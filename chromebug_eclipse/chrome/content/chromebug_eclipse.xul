@@ -1,0 +1,22 @@
+<?xml version="1.0"?> 
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script src="chrome://chromebug_eclipse/content/util.js" type="application/x-javascript;version=1.8"/> 
+    <script src="chrome://chromebug_eclipse/content/chromebug_eclipse.js" type="application/x-javascript;version=1.8"/> 
+
+  <menupopup id="menu_ToolsPopup">
+    <menu id="gt_menu"
+      insertbefore="javascriptConsole" />
+  </menupopup>
+
+  <menu id="gt_menu" class="menu-iconic"
+    label="gt">
+    <menupopup
+      onpopupshowing="">
+      <menuitem id="gt-item"
+        label="start server"
+        oncommand="Firebug.chromebug_eclipseModle.startServer();" />
+    </menupopup>
+  </menu>
+
+</overlay>
