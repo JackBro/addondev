@@ -210,13 +210,12 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  var body = "accept";
 	  var cmd = params.cmd;
 	  var result;
+	  var file, line;
 	  Application.console.log("cmd = " + cmd);
 	  switch(cmd) 
 	  {
 	  	case "setbreakpoint":
 	  		//alert("setbreakpoint postdata = " + postdata);
-	  		let file;
-	  		let line;
 	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
 	  		
 	  		for(i=0;i<result.length; i++)
@@ -247,8 +246,6 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  		}
 	    	break;
 	    case "removebreakpoint":
-	  		let file;
-	  		let line;
 	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
 	  		
 	  		for(i=0;i<result.length; i++)
