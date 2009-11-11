@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>${name}@addondev</em:id>
+    <em:version>${version}</em:version>
+   
+    <!-- Firefox -->
+    <em:targetApplication>
+      <Description>
+        <em:id>${firefoxid}</em:id>
+        <em:minVersion>${minversion}</em:minVersion>
+        <em:maxVersion>${maxversion}</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:name>${name}</em:name>
+    <em:description>${description}</em:description>
+    <em:creator>${creator}</em:creator>
+    <em:homepageURL>${homepageurl}</em:homepageURL>
+  </Description>      
+</RDF>
