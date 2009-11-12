@@ -35,6 +35,8 @@ const chrome_eclipseHandler = {
   /* nsICommandLineHandler */
   handle : function clh_handle(cmdLine)
   {
+	  //-p "35chromebug" -no-remote -ce_eport 8084 -ce_cport 8083 -chrome chrome://chromebug/content/chromebug.xul
+	  //-chromebug -p "35chromebug" -no-remote
     try {
     	var ce_eport = cmdLine.handleFlagWithParam("ce_eport", false);
     	var ce_cport = cmdLine.handleFlagWithParam("ce_cport", false);

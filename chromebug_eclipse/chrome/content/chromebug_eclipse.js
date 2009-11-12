@@ -226,7 +226,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		  		if(file in Firebug.chromebug_eclipse.util.sourceFileMap)
 		  		{
 		  			var s = Firebug.chromebug_eclipse.util.sourceFileMap[file];
-		  			FBL.fbs.setBreakpoint(s, line, null, Firebug.Debugger);
+		  			Firebug.Debugger.fbs.setBreakpoint(s, line, null, Firebug.Debugger);
 		  		}
 		  		else
 		  		{		  		
@@ -252,7 +252,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  		{
 	  			file = decodeURIComponent(result[i]["filename"]);
 	  			line = parseInt(result[i]["line"]);
-		  		FBL.fbs.clearBreakpoint(file, line);
+	  			Firebug.Debugger.fbs.clearBreakpoint(file, line);
 	  		}	    	
 	    	break;
 	  	case "load":
@@ -294,12 +294,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		  		{
 		  			frame = frame.callingFrame;
 		  		}
-		  		//alert("getvalues params.name = " + params.name);
-		  		//alert("getvalues id = " + id);
-		  		//alert("getvalues frame = " + frame);
 		  		body = Firebug.chromebug_eclipse.util.getValuesXML(frame, valuename);	
-		  		//body = 
-		  		//alert("getvalues = " + body);
 		  		Application.console.log("getvalues body = " + body);
 	  		}
 	  		else
