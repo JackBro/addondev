@@ -193,9 +193,9 @@
    <extension
          point="org.eclipse.ui.importWizards">
       <wizard
-            class="addondev.ImportWizard1"
-            id="AddonDev.wizard1"
-            name="name">
+            class="jp.addondev.wizard.AddonDevImportWizard"
+            id="jp.addondev.wizard.addonimportwizard"
+            name="addonimport">
       </wizard>
    </extension>
    <extension
