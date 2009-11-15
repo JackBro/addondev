@@ -61,7 +61,7 @@ public class AddonDevImportWizard extends Wizard implements IImportWizard {
 	@Override
 	public boolean performFinish() {
 		// TODO Auto-generated method stub
-		return false;
+		return mainPage.finish();
 	}
 
 	@Override
@@ -77,72 +77,4 @@ public class AddonDevImportWizard extends Wizard implements IImportWizard {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	private void createProject(IProjectDescription projectDescription,
-			IProject project, IProgressMonitor monitor) throws CoreException,
-			OperationCanceledException {
-		try {
-			monitor.beginTask("", 2000);
-			
-	//		String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
-	//		if (!projectDescription.hasNature(newNatureId)) {
-	//			String[] ids = projectDescription.getNatureIds();
-	//			String[] newIds = new String[ids.length + 1];
-	//			System.arraycopy(ids, 0, newIds, 0, ids.length);
-	//			newIds[ids.length] = newNatureId;
-	//			projectDescription.setNatureIds(newIds);
-	//			project.setDescription(projectDescription, monitor);
-	//		}			
-	
-			project.create(projectDescription, new SubProgressMonitor(monitor, 1000));
-	
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
-	
-			project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(monitor, 1000));
-	
-			//createFolder(project, monitor);
-
-//			try {
-//				createFile(project, "chrome/content/" + param.get("name") + ".js", AddonDevWizard.class.getResourceAsStream("addon.js"), param, monitor);
-//				createFile(project, "install.rdf", AddonDevWizard.class.getResourceAsStream("install.rdf"), param, monitor);
-//				createFile(project, "chrome.manifest", AddonDevWizard.class.getResourceAsStream("chrome.manifest"), param, monitor);
-//				createFile(project, "overlay.xul", AddonDevWizard.class.getResourceAsStream("overlay.xul"), param, monitor);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			
-			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
-			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
-			String newNatureId = "AddonDev.addondevnature";
-			addNature(newNatureId, projectDescription, project, monitor);			
-			newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
-			addNature(newNatureId, projectDescription, project, monitor);
-
-		} finally {
-			monitor.done();
-		}		
-	}
-	
-	private synchronized void addNature(String newNatureId, IProjectDescription projectDescription, IProject project, IProgressMonitor monitor)
-	{
-		//IProjectDescription pDescription = project.getDescription();
-		if (!projectDescription.hasNature(newNatureId)) {
-			String[] ids = projectDescription.getNatureIds();
-			String[] newIds = new String[ids.length + 1];
-			System.arraycopy(ids, 0, newIds, 0, ids.length);
-			newIds[ids.length] = newNatureId;
-			projectDescription.setNatureIds(newIds);
-			try {
-				project.setDescription(projectDescription, monitor);
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}		
-	}
-	
-
 }

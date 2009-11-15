@@ -11,11 +11,15 @@ import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
@@ -151,6 +155,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 	}
 	
 	public boolean finish() {
+	
 		final Object[] selected = ctv.getCheckedElements();
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			protected void execute(IProgressMonitor monitor)
@@ -161,6 +166,9 @@ public class AddonDevImportWizardPage extends WizardPage {
 						throw new OperationCanceledException();
 					}
 					for (int i = 0; i < selected.length; i++) {
+						
+						
+						
 						try {
 							copyProjects((File) selected[i],
 									new SubProgressMonitor(monitor, 1));
@@ -196,22 +204,102 @@ public class AddonDevImportWizardPage extends WizardPage {
 		//ResourcesPlugin.getWorkspace().getRoot().
 		String name = dir.getName();
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+//        IPath defaultPath = Platform.getLocation();
+//        IPath newPath = projectPage.getLocationPath();
+//        if (defaultPath.equals(newPath)){
+//            newPath = null;
+//        }
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IProjectDescription description = workspace.newProjectDescription(project.getName());
+        //description.setLocation(newPath);
+        createProject(description, project, monitor);
+        
 		IPath path = project.getFullPath().removeLastSegments(1);
-		//File dir = new File("C:\\tmp");
-		String[] extensions = {};
-		boolean recursive = true;
-		Collection files = FileUtils.listFiles(dir, extensions, recursive);
+		//File destDir = new File(arg0);
 		
-		File[] srcfile = FileUtils.convertFileCollectionToFileArray(files);
+		FileUtils.copyDirectory(dir, project.getFullPath().toFile(), true);
 		
-		for (File src : srcfile) {
+//		//File dir = new File("C:\\tmp");
+//		String[] extensions = {"*"};
+//		boolean recursive = true;
+//		Collection files = FileUtils.listFiles(dir, null, recursive);
+//		
+//		File[] srcfile = FileUtils.convertFileCollectionToFileArray(files);
+//		
+//		for (File src : srcfile) {
+//			
+//			IFile file = project.getFile(path.append(src.getName()));
+//
+//			//file.create(new ByteArrayInputStream(text.getBytes("UTF-8")), true, monitor);
+//			file.create(new FileInputStream(src), true, monitor);
+//			//File dist = new File(.toOSString());
+//			//FileUtils.copyFile(src, dist);
+//		}
+	}
+	
+	private void createProject(IProjectDescription projectDescription,
+			IProject project, IProgressMonitor monitor) throws CoreException,
+			OperationCanceledException {
+		try {
+			monitor.beginTask("", 2000);
 			
-			IFile file = project.getFile(path.append(src.getName()));
+	//		String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
+	//		if (!projectDescription.hasNature(newNatureId)) {
+	//			String[] ids = projectDescription.getNatureIds();
+	//			String[] newIds = new String[ids.length + 1];
+	//			System.arraycopy(ids, 0, newIds, 0, ids.length);
+	//			newIds[ids.length] = newNatureId;
+	//			projectDescription.setNatureIds(newIds);
+	//			project.setDescription(projectDescription, monitor);
+	//		}			
+	
+			project.create(projectDescription, new SubProgressMonitor(monitor, 1000));
+	
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+	
+			project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(monitor, 1000));
+	
+			//createFolder(project, monitor);
 
-			//file.create(new ByteArrayInputStream(text.getBytes("UTF-8")), true, monitor);
-			file.create(new FileInputStream(src), true, monitor);
-			//File dist = new File(.toOSString());
-			//FileUtils.copyFile(src, dist);
-		}
+//			try {
+//				createFile(project, "chrome/content/" + param.get("name") + ".js", AddonDevWizard.class.getResourceAsStream("addon.js"), param, monitor);
+//				createFile(project, "install.rdf", AddonDevWizard.class.getResourceAsStream("install.rdf"), param, monitor);
+//				createFile(project, "chrome.manifest", AddonDevWizard.class.getResourceAsStream("chrome.manifest"), param, monitor);
+//				createFile(project, "overlay.xul", AddonDevWizard.class.getResourceAsStream("overlay.xul"), param, monitor);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			
+			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
+			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
+			String newNatureId = "AddonDev.addondevnature";
+			addNature(newNatureId, projectDescription, project, monitor);			
+			newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
+			addNature(newNatureId, projectDescription, project, monitor);
+
+		} finally {
+			monitor.done();
+		}		
+	}
+	
+	private synchronized void addNature(String newNatureId, IProjectDescription projectDescription, IProject project, IProgressMonitor monitor)
+	{
+		//IProjectDescription pDescription = project.getDescription();
+		if (!projectDescription.hasNature(newNatureId)) {
+			String[] ids = projectDescription.getNatureIds();
+			String[] newIds = new String[ids.length + 1];
+			System.arraycopy(ids, 0, newIds, 0, ids.length);
+			newIds[ids.length] = newNatureId;
+			projectDescription.setNatureIds(newIds);
+			try {
+				project.setDescription(projectDescription, monitor);
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}		
 	}
 }
