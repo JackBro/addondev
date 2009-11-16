@@ -1,15 +1,20 @@
 package jp.addondev.wizard;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.StringBufferInputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
+import jp.addondev.AddonDevPlugin;
+
+import org.apache.commons.io.FileSystemUtils;
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -19,34 +24,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IImportWizard;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.dialogs.WizardResourceImportPage;
 
 public class AddonDevImportWizardPage extends WizardPage {
 	
@@ -69,6 +63,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 		Composite dfeparent = new Composite(composite, SWT.NONE);
 		fDirectoryFieldEditor = new DirectoryFieldEditor("name", "labelText", dfeparent);
 		dfeparent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
 		//fDirectoryFieldEditor.fillIntoGrid(composite, 1);
 		fDirectoryFieldEditor.setPropertyChangeListener(new IPropertyChangeListener() {
 			
@@ -152,6 +147,13 @@ public class AddonDevImportWizardPage extends WizardPage {
 		
 		setControl(composite);
 		setPageComplete(true);
+		String importdir = "";
+		//String importdir = AddonDevPlugin.getDefault().getPreferenceStore().getString(AddonDevPlugin.IMPORT_DIR);
+		//if(!new File(importdir).exists())
+		//{
+			importdir = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+		//}
+		fDirectoryFieldEditor.setStringValue(importdir);
 	}
 	
 	public boolean finish() {
@@ -166,18 +168,44 @@ public class AddonDevImportWizardPage extends WizardPage {
 						throw new OperationCanceledException();
 					}
 					for (int i = 0; i < selected.length; i++) {
-						
-						
-						
-						try {
-							copyProjects((File) selected[i],
-									new SubProgressMonitor(monitor, 1));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (CoreException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						File file = (File) selected[i];
+						//ZipFile zipFile = new ZipFile((File) selected[i]);
+						//zipFile.getEntry("").
+						Path path = new Path(file.getAbsolutePath());
+						if(path.getFileExtension().equals("xpi"))
+						{
+							IProject project = null;
+							try {
+								project = createProject(file.getName(), monitor);
+							} catch (OperationCanceledException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (CoreException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							try {
+								unZipxpi(file, project.getLocation().toFile());
+							} catch (ZipException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						else
+						{
+							try {
+								copyFiles(file,
+										new SubProgressMonitor(monitor, 1));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (CoreException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 				} finally {
@@ -199,25 +227,70 @@ public class AddonDevImportWizardPage extends WizardPage {
 		return true;
 	}
 	
-	private void copyProjects(File dir, IProgressMonitor monitor) throws IOException, CoreException
+	private void unZipxpi(File file, File distDir) throws ZipException, IOException
 	{
-		//ResourcesPlugin.getWorkspace().getRoot().
-		String name = dir.getName();
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-//        IPath defaultPath = Platform.getLocation();
-//        IPath newPath = projectPage.getLocationPath();
-//        if (defaultPath.equals(newPath)){
-//            newPath = null;
-//        }
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        final IProjectDescription description = workspace.newProjectDescription(project.getName());
-        //description.setLocation(newPath);
-        createProject(description, project, monitor);
+		 ZipFile zipFile = new ZipFile(file);
+		 Enumeration<? extends ZipEntry> entries = zipFile.entries();
+		 while (entries.hasMoreElements()) {
+			 ZipEntry ze = entries.nextElement();
+			 
+	            File outFile = new File(distDir.getAbsoluteFile(), ze.getName());
+	            if (ze.isDirectory()) {
+	                // ZipEntry がディレクトリの場合はディレクトリを作成。
+	                outFile.mkdirs();
+	            } else {
+	            	
+	            	 BufferedInputStream bis = null;
+	                 BufferedOutputStream bos = null;
+	            	
+	                 try {	
+	                	 
+	                	 if (!outFile.getParentFile().exists()) {
+	                         outFile.getParentFile().mkdirs();
+	                     }
+	                	 
+	            	bis = new BufferedInputStream(zipFile.getInputStream(ze));
+	            	bos = new BufferedOutputStream(new FileOutputStream(outFile));
+	            	
+	            	 int i = 0;
+	                 while( ( i = bis.read() ) != -1 ) {
+	                     bos.write( i );
+	                 }
+	                 }catch(IOException e)
+	                 {
+	                	 e.printStackTrace();
+	                 }
+	                finally
+	                {
+	                    try {
+	                        if (bis != null) bis.close();
+	                    } catch (IOException e) {
+	                    	e.printStackTrace();
+	                    }
+	                    try {
+	                        if (bos != null) bos.close();
+	                    } catch (IOException e) {
+	                    	e.printStackTrace();
+	                    }	                	
+	                }
+	            }
+		 }
+		
+	}
+	
+	private void copyFiles(File srcdir, IProgressMonitor monitor) throws IOException, CoreException
+	{
+
+        IProject project = createProject(srcdir.getName(), monitor);
         
 		IPath path = project.getFullPath().removeLastSegments(1);
 		//File destDir = new File(arg0);
 		
-		FileUtils.copyDirectory(dir, project.getFullPath().toFile(), true);
+		
+		//File zipFile = new java.io.File(file);
+		//ZipFile zipFile = new ZipFile(arg0)
+		
+		FileUtils.copyDirectory(srcdir, project.getFullPath().toFile(), true);
 		
 //		//File dir = new File("C:\\tmp");
 //		String[] extensions = {"*"};
@@ -237,11 +310,23 @@ public class AddonDevImportWizardPage extends WizardPage {
 //		}
 	}
 	
-	private void createProject(IProjectDescription projectDescription,
-			IProject project, IProgressMonitor monitor) throws CoreException,
-			OperationCanceledException {
+	private IProject createProject(String projactname, IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+		
+		IProject project = null;
 		try {
 			monitor.beginTask("", 2000);
+			
+			//ResourcesPlugin.getWorkspace().getRoot().
+			//String name = distdir.getName();
+			project = ResourcesPlugin.getWorkspace().getRoot().getProject(projactname);
+//	        IPath defaultPath = Platform.getLocation();
+//	        IPath newPath = projectPage.getLocationPath();
+//	        if (defaultPath.equals(newPath)){
+//	            newPath = null;
+//	        }
+	        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+	        IProjectDescription description = workspace.newProjectDescription(project.getName());
+	        //description.setLocation(newPath);		
 			
 	//		String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
 	//		if (!projectDescription.hasNature(newNatureId)) {
@@ -253,7 +338,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 	//			project.setDescription(projectDescription, monitor);
 	//		}			
 	
-			project.create(projectDescription, new SubProgressMonitor(monitor, 1000));
+			project.create(description, new SubProgressMonitor(monitor, 1000));
 	
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
@@ -276,13 +361,15 @@ public class AddonDevImportWizardPage extends WizardPage {
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
 			String newNatureId = "AddonDev.addondevnature";
-			addNature(newNatureId, projectDescription, project, monitor);			
+			addNature(newNatureId, description, project, monitor);			
 			newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
-			addNature(newNatureId, projectDescription, project, monitor);
+			addNature(newNatureId, description, project, monitor);
 
 		} finally {
 			monitor.done();
-		}		
+		}	
+		
+		return project;
 	}
 	
 	private synchronized void addNature(String newNatureId, IProjectDescription projectDescription, IProject project, IProgressMonitor monitor)

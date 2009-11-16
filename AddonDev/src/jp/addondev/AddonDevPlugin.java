@@ -16,6 +16,8 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	public static final String IMG_BP_DISABLE = "bp_disable.png";
 	public static final String IMG_ADDON = "addondev";
 	
+	public static final String NATUREID = "AddonDev.addondevnature";
+	
 	//public static final String ID_BREAK_MARKER = "org.eclipse.debug.core.breakpointMarker";
 	//public static final String ID_DEBUG_MODEL = "org.eclipse.debug.core.breakpointMarker";
 	
@@ -34,6 +36,8 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	public static final String DEBUG_PROFILEDIR = "debugProfileDir";
 	public static final String DEBUG_ARGS = "debugArgs";
 	public static final String DEBUG_ADDONS = "debugAddons";
+	
+	public static final String IMPORT_DIR = "addondev.importwizard.dir";
 	
 	//public static final String GM_DEBUG_PROFILENANE = "gm_debugProfileName";
 	//public static final String GM_DEBUG_PROFILEDIR = "gm_debugProfileDir";
