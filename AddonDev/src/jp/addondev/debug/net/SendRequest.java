@@ -1,4 +1,4 @@
-package jp.addondev.debug.core.model;
+package jp.addondev.debug.net;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

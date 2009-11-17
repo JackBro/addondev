@@ -56,16 +56,16 @@ public class DefaultFilesPreferencePage extends PreferencePage implements
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
         fguid = addText(composite, "ID");
-        fguid.setText(getValueFromStote(stote,AddonDevPlugin.DEFAULT_GUID, "ec8030f7-c20a-464f-9b0e-13a3a9e97384"));
+        fguid.setText(getValueFromStote(stote,AddonDevPlugin.DEFAULT_GUID, DEFAULT_GUID));
         
         fversion = addText(composite, "version");
-        fversion.setText(getValueFromStote(stote,AddonDevPlugin.DEFAULT_VERSION, "0.1.0.0"));
+        fversion.setText(getValueFromStote(stote,AddonDevPlugin.DEFAULT_VERSION, DEFAULT_VERSION));
         
         fminVersion = addText(composite, "minVersion");
-        fminVersion.setText(getValueFromStote(stote,AddonDevPlugin.DEFAULT_MINVERSION, "2.0"));
+        fminVersion.setText(getValueFromStote(stote,AddonDevPlugin.DEFAULT_MINVERSION, DEFAULT_MINVERSION));
         
         fmaxVersion = addText(composite, "maxVersion");
-        fmaxVersion.setText(getValueFromStote(stote,AddonDevPlugin.DEFAULT_MAXVERSION, "3.0.*"));
+        fmaxVersion.setText(getValueFromStote(stote,AddonDevPlugin.DEFAULT_MAXVERSION, DEFAULT_MAXVERSION));
         
 		return parent;
 	}

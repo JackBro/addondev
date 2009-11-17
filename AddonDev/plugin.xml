@@ -177,11 +177,11 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="jp.addondev.wizzard.category"
-            name="AddonDev">
+            id="jp.addondev.category.wizard.new"
+            name="Addon Dev">
       </category>
       <wizard
-            category="jp.addondev.wizzard.category"
+            category="jp.addondev.category.wizard.new"
             class="jp.addondev.wizard.AddonDevWizard"
             hasPages="true"
             icon="icons/addon.png"
@@ -193,10 +193,15 @@
    <extension
          point="org.eclipse.ui.importWizards">
       <wizard
+            category="jp.addondev.category.wizard.import"
             class="jp.addondev.wizard.AddonDevImportWizard"
             id="jp.addondev.wizard.addonimportwizard"
-            name="addonimport">
+            name="Firefox Addon">
       </wizard>
+      <category
+            id="jp.addondev.category.wizard.import"
+            name="Addon Dev">
+      </category>
    </extension>
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">

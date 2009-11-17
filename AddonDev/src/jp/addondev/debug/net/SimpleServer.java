@@ -1,4 +1,4 @@
-package jp.addondev.debug.core.model;
+package jp.addondev.debug.net;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+
+import jp.addondev.debug.core.model.AddonDebugTarget;
 
 import org.eclipse.debug.core.model.IDebugTarget;
 

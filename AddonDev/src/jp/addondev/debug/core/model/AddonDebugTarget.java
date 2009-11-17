@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
 import jp.addondev.AddonDevPlugin;
+import jp.addondev.debug.net.SendRequest;
 import jp.addondev.debug.ui.model.JSDebugModelPresentation;
 import jp.addondev.util.AddonDevUtil;
 import jp.addondev.util.XMLUtils;
@@ -42,7 +43,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 import org.xml.sax.SAXException;
 
-
+//http://sites.google.com/site/shin1ogawa/eclipseplugin/debug
 public class AddonDebugTarget extends PlatformObject implements IDebugTarget, ILaunchListener {
 
 	private IProcess fProcess;
@@ -515,7 +516,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	 * @param event debug event
 	 * @throws CoreException 
 	 */
-	void breakpointHit(String event, String data) {
+	public void breakpointHit(String event, String data) {
 		fstateChange = true;
 		
 		JSStackFrame[] stackframes = null;

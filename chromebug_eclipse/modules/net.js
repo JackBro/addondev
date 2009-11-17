@@ -24,7 +24,8 @@ server = {
 		this.socket = Cc["@mozilla.org/network/server-socket;1"].createInstance( Ci.nsIServerSocket );
         try
 		{
-    		this.socket.init( this.port, false, -1 );
+			var allowAccessesFromRemote = false;
+    		this.socket.init( this.port, !allowAccessesFromRemote, -1 );
     		this.socket.asyncListen( this );
     	}
     	catch(ex)

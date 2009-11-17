@@ -202,17 +202,26 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 		
 		if(viewer.getTable().getItemCount() >0) return;
 		
-		IPath chrome = new Path("chrome.manifest");
-		IPath install = new Path("install.rdf");
+		//IPath chrome = new Path("chrome.manifest");
+		//IPath install = new Path("install.rdf");
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IProject[] projects = workspace.getRoot().getProjects();
         for(int i=0; i<projects.length; i++)
         {
         	IProject project = projects[i];
-        	if(project.exists(chrome) && project.exists(install))
-        	{
-        		viewer.add(new Customer(project.getName(), project.getFullPath().toString()));
-        	}
+//        	if(project.exists(chrome) && project.exists(install))
+//        	{
+//        		viewer.add(new Customer(project.getName(), project.getFullPath().toString()));
+//        	}
+        	try {
+				if(project.hasNature(AddonDevPlugin.NATUREID))
+				{
+					viewer.add(new Customer(project.getName(), project.getFullPath().toString()));
+				}
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         
 		List<String> excheckedlist = null;

@@ -1,7 +1,9 @@
 package jp.addondev;
 
 import java.net.URL;
-import jp.addondev.debug.core.model.SimpleServer;
+
+import jp.addondev.debug.net.SimpleServer;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.model.IDebugTarget;

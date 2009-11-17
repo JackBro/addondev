@@ -3,6 +3,7 @@ package jp.addondev.wizard;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -40,6 +41,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 public class AddonDevImportWizardPage extends WizardPage {
@@ -83,7 +86,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 			}
 		});
 		
-		ctv = CheckboxTableViewer.newCheckList(composite, SWT.NONE);
+		ctv = CheckboxTableViewer.newCheckList(composite, SWT.BORDER);
 		ctv.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 		ctv.setContentProvider(new IStructuredContentProvider() {
 			
@@ -141,6 +144,19 @@ public class AddonDevImportWizardPage extends WizardPage {
 			@Override
 			public Image getImage(Object element) {
 				// TODO Auto-generated method stub
+				String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
+				if (element instanceof File){
+					File file = (File)element;
+					if(file.isDirectory())
+					{
+						imageKey = ISharedImages.IMG_OBJ_FOLDER;
+					}
+					else
+					{
+						imageKey = ISharedImages.IMG_OBJ_FILE;
+					}
+					return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
+				}
 				return null;
 			}
 		});
@@ -172,7 +188,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 						//ZipFile zipFile = new ZipFile((File) selected[i]);
 						//zipFile.getEntry("").
 						Path path = new Path(file.getAbsolutePath());
-						if(path.getFileExtension().equals("xpi"))
+						if("xpi".equals(path.getFileExtension()))
 						{
 							IProject project = null;
 							try {
@@ -280,17 +296,37 @@ public class AddonDevImportWizardPage extends WizardPage {
 	
 	private void copyFiles(File srcdir, IProgressMonitor monitor) throws IOException, CoreException
 	{
-
         IProject project = createProject(srcdir.getName(), monitor);
-        
-		IPath path = project.getFullPath().removeLastSegments(1);
-		//File destDir = new File(arg0);
+		//.settings, .project
+		FileFilter filter = new FileFilter() {
+			
+			@Override
+			public boolean accept(File pathname) {
+				// TODO Auto-generated method stub
+				
+				if(".project".equals(pathname.getName()))
+					return false;
+				
+				if(pathname.isDirectory() && ".settings".equals(pathname.getName()))
+					return false;
+					
+				return true;
+			}
+			
+		};
+		FileUtils.copyDirectory(srcdir, project.getLocation().toFile(), filter, true);
 		
 		
-		//File zipFile = new java.io.File(file);
-		//ZipFile zipFile = new ZipFile(arg0)
-		
-		FileUtils.copyDirectory(srcdir, project.getFullPath().toFile(), true);
+//		IProjectDescription description = project.getDescription();
+//		if(!project.hasNature(AddonDevPlugin.NATUREID))
+//		{
+//			addNature(AddonDevPlugin.NATUREID, description, project, monitor);			
+//		}
+//		String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
+//		if(!project.hasNature(newNatureId))
+//		{
+//			addNature(newNatureId, description, project, monitor);
+//		}
 		
 //		//File dir = new File("C:\\tmp");
 //		String[] extensions = {"*"};
@@ -360,9 +396,9 @@ public class AddonDevImportWizardPage extends WizardPage {
 			
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
-			String newNatureId = "AddonDev.addondevnature";
-			addNature(newNatureId, description, project, monitor);			
-			newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
+			//String newNatureId = "AddonDev.addondevnature";
+			addNature(AddonDevPlugin.NATUREID, description, project, monitor);			
+			String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
 			addNature(newNatureId, description, project, monitor);
 
 		} finally {
