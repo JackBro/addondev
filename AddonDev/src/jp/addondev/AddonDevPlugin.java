@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -40,11 +41,7 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	public static final String DEBUG_ADDONS = "debugAddons";
 	
 	public static final String IMPORT_DIR = "addondev.importwizard.dir";
-	
-	//public static final String GM_DEBUG_PROFILENANE = "gm_debugProfileName";
-	//public static final String GM_DEBUG_PROFILEDIR = "gm_debugProfileDir";
-	//public static final String GM_DEBUG_TESTURL = "gm_debugTestURL";
-	
+
 	
 	private static SimpleServer eclipseServer = null;
 	
@@ -84,6 +81,11 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	
 	public Image getImage(String key) {
 		return getImageRegistry().get(key);
+	}
+	
+	public Color getColor()
+	{
+		
 	}
 	
 	public static void startServer(IDebugTarget target, int port) throws Exception

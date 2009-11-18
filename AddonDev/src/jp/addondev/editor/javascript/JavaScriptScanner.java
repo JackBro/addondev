@@ -3,9 +3,17 @@ package jp.addondev.editor.javascript;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.internal.ui.text.JavaWordDetector;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
+import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
+import org.eclipse.jface.text.rules.Token;
+import org.eclipse.jface.text.rules.WordRule;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 public class JavaScriptScanner extends RuleBasedScanner {
 	private IPreferenceStore fPreferenceStore;
@@ -29,12 +37,25 @@ public class JavaScriptScanner extends RuleBasedScanner {
 	public JavaScriptScanner(IPreferenceStore fPreferenceStore) {
 		super();
 		this.fPreferenceStore = fPreferenceStore;
+		List<IRule> rules = createRules();
+		setRules(rules.toArray(new IRule[rules.size()]));
 	}
 	
 	protected List<IRule> createRules(){
+		Color backColor = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+		Color keywordColor = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
+		IToken keywordtoken = new Token(new TextAttribute(keywordColor, backColor, SWT.BOLD));
+		
+		Color defaultColor = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+		IToken defaulttoken = new Token(new TextAttribute(defaultColor));
+		
 		List<IRule> rules = new ArrayList<IRule>();
-		
-		
+		WordRule wordRule = new WordRule(new JavaWordDetector(), defaulttoken);
+		for (String keyword : fKeywords) {
+			 wordRule.addWord(keyword, keywordtoken); // ワードの追加
+		}
+		rules.add(wordRule);
+	    
 		return rules;
 	}
 }

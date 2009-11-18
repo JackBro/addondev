@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.RGB;
 public class JavaScriptSourceViewerConfiguration extends
 		SourceViewerConfiguration {
 	private RuleBasedScanner defaultScanner;
+	
 	Token token;
 	
 	@Override
@@ -29,7 +30,7 @@ public class JavaScriptSourceViewerConfiguration extends
 		DefaultDamagerRepairer dr = null;
 		
 		if (defaultScanner == null) {
-			 JFaceResources.getColorRegistry().put("test", new RGB(255, 0, 0));
+			 JFaceResources.getColorRegistry().put("test", new RGB(0, 0, 0));
 			token = new Token(new TextAttribute(JFaceResources.getColorRegistry().get("test")));
 			defaultScanner = new JavaScriptScanner(AddonDevPlugin.getDefault().getPreferenceStore());
 			defaultScanner.setDefaultReturnToken(token);
@@ -39,9 +40,9 @@ public class JavaScriptSourceViewerConfiguration extends
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		
-//		dr = new DefaultDamagerRepairer(getCommentScanner());
-//		reconciler.setDamager(dr, JavaScriptPartitionScanner.JS_COMMENT);
-//		reconciler.setRepairer(dr, JavaScriptPartitionScanner.JS_COMMENT);
+		dr = new DefaultDamagerRepairer(getCommentScanner());
+		reconciler.setDamager(dr, JavaScriptPartitionScanner.JS_COMMENT);
+		reconciler.setRepairer(dr, JavaScriptPartitionScanner.JS_COMMENT);
 		
 		return reconciler;		
 	}

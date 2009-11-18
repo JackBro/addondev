@@ -287,5 +287,11 @@
             sequence="M1+6">
       </key>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="jp.addondev.preferences.AddonDevPreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
