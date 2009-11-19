@@ -1,4 +1,4 @@
-package jp.addondev;
+package jp.addondev.plugin;
 
 import java.net.URL;
 
@@ -41,9 +41,13 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	public static final String DEBUG_ADDONS = "debugAddons";
 	
 	public static final String IMPORT_DIR = "addondev.importwizard.dir";
+	
+	public static final String PREF_COLOR_JAVASCRIPT_BACKGROUND = "jp.addondev.pref.color.javascript.background"; 
+	public static final String PREF_COLOR_JAVASCRIPT_COMMENT = "jp.addondev.pref.color.javascript.comment"; 
+	public static final String PREF_COLOR_JAVASCRIPT_WORD = "jp.addondev.pref.color.javascript.word"; 
 
 	
-	private static SimpleServer eclipseServer = null;
+	//private static SimpleServer eclipseServer = null;
 	
 	private static AddonDevPlugin plugin;
 	
@@ -83,24 +87,19 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 		return getImageRegistry().get(key);
 	}
 	
-	public Color getColor()
-	{
-		
-	}
-	
-	public static void startServer(IDebugTarget target, int port) throws Exception
-	{
-		if(eclipseServer == null)
-		{
-			eclipseServer = new SimpleServer(target, port);
-		}
-		if(!eclipseServer.working)
-			eclipseServer.Start(target);
-	}
-	
-	public static void stopServer()
-	{
-		if(eclipseServer != null && eclipseServer.working)
-			eclipseServer.Stop();
-	}
+//	public static void startServer(IDebugTarget target, int port) throws Exception
+//	{
+//		if(eclipseServer == null)
+//		{
+//			eclipseServer = new SimpleServer(target, port);
+//		}
+//		if(!eclipseServer.working)
+//			eclipseServer.Start(target);
+//	}
+//	
+//	public static void stopServer()
+//	{
+//		if(eclipseServer != null && eclipseServer.working)
+//			eclipseServer.Stop();
+//	}
 }
