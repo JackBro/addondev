@@ -23,32 +23,7 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	
 	//public static final String ID_BREAK_MARKER = "org.eclipse.debug.core.breakpointMarker";
 	//public static final String ID_DEBUG_MODEL = "org.eclipse.debug.core.breakpointMarker";
-	
-	public static final String DEFAULT_GUID = "defaultGuid";
-	public static final String DEFAULT_VERSION = "defaultVersion";
-	public static final String DEFAULT_MINVERSION = "defaultMinversion";
-	public static final String DEFAULT_MAXVERSION = "defaultMaxversion";
-	
-	public static final String DEBUG_APP_PATH = "firefoxPath";
-	
-	public static final String DEBUG_DEBUGGERPORT = "debuggerPort";
-	public static final String DEBUG_ECLIPSEPORT = "eclipsePort";
-	public static final String FIREBUG_SERVER_CONEECT_TIMEOUT = "ConnectTimeout";
-	
-	public static final String DEBUG_PROFILENANE = "debugProfileName";
-	public static final String DEBUG_PROFILEDIR = "debugProfileDir";
-	public static final String DEBUG_ARGS = "debugArgs";
-	public static final String DEBUG_ADDONS = "debugAddons";
-	
-	public static final String IMPORT_DIR = "addondev.importwizard.dir";
-	
-	public static final String PREF_COLOR_JAVASCRIPT_BACKGROUND = "jp.addondev.pref.color.javascript.background"; 
-	public static final String PREF_COLOR_JAVASCRIPT_COMMENT = "jp.addondev.pref.color.javascript.comment"; 
-	public static final String PREF_COLOR_JAVASCRIPT_WORD = "jp.addondev.pref.color.javascript.word"; 
-
-	
-	//private static SimpleServer eclipseServer = null;
-	
+		
 	private static AddonDevPlugin plugin;
 	
 	public AddonDevPlugin(){

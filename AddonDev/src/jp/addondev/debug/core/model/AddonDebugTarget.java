@@ -14,6 +14,7 @@ import jp.addondev.debug.net.SendRequest;
 import jp.addondev.debug.net.SimpleServer;
 import jp.addondev.debug.ui.model.JSDebugModelPresentation;
 import jp.addondev.plugin.AddonDevPlugin;
+import jp.addondev.preferences.PrefConst;
 import jp.addondev.util.AddonDevUtil;
 import jp.addondev.util.XMLUtils;
 
@@ -40,6 +41,7 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 import org.xml.sax.SAXException;
@@ -99,8 +101,10 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	
 	public void startPrcess(ILaunchConfiguration configuration, ILaunch launch) throws Exception
 	{
-		int eclispport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(AddonDevPlugin.DEBUG_ECLIPSEPORT);
-		SendRequest.debuggerport = AddonDevPlugin.getDefault().getPreferenceStore().getString(AddonDevPlugin.DEBUG_DEBUGGERPORT);
+		IPreferenceStore store = AddonDevPlugin.getDefault().getPreferenceStore();
+		
+		int eclispport = store.getInt(PrefConst.ECLIPSE_PORT);
+		SendRequest.debuggerport = store.getString(PrefConst.DEBUGGER_PORT);
 		
 		//AddonDevPlugin.startServer(this, eclispport);
 		SimpleServer.getInstance().Start(this, eclispport);
@@ -116,7 +120,6 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(this);
 
-		//test
 		started();		
 		fThread.setBreakpoints(null);
 		fThread.setStepping(false);

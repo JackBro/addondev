@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.addondev.plugin.AddonDevPlugin;
+import jp.addondev.preferences.PrefConst;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -189,13 +190,13 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 		// TODO Auto-generated method stub
 		try {	
 			
-			String firefoxpath = configuration.getAttribute(AddonDevPlugin.DEBUG_APP_PATH, "");
+			String firefoxpath = configuration.getAttribute(PrefConst.DEBUG_APP_PATH, "");
 			ffirefoxPathEditor.setStringValue(firefoxpath);
 			
-			fprofilename.setText(configuration.getAttribute(AddonDevPlugin.DEBUG_PROFILENANE, ""));
-			String dir = configuration.getAttribute(AddonDevPlugin.DEBUG_PROFILEDIR, "");
+			fprofilename.setText(configuration.getAttribute(PrefConst.DEBUG_PROFILENANE, ""));
+			String dir = configuration.getAttribute(PrefConst.DEBUG_PROFILEDIR, "");
 			fprofiledir.setStringValue(dir);
-			ffirefoxargs.setText(configuration.getAttribute(AddonDevPlugin.DEBUG_ARGS, ""));
+			ffirefoxargs.setText(configuration.getAttribute(PrefConst.DEBUG_ARGS, ""));
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -227,7 +228,7 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
         
 		List<String> excheckedlist = null;
 		try {
-			excheckedlist = configuration.getAttribute(AddonDevPlugin.DEBUG_ADDONS, new ArrayList<String>());
+			excheckedlist = configuration.getAttribute(PrefConst.FIREFOX_DEBUGTARGETADDONS, new ArrayList<String>());
 			
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
@@ -248,14 +249,14 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		// TODO Auto-generated method stub		
-		configuration.setAttribute(AddonDevPlugin.DEBUG_APP_PATH, ffirefoxPathEditor.getStringValue());
+		configuration.setAttribute(PrefConst.DEBUG_APP_PATH, ffirefoxPathEditor.getStringValue());
 		
-		configuration.setAttribute(AddonDevPlugin.DEBUG_PROFILENANE, fprofilename.getText());
+		configuration.setAttribute(PrefConst.DEBUG_PROFILENANE, fprofilename.getText());
 		
 		String value = fprofiledir.getStringValue();
-		configuration.setAttribute(AddonDevPlugin.DEBUG_PROFILEDIR, value);
+		configuration.setAttribute(PrefConst.DEBUG_PROFILEDIR, value);
 		
-		configuration.setAttribute(AddonDevPlugin.DEBUG_ARGS, ffirefoxargs.getText());
+		configuration.setAttribute(PrefConst.DEBUG_ARGS, ffirefoxargs.getText());
 
 		//Map<String, String> excheckedmap = new HashMap<String, String>();
 		List<String> excheckedlist = new ArrayList<String>();

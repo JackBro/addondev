@@ -85,12 +85,12 @@ public class AddonDevPreferencePage extends PreferencePage implements
 	public boolean performOk() {
 		// TODO Auto-generated method stub
 		
-		prefstote.setValue(AddonDevPlugin.DEBUG_ECLIPSEPORT, feclipsePort.getText());
-		prefstote.setValue(AddonDevPlugin.DEBUG_DEBUGGERPORT, fdebuggerPort.getText());
-		prefstote.setValue(AddonDevPlugin.DEFAULT_GUID, fguid.getText());
-		prefstote.setValue(AddonDevPlugin.DEFAULT_VERSION, fguid.getText());
-		prefstote.setValue(AddonDevPlugin.DEFAULT_MINVERSION, fminVersion.getText());
-		prefstote.setValue(AddonDevPlugin.DEFAULT_MAXVERSION, fmaxVersion.getText());
+		prefstote.setValue(PrefConst.ECLIPSE_PORT, feclipsePort.getText());
+		prefstote.setValue(PrefConst.DEBUGGER_PORT, fdebuggerPort.getText());
+		prefstote.setValue(PrefConst.DEFAULT_FIREFOX_ADDON_GUID, fguid.getText());
+		prefstote.setValue(PrefConst.FIREFOX_ADDON_VERSION, fguid.getText());
+		prefstote.setValue(PrefConst.FIREFOX_ADDON_MINVERSION, fminVersion.getText());
+		prefstote.setValue(PrefConst.FIREFOX_ADDON_MAXVERSION, fmaxVersion.getText());
 		
 		return super.performOk();
 	}	
@@ -110,8 +110,8 @@ public class AddonDevPreferencePage extends PreferencePage implements
 //		composite5.setLayout(layout5);
 //		composite5.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
-        addText(group, "&Eclipse Port", feclipsePort, AddonDevPlugin.DEBUG_ECLIPSEPORT, "8083");
-        addText(group, "&Debugger Port", fdebuggerPort, AddonDevPlugin.DEBUG_DEBUGGERPORT, "8084");       
+        addText(group, "&Eclipse Port", feclipsePort, PrefConst.ECLIPSE_PORT);
+        addText(group, "&Debugger Port", fdebuggerPort, PrefConst.DEBUGGER_PORT);       
 	}
 	
 	public void createDefaultPrefControl(Composite parent) {
@@ -123,19 +123,19 @@ public class AddonDevPreferencePage extends PreferencePage implements
         layout.numColumns = 2;
         group.setLayout(layout);
         
-        addText(group, "&ID", fguid, AddonDevPlugin.DEFAULT_GUID, "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}");
-        addText(group, "&Version", fversion, AddonDevPlugin.DEFAULT_VERSION, "0.1.0");    
-        addText(group, "&MinVersion", fminVersion, AddonDevPlugin.DEFAULT_MINVERSION, "3.0");
-        addText(group, "&MaxVersion", fmaxVersion, AddonDevPlugin.DEFAULT_MAXVERSION, "3.5.*");
+        addText(group, "&ID", fguid, PrefConst.FIREFOX_ADDON_GUID);
+        addText(group, "&Version", fversion, PrefConst.FIREFOX_ADDON_VERSION);    
+        addText(group, "&MinVersion", fminVersion, PrefConst.FIREFOX_ADDON_MINVERSION);
+        addText(group, "&MaxVersion", fmaxVersion, PrefConst.FIREFOX_ADDON_MAXVERSION);
 	}
 
-	private void addText(Composite parent, String label, Text text, String ID, String defaultPref) {
+	private void addText(Composite parent, String label, Text text, String ID) {
         Label L = new Label(parent, SWT.NONE);
         L.setText(label);
 
         text = new Text(parent, SWT.SINGLE | SWT.BORDER);
         text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        text.setText(getStoteValue(ID, defaultPref));
+        text.setText(getPreferenceStore().getString(ID));
 	}
 	
 	private String getStoteValue(String ID, String defaultvalue)

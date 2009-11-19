@@ -3,13 +3,13 @@ package jp.addondev.editor.javascript;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.addondev.plugin.AddonDevPlugin;
+import jp.addondev.preferences.PrefConst;
+import jp.addondev.preferences.ResourceManager;
 
 import org.eclipse.jdt.internal.ui.text.JavaWordDetector;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.JFaceColors;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
@@ -48,16 +48,13 @@ public class JavaScriptScanner extends RuleBasedScanner {
 	
 	protected List<IRule> createRules(){
 		
+		ColorRegistry cr = JFaceResources.getColorRegistry();
 		
-		
-		Color backColor = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-		String skeywordColor = AddonDevPlugin.getDefault().getPreferenceStore().getString(AddonDevPlugin.PREF_COLOR_JAVASCRIPT_WORD);
-		JFaceResources.getColorRegistry().put("test", StringConverter.asRGB(skeywordColor));
-		
-		Color keywordColor =  JFaceResources.getColorRegistry().get("test");
-			//Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
-		IToken keywordtoken = new Token(new TextAttribute(keywordColor, backColor, SWT.BOLD));
-		
+		Color backgroundcolor = ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_BACKGROUND);
+		Color keywordcolor =  ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_KEYWORD);
+
+		IToken keywordtoken = new Token(new TextAttribute(keywordcolor, backgroundcolor, SWT.BOLD));
+
 		Color defaultColor = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 		IToken defaulttoken = new Token(new TextAttribute(defaultColor));
 		

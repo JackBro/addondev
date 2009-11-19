@@ -1,6 +1,8 @@
 package jp.addondev.editor.javascript;
 
 import jp.addondev.plugin.AddonDevPlugin;
+import jp.addondev.preferences.PrefConst;
+import jp.addondev.preferences.ResourceManager;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
@@ -22,8 +24,10 @@ import org.eclipse.swt.graphics.RGB;
 public class JavaScriptSourceViewerConfiguration extends
 		SourceViewerConfiguration {
 	private RuleBasedScanner defaultScanner;
+	private RuleBasedScanner fCommentScanner;
 	
-	Token token;
+	private Token fDefaultToken;
+	private Token fCommnetToken;
 	
 	@Override
 	public IPresentationReconciler getPresentationReconciler(
@@ -34,19 +38,23 @@ public class JavaScriptSourceViewerConfiguration extends
 		DefaultDamagerRepairer dr = null;
 		
 		if (defaultScanner == null) {
-			 JFaceResources.getColorRegistry().put("test", new RGB(0, 0, 0));
-			token = new Token(new TextAttribute(JFaceResources.getColorRegistry().get("test")));
+			fDefaultToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_FOREGROUND)));
 			defaultScanner = new JavaScriptScanner(AddonDevPlugin.getDefault().getPreferenceStore());
-			defaultScanner.setDefaultReturnToken(token);
+			defaultScanner.setDefaultReturnToken(fDefaultToken);
 		}
 		
 		dr = new DefaultDamagerRepairer(defaultScanner);
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		
-//		dr = new DefaultDamagerRepairer(getCommentScanner());
-//		reconciler.setDamager(dr, JavaScriptPartitionScanner.JS_COMMENT);
-//		reconciler.setRepairer(dr, JavaScriptPartitionScanner.JS_COMMENT);
+			
+		if (fCommentScanner == null) {
+			fCommnetToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_COMMENT)));
+			fCommentScanner = new RuleBasedScanner();
+			fCommentScanner.setDefaultReturnToken(fCommnetToken);
+		}		
+		dr = new DefaultDamagerRepairer(fCommentScanner);
+		reconciler.setDamager(dr, JavaScriptPartitionScanner.JS_COMMENT);
+		reconciler.setRepairer(dr, JavaScriptPartitionScanner.JS_COMMENT);
 		
 		return reconciler;		
 	}

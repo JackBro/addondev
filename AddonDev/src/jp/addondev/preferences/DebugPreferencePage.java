@@ -40,12 +40,6 @@ public class DebugPreferencePage extends PreferencePage implements
 	protected Control createContents(Composite parent) {
 		// TODO Auto-generated method stub
 		IPreferenceStore stote = getPreferenceStore();
-			
-
-		
-//        Group group = new Group(parent, SWT.FILL);
-//        group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//        group.setText("FireFox");
         
         Composite composite1 = new Composite(parent, SWT.NONE);
         GridLayout layout1 = new GridLayout();
@@ -64,10 +58,10 @@ public class DebugPreferencePage extends PreferencePage implements
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
 		eclipsePort = addText(composite, "&Eclipse Port");
-		eclipsePort.setText(stote.getString(AddonDevPlugin.DEBUG_ECLIPSEPORT));
+		eclipsePort.setText(stote.getString(PrefConst.ECLIPSE_PORT));
 		
 		debuggerPort = addText(composite, "&Debugger Port");
-		debuggerPort.setText(stote.getString(AddonDevPlugin.DEBUG_DEBUGGERPORT));
+		debuggerPort.setText(stote.getString(PrefConst.DEBUGGER_PORT));
 					
 		return parent;	
 	}
@@ -103,8 +97,8 @@ public class DebugPreferencePage extends PreferencePage implements
 	protected void performDefaults() {
 		IPreferenceStore stote = getPreferenceStore();
 		//firefoxPath.setStringValue(stote.getDefaultString(AddonDevPlugin.DEBUG_APP_PATH));			
-		debuggerPort.setText(stote.getDefaultString(AddonDevPlugin.DEBUG_DEBUGGERPORT));	
-		eclipsePort.setText(stote.getString(AddonDevPlugin.DEBUG_ECLIPSEPORT));	
+		debuggerPort.setText(stote.getDefaultString(PrefConst.DEBUGGER_PORT));	
+		eclipsePort.setText(stote.getString(PrefConst.ECLIPSE_PORT));	
 		firebugServerConnectTimeout.setText("20000");
 		super.performDefaults();
 	}
@@ -115,9 +109,9 @@ public class DebugPreferencePage extends PreferencePage implements
 	public boolean performOk() {
 		IPreferenceStore stote = getPreferenceStore();
 		//stote.setValue(AddonDevPlugin.DEBUG_APP_PATH, firefoxPath.getStringValue());		
-		stote.setValue(AddonDevPlugin.DEBUG_DEBUGGERPORT, debuggerPort.getText());
-		stote.setValue(AddonDevPlugin.DEBUG_ECLIPSEPORT, eclipsePort.getText());
-		stote.setValue(AddonDevPlugin.FIREBUG_SERVER_CONEECT_TIMEOUT, firebugServerConnectTimeout.getText());
+		stote.setValue(PrefConst.DEBUGGER_PORT, debuggerPort.getText());
+		stote.setValue(PrefConst.ECLIPSE_PORT, eclipsePort.getText());
+		stote.setValue(PrefConst.DEBUGGER_CONEECT_TIMEOUT, firebugServerConnectTimeout.getText());
 		return true;
 	}
 	
