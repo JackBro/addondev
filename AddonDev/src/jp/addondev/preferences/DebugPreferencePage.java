@@ -1,6 +1,6 @@
 package jp.addondev.preferences;
 
-import jp.addondev.AddonDevPlugin;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;

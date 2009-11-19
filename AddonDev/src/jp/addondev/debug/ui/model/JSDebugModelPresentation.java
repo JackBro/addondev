@@ -2,11 +2,11 @@ package jp.addondev.debug.ui.model;
 
 import java.util.Map;
 
-import jp.addondev.AddonDevPlugin;
 import jp.addondev.debug.core.model.AddonDebugTarget;
 import jp.addondev.debug.core.model.JSLineBreakpoint;
 import jp.addondev.debug.core.model.JSStackFrame;
 import jp.addondev.debug.core.model.JSThread;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;

@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
-import jp.addondev.AddonDevPlugin;
 import jp.addondev.debug.net.SendRequest;
+import jp.addondev.debug.net.SimpleServer;
 import jp.addondev.debug.ui.model.JSDebugModelPresentation;
+import jp.addondev.plugin.AddonDevPlugin;
 import jp.addondev.util.AddonDevUtil;
 import jp.addondev.util.XMLUtils;
 
@@ -101,7 +102,8 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		int eclispport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(AddonDevPlugin.DEBUG_ECLIPSEPORT);
 		SendRequest.debuggerport = AddonDevPlugin.getDefault().getPreferenceStore().getString(AddonDevPlugin.DEBUG_DEBUGGERPORT);
 		
-		AddonDevPlugin.startServer(this, eclispport);
+		//AddonDevPlugin.startServer(this, eclispport);
+		SimpleServer.getInstance().Start(this, eclispport);
 		
 		String[] commandLine = fAddonDevUtil.getProcessCommandLine();
 		Process process = DebugPlugin.exec(commandLine, null);
@@ -259,7 +261,8 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		AddonDevPlugin.stopServer();
+		//AddonDevPlugin.stopServer();
+		SimpleServer.getInstance().Stop();
 		
 		while(!fProcess.isTerminated())
 		{

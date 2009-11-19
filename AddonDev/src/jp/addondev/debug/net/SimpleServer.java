@@ -18,23 +18,51 @@ import com.sun.net.httpserver.HttpServer;
 
 public class SimpleServer {
 
+	private static SimpleServer fInstance = null;
+	private int fPort;
 	private AddonDebugTarget fTarget;
+	
+	public int getPort() {
+		return fPort;
+	}
+
+	public AddonDebugTarget getDebugTarget() {
+		return fTarget;
+	}
+
 	private HttpServer server;
 	public boolean working;
-	//private int port;
 	
-	public SimpleServer(IDebugTarget target, int port) throws Exception
+	private SimpleServer()
 	{
-		fTarget = (AddonDebugTarget) target;
-        server = HttpServer.create(new InetSocketAddress(port), 0);
-        
-        //this.port = port;
-        working = false;
+		 //server = HttpServer.create(new InetSocketAddress(port), 0);
 	}
 	
-	public void Start(IDebugTarget target)
+	public static SimpleServer getInstance()
 	{
-		fTarget = (AddonDebugTarget) target;
+		if(fInstance == null)
+		{
+			fInstance = new SimpleServer();
+		}
+		
+		return fInstance;
+	}
+	
+//	public SimpleServer(IDebugTarget target, int port) throws Exception
+//	{
+//		fTarget = (AddonDebugTarget) target;
+//        server = HttpServer.create(new InetSocketAddress(port), 0);
+//        
+//        //this.port = port;
+//        working = false;
+//	}
+	
+	public void Start(IDebugTarget debugtarget, int port) throws IOException
+	{	
+		fTarget = (AddonDebugTarget) debugtarget;
+		fPort = port;
+		
+		server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new HelloHttpHandler(fTarget));
         server.start();
         working = true;

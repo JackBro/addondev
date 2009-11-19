@@ -3,10 +3,10 @@ package jp.addondev.debug.ui.actions;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.addondev.AddonDevPlugin;
 import jp.addondev.debug.core.model.JSLineBreakpoint;
 import jp.addondev.debug.ui.model.JSDebugModelPresentation;
 import jp.addondev.debug.ui.model.JSToggleBreakpointAdapter;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;

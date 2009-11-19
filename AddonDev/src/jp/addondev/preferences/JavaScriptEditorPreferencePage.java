@@ -1,6 +1,6 @@
 package jp.addondev.preferences;
 
-import jp.addondev.AddonDevPlugin;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;

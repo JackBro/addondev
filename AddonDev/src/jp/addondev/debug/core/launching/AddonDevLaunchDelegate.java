@@ -5,9 +5,9 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import jp.addondev.AddonDevPlugin;
 import jp.addondev.debug.core.model.AddonDebugTarget;
 import jp.addondev.debug.core.model.JSSourceLocator;
+import jp.addondev.plugin.AddonDevPlugin;
 import jp.addondev.util.AddonDevUtil;
 
 import org.eclipse.core.runtime.CoreException;

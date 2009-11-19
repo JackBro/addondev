@@ -1,6 +1,6 @@
 package jp.addondev.wizard;
 
-import jp.addondev.AddonDevPlugin;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;

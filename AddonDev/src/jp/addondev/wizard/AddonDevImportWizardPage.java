@@ -12,7 +12,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import jp.addondev.AddonDevPlugin;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.apache.commons.io.FileSystemUtils;
 import org.apache.commons.io.FileUtils;

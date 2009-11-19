@@ -3,11 +3,11 @@ package jp.addondev.editor.javascript;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.addondev.AddonDevPlugin;
 import jp.addondev.parser.javascript.JsNode;
 import jp.addondev.parser.javascript.Lexer;
 import jp.addondev.parser.javascript.NodeManager;
 import jp.addondev.parser.javascript.Parser;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ProjectScope;
@@ -33,18 +33,6 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.wst.jsdt.core.IJavaScriptProject;
-import org.eclipse.wst.jsdt.core.JavaScriptCore;
-import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
-import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
-import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
-import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaSourceViewer;
-//import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor.EclipsePreferencesAdapter;
-//import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor.EclipsePreferencesAdapter.PreferenceChangeListener;
-import org.eclipse.wst.jsdt.internal.ui.text.PreferencesAdapter;
-import org.eclipse.wst.jsdt.ui.text.IJavaScriptColorConstants;
-import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
-import org.eclipse.wst.jsdt.ui.text.JavaScriptTextTools;
 import org.osgi.service.prefs.BackingStoreException;
 
 public class JavaScriptEditor extends TextEditor {
@@ -52,7 +40,7 @@ public class JavaScriptEditor extends TextEditor {
 	
 	public JavaScriptEditor() {
 		super();
-		// TODO Auto-generated constructor stub
+		// TODO Auto-generated constructor stub		
 		setSourceViewerConfiguration(new JavaScriptSourceViewerConfiguration());
 	}
 

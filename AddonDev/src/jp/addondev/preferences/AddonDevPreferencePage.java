@@ -1,5 +1,5 @@
 package jp.addondev.preferences;
-import jp.addondev.AddonDevPlugin;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -18,6 +18,17 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class AddonDevPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
+//	if (!getPreferenceStore().contains(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND)) {
+//		RGB rgb= getControl().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB();
+//		PreferenceConverter.setDefault(fOverlayStore, AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND, rgb);
+//		PreferenceConverter.setDefault(getPreferenceStore(), AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND, rgb);
+//	}
+//	if (!getPreferenceStore().contains(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)) {
+//		RGB rgb= getControl().getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB();
+//		PreferenceConverter.setDefault(fOverlayStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND, rgb);
+//		PreferenceConverter.setDefault(getPreferenceStore(), AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND, rgb);
+//	}
+	
 
 	private IPreferenceStore prefstote;
 	private Text feclipsePort;

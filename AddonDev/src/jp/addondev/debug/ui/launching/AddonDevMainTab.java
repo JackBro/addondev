@@ -3,7 +3,8 @@ package jp.addondev.debug.ui.launching;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import jp.addondev.AddonDevPlugin;
+
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;

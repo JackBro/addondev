@@ -1,7 +1,7 @@
 package jp.addondev.debug.ui.model;
 
-import jp.addondev.AddonDevPlugin;
 import jp.addondev.debug.core.model.JSLineBreakpoint;
+import jp.addondev.plugin.AddonDevPlugin;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
