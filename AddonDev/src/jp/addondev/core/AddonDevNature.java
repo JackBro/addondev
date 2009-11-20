@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.CoreException;
 public class AddonDevNature implements IProjectNature {
 
 	private IProject project;
-	public static final String ADDONDEV_NATURE_ID = "AddonDev.addondevnature";
 	
 	@Override
 	public void configure() throws CoreException {

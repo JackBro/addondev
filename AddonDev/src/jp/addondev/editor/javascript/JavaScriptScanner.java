@@ -14,6 +14,7 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
+import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
@@ -47,15 +48,13 @@ public class JavaScriptScanner extends RuleBasedScanner {
 	}
 	
 	protected List<IRule> createRules(){
-		
-		ColorRegistry cr = JFaceResources.getColorRegistry();
-		
+				
 		Color backgroundcolor = ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_BACKGROUND);
 		Color keywordcolor =  ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_KEYWORD);
 
 		IToken keywordtoken = new Token(new TextAttribute(keywordcolor, backgroundcolor, SWT.BOLD));
 
-		Color defaultColor = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+		Color defaultColor = ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_FOREGROUND);
 		IToken defaulttoken = new Token(new TextAttribute(defaultColor));
 		
 		List<IRule> rules = new ArrayList<IRule>();
@@ -64,7 +63,12 @@ public class JavaScriptScanner extends RuleBasedScanner {
 			 wordRule.addWord(keyword, keywordtoken); // ワードの追加
 		}
 		rules.add(wordRule);
-	    
+		
+		Color stringcolor  = ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_STRING);
+		IToken stringtoken = new Token(new TextAttribute(stringcolor));
+		rules.add(new SingleLineRule("\"", "\"", stringtoken, '\\'));
+		rules.add(new SingleLineRule("'", "'", stringtoken, '\\'));
+		
 		return rules;
 	}
 }

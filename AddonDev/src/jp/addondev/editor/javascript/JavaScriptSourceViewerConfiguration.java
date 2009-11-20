@@ -30,6 +30,15 @@ public class JavaScriptSourceViewerConfiguration extends
 	private Token fCommnetToken;
 	
 	@Override
+	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+		// TODO Auto-generated method stub
+		//return super.getConfiguredContentTypes(sourceViewer);
+		return new String[] {
+				IDocument.DEFAULT_CONTENT_TYPE,
+				JavaScriptPartitionScanner.JS_COMMENT};
+	}
+
+	@Override
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer) {
 		// TODO Auto-generated method stub

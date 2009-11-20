@@ -2,14 +2,10 @@ package jp.addondev.plugin;
 
 import java.net.URL;
 
-import jp.addondev.debug.net.SimpleServer;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 

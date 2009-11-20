@@ -29,6 +29,7 @@ public class ResourceManager {
 		ColorRegistry cr = JFaceResources.getColorRegistry();
 		if(!cr.hasValueFor(key))
 		{
+			//String tmp = AddonDevPlugin.getDefault().getPreferenceStore().getString(key);
 			cr.put(key, StringConverter.asRGB(AddonDevPlugin.getDefault().getPreferenceStore().getString(key)));
 		}	
 		return cr.get(key);

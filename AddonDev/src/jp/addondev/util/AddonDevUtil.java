@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import jp.addondev.plugin.AddonDevPlugin;
+import jp.addondev.preferences.PrefConst;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -65,7 +66,7 @@ public class AddonDevUtil {
 			debugprojects = getDebugProjects(configuration, root.getProjects());
 			setContentMap(debugprojects);
 			
-			String path =  configuration.getAttribute(AddonDevPlugin.DEBUG_PROFILEDIR, "");
+			String path =  configuration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH, "");
 			checkAddonFile(path, debugprojects);
 			
 			contentMap(debugprojects);
@@ -88,7 +89,7 @@ public class AddonDevUtil {
 	private IProject[] getDebugProjects(ILaunchConfiguration configuration, IProject[] projects) throws CoreException
 	{
 		List<IProject> result= new ArrayList<IProject>();
-		List<String> checkedprojects = configuration.getAttribute(AddonDevPlugin.DEBUG_ADDONS, new ArrayList<String>());
+		List<String> checkedprojects = configuration.getAttribute(PrefConst.FIREFOX_DEBUGTARGETADDONS, new ArrayList<String>());
 		for (int i = 0; i < projects.length; i++) 
 		{
 			if(checkedprojects.contains(projects[i].getName()))
@@ -235,12 +236,12 @@ public class AddonDevUtil {
 	private String[] getCommandLine(ILaunchConfiguration configuration) throws CoreException
 	{
 		
-		int eclispport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(AddonDevPlugin.DEBUG_ECLIPSEPORT);
-		int debuggerport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(AddonDevPlugin.DEBUG_DEBUGGERPORT);	
+		int eclispport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(PrefConst.ECLIPSE_PORT);
+		int debuggerport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(PrefConst.DEBUGGER_PORT);	
 		
-		String firefoxpath = configuration.getAttribute(AddonDevPlugin.DEBUG_APP_PATH, "");
-		String profilename = configuration.getAttribute(AddonDevPlugin.DEBUG_PROFILENANE, "");
-		String firefoxargs = configuration.getAttribute(AddonDevPlugin.DEBUG_ARGS, "");
+		String firefoxpath = configuration.getAttribute(PrefConst.FIREFOX_PATH, "");
+		String profilename = configuration.getAttribute(PrefConst.FIREFOX_PROFILE_NANE, "");
+		String firefoxargs = configuration.getAttribute(PrefConst.FIREFOX_ARGS, "");
 		
 		List<String> commandList = new ArrayList<String>();		
 		commandList.add(firefoxpath);

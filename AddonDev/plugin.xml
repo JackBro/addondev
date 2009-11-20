@@ -5,7 +5,7 @@
          point="org.eclipse.ui.editorActions">
       <editorContribution
             id="jp.addondev.internal.debug.BreakpointRulerActions"
-            targetID="jp.addondev.editor.javascripteditor">
+            targetID="jp.addondev.editor.javascript">
          <action
                actionID="RulerDoubleClick"
                class="jp.addondev.debug.ui.actions.JSManageBreakpointRulerActionDelegate"
@@ -15,7 +15,7 @@
       </editorContribution>
       <editorContribution
             id="jp.addondev.internal.debug.ui.actions.BreakpointRulerActions"
-            targetID="jp.addondev.editor.javascripteditor">
+            targetID="jp.addondev.editor.javascript">
          <action
                actionID="RulerDoubleClick"
                class="jp.addondev.debug.ui.actions.JSManageBreakpointRulerActionDelegate"
@@ -96,39 +96,6 @@
             </enablement>
          </contextualLaunch>
       </shortcut>
-      <shortcut
-            class="jp.addondev.debug.ui.launching.LaunchShortcut"
-            id="jp.javascript.debug.ui.launchShortcut.greasemonkey"
-            label="Greasemonkey"
-            modes="debug">
-         <perspective
-               id="org.eclipse.debug.ui.DebugPerspective">
-         </perspective>
-         <configurationType
-               id="jp.addondev.debug.core.launchConfigurationType.greasemonkey"></configurationType>
-         <contextualLaunch>
-            <enablement>
-               <with
-                     variable="selection">
-                  <count
-                        value="1">
-                  </count>
-                  <iterate>
-                     <or>
-                        <test
-                              property="org.eclipse.debug.ui.matchesPattern"
-                              value="*.js">
-                        </test>
-                        <test
-                              property="org.eclipse.debug.ui.matchesPattern"
-                              value="*.xul">
-                        </test>
-                     </or>
-                  </iterate>
-               </with>
-            </enablement>
-         </contextualLaunch>
-      </shortcut>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -163,7 +130,7 @@
             class="jp.addondev.editor.javascript.JavaScriptEditor"
             default="false"
             extensions="js"
-            id="jp.addondev.editor.javascripteditor"
+            id="jp.addondev.editor.javascript"
             name="AddonDev JavaScript Editor">
       </editor>
       <editor

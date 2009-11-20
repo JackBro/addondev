@@ -1,6 +1,7 @@
 package jp.addondev.wizard;
 
 import jp.addondev.plugin.AddonDevPlugin;
+import jp.addondev.preferences.PrefConst;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -58,11 +59,11 @@ public class AddonDevInstallerfWizardPage extends WizardPage {
 		
 		//fid = addText(composite, "ID", projectname + "@dev.org");
         fid = addText(composite, "ID");
-      	fversion = addText(composite, "version", getPreference(AddonDevPlugin.getDefault().DEFAULT_VERSION));
+      	fversion = addText(composite, "version", getPreference(PrefConst.DEFAULT_FIREFOX_ADDON_VERSION));
       	
-      	ftargetApplicationid = addText(composite, "targetApplication ID", getPreference(AddonDevPlugin.getDefault().DEFAULT_GUID));
-      	fminVersion = addText(composite, "minVersion", getPreference(AddonDevPlugin.getDefault().DEFAULT_MINVERSION));
-      	fmaxVersion = addText(composite, "maxVersion", getPreference(AddonDevPlugin.getDefault().DEFAULT_MAXVERSION));
+      	ftargetApplicationid = addText(composite, "targetApplication ID", getPreference(PrefConst.DEFAULT_FIREFOX_ADDON_GUID));
+      	fminVersion = addText(composite, "minVersion", getPreference(PrefConst.DEFAULT_FIREFOX_ADDON_MINVERSION));
+      	fmaxVersion = addText(composite, "maxVersion", getPreference(PrefConst.DEFAULT_FIREFOX_ADDON_MAXVERSION));
       	
       	//fname = addText(composite, "name", projectname);
       	//fname = addText(composite, "name");
