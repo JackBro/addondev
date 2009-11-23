@@ -130,6 +130,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		
 		if((eclipseport && eclipseport > 0) && (chromeport && chromeport > 0))
 		{
+			
 			Application.console.log("startServer0");
 			//this.server = new this.net.server(chromeport); 
 			if(this.net.server.isWorking) 
@@ -140,7 +141,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			Firebug.Debugger.fbs.filterSystemURLs = false;
 			Firebug.filterSystemURLs = false;
 			
-			//alert("startServer");
+			alert("startServer");
 			Application.console.log("startServer");
 			//ecclient.port = eclipseport;
 			this.server = this.net.server;
@@ -370,6 +371,12 @@ ChromeDebuggerPanel.prototype = extend(Firebug.Panel,
 
 Firebug.registerModule(Firebug.chromebug_eclipseModle); 
 Firebug.registerPanel(ChromeDebuggerPanel); 
+window.addEventListener("load", function(e) { 
+	 
+	}, false);
+window.addEventListener("unload", function(e) { 
+	alert("unload");
+	}, false);
 }});
 
 
