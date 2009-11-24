@@ -64,6 +64,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	},	
     shutdown: function()
     {
+		//alert("shutdown");
     	//alert("shutdown");
 		//this.server.stop();
 		server.stop();
@@ -113,8 +114,6 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     
 	startServer : function()
 	{
-		
-		
 		//var ss = new HttpServer(3644);
 		//HttpServer.start(8083);
 		
@@ -141,9 +140,9 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			Firebug.Debugger.fbs.filterSystemURLs = false;
 			Firebug.filterSystemURLs = false;
 			
-			alert("startServer");
+			//alert("startServer");
 			Application.console.log("startServer");
-			//ecclient.port = eclipseport;
+			ecclient.port = eclipseport;
 			this.server = this.net.server;
 			this.server.init(chromeport);
 			//this.server.port = chromeport;//Firebug.getPref(Firebug.prefDomain, "FireJavaScriptDebugger.port");
@@ -184,7 +183,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
         Application.console.log("ce onStop postdata = " + postdata);
         
         var eclipseport = Application.storage.get('ce_eport', -1);
-        ecclient.send(eclipseport, "suspend", postdata);
+        ecclient.send("suspend", postdata);
     	//this.net.client.send("suspend", postdata);
     },
     
@@ -315,7 +314,8 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 });
 
 var ecclient = {
-	send:function(port, command, data)
+	port:null,
+	send:function(command, data)
 	{
 		try
 		{
@@ -371,12 +371,31 @@ ChromeDebuggerPanel.prototype = extend(Firebug.Panel,
 
 Firebug.registerModule(Firebug.chromebug_eclipseModle); 
 Firebug.registerPanel(ChromeDebuggerPanel); 
-window.addEventListener("load", function(e) { 
+
+window.addEventListener('load', function() { 
 	 
-	}, false);
-window.addEventListener("unload", function(e) { 
-	alert("unload");
-	}, false);
+}, false);
+
+window.addEventListener('unload', function() {
+	//alert("unload");
+	window.removeEventListener('unload', arguments.callee, false);
+	// windowtype="chromebug:ui"
+	const WindowManager = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator);
+	var targets = WindowManager.getEnumerator('navigator:browser');
+	var chromebugui = WindowManager.getMostRecentWindow('chromebug:ui');
+	if (targets.hasMoreElements() && !chromebugui) {
+		//window.close();
+		Application.quit();
+		//targets.close();
+		//ecclient.send("windowstate", "<xml><window=\"main\" value=\"open\"><window=\"chromebug\" value=\"close\"></xml>");
+	}
+	else if(!targets.hasMoreElements() && chromebugui)
+	{
+		ecclient.send("closebrowser");
+	}
+
+}, false);
+
 }});
 
 

@@ -63,6 +63,8 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	// terminated state
 	private boolean fTerminated = false;
 	
+	private boolean fCloseBrowser = true;
+	
 	// threads
 	private JSThread fThread;
 	private IThread[] fThreads;
@@ -77,6 +79,15 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	private ArrayList<IBreakpoint> fRemoveBreakpointList = new ArrayList<IBreakpoint>();
 	
 	
+	
+	public boolean isCloseBrowser() {
+		return fCloseBrowser;
+	}
+
+	public void setCloseBrowser(boolean closeBrowser) {
+		this.fCloseBrowser = closeBrowser;
+	}
+
 	public AddonDebugTarget(ILaunchConfiguration configuration, ILaunch launch, AddonDevUtil addondevutil) throws Exception {
 		// TODO Auto-generated constructor stub
 		fLaunch = launch;		
@@ -168,6 +179,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.fCloseBrowser = false;
 	}
 	
 	public void restart() throws Exception
@@ -246,17 +258,26 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	@Override
 	public boolean canTerminate() {
 		// TODO Auto-generated method stub
-		return fProcess.canTerminate();
+		if(this.fCloseBrowser)
+			return fProcess.canTerminate();
+		else
+			return true;
 	}
 
 	@Override
 	public boolean isTerminated() {
 		// TODO Auto-generated method stub
-		return fProcess.isTerminated();
+		if(this.fCloseBrowser)
+			return fProcess.isTerminated();
+		else
+			return false;
 	}
 
 	@Override
 	public void terminate() {
+		if(this.fCloseBrowser)
+		{
+			
 		// TODO Auto-generated method stub
 		try {
 			SendRequest.terminate();
@@ -279,6 +300,18 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		}
 		
 		fThread.fireTerminateEvent();
+		
+		}
+		else
+		{
+			try {
+				SendRequest.closeBrowser();
+				fThread.fireTerminateEvent();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package jp.addondev.debug.net;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -150,6 +148,10 @@ public class SimpleServer {
                 	else if(cmd.equals("ready"))
                 	{
                 		fTarget.startDebug();
+                	}
+                	else if("closebrowser".equals(cmd))
+                	{
+                		fTarget.setCloseBrowser(true);
                 	}
                 	else if(cmd.equals("error"))
                 	{

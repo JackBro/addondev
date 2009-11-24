@@ -54,6 +54,11 @@ public class SendRequest {
 		return RequestData("terminate");
 	}
 	
+	public static String closeBrowser() throws IOException
+	{
+		return RequestData("closebrowser");
+	}
+	
 	public static void open(String args) throws IOException
 	{
 		//String encStr = URLEncoder.encode("file://" + filename , "UTF-8");
