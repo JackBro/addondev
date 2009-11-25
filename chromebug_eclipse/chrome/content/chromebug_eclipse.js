@@ -153,7 +153,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			try
 			{
 				//alert("ready");
-				ecclient.send(eclipseport, "ready");
+				ecclient.send("ready");
 			}catch(ex)
 			{
 				Application.console.log("client error : " + ex);
@@ -319,7 +319,7 @@ var ecclient = {
 	{
 		try
 		{
-			var url = "http://localhost:" + port+ "/?cmd=" + command;
+			var url = "http://localhost:" + this.port+ "/?cmd=" + command;
 			
 			//var url = "http://localhost:8084/?cmd=" + command;
 	        var request = new XMLHttpRequest();
