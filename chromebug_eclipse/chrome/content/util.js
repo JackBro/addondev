@@ -77,7 +77,6 @@ Firebug.chromebug_eclipse.util = {
 	},
 	
 	getLocalsXML : function(frame){
-		//LOG("getLocalsXML frame = " + frame);
      	//var localsxml = this.Stringformat("<file name=\"{0}\" function=\"{1}\" line=\"{2}\"/>", encodeURIComponent(frame.script.fileName), frame.script.functionName, frame.line);
     	var localsxml = "";
     	var name = "";
@@ -167,17 +166,22 @@ Firebug.chromebug_eclipse.util = {
 					return this.getvalues(prop.value.getWrappedValue(), names, level+1);
 					//return this.getvalues(prop.value, names, level+1);
 				}
-			}	
+			}      
 		}
 		else
 		{
-			var insecureObject = parent;
-			for (var name in insecureObject)
+//			if (parent.wrappedJSObject)
+//            	var insecureObject = parent.wrappedJSObject;
+//        	else
+//            	var insecureObject = parent;
+            
+			//var insecureObject = parent;
+			for (var name in parent)
 			{		
 				if(names[level] == name)
 				{
 					//alert("2names[level] == name : " + names[level] + " == " + name);
-					return this.getvalues(insecureObject[name], names,  level+1);
+					return this.getvalues(parent[name], names,  level+1);
 				}
 			}
 		}
@@ -213,8 +217,7 @@ Firebug.chromebug_eclipse.util = {
   				//for(key in members)
   				//{
   				//	Application.console.log("###members key = " + key + " : " + members[key]);
-  				//}
-  				  			
+  				//}  			
 	  		}
 	  		else
 	  		{
@@ -222,24 +225,42 @@ Firebug.chromebug_eclipse.util = {
 	  		}
 	        //alert("getValuesXML values = " + values);
 	       
-	        for (var name in values) 
-	        {
-	        	//alert("getValuesXML values name= " + name);
-	        	var value;
-	        	try{
-	        		value = values[name];
-	        	}
-		        catch (exc)
-		        {
-		        	//alert("Error " + exc + " name = " + name);
-		        }
-	        	if(value)
-	        	{
-	            	var valueType = typeof(value);
-	            	var hasCh = this.hasChildren(value);
-	        		valuesxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", name, valueType, encodeURIComponent(value), hasCh);
-	        	}
-	        }
+			if (values.wrappedJSObject)
+            	var insecureObject = values.wrappedJSObject;
+        	else
+            	var insecureObject = values;
+            	
+            for (var name in insecureObject)
+            {
+            	if (this.ignoreVars[name] == 1)
+            		continue;
+            	
+            	var value;
+            	try
+            	{
+            		value = insecureObject[name];
+            		//Application.console.log("getvaluesXML name = " + name + " : value = " + value );
+            		
+            	}
+            	catch (exc)
+            	{
+            		//Application.console.log("getvaluesXML exp name = " + name + " : " + exc);
+            	}
+            	
+            	try
+            	{
+            	if(value != undefined)
+            	{
+ 	            var valueType = typeof(value);
+	            var hasCh = this.hasChildren(value);
+	        	valuesxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", name, valueType, encodeURIComponent(value), hasCh); 
+            	}
+            	}catch (exc2)
+            	{
+            		Application.console.log("getvaluesXML exp2 name = " + name + " : " + exc2);
+            	}
+            }
+            
 	        return "<xml> " + valuesxml + " </xml>"; 	
 		}
 	},
@@ -248,8 +269,7 @@ Firebug.chromebug_eclipse.util = {
 		var stackframesxml = "";
 		 //for (var stackframe in this.currentStackTrace.frames) 
 		for(var i=0; i<this.currentStackTrace.frames.length; i++)
-		 {
-		 	
+		 {	
 		 	var stackframe = this.currentStackTrace.frames[i];
 		 	var path = this.getFilePathFromURL(stackframe.href);
 		 	if(path == null) continue;
