@@ -175,6 +175,9 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     	//FBL.fbs.clearBreakpoint(href, line);
     	//FBL.fbs.disableBreakpoint(href, line);
     	//Application.console.log("frame.script.functionName = " + frame.script.functionName);
+    	//Application.console.log("onStop frame.href = " +frame.href);
+    	//if(frame.href.indexOf('file:/')==0)
+    	//{
     	Application.console.log("frame.args = " +frame.args);
     	Firebug.chromebug_eclipse.util.currnetFrame = frame;
     	Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);
@@ -182,8 +185,9 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
         
         Application.console.log("ce onStop postdata = " + postdata);
         
-        var eclipseport = Application.storage.get('ce_eport', -1);
+        //var eclipseport = Application.storage.get('ce_eport', -1);
         ecclient.send("suspend", postdata);
+    	//}
     	//this.net.client.send("suspend", postdata);
     },
     

@@ -271,12 +271,13 @@ Firebug.chromebug_eclipse.util = {
 		for(var i=0; i<this.currentStackTrace.frames.length; i++)
 		 {	
 		 	var stackframe = this.currentStackTrace.frames[i];
+		 	Application.console.log("getStackFramesXML stackframe.href = " + stackframe.href);
 		 	var path = this.getFilePathFromURL(stackframe.href);
 		 	if(path == null) continue;
 		 	
 		 	Application.console.log("stackframe.script.functionName = " + stackframe.script.functionName);
 		 	var fn = FBL.getFunctionName(stackframe.script, stackframe.context, stackframe);
-		 	 stackframesxml += this.Stringformat("<stackframe depth=\"{0}\" filename=\"{1}\" functionname=\"{2}\" line=\"{3}\" />", i, encodeURIComponent(path), fn, stackframe.lineNo);
+		 	stackframesxml += this.Stringformat("<stackframe depth=\"{0}\" filename=\"{1}\" functionname=\"{2}\" line=\"{3}\" />", i, encodeURIComponent(path), fn, stackframe.lineNo);
 		 }
 		 return "<xml> " + stackframesxml + " </xml>";	 
 	},
@@ -335,19 +336,20 @@ Firebug.chromebug_eclipse.util = {
     	
     		if (aURI.indexOf('chrome://') == 0) 
     		{
-    			var uri =
-    		        Components.classes["@mozilla.org/network/standard-url;1"]
-    		            .createInstance(Components.interfaces.nsIURI);
-    		    
-    		    uri.spec = aURI;
-
+//    			var uri =
+//    		        Components.classes["@mozilla.org/network/standard-url;1"]
+//    		            .createInstance(Components.interfaces.nsIURI);
+//    		    uri.spec = aURI;
+				var uri = Components.classes["@mozilla.org/network/io-service;1"]
+					.getService(Components.interfaces.nsIIOService)
+					.newURI(aURI, null, null);
     			var ChromeRegistry = Cc["@mozilla.org/chrome/chrome-registry;1"].getService(Ci.nsIChromeRegistry);
     			//aURI = ChromeRegistry.convertChromeURL(IOService.newURI(aURI, null, null));
     			aURI = ChromeRegistry.convertChromeURL(uri).spec;
-    			//Application.console.log("aURI = " + aURI);
+    			Application.console.log("convertChromeURL aURI = " + aURI);
     		}
     	
-    		//if (aURI.indexOf('file://') != 0) return null;
+    		if (aURI.indexOf('file://') != 0) return null;
     	
     		//var file = Components.classes["@mozilla.org/file/local;1"]
     		//                              .createInstance(Components.interfaces.nsILocalFile);
@@ -360,7 +362,7 @@ Firebug.chromebug_eclipse.util = {
     		return fileHandler.getFileFromURLSpec(aURI).path; //error
     	
     	}catch(e){
-    		Application.console.log("getFilePathFromURL error = " + e);
+    		Application.console.log("getFilePathFromURL aURI = " + aURI + " error = " + e);
     	}
     	return null;
     }
