@@ -83,7 +83,7 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
 				target.startPrcess(configuration, launch);
 				
 				launch.addDebugTarget(target);
-				launch.setSourceLocator(new JSSourceLocator());
+				//launch.setSourceLocator(new JSSourceLocator());
 
 				
 			} catch (Exception e) {

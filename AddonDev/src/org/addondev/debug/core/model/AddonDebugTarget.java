@@ -499,6 +499,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	 * @see org.eclipse.debug.core.model.IDebugElement#getLaunch()
 	 */
 	public ILaunch getLaunch() {
+		
 		return fLaunch;
 	}
 	

@@ -42,6 +42,11 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 		this.line = Integer.parseInt(line);
 	}
 	
+	public String getFileFullPath()
+	{
+		return fFileName;
+	}
+	
 	@Override
 	public int getCharEnd() throws DebugException {
 		// TODO Auto-generated method stub

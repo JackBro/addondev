@@ -2,6 +2,8 @@ package org.addondev.plugin;
 
 import java.net.URL;
 
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -57,6 +59,10 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	
 	public Image getImage(String key) {
 		return getImageRegistry().get(key);
+	}
+	
+	public static IWorkspace getWorkspace() {
+		return ResourcesPlugin.getWorkspace();
 	}
 	
 //	public static void startServer(IDebugTarget target, int port) throws Exception

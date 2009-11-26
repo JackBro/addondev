@@ -37,6 +37,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 public class JavaScriptEditor extends TextEditor {
 	
+	public static final String ID = "org.addondev.editor.javascript";
 	
 	public JavaScriptEditor() {
 		super();

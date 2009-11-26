@@ -30,7 +30,9 @@ public class JSSourceLocator implements ISourceLocator, ISourcePresentation {
 		String path = ((JSStackFrame)element).getSourceName();
 		//String path ="D:/data/src/PDE/eclipsePDE/runtime-EclipseApplication/webtest/WebContent/index.html";
 		String id = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(path).getId();
-		return id;
+		//return id;
+		
+		return "org.addondev.editor.javascript";
 		//return PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor((String) element).getId();
 		//return "org.eclipse.wst.jsdt.ui.CompilationUnitEditor";
 		//return "org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor";

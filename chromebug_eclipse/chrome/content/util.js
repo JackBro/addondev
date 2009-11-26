@@ -357,7 +357,7 @@ Firebug.chromebug_eclipse.util = {
     		var fileHandler = IOService.getProtocolHandler('file')
     							.QueryInterface(Ci.nsIFileProtocolHandler);
     				
-    		return fileHandler.getFileFromURLSpec(aURI).path;
+    		return fileHandler.getFileFromURLSpec(aURI).path; //error
     	
     	}catch(e){
     		Application.console.log("getFilePathFromURL error = " + e);

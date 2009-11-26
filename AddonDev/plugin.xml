@@ -30,8 +30,8 @@
             modes="run, debug"
             name="AddonDev"
             public="true"
-            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
-            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+            sourceLocatorId="org.addondev.debug.core.addondevsourcelocatorcator"
+            sourcePathComputerId="org.addondev.debug.core.addondevsourcepathcomputer">
       </launchConfigurationType>
    </extension>
    <extension
@@ -254,6 +254,21 @@
                menubarPath="debug">
          </action>
       </viewerContribution>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourcePathComputers">
+      <sourcePathComputer
+            class="org.addondev.debug.core.AddonDevSourcePathComputerDelegate"
+            id="org.addondev.debug.core.addondevsourcepathcomputer">
+      </sourcePathComputer>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourceLocators">
+      <sourceLocator
+            class="org.addondev.debug.core.AddonDevPersistableSourceLocator"
+          	id="org.addondev.debug.core.addondevsourcelocatorcator"
+            name="name">
+      </sourceLocator>
    </extension>
 
 </plugin>
