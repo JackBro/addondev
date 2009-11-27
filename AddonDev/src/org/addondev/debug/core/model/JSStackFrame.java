@@ -1,9 +1,13 @@
 package org.addondev.debug.core.model;
 
+import java.io.IOException;
+
+import org.addondev.debug.net.SendRequest;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -132,13 +136,28 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 	@Override
 	public void stepInto() throws DebugException {
 		// TODO Auto-generated method stub
-		getThread().stepInto();
+		//getThread().stepInto();
+		target.resumed(DebugEvent.STEP_INTO);
+		try {
+			SendRequest.stepInto();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void stepOver() throws DebugException {
 		// TODO Auto-generated method stub
-		getThread().stepOver();
+		//getThread().stepOver();
+		target.resumed(DebugEvent.STEP_OVER);
+		try {
+			SendRequest.stepOver();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override

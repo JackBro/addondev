@@ -267,7 +267,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	}
 
 	@Override
-	public boolean isTerminated() {
+	public synchronized boolean isTerminated() {
 		// TODO Auto-generated method stub
 		if(this.fCloseBrowser)
 			return fProcess.isTerminated();
@@ -319,17 +319,24 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	@Override
 	public boolean canResume() {
 		// TODO Auto-generated method stub
-		return !isTerminated() && isSuspended();
+		//return !isTerminated() && isSuspended();
+		if (isTerminated())
+			return false;
+		return !isSuspended();
 	}
 
 	@Override
 	public boolean canSuspend() {
 		// TODO Auto-generated method stub
-		return !isTerminated() && !isSuspended();
+		//return !isTerminated() && !isSuspended();
+		
+		if (isTerminated())
+			return false;
+		return !isSuspended();
 	}
 
 	@Override
-	public boolean isSuspended() {
+	public synchronized boolean isSuspended() {
 		// TODO Auto-generated method stub
 		return fSuspended;
 	}
@@ -338,23 +345,23 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	public void resume() throws DebugException {
 		// TODO Auto-generated method stub
 		
-		fBreakpointList.removeAll(fRemoveBreakpointList);
-		String xml = getBreakPoint(fBreakpointList);
-		try {
-			SendRequest.setBreakPoint(xml);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		String removexml = getBreakPoint(fBreakpointList);
-		try {
-			SendRequest.removeBreakPoint(removexml);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+//		fBreakpointList.removeAll(fRemoveBreakpointList);
+//		String xml = getBreakPoint(fBreakpointList);
+//		try {
+//			SendRequest.setBreakPoint(xml);
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		
+//		String removexml = getBreakPoint(fBreakpointList);
+//		try {
+//			SendRequest.removeBreakPoint(removexml);
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		fSuspended = false;
 		try {
 			SendRequest.resume();
 			resumed(DebugEvent.RESUME);
@@ -370,10 +377,12 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	}
 	
 	@Override
-	public void suspend() throws DebugException {
+	public synchronized void suspend() throws DebugException {
 		// TODO Auto-generated method stub
 		int i=0;
 		i++;
+		fSuspended = true;
+		suspended(DebugEvent.BREAKPOINT);
 	}
 
 	
@@ -522,6 +531,8 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		fSuspended = true;
 		fThread.fireSuspendEvent(detail);
 		//fireEvent(new DebugEvent(fThread, DebugEvent.SUSPEND, detail));
+		//DebugEvent ev = new DebugEvent (fThread, DebugEvent.SUSPEND, DebugEvent.BREAKPOINT);
+		//DebugPlugin.getDefault ().fireDebugEventSet (new DebugEvent[] { ev });
 	}	
 	
 	private void installDeferredBreakpoints() {
@@ -539,13 +550,26 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	}
 	
 	protected void stepOver() throws DebugException {
-		try {
-			SendRequest.stepOver();
-			resumed(DebugEvent.STEP_OVER);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				
+//		try {
+//			
+//			SendRequest.stepOver();
+//			resumed(DebugEvent.STEP_OVER);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		int i=0;
+//		i++;
+		
+		//resumed(DebugEvent.STEP_OVER);
+		for (IThread thread : fThreads) {
+			fSuspended = false;
+			//thread.fireResumeEvent(DebugEvent.STEP_OVER);
+			thread.stepOver();
 		}
+		//fThread.stepOver();
+		
 	}
 	
 	protected void stepInto() throws DebugException {
@@ -566,6 +590,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	 */
 	public void breakpointHit(String event, String data) {
 		fstateChange = true;
+		childVariablesDataCash.clear();
 		
 		JSStackFrame[] stackframes = null;
 		try {
@@ -574,12 +599,21 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		
-		childVariablesDataCash.clear();
+	
+//		try {
+//			Thread.sleep(200);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		//IStackFrame[] theFrames = new JSStackFrame[]{new JSStackFrame(fThread, JSTestData.TESTDATA, 0, this)};
+		synchronized(stackframes)
+		{
 		fThread.SetStackFrames(stackframes);
+		}
 		suspended(DebugEvent.BREAKPOINT);
+		
 	}
 
 	

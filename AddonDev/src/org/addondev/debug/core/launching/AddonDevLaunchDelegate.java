@@ -7,7 +7,6 @@ import javax.xml.transform.TransformerException;
 
 
 import org.addondev.debug.core.model.AddonDebugTarget;
-import org.addondev.debug.core.model.JSSourceLocator;
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.util.AddonDevUtil;
 import org.eclipse.core.runtime.CoreException;

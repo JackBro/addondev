@@ -109,6 +109,7 @@ public class SimpleServer {
             	data += new String(buff);
             }
             in.close();
+
             //out.close();
             
 //             DataInputStream dis = new DataInputStream(exchange.getRequestBody());
@@ -125,6 +126,7 @@ public class SimpleServer {
             
         	//data += new String(buf);
         	//System.out.println(data);
+            //exchange.close();
             StringBuilder sb = new StringBuilder();
             sb.append("<html></html>");
 
@@ -133,8 +135,8 @@ public class SimpleServer {
             OutputStream output = exchange.getResponseBody();
             output.write(response);
             output.close();
+            //exchange.close();
             
-
             if(query !=null)
             {
             	String[] params = query.split("&");
@@ -160,6 +162,8 @@ public class SimpleServer {
                 	}
             	}
             }
+            
+
         }           
     }
 }

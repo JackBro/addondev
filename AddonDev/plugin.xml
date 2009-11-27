@@ -54,7 +54,7 @@
       <shortcut
             class="org.addondev.debug.ui.launching.LaunchShortcut"
             icon="icons/addon.png"
-            id="jp.javascript.debug.ui.launchShortcut.js"
+            id="orgaddondev.debug.ui.addondevlaunchshortcut"
             label="Addon Run"
             modes="run, debug">
          <perspective

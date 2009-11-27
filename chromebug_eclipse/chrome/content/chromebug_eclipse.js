@@ -178,6 +178,11 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     	//Application.console.log("onStop frame.href = " +frame.href);
     	//if(frame.href.indexOf('file:/')==0)
     	//{
+		for(var key in context.sourceCache.cache)
+		{
+		//	Application.console.log("sourceCache key = " + key);
+		}
+		Application.console.log("context.sourceCache.cache = " + context.sourceCache.cache['chrome://browser/content/browser.xul/event/seq/61']);
     	Application.console.log("frame.args = " +frame.args);
     	Firebug.chromebug_eclipse.util.currnetFrame = frame;
     	Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);
@@ -352,7 +357,7 @@ var ecclient = {
 		}
 		catch(exc)
 		{
-			//LOG("send error = " + exc);
+			Application.console.log("send error = " + exc);
 		}
 	}
 };

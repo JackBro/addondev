@@ -272,8 +272,17 @@ Firebug.chromebug_eclipse.util = {
 		 {	
 		 	var stackframe = this.currentStackTrace.frames[i];
 		 	Application.console.log("getStackFramesXML stackframe.href = " + stackframe.href);
+		 	Application.console.log("getStackFramesXML stackframe.lineNo = " + stackframe.lineNo);
+		 	Application.console.log("getStackFramesXML stackframe");
+		 	Application.console.log("getStackFramesXML !path Firebug.SourceCache = " + Firebug.SourceCache);
 		 	var path = this.getFilePathFromURL(stackframe.href);
-		 	if(path == null) continue;
+		 	if(path == null) 
+		 		{
+		 		
+		 		 var response = FBL.Firebug.SourceCache.cache[stackframe.href];
+
+		 		 continue;
+		 		}
 		 	
 		 	Application.console.log("stackframe.script.functionName = " + stackframe.script.functionName);
 		 	var fn = FBL.getFunctionName(stackframe.script, stackframe.context, stackframe);

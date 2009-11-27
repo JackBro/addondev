@@ -138,13 +138,16 @@ public class JSThread extends PlatformObject implements IThread {
 	@Override
 	public void stepInto() throws DebugException {
 		// TODO Auto-generated method stub
-		((AddonDebugTarget)getDebugTarget()).stepInto();
+		//((AddonDebugTarget)getDebugTarget()).stepInto();
+		stack[0].stepInto();
 	}
 
 	@Override
 	public void stepOver() throws DebugException {
 		// TODO Auto-generated method stub
-		((AddonDebugTarget)getDebugTarget()).stepOver();
+		//((AddonDebugTarget)getDebugTarget()).stepOver();
+		fireResumeEvent(DebugEvent.STEP_OVER);
+		stack[0].stepOver();
 	}
 
 	@Override
