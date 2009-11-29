@@ -73,6 +73,18 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
  
     resetBreakpoints: function(sourceFile, lastLineNumber)
     {
+    	//Application.console.log("resetBreakpoints sourceFile.href = " + sourceFile.href);
+    	
+//    	if(sourceFile.href.indexOf("browser/content/browser.xul/event/seq/") > 0)
+//    	{
+//    		var val2 = sourceFile.outerScript;
+//    		val2 = sourceFile;
+//	 		for(var key in val2)
+//			{
+//				Application.console.log("sourceFile key = " + key + " : "+ val2[key]);
+//			}   		
+//    	}
+    	
     	if(sourceFile.href in Firebug.chromebug_eclipse.util.sourceFileMap)
     	{
     		
@@ -178,11 +190,12 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     	//Application.console.log("onStop frame.href = " +frame.href);
     	//if(frame.href.indexOf('file:/')==0)
     	//{
-		for(var key in context.sourceCache.cache)
-		{
-		//	Application.console.log("sourceCache key = " + key);
-		}
-		Application.console.log("context.sourceCache.cache = " + context.sourceCache.cache['chrome://browser/content/browser.xul/event/seq/61']);
+//		for(var key in context.sourceCache.cache)
+//		{
+//			Application.console.log("sourceCache key = " + key);
+//		}
+    	var ckey = 'jar:file:///D:/program/firefox35/chrome/browser.jar!/content/browser/browser.xul';
+		//Application.console.log("context.sourceCache.cache ckey = " + context.sourceCache.cache[ckey]);
     	Application.console.log("frame.args = " +frame.args);
     	Firebug.chromebug_eclipse.util.currnetFrame = frame;
     	Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);

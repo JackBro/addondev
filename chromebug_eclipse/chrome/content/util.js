@@ -271,20 +271,31 @@ Firebug.chromebug_eclipse.util = {
 		for(var i=0; i<this.currentStackTrace.frames.length; i++)
 		 {	
 		 	var stackframe = this.currentStackTrace.frames[i];
+//		 	for(var key in stackframe)
+//		 	{
+//		 		if(key == 'script')
+//		 		{
+//		 			var con = stackframe[key];
+//		 			for(var key2 in con)
+//		 			{
+//		 				Application.console.log("getStackFramesXML key2 = " + key2 + " : " + con[key2]);
+//		 			}
+//		 		}
+//		 	}
 		 	Application.console.log("getStackFramesXML stackframe.href = " + stackframe.href);
-		 	Application.console.log("getStackFramesXML stackframe.lineNo = " + stackframe.lineNo);
-		 	Application.console.log("getStackFramesXML stackframe");
-		 	Application.console.log("getStackFramesXML !path Firebug.SourceCache = " + Firebug.SourceCache);
+		 	//Application.console.log("getStackFramesXML stackframe.lineNo = " + stackframe.lineNo);
+		 	//Application.console.log("getStackFramesXML stackframe");
+		 	//Application.console.log("getStackFramesXML !path Firebug.SourceCache = " + Firebug.SourceCache);
 		 	var path = this.getFilePathFromURL(stackframe.href);
 		 	if(path == null) 
 		 		{
 		 		
-		 		 var response = FBL.Firebug.SourceCache.cache[stackframe.href];
+		 		 //var response = FBL.Firebug.SourceCache.cache[stackframe.href];
 
 		 		 continue;
 		 		}
 		 	
-		 	Application.console.log("stackframe.script.functionName = " + stackframe.script.functionName);
+		 	//Application.console.log("stackframe.script.functionName = " + stackframe.script.functionName);
 		 	var fn = FBL.getFunctionName(stackframe.script, stackframe.context, stackframe);
 		 	stackframesxml += this.Stringformat("<stackframe depth=\"{0}\" filename=\"{1}\" functionname=\"{2}\" line=\"{3}\" />", i, encodeURIComponent(path), fn, stackframe.lineNo);
 		 }

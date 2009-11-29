@@ -1,0 +1,88 @@
+context.sourceCache.cache = undefined
+ ----------
+frame.args = undefined
+ ----------
+script xul
+getStackFramesXML key2 = fileName : chrome://browser/content/browser.xul
+ ----------
+getStackFramesXML key2 = functionName : onmousedown
+ ----------
+getStackFramesXML key2 = baseLineNumber : 1
+ ----------
+getStackFramesXML key2 = tag : 13057
+ ----------
+getStackFramesXML key2 = setBreakpoint : function setBreakpoint() {
+    [native code]
+}
+ ----------
+getStackFramesXML key2 = clearBreakpoint : function clearBreakpoint() {
+    [native code]
+}
+ ----------
+getStackFramesXML key2 = functionSource :     function onmousedown(event) {
+        stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6.stackpanel.onClickStatusbarIcon(event);
+    }
+ ----------
+getStackFramesXML key2 = pcToLine : function pcToLine() {
+    [native code]
+}
+ ----------
+getStackFramesXML key2 = functionObject : [xpconnect wrapped jsdIValue]
+ ----------
+getStackFramesXML key2 = flags : 0
+ ----------
+getStackFramesXML key2 = QueryInterface : function QueryInterface() {
+    [native code]
+}
+ ----------
+getStackFramesXML key2 = isValid : true
+ ----------
+getStackFramesXML key2 = version : 0
+ ----------
+getStackFramesXML key2 = lineExtent : 1
+ ----------
+getStackFramesXML key2 = callCount : 0
+ ----------
+getStackFramesXML key2 = maxRecurseDepth : 0
+ ----------
+getStackFramesXML key2 = minExecutionTime : 0
+ ----------
+getStackFramesXML key2 = maxExecutionTime : 0
+ ----------
+getStackFramesXML key2 = totalExecutionTime : 0
+ ----------
+getStackFramesXML key2 = minOwnExecutionTime : 0
+ ----------
+getStackFramesXML key2 = maxOwnExecutionTime : 0
+ ----------
+getStackFramesXML key2 = totalOwnExecutionTime : 0
+ ----------
+getStackFramesXML key2 = clearProfileData : function clearProfileData() {
+    [native code]
+}
+ ----------
+getStackFramesXML key2 = lineToPc : function lineToPc() {
+    [native code]
+}
+ ----------
+getStackFramesXML key2 = isLineExecutable : function isLineExecutable() {
+    [native code]
+}
+ ----------
+getStackFramesXML key2 = clearAllBreakpoints : function clearAllBreakpoints() {
+    [native code]
+}
+ ----------
+getStackFramesXML key2 = FLAG_PROFILE : 1
+ ----------
+getStackFramesXML key2 = FLAG_DEBUG : 2
+ ----------
+getStackFramesXML key2 = PCMAP_SOURCETEXT : 1
+ ----------
+getStackFramesXML key2 = PCMAP_PRETTYPRINT : 2
+ ----------
+convertChromeURL aURI = jar:file:///D:/program/firefox35/chrome/browser.jar!/content/browser/browser.xul/event/seq/81
+ ----------
+ce onStop postdata = <xml>  </xml>
+ ----------
+send error = [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIXMLHttpRequest.send]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: chrome://chromebug/content/chromebug.xul -> chrome://chromebug_eclipse/content/chromebug_eclipse.js :: anonymous :: line 353"  data: no]
