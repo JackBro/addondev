@@ -24,31 +24,51 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 	private JSThread fThread;
 	private String fName;
 	private int fPC;
+	private String fURL;
 	private String fFileName;
 	private IPath path;
 	private int line;
+	private String fFn;
 	private String fdepth;
 	private IVariable[] fVariables;
 	private AddonDebugTarget target;
 	
-	public JSStackFrame(JSThread thread, AddonDebugTarget target, String depth, String filename, String functionname, String line) {
+	public JSStackFrame(JSThread thread, 
+			AddonDebugTarget target, 
+			String depth, 
+			String url, 
+			String filename, 
+			String functionname, 
+			String line,
+			String fn) {
 		// TODO Auto-generated constructor stub
 		this.target = target;
 		fThread = thread;
-		
 		fdepth = depth;
+		fURL = url;
 		fFileName = filename;
 		fName = functionname;
 		fPC = Integer.parseInt(line);
+		fFn = fn;
 		fVariables = null;
 		
 		path = new Path(filename);
 		this.line = Integer.parseInt(line);
 	}
 	
+	public String getURL()
+	{
+		return fURL;
+	}
+	
 	public String getFileFullPath()
 	{
 		return fFileName;
+	}
+	
+	public String getFn()
+	{
+		return fFn;
 	}
 	
 	@Override

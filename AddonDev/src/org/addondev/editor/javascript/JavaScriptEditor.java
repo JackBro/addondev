@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.addondev.debug.core.SeqEditorInput;
 import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.NodeManager;
@@ -46,14 +47,21 @@ public class JavaScriptEditor extends TextEditor {
 	}
 
 	protected void doSetInput(IEditorInput input) throws CoreException {
+		
+		//super.doSetInput(input);
+		
 		if(input instanceof IFileEditorInput){
 			setDocumentProvider(new JavaScriptDocumentProvider());
+			//super.doSetInput(input);
 		} else if(input instanceof IStorageEditorInput){
 			setDocumentProvider(new JavaScriptDocumentProvider());
-		} else {
+		} else if(input instanceof SeqEditorInput){
+			//setDocumentProvider(new JavaScriptDocumentProvider());
 			setDocumentProvider(new JavaScriptDocumentProvider());
+			//getDocumentProvider().getDocument(null).set("test");
 		}
 		super.doSetInput(input);
+		
 	}
 
 	@Override

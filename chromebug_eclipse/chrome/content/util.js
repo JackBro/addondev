@@ -271,8 +271,9 @@ Firebug.chromebug_eclipse.util = {
 		for(var i=0; i<this.currentStackTrace.frames.length; i++)
 		 {	
 		 	var stackframe = this.currentStackTrace.frames[i];
-//		 	for(var key in stackframe)
-//		 	{
+		 	for(var key in stackframe)
+		 	{
+		 		Application.console.log("getStackFramesXML key = " + key + " : " + stackframe[key]);
 //		 		if(key == 'script')
 //		 		{
 //		 			var con = stackframe[key];
@@ -281,23 +282,30 @@ Firebug.chromebug_eclipse.util = {
 //		 				Application.console.log("getStackFramesXML key2 = " + key2 + " : " + con[key2]);
 //		 			}
 //		 		}
-//		 	}
+		 	}
 		 	Application.console.log("getStackFramesXML stackframe.href = " + stackframe.href);
 		 	//Application.console.log("getStackFramesXML stackframe.lineNo = " + stackframe.lineNo);
 		 	//Application.console.log("getStackFramesXML stackframe");
 		 	//Application.console.log("getStackFramesXML !path Firebug.SourceCache = " + Firebug.SourceCache);
 		 	var path = this.getFilePathFromURL(stackframe.href);
 		 	if(path == null) 
-		 		{
-		 		
-		 		 //var response = FBL.Firebug.SourceCache.cache[stackframe.href];
-
-		 		 continue;
-		 		}
-		 	
+		 	{
+		 		continue;
+		 	}
+		 	var fn = stackframe.fn;
+		 	if(fn == undefined)
+		 	{
+		 		fn = "";
+		 	}
 		 	//Application.console.log("stackframe.script.functionName = " + stackframe.script.functionName);
-		 	var fn = FBL.getFunctionName(stackframe.script, stackframe.context, stackframe);
-		 	stackframesxml += this.Stringformat("<stackframe depth=\"{0}\" filename=\"{1}\" functionname=\"{2}\" line=\"{3}\" />", i, encodeURIComponent(path), fn, stackframe.lineNo);
+		 	var functionname = FBL.getFunctionName(stackframe.script, stackframe.context, stackframe);
+		 	stackframesxml += this.Stringformat("<stackframe depth=\"{0}\" url=\"{1}\" filename=\"{2}\" functionname=\"{3}\" line=\"{4}\" fn=\"{5}\" />", 
+		 			i, 
+		 			encodeURIComponent(stackframe.href), 
+		 			encodeURIComponent(path), 
+		 			functionname, 
+		 			stackframe.lineNo,
+		 			encodeURIComponent(fn));
 		 }
 		 return "<xml> " + stackframesxml + " </xml>";	 
 	},
@@ -351,7 +359,9 @@ Firebug.chromebug_eclipse.util = {
     
     getFilePathFromURL : function(aURI) 
     {
-    	try {		
+    	try {	
+    		var chromeurl;
+    		
     		if (!aURI) aURI = '';
     	
     		if (aURI.indexOf('chrome://') == 0) 
@@ -365,11 +375,14 @@ Firebug.chromebug_eclipse.util = {
 					.newURI(aURI, null, null);
     			var ChromeRegistry = Cc["@mozilla.org/chrome/chrome-registry;1"].getService(Ci.nsIChromeRegistry);
     			//aURI = ChromeRegistry.convertChromeURL(IOService.newURI(aURI, null, null));
-    			aURI = ChromeRegistry.convertChromeURL(uri).spec;
-    			Application.console.log("convertChromeURL aURI = " + aURI);
+    			chromeurl = ChromeRegistry.convertChromeURL(uri).spec;
+    			Application.console.log("convertChromeURL chromeurl = " + chromeurl);
     		}
     	
-    		if (aURI.indexOf('file://') != 0) return null;
+    		if (chromeurl.indexOf('file://') != 0) 
+    		{
+    			return chromeurl;
+    		}
     	
     		//var file = Components.classes["@mozilla.org/file/local;1"]
     		//                              .createInstance(Components.interfaces.nsILocalFile);
@@ -379,7 +392,7 @@ Firebug.chromebug_eclipse.util = {
     		var fileHandler = IOService.getProtocolHandler('file')
     							.QueryInterface(Ci.nsIFileProtocolHandler);
     				
-    		return fileHandler.getFileFromURLSpec(aURI).path; //error
+    		return fileHandler.getFileFromURLSpec(chromeurl).path; //error
     	
     	}catch(e){
     		Application.console.log("getFilePathFromURL aURI = " + aURI + " error = " + e);

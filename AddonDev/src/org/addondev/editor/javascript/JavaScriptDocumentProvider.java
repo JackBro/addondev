@@ -1,5 +1,6 @@
 package org.addondev.editor.javascript;
 
+import org.addondev.debug.core.SeqEditorInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
@@ -21,6 +22,24 @@ public class JavaScriptDocumentProvider extends FileDocumentProvider {
 						});
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
+		}
+		else
+		{
+			if(element instanceof SeqEditorInput)
+			{
+				SeqEditorInput seqinput = (SeqEditorInput)element;
+				
+				document = super.createEmptyDocument();
+				document.set(seqinput.getFn());
+				IDocumentPartitioner partitioner =
+					new FastPartitioner(
+						new JavaScriptPartitionScanner(),
+						new String[] {
+							JavaScriptPartitionScanner.JS_COMMENT
+							});
+				partitioner.connect(document);
+				document.setDocumentPartitioner(partitioner);
+			}
 		}
 		return document;
 	}

@@ -41,8 +41,9 @@ public class AddonDevPersistableSourceLocator implements
 	public Object getSourceElement(IStackFrame stackFrame) {
 		// TODO Auto-generated method stub
 		//return null;
-		String filefullpath = ((JSStackFrame)stackFrame).getFileFullPath();
-		return filefullpath;
+		//String filefullpath = ((JSStackFrame)stackFrame).getFileFullPath();
+		//return filefullpath;
+		return stackFrame;
 	}
 
 	@Override
@@ -56,7 +57,9 @@ public class AddonDevPersistableSourceLocator implements
 	public IEditorInput getEditorInput(Object element) {
 		// TODO Auto-generated method stub
 		//return null;
-		String filefullpath = (String)element;
+		JSStackFrame frame = (JSStackFrame)element;
+		
+		String filefullpath = frame.getFileFullPath();
 		IWorkspaceRoot root = AddonDevPlugin.getWorkspace().getRoot();
 		IPath path = new Path(filefullpath);
 		//IPath path = new Path(filefullpath);
@@ -72,7 +75,7 @@ public class AddonDevPersistableSourceLocator implements
 		}
 		else
 		{
-			return null;
+			return new SeqEditorInput(filefullpath, frame.getURL(), frame.getFn());
 		}
 	}
 

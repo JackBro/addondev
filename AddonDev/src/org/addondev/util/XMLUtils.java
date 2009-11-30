@@ -25,6 +25,7 @@ import org.addondev.debug.core.model.JSThread;
 import org.addondev.debug.core.model.JSVariable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
@@ -63,9 +64,11 @@ public class XMLUtils {
 		public void startElement(String uri, String localName, String qName, Attributes attributes){			
 			if (qName.equals("stackframe")) {
 				String depth = attributes.getValue("depth");
+				String url = attributes.getValue("url");
                 String filename = attributes.getValue("filename");
 				String functionname = attributes.getValue("functionname");
                 String line = attributes.getValue("line");
+                String fn = attributes.getValue("fn");
                 try {
 					thread = (JSThread) target.getThreads()[0];
 				} catch (DebugException e1) {
@@ -73,26 +76,30 @@ public class XMLUtils {
 					e1.printStackTrace();
 				}
                 try {
-                    if (filename != null){
+                    if (url != null && filename != null){
                     	//file:/D:/data/src/PDE/eclipsePDE/runtime-EclipseApplication/webtest/WebContent/index.html
                         //name = URLDecoder.decode(name, "UTF-8");
                     	//filename = ResourcePathUtil.getLocalFormUrl(URLDecoder.decode(filename, "UTF-8"));
                         //name = name.substring(6);
                     	//filename = target.URLDecode(filename);
                     	//URLEncoder.encode(arg0)
-                    	//if(target.)
-                    	String filepath = URLDecoder.decode(filename, "UTF-8");
-                    	File file = new File(filepath);
-                    	if(file.exists())
-                    	{
+                    	
+                    	String deURL = URLDecoder.decode(url, "UTF-8");
+                    	String defn = null;
+                    	if(fn.length() > 0)
+                    		defn = URLDecoder.decode(fn, "UTF-8");
+                    	//String filepath = URLDecoder.decode(filename, "UTF-8");
+                    	//File file = new File(filepath);
+                    	//if(file.exists())
+                    	//{
 	                    	filename = URLDecoder.decode(filename, "UTF-8");
-	                    	IPath ipath = target.getAddonDevUtil().getPath(filepath);
+	                    	IPath ipath = new Path(filename);
 	                    	filename = ipath.toOSString();
 	                    	
-	                    	JSStackFrame frame = new JSStackFrame(thread, target, depth, filename, functionname, line);
+	                    	JSStackFrame frame = new JSStackFrame(thread, target, depth, deURL, filename, functionname, line, defn);
 	                    	
 	                    	stacks.add(frame);
-                    	}
+                    	//}
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
