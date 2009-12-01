@@ -5,6 +5,7 @@ import java.util.List;
 
 
 import org.addondev.debug.core.SeqEditorInput;
+import org.addondev.debug.core.SeqStorageEditorInput;
 import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.NodeManager;
@@ -60,8 +61,11 @@ public class JavaScriptEditor extends TextEditor {
 			setDocumentProvider(new JavaScriptDocumentProvider());
 			//getDocumentProvider().getDocument(null).set("test");
 		}
+		else if(input instanceof SeqStorageEditorInput)
+		{
+			setDocumentProvider(new JavaScriptDocumentProvider());
+		}
 		super.doSetInput(input);
-		
 	}
 
 	@Override

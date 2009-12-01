@@ -1,5 +1,8 @@
 package org.addondev.debug.core;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.addondev.debug.core.model.JSStackFrame;
 import org.addondev.editor.javascript.JavaScriptEditor;
 import org.addondev.plugin.AddonDevPlugin;
@@ -11,12 +14,15 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IPersistableSourceLocator;
 import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.debug.core.sourcelookup.containers.LocalFileStorage;
 import org.eclipse.debug.ui.ISourcePresentation;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
 public class AddonDevPersistableSourceLocator implements
 		IPersistableSourceLocator, ISourcePresentation {
+	
+	private File dir;
 
 	@Override
 	public String getMemento() throws CoreException {
@@ -28,7 +34,12 @@ public class AddonDevPersistableSourceLocator implements
 	public void initializeDefaults(ILaunchConfiguration configuration)
 			throws CoreException {
 		// TODO Auto-generated method stub
-
+		IPath path = AddonDevPlugin.getWorkspace().getRoot().getLocation();
+		dir = path.append("tmp").toFile();
+		if(!dir.exists())
+		{
+			dir.mkdir();
+		}
 	}
 
 	@Override
@@ -75,7 +86,24 @@ public class AddonDevPersistableSourceLocator implements
 		}
 		else
 		{
-			return new SeqEditorInput(filefullpath, frame.getURL(), frame.getFn());
+//			//fLaunchConfiguration.
+			SeqEditorInput f = new SeqEditorInput(dir, filefullpath, frame.getURL(), frame.getFn());
+			try {
+				f.createFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//IPath tmppath = new Path(dir.getAbsolutePath()).append(f.getName());
+			//IFile tmpfile = root.getFileForLocation(tmppath);
+			File ff = new File(dir, f.getName());
+//			return new FileEditorInput(tmpfile);
+//			//return new SeqEditorInput(filefullpath, frame.getURL(), frame.getFn());
+			
+			LocalFileStorage lfile = new LocalFileStorage(ff);
+			//filePath = ((LocalFileStorage) element).getFullPath();
+			return new SeqStorageEditorInput(lfile);
+
 		}
 	}
 

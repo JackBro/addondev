@@ -30,6 +30,7 @@ public class JavaScriptDocumentProvider extends FileDocumentProvider {
 				SeqEditorInput seqinput = (SeqEditorInput)element;
 				
 				document = super.createEmptyDocument();
+				//document = super.createDocument(element);
 				document.set(seqinput.getFn());
 				IDocumentPartitioner partitioner =
 					new FastPartitioner(

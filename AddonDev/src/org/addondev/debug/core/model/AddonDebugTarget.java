@@ -34,6 +34,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchListener;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILineBreakpoint;
 import org.eclipse.debug.core.model.IMemoryBlock;
@@ -844,6 +845,9 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	                ){
 	            return  super.getAdapter(adapter);
 	        }
+//	        else if (adapter == IDebugElement.class) {
+//				return this;
+//			}
 	        
 	        //AdapterDebug.printDontKnow(this, adapter);
 	        return super.getAdapter(adapter);      

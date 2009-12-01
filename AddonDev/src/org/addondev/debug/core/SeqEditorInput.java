@@ -1,7 +1,10 @@
 package org.addondev.debug.core;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -11,7 +14,7 @@ public class SeqEditorInput implements IEditorInput {
 	private String filepath;
 	private String url;
 	private String fn;
-	
+	private File dir;
 	private String filename;
 	
 	public String getFilepath() {
@@ -26,13 +29,21 @@ public class SeqEditorInput implements IEditorInput {
 		return fn;
 	}
 
-	public SeqEditorInput(String filepath, String url, String fn) {
+	public SeqEditorInput(File dir, String filepath, String url, String fn) {
 		super();
 		this.filepath = filepath;
 		this.url = url;
 		this.fn = fn;
+		this.dir = dir;
 		
 		filename = new File(this.filepath).getName();
+	}
+	
+	public void createFile() throws IOException
+	{
+		File f = new File(dir, filename);
+		
+		FileUtils.writeStringToFile(f, fn);		
 	}
 
 	@Override

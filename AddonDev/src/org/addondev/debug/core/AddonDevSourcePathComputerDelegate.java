@@ -32,5 +32,4 @@ public class AddonDevSourcePathComputerDelegate implements
 		
 		return containers.toArray(new ISourceContainer[containers.size()]);
 	}
-
 }
