@@ -6,23 +6,20 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 {
 	initialize: function() 
 	{
-		//alert("initialize");
 		//Application.console.log("chromebug_eclipseModle initialize");
-		/*
-		var cbe_resetBreakpoints = FBL.fbs.resetBreakpoints;	
-		FBL.fbs.resetBreakpoints = function(sourceFile, lastLineNumber)
-		{		
-			chromebug_eclipseModle.resetBreakpoints(sourceFile, lastLineNumber);
-			cbe_resetBreakpoints(sourceFile, lastLineNumber);
-		}
-		Firebug.Debugger.addListener(this); 
-		*/
-
+		
+//		var cbe_resetBreakpoints = FBL.fbs.resetBreakpoints;	
+//		FBL.fbs.resetBreakpoints = function(sourceFile, lastLineNumber)
+//		{		
+//			Firebug.chromebug_eclipseModle.resetBreakpoints.resetBreakpoints(sourceFile, lastLineNumber);
+//			firebug_resetBreakpoints(sourceFile, lastLineNumber);
+//		}
+//		Firebug.Debugger.addListener(this); 
 		
 		var firebug_resetBreakpoints =  Firebug.Debugger.fbs.resetBreakpoints;
+		//Application.console.log("firebug_resetBreakpoints = " + firebug_resetBreakpoints);
 		Firebug.Debugger.fbs.resetBreakpoints = function(sourceFile, lastLineNumber)
 		{
-			//
 			Firebug.chromebug_eclipseModle.resetBreakpoints(sourceFile, lastLineNumber);
 			firebug_resetBreakpoints(sourceFile, lastLineNumber);
 		}
@@ -33,30 +30,19 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		
 		if(Firebug.Chromebug)
 		{
-		var sss = Firebug.Chromebug.onStop;
-		
-		Firebug.Chromebug.onStop = function(context, frame, type, rv)
-		{
-			//alert("wakiyama");
+			var sss = Firebug.Chromebug.onStop;
 			
-			sss(context, frame, type, rv);
-		}
+			Firebug.Chromebug.onStop = function(context, frame, type, rv)
+			{
+				sss(context, frame, type, rv);
+			}
 		}
 		this.net = {};
 		this.util = {};
 		Components.utils.import("resource://ec_modules/net.js", this.net);
 		Components.utils.import("resource://ec_modules/xmlutil.js", this.util);
 		
-		//var h = new nsHttpServer();
-		//h.start(8083);
-		//for(key in FBL)
-		//{
-		//	Application.console.log("FBL key = " + key + " : " + FBL[key]);
-		//}
-		
 		this.startServer();
-		
-	
 	},
 	initializeUI: function()
 	{
@@ -74,7 +60,6 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     resetBreakpoints: function(sourceFile, lastLineNumber)
     {
     	//Application.console.log("resetBreakpoints sourceFile.href = " + sourceFile.href);
-    	
 //    	if(sourceFile.href.indexOf("browser/content/browser.xul/event/seq/") > 0)
 //    	{
 //    		var val2 = sourceFile.outerScript;
@@ -149,8 +134,18 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			
 			this.net.server.isWorking= true;
 			
-			Firebug.Debugger.fbs.filterSystemURLs = false;
-			Firebug.filterSystemURLs = false;
+			//extensions.firebug.service.filterSystemURLs;true
+			//Firebug.Debugger.fbs.filterSystemURLs = false;
+			//Firebug.filterSystemURLs = false;
+			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
+			if(filterSystemURLs)
+				Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
+			
+			//extensions.firebug.service.showAllSourceFiles;false
+			//Firebug.Debugger.fbs.showAllSourceFiles = true;
+			//Firebug.showAllSourceFiles = true;
+			//Firebug.filterSystemURLs = true;
+			//Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);
 			
 			//alert("startServer");
 			Application.console.log("startServer");
@@ -194,7 +189,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 //		{
 //			Application.console.log("sourceCache key = " + key);
 //		}
-    	var ckey = 'jar:file:///D:/program/firefox35/chrome/browser.jar!/content/browser/browser.xul';
+    	//var ckey = 'jar:file:///D:/program/firefox35/chrome/browser.jar!/content/browser/browser.xul';
 		//Application.console.log("context.sourceCache.cache ckey = " + context.sourceCache.cache[ckey]);
     	//Application.console.log("frame.args = " +frame.args);
     	Firebug.chromebug_eclipse.util.currnetFrame = frame;
@@ -233,7 +228,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  var cmd = params.cmd;
 	  var result;
 	  var file, line;
-	  Application.console.log("cmd = " + cmd);
+	  //Application.console.log("cmd = " + cmd);
 	  switch(cmd) 
 	  {
 	  	case "setbreakpoint":
@@ -244,7 +239,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  		{
 	  			file = decodeURIComponent(result[i]["filename"]);
 	  			line = parseInt(result[i]["line"]);
-	  			Application.console.log("setbreakpoint file=" + file + " : " + "line = "+ line);
+	  			//Application.console.log("setbreakpoint file=" + file + " : " + "line = "+ line);
 		  		if(file in Firebug.chromebug_eclipse.util.sourceFileMap)
 		  		{
 		  			var s = Firebug.chromebug_eclipse.util.sourceFileMap[file];
@@ -394,9 +389,9 @@ ChromeDebuggerPanel.prototype = extend(Firebug.Panel,
 Firebug.registerModule(Firebug.chromebug_eclipseModle); 
 Firebug.registerPanel(ChromeDebuggerPanel); 
 
-window.addEventListener('load', function() { 
-	 
-}, false);
+//window.addEventListener('load', function() { 
+//	 
+//}, false);
 
 window.addEventListener('unload', function() {
 	//alert("unload");
