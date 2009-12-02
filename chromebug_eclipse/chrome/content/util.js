@@ -143,8 +143,8 @@ Firebug.chromebug_eclipse.util = {
 		var listValue = {value: null}, lengthValue = {value: 0};
 		if(level == 0)
 		{
-			Application.console.log("getvalues parent = " + parent);
-			Application.console.log("getvalues level = " + level);
+			//Application.console.log("getvalues parent = " + parent);
+			//Application.console.log("getvalues level = " + level);
 			parent.getProperties(listValue, lengthValue);
 			var props = [], funcs = [];
 			//alert("getvalues lengthValue.value = " + lengthValue.value +" level = " +  level);
@@ -154,8 +154,8 @@ Firebug.chromebug_eclipse.util = {
 				var prop = listValue.value[i];
 				var name = prop.name.getWrappedValue();
 				
-				Application.console.log("getvalues prop = " + prop);
-				Application.console.log("getvalues name = " + name);
+				//Application.console.log("getvalues prop = " + prop);
+				//Application.console.log("getvalues name = " + name);
 				
 				if (this.ignoreVars[name] == 1)
 				    continue;
@@ -271,19 +271,19 @@ Firebug.chromebug_eclipse.util = {
 		for(var i=0; i<this.currentStackTrace.frames.length; i++)
 		 {	
 		 	var stackframe = this.currentStackTrace.frames[i];
-		 	for(var key in stackframe)
-		 	{
-		 		Application.console.log("getStackFramesXML key = " + key + " : " + stackframe[key]);
-//		 		if(key == 'script')
-//		 		{
-//		 			var con = stackframe[key];
-//		 			for(var key2 in con)
-//		 			{
-//		 				Application.console.log("getStackFramesXML key2 = " + key2 + " : " + con[key2]);
-//		 			}
-//		 		}
-		 	}
-		 	Application.console.log("getStackFramesXML stackframe.href = " + stackframe.href);
+//		 	for(var key in stackframe)
+//		 	{
+//		 		Application.console.log("getStackFramesXML key = " + key + " : " + stackframe[key]);
+////		 		if(key == 'script')
+////		 		{
+////		 			var con = stackframe[key];
+////		 			for(var key2 in con)
+////		 			{
+////		 				Application.console.log("getStackFramesXML key2 = " + key2 + " : " + con[key2]);
+////		 			}
+////		 		}
+//		 	}
+		 	//Application.console.log("getStackFramesXML stackframe.href = " + stackframe.href);
 		 	//Application.console.log("getStackFramesXML stackframe.lineNo = " + stackframe.lineNo);
 		 	//Application.console.log("getStackFramesXML stackframe");
 		 	//Application.console.log("getStackFramesXML !path Firebug.SourceCache = " + Firebug.SourceCache);
@@ -366,6 +366,16 @@ Firebug.chromebug_eclipse.util = {
     	
     		if (aURI.indexOf('chrome://') == 0) 
     		{
+    			//chrome://chromebug/content/chromebug.xul -> chrome://chromebug_eclipse/content/chromebug_eclipse.js
+    			if(aURI.indexOf(' -> ') == 0)
+    			{
+    				var index = aURI.indexOf('chrome://', 1);
+    				if(index > 0)
+    				{
+    					aURI = aURI.slice(index);
+    					Application.console.log("convertChromeURL chromeurl -> url = " + aURI);
+    				}
+    			}
 //    			var uri =
 //    		        Components.classes["@mozilla.org/network/standard-url;1"]
 //    		            .createInstance(Components.interfaces.nsIURI);
@@ -376,7 +386,7 @@ Firebug.chromebug_eclipse.util = {
     			var ChromeRegistry = Cc["@mozilla.org/chrome/chrome-registry;1"].getService(Ci.nsIChromeRegistry);
     			//aURI = ChromeRegistry.convertChromeURL(IOService.newURI(aURI, null, null));
     			chromeurl = ChromeRegistry.convertChromeURL(uri).spec;
-    			Application.console.log("convertChromeURL chromeurl = " + chromeurl);
+    			//Application.console.log("convertChromeURL chromeurl = " + chromeurl);
     		}
     	
     		if (chromeurl.indexOf('file://') != 0) 
@@ -404,7 +414,7 @@ Firebug.chromebug_eclipse.util = {
 function getMembers(object, names, level)
 {
 	var members = {};
-	Application.console.log("getMembers");
+	//Application.console.log("getMembers");
     if (object.wrappedJSObject)
         var insecureObject = object.wrappedJSObject;
     else
@@ -423,7 +433,7 @@ function getMembers(object, names, level)
             val = insecureObject[name];  // getter is safe
             members[name] = val;
             //var hasChildren();
-            Application.console.log("getMembers name = " + name +" : " + val);
+            //Application.console.log("getMembers name = " + name +" : " + val);
             
             if(names[level] == name)
             	return getMembers(val, names, level+1);

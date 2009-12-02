@@ -102,7 +102,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     	
     	if(sourceFile.href in Firebug.chromebug_eclipse.util.breakpointMap)
     	{	
-    		Application.console.log("resetBreakpoints sourceFile.href in breakpointMap = " + sourceFile.href);
+    		//Application.console.log("resetBreakpoints sourceFile.href in breakpointMap = " + sourceFile.href);
     		for(line in Firebug.chromebug_eclipse.util.breakpointMap[sourceFile.href])
     		{
     			Application.console.log("resetBreakpoints sourceFile.href = " + sourceFile.href);
@@ -142,7 +142,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		if((eclipseport && eclipseport > 0) && (chromeport && chromeport > 0))
 		{
 			
-			Application.console.log("startServer0");
+			//Application.console.log("startServer0");
 			//this.server = new this.net.server(chromeport); 
 			if(this.net.server.isWorking) 
 				return;
@@ -196,12 +196,12 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 //		}
     	var ckey = 'jar:file:///D:/program/firefox35/chrome/browser.jar!/content/browser/browser.xul';
 		//Application.console.log("context.sourceCache.cache ckey = " + context.sourceCache.cache[ckey]);
-    	Application.console.log("frame.args = " +frame.args);
+    	//Application.console.log("frame.args = " +frame.args);
     	Firebug.chromebug_eclipse.util.currnetFrame = frame;
     	Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);
         var postdata = Firebug.chromebug_eclipse.util.getStackFramesXML();
         
-        Application.console.log("ce onStop postdata = " + postdata);
+        //Application.console.log("ce onStop postdata = " + postdata);
         
         //var eclipseport = Application.storage.get('ce_eport', -1);
         ecclient.send("suspend", postdata);
@@ -212,7 +212,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	pathHandler:function(queryString, postdata) 
 	{
 
-    	Application.console.log("queryString = " + queryString);
+    	//Application.console.log("queryString = " + queryString);
 	  var params={};
 	  if (queryString) {
 		  var qs = queryString;
@@ -297,19 +297,19 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  		Firebug.Debugger.stepOut(FirebugContext);
 	  		break;
 	  	case "getvalues": 
-	  		Application.console.log("getvalues postdata = " + postdata);
+	  		//Application.console.log("getvalues postdata = " + postdata);
 	  		//alert("getvalues postdata = " + postdata);
 	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
-	  		Application.console.log("getvalues result.length = " + result.length);
+	  		//Application.console.log("getvalues result.length = " + result.length);
 	  		if(result.length ==1)
 	  		{
 	  			var depth = parseInt(result[0]["depth"]);
 	  			var valuename = result[0]["valuename"];
 	  			var frame = Firebug.chromebug_eclipse.util.currnetFrame;
 	  			
-	  			Application.console.log("getvalues depth = " + depth);
-	  			Application.console.log("getvalues valuename = " + valuename);
-	  			Application.console.log("getvalues frame = " + frame);
+	  			//Application.console.log("getvalues depth = " + depth);
+	  			//Application.console.log("getvalues valuename = " + valuename);
+	  			//Application.console.log("getvalues frame = " + frame);
 	  			//if(valuename == 'this') depth++;
 	  			
 		  		for (let i = 0; i<depth; i++)
@@ -317,7 +317,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		  			frame = frame.callingFrame;
 		  		}
 		  		body = Firebug.chromebug_eclipse.util.getValuesXML(frame, valuename);	
-		  		Application.console.log("getvalues body = " + body);
+		  		//Application.console.log("getvalues body = " + body);
 	  		}
 	  		else
 	  		{

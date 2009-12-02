@@ -41,7 +41,7 @@ server = {
  	},
   
  	onSocketAccepted: function(aServer, aTransport){
-  		Application.console.log("server onSocketAccepted");
+  		//Application.console.log("server onSocketAccepted");
     	new HttpServerListener(aServer, aTransport);
  	},
 
@@ -107,7 +107,7 @@ HttpServerListener.prototype = {
     var availableData = this._bInputStream.readBytes(aCount);
 
     this._data += availableData;
-     Application.console.log("server _data : " + this._data);
+     //Application.console.log("server _data : " + this._data);
 		var datas = this._data.split("\r\n\r\n");
 		
 		var header = datas[0];
@@ -115,13 +115,13 @@ HttpServerListener.prototype = {
 		var headers =header.split("\r\n");
 		var methods = headers[0].split(/\s/);
 		
-		Application.console.log("onDataAvailable  methods[1] : " + methods[1]);
+		//Application.console.log("onDataAvailable  methods[1] : " + methods[1]);
 		
 		var queryStrings = methods[1].match(/^(\/\?)(.*)/);
 		var queryString;
 		if(queryStrings) queryString = queryStrings[2];
 		
-		Application.console.log("onDataAvailable queryStrings : " +queryStrings);
+		//Application.console.log("onDataAvailable queryStrings : " +queryStrings);
 		
 		if(methods[0] == "POST")
 		{
@@ -129,14 +129,14 @@ HttpServerListener.prototype = {
 			//var responseBody ;
 			if(this._data.match("(<\/xml>)$")){
 				let responseBody = server.pathHandler(queryString, postdata);
-				 Application.console.log("server post data : " + methods[1] + " : " + postdata);
+				//Application.console.log("server post data : " + methods[1] + " : " + postdata);
 				this.sendResponse(responseBody);
 			}
 		}
 		else
 		{
 			let responseBody = server.pathHandler(queryString, postdata);
-			Application.console.log("server get : " + methods[1]);
+			//Application.console.log("server get : " + methods[1]);
 			this.sendResponse(responseBody);
 		}
     }

@@ -394,21 +394,36 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		// TODO Auto-generated method stub
 		//if (breakpoint.getModelIdentifier().equals("org.eclipse.debug.core.breakpointMarker")){ //IJSConstants.ID_JS_DEBUG_MODEL)) {
 		//if (breakpoint.getModelIdentifier().equals(IJSConstants.ID_JS_DEBUG_MODEL)) {
-		 if (fSuspended && breakpoint instanceof AddonDevLineBreakpoint ) {
+		if(!(breakpoint instanceof AddonDevLineBreakpoint)) return;
+		
+		if (fSuspended) {
 			try {
 				if (breakpoint.isEnabled()) {
 					if(!fBreakpointList.contains(breakpoint))
 					{
 						fBreakpointList.add(breakpoint);
 					}
-//					IMarker marker =breakpoint.getMarker();
-//					if (marker != null) {
-//						String path = marker.getResource().getLocation().toOSString();
-//						//String tmpp= "setbreak:" + path+":"+ (((ILineBreakpoint)breakpoint).getLineNumber() - 1);
-//						//sendRequest("setbreak:" + path+":"+ (((ILineBreakpoint)breakpoint).getLineNumber() - 1));
-//					}
 				}
 			} catch (CoreException e) {
+			}			
+		}
+		else
+		{
+			try {
+				if (breakpoint.isEnabled()) {
+					if(!fBreakpointList.contains(breakpoint))
+					{
+						fBreakpointList.add(breakpoint);
+						String data = getBreakPoint(breakpoint);
+						SendRequest.setBreakPoint(data);
+					}
+				}
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}			
 		}
 	}
@@ -417,6 +432,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		// TODO Auto-generated method stub
 		if (supportsBreakpoint(breakpoint)) {
+
 			try {
 				if (breakpoint.isEnabled()) {
 					breakpointAdded(breakpoint);
@@ -431,7 +447,9 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		// TODO Auto-generated method stub
-		if (fSuspended && breakpoint instanceof AddonDevLineBreakpoint ) 
+		if (!(breakpoint instanceof AddonDevLineBreakpoint )) return;
+		
+		if (fSuspended) 
 		{
 			//IMarker marker =breakpoint.getMarker();
 			//JSLineBreakpoint jb = (JSLineBreakpoint)breakpoint;
@@ -468,6 +486,24 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
+		}
+		else
+		{
+			if(fBreakpointList.contains(breakpoint))
+			{
+				fBreakpointList.remove(breakpoint);
+				String data = getBreakPoint(breakpoint);
+				try {
+					SendRequest.removeBreakPoint(data);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				fRemoveBreakpointList.add(breakpoint);
+			}			
 		}
 	}
 
@@ -879,6 +915,13 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
             IBreakpointManager breakpointManager= DebugPlugin.getDefault().getBreakpointManager();
             breakpointManager.removeBreakpointListener(this);
         }
+	}
+	
+	private String getBreakPoint(IBreakpoint breakpoint)
+	{
+		ArrayList<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
+		breakpoints.add(breakpoint);
+		return getBreakPoint(breakpoints);
 	}
 	
 	private String getBreakPoint(List<IBreakpoint> breakpoints)
