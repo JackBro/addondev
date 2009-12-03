@@ -167,6 +167,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 //		}	
 //		
 //		xml = "<xml>" +xml + "</xml>";
+		//fBreakpointList.clear();
 		
 		String xml = getBreakPoint(fBreakpointList);
 		try {
@@ -308,6 +309,11 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		else
 		{
 			try {
+				
+				fCloseBrowser = true;
+				fBreakpointList.clear();
+				fRemoveBreakpointList.clear();
+				
 				SendRequest.closeBrowser();
 				fThread.fireTerminateEvent();
 			} catch (IOException e) {
@@ -363,14 +369,32 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 //			e1.printStackTrace();
 //		}
 		fSuspended = false;
-		
-		try {
-			resumed(DebugEvent.RESUME);
-			SendRequest.resume();
+		if(fCloseBrowser)
+		{
+			fBreakpointList.clear();
+			fRemoveBreakpointList.clear();
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			resumed(DebugEvent.RESUME);
+			installDeferredBreakpoints();
+			String data = getBreakPoint(fBreakpointList);
+			try {
+				SendRequest.setBreakPoint(data);
+				SendRequest.open("");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			try {
+				resumed(DebugEvent.RESUME);
+				SendRequest.resume();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -576,16 +600,12 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	
 	private void installDeferredBreakpoints() {
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints();
-		//IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints("org.eclipse.debug.core.breakpointMarker");//IJSConstants.ID_JS_DEBUG_MODEL);
 		for (IBreakpoint iBreakpoint : breakpoints) {
 			if(iBreakpoint instanceof AddonDevLineBreakpoint)
 			{
 				breakpointAdded(iBreakpoint);
 			}
 		}
-//		for (int i = 0; i < breakpoints.length; i++) {
-//			breakpointAdded(breakpoints[i]);
-//		}
 	}
 	
 	protected void stepOver() throws DebugException {

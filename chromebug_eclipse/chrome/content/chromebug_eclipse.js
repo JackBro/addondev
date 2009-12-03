@@ -269,6 +269,19 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  		{
 	  			file = decodeURIComponent(result[i]["filename"]);
 	  			line = parseInt(result[i]["line"]);
+	  			
+	  			if(file in Firebug.chromebug_eclipse.util.breakpointMap)
+	  			{
+	  				if(line in Firebug.chromebug_eclipse.util.breakpointMap[file])
+	  				{
+	  					let index = Firebug.chromebug_eclipse.util.breakpointMap[file].indexOf(line);
+	  					if(index != -1)
+	  					{
+	  						Firebug.chromebug_eclipse.util.breakpointMap[file].splice(index,1);
+	  					}
+	  				}
+	  			}
+	  			
 	  			Firebug.Debugger.fbs.clearBreakpoint(file, line);
 	  		}	    	
 	    	break;
@@ -278,6 +291,23 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  	case "open":
 	  		window.open().home();
 	  		//loadURI(params.file);
+	  		break;
+	  	case "closebrowser":
+	  		//window.close();
+	  		//Application.quit();
+  			for(file in Firebug.chromebug_eclipse.util.breakpointMap)
+  			{
+  				Firebug.chromebug_eclipse.util.breakpointMap[file].length = 0;
+  			}
+	  		Firebug.Debugger.clearAllBreakpoints();
+	  		const WindowManager = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator);
+	  		var browsers = WindowManager.getEnumerator('navigator:browser');
+	  		var browser;
+	  		while (browsers.hasMoreElements()) {
+	  		    browser = browsers.getNext()
+	  		            .QueryInterface(Components.interfaces.nsIDOMWindowInternal);
+	  		    browser.BrowserTryToCloseWindow();
+	  		}
 	  		break;
 	  	case "resume":
 	  		Firebug.Debugger.resume(FirebugContext);
