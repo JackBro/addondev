@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeIterator;
@@ -45,6 +46,10 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
 
 public class AddonDevUtil {
 
+	
+	private ILaunchConfiguration fLaunchConfiguration;
+	private IPreferenceStore fStore;
+	
 	private static IProject[] debugprojects;
 	private String[] commandline;
 	
@@ -57,6 +62,14 @@ public class AddonDevUtil {
 	private static Pattern contentslipitpattern = Pattern.compile("[\\s\\t]+");
 	private static Pattern p = Pattern.compile("^(chrome://)(.+)(/content/)(.*)$"); //chrome://hello/content/hello.js
 		
+	public AddonDevUtil(ILaunchConfiguration configuration)
+	{
+		fLaunchConfiguration = configuration;
+		fStore = AddonDevPlugin.getDefault().getPreferenceStore();
+		
+		
+	}
+	
 	public void init(ILaunchConfiguration configuration) throws CoreException, IOException, ParserConfigurationException, SAXException, TransformerException
 	{
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -266,6 +279,38 @@ public class AddonDevUtil {
 		}
 		
 		return commandList.toArray(new String[commandList.size()]);
+	}
+	
+	
+	public String[] makeCommandLine() throws CoreException
+	{
+		
+		String profilepath = fLaunchConfiguration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH , "");
+		List<String> commands = new ArrayList<String>();	
+		
+		commands.add("-no-remote");
+		
+		commands.add("-profile");
+		commands.add("\"" + profilepath + "\"");
+		
+		int eclispport = fStore.getInt(PrefConst.ECLIPSE_PORT);
+		int debuggerport = fStore.getInt(PrefConst.DEBUGGER_PORT);
+		
+		commands.add("-ce_eport");
+		commands.add(String.valueOf(eclispport));
+		commands.add("-ce_cport");
+		commands.add(String.valueOf(debuggerport));
+		
+		commands.add("-chrome");
+		commands.add("chrome://chromebug/content/chromebug.xul");
+		
+		String firefoxargs = fLaunchConfiguration.getAttribute(PrefConst.FIREFOX_ARGS, "");
+		String[] args = firefoxargs.split(" ");
+		for (String string : args) {
+			commands.add(string);
+		}		
+		
+		return commands.toArray(new String[commands.size()]);
 	}
 	
 	// /hello/content/main/hello.js -> chrome://hello/content/hello.js
