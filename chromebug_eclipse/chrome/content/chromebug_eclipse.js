@@ -1,4 +1,7 @@
 
+//chromebug-1.5.0a2.xpi
+//firebug-1.4.2-fx.xpi
+
 FBL.ns(function chromebug() { with (FBL) {
 
 
@@ -6,6 +9,8 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 {
 	initialize: function() 
 	{
+		
+		//Application.console.log("urlFilters = " +  urlFilters);
 		//Application.console.log("chromebug_eclipseModle initialize");
 		
 //		var cbe_resetBreakpoints = FBL.fbs.resetBreakpoints;	
@@ -138,7 +143,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			//Firebug.Debugger.fbs.filterSystemURLs = false;
 			//Firebug.filterSystemURLs = false;
 			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
-			if(filterSystemURLs)
+			if(!filterSystemURLs)
 				Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
 			
 			//extensions.firebug.service.showAllSourceFiles;false
@@ -196,7 +201,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     	Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);
         var postdata = Firebug.chromebug_eclipse.util.getStackFramesXML();
         
-        //Application.console.log("ce onStop postdata = " + postdata);
+        Application.console.log("ce onStop postdata = " + postdata);
         
         //var eclipseport = Application.storage.get('ce_eport', -1);
         ecclient.send("suspend", postdata);
@@ -239,7 +244,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  		{
 	  			file = decodeURIComponent(result[i]["filename"]);
 	  			line = parseInt(result[i]["line"]);
-	  			//Application.console.log("setbreakpoint file=" + file + " : " + "line = "+ line);
+	  			Application.console.log("setbreakpoint file=" + file + " : " + "line = "+ line);
 		  		if(file in Firebug.chromebug_eclipse.util.sourceFileMap)
 		  		{
 		  			var s = Firebug.chromebug_eclipse.util.sourceFileMap[file];
@@ -417,7 +422,7 @@ ChromeDebuggerPanel.prototype = extend(Firebug.Panel,
 }); 
 
 Firebug.registerModule(Firebug.chromebug_eclipseModle); 
-Firebug.registerPanel(ChromeDebuggerPanel); 
+//Firebug.registerPanel(ChromeDebuggerPanel); 
 
 //window.addEventListener('load', function() { 
 //	 

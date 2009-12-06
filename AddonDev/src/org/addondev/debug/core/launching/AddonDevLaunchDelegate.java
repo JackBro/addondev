@@ -55,7 +55,7 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
 		
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			
-			AddonDevUtil addondevutil = new AddonDevUtil();	
+			AddonDevUtil addondevutil = new AddonDevUtil(configuration);	
 			try {
 				addondevutil.init(configuration);
 			} catch (IOException e1) {

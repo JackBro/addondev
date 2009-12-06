@@ -367,15 +367,15 @@ Firebug.chromebug_eclipse.util = {
     		if (aURI.indexOf('chrome://') == 0) 
     		{
     			//chrome://chromebug/content/chromebug.xul -> chrome://chromebug_eclipse/content/chromebug_eclipse.js
-    			if(aURI.indexOf(' -> ') == 0)
-    			{
-    				var index = aURI.indexOf('chrome://', 1);
-    				if(index > 0)
-    				{
-    					aURI = aURI.slice(index);
-    					Application.console.log("convertChromeURL chromeurl -> url = " + aURI);
-    				}
-    			}
+//    			if(aURI.indexOf(' -> ') == 0)
+//    			{
+//    				var index = aURI.indexOf('chrome://', 1);
+//    				if(index > 0)
+//    				{
+//    					aURI = aURI.slice(index);
+//    					//Application.console.log("convertChromeURL chromeurl -> url = " + aURI);
+//    				}
+//    			}
 //    			var uri =
 //    		        Components.classes["@mozilla.org/network/standard-url;1"]
 //    		            .createInstance(Components.interfaces.nsIURI);
@@ -386,7 +386,7 @@ Firebug.chromebug_eclipse.util = {
     			var ChromeRegistry = Cc["@mozilla.org/chrome/chrome-registry;1"].getService(Ci.nsIChromeRegistry);
     			//aURI = ChromeRegistry.convertChromeURL(IOService.newURI(aURI, null, null));
     			chromeurl = ChromeRegistry.convertChromeURL(uri).spec;
-    			//Application.console.log("convertChromeURL chromeurl = " + chromeurl);
+    			Application.console.log("convertChromeURL chromeurl = " + chromeurl);
     		}
     	
     		if (chromeurl.indexOf('file://') != 0) 

@@ -5,6 +5,7 @@ const Ci = Components.interfaces;
 const CC = Components.Constructor;
 
 var Application = Cc["@mozilla.org/fuel/application;1"].getService(Ci.fuelIApplication);
+//var log = Application.console.log;
 
 server = {
 
@@ -98,6 +99,7 @@ HttpServerListener.prototype = {
 
   onStopRequest: function(aRequest, aContext, aStatus){
     //dump("onStopRequest\n");
+	  //log("###onStopRequest");
   },
 
   onDataAvailable: function(aRequest, aContext, aInputStream, aOffset, aCount){
