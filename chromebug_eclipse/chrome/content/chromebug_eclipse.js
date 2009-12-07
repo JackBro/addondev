@@ -9,7 +9,6 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 {
 	initialize: function() 
 	{
-		
 		//Application.console.log("urlFilters = " +  urlFilters);
 		//Application.console.log("chromebug_eclipseModle initialize");
 		
@@ -25,10 +24,11 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		//Application.console.log("firebug_resetBreakpoints = " + firebug_resetBreakpoints);
 		Firebug.Debugger.fbs.resetBreakpoints = function(sourceFile, lastLineNumber)
 		{
-			Firebug.chromebug_eclipseModle.resetBreakpoints(sourceFile, lastLineNumber);
+			Firebug.chromebug_eclipseModle.resetBreakpoints(sourceFile, lastLineNumber);			
 			firebug_resetBreakpoints(sourceFile, lastLineNumber);
-		}
-		//Firebug.ActivableModule.initialize.apply(this, arguments);
+		};
+		
+		Firebug.ActivableModule.initialize.apply(this, arguments);
 		//Firebug.Debugger.fbs.countContext(true); 
 		Firebug.Debugger.addListener(this); 
 		//Firebug.Chromebug.Debugger.addListener(this); 
@@ -40,7 +40,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			Firebug.Chromebug.onStop = function(context, frame, type, rv)
 			{
 				sss(context, frame, type, rv);
-			}
+			};
 		}
 		this.net = {};
 		this.util = {};
@@ -56,10 +56,8 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     shutdown: function()
     {
 		//alert("shutdown");
-    	//alert("shutdown");
 		//this.server.stop();
 		server.stop();
-		//this.hh.stop();
     },
  
     resetBreakpoints: function(sourceFile, lastLineNumber)
@@ -95,9 +93,14 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     		//Application.console.log("resetBreakpoints sourceFile.href in breakpointMap = " + sourceFile.href);
     		for(line in Firebug.chromebug_eclipse.util.breakpointMap[sourceFile.href])
     		{
-    			Application.console.log("resetBreakpoints sourceFile.href = " + sourceFile.href);
     			var linenum = Firebug.chromebug_eclipse.util.breakpointMap[sourceFile.href][line];
-    			Firebug.Debugger.fbs.setBreakpoint(sourceFile, linenum, null, Firebug.Debugger);
+    			//if(!(linenum in this.pp))
+    			//{
+    			Application.console.log("resetBreakpoints sourceFile.href=" + sourceFile.href + " linenum=" + linenum);
+    			//Firebug.Debugger.fbs.setBreakpoint(sourceFile, linenum, null, Firebug.Debugger);
+    			Firebug.Debugger.setBreakpoint(sourceFile, linenum);
+    			//this.pp.push(linenum);
+    			//}
     		}
     	}
     },
@@ -116,11 +119,6 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     
 	startServer : function()
 	{
-		//var ss = new HttpServer(3644);
-		//HttpServer.start(8083);
-		
-		//this.hh = new nsHttpServer();
-		//this.hh.start(8083);
 		var eclipseport = Application.storage.get('ce_eport', -1);
 		var chromeport = Application.storage.get('ce_cport', -1);	
 		//var eclipseport = 8084;
@@ -131,7 +129,6 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		
 		if((eclipseport && eclipseport > 0) && (chromeport && chromeport > 0))
 		{
-			
 			//Application.console.log("startServer0");
 			//this.server = new this.net.server(chromeport); 
 			if(this.net.server.isWorking) 
@@ -145,6 +142,12 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
 			if(!filterSystemURLs)
 				Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
+			
+			//javascript.options.strict false => OK
+			//javascript.options.strict true => NG
+			var strict = Application.prefs.getValue("javascript.options.strict", true);
+			if(!strict)
+				Application.prefs.setValue("javascript.options.strict", false);			
 			
 			//extensions.firebug.service.showAllSourceFiles;false
 			//Firebug.Debugger.fbs.showAllSourceFiles = true;
@@ -181,7 +184,6 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     
     onStop: function(context, frame, type, rv)
     {
-    	//Application.console.log("ce onStop");
     	//Firebug.Debugger.resume(FirebugContext);
     	//var line = 28;
     	//FBL.fbs.clearBreakpoint(href, line);
@@ -194,19 +196,26 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 //		{
 //			Application.console.log("sourceCache key = " + key);
 //		}
-    	//var ckey = 'jar:file:///D:/program/firefox35/chrome/browser.jar!/content/browser/browser.xul';
 		//Application.console.log("context.sourceCache.cache ckey = " + context.sourceCache.cache[ckey]);
     	//Application.console.log("frame.args = " +frame.args);
     	Firebug.chromebug_eclipse.util.currnetFrame = frame;
-    	Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);
-        var postdata = Firebug.chromebug_eclipse.util.getStackFramesXML();
-        
-        Application.console.log("ce onStop postdata = " + postdata);
-        
-        //var eclipseport = Application.storage.get('ce_eport', -1);
+    	try
+    	{
+    		//Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);
+    		Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getCorrectedStackTrace(frame, context);
+    	}catch (e) {
+			// TODO: handle exception
+    		Application.console.log("ce getStackTrace e = " + e);
+		}
+    	try
+    	{
+    		var postdata = Firebug.chromebug_eclipse.util.getStackFramesXML();
+		}catch (ex) {
+			// TODO: handle exception
+			Application.console.log("ce getStackFramesXML ex = " + ex);
+		}
+
         ecclient.send("suspend", postdata);
-    	//}
-    	//this.net.client.send("suspend", postdata);
     },
     
 	pathHandler:function(queryString, postdata) 
@@ -390,7 +399,7 @@ var ecclient = {
 //	        request.setRequestHeader('Content-Type', 'text/xml');
 //			request.send(data);
 			
-	        if(!data) data = "debuggeraccept";
+	        if(!data || data == undefined) data = "debuggeraccept";
 			request.open('POST', url, false);
 			//request.setRequestHeader("content-type","text/xml");
 			request.send(data);
@@ -422,7 +431,7 @@ ChromeDebuggerPanel.prototype = extend(Firebug.Panel,
 }); 
 
 Firebug.registerModule(Firebug.chromebug_eclipseModle); 
-//Firebug.registerPanel(ChromeDebuggerPanel); 
+Firebug.registerPanel(ChromeDebuggerPanel); 
 
 //window.addEventListener('load', function() { 
 //	 

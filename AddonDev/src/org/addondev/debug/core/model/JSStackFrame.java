@@ -207,6 +207,7 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 	@Override
 	public void resume() throws DebugException {
 		// TODO Auto-generated method stub
+		//fVariables = null;
 		getThread().resume();
 	}
 

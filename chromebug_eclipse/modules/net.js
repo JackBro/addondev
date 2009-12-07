@@ -5,7 +5,7 @@ const Ci = Components.interfaces;
 const CC = Components.Constructor;
 
 var Application = Cc["@mozilla.org/fuel/application;1"].getService(Ci.fuelIApplication);
-//var log = Application.console.log;
+var log = Application.console.log;
 
 server = {
 
@@ -89,6 +89,7 @@ HttpServerListener.prototype = {
     this._output.write(response, response.length);
     this._output.close();
     this._input.close();
+    //this._bInputStream.close();
   },
   onStartRequest: function(aRequest, aContext){
     //dump("onStartRequest\n");
@@ -129,8 +130,11 @@ HttpServerListener.prototype = {
 		{
 			var postdata = datas[1]; 
 			//var responseBody ;
-			if(this._data.match("(<\/xml>)$")){
+			//if(this._data.match("(<\/xml>)$")){
+			if(this._data.match(/<\/xml>/)){
+				//log("server post data : " + methods[1] + " : " + postdata);
 				let responseBody = server.pathHandler(queryString, postdata);
+				//log("server responseBody : " + responseBody);
 				//Application.console.log("server post data : " + methods[1] + " : " + postdata);
 				this.sendResponse(responseBody);
 			}

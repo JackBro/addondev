@@ -267,7 +267,7 @@ Firebug.chromebug_eclipse.util = {
 	
 	getStackFramesXML : function(){
 		var stackframesxml = "";
-		 //for (var stackframe in this.currentStackTrace.frames) 
+		//Application.console.log("getStackFramesXML this.currentStackTrace = " + this.currentStackTrace);
 		for(var i=0; i<this.currentStackTrace.frames.length; i++)
 		 {	
 		 	var stackframe = this.currentStackTrace.frames[i];
@@ -297,15 +297,20 @@ Firebug.chromebug_eclipse.util = {
 		 	{
 		 		fn = "";
 		 	}
+
 		 	//Application.console.log("stackframe.script.functionName = " + stackframe.script.functionName);
-		 	var functionname = FBL.getFunctionName(stackframe.script, stackframe.context, stackframe);
+		 	//var functionname = FBL.getFunctionName(stackframe.script, stackframe.context, stackframe);
+		 	var functionname = stackframe.script.functionName;
+		 	
 		 	stackframesxml += this.Stringformat("<stackframe depth=\"{0}\" url=\"{1}\" filename=\"{2}\" functionname=\"{3}\" line=\"{4}\" fn=\"{5}\" />", 
 		 			i, 
 		 			encodeURIComponent(stackframe.href), 
 		 			encodeURIComponent(path), 
 		 			functionname, 
-		 			stackframe.lineNo,
+		 			//stackframe.lineNo,
+		 			stackframe.line,
 		 			encodeURIComponent(fn));
+
 		 }
 		 return "<xml> " + stackframesxml + " </xml>";	 
 	},
@@ -367,15 +372,15 @@ Firebug.chromebug_eclipse.util = {
     		if (aURI.indexOf('chrome://') == 0) 
     		{
     			//chrome://chromebug/content/chromebug.xul -> chrome://chromebug_eclipse/content/chromebug_eclipse.js
-//    			if(aURI.indexOf(' -> ') == 0)
-//    			{
-//    				var index = aURI.indexOf('chrome://', 1);
-//    				if(index > 0)
-//    				{
-//    					aURI = aURI.slice(index);
-//    					//Application.console.log("convertChromeURL chromeurl -> url = " + aURI);
-//    				}
-//    			}
+    			if(aURI.indexOf(' -> ') == 0)
+    			{
+    				var index = aURI.indexOf('chrome://', 1);
+    				if(index > 0)
+    				{
+    					aURI = aURI.slice(index);
+    					//Application.console.log("convertChromeURL chromeurl -> url = " + aURI);
+    				}
+    			}
 //    			var uri =
 //    		        Components.classes["@mozilla.org/network/standard-url;1"]
 //    		            .createInstance(Components.interfaces.nsIURI);
