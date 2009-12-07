@@ -387,10 +387,12 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		}
 		else
 		{
+			//resumed(DebugEvent.RESUME);
+			//for (IThread thread : fThreads) {
+			//	thread.resume();
+			//}
 			try {
-				resumed(DebugEvent.RESUME);
 				SendRequest.resume();
-				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

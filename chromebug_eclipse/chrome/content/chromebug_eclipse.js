@@ -145,9 +145,9 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			
 			//javascript.options.strict false => OK
 			//javascript.options.strict true => NG
-			var strict = Application.prefs.getValue("javascript.options.strict", true);
-			if(!strict)
-				Application.prefs.setValue("javascript.options.strict", false);			
+			//var strict = Application.prefs.getValue("javascript.options.strict", true);
+			//if(!strict)
+			//	Application.prefs.setValue("javascript.options.strict", false);			
 			
 			//extensions.firebug.service.showAllSourceFiles;false
 			//Firebug.Debugger.fbs.showAllSourceFiles = true;

@@ -72,13 +72,21 @@ public class JSThread extends PlatformObject implements IThread {
 //			return frames[0];
 //		}
 //		return null;
-		 return stack == null ? null : stack[0];
+		if (stack == null || stack.length == 0) {
+			return null;
+		}
+		
+		 return stack[0];
 	}
 
 	@Override
 	public boolean hasStackFrames() throws DebugException {
 		// TODO Auto-generated method stub
-		return isSuspended();
+		//return isSuspended();
+		if(stack == null)
+			return false;
+		
+		return stack.length > 0;
 	}
 
 	@Override
@@ -102,6 +110,8 @@ public class JSThread extends PlatformObject implements IThread {
 	@Override
 	public void resume() throws DebugException {
 		// TODO Auto-generated method stub
+		stack = null;
+	  	fireResumeEvent(DebugEvent.STEP_OVER);
 		getDebugTarget().resume();
 	}
 
@@ -146,8 +156,9 @@ public class JSThread extends PlatformObject implements IThread {
 	public void stepOver() throws DebugException {
 		// TODO Auto-generated method stub
 		//((AddonDebugTarget)getDebugTarget()).stepOver();
+		this.stack = null; 
 		fireResumeEvent(DebugEvent.STEP_OVER);
-		stack[0].stepOver();
+		/stack[0].stepOver();
 	}
 
 	@Override
