@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 
 
 import org.addondev.debug.core.model.AddonDebugTarget;
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugTarget;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -145,7 +146,12 @@ public class SimpleServer {
                 	String cmd =  params[0].split("=")[1];
                 	if(cmd.equals("suspend"))
                 	{
-                		fTarget.breakpointHit(cmd, data);
+                		try {
+							fTarget.breakpointHit(cmd, data);
+						} catch (DebugException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
                 	}
                 	else if(cmd.equals("ready"))
                 	{

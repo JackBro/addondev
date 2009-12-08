@@ -10,13 +10,13 @@ import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 
-public class JSVariable extends PlatformObject implements IVariable {
+public class AddonVariable extends PlatformObject implements IVariable {
 	
 	private String fName;
 	private String ftype;
 	//private JSStackFrame fFrame;
 	private AddonDebugTarget target;
-	private JSValue fvalue;
+	private AddonValue fvalue;
 	
 	/**
 	 * Constructs a variable contained in the given stack frame
@@ -25,13 +25,13 @@ public class JSVariable extends PlatformObject implements IVariable {
 	 * @param frame owning stack frame
 	 * @param name variable name
 	 */
-	public JSVariable(AddonDebugTarget target, String stackframeid, String parent, String name, String type, String value, boolean hasChildren) {
+	public AddonVariable(AddonDebugTarget target, String stackframeid, String parent, String name, String type, String value, boolean hasChildren) {
 		//super((JSDebugTarget) frame.getDebugTarget());
 		this.target = target;
 		//fFrame = frame;
 		fName = name;
 		ftype = type;
-		fvalue = new JSValue(target, stackframeid, parent, name, type, value, hasChildren);
+		fvalue = new AddonValue(target, stackframeid, parent, name, type, value, hasChildren);
 	}
 
 	@Override

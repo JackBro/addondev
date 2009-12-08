@@ -1,13 +1,12 @@
 package org.addondev.debug.core.model;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
-import org.addondev.debug.net.SendRequest;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -15,13 +14,12 @@ import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 
-public class JSStackFrame extends PlatformObject implements IStackFrame {
+public class AddonStackFrame extends PlatformObject implements IStackFrame {
 
-	private JSThread fThread;
+	private AddonThread fThread;
 	private String fName;
 	private int fPC;
 	private String fURL;
@@ -30,10 +28,11 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 	private int line;
 	private String fFn;
 	private String fdepth;
-	private IVariable[] fVariables;
+	private ArrayList<IVariable> fVariables;
 	private AddonDebugTarget target;
+	private boolean fUpToDate;
 	
-	public JSStackFrame(JSThread thread, 
+	public AddonStackFrame(IThread thread, 
 			AddonDebugTarget target, 
 			String depth, 
 			String url, 
@@ -43,7 +42,7 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 			String fn) {
 		// TODO Auto-generated constructor stub
 		this.target = target;
-		fThread = thread;
+		fThread = (AddonThread)thread;
 		fdepth = depth;
 		fURL = url;
 		fFileName = filename;
@@ -51,7 +50,7 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 		fPC = Integer.parseInt(line);
 		fFn = fn;
 		fVariables = null;
-		
+		fUpToDate = false;
 		path = new Path(filename);
 		this.line = Integer.parseInt(line);
 	}
@@ -110,11 +109,31 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 
 	@Override
 	public IVariable[] getVariables() throws DebugException {
+		
+//		if(canSuspend()) 
+//		{
+//			fVariables = null;
+//			return fVariables;
+//		}
+		
 		// TODO Auto-generated method stub
-		if(this.fVariables == null){
-			fVariables = target.getVariables(fdepth, null, null);
+		//if(this.fVariables == null){
+		if (!fUpToDate) {
+//			if(canSuspend())
+//			{
+//				fVariables = new AddonVariable[0];
+//			}
+//			else
+				fVariables = target.getVariables(fdepth, null, null);
+			
+			fUpToDate = true;
+			Collections.sort(fVariables);
 		}
-		return fVariables;
+//		else if(!canSuspend())
+//		{
+//			fVariables = new AddonVariable[0];
+//		}
+		return fVariables.toArray(new IVariable[fVariables.size()]);
 	}
 
 	@Override
@@ -156,28 +175,28 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 	@Override
 	public void stepInto() throws DebugException {
 		// TODO Auto-generated method stub
-		//getThread().stepInto();
-		target.resumed(DebugEvent.STEP_INTO);
-		try {
-			SendRequest.stepInto();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		getThread().stepInto();
+//		target.resumed(DebugEvent.STEP_INTO);
+//		try {
+//			SendRequest.stepInto();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
 	public void stepOver() throws DebugException {
 		// TODO Auto-generated method stub
-		//getThread().stepOver();
-		target.resumed(DebugEvent.STEP_OVER);
-		try {
-			SendRequest.stepOver();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		fUpToDate = false;
+		getThread().stepOver();
+//		target.resumed(DebugEvent.STEP_OVER);
+//		try {
+//			SendRequest.stepOver();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
@@ -204,10 +223,12 @@ public class JSStackFrame extends PlatformObject implements IStackFrame {
 		return getThread().isSuspended();
 	}
 
+
 	@Override
 	public void resume() throws DebugException {
 		// TODO Auto-generated method stub
 		//fVariables = null;
+		fUpToDate = false;
 		getThread().resume();
 	}
 

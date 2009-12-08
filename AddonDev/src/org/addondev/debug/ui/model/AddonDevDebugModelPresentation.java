@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.addondev.debug.core.model.AddonDebugTarget;
 import org.addondev.debug.core.model.AddonDevLineBreakpoint;
-import org.addondev.debug.core.model.JSStackFrame;
-import org.addondev.debug.core.model.JSThread;
+import org.addondev.debug.core.model.AddonStackFrame;
+import org.addondev.debug.core.model.AddonThread;
 import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.ILineBreakpoint;
+import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IWatchExpression;
 import org.eclipse.debug.ui.IDebugModelPresentation;
@@ -108,11 +109,11 @@ public class AddonDevDebugModelPresentation  implements IDebugModelPresentation 
                 //PydevDebugPlugin.log(IStatus.ERROR, "error retreiving marker attributes", e);
                 return "error";
             }
-        } else if (element instanceof AddonDebugTarget || element instanceof JSStackFrame){// || element instanceof JSThread) {
+        } else if (element instanceof AddonDebugTarget || element instanceof AddonStackFrame){// || element instanceof JSThread) {
             return null; // defaults work
             
-        } else if (element instanceof JSThread ) {
-        	JSThread th = (JSThread) element;
+        } else if (element instanceof AddonThread ) {
+        	AddonThread th = (AddonThread) element;
         	if(th.isTerminated()) //debugger close
         	{
         		try {

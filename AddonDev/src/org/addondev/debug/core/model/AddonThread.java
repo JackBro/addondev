@@ -13,17 +13,19 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 
-public class JSThread extends PlatformObject implements IThread {
+public class AddonThread extends PlatformObject implements IThread {
 
 	private AddonDebugTarget target;
 	private IBreakpoint[] fBreakpoints;
 	private boolean fStepping = false;
 	private IStackFrame[] stack;
+	private boolean isSuspended;
 	
-	public JSThread(AddonDebugTarget target) {
+	public AddonThread(AddonDebugTarget target) {
 		//super(target);
 		// TODO Auto-generated constructor stub
 		this.target = target;
+		isSuspended = true;
 	}
 
 	@Override
@@ -90,34 +92,52 @@ public class JSThread extends PlatformObject implements IThread {
 	}
 
 	@Override
-	public boolean canResume() {
+	public synchronized boolean canResume() {
 		// TODO Auto-generated method stub
 		return isSuspended();
 	}
 
 	@Override
-	public boolean canSuspend() {
+	public synchronized boolean canSuspend() {
 		// TODO Auto-generated method stub
 		return !isSuspended();
 	}
 
 	@Override
-	public boolean isSuspended() {
+	public synchronized boolean isSuspended() {
 		// TODO Auto-generated method stub
-		return getDebugTarget().isSuspended();
+		//return getDebugTarget().isSuspended();
+		return isSuspended;
 	}
 
 	@Override
-	public void resume() throws DebugException {
+	public synchronized void resume() throws DebugException {
 		// TODO Auto-generated method stub
+		if (!isSuspended ()) {
+			return;	
+		}
+		
 		stack = null;
-	  	fireResumeEvent(DebugEvent.STEP_OVER);
+		isSuspended = false;
+		
+//		DebugEvent ev = new DebugEvent (this, DebugEvent.RESUME, DebugEvent.STEP_OVER);
+//		DebugPlugin.getDefault ().fireDebugEventSet (new DebugEvent[] { ev });
+		
+		fireResumeEvent(DebugEvent.BREAKPOINT);
+		//fireSuspendEvent(DebugEvent.BREAKPOINT);
+		
+	  	//fireResumeEvent(DebugEvent.STEP_OVER);
 		getDebugTarget().resume();
 	}
 
 	@Override
-	public void suspend() throws DebugException {
+	public synchronized void suspend() throws DebugException {
 		// TODO Auto-generated method stub
+		isSuspended = true;
+		
+		DebugEvent ev = new DebugEvent (this, DebugEvent.SUSPEND, DebugEvent.BREAKPOINT);
+		DebugPlugin.getDefault ().fireDebugEventSet (new DebugEvent[] { ev });
+		
 		getDebugTarget().suspend();
 	}
 
@@ -149,16 +169,22 @@ public class JSThread extends PlatformObject implements IThread {
 	public void stepInto() throws DebugException {
 		// TODO Auto-generated method stub
 		//((AddonDebugTarget)getDebugTarget()).stepInto();
-		stack[0].stepInto();
+		fireResumeEvent(DebugEvent.STEP_INTO);
+		target.stepInto();
+		//stack[0].stepInto();
+		
 	}
 
 	@Override
 	public void stepOver() throws DebugException {
 		// TODO Auto-generated method stub
 		//((AddonDebugTarget)getDebugTarget()).stepOver();
+		//DebugEvent ev = new DebugEvent (this, DebugEvent.RESUME, DebugEvent.STEP_OVER);
+		//DebugPlugin.getDefault ().fireDebugEventSet (new DebugEvent[] { ev });
 		this.stack = null; 
 		fireResumeEvent(DebugEvent.STEP_OVER);
-		/stack[0].stepOver();
+		target.stepOver();
+		//stack[0].stepOver();
 	}
 
 	@Override
@@ -180,7 +206,7 @@ public class JSThread extends PlatformObject implements IThread {
 	}
 
 	@Override
-	public void terminate() throws DebugException {
+	public synchronized void terminate() throws DebugException {
 		// TODO Auto-generated method stub
 		getDebugTarget().terminate();
 	}
@@ -241,53 +267,6 @@ public class JSThread extends PlatformObject implements IThread {
         // ongoing, I do not fully understand all the interfaces they'd like me to support
         return super.getAdapter(adapter);
     }
-	
-	/**
-	 * Fires a debug event
-	 * 
-	 * @param event the event to be fired
-	 */
-	protected void fireEvent(DebugEvent event) {
-		//DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] {event});
-        DebugPlugin manager= DebugPlugin.getDefault();
-        if (manager != null) {
-            manager.fireDebugEventSet(new DebugEvent[]{event});
-        }
-	}
-	
-	/**
-	 * Fires a <code>CREATE</code> event for this element.
-	 */
-	public void fireCreationEvent() {
-		fireEvent(new DebugEvent(this, DebugEvent.CREATE));
-	}	
-	
-	/**
-	 * Fires a <code>RESUME</code> event for this element with
-	 * the given detail.
-	 * 
-	 * @param detail event detail code
-	 */
-	public void fireResumeEvent(int detail) {
-		fireEvent(new DebugEvent(this, DebugEvent.RESUME, detail));
-	}
-
-	/**
-	 * Fires a <code>SUSPEND</code> event for this element with
-	 * the given detail.
-	 * 
-	 * @param detail event detail code
-	 */
-	public void fireSuspendEvent(int detail) {
-		fireEvent(new DebugEvent(this, DebugEvent.SUSPEND, detail));
-	}
-	
-	/**
-	 * Fires a <code>TERMINATE</code> event for this element.
-	 */
-	protected void fireTerminateEvent() {
-		fireEvent(new DebugEvent(this, DebugEvent.TERMINATE));
-	}	
 
 	public void SetStackFrames(IStackFrame[] stack)
 	{
@@ -303,4 +282,25 @@ public class JSThread extends PlatformObject implements IThread {
 //		}
 //		return null;
 //	}
+	
+	
+	protected void fireEvent(DebugEvent event) {
+		DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] { event });
+	}
+	
+	public void fireCreationEvent() {
+		fireEvent(new DebugEvent(this, DebugEvent.CREATE));
+	}
+	
+	public void fireResumeEvent(int detail) {
+		fireEvent(new DebugEvent(this, DebugEvent.RESUME, detail));
+	}
+	
+	public void fireSuspendEvent(int detail) {
+		fireEvent(new DebugEvent(this, DebugEvent.SUSPEND, detail));
+	}
+	
+	protected void fireTerminateEvent() {
+		fireEvent(new DebugEvent(this, DebugEvent.TERMINATE));
+	}
 }

@@ -1,13 +1,11 @@
 package org.addondev.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,15 +17,14 @@ import javax.xml.parsers.SAXParserFactory;
 
 
 import org.addondev.debug.core.model.AddonDebugTarget;
-import org.addondev.debug.core.model.JSError;
-import org.addondev.debug.core.model.JSStackFrame;
-import org.addondev.debug.core.model.JSThread;
-import org.addondev.debug.core.model.JSVariable;
+import org.addondev.debug.core.model.AddonStackFrame;
+import org.addondev.debug.core.model.AddonVariable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -50,15 +47,15 @@ public class XMLUtils {
 	 *
 	 */
 	static class XMLToStackFrameInfo extends DefaultHandler{
-		public JSThread thread;
+		public IThread thread;
 		public AddonDebugTarget target;
 		//public List<JSStackFrame> stacks = new ArrayList<JSStackFrame>();
-		public List<JSStackFrame> stacks;
+		public List<AddonStackFrame> stacks;
 		//public List<JSVariable> locals = new ArrayList<JSVariable>();
 		
 		public XMLToStackFrameInfo(AddonDebugTarget target) {
             this.target = target;
-            stacks = new ArrayList<JSStackFrame>();
+            stacks = new ArrayList<AddonStackFrame>();
         }
 
 		public void startElement(String uri, String localName, String qName, Attributes attributes){			
@@ -70,7 +67,7 @@ public class XMLUtils {
                 String line = attributes.getValue("line");
                 String fn = attributes.getValue("fn");
                 try {
-					thread = (JSThread) target.getThreads()[0];
+					thread = (IThread) target.getThreads()[0];
 				} catch (DebugException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -96,7 +93,7 @@ public class XMLUtils {
 	                    	IPath ipath = new Path(filename);
 	                    	filename = ipath.toOSString();
 	                    	
-	                    	JSStackFrame frame = new JSStackFrame(thread, target, depth, deURL, filename, functionname, line, defn);
+	                    	AddonStackFrame frame = new AddonStackFrame(thread, target, depth, deURL, filename, functionname, line, defn);
 	                    	
 	                    	stacks.add(frame);
                     	//}
@@ -107,7 +104,7 @@ public class XMLUtils {
             }
 		}
 	}
-	static public JSStackFrame[] StackFramesFromXML(AddonDebugTarget target, String payload) throws CoreException {
+	static public AddonStackFrame[] StackFramesFromXML(AddonDebugTarget target, String payload) throws CoreException {
         SAXParser parser = null;
 		try {
 			parser = getSAXParser();
@@ -133,7 +130,7 @@ public class XMLUtils {
 		//JSStackFrame stackframe = info.stacks.get(0);
 		//IVariable[] vals = (IVariable[]) info.locals.toArray(new JSVariable[0]);
 		//stackframe.setVariables(vals);
-		return (JSStackFrame[]) info.stacks.toArray(new JSStackFrame[0]);
+		return (AddonStackFrame[]) info.stacks.toArray(new AddonStackFrame[0]);
 	}
 	
 	
@@ -145,7 +142,7 @@ public class XMLUtils {
 	 */
 	static class XMLToVariableInfo extends DefaultHandler {
 		public AddonDebugTarget target;
-		public List<JSVariable> locals = new ArrayList<JSVariable>();
+		public ArrayList<IVariable> locals = new ArrayList<IVariable>();
 		private String stackFrameDepth;
 		private String parent;
 		
@@ -167,7 +164,7 @@ public class XMLUtils {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}	
-				locals.add(new JSVariable(target, stackFrameDepth, parent, name, type, value, hasChildren));
+				locals.add(new AddonVariable(target, stackFrameDepth, parent, name, type, value, hasChildren));
 			}
 //			else if(qName.equals("var"))
 //			{
@@ -185,7 +182,7 @@ public class XMLUtils {
 //			}
 		}
 	}
-	static public IVariable[] VariablesFromXML(AddonDebugTarget target, String stackFrameID, String payload, String parent) throws CoreException {
+	static public ArrayList<IVariable> VariablesFromXML(AddonDebugTarget target, String stackFrameID, String payload, String parent) throws CoreException {
         SAXParser parser = null;
 		try {
 			parser = getSAXParser();
@@ -209,7 +206,8 @@ public class XMLUtils {
 			e.printStackTrace();
 		}
 		//return (JSVariable[]) info.locals.toArray(new JSVariable[0]);
-		return info.locals.toArray(new JSVariable[0]);
+		//return info.locals.toArray(new AddonVariable[0]);
+		return info.locals;
 	}
 	
 
