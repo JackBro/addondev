@@ -127,7 +127,7 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
 				fVariables = target.getVariables(fdepth, null, null);
 			
 			fUpToDate = true;
-			Collections.sort(fVariables);
+			Collections.sort(fVariables, new AddonValueComparator());
 		}
 //		else if(!canSuspend())
 //		{
@@ -145,7 +145,7 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
 	@Override
 	public boolean hasVariables() throws DebugException {
 		// TODO Auto-generated method stub
-		return fVariables.length > 0;
+		return fVariables.size() > 0;
 	}
 
 	@Override
@@ -278,9 +278,9 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
 		return fThread.getModelIdentifier();
 	}
 	
-    public void setVariables(IVariable[] locals) {
-        this.fVariables = locals;
-    }
+//    public void setVariables(IVariable[] locals) {
+//        this.fVariables = locals;
+//    }
     	
     public Object getAdapter(Class adapter) {
         //AdapterDebug.print(this, adapter);

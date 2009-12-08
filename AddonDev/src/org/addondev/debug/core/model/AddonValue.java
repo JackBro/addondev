@@ -1,5 +1,7 @@
 package org.addondev.debug.core.model;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
@@ -51,8 +53,9 @@ public class AddonValue extends PlatformObject implements IValue {
 		//return target.getVariables(fValue);
 		if(hasChildren)
 		{
-			//return target.getVariables(stackFrameID, parent, name);			
-			return target.getChildVariables(stackFrameID, parent, name);
+			//return target.getVariables(stackFrameID, parent, name);	
+			ArrayList<IVariable> list = target.getChildVariables(stackFrameID, parent, name);
+			return list.toArray(new IVariable[list.size()]);
 		}
 		else
 			return EMPTY_IVARIABLE_ARRAY;

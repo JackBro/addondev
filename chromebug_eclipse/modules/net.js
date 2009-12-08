@@ -36,8 +36,8 @@ server = {
 	},
 	
  	stop: function(){
-    	if(this.server) this.server.close();
- 		this.socket = null;
+    	//if(this.server) this.server.close();
+ 		if(this.socket != null) this.socket.close();
 		this.pathHandler = null;   
  	},
   
@@ -68,6 +68,9 @@ HttpServerListener.prototype = {
     this._input = this._transport.openInputStream(0, 0, 0);
     this._output = this._transport.openOutputStream(0, 0, 0);
 
+    this._instream = Cc["@mozilla.org/scriptableinputstream;1"].createInstance(Ci.nsIScriptableInputStream);
+    this._instream.init(this._input);     
+    
     var streamPump = Cc["@mozilla.org/network/input-stream-pump;1"].createInstance(Ci.nsIInputStreamPump);
     streamPump.init(this._input, -1, -1, 0, 0, false);
     streamPump.asyncRead(this, null);
@@ -87,31 +90,35 @@ HttpServerListener.prototype = {
     var response = responseHeader + responseBody;
 
     this._output.write(response, response.length);
+    this._output.flush();
+
+	    
     this._output.close();
     this._input.close();
+    this._instream.close();
     //this._bInputStream.close();
   },
   onStartRequest: function(aRequest, aContext){
     //dump("onStartRequest\n");
 
     this._data = "";
-    this._bInputStream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
+    //this._bInputStream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
   },
 
   onStopRequest: function(aRequest, aContext, aStatus){
-    //dump("onStopRequest\n");
-	  //log("###onStopRequest");
+	 //log("###onStopRequest  this._data = " +  this._data);
   },
 
   onDataAvailable: function(aRequest, aContext, aInputStream, aOffset, aCount){
 	try
 	{		
-    this._bInputStream.setInputStream(aInputStream);
-    var availableData = this._bInputStream.readBytes(aCount);
-
-    this._data += availableData;
-     //Application.console.log("server _data : " + this._data);
-		var datas = this._data.split("\r\n\r\n");
+	    //this._bInputStream.setInputStream(aInputStream);
+	    //var availableData = this._bInputStream.readBytes(aCount);
+	    var availableData = this._instream.read(aCount);
+	    this._data += availableData;
+	    //Application.console.log("server _data : " + this._data);
+		
+    	var datas = this._data.split("\r\n\r\n");
 		
 		var header = datas[0];
 		
@@ -129,7 +136,6 @@ HttpServerListener.prototype = {
 		if(methods[0] == "POST")
 		{
 			var postdata = datas[1]; 
-			//var responseBody ;
 			//if(this._data.match("(<\/xml>)$")){
 			if(this._data.match(/<\/xml>/)){
 				//log("server post data : " + methods[1] + " : " + postdata);
