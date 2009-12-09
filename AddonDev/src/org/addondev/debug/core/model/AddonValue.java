@@ -1,6 +1,7 @@
 package org.addondev.debug.core.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.debug.core.DebugException;
@@ -55,6 +56,7 @@ public class AddonValue extends PlatformObject implements IValue {
 		{
 			//return target.getVariables(stackFrameID, parent, name);	
 			ArrayList<IVariable> list = target.getChildVariables(stackFrameID, parent, name);
+			Collections.sort(list, new AddonValueComparator());
 			return list.toArray(new IVariable[list.size()]);
 		}
 		else
