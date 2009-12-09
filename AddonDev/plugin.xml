@@ -254,6 +254,16 @@
                menubarPath="debug">
          </action>
       </viewerContribution>
+      <viewerContribution
+            id="org.addondev.viewerContribution1"
+            targetID="#AddonDevJavascriptEditContext">
+         <action
+               class="org.addondev.debug.ui.actions.AddonDevWatchExpressionAction"
+               id="org.addondev.debug.ui.actions.AddonDevWatchExpression"
+               label="Watch"
+               menubarPath="additions">
+         </action>
+      </viewerContribution>
    </extension>
    <extension
          point="org.eclipse.debug.core.sourcePathComputers">
@@ -269,6 +279,13 @@
           	id="org.addondev.debug.core.addondevsourcelocatorcator"
             name="name">
       </sourceLocator>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.watchExpressionDelegates">
+      <watchExpressionDelegate
+            debugModel="org.addondev.debug"
+            delegateClass="org.addondev.debug.core.AddonDevWatchExpressionDelegate">
+      </watchExpressionDelegate>
    </extension>
 
 </plugin>

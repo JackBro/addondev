@@ -1,5 +1,11 @@
 package org.addondev.editor.javascript;
 
+import org.addondev.debug.core.model.AddonDebugTarget;
+import org.addondev.debug.core.model.AddonStackFrame;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.model.IDebugElement;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IDocument;
@@ -26,19 +32,32 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 	}
 
 	@Override
-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+	public synchronized String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// TODO Auto-generated method stub
 		if(!textHoverEnable) return null;
-			
-		String text = null;
-		try {
-			text = getTest(textViewer, hoverRegion.getOffset());
-			return text;
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
+		IAdaptable object = DebugUITools.getDebugContext();
+	    IDebugElement context = null;
+	    //if (object instanceof IDebugElement) {
+	    if (object instanceof AddonStackFrame) {
+	        context = (AddonStackFrame) object;
+	    }
+	        
+	    if(context != null){
+			String text = null;
+			try {
+				text = getTest(textViewer, hoverRegion.getOffset());
+				return text;
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    else
+	    {
+	    	String text = "edit";
+	    	return text;
+	    }
 		return null;
 	}
 

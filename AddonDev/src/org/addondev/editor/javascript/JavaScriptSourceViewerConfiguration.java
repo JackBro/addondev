@@ -66,8 +66,7 @@ public class JavaScriptSourceViewerConfiguration extends
 		reconciler.setRepairer(dr, JavaScriptPartitionScanner.JS_COMMENT);
 		
 		return reconciler;		
-	}
-	
+	}	
 	
 //	@Override
 //	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
@@ -79,12 +78,12 @@ public class JavaScriptSourceViewerConfiguration extends
 //		//return super.getContentAssistant(sourceViewer);
 //	}
 //	
-//	@Override
-//	public ITextHover getTextHover(ISourceViewer sourceViewer,
-//			String contentType, int stateMask) {
-//		// TODO Auto-generated method stub
-//		// return super.getTextHover(sourceViewer, contentType, stateMask);
-//		return new JavaScriptTextHover(sourceViewer, contentType);
-//	}
+
+	@Override
+	public ITextHover getTextHover(ISourceViewer sourceViewer,
+			String contentType) {
+		// TODO Auto-generated method stub
+		return new JavaScriptTextHover(sourceViewer, contentType);
+	}
 
 }

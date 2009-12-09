@@ -284,7 +284,11 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
     	
     public Object getAdapter(Class adapter) {
         //AdapterDebug.print(this, adapter);
-
+    	if(adapter == AddonStackFrame.class)
+    	{
+    		return this;
+    	}
+    	
         if (adapter.equals(ILaunch.class) ||
             adapter.equals(IResource.class)){
             return fThread.getAdapter(adapter);
