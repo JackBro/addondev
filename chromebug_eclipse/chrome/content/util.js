@@ -216,12 +216,13 @@ Firebug.chromebug_eclipse.util = {
   				Application.console.log("getValuesXML names[0] == this namepath = " + namepath);
   				var thisVar = frame.thisValue.getWrappedValue();
   				//var test = ["this","_panel"];
-  				values = getMembers(thisVar, names, 1);
-  				Application.console.log("###members values = " + values.toString());
-  				for(key in values)
-  				{
-  					Application.console.log("###values key = " + key + " : " + values[key]);
-  				}  			
+  				//values = getMembers(thisVar, names, 1);
+  				values = this.getvalues(thisVar, names, 1); 
+//  				Application.console.log("###members values = " + values.toString());
+//  				for(key in values)
+//  				{
+//  					Application.console.log("###values key = " + key + " : " + values[key]);
+//  				}  			
 	  		}
 	  		else
 	  		{
@@ -299,16 +300,12 @@ Firebug.chromebug_eclipse.util = {
 	  		
 	  		if(names[0] == "this")
 	  		{
-  				//namepath = "Hello";
   				Application.console.log("getValuesXML names[0] == this namepath = " + namepath);
   				var thisVar = frame.thisValue.getWrappedValue();
-  				//var test = ["this","_panel"];
-  				value = getMembers(thisVar, names, 1);
+  				//value = getMembers(thisVar, names, 1);
+  				value = this.getvalues(thisVar, names, 1); 
   				Application.console.log("###members value = " + value.toString());
-  				for(key in value)
-  				{
-  					Application.console.log("###value key = " + key + " : " + value[key]);
-  				}  			
+  			
 	  		}
 	  		else
 	  		{
@@ -330,7 +327,7 @@ Firebug.chromebug_eclipse.util = {
 			var valuesxml= this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", 
 					namepath, valueType, encodeURIComponent(value), hasCh);			
             
-            Application.console.log("getvalueXML namepath = " + namepath + " : valuesxml = " + valuesxml);
+            //Application.console.log("getvalueXML namepath = " + namepath + " : valuesxml = " + valuesxml);
 	        return "<xml> " + valuesxml + " </xml>"; 	
 		}		
 	},

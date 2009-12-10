@@ -3,19 +3,12 @@ package org.addondev.debug.net;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.ILineBreakpoint;
 
 public class SendRequest {
 	public static String debuggerport;
