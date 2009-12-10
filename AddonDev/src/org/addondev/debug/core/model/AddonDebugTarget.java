@@ -781,35 +781,43 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 //		//return new IStackFrame[0];
 //	}
 
-	/**
-	 * Returns the current value of the given variable.
-	 * 
-	 * @param variable
-	 * @return variable value
-	 * @throws DebugException if the request fails
-	 */
-	protected IValue getVariableValue(AddonVariable variable) throws DebugException {
-//		fRequestWriter.println("var " + variable.getStackFrame().getIdentifier() + " " + variable.getName());
-//		fRequestWriter.flush();
-//		try {
-//			String value = fRequestReader.readLine();
-//			return new PDAValue(this, value);
-//		} catch (IOException e) {
-//			abort(MessageFormat.format("Unable to retrieve value for variable {0}", new String[]{variable.getName()}), e);
-//		}
-//		return null;
-		return null;
-	}
-		
-	protected ArrayList<IVariable> getVariables(String stackFramedepth, String parent, String name) {
+	 
+	
+	 public IVariable getVariable(String stackFramedepth, String parent, String name) {
 		ArrayList<IVariable> variables = null;
 		String xmldata = "";
 		String path = "";
 		
-//		if(!isSuspended()) 
-//		{
-//			return new AddonVariable[0];
-//		}
+		try {
+			if(parent != null)
+				path = parent + "." + name;
+			else
+			{
+				//parent = name;
+				path = name;
+			}
+			
+			if(path == null) path = "";
+			
+			xmldata =  SendRequest.getValue(stackFramedepth, path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//return null;
+		}
+		try {
+			variables = XMLUtils.VariablesFromXML(this, stackFramedepth, xmldata, parent);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return variables.get(0);
+	}
+		
+	public ArrayList<IVariable> getVariables(String stackFramedepth, String parent, String name) {
+		ArrayList<IVariable> variables = null;
+		String xmldata = "";
+		String path = "";
 		
 		try {
 			if(parent != null)
@@ -837,7 +845,6 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		return variables;
 	}
 	
-	private String VariablesXML = null;
 	private HashMap<String, String> childVariablesDataCash = new HashMap<String, String>();
 	
 	protected ArrayList<IVariable> getChildVariables(String stackFramedepth, String parent, String name) {

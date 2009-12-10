@@ -1,9 +1,7 @@
 package org.addondev.editor.javascript;
 
-import org.addondev.debug.core.model.AddonDebugTarget;
 import org.addondev.debug.core.model.AddonStackFrame;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.text.BadLocationException;
@@ -42,9 +40,10 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 	    if (object instanceof AddonStackFrame) {
 	        context = (AddonStackFrame) object;
 	    }
-	        
+	    
+	    String text = null;
 	    if(context != null){
-			String text = null;
+			
 			try {
 				text = getTest(textViewer, hoverRegion.getOffset());
 				return text;
@@ -55,7 +54,12 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 	    }
 	    else
 	    {
-	    	String text = "edit";
+			try {
+				text = getTest(textViewer, hoverRegion.getOffset());
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    	return text;
 	    }
 		return null;
@@ -98,7 +102,8 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 		while(endOffset <= doclen)
 		{
 			char ch = textViewer.getDocument().getChar(endOffset);
-			if(!Character.isJavaIdentifierPart(ch) && ch != '.')
+			//if(!Character.isJavaIdentifierPart(ch) && ch != '.')
+			if(!Character.isJavaIdentifierPart(ch))
 			{
 				endOffset--;
 				break;

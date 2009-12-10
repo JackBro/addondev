@@ -112,7 +112,7 @@ Firebug.chromebug_eclipse.util = {
         var listValue = {value: null}, lengthValue = {value: 0};
         frame.scope.getProperties(listValue, lengthValue);
         //LOG("getLocalsXML lengthValue.value = " + lengthValue.value);
-        var props = [], funcs = [];
+        //var props = [], funcs = [];
         for (var i = 0; i < lengthValue.value; ++i)
         {
             var prop = listValue.value[i];
@@ -143,25 +143,27 @@ Firebug.chromebug_eclipse.util = {
 		var listValue = {value: null}, lengthValue = {value: 0};
 		if(level == 0)
 		{
-			//Application.console.log("getvalues parent = " + parent);
-			//Application.console.log("getvalues level = " + level);
+			Application.console.log("getvalues parent = " + parent);
+			Application.console.log("getvalues level = " + level);
 			parent.getProperties(listValue, lengthValue);
+
 			var props = [], funcs = [];
-			//alert("getvalues lengthValue.value = " + lengthValue.value +" level = " +  level);
+			Application.console.log("getvalues lengthValue.value = " + lengthValue.value +" level = " +  level);
 			//alert("names[level] = " + names[level]);
 			for (var i = 0; i < lengthValue.value; ++i)
 			{
 				var prop = listValue.value[i];
 				var name = prop.name.getWrappedValue();
 				
-				//Application.console.log("getvalues prop = " + prop);
-				//Application.console.log("getvalues name = " + name);
+				Application.console.log("getvalues prop = " + prop);
+				Application.console.log("getvalues name = " + name);
 				
 				if (this.ignoreVars[name] == 1)
 				    continue;
 				    
-				if(names[level] == name)
+				if(names[level].indexOf(name) == 0 && names[level].length == name.length)
 				{
+					Application.console.log("names[level] == name = " + name);
 					//alert("1names[level] == name : " + names[level] + " == " + name);
 					return this.getvalues(prop.value.getWrappedValue(), names, level+1);
 					//return this.getvalues(prop.value, names, level+1);
@@ -176,10 +178,12 @@ Firebug.chromebug_eclipse.util = {
 //            	var insecureObject = parent;
             
 			//var insecureObject = parent;
+			Application.console.log(" else parent = " + parent + " : level = " +  level);
 			for (var name in parent)
 			{		
 				if(names[level] == name)
 				{
+					//var n = 
 					//alert("2names[level] == name : " + names[level] + " == " + name);
 					return this.getvalues(parent[name], names,  level+1);
 				}
@@ -209,19 +213,25 @@ Firebug.chromebug_eclipse.util = {
 	  		if(names[0] == "this")
 	  		{
   				//namepath = "Hello";
-  				//Application.console.log("getValuesXML namepath = " + namepath);
+  				Application.console.log("getValuesXML names[0] == this namepath = " + namepath);
   				var thisVar = frame.thisValue.getWrappedValue();
   				//var test = ["this","_panel"];
   				values = getMembers(thisVar, names, 1);
-  				
-  				//for(key in members)
-  				//{
-  				//	Application.console.log("###members key = " + key + " : " + members[key]);
-  				//}  			
+  				Application.console.log("###members values = " + values.toString());
+  				for(key in values)
+  				{
+  					Application.console.log("###values key = " + key + " : " + values[key]);
+  				}  			
 	  		}
 	  		else
 	  		{
-	        	values = this.getvalues(frame.scope, names, 0);
+	        	values = this.getvalues(frame.scope, names, 0);  	
+	        	Application.console.log("getvaluesXML names[0] != this namepath = " + namepath + " : values = " + values );
+
+				for(key in value)
+				{
+					Application.console.log("###value key = " + key + " : " + value[key]);
+				} 
 	  		}
 	        //alert("getValuesXML values = " + values);
 	       
@@ -244,25 +254,85 @@ Firebug.chromebug_eclipse.util = {
             	}
             	catch (exc)
             	{
-            		//Application.console.log("getvaluesXML exp name = " + name + " : " + exc);
+            		Application.console.log("getvaluesXML exp name = " + name + " : " + exc);
             	}
             	
             	try
             	{
-            	if(value != undefined)
-            	{
- 	            var valueType = typeof(value);
-	            var hasCh = this.hasChildren(value);
-	        	valuesxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", name, valueType, encodeURIComponent(value), hasCh); 
+            		if(value != undefined)
+            		{
+            			var valueType = typeof(value);
+            			var hasCh = this.hasChildren(value);
+            			valuesxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", name, valueType, encodeURIComponent(value), hasCh); 
+            		}
             	}
-            	}catch (exc2)
+            	catch (exc2)
             	{
             		Application.console.log("getvaluesXML exp2 name = " + name + " : " + exc2);
             	}
+            	
+            	
             }
-            
+            //Application.console.log("getvaluesXML namepath = " + namepath + " : valuesxml = " + valuesxml);
 	        return "<xml> " + valuesxml + " </xml>"; 	
 		}
+	},
+	
+	getValueXML : function(frame, namepath)
+	{
+		var names = [];
+		
+		if(namepath=="")
+		{	
+			return this.getLocalsXML(frame);
+		}
+		else
+		{
+	  		if(namepath.indexOf(".") >=0 )
+	  			names = namepath.split(".");
+	  		else
+	  		{
+	  			names.push(namepath);
+	  		}
+	  		
+	  		var value;
+	  		
+	  		if(names[0] == "this")
+	  		{
+  				//namepath = "Hello";
+  				Application.console.log("getValuesXML names[0] == this namepath = " + namepath);
+  				var thisVar = frame.thisValue.getWrappedValue();
+  				//var test = ["this","_panel"];
+  				value = getMembers(thisVar, names, 1);
+  				Application.console.log("###members value = " + value.toString());
+  				for(key in value)
+  				{
+  					Application.console.log("###value key = " + key + " : " + value[key]);
+  				}  			
+	  		}
+	  		else
+	  		{
+	  			value = this.getvalues(frame.scope, names, 0);  	
+	        	Application.console.log("getvalueXML names[0] != this namepath = " + namepath + " : value = " + value );
+
+	  		}
+	        //alert("getValuesXML values = " + values);
+	       
+//			if (value.wrappedJSObject)
+//            	var insecureObject = value.wrappedJSObject;
+//        	else
+//            	var insecureObject = value;
+//			
+//			value = insecureObject;
+			var valueType = typeof(value);
+			var hasCh = this.hasChildren(value);
+			
+			var valuesxml= this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", 
+					namepath, valueType, encodeURIComponent(value), hasCh);			
+            
+            Application.console.log("getvalueXML namepath = " + namepath + " : valuesxml = " + valuesxml);
+	        return "<xml> " + valuesxml + " </xml>"; 	
+		}		
 	},
 	
 	getStackFramesXML : function(){

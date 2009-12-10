@@ -363,6 +363,34 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  			Application.console.log("getvalues result.length = 0");
 	  		}
 	  		break;
+	  	case "getvalue": 
+	  		Application.console.log("getvalue postdata = " + postdata);
+	  		//alert("getvalues postdata = " + postdata);
+	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
+	  		//Application.console.log("getvalues result.length = " + result.length);
+	  		if(result.length ==1)
+	  		{
+	  			var depth = parseInt(result[0]["depth"]);
+	  			var valuename = result[0]["valuename"];
+	  			var frame = Firebug.chromebug_eclipse.util.currnetFrame;
+	  			
+	  			//Application.console.log("getvalues depth = " + depth);
+	  			//Application.console.log("getvalues valuename = " + valuename);
+	  			//Application.console.log("getvalues frame = " + frame);
+	  			//if(valuename == 'this') depth++;
+	  			
+		  		for (let i = 0; i<depth; i++)
+		  		{
+		  			frame = frame.callingFrame;
+		  		}
+		  		body = Firebug.chromebug_eclipse.util.getValueXML(frame, valuename);	
+		  		Application.console.log("getvalue body = " + body);
+	  		}
+	  		else
+	  		{
+	  			Application.console.log("getvalue result.length = 0");
+	  		}
+	  		break;
 	  	case "terminate":
 	  		Firebug.chromebug_eclipseModle.terminate();
 	  		break;

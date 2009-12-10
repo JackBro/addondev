@@ -102,7 +102,12 @@ public class SendRequest {
 		return RequestData("getvalues", data);
 	}
 	
-	public static String RequestData(String command) throws IOException
+	public static String getValue(String stackframedepth, String name) throws IOException{				
+		String data = String.format("<xml><stackframe depth=\"%s\" valuename=\"%s\"/></xml>", stackframedepth, name);
+		return RequestData("getvalue", data);
+	}
+	
+	private static String RequestData(String command) throws IOException
 	{			
 		URL url1 = new URL("http://localhost:" + debuggerport + "/?cmd=" + command);
 		HttpURLConnection http = (HttpURLConnection)url1.openConnection();
@@ -129,7 +134,7 @@ public class SendRequest {
 		return res;
 	}
 	
-	public static String RequestData(String command, String data) throws IOException
+	private static String RequestData(String command, String data) throws IOException
 	{			
 		URL url1 = new URL("http://localhost:" + debuggerport + "/?cmd=" + command);
 		HttpURLConnection http = (HttpURLConnection)url1.openConnection();

@@ -70,6 +70,11 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
 		return fFn;
 	}
 	
+	public int getDepth()
+	{
+		return Integer.parseInt(fdepth);
+	}
+	
 	@Override
 	public int getCharEnd() throws DebugException {
 		// TODO Auto-generated method stub
