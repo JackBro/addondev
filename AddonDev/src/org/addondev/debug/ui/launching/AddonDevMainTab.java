@@ -50,7 +50,7 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 	}
 
 	private FileFieldEditor ffirefoxPathEditor;
-	private Text fprofilename;
+	//private Text fprofilename;
 	private DirectoryFieldEditor fprofiledir;	
 	private Text ffirefoxargs;	
 	private CheckboxTableViewer viewer;
@@ -63,20 +63,20 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 				
         Group firefoxpathgroup= new Group(composite, SWT.NONE);
-        firefoxpathgroup.setText("firefox path"); 
+        firefoxpathgroup.setText("firefox"); 
         GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
         firefoxpathgroup.setLayoutData(gd1);
         GridLayout layout1 = new GridLayout();
         layout1.numColumns = 1;
         firefoxpathgroup.setLayout(layout1);
         
-	    Composite composite5 = new Composite(firefoxpathgroup, SWT.NONE);
-		GridLayout layout5 = new GridLayout();
-		layout5.numColumns = 3;
-		composite5.setLayout(layout5);
-		composite5.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//	    Composite composite5 = new Composite(firefoxpathgroup, SWT.NONE);
+//		GridLayout layout5 = new GridLayout();
+//		layout5.numColumns = 3;
+//		composite5.setLayout(layout5);
+//		composite5.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-        ffirefoxPathEditor = new FileFieldEditor("test", "firefox Path", composite5);
+        ffirefoxPathEditor = new FileFieldEditor("test", "firefox Path", firefoxpathgroup);
         ffirefoxPathEditor.setPropertyChangeListener(new IPropertyChangeListener(){
 
 			@Override
@@ -88,32 +88,32 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 		});        
         
 		
-        Group profilegroup= new Group(composite, SWT.NONE);
-        profilegroup.setText("Profile"); 
-        GridData gd2 = new GridData(GridData.FILL_HORIZONTAL);
-        profilegroup.setLayoutData(gd2);
-        GridLayout layout2 = new GridLayout();
-        layout2.numColumns = 1;
-        profilegroup.setLayout(layout2);
+//        Group profilegroup= new Group(composite, SWT.NONE);
+//        profilegroup.setText("Profile"); 
+//        GridData gd2 = new GridData(GridData.FILL_HORIZONTAL);
+//        profilegroup.setLayoutData(gd2);
+//        GridLayout layout2 = new GridLayout();
+//        layout2.numColumns = 1;
+//        profilegroup.setLayout(layout2);
         
-	    Composite composite3 = new Composite(profilegroup, SWT.NONE);
-		GridLayout layout3 = new GridLayout();
-		layout3.numColumns = 3;
-		composite3.setLayout(layout3);
-		composite3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//	    Composite composite3 = new Composite(profilegroup, SWT.NONE);
+//		GridLayout layout3 = new GridLayout();
+//		layout3.numColumns = 3;
+//		composite3.setLayout(layout3);
+//		composite3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		fprofilename = addText(composite3, "Profile Name");
-		fprofilename.addListener(SWT.Modify, new Listener(){
-
-			@Override
-			public void handleEvent(Event event) {
-				// TODO Auto-generated method stub
-				updateLaunchConfigurationDialog();
-			}
-        	
-        });
+//		fprofilename = addText(composite3, "Profile Name");
+//		fprofilename.addListener(SWT.Modify, new Listener(){
+//
+//			@Override
+//			public void handleEvent(Event event) {
+//				// TODO Auto-generated method stub
+//				updateLaunchConfigurationDialog();
+//			}
+//        	
+//        });
 		
-		fprofiledir = new DirectoryFieldEditor("test", "Profile Path", composite3);
+		fprofiledir = new DirectoryFieldEditor("test", "Profile Path", firefoxpathgroup);
 		fprofiledir.setPropertyChangeListener(new IPropertyChangeListener(){
 
 			@Override
@@ -193,7 +193,7 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 			String firefoxpath = configuration.getAttribute(PrefConst.FIREFOX_PATH, "");
 			ffirefoxPathEditor.setStringValue(firefoxpath);
 			
-			fprofilename.setText(configuration.getAttribute(PrefConst.FIREFOX_PROFILE_NANE, ""));
+			//fprofilename.setText(configuration.getAttribute(PrefConst.FIREFOX_PROFILE_NANE, ""));
 			String dir = configuration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH, "");
 			fprofiledir.setStringValue(dir);
 			ffirefoxargs.setText(configuration.getAttribute(PrefConst.FIREFOX_ARGS, ""));
@@ -251,7 +251,7 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 		// TODO Auto-generated method stub		
 		configuration.setAttribute(PrefConst.FIREFOX_PATH, ffirefoxPathEditor.getStringValue());
 		
-		configuration.setAttribute(PrefConst.FIREFOX_PROFILE_NANE, fprofilename.getText());
+		//configuration.setAttribute(PrefConst.FIREFOX_PROFILE_NANE, fprofilename.getText());
 		
 		String value = fprofiledir.getStringValue();
 		configuration.setAttribute(PrefConst.FIREFOX_PROFILE_PATH, value);
@@ -279,8 +279,9 @@ public class AddonDevMainTab extends AbstractLaunchConfigurationTab {
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		boolean result = super.isValid(launchConfig);
 		if (result) {
-		String name = fprofilename.getText();
-		if (name.length() == 0) {
+		//String name = fprofilename.getText();
+		String profiledir = fprofiledir.getStringValue();
+		if (profiledir.length() == 0) {
 			result = true;
 		}
 		

@@ -51,7 +51,7 @@ public class AddonDevUtil {
 	private IPreferenceStore fStore;
 	
 	private static IProject[] debugprojects;
-	private String[] commandline;
+	//private String[] commandline;
 	
 	private Map<String, List<List<String>>> mapProject2Chrome = new HashMap<String, List<List<String>>>(); // projectname:[chrome, path],[chrome, path]}
 	private Map<String, List<String>> mapChrome2Projec = new HashMap<String, List<String>>(); // chrome:[projectname, path]
@@ -65,21 +65,19 @@ public class AddonDevUtil {
 	public AddonDevUtil(ILaunchConfiguration configuration)
 	{
 		fLaunchConfiguration = configuration;
-		fStore = AddonDevPlugin.getDefault().getPreferenceStore();
-		
-		
+		fStore = AddonDevPlugin.getDefault().getPreferenceStore();	
 	}
 	
-	public void init(ILaunchConfiguration configuration) throws CoreException, IOException, ParserConfigurationException, SAXException, TransformerException
+	public void init() throws CoreException, IOException, ParserConfigurationException, SAXException, TransformerException
 	{
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();	
 		//try
 		//{
-			debugprojects = getDebugProjects(configuration, root.getProjects());
+			debugprojects = getDebugProjects(fLaunchConfiguration, root.getProjects());
 			setContentMap(debugprojects);
 			
-			String path =  configuration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH, "");
+			String path =  fLaunchConfiguration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH, "");
 			checkAddonFile(path, debugprojects);
 			
 			contentMap(debugprojects);
@@ -91,13 +89,13 @@ public class AddonDevUtil {
 		//}
 		//return true;
 			
-			commandline = getCommandLine(configuration);
+		//	commandline = getCommandLine(configuration);
 	}
 	
-	public String[] getProcessCommandLine()
-	{
-		return commandline;
-	}
+//	public String[] getProcessCommandLine()
+//	{
+//		return commandline;
+//	}
 	
 	private IProject[] getDebugProjects(ILaunchConfiguration configuration, IProject[] projects) throws CoreException
 	{
@@ -246,47 +244,50 @@ public class AddonDevUtil {
 	}
 	
 	
-	private String[] getCommandLine(ILaunchConfiguration configuration) throws CoreException
+//	private String[] getCommandLine(ILaunchConfiguration configuration) throws CoreException
+//	{
+//		
+//		int eclispport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(PrefConst.ECLIPSE_PORT);
+//		int debuggerport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(PrefConst.DEBUGGER_PORT);	
+//		
+//		String firefoxpath = configuration.getAttribute(PrefConst.FIREFOX_PATH, "");
+//		String profilename = configuration.getAttribute(PrefConst.FIREFOX_PROFILE_NANE, "");
+//		String firefoxargs = configuration.getAttribute(PrefConst.FIREFOX_ARGS, "");
+//		
+//		List<String> commandList = new ArrayList<String>();		
+//		commandList.add(firefoxpath);
+//	
+//		//-p "chromebugtest" -no-remote -ce_eport 8084 -ce_cport 8083 -chrome chrome://chromebug/content/chromebug.xul		
+//		commandList.add("-p");
+//		commandList.add(profilename);
+//		
+//		commandList.add("-no-remote");
+//		
+//		commandList.add("-ce_eport");
+//		commandList.add(String.valueOf(eclispport));
+//		commandList.add("-ce_cport");
+//		commandList.add(String.valueOf(debuggerport));
+//		
+//		commandList.add("-chrome");
+//		commandList.add("chrome://chromebug/content/chromebug.xul");
+//		
+//		String[] args = firefoxargs.split(" ");
+//		for (String string : args) {
+//			commandList.add(string);
+//		}
+//		
+//		return commandList.toArray(new String[commandList.size()]);
+//	}
+	
+	
+	public String[] getDebugStartCommandLine() throws CoreException
 	{
-		
-		int eclispport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(PrefConst.ECLIPSE_PORT);
-		int debuggerport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(PrefConst.DEBUGGER_PORT);	
-		
-		String firefoxpath = configuration.getAttribute(PrefConst.FIREFOX_PATH, "");
-		String profilename = configuration.getAttribute(PrefConst.FIREFOX_PROFILE_NANE, "");
-		String firefoxargs = configuration.getAttribute(PrefConst.FIREFOX_ARGS, "");
-		
-		List<String> commandList = new ArrayList<String>();		
-		commandList.add(firefoxpath);
-	
-		//-p "chromebugtest" -no-remote -ce_eport 8084 -ce_cport 8083 -chrome chrome://chromebug/content/chromebug.xul		
-		commandList.add("-p");
-		commandList.add(profilename);
-		
-		commandList.add("-no-remote");
-		
-		commandList.add("-ce_eport");
-		commandList.add(String.valueOf(eclispport));
-		commandList.add("-ce_cport");
-		commandList.add(String.valueOf(debuggerport));
-		
-		commandList.add("-chrome");
-		commandList.add("chrome://chromebug/content/chromebug.xul");
-		
-		String[] args = firefoxargs.split(" ");
-		for (String string : args) {
-			commandList.add(string);
-		}
-		
-		return commandList.toArray(new String[commandList.size()]);
-	}
-	
-	
-	public String[] makeCommandLine() throws CoreException
-	{
-		
-		String profilepath = fLaunchConfiguration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH , "");
 		List<String> commands = new ArrayList<String>();	
+		
+		String firefoxpath = fLaunchConfiguration.getAttribute(PrefConst.FIREFOX_PATH, "");
+		String profilepath = fLaunchConfiguration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH , "");		
+		
+		commands.add(firefoxpath);
 		
 		commands.add("-no-remote");
 		

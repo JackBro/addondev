@@ -1,5 +1,6 @@
 package org.addondev.debug.ui.launching;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -32,9 +33,14 @@ public class LaunchShortcut implements ILaunchShortcut {
 			} else if (obj instanceof IAdaptable) {
 				targetProject = (IProject) ((IAdaptable) obj).getAdapter(IProject.class);
 			}
+			else if(obj instanceof IFile)
+			{
+				IFile file = (IFile)obj;
+				targetProject = file.getProject();
+			}
 
 			if (targetProject != null) {
-				launch(targetProject);
+				launch(targetProject, mode);
 			}
 		}
 	}
@@ -45,7 +51,7 @@ public class LaunchShortcut implements ILaunchShortcut {
 		IEditorInput input = editor.getEditorInput();
 		if (input instanceof IFileEditorInput) {
 			IProject targetProject = ((IFileEditorInput) input).getFile().getProject();
-			launch(targetProject);
+			launch(targetProject, mode);
 		}
 	}
 	
@@ -53,10 +59,10 @@ public class LaunchShortcut implements ILaunchShortcut {
 	 * build and launch for air application.
 	 * @param targetProject
 	 */
-	private void launch(IProject targetProject) {
+	private void launch(IProject targetProject, String mode) {
 		try {
 			ILaunchConfiguration config = getLaunchConfiguration(targetProject);
-			DebugUITools.launch(config, ILaunchManager.DEBUG_MODE);
+			DebugUITools.launch(config, mode);
 		} catch (Exception ex) {
 			//AIRPlugin.logException(ex);
 		}
@@ -78,21 +84,23 @@ public class LaunchShortcut implements ILaunchShortcut {
 //				return configs[i];
 //			}
 //		}
-
-		ILaunchConfigurationType type = manager.getLaunchConfigurationType("jp.javascript.debug.core.launchConfigurationType");//LaunchAIRConfiguration.ID);
+		
+		//return manager.getLaunchConfigurations()[0];
+		//project.g
+		/ILaunchConfigurationType type = manager.getLaunchConfigurationType("org.addondev.debug.core.launchConfigurationType");//LaunchAIRConfiguration.ID);
 
 		ILaunchConfigurationWorkingCopy wc = type.newInstance(null, manager
 				.generateUniqueLaunchConfigurationNameFrom(project.getName()));
-
-//		ScopedPreferenceStore projectStore = new ScopedPreferenceStore(new ProjectScope(project),
-//				AIRPlugin.PLUGIN_ID);
-//		String descriptor = projectStore.getString(AIRPlugin.PREF_DESCRIPTOR);
 //
-//		wc.setAttribute(LaunchAIRMainTab.ATTR_PROJECT, project.getName());
-//		wc.setAttribute(LaunchAIRMainTab.ATTR_TARGET, descriptor);
-		//wc.setAttribute(IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND, false);
-		//wc.setAttribute(IDebugUIConstants.ID_DEBUG_PERSPECTIVE, false);
-
+////		ScopedPreferenceStore projectStore = new ScopedPreferenceStore(new ProjectScope(project),
+////				AIRPlugin.PLUGIN_ID);
+////		String descriptor = projectStore.getString(AIRPlugin.PREF_DESCRIPTOR);
+////
+////		wc.setAttribute(LaunchAIRMainTab.ATTR_PROJECT, project.getName());
+////		wc.setAttribute(LaunchAIRMainTab.ATTR_TARGET, descriptor);
+//		//wc.setAttribute(IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND, false);
+//		//wc.setAttribute(IDebugUIConstants.ID_DEBUG_PERSPECTIVE, false);
+//
 		return wc.doSave();
 	}
 }

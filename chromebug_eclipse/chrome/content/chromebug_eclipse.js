@@ -106,15 +106,8 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     },
     terminate : function()
     {
-		var os = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
-		var cancelQuit = Cc["@mozilla.org/supports-PRBool;1"].createInstance(Ci.nsISupportsPRBool);
-		os.notifyObservers(cancelQuit, "quit-application-requested", null);
-      
-		if (cancelQuit.data) return;
-      
-		//alert("quit");
-		var appStartup = Cc['@mozilla.org/toolkit/app-startup;1'].getService(Ci.nsIAppStartup);
-		appStartup.quit(Ci.nsIAppStartup.eAttemptQuit);
+    	Application.console.log("chrome_eclipse terminate");
+    	goQuitApplication();
     },
     
 	startServer : function()
@@ -392,6 +385,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  		}
 	  		break;
 	  	case "terminate":
+	  		Application.console.log("terminate");
 	  		Firebug.chromebug_eclipseModle.terminate();
 	  		break;
 	  	default:

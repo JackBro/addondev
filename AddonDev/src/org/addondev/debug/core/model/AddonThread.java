@@ -41,7 +41,7 @@ public class AddonThread extends PlatformObject implements IThread {
 	@Override
 	public String getName() throws DebugException {
 		// TODO Auto-generated method stub
-		return "Thread[1]";
+		return "Thread";
 	}
 
 	@Override
@@ -94,7 +94,8 @@ public class AddonThread extends PlatformObject implements IThread {
 	@Override
 	public synchronized boolean canResume() {
 		// TODO Auto-generated method stub
-		return isSuspended();
+		return target.canResume();
+		//return isSuspended();
 	}
 
 	@Override

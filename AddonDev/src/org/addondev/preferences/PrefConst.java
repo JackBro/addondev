@@ -14,7 +14,7 @@ public class PrefConst {
 	public static final int DEFAULT_DEBUGGER_CONEECT_TIMEOUT = 20000;
 	
 	public static final String FIREFOX_PATH = "org.addondev.pref.firefox.path";
-	public static final String FIREFOX_PROFILE_NANE = "org.addondev.pref.firefox.profile.name";
+	//public static final String FIREFOX_PROFILE_NANE = "org.addondev.pref.firefox.profile.name";
 	public static final String FIREFOX_PROFILE_PATH = "org.addondev.pref.firefox.profile.path";
 	public static final String FIREFOX_ARGS = "org.addondev.pref.firefox.args";
 	public static final String FIREFOX_DEBUGTARGETADDONS = "org.addondev.pref.firefox.debugtargetaddons";

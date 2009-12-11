@@ -55,30 +55,30 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
 		
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			
-			AddonDevUtil addondevutil = new AddonDevUtil(configuration);	
-			try {
-				addondevutil.init(configuration);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ParserConfigurationException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (SAXException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (TransformerException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//			AddonDevUtil addondevutil = new AddonDevUtil(configuration);	
+//			try {
+//				addondevutil.init(configuration);
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			} catch (ParserConfigurationException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			} catch (SAXException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			} catch (TransformerException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
 
 			try 
 			{		
 				
 				//IPath p =  addondevutil.getPath("chrome://helloworld/content/helloWorld.js");
 				
-				AddonDebugTarget target = new AddonDebugTarget(configuration, launch, addondevutil);
-				
+				AddonDebugTarget target = new AddonDebugTarget(configuration, launch);
+				target.init();
 				target.startPrcess(configuration, launch);
 				
 				launch.addDebugTarget(target);

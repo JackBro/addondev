@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 
 import org.addondev.debug.net.SendRequest;
@@ -30,6 +31,7 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
+import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchListener;
@@ -46,8 +48,8 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 import org.xml.sax.SAXException;
 
-//http://sites.google.com/site/shin1ogawa/eclipseplugin/debug
-public class AddonDebugTarget extends PlatformObject implements IDebugTarget, ILaunchListener {
+
+public class AddonDebugTarget extends PlatformObject implements IDebugTarget, ILaunchListener, IDebugEventSetListener {
 
 	private IProcess fProcess;
 	
@@ -88,11 +90,13 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		this.fCloseBrowser = closeBrowser;
 	}
 
-	public AddonDebugTarget(ILaunchConfiguration configuration, ILaunch launch, AddonDevUtil addondevutil) throws Exception {
+	public AddonDebugTarget(ILaunchConfiguration configuration, ILaunch launch) throws Exception {
 		// TODO Auto-generated constructor stub
 		fLaunch = launch;		
-		fAddonDevUtil = addondevutil;
+		//fAddonDevUtil = addondevutil;
+		fAddonDevUtil = new AddonDevUtil(configuration);
 		
+		DebugPlugin.getDefault().addDebugEventListener(this);
 		//startDebug();
 		//IPath pp = ((JSLineBreakpoint)breakpoint).getPath().makeAbsolute();
 		//String pp2 = ((JSLineBreakpoint)breakpoint).getPath().makeAbsolute().toPortableString();
@@ -110,6 +114,11 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 //		fThread.SetStackFrames(null);
 	}
 	
+	public void init() throws CoreException, IOException, ParserConfigurationException, SAXException, TransformerException
+	{
+		fAddonDevUtil.init();
+	}
+	
 	public void startPrcess(ILaunchConfiguration configuration, ILaunch launch) throws Exception
 	{
 		IPreferenceStore store = AddonDevPlugin.getDefault().getPreferenceStore();
@@ -120,10 +129,11 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		//AddonDevPlugin.startServer(this, eclispport);
 		SimpleServer.getInstance().Start(this, eclispport);
 		
-		String[] commandLine = fAddonDevUtil.getProcessCommandLine();
+		String[] commandLine = fAddonDevUtil.getDebugStartCommandLine();
 		Process process = DebugPlugin.exec(commandLine, null);
-		fProcess = DebugPlugin.newProcess(launch, process, "firefox");
-		fTerminated = true;
+		fProcess = DebugPlugin.newProcess(launch, process, commandLine[0]);
+		
+		fTerminated = false;
 		
 		fThread = new AddonThread(this);
 		fThreads = new IThread[] {fThread};
@@ -213,7 +223,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	public String getName() throws DebugException {
 		// TODO Auto-generated method stub
 		if (fName == null) {
-			fName = "JS Program";
+			fName = "chromebug";
 			//fName = "JS VM";//getLaunch().getLaunchConfiguration().getAttribute(AddonDevPlugin.ATTR_JS_PROGRAM, "JS VM");
 		}
 		return fName;
@@ -261,8 +271,10 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	@Override
 	public boolean canTerminate() {
 		// TODO Auto-generated method stub
-		if(this.fCloseBrowser)
-			return fProcess.canTerminate();
+		if(this.fCloseBrowser && !fTerminated)
+			return !fTerminated;
+		else if(this.fCloseBrowser && fTerminated)
+			return !fTerminated;
 		else
 			return true;
 	}
@@ -270,8 +282,10 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	@Override
 	public synchronized boolean isTerminated() {
 		// TODO Auto-generated method stub
-		if(this.fCloseBrowser)
-			return fProcess.isTerminated();
+		if(this.fCloseBrowser && fTerminated)
+			return fTerminated;
+		
+		//return fProcess.isTerminated();
 		else
 			return false;
 	}
@@ -289,7 +303,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 				e.printStackTrace();
 			}
 			//AddonDevPlugin.stopServer();
-			SimpleServer.getInstance().Stop();
+
 			while(!fProcess.isTerminated())
 			{
 				try {
@@ -300,6 +314,8 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 					break;
 				}
 			}
+			fTerminated = true;
+			SimpleServer.getInstance().Stop();
 			//fireTerminateEvent();
 			//fThread.fireTerminateEvent();
 		}
@@ -328,6 +344,10 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		//return !isTerminated() && isSuspended();
 		if (isTerminated())
 			return false;
+		
+		if(fCloseBrowser && !isTerminated())
+			return true;
+		
 		return !isSuspended();
 	}
 
@@ -338,6 +358,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		
 		if (isTerminated())
 			return false;
+		
 		return !isSuspended();
 	}
 
@@ -543,6 +564,8 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	@Override
 	public void disconnect() throws DebugException {
 		// TODO Auto-generated method stub
+		int i=0;
+		i++;
 	}
 
 	@Override
@@ -987,5 +1010,36 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		}
 		xml = "<xml>" +xml + "</xml>";
 		return xml;
+	}
+
+	@Override
+	public void handleDebugEvents(DebugEvent[] events) {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < events.length; i++) {
+			DebugEvent event = events[i];
+			if (event.getKind() == DebugEvent.TERMINATE) {
+				Object source = event.getSource();
+				if (source instanceof AddonDebugTarget)
+				{
+					SimpleServer.getInstance().Stop();
+					fCloseBrowser = true;
+					fTerminated = true;					
+				}else if (source instanceof IProcess) {
+					SimpleServer.getInstance().Stop();
+					fTerminated = true;
+					fCloseBrowser = true;
+					fThread.fireTerminateEvent();
+				}
+//						|| source instanceof IDebugTarget) {
+//					//getPHPDBGProxy().stop();
+//				} else if (source instanceof IProcess) {
+//					if (getDebugTarget().getProcess() == (IProcess) source) {
+//						//getPHPDBGProxy().stop();
+//					}
+//				}
+			} else if (event.getKind() == DebugEvent.SUSPEND) {
+				//getPHPDBGProxy().pause();
+			}
+		}		
 	}	
 }
