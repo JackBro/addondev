@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+<template name="for" 
+	description="for statement" 
+	id="org.addondev.templates.for" 
+	context="org.addondev.templates.javascript" enabled="true"
+>for (var ${index}:int = 0; ${condition}; ${index}++) {
+	${line_selection}${cursor}
+}</template>
+</templates>

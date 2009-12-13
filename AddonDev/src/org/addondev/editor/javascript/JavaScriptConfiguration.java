@@ -21,7 +21,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 
-public class JavaScriptSourceViewerConfiguration extends
+public class JavaScriptConfiguration extends
 		SourceViewerConfiguration {
 	private RuleBasedScanner defaultScanner;
 	private RuleBasedScanner fCommentScanner;
@@ -78,12 +78,27 @@ public class JavaScriptSourceViewerConfiguration extends
 //		//return super.getContentAssistant(sourceViewer);
 //	}
 //	
+	
+	
 
 	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer,
 			String contentType) {
 		// TODO Auto-generated method stub
 		return new JavaScriptTextHover(sourceViewer, contentType);
+	}
+
+	@Override
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		// TODO Auto-generated method stub
+		//return super.getContentAssistant(sourceViewer);
+		//ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
+		ContentAssistant assistant = new ContentAssistant();
+		IContentAssistProcessor javaProcessor = new JavaScriptContentAssistProcessor();
+		assistant.setContentAssistProcessor(javaProcessor, IDocument.DEFAULT_CONTENT_TYPE);
+		assistant.install(sourceViewer);
+		
+		return assistant;
 	}
 
 }

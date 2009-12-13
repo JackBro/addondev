@@ -35,7 +35,7 @@ public class JavaScriptEditor extends TextEditor {
 	public JavaScriptEditor() {
 		super();
 		// TODO Auto-generated constructor stub		
-		setSourceViewerConfiguration(new JavaScriptSourceViewerConfiguration());
+		setSourceViewerConfiguration(new JavaScriptConfiguration());
 	}
 
 	@Override

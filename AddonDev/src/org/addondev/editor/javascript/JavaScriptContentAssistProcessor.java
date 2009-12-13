@@ -9,6 +9,7 @@ import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.JsNodeHelper;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Parser;
+import org.addondev.templates.JavaScriptTemplateCompletionProcessor;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -29,46 +30,49 @@ public class JavaScriptContentAssistProcessor implements
 			int offset) {
 		// TODO Auto-generated method stub
 		// ワークベンチの取得
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-
-		//アクティブなエディタの取得
-		IEditorPart editor = window.getActivePage().getActiveEditor();
-		AbstractTextEditor aEditor = (AbstractTextEditor) editor;
-		//aEditor
-		//return null;
-		
-        String src = viewer.getDocument().get();        
-		Lexer lex = new Lexer(src);
-		Parser parser = new Parser(); // パーサーを作成。
-		parser.parse(lex);
-		//tree.setInput(parser.root);
-		
-		parser.root.dump("");
-		
-		String t = getAssistTarget(src, offset);
-		
-		
-		JsNode node2 = parser.root.getNodeFromOffset(offset);
-		JsNode node = JsNodeHelper.findChildNode(node2, t);
-		
-//		JsNode valuenode = node.getValueNode();
-//		List<CompletionProposal> result = new ArrayList<CompletionProposal>();
-//		for (int i = 0; i < valuenode.getChildrenNum(); i++) {
-//			result.add(
-//			        new CompletionProposal(
-//			        		valuenode.getChild(i).getImage(),
-//			          offset,
-//			          0,
-//			          valuenode.getChild(i).getImage().length()));			
-//		}
+//		IWorkbench workbench = PlatformUI.getWorkbench();
+//		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 //
-//	    ICompletionProposal[] proposals =
-//	        new ICompletionProposal[result.size()];
-//	      result.toArray(proposals);
-//	      return proposals;
+//		//アクティブなエディタの取得
+//		IEditorPart editor = window.getActivePage().getActiveEditor();
+//		AbstractTextEditor aEditor = (AbstractTextEditor) editor;
+//		//aEditor
+//		//return null;
+//		
+//        String src = viewer.getDocument().get();        
+//		Lexer lex = new Lexer(src);
+//		Parser parser = new Parser(); // パーサーを作成。
+//		parser.parse(lex);
+//		//tree.setInput(parser.root);
+//		
+//		parser.root.dump("");
+//		
+//		String t = getAssistTarget(src, offset);
+//		
+//		
+//		JsNode node2 = parser.root.getNodeFromOffset(offset);
+//		JsNode node = JsNodeHelper.findChildNode(node2, t);
+//		
+////		JsNode valuenode = node.getValueNode();
+////		List<CompletionProposal> result = new ArrayList<CompletionProposal>();
+////		for (int i = 0; i < valuenode.getChildrenNum(); i++) {
+////			result.add(
+////			        new CompletionProposal(
+////			        		valuenode.getChild(i).getImage(),
+////			          offset,
+////			          0,
+////			          valuenode.getChild(i).getImage().length()));			
+////		}
+////
+////	    ICompletionProposal[] proposals =
+////	        new ICompletionProposal[result.size()];
+////	      result.toArray(proposals);
+////	      return proposals;
 		
-		return null;
+		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
+		addTemplateCompletionProposal(viewer, offset, result);
+		
+		return result.toArray(new ICompletionProposal[result.size()]);
 	}
 
 	@Override
@@ -100,6 +104,16 @@ public class JavaScriptContentAssistProcessor implements
 	public String getErrorMessage() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	protected void addTemplateCompletionProposal(ITextViewer viewer, int documentOffset,
+			List<ICompletionProposal> result) {
+		JavaScriptTemplateCompletionProcessor templateProcessor = new JavaScriptTemplateCompletionProcessor();
+		ICompletionProposal[] templateProposals = templateProcessor.computeCompletionProposals(
+				viewer, documentOffset);
+		for (ICompletionProposal prop : templateProposals) {
+			result.add(prop);
+		}
 	}
 	
 	private String getAssistTarget(String src, int offset)

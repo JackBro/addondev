@@ -287,5 +287,16 @@
             delegateClass="org.addondev.debug.core.AddonDevWatchExpressionDelegate">
       </watchExpressionDelegate>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors.templates">
+      <contextType
+            class="org.addondev.templates.JavaScriptTemplateContextType"
+            id="org.addondev.templates.javascript"
+            name="JavaScript">
+      </contextType>
+      <include
+            file="templates/javascripttemplates.xml">
+      </include>
+   </extension>
 
 </plugin>

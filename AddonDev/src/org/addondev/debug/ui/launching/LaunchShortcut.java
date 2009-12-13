@@ -87,7 +87,7 @@ public class LaunchShortcut implements ILaunchShortcut {
 		
 		//return manager.getLaunchConfigurations()[0];
 		//project.g
-		/ILaunchConfigurationType type = manager.getLaunchConfigurationType("org.addondev.debug.core.launchConfigurationType");//LaunchAIRConfiguration.ID);
+		ILaunchConfigurationType type = manager.getLaunchConfigurationType("org.addondev.debug.core.launchConfigurationType");//LaunchAIRConfiguration.ID);
 
 		ILaunchConfigurationWorkingCopy wc = type.newInstance(null, manager
 				.generateUniqueLaunchConfigurationNameFrom(project.getName()));
