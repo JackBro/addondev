@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.addondev.debug.core.model.AddonDebugTarget;
 import org.addondev.debug.core.model.AddonDevLineBreakpoint;
-import org.addondev.debug.core.model.AddonStackFrame;
-import org.addondev.debug.core.model.AddonThread;
+import org.addondev.debug.core.model.AddonDevStackFrame;
+import org.addondev.debug.core.model.AddonDevThread;
 import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -109,11 +109,11 @@ public class AddonDevDebugModelPresentation  implements IDebugModelPresentation 
                 //PydevDebugPlugin.log(IStatus.ERROR, "error retreiving marker attributes", e);
                 return "error";
             }
-        } else if (element instanceof AddonDebugTarget || element instanceof AddonStackFrame){// || element instanceof JSThread) {
+        } else if (element instanceof AddonDebugTarget || element instanceof AddonDevStackFrame){// || element instanceof JSThread) {
             return null; // defaults work
             
-        } else if (element instanceof AddonThread ) {
-        	AddonThread th = (AddonThread) element;
+        } else if (element instanceof AddonDevThread ) {
+        	AddonDevThread th = (AddonDevThread) element;
         	if(th.isTerminated()) //debugger close
         	{
         		try {

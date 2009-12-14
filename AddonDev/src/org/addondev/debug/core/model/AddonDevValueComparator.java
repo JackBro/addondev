@@ -5,7 +5,7 @@ import java.util.Comparator;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 
-public class AddonValueComparator implements Comparator<IVariable> {
+public class AddonDevValueComparator implements Comparator<IVariable> {
 
 	@Override
 	public int compare(IVariable o1, IVariable o2) {	

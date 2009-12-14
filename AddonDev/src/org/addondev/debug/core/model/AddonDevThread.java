@@ -13,7 +13,7 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 
-public class AddonThread extends PlatformObject implements IThread {
+public class AddonDevThread extends PlatformObject implements IThread {
 
 	private AddonDebugTarget target;
 	private IBreakpoint[] fBreakpoints;
@@ -21,7 +21,7 @@ public class AddonThread extends PlatformObject implements IThread {
 	private IStackFrame[] stack;
 	private boolean isSuspended;
 	
-	public AddonThread(AddonDebugTarget target) {
+	public AddonDevThread(AddonDebugTarget target) {
 		//super(target);
 		// TODO Auto-generated constructor stub
 		this.target = target;

@@ -1,6 +1,6 @@
 package org.addondev.editor.javascript;
 
-import org.addondev.debug.core.model.AddonStackFrame;
+import org.addondev.debug.core.model.AddonDevStackFrame;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.ui.DebugUITools;
@@ -37,8 +37,8 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 		IAdaptable object = DebugUITools.getDebugContext();
 	    IDebugElement context = null;
 	    //if (object instanceof IDebugElement) {
-	    if (object instanceof AddonStackFrame) {
-	        context = (AddonStackFrame) object;
+	    if (object instanceof AddonDevStackFrame) {
+	        context = (AddonDevStackFrame) object;
 	    }
 	    
 	    String text = null;

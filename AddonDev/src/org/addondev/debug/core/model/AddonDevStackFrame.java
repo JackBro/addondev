@@ -17,9 +17,9 @@ import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 
-public class AddonStackFrame extends PlatformObject implements IStackFrame {
+public class AddonDevStackFrame extends PlatformObject implements IStackFrame {
 
-	private AddonThread fThread;
+	private AddonDevThread fThread;
 	private String fName;
 	private int fPC;
 	private String fURL;
@@ -32,7 +32,7 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
 	private AddonDebugTarget target;
 	private boolean fUpToDate;
 	
-	public AddonStackFrame(IThread thread, 
+	public AddonDevStackFrame(IThread thread, 
 			AddonDebugTarget target, 
 			String depth, 
 			String url, 
@@ -42,7 +42,7 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
 			String fn) {
 		// TODO Auto-generated constructor stub
 		this.target = target;
-		fThread = (AddonThread)thread;
+		fThread = (AddonDevThread)thread;
 		fdepth = depth;
 		fURL = url;
 		fFileName = filename;
@@ -132,7 +132,7 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
 				fVariables = target.getVariables(fdepth, null, null);
 			
 			fUpToDate = true;
-			Collections.sort(fVariables, new AddonValueComparator());
+			Collections.sort(fVariables, new AddonDevValueComparator());
 		}
 //		else if(!canSuspend())
 //		{
@@ -289,7 +289,7 @@ public class AddonStackFrame extends PlatformObject implements IStackFrame {
     	
     public Object getAdapter(Class adapter) {
         //AdapterDebug.print(this, adapter);
-    	if(adapter == AddonStackFrame.class)
+    	if(adapter == AddonDevStackFrame.class)
     	{
     		return this;
     	}

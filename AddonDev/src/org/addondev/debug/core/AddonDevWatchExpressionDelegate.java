@@ -3,8 +3,8 @@ package org.addondev.debug.core;
 import java.util.ArrayList;
 
 import org.addondev.debug.core.model.AddonDebugTarget;
-import org.addondev.debug.core.model.AddonStackFrame;
-import org.addondev.debug.core.model.AddonVariable;
+import org.addondev.debug.core.model.AddonDevStackFrame;
+import org.addondev.debug.core.model.AddonDevVariable;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -34,9 +34,9 @@ public class AddonDevWatchExpressionDelegate implements
 	public void evaluateExpression(String expression, IDebugElement context,
 			IWatchExpressionListener listener) {
 		// TODO Auto-generated method stub
-		if(context instanceof AddonStackFrame)
+		if(context instanceof AddonDevStackFrame)
 		{
-			AddonStackFrame stackframe = (AddonStackFrame)context;
+			AddonDevStackFrame stackframe = (AddonDevStackFrame)context;
 			AddonDebugTarget debugtarget = (AddonDebugTarget) stackframe.getDebugTarget();
 			String parent = null;
 			String name = null;

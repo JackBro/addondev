@@ -3,7 +3,7 @@ package org.addondev.debug.core;
 import java.io.File;
 import java.io.IOException;
 
-import org.addondev.debug.core.model.AddonStackFrame;
+import org.addondev.debug.core.model.AddonDevStackFrame;
 import org.addondev.editor.javascript.JavaScriptEditor;
 import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IFile;
@@ -68,7 +68,7 @@ public class AddonDevPersistableSourceLocator implements
 	public IEditorInput getEditorInput(Object element) {
 		// TODO Auto-generated method stub
 		//return null;
-		AddonStackFrame frame = (AddonStackFrame)element;
+		AddonDevStackFrame frame = (AddonDevStackFrame)element;
 		
 		String filefullpath = frame.getFileFullPath();
 		IWorkspaceRoot root = AddonDevPlugin.getWorkspace().getRoot();

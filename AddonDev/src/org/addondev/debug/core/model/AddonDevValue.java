@@ -10,7 +10,7 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 
-public class AddonValue extends PlatformObject implements IValue {
+public class AddonDevValue extends PlatformObject implements IValue {
 
 	private AddonDebugTarget target;
 	
@@ -23,7 +23,7 @@ public class AddonValue extends PlatformObject implements IValue {
 	private static final IVariable[] EMPTY_IVARIABLE_ARRAY = new IVariable[0]; 
 	public String parent;
 	
-	public AddonValue(AddonDebugTarget target, String stackFrameID, String parent, String name, String type, String value, boolean hasChildren) {
+	public AddonDevValue(AddonDebugTarget target, String stackFrameID, String parent, String name, String type, String value, boolean hasChildren) {
 		this.target = target;
 		this.stackFrameID = stackFrameID;
 		
@@ -56,7 +56,7 @@ public class AddonValue extends PlatformObject implements IValue {
 		{
 			//return target.getVariables(stackFrameID, parent, name);	
 			ArrayList<IVariable> list = target.getChildVariables(stackFrameID, parent, name);
-			Collections.sort(list, new AddonValueComparator());
+			Collections.sort(list, new AddonDevValueComparator());
 			return list.toArray(new IVariable[list.size()]);
 		}
 		else

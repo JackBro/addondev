@@ -253,6 +253,12 @@
                label="Add Breakpoint"
                menubarPath="debug">
          </action>
+         <action
+               class="org.addondev.debug.ui.actions.AddonDevBreakpointPropertiesRulerActionDelegate"
+               id="org.addondev.action4"
+               label="bpplabel"
+               menubarPath="debug">
+         </action>
       </viewerContribution>
       <viewerContribution
             id="org.addondev.viewerContribution1"
@@ -264,6 +270,20 @@
                menubarPath="additions">
          </action>
       </viewerContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.addondev.objectContribution2"
+            objectClass="org.addondev.debug.core.model.AddonDevLineBreakpoint">
+         <menu
+               id="org.addondev.menu1"
+               label="label">
+         </menu>
+         <action
+               class="org.addondev.Action3"
+               id="org.addondev.action3"
+               label="label2">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.debug.core.sourcePathComputers">
@@ -297,6 +317,16 @@
       <include
             file="templates/javascripttemplates.xml">
       </include>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            adaptable="true"
+            class="org.addondev.debug.ui.propertypages.AddonDevBreakPointPropertyPage"
+            id="org.addondev.debug.ui.propertypages.AddonDevBreakPointPropertyPage"
+            name="breakpoint"
+            objectClass="org.addondev.debug.core.model.AddonDevLineBreakpoint">
+      </page>
    </extension>
 
 </plugin>

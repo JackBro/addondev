@@ -17,8 +17,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 
 import org.addondev.debug.core.model.AddonDebugTarget;
-import org.addondev.debug.core.model.AddonStackFrame;
-import org.addondev.debug.core.model.AddonVariable;
+import org.addondev.debug.core.model.AddonDevStackFrame;
+import org.addondev.debug.core.model.AddonDevVariable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -50,12 +50,12 @@ public class XMLUtils {
 		public IThread thread;
 		public AddonDebugTarget target;
 		//public List<JSStackFrame> stacks = new ArrayList<JSStackFrame>();
-		public List<AddonStackFrame> stacks;
+		public List<AddonDevStackFrame> stacks;
 		//public List<JSVariable> locals = new ArrayList<JSVariable>();
 		
 		public XMLToStackFrameInfo(AddonDebugTarget target) {
             this.target = target;
-            stacks = new ArrayList<AddonStackFrame>();
+            stacks = new ArrayList<AddonDevStackFrame>();
         }
 
 		public void startElement(String uri, String localName, String qName, Attributes attributes){			
@@ -93,7 +93,7 @@ public class XMLUtils {
 	                    	IPath ipath = new Path(filename);
 	                    	filename = ipath.toOSString();
 	                    	
-	                    	AddonStackFrame frame = new AddonStackFrame(thread, target, depth, deURL, filename, functionname, line, defn);
+	                    	AddonDevStackFrame frame = new AddonDevStackFrame(thread, target, depth, deURL, filename, functionname, line, defn);
 	                    	
 	                    	stacks.add(frame);
                     	//}
@@ -104,7 +104,7 @@ public class XMLUtils {
             }
 		}
 	}
-	static public AddonStackFrame[] StackFramesFromXML(AddonDebugTarget target, String payload) throws CoreException {
+	static public AddonDevStackFrame[] StackFramesFromXML(AddonDebugTarget target, String payload) throws CoreException {
         SAXParser parser = null;
 		try {
 			parser = getSAXParser();
@@ -130,7 +130,7 @@ public class XMLUtils {
 		//JSStackFrame stackframe = info.stacks.get(0);
 		//IVariable[] vals = (IVariable[]) info.locals.toArray(new JSVariable[0]);
 		//stackframe.setVariables(vals);
-		return (AddonStackFrame[]) info.stacks.toArray(new AddonStackFrame[0]);
+		return (AddonDevStackFrame[]) info.stacks.toArray(new AddonDevStackFrame[0]);
 	}
 	
 	
@@ -164,7 +164,7 @@ public class XMLUtils {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}	
-				locals.add(new AddonVariable(target, stackFrameDepth, parent, name, type, value, hasChildren));
+				locals.add(new AddonDevVariable(target, stackFrameDepth, parent, name, type, value, hasChildren));
 			}
 //			else if(qName.equals("var"))
 //			{

@@ -292,6 +292,21 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  			Firebug.Debugger.fbs.clearBreakpoint(file, line);
 	  		}	    	
 	    	break;
+	    case "setbreakpointcondition":
+	    	result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
+	  		for(i=0;i<result.length; i++)
+	  		{
+	  			file = decodeURIComponent(result[i]["filename"]);
+	  			line = parseInt(result[i]["line"]);
+	  			var condition = decodeURIComponent(result[i]["condition"]);
+	  			Application.console.log("setbreakpointcondition file=" + file + " : " + "line = "+ line);
+		  		if(file in Firebug.chromebug_eclipse.util.sourceFileMap)
+		  		{
+		  			var s = Firebug.chromebug_eclipse.util.sourceFileMap[file];
+		  			Firebug.Debugger.fbs.setBreakpointCondition(s, line, condition, Firebug.Debugger);
+		  		}
+	  		}
+	    	break;
 	  	case "load":
 	  		loadURI(params.file);
 	  		break;

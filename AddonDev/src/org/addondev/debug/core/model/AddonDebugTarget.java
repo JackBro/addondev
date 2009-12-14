@@ -68,7 +68,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	private boolean fCloseBrowser = true;
 	
 	// threads
-	private AddonThread fThread;
+	private AddonDevThread fThread;
 	private IThread[] fThreads;
 	
 	private AddonDevUtil fAddonDevUtil;
@@ -135,7 +135,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		
 		fTerminated = false;
 		
-		fThread = new AddonThread(this);
+		fThread = new AddonDevThread(this);
 		fThreads = new IThread[] {fThread};
 		
 		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
@@ -689,7 +689,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		fstateChange = true;
 		childVariablesDataCash.clear();
 		
-		AddonStackFrame[] stackframes = null;
+		AddonDevStackFrame[] stackframes = null;
 		try {
 			stackframes = XMLUtils.StackFramesFromXML(this, data);
 		} catch (CoreException e) {
