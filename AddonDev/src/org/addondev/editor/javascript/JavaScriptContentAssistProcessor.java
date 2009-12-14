@@ -1,5 +1,7 @@
 package org.addondev.editor.javascript;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -9,7 +11,9 @@ import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.JsNodeHelper;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Parser;
+import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.templates.JavaScriptTemplateCompletionProcessor;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -68,6 +72,18 @@ public class JavaScriptContentAssistProcessor implements
 ////	        new ICompletionProposal[result.size()];
 ////	      result.toArray(proposals);
 ////	      return proposals;
+		
+
+		try {
+			URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
+			String pluginDirectory;
+			pluginDirectory = FileLocator.resolve(entry).getPath();
+			int i=0;
+			i++;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		addTemplateCompletionProposal(viewer, offset, result);
