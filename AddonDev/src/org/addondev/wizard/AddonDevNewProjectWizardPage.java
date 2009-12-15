@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
-public class AddonDevInstallerfWizardPage extends WizardPage {
+public class AddonDevNewProjectWizardPage extends WizardPage {
 
 	@Override
 	public void setVisible(boolean visible) {
@@ -38,7 +38,7 @@ public class AddonDevInstallerfWizardPage extends WizardPage {
 	
 	public WizardNewProjectCreationPage page1;
 
-	protected AddonDevInstallerfWizardPage(String pageName) {
+	protected AddonDevNewProjectWizardPage(String pageName) {
 		super(pageName);
 		//setPageComplete(false);
 		// TODO Auto-generated constructor stub

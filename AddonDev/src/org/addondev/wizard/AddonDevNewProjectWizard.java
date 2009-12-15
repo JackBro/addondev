@@ -7,6 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -27,13 +29,13 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
 
-public class AddonDevWizard extends Wizard implements INewWizard {
+public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 
 	private WizardNewProjectCreationPage page1;
-	private AddonDevInstallerfWizardPage page2;
+	private AddonDevNewProjectWizardPage page2;
 	private HashMap<String, String> param;
 
-	public AddonDevWizard() {
+	public AddonDevNewProjectWizard() {
 		// TODO Auto-generated constructor stub
 		setWindowTitle("addon dev");
 	}
@@ -45,7 +47,7 @@ public class AddonDevWizard extends Wizard implements INewWizard {
 		page1 = new WizardNewProjectCreationPage("page1");
 		addPage(page1);
 
-		page2 = new AddonDevInstallerfWizardPage("page2");
+		page2 = new AddonDevNewProjectWizardPage("page2");
 		page2.page1 = page1;
 		addPage(page2);
 	}
@@ -158,10 +160,11 @@ public class AddonDevWizard extends Wizard implements INewWizard {
 			createFolder(project, monitor);
 	
 			try {
-				createFile(project, "chrome/content/" + param.get("name") + ".js", AddonDevWizard.class.getResourceAsStream("addon.js"), param, monitor);
-				createFile(project, "install.rdf", AddonDevWizard.class.getResourceAsStream("install.rdf"), param, monitor);
-				createFile(project, "chrome.manifest", AddonDevWizard.class.getResourceAsStream("chrome.manifest"), param, monitor);
-				createFile(project, "overlay.xul", AddonDevWizard.class.getResourceAsStream("overlay.xul"), param, monitor);
+				//AddonDevPlugin.getDefault().openStream(file)
+				createFile(project, "chrome/content/" + param.get("name") + ".js", AddonDevNewProjectWizard.class.getResourceAsStream("addon.js"), param, monitor);
+				createFile(project, "install.rdf", AddonDevNewProjectWizard.class.getResourceAsStream("install.rdf"), param, monitor);
+				createFile(project, "chrome.manifest", AddonDevNewProjectWizard.class.getResourceAsStream("chrome.manifest"), param, monitor);
+				createFile(project, "overlay.xul", AddonDevNewProjectWizard.class.getResourceAsStream("overlay.xul"), param, monitor);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -169,10 +172,10 @@ public class AddonDevWizard extends Wizard implements INewWizard {
 			
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
-			String newNatureId = "AddonDev.addondevnature";
-			addNature(newNatureId, projectDescription, project, monitor);			
-			newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
-			addNature(newNatureId, projectDescription, project, monitor);
+			//String newNatureId = "AddonDev.addondevnature";
+			addNature(AddonDevPlugin.NATUREID, projectDescription, project, monitor);			
+			//newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
+			//addNature(newNatureId, projectDescription, project, monitor);
 
 		} finally {
 			monitor.done();

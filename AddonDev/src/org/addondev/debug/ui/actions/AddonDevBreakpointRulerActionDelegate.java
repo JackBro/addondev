@@ -5,10 +5,10 @@ import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.ui.texteditor.AbstractRulerActionDelegate;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class ManageBreakpointRulerActionDelegate extends
+public class AddonDevBreakpointRulerActionDelegate extends
 		AbstractRulerActionDelegate {
 
-	public ManageBreakpointRulerActionDelegate() {
+	public AddonDevBreakpointRulerActionDelegate() {
 		// TODO Auto-generated constructor stub
 	}
 

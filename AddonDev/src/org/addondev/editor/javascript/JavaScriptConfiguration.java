@@ -5,6 +5,7 @@ import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
 import org.addondev.preferences.ResourceManager;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.TextAttribute;
@@ -68,19 +69,6 @@ public class JavaScriptConfiguration extends
 		return reconciler;		
 	}	
 	
-//	@Override
-//	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-//		// TODO Auto-generated method stub
-//		ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
-//		IContentAssistProcessor javaProcessor = new JavaScriptContentAssistProcessor();
-//		assistant.setContentAssistProcessor(javaProcessor, IDocument.DEFAULT_CONTENT_TYPE);
-//		return assistant;
-//		//return super.getContentAssistant(sourceViewer);
-//	}
-//	
-	
-	
-
 	@Override
 	public ITextHover getTextHover(ISourceViewer sourceViewer,
 			String contentType) {
@@ -99,6 +87,13 @@ public class JavaScriptConfiguration extends
 		assistant.install(sourceViewer);
 		
 		return assistant;
+	}
+
+	@Override
+	public IAutoEditStrategy[] getAutoEditStrategies(
+			ISourceViewer sourceViewer, String contentType) {
+		// TODO Auto-generated method stub
+		return super.getAutoEditStrategies(sourceViewer, contentType);
 	}
 
 }

@@ -3,14 +3,25 @@
 <plugin>
    <extension
          point="org.eclipse.ui.editorActions">
+     
       <editorContribution
             id="org.addondev.debug.BreakpointRulerActions"
             targetID="org.addondev.editor.javascript">
          <action
                actionID="RulerDoubleClick"
-               class="org.addondev.debug.ui.actions.ManageBreakpointRulerActionDelegate"
+               class="org.addondev.debug.ui.actions.AddonDevBreakpointRulerActionDelegate"
                id="org.addondev.debug.BreakpointRulerAction"
-               label="Add breakpoint">
+               label="Add Breakpoint">
+         </action>
+      </editorContribution>n>
+      <editorContribution
+            id="org.addondev.debug.SelectLineRulerActions"
+            targetID="org.addondev.editor.javascript">
+         <action
+               actionID="RulerClick"
+               class="org.addondev.SelectLineRulerActionDelegate"
+               id="org.addondev.debug.SelectLineRulerAction"
+               label="SelectLine">
          </action>
       </editorContribution>
    </extension>
@@ -139,7 +150,7 @@
       </category>
       <wizard
             category="org.addondev.category.wizard.new"
-            class="org.addondev.wizard.AddonDevWizard"
+            class="org.addondev.wizard.AddonDevNewProjectWizard"
             hasPages="true"
             icon="icons/addon.png"
             id="org.addondev.wizzard.addondevwizard"
@@ -213,8 +224,8 @@
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
             icon="icons/addondev_nature.png"
-            id="AddonDev.image1"
-            natureId="AddonDev.addondevnature">
+            id="org.addondev.nature.image"
+            natureId="org.addondev.nature">
       </image>
    </extension>
    <extension
@@ -248,7 +259,7 @@
             id="org.addondev.debug.editpopupactions"
             targetID="#TextRulerContext">
          <action
-               class="org.addondev.debug.ui.actions.ManageBreakpointRulerActionDelegate"
+               class="org.addondev.debug.ui.actions.AddonDevBreakpointRulerActionDelegate"
                id="AddonDev.action1"
                label="Add Breakpoint"
                menubarPath="debug">
@@ -315,7 +326,7 @@
             name="JavaScript">
       </contextType>
       <include
-            file="templates/javascripttemplates.xml">
+            file="templates/code/javascript_templates.xml">
       </include>
    </extension>
    <extension

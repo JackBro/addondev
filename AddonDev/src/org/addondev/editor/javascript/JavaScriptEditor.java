@@ -43,6 +43,7 @@ public class JavaScriptEditor extends TextEditor {
 		// TODO Auto-generated method stub
 		super.initializeEditor();
 		setEditorContextMenuId(JAVASCRIPT_EDIT_CONTEXT);
+		//getSourceViewer().
 	}
 
 	protected void doSetInput(IEditorInput input) throws CoreException {
@@ -71,6 +72,13 @@ public class JavaScriptEditor extends TextEditor {
 		// TODO Auto-generated method stub
 		return super.getAdapter(adapter);
 		
+	}
+	
+	public void setSelection(int offset, int length)
+	{
+	    ISourceViewer sourceViewer = getSourceViewer();
+	    sourceViewer.setSelectedRange(offset, length);
+	    sourceViewer.revealRange(offset, length);		
 	}
 	
 }

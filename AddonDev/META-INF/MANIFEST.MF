@@ -65,7 +65,6 @@ Require-Bundle: org.eclipse.equinox.preferences,
  org.eclipse.ui.views;bundle-version="3.4.0",
  org.eclipse.text,
  org.eclipse.jface.text,
- org.eclipse.wst.jsdt.core,
  org.eclipse.ui.ide,
  org.eclipse.jdt.ui
 Import-Package: junit.framework,

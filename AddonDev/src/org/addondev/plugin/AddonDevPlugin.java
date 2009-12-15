@@ -23,7 +23,7 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	public static final String IMG_BP_DISABLE = "bp_disable.png";
 	public static final String IMG_ADDON = "addondev";
 	
-	public static final String NATUREID = "AddonDev.addondevnature";
+	public static final String NATUREID = "org.addondev.nature";
 	//static public final String ADDON_BREAK_MARKER = "AddonDev.addonStopBreakpointMarker";
 	
 	//public static final String ID_BREAK_MARKER = "org.eclipse.debug.core.breakpointMarker";

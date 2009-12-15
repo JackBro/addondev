@@ -118,5 +118,4 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 		
 		return null;
 	}
-
 }
