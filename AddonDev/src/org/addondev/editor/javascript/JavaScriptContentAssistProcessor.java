@@ -32,6 +32,8 @@ public class JavaScriptContentAssistProcessor implements
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
+		
+		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		// TODO Auto-generated method stub
 		// ワークベンチの取得
 //		IWorkbench workbench = PlatformUI.getWorkbench();
@@ -74,18 +76,18 @@ public class JavaScriptContentAssistProcessor implements
 ////	      return proposals;
 		
 
-		try {
-			URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
-			String pluginDirectory;
-			pluginDirectory = FileLocator.resolve(entry).getPath();
-			int i=0;
-			i++;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
+//			String pluginDirectory;
+//			pluginDirectory = FileLocator.resolve(entry).getPath();
+//			int i=0;
+//			i++;
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
-		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
+
 		addTemplateCompletionProposal(viewer, offset, result);
 		
 		return result.toArray(new ICompletionProposal[result.size()]);

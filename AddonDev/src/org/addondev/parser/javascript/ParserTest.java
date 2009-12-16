@@ -1,17 +1,21 @@
 package org.addondev.parser.javascript;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 
 public class ParserTest {
 
@@ -71,7 +75,7 @@ public class ParserTest {
 	public void testParser01() throws IOException {
 		
 		Lexer lex = null;
-		String src = getSource(ParserTest.class.getResourceAsStream("test01.js"));
+		String src = getSource(ParserTest.class.getResourceAsStream("test00.js"));
 		lex = new Lexer(src);
 		Parser parser = new Parser(); // パーサーを作成。
 		parser.parse(lex);
@@ -236,4 +240,6 @@ public class ParserTest {
 		NodeManager.getInstance().SetNode("test01", parser.root);
 		parser.root.dump("");
 	}
+	
+
 }

@@ -1,4 +1,4 @@
-package org.addondev;
+package org.addondev.debug.ui.actions;
 
 import org.addondev.editor.javascript.JavaScriptEditor;
 import org.eclipse.jface.action.IAction;

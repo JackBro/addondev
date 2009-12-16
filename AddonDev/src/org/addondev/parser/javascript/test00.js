@@ -1,6 +1,8 @@
 
+var m=100;
 
-var MyObject = 
+var MyObject = function(){};
+MyObject.prototype = 
 {
     message3: null,
     
@@ -10,4 +12,4 @@ var MyObject =
     }
 }
 
-var tmp = new MyObject;
+var tmp = new MyObject();

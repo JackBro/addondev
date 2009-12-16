@@ -19,7 +19,7 @@
             targetID="org.addondev.editor.javascript">
          <action
                actionID="RulerClick"
-               class="org.addondev.SelectLineRulerActionDelegate"
+               class="org.addondev.debug.ui.actions.SelectLineRulerActionDelegate"
                id="org.addondev.debug.SelectLineRulerAction"
                label="SelectLine">
          </action>
