@@ -1,25 +1,33 @@
 package org.addondev.wizard;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.addondev.plugin.AddonDevPlugin;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -149,6 +157,8 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 	//			project.setDescription(projectDescription, monitor);
 	//		}			
 	
+			
+			
 			project.create(projectDescription, new SubProgressMonitor(monitor, 1000));
 	
 			if (monitor.isCanceled()) {
@@ -160,11 +170,15 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 			createFolder(project, monitor);
 	
 			try {
-				//AddonDevPlugin.getDefault().openStream(file)
-				createFile(project, "chrome/content/" + param.get("name") + ".js", AddonDevNewProjectWizard.class.getResourceAsStream("addon.js"), param, monitor);
-				createFile(project, "install.rdf", AddonDevNewProjectWizard.class.getResourceAsStream("install.rdf"), param, monitor);
-				createFile(project, "chrome.manifest", AddonDevNewProjectWizard.class.getResourceAsStream("chrome.manifest"), param, monitor);
-				createFile(project, "overlay.xul", AddonDevNewProjectWizard.class.getResourceAsStream("overlay.xul"), param, monitor);
+				//createFile(project, "chrome/content/" + param.get("name") + ".js", AddonDevNewProjectWizard.class.getResourceAsStream("addon.js"), param, monitor);
+				//createFile(project, "install.rdf", AddonDevNewProjectWizard.class.getResourceAsStream("install.rdf"), param, monitor);
+				//createFile(project, "chrome.manifest", AddonDevNewProjectWizard.class.getResourceAsStream("chrome.manifest"), param, monitor);
+				//createFile(project, "overlay.xul", AddonDevNewProjectWizard.class.getResourceAsStream("overlay.xul"), param, monitor);
+				
+				createFile(project, "chrome/content/" + param.get("name") + ".js", "templates/project/addon.js", param, monitor);
+				createFile(project, "install.rdf", "templates/project/common/install.rdf", param, monitor);
+				createFile(project, "chrome.manifest", "templates/project/common/chrome.manifest", param, monitor);
+				createFile(project, "overlay.xul", "templates/project/common/overlay.xul", param, monitor);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -233,6 +247,26 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 			e.printStackTrace();
 		} finally {
 			in.close();
+		}
+	}
+	
+	private void createFile(IProject project, String distpath, String srcpath,
+			Map param, IProgressMonitor monitor) throws IOException, CoreException {
+		
+		File srcfile = new File(srcpath);
+		boolean ff = srcfile.exists();
+		if(srcfile != null)
+		{
+			String srctext = FileUtils.readFileToString(srcfile);
+			for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
+			{
+				String key = (String) iterator.next();
+				srctext = srctext.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
+			}	
+			
+			IFile distfile = project.getFile(distpath);
+			InputStream is = new ByteArrayInputStream(srctext.getBytes("UTF-8"));
+			distfile.create(is, true, monitor);
 		}
 	}
 }

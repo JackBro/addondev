@@ -145,17 +145,24 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="org.addondev.category.wizard.new"
+            id="org.addondev.category"
             name="Addon Dev">
       </category>
       <wizard
-            category="org.addondev.category.wizard.new"
+            category="org.addondev.category"
             class="org.addondev.wizard.AddonDevNewProjectWizard"
             hasPages="true"
             icon="icons/addon.png"
             id="org.addondev.wizzard.addondevwizard"
             name="AddonDev Project"
             project="true">
+      </wizard>
+      <wizard
+            category="org.addondev.category"
+            class="org.addondev.wizard.NewJavaScriptFileWizard"
+            id="org.addondev.wizard1"
+            name="JavaScript File"
+            project="false">
       </wizard>
    </extension>
    <extension

@@ -207,10 +207,10 @@ public class JsNode {
 		int s = fOffset;
 		int e = endoffset;
 		String val = "";
-		if(getChildrenNum() >0)
-		{
-			val = getChild(0).getId();
-		}
+//		if(getChildrenNum() >0)
+//		{
+//			val = getChild(0).getId();
+//		}
 		//if(valueNode != null && valueNode.getNode() != null)
 		//	val = valueNode.getNode().id;
 		//String val = valueNode == null?"":ValueNode.id;

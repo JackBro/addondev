@@ -3,6 +3,7 @@ package org.addondev.wizard;
 
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -25,6 +26,8 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		super.setVisible(visible);
 	}
 
+	private IPreferenceStore fStote;
+	
 	private Text fid;
 	private Text fversion;
 	
@@ -44,6 +47,8 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		// TODO Auto-generated constructor stub
 		setTitle("Fire FoxExtension");
 		setDescription("Fire FoxExtension install.rdt");
+		
+		fStote = AddonDevPlugin.getDefault().getPreferenceStore();
 	}
 
 	@Override
@@ -59,11 +64,11 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		
 		//fid = addText(composite, "ID", projectname + "@dev.org");
         fid = addText(composite, "ID");
-      	fversion = addText(composite, "version", getPreference(PrefConst.DEFAULT_FIREFOX_ADDON_VERSION));
+      	fversion = addText(composite, "version", fStote.getString(PrefConst.FIREFOX_ADDON_VERSION));
       	
-      	ftargetApplicationid = addText(composite, "targetApplication ID", getPreference(PrefConst.DEFAULT_FIREFOX_ADDON_GUID));
-      	fminVersion = addText(composite, "minVersion", getPreference(PrefConst.DEFAULT_FIREFOX_ADDON_MINVERSION));
-      	fmaxVersion = addText(composite, "maxVersion", getPreference(PrefConst.DEFAULT_FIREFOX_ADDON_MAXVERSION));
+      	ftargetApplicationid = addText(composite, "targetApplication ID", fStote.getString(PrefConst.FIREFOX_ADDON_GUID));
+      	fminVersion = addText(composite, "minVersion", fStote.getString(PrefConst.FIREFOX_ADDON_MINVERSION));
+      	fmaxVersion = addText(composite, "maxVersion", fStote.getString(PrefConst.FIREFOX_ADDON_MAXVERSION));
       	
       	//fname = addText(composite, "name", projectname);
       	//fname = addText(composite, "name");

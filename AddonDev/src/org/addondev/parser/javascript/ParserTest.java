@@ -233,11 +233,11 @@ public class ParserTest {
 		NodeManager.getInstance().SetNode("system", node);
 		node.dump("");
 		
-		src = getSource(ParserTest.class.getResourceAsStream("test01.js"));
+		src = getSource(ParserTest.class.getResourceAsStream("test00.js"));
 		lex = new Lexer(src);
 		parser = new Parser(); // パーサーを作成。
 		parser.parse(lex);
-		NodeManager.getInstance().SetNode("test01", parser.root);
+		NodeManager.getInstance().SetNode("test00", parser.root);
 		parser.root.dump("");
 	}
 	

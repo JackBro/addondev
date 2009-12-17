@@ -163,6 +163,10 @@ String fJsDoc;
 					else
 					{
 						fromnode = frame.findNodeGlobalFrame(sym);
+						if(fromnode == null)
+						{
+							fromnode = frame.findNodeCurrentFrame(sym);
+						}
 						
 					}
 					//getToken();
@@ -419,8 +423,8 @@ String fJsDoc;
 			//node.setValueNode(new ValueNode(res));
 			if(res != null)
 			{
-				if(res.getChildrenList().size() == 0)	
-				{
+				//if(res.getChildrenList().size() == 0)	
+				//{
 					String type = res.getType();
 					if(type != null)
 					{
@@ -435,11 +439,11 @@ String fJsDoc;
 							JsNodeHelper.assignNode(node.getChildrenList(), gnode.getChildrenList()); 
 						}
 					}
-				}
-				else
-				{
-					JsNodeHelper.assignNode(node.getChildrenList(), res.getChildrenList());
-				}
+//				}
+//				else
+//				{
+//					JsNodeHelper.assignNode(node.getChildrenList(), res.getChildrenList());
+//				}
 			}			
 		}
 
