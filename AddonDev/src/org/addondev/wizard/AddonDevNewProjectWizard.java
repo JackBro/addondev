@@ -3,6 +3,7 @@ package org.addondev.wizard;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -253,20 +254,35 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 	private void createFile(IProject project, String distpath, String srcpath,
 			Map param, IProgressMonitor monitor) throws IOException, CoreException {
 		
-		File srcfile = new File(srcpath);
-		boolean ff = srcfile.exists();
-		if(srcfile != null)
-		{
-			String srctext = FileUtils.readFileToString(srcfile);
-			for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
-			{
-				String key = (String) iterator.next();
-				srctext = srctext.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
-			}	
-			
-			IFile distfile = project.getFile(distpath);
-			InputStream is = new ByteArrayInputStream(srctext.getBytes("UTF-8"));
-			distfile.create(is, true, monitor);
+		URL url = AddonDevPlugin.getDefault().getBundle().getEntry(srcpath);
+		InputStream in = url.openStream();
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+		int len = 0;
+		byte[] buf = new byte[1024 * 8];
+		while((len = in.read(buf))!=-1){
+			out.write(buf,0,len);
 		}
+		//byte[] result = out.toByteArray();
+		in.close();
+		out.close();	
+		IFile distfile = project.getFile(distpath);
+		distfile.create(new ByteArrayInputStream(buf), true, monitor);
+		
+		
+//		File srcfile = new File(srcpath);
+//		boolean ff = srcfile.exists();
+//		if(srcfile != null)
+//		{
+//			String srctext = FileUtils.readFileToString(srcfile);
+//			for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
+//			{
+//				String key = (String) iterator.next();
+//				srctext = srctext.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
+//			}	
+//			
+//			IFile distfile = project.getFile(distpath);
+//			InputStream is = new ByteArrayInputStream(srctext.getBytes("UTF-8"));
+//			distfile.create(is, true, monitor);
+//		}
 	}
 }
