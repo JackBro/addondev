@@ -1,3 +1,6 @@
+http://cms.xulbooster.org/index.php?option=com_frontpage&Itemid=1
+http://www.open-force.info/index.php/blog/show/l/77
+
 context.sourceCache.cache = undefined
  ----------
 frame.args = undefined

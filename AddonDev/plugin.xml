@@ -236,8 +236,8 @@
       </image>
    </extension>
    <extension
-         id="addondevnature"
-         name="addondevNature"
+         id="org.addondev.nature"
+         name="AddonDevNature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run

@@ -45,6 +45,7 @@ public class NewJavaScriptFileWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// TODO Auto-generated method stub
 		fSelection = selection;
+		
 	}
 
 	@Override
