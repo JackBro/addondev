@@ -77,15 +77,15 @@ public class JavaScriptContentAssistProcessor implements
 		
 
 //		try {
-//			URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
-//			String pluginDirectory;
-//			pluginDirectory = FileLocator.resolve(entry).getPath();
-//			int i=0;
-//			i++;
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//		URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
+//		String pluginDirectory;
+//		pluginDirectory = FileLocator.resolve(entry).getPath();
+//		int i=0;
+//		i++;
+//	} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
 		
 
 		addTemplateCompletionProposal(viewer, offset, result);
