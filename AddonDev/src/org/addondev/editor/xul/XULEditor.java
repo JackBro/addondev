@@ -1,10 +1,16 @@
 package org.addondev.editor.xul;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
 import jp.aonir.fuzzyxml.FuzzyXMLNode;
 
 import org.addondev.editor.xul.formeditor.BrowserFormPage;
 import org.addondev.editor.xul.formeditor.XULFormEditor;
+import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorInput;
@@ -39,10 +45,16 @@ public class XULEditor extends TextEditor {
 		Object element = sel.getFirstElement();
 		 if(element instanceof FuzzyXMLNode)
 		 {
+			 String text = ((FuzzyXMLNode)element).toXMLString();
 			 
 		 }
 		
 		getXUL();
+		
+		if(outline!=null)
+		{
+			outline.update();
+		}
 	}
 
 	@Override
@@ -65,6 +77,7 @@ public class XULEditor extends TextEditor {
 		}
 		return super.getAdapter(adapter);
 	}
+	
 	private void getXUL()
 	{
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
@@ -101,5 +114,21 @@ public class XULEditor extends TextEditor {
 			}
 		}
 
+	}
+	
+	private void getXULFile(String filename)
+	{
+		URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
+		try {
+			String pluginDirectory = FileLocator.resolve(entry).getPath();
+			File file = new File(pluginDirectory, filename);
+			if(!file.exists())
+			{
+				file.createNewFile();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

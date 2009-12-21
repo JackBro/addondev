@@ -24,6 +24,7 @@ public class XULOutlinePage extends ContentOutlinePage {
 
 	private XULEditor fEditor;
 	private XMLInput input = new XMLInput();
+	private int fElementStartOffset;
 	  
 	private class XMLInput 
 	{
@@ -33,6 +34,11 @@ public class XULOutlinePage extends ContentOutlinePage {
 	public XULOutlinePage(XULEditor editor)
 	{
 		fEditor = editor;
+	}
+	
+	public int getElementStartOffset()
+	{
+		return fElementStartOffset;
 	}
 	
 	@Override
@@ -137,6 +143,7 @@ public class XULOutlinePage extends ContentOutlinePage {
 		  IDocument doc = fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
 		  FuzzyXMLDocument document = new FuzzyXMLParser().parse(doc.get());
 		  input.documentElement = document.getDocumentElement();
+		  fElementStartOffset = input.documentElement.getOffset();
 		  getTreeViewer().refresh();
 	  }	
 }
