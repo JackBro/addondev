@@ -1,6 +1,11 @@
 package org.addondev.editor.xul.formeditor;
 
+import java.io.IOException;
+import java.net.URL;
+
+import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -60,7 +65,23 @@ public class XULFormEditor extends MultiPageEditorPart {
 	
 	public void setFile(IFile file)
 	{
+		
 		fBrowserFormPage.setFile(file);
 	}
 
+	private void make()
+	{
+
+		URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
+		String pluginDirectory;
+		try {
+			pluginDirectory = FileLocator.resolve(entry).getPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int i=0;
+		i++;
+
+	}
 }

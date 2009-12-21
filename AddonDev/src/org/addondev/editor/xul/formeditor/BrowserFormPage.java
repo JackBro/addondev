@@ -21,6 +21,7 @@ public class BrowserFormPage extends Page {
 	public static final String ID = "browser";
 	private Browser fBrowser;
 
+	private boolean fFileLoaded = false;
 	private Composite composite;
 	
 	

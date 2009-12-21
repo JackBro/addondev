@@ -74,20 +74,6 @@ public class JavaScriptContentAssistProcessor implements
 ////	        new ICompletionProposal[result.size()];
 ////	      result.toArray(proposals);
 ////	      return proposals;
-		
-
-//		try {
-//		URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
-//		String pluginDirectory;
-//		pluginDirectory = FileLocator.resolve(entry).getPath();
-//		int i=0;
-//		i++;
-//	} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-		
-
 		addTemplateCompletionProposal(viewer, offset, result);
 		
 		return result.toArray(new ICompletionProposal[result.size()]);

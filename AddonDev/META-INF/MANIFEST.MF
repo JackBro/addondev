@@ -53,7 +53,9 @@ Export-Package: org.addondev.debug.core.launching;uses:="org.eclipse.debug.core,
    org.eclipse.jface.util,
    org.eclipse.swt.widgets"
 Bundle-ClassPath: lib/commons-io-1.4.jar,
- .
+ .,
+ lib/FuzzyXML/fuzzyxml.jar,
+ lib/FuzzyXML/lib/commons-jxpath-1.2.jar
 Require-Bundle: org.eclipse.equinox.preferences,
  org.eclipse.equinox.common,
  org.eclipse.core.resources;bundle-version="3.5.0",

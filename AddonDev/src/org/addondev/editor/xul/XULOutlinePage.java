@@ -1,13 +1,14 @@
 package org.addondev.editor.xul;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.aonir.fuzzyxml.FuzzyXMLDocument;
 import jp.aonir.fuzzyxml.FuzzyXMLElement;
 import jp.aonir.fuzzyxml.FuzzyXMLNode;
+import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -21,10 +22,17 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 public class XULOutlinePage extends ContentOutlinePage {
 
-	
-	public XULOutlinePage()
+	private XULEditor fEditor;
+	private XMLInput input = new XMLInput();
+	  
+	private class XMLInput 
 	{
-		
+	    FuzzyXMLElement documentElement;
+	}
+	
+	public XULOutlinePage(XULEditor editor)
+	{
+		fEditor = editor;
 	}
 	
 	@Override
@@ -66,7 +74,8 @@ public class XULOutlinePage extends ContentOutlinePage {
 			@Override
 			public Object[] getElements(Object inputElement) {
 				// TODO Auto-generated method stub
-				return getChildren(((FuzzyXMLElement)inputElement));
+				//return getChildren(((FuzzyXMLElement)inputElement));
+				return getChildren(((XMLInput)inputElement).documentElement);
 			}
 
 			@Override
@@ -111,15 +120,21 @@ public class XULOutlinePage extends ContentOutlinePage {
 		        IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 		        Object element = sel.getFirstElement();
 		        if(element instanceof FuzzyXMLNode){
-
+		        	FuzzyXMLNode node = (FuzzyXMLNode)element;
+		        	String xml = node.toXMLString();
+		        	int i=0;
+		        	i++;
 		        }
 			}				
-		});		
+		});
+		
+		tree.setInput(input);
+		update();
 	}
 
 	  public void update()
 	  {
-		  IDocument doc = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+		  IDocument doc = fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
 		  FuzzyXMLDocument document = new FuzzyXMLParser().parse(doc.get());
 		  input.documentElement = document.getDocumentElement();
 		  getTreeViewer().refresh();
