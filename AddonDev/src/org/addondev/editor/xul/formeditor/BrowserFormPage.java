@@ -1,8 +1,13 @@
 package org.addondev.editor.xul.formeditor;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -55,15 +60,52 @@ public class BrowserFormPage extends Page {
 	public void setDocument(String text)
 	{
 		if(fBrowser != null)
-			fBrowser.setText(text);
+		{
+			Control control =getControl();
+			control.getDisplay().syncExec(new Runnable() {
+				public void run() {
+					fBrowser.setUrl("file:///D:/data/src/PDE/xpi/xuledit.xul");
+					fBrowser.addLocationListener(new LocationListener() {
+						
+						@Override
+						public void changing(LocationEvent event) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void changed(LocationEvent event) {
+							// TODO Auto-generated method stub
+							fBrowser.execute("output('setDocument');");
+						}
+					});
+					
+					//fBrowser.setText(text);
+					//fBrowser.redraw();
+				}
+			});
+		}
 	}
 	
 	public void setFile(IFile file)
 	{
 		String url="file:///"+file.getRawLocation().toString();
 		
+		if(fBrowser != null && !fFileLoaded)
+		{
+			fFileLoaded = true;
+			fBrowser.setUrl(url);
+		}
+	}
+	
+	public void setFile(File file)
+	{
+		Path path = new Path(file.getAbsolutePath());
+		String url="file:///"+path.toPortableString();
+		
 		if(fBrowser != null)
 		{
+			fFileLoaded = true;
 			fBrowser.setUrl(url);
 		}
 	}

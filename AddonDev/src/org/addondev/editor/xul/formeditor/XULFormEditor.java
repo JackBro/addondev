@@ -1,5 +1,6 @@
 package org.addondev.editor.xul.formeditor;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -61,11 +62,17 @@ public class XULFormEditor extends MultiPageEditorPart {
 	public void settest(String text)
 	{
 		fBrowserFormPage.setDocument(text);
+		
 	}
 	
 	public void setFile(IFile file)
 	{
 		
+		fBrowserFormPage.setFile(file);
+	}
+	
+	public void setFile(File file)
+	{
 		fBrowserFormPage.setFile(file);
 	}
 
