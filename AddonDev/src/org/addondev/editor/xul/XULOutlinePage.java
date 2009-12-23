@@ -1,6 +1,7 @@
 package org.addondev.editor.xul;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import jp.aonir.fuzzyxml.FuzzyXMLDocument;
@@ -26,6 +27,10 @@ public class XULOutlinePage extends ContentOutlinePage {
 	private XULEditor fEditor;
 	private XMLInput input = new XMLInput();
 	private int fElementStartOffset;
+
+	private HashSet<String> NodeSet = new HashSet<String>();
+	private FuzzyXMLElement fPreviewElement;
+
 	TreeViewer tree;
 	  
 	private class XMLInput 
@@ -36,11 +41,22 @@ public class XULOutlinePage extends ContentOutlinePage {
 	public XULOutlinePage(XULEditor editor)
 	{
 		fEditor = editor;
+		NodeSet.add("dialog");
+		NodeSet.add("prefpane");
+		NodeSet.add("window");
 	}
 	
 	public int getElementStartOffset()
 	{
 		return fElementStartOffset;
+	}
+	
+	public String getPreviewElementXML()
+	{
+		if(fPreviewElement != null)
+			return fPreviewElement.toXMLString();
+		else
+			return "";
 	}
 	
 	@Override
@@ -141,6 +157,19 @@ public class XULOutlinePage extends ContentOutlinePage {
 		update(-1);
 	}
 
+	private boolean isEnablePreview(FuzzyXMLNode node)
+	{
+		if(node instanceof FuzzyXMLElement)
+		{
+			FuzzyXMLElement elem = (FuzzyXMLElement)node;
+			if(NodeSet.contains(elem.getName()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void update(int offset)
 	{
 		IDocument doc = fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
@@ -150,6 +179,35 @@ public class XULOutlinePage extends ContentOutlinePage {
 		{
 			FuzzyXMLElement element = document.getElementByOffset(offset);
 			tree.setSelection(new StructuredSelection(element));
+
+			//FuzzyXMLElement node = (FuzzyXMLElement) element.getParentNode();
+			//String sno = node.getName();
+			FuzzyXMLElement fnode = document.getDocumentElement();
+			if(fnode.hasChildren())
+			{
+				FuzzyXMLNode firstnode = fnode.getChildren()[0];
+				if(NodeSet.contains(element.getName()))
+				{
+					fPreviewElement = element;
+				}
+				else
+				{
+					FuzzyXMLNode node;
+					do		
+					{
+						node = element.getParentNode();
+					}while(!isEnablePreview(node) && !node.equals(fnode));
+					fPreviewElement = (FuzzyXMLElement) node;
+				}				
+			}
+			else
+			{
+				
+			}
+			int i=0;
+			i++;
+
+			
 			//tree.setSelection(new sel);
 		}
 		fElementStartOffset = input.documentElement.getOffset();

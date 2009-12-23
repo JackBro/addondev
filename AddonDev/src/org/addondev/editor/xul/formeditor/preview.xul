@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window id="xuledit" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script type="text/javascript">
+	function preview(text) {
+	    var xwin = document.getElementById("content");
+		var dataURI = "data:application/vnd.mozilla.xul+xml," + text;
+	    xwin.setAttribute("src",dataURI);
+	}
+	</script>
+
+	<iframe id="content" src="about:blank" flex="1"/>
+
+</window>

@@ -71,9 +71,9 @@ public class XULFormEditor extends MultiPageEditorPart {
 		fBrowserFormPage.setFile(file);
 	}
 	
-	public void setFile(File file)
+	public void setFile(File file, String xml)
 	{
-		fBrowserFormPage.setFile(file);
+		fBrowserFormPage.setFile(file, xml);
 	}
 
 	private void make()

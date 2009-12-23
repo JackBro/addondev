@@ -1,6 +1,9 @@
 package org.addondev.editor.xul.formeditor;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
@@ -57,31 +60,21 @@ public class BrowserFormPage extends Page {
 //	}
 	
 
+
 	public void setDocument(String text)
 	{
 		if(fBrowser != null)
 		{
+			setted = false;
+			fXML = text;
 			Control control =getControl();
 			control.getDisplay().syncExec(new Runnable() {
+			//getSite().getShell().getDisplay().syncExec(new Runnable() {
 				public void run() {
-					fBrowser.setUrl("file:///D:/data/src/PDE/xpi/xuledit.xul");
-					fBrowser.addLocationListener(new LocationListener() {
-						
-						@Override
-						public void changing(LocationEvent event) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void changed(LocationEvent event) {
-							// TODO Auto-generated method stub
-							fBrowser.execute("output('setDocument');");
-						}
-					});
-					
-					//fBrowser.setText(text);
-					//fBrowser.redraw();
+					URL url = getClass().getResource("preview.xml");
+					fBrowser.setUrl(url.toString());
+					//fBrowser.setUrl("file:///D:/data/src/PDE/xpi/xuledit/xuledit.xul");
+					//fBrowser.setUrl("file:///D:/data/src/PDE/workrepository/plugins/AddonDev/tmp.xul");
 				}
 			});
 		}
@@ -98,13 +91,15 @@ public class BrowserFormPage extends Page {
 		}
 	}
 	
-	public void setFile(File file)
+	String fXML;
+	public void setFile(File file, String xml)
 	{
 		Path path = new Path(file.getAbsolutePath());
 		String url="file:///"+path.toPortableString();
 		
 		if(fBrowser != null)
 		{
+			fXML = xml;
 			fFileLoaded = true;
 			fBrowser.setUrl(url);
 		}
@@ -112,6 +107,8 @@ public class BrowserFormPage extends Page {
 
 
 	protected Composite displayArea = null;
+	private boolean setted = false;
+	
 	@Override
 	public void createControl(Composite parent) {
 		// TODO Auto-generated method stub
@@ -129,6 +126,45 @@ public class BrowserFormPage extends Page {
 			//D:\program\xulrunner
 			System.setProperty("org.eclipse.swt.browser.XULRunnerPath", path);
 			fBrowser = new Browser(displayArea, SWT.MOZILLA);
+			
+			fBrowser.addLocationListener(new LocationListener() {
+
+				@Override
+				public void changed(LocationEvent event) {
+					// TODO Auto-generated method stub
+					event.display.asyncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							//String tmp = URLEncoder.encode("h+h", "UTF-8");
+							//fBrowser.execute("output('"+ fXML +"');");
+							try {
+								String tmp;
+
+									tmp = URLEncoder.encode(fXML, "UTF-8");
+									String res = tmp.replaceAll("\\+", " ");
+									//String enc = (String) fBrowser.evaluate("encodeURIComponent(" + fXML +");");
+									//String res = fXML.replaceAll("\"", "'");
+									fBrowser.execute("preview('"+ res +"');");
+								} catch (UnsupportedEncodingException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+
+								
+								System.out.println("#####changed");
+						}
+					});
+					
+				}
+
+				@Override
+				public void changing(LocationEvent event) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 
 		} catch (Exception e) {
 			// TODO: handle exception
