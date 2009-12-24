@@ -1,10 +1,18 @@
 package org.addondev.editor.xul.formeditor;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.addondev.plugin.AddonDevPlugin;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,19 +27,6 @@ public class XULFormEditor extends MultiPageEditorPart {
 	public XULFormEditor() {
 		// TODO Auto-generated constructor stub
 	}
-
-//	@Override
-//	protected void addPages() {
-//		// TODO Auto-generated method stub
-//		try {
-//			fBrowserFormPage = new BrowserFormPage(this, BrowserFormPage.ID, "title");
-//			//fBrowserFormPage.createFormContent(managedForm)
-//			addPage(fBrowserFormPage);
-//		} catch (PartInitException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -56,25 +51,67 @@ public class XULFormEditor extends MultiPageEditorPart {
 		// TODO Auto-generated method stub
 		fBrowserFormPage = new BrowserFormPage();
 		fBrowserFormPage.createControl(getContainer());
-		addPage(fBrowserFormPage.getControl());
+		int pageIndex = addPage(fBrowserFormPage.getControl());
+		setPageText(pageIndex, "Preview");
 	}
 	
 	public void settest(String text)
 	{
-		fBrowserFormPage.setDocument(text);
+		File file = makeXULPreviewFile();
+		fBrowserFormPage.setDocument(file, text);
 		
 	}
 	
-	public void setFile(IFile file)
+	private File makeXULPreviewFile()
 	{
+		String filename = "preview.xul";
+		File file = null;
+		URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
+		try {
+			String pluginDirectory = FileLocator.resolve(entry).getPath();
+			file = new File(pluginDirectory, filename);
+			if(!file.exists())
+			{
+				URL url = AddonDevPlugin.getDefault().getBundle().getEntry("files/preview.xul");
+				InputStream in = url.openStream();
+				StringBuffer buf = new StringBuffer();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+				String line = null;
+				//String res = "";
+				while ((line = reader.readLine()) != null) {
+					buf.append(line + "\n");
+				}
+
+				in.close();
+				reader.close();
+				
+				String text = buf.toString();
+				file.createNewFile();
+				FileWriter fw = new FileWriter(file);
+				fw.write(text);
+				fw.close();
+				
+				//FileUtils.writeStringToFile(file, text);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		fBrowserFormPage.setFile(file);
+		return file;
 	}
 	
-	public void setFile(File file, String xml)
-	{
-		fBrowserFormPage.setFile(file, xml);
-	}
+//	public void setFile(IFile file)
+//	{
+//		
+//		fBrowserFormPage.setFile(file);
+//	}
+	
+//	public void setFile(File file, String xml)
+//	{
+//		fBrowserFormPage.setFile(file, xml);
+//	}
 
 	private void make()
 	{

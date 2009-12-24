@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry exported="true" kind="lib" path="lib/FuzzyXML/lib/commons-jxpath-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/FuzzyXML/fuzzyxml.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io/commons-io-1.4.jar" sourcepath="lib/commons-io/commons-io-1.4-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>

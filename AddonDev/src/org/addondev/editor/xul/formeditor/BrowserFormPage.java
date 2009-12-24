@@ -32,36 +32,7 @@ public class BrowserFormPage extends Page {
 	private boolean fFileLoaded = false;
 	private Composite composite;
 	
-	
-	
-//	@Override
-//	protected void createFormContent(IManagedForm managedForm) {
-//		// TODO Auto-generated method stub
-//		//super.createFormContent(managedForm);
-//		ScrolledForm form = managedForm.getForm();
-//		FormToolkit toolkit = managedForm.getToolkit();
-//		Section section = toolkit.createSection(form.getBody(), 
-//	            Section.TITLE_BAR | Section.DESCRIPTION);
-//		//Composite composite = toolkit.createComposite(section);
-//		section.setLayout(new FillLayout());
-//		composite = toolkit.createComposite(section);
-//		composite.setLayout(new FillLayout());
-//		try {
-//			String path = "D:\\program\\xulrunner";
-//			//D:\program\xulrunner
-//			System.setProperty("org.eclipse.swt.browser.XULRunnerPath", path);
-//
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-//		section.setClient(composite);
-//		//section.setLayoutData(new FillLayout());
-//	}
-	
-
-
-	public void setDocument(String text)
+	public void setDocument(final File file, String text)
 	{
 		if(fBrowser != null)
 		{
@@ -71,8 +42,9 @@ public class BrowserFormPage extends Page {
 			control.getDisplay().syncExec(new Runnable() {
 			//getSite().getShell().getDisplay().syncExec(new Runnable() {
 				public void run() {
-					URL url = getClass().getResource("preview.xml");
-					fBrowser.setUrl(url.toString());
+					//URL url = getClass().getResource("preview.xul");
+					String url="file://"+file.toURI().getRawPath();
+					fBrowser.setUrl(url);
 					//fBrowser.setUrl("file:///D:/data/src/PDE/xpi/xuledit/xuledit.xul");
 					//fBrowser.setUrl("file:///D:/data/src/PDE/workrepository/plugins/AddonDev/tmp.xul");
 				}
@@ -80,30 +52,30 @@ public class BrowserFormPage extends Page {
 		}
 	}
 	
-	public void setFile(IFile file)
-	{
-		String url="file:///"+file.getRawLocation().toString();
-		
-		if(fBrowser != null && !fFileLoaded)
-		{
-			fFileLoaded = true;
-			fBrowser.setUrl(url);
-		}
-	}
+//	public void setFile(IFile file)
+//	{
+//		String url="file:///"+file.getRawLocation().toString();
+//		
+//		if(fBrowser != null && !fFileLoaded)
+//		{
+//			fFileLoaded = true;
+//			fBrowser.setUrl(url);
+//		}
+//	}
 	
 	String fXML;
-	public void setFile(File file, String xml)
-	{
-		Path path = new Path(file.getAbsolutePath());
-		String url="file:///"+path.toPortableString();
-		
-		if(fBrowser != null)
-		{
-			fXML = xml;
-			fFileLoaded = true;
-			fBrowser.setUrl(url);
-		}
-	}
+//	public void setFile(File file, String xml)
+//	{
+//		Path path = new Path(file.getAbsolutePath());
+//		String url="file:///"+path.toPortableString();
+//		
+//		if(fBrowser != null)
+//		{
+//			fXML = xml;
+//			fFileLoaded = true;
+//			fBrowser.setUrl(url);
+//		}
+//	}
 
 
 	protected Composite displayArea = null;
@@ -111,6 +83,7 @@ public class BrowserFormPage extends Page {
 	
 	@Override
 	public void createControl(Composite parent) {
+		
 		// TODO Auto-generated method stub
 		displayArea = new Composite( parent, SWT.NONE );
 		GridLayout gridLayout = new GridLayout();

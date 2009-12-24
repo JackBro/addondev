@@ -9,6 +9,8 @@ import jp.aonir.fuzzyxml.FuzzyXMLNode;
 import org.addondev.editor.xul.formeditor.BrowserFormPage;
 import org.addondev.editor.xul.formeditor.XULFormEditor;
 import org.addondev.plugin.AddonDevPlugin;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,6 +22,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class XULEditor extends TextEditor {
@@ -58,8 +61,9 @@ public class XULEditor extends TextEditor {
 			 if(element instanceof FuzzyXMLNode)
 			 {
 				 String text = ((FuzzyXMLNode)element).toXMLString();
-				 File file = getXULTmpFile("tmp.xul");
-				 getXUL(file, text); 
+				 //File file = getXULTmpFile("tmp.xul");
+				 
+				 getXUL(outline.getPreviewElementXML()); 
 			 }
 		}
 	}
@@ -85,7 +89,7 @@ public class XULEditor extends TextEditor {
 		return super.getAdapter(adapter);
 	}
 	
-	private void getXUL(File file, String xml)
+	private void getXUL(String xml)
 	{
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (IWorkbenchWindow iWorkbenchWindow : windows) {
@@ -99,14 +103,29 @@ public class XULEditor extends TextEditor {
 				{
 					XULFormEditor xulformeditor = (XULFormEditor)editorpart;
 					String text = getSourceViewer().getDocument().get();
-					IEditorInput input = getEditorInput();
+					IEditorInput editorinput = getEditorInput();
+					
+					IEditorInput formeditorinput = xulformeditor.getEditorInput();
+					
+					if(editorinput instanceof FileEditorInput
+							&& formeditorinput instanceof FileEditorInput)
+					{
+						String editorpath = ((FileEditorInput)editorinput).getPath().toPortableString();
+						String formeditorpath = ((FileEditorInput)formeditorinput).getPath().toPortableString();
+						if(editorpath != null && formeditorpath != null
+								&& editorpath.equals(formeditorpath))
+						{
+							xulformeditor.settest(xml);
+						}
+					}
+					
 //					if(input instanceof IFileEditorInput)
 //					{
 //						xulformeditor.setFile(((IFileEditorInput)input).getFile());
 //					}
 					//xulformeditor.settest(text);
 					//xulformeditor.setFile(file);
-					xulformeditor.settest(xml);
+					//xulformeditor.settest(xml);
 //					BrowserFormPage formpage = (BrowserFormPage)xulformeditor.setActivePage(BrowserFormPage.ID);
 //					
 //					String text = getSourceViewer().getDocument().get();
@@ -125,22 +144,5 @@ public class XULEditor extends TextEditor {
 
 	}
 	
-	private File getXULTmpFile(String filename)
-	{
-		File file = null;
-		URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
-		try {
-			String pluginDirectory = FileLocator.resolve(entry).getPath();
-			file = new File(pluginDirectory, filename);
-			if(!file.exists())
-			{
-				file.createNewFile();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return file;
-	}
+
 }

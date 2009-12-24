@@ -192,11 +192,11 @@ public class XULOutlinePage extends ContentOutlinePage {
 				}
 				else
 				{
-					FuzzyXMLNode node;
+					FuzzyXMLElement node = element;
 					do		
 					{
-						node = element.getParentNode();
-					}while(!isEnablePreview(node) && !node.equals(fnode));
+						node = (FuzzyXMLElement) node.getParentNode();
+					}while(!isEnablePreview(node) && !node.equals(firstnode));
 					fPreviewElement = (FuzzyXMLElement) node;
 				}				
 			}
