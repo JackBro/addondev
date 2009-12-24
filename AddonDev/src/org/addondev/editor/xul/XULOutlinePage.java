@@ -186,6 +186,8 @@ public class XULOutlinePage extends ContentOutlinePage {
 			if(fnode.hasChildren())
 			{
 				FuzzyXMLNode firstnode = fnode.getChildren()[0];
+				
+				
 				if(NodeSet.contains(element.getName()))
 				{
 					fPreviewElement = element;
@@ -195,8 +197,9 @@ public class XULOutlinePage extends ContentOutlinePage {
 					FuzzyXMLElement node = element;
 					do		
 					{
+						String tmp = node.toString();
 						node = (FuzzyXMLElement) node.getParentNode();
-					}while(!isEnablePreview(node) && !node.equals(firstnode));
+					}while(node != null && !isEnablePreview(node) && !node.equals(fnode));
 					fPreviewElement = (FuzzyXMLElement) node;
 				}				
 			}

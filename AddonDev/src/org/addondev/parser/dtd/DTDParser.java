@@ -31,8 +31,8 @@ public class DTDParser {
 		return fLocateEntityMap.containsKey(Locate);
 	}
 	
-	public String getEntity(String key)
-	{
-		
-	}
+//	public String getEntity(String key)
+//	{
+//		
+//	}
 }
