@@ -243,43 +243,6 @@ public class AddonDevUtil {
         return id;
 	}
 	
-	
-//	private String[] getCommandLine(ILaunchConfiguration configuration) throws CoreException
-//	{
-//		
-//		int eclispport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(PrefConst.ECLIPSE_PORT);
-//		int debuggerport = AddonDevPlugin.getDefault().getPreferenceStore().getInt(PrefConst.DEBUGGER_PORT);	
-//		
-//		String firefoxpath = configuration.getAttribute(PrefConst.FIREFOX_PATH, "");
-//		String profilename = configuration.getAttribute(PrefConst.FIREFOX_PROFILE_NANE, "");
-//		String firefoxargs = configuration.getAttribute(PrefConst.FIREFOX_ARGS, "");
-//		
-//		List<String> commandList = new ArrayList<String>();		
-//		commandList.add(firefoxpath);
-//	
-//		//-p "chromebugtest" -no-remote -ce_eport 8084 -ce_cport 8083 -chrome chrome://chromebug/content/chromebug.xul		
-//		commandList.add("-p");
-//		commandList.add(profilename);
-//		
-//		commandList.add("-no-remote");
-//		
-//		commandList.add("-ce_eport");
-//		commandList.add(String.valueOf(eclispport));
-//		commandList.add("-ce_cport");
-//		commandList.add(String.valueOf(debuggerport));
-//		
-//		commandList.add("-chrome");
-//		commandList.add("chrome://chromebug/content/chromebug.xul");
-//		
-//		String[] args = firefoxargs.split(" ");
-//		for (String string : args) {
-//			commandList.add(string);
-//		}
-//		
-//		return commandList.toArray(new String[commandList.size()]);
-//	}
-	
-	
 	public String[] getDebugStartCommandLine() throws CoreException
 	{
 		List<String> commands = new ArrayList<String>();	
