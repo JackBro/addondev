@@ -2,6 +2,8 @@ package org.addondev.wizard;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -11,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.addondev.plugin.AddonDevPlugin;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -19,6 +22,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -214,40 +218,16 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		folder = project.getFolder("skin/classic");
 		folder.create(false, true, monitor);
 	}
-
-	private void createFile(IProject project, String path, InputStream in,
-			Map param, IProgressMonitor monitor) throws IOException {
-		byte[] buf;
-		String text = null;
-		try {
-			buf = new byte[in.available()];
-			in.read(buf);
-			text = new String(buf, "UTF-8");
-			for (Iterator iterator = param.keySet().iterator(); iterator
-					.hasNext();) {
-				String key = (String) iterator.next();
-				text = text.replaceAll("\\$\\{" + key + "\\}", (String) param
-						.get(key));
-			}
-
-			IFile file = project.getFile(path);
-			file.create(new ByteArrayInputStream(text.getBytes("UTF-8")), true,
-					monitor);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			in.close();
-		}
-	}
 	
 	private void createFile(IProject project, String srcpath, String distpath,
 			Map param, IProgressMonitor monitor) throws IOException, CoreException {
 		
 		URL url = AddonDevPlugin.getDefault().getBundle().getEntry(srcpath);
+		//URL dirUrl = FileLocator.toFileURL(url);
+		//File file = new File(dirUrl.getFile());
+		//String tt = FileUtils.readFileToString(file);
+		//FileInputStream in = new FileInputStream(file);
+		
 		InputStream in = url.openStream();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		int len = 0;
@@ -259,7 +239,7 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		in.close();
 		out.close();	
 		
-		String text = buf.toString();
+		String text = out.toString();
 		for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
 		{
 			String key = (String) iterator.next();
@@ -268,22 +248,5 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		
 		IFile distfile = project.getFile(distpath);
 		distfile.create(new ByteArrayInputStream(text.getBytes()), true, monitor);
-		
-		
-//		File srcfile = new File(srcpath);
-//		boolean ff = srcfile.exists();
-//		if(srcfile != null)
-//		{
-//			String srctext = FileUtils.readFileToString(srcfile);
-//			for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
-//			{
-//				String key = (String) iterator.next();
-//				srctext = srctext.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
-//			}	
-//			
-//			IFile distfile = project.getFile(distpath);
-//			InputStream is = new ByteArrayInputStream(srctext.getBytes("UTF-8"));
-//			distfile.create(is, true, monitor);
-//		}
 	}
 }

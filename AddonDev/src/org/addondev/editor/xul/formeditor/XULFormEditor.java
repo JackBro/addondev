@@ -1,8 +1,6 @@
 package org.addondev.editor.xul.formeditor;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,13 +9,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.addondev.plugin.AddonDevPlugin;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 public class XULFormEditor extends MultiPageEditorPart {
@@ -26,6 +22,19 @@ public class XULFormEditor extends MultiPageEditorPart {
 	
 	public XULFormEditor() {
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	protected void setInput(IEditorInput input) {
+		// TODO Auto-generated method stub
+		super.setInput(input);
+		
+		if(input instanceof FileEditorInput)
+		{
+			FileEditorInput fileinput = (FileEditorInput)input;
+			IProject project = fileinput.getFile().getProject();
+			
+		}
 	}
 
 	@Override

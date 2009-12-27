@@ -33,7 +33,7 @@ public class xulTest {
 		}
 		
 		//<?xml-stylesheet href="chrome://dendzones/skin/dendzones.css" type="text/css"?>
-		Pattern content2 = Pattern.compile("<!DOCTYPE\\s+overlay\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
+		Pattern content2 = Pattern.compile("<?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*?>");
 		String data2 = "<?xml-stylesheet href=\"chrome://dendzones/skin/dendzones.css\" type=\"text/css\"?>";
 		Matcher matcher2 = content2.matcher(data2);
 		if (matcher2.find()) {

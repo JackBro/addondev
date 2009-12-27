@@ -256,6 +256,20 @@
                class="org.addondev.core.AddonDevNature">
          </run>
       </runtime>
+      <builder
+            id="org.addondev.core.AddonIncrementalProjectBuilder">
+      </builder>
+   </extension>
+   <extension
+         id="org.addondev.core.AddonIncrementalProjectBuilder"
+         name="checkfile"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="org.addondev.core.AddonIncrementalProjectBuilder">
+         </run>
+      </builder>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">

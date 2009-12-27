@@ -2,8 +2,11 @@ package org.addondev.plugin;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.addondev.templates.JavaScriptTemplateContextType;
+import org.addondev.util.ChromeURLMap;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -92,5 +95,14 @@ public class AddonDevPlugin extends AbstractUIPlugin {
             }
         }
         return fStore;
+    }
+    
+    private HashMap<String, ChromeURLMap> fChromeURL = new HashMap<String, ChromeURLMap>();
+    public void getChromeURLMap(IFile file, boolean isupdate)
+    {
+    	if(file.getName().equals(ChromeURLMap.MANIFEST_FILENAME) )
+    	{
+    		
+    	}
     }
 }

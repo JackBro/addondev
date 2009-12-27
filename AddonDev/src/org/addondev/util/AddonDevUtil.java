@@ -28,6 +28,7 @@ import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -66,10 +67,12 @@ public class AddonDevUtil {
 	{
 		fLaunchConfiguration = configuration;
 		fStore = AddonDevPlugin.getDefault().getPreferenceStore();	
+		
 	}
 	
 	public void init() throws CoreException, IOException, ParserConfigurationException, SAXException, TransformerException
 	{
+			
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();	
 		//try
