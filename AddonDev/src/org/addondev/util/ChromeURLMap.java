@@ -2,6 +2,7 @@ package org.addondev.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -67,6 +68,43 @@ public class ChromeURLMap {
 		}
 	}
 	
+
+	public void readManifest(IPath basepath, InputStream in) {
+		// TODO Auto-generated method stub
+		//fBasePath = file.getLocation().removeLastSegments(1);
+		fBasePath = basepath;
+		
+		InputStreamReader inputreader = null;
+		BufferedReader bufferreader = null;
+		try {
+			inputreader = new InputStreamReader(in, "UTF-8");
+			bufferreader = new BufferedReader(inputreader);
+			String line = null;
+			while((line = bufferreader.readLine()) != null)
+			{
+				makeContentMap(line);
+				makeSkinMap(line);
+				makeLocaleMap(line);
+			}			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		finally
+		{
+			try {
+				if(inputreader != null ) inputreader.close();
+				if(bufferreader != null ) bufferreader.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	// /stacklink/chrome/content/tmp/stacklink.js //file
 	// /stacklink/chrome/content/stacklink.js
 	// chrome/content/ uri
@@ -83,7 +121,26 @@ public class ChromeURLMap {
 			if(file.getFullPath().toPortableString().indexOf(path.toPortableString()) == 0)
 			{
 				chromeurl = "chrome://" + 
-				file.getFullPath().toPortableString().replaceFirst(path.toPortableString(), key1 + "/content");
+				file.getFullPath().toPortableString().replaceFirst(path.toPortableString(), key1 + "/content/");
+				break;
+				
+			}
+		}
+		return chromeurl;
+	}
+	
+	public String convertLocal2Chrome(IPath fullpath)
+	{
+		String chromeurl = null;
+		for(String key1 : fContentMap.keySet()) {
+			
+			HashMap<String, String> map = fContentMap.get(key1);
+			String uri = map.get("uri");
+			IPath path = fBasePath.append(uri);
+			if(fullpath.toPortableString().indexOf(path.toPortableString()) == 0)
+			{
+				chromeurl = "chrome://" + 
+				fullpath.toPortableString().replaceFirst(path.toPortableString(), key1 + "/content/");
 				break;
 				
 			}
@@ -95,13 +152,15 @@ public class ChromeURLMap {
 	//chrome://stacklink/content/stacklink.js
 	public String convertChrome2Local(String path)
 	{
+		
+		
 		String localpath = null;
 		Matcher m = chrome_content_pattern.matcher(path);
 		if (m.find()) {
 			String name = m.group(1);
 			String file = m.group(2);
 			String uri = fContentMap.get(name).get("uri");
-			localpath = uri + file;
+			localpath = "file:///" + fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
@@ -110,7 +169,8 @@ public class ChromeURLMap {
 			String name = m.group(1);
 			String file = m.group(2);
 			String uri = fSkinMap.get(name).get("uri");
-			localpath = uri + file;
+			//localpath = uri + file;
+			localpath = "file:///" + fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
@@ -119,7 +179,8 @@ public class ChromeURLMap {
 			String name = m.group(1);
 			String file = m.group(2);
 			String uri = fLocaleMap.get(name).get(fLocale);
-			localpath = uri + file;
+			//localpath = uri + file;
+			localpath = "file:///" + fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
@@ -168,14 +229,22 @@ public class ChromeURLMap {
 	{
 		Matcher m = localepattern.matcher(content);
 		if (m.find()) {
-			HashMap<String, String> map = new HashMap<String, String>(); 
+			
 			String packagename = m.group(1);
 			String locale = m.group(2);
 			String uri = m.group(3);			
-			map.put(locale, uri);
+
 			//map.put("uri", uri);
-			
-			fLocaleMap.put(packagename, map);
+			if(fLocaleMap.containsKey(packagename))
+			{
+				fLocaleMap.get(packagename).put(locale, uri);
+			}
+			else
+			{
+				HashMap<String, String> map = new HashMap<String, String>(); 
+				map.put(locale, uri);
+				fLocaleMap.put(packagename, map);
+			}
 			
 			//System.out.println(m.group(0));
 			//System.out.println(m.group(1));
@@ -183,6 +252,7 @@ public class ChromeURLMap {
 			//System.out.println(m.group(3));
 		}		
 	}
+
 	
 
 	

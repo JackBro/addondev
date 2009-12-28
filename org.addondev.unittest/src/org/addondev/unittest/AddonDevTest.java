@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,29 +38,24 @@ public class AddonDevTest {
 		ChromeURLMap cm = new ChromeURLMap();	
 		try {
 			URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");
-			//url.
-			URI ui = url.toURI();
 			//project.getFile(ChromeURLMap.MANIFEST_FILENAME).
 			//cm.readManifest(project.getFile(ChromeURLMap.MANIFEST_FILENAME));
-			cm.readManifest("stacklink", url.openStream());
-			String lo = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
-			File f = new File(lo);
-			String ap = f.getAbsolutePath();
-			//IFile lofile = project.getFile("stacklink.js");
-			//String ch = cm.convertLocal2Chrome(lofile);
-			String ch = cm.convertLocal2Chrome("stacklink/chrome/content/stacklink.js");
-
-			String ch2 = cm.convertLocal2Chrome("stacklink/chrome/content/tmp/tmp.js");
+			String bpath = "D:/data/src/PDE/workrepository/plugins/org.addondev.unittest/stacklink"; 
+			cm.readManifest(new Path(bpath), url.openStream());
 			
-			int i=0;
-			i++;
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//String pp = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
+			assertEquals("file:///" + bpath + "/chrome/content/stacklink.js", cm.convertChrome2Local("chrome://stacklink/content/stacklink.js"));
+			assertEquals("file:///" + bpath + "/skin/classic/preference.css", cm.convertChrome2Local("chrome://stacklink/skin/preference.css"));
+			
+			cm.setLocale("en-US");
+			assertEquals("file:///" + bpath + "/locale/en-US/stacklink.dtd", cm.convertChrome2Local("chrome://stacklink/locale/stacklink.dtd"));
+			cm.setLocale("ja-JP");
+			assertEquals("file:///" + bpath + "/locale/ja-JP/stacklink.dtd", cm.convertChrome2Local("chrome://stacklink/locale/stacklink.dtd"));
+			
+			assertEquals("chrome://stacklink/content/stacklink.js", cm.convertLocal2Chrome(new Path(bpath).append("/chrome/content/stacklink.js")));
+			assertEquals("chrome://stacklink/content/tmp/tmp.js", cm.convertLocal2Chrome(new Path(bpath).append("chrome/content/tmp/tmp.js")));
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

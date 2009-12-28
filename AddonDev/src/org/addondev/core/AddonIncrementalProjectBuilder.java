@@ -27,7 +27,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 			IResourceDelta delta = getDelta(getProject());
 			if(delta != null)
 			{
-				
+				//delta.getResource().getName()
 				switch (delta.getKind()) {
 				case IResourceDelta.CHANGED:
 					IFile file = getProject().getFile("chrome.manifest");

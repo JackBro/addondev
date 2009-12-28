@@ -51,7 +51,9 @@ Export-Package: org.addondev.debug.core.launching;uses:="org.eclipse.debug.core,
    org.eclipse.swt.graphics,
    org.eclipse.jface.viewers,
    org.eclipse.jface.util,
-   org.eclipse.swt.widgets"
+   org.eclipse.swt.widgets",
+ org.addondev.plugin,
+ org.addondev.util
 Bundle-ClassPath: lib/commons-io-1.4.jar,
  .,
  lib/FuzzyXML/fuzzyxml.jar,
