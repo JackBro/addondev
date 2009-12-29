@@ -2,21 +2,13 @@ package org.addondev.unittest;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-
-import junit.framework.TestCase;
 
 import org.addondev.parser.dtd.DTDMap;
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.util.ChromeURLMap;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
 import org.junit.Before;
@@ -34,13 +26,12 @@ public class AddonDevTest {
 
 	@Test
 	public void ChromeURLMapTest() {
-		IProject[] s = AddonDevPlugin.getWorkspace().getRoot().getProjects();
-
+		//IProject[] s = AddonDevPlugin.getWorkspace().getRoot().getProjects();
 		//IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
 		//boolean pe = project.exists();
 		ChromeURLMap cm = new ChromeURLMap();	
 		try {
-			URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");
+			//URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");
 			//URL url = new URL("file:///D:/data/src/PDE/work/org.addondev.unittest/stacklink/");
 			//project.getFile(ChromeURLMap.MANIFEST_FILENAME).
 			//cm.readManifest(project.getFile(ChromeURLMap.MANIFEST_FILENAME));
