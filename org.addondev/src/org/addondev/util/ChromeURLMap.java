@@ -1,6 +1,8 @@
 package org.addondev.util;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,7 +31,6 @@ public class ChromeURLMap {
 	private static Pattern chrome_skin_pattern = Pattern.compile("chrome:\\/\\/([^\\s^\\/]+)\\/skin\\/(.*)"); 
 	private static Pattern chrome_locale_pattern = Pattern.compile("chrome:\\/\\/([^\\s^\\/]+)\\/locale\\/(.*)");  
 	
-	private IProject fProject;
 	private String fLocale;
 	private IPath fBasePath;
 	
@@ -45,8 +46,14 @@ public class ChromeURLMap {
 	
 	public ChromeURLMap()
 	{
-		//fProject = project;
 		fLocale = "en-US";
+	}
+	
+	public void clear()
+	{
+		fContentMap.clear();
+		fSkinMap.clear();
+		fLocaleMap.clear();
 	}
 	
 	public void readManifest(IFile manifest) throws CoreException, IOException
@@ -69,22 +76,27 @@ public class ChromeURLMap {
 	}
 	
 
-	public void readManifest(IPath basepath, InputStream in) {
+	public void readManifest(IPath manifestfullpath) throws FileNotFoundException {
 		// TODO Auto-generated method stub
 		//fBasePath = file.getLocation().removeLastSegments(1);
-		fBasePath = basepath;
+		fBasePath = manifestfullpath.removeLastSegments(1);
+		
+		FileInputStream fin = new FileInputStream(manifestfullpath.toFile());
 		
 		InputStreamReader inputreader = null;
 		BufferedReader bufferreader = null;
 		try {
-			inputreader = new InputStreamReader(in, "UTF-8");
+			inputreader = new InputStreamReader(fin, "UTF-8");
 			bufferreader = new BufferedReader(inputreader);
 			String line = null;
 			while((line = bufferreader.readLine()) != null)
 			{
+				if(line.length() > 0)
+				{
 				makeContentMap(line);
 				makeSkinMap(line);
 				makeLocaleMap(line);
+				}
 			}			
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

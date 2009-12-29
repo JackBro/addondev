@@ -8,6 +8,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
+import org.addondev.parser.dtd.DTDMap;
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.util.ChromeURLMap;
 import org.eclipse.core.resources.IFile;
@@ -31,17 +34,19 @@ public class AddonDevTest {
 
 	@Test
 	public void ChromeURLMapTest() {
-		//IProject[] s = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		IProject[] s = AddonDevPlugin.getWorkspace().getRoot().getProjects();
 
 		//IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
 		//boolean pe = project.exists();
 		ChromeURLMap cm = new ChromeURLMap();	
 		try {
 			URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");
+			//URL url = new URL("file:///D:/data/src/PDE/work/org.addondev.unittest/stacklink/");
 			//project.getFile(ChromeURLMap.MANIFEST_FILENAME).
 			//cm.readManifest(project.getFile(ChromeURLMap.MANIFEST_FILENAME));
-			String bpath = "D:/data/src/PDE/workrepository/plugins/org.addondev.unittest/stacklink"; 
-			cm.readManifest(new Path(bpath), url.openStream());
+			String bpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink"; 
+			String filepath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink/chrome.manifest"; 
+			cm.readManifest(new Path(filepath));
 			
 			//String pp = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
 			assertEquals("file:///" + bpath + "/chrome/content/stacklink.js", cm.convertChrome2Local("chrome://stacklink/content/stacklink.js"));
@@ -59,5 +64,27 @@ public class AddonDevTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void DTDMapTest() {
+		DTDMap dtdmap = new DTDMap();
+
+		String enfullpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink/locale/en-US/stacklink.dtd"; 
+		dtdmap.setLocate("en-US");
+		dtdmap.parse(new Path(enfullpath));
+		
+		assertEquals("Preference", dtdmap.getWord("stacklink.pref"));
+		assertEquals("View label", dtdmap.getWord("stacklink.pref.label"));
+		
+		String jafullpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink/locale/ja-JP/stacklink.dtd"; 
+		dtdmap.setLocate("ja-JP");
+		dtdmap.parse(new Path(jafullpath));
+		assertEquals("stacklinkの設定", dtdmap.getWord("stacklink.pref"));
+		assertEquals("タイトルの表示", dtdmap.getWord("stacklink.pref.label"));
+		
+		dtdmap.setLocate("en-US");
+		assertEquals("Preference", dtdmap.getWord("stacklink.pref"));
+		assertEquals("View label", dtdmap.getWord("stacklink.pref.label"));
 	}
 }
