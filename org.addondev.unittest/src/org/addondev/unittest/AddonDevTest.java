@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.addondev.parser.dtd.DTDMap;
+import org.addondev.parser.xul.XULParser;
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.util.ChromeURLMap;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
 import org.junit.Before;
@@ -16,6 +18,8 @@ import org.junit.Test;
 
 public class AddonDevTest {
 
+	private IPath basepath = new Path("D:/data/src/PDE/workrepositry/plugins/org.addondev.unittest");
+	
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -36,8 +40,8 @@ public class AddonDevTest {
 			//project.getFile(ChromeURLMap.MANIFEST_FILENAME).
 			//cm.readManifest(project.getFile(ChromeURLMap.MANIFEST_FILENAME));
 			String bpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink"; 
-			String filepath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink/chrome.manifest"; 
-			cm.readManifest(new Path(filepath));
+			String filepath = "stacklink/chrome.manifest"; 
+			cm.readManifest(basepath.append(filepath));
 			
 			//String pp = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
 			assertEquals("file:///" + bpath + "/chrome/content/stacklink.js", cm.convertChrome2Local("chrome://stacklink/content/stacklink.js"));
@@ -61,16 +65,16 @@ public class AddonDevTest {
 	public void DTDMapTest() {
 		DTDMap dtdmap = new DTDMap();
 
-		String enfullpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink/locale/en-US/stacklink.dtd"; 
+		String enfullpath = "stacklink/locale/en-US/stacklink.dtd"; 
 		dtdmap.setLocate("en-US");
-		dtdmap.parse(new Path(enfullpath));
+		dtdmap.parse(basepath.append(enfullpath));
 		
 		assertEquals("Preference", dtdmap.getWord("stacklink.pref"));
 		assertEquals("View label", dtdmap.getWord("stacklink.pref.label"));
 		
-		String jafullpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink/locale/ja-JP/stacklink.dtd"; 
+		String jafullpath = "stacklink/locale/ja-JP/stacklink.dtd"; 
 		dtdmap.setLocate("ja-JP");
-		dtdmap.parse(new Path(jafullpath));
+		dtdmap.parse(basepath.append(jafullpath));
 		assertEquals("stacklinkの設定", dtdmap.getWord("stacklink.pref"));
 		assertEquals("タイトルの表示", dtdmap.getWord("stacklink.pref.label"));
 		
@@ -78,4 +82,13 @@ public class AddonDevTest {
 		assertEquals("Preference", dtdmap.getWord("stacklink.pref"));
 		assertEquals("View label", dtdmap.getWord("stacklink.pref.label"));
 	}
+	
+	@Test
+	public void XULTest() {
+		XULParser p = new XULParser();
+		
+		String fullpath = "stacklink/chrome/content/preference.xul"; 
+		p.parse(basepath.append(fullpath), 0);
+	}
+	
 }

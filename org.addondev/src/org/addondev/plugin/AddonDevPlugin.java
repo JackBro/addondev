@@ -1,14 +1,18 @@
 package org.addondev.plugin;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
+import org.addondev.parser.dtd.DTDMap;
 import org.addondev.templates.JavaScriptTemplateContextType;
 import org.addondev.util.ChromeURLMap;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
@@ -98,11 +102,61 @@ public class AddonDevPlugin extends AbstractUIPlugin {
     }
     
     private HashMap<String, ChromeURLMap> fChromeURL = new HashMap<String, ChromeURLMap>();
-    public void getChromeURLMap(IFile file, boolean isupdate)
+    public ChromeURLMap getChromeURLMap(IProject prject, boolean isupdate)
     {
-    	if(file.getName().equals(ChromeURLMap.MANIFEST_FILENAME) )
-    	{
+    	IFile file = prject.getFile(ChromeURLMap.MANIFEST_FILENAME);
+    	//if(file.getName().equals(ChromeURLMap.MANIFEST_FILENAME) )
+    	//{
     		
-    	}
+    		if(prject != null)
+    		{
+    			String name = prject.getName();
+    			if(fChromeURL.containsKey(name))
+    			{
+    				return fChromeURL.get(name);
+    			}
+    			else
+    			{
+    				ChromeURLMap map = new ChromeURLMap();
+    				try {
+						map.readManifest(file);
+	    				fChromeURL.put(name, map);
+	    				
+					} catch (CoreException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						map = null;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						map = null;
+					}
+					return map;
+    			}
+    		}
+    		return null;
+    	//}
+    }
+    
+    private HashMap<String, DTDMap> fDTDHashMap = new HashMap<String, DTDMap>();
+    public DTDMap getDTDMap(IProject prject, boolean update)
+    {
+		if(prject != null)
+		{
+			String name = prject.getName();
+			if(fDTDHashMap.containsKey(name))
+			{
+				return fDTDHashMap.get(name);
+			}
+			else
+			{
+		    	DTDMap map = new DTDMap();
+		    	fDTDHashMap.put(name, map);
+		    	return map;
+			}
+		}
+		
+		return null;
+
     }
 }

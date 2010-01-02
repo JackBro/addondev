@@ -104,6 +104,10 @@ public class DTDMap {
 		{
 			word = fLocateEntityMap.get(fLocate).get(key);
 		}
+		else
+		{
+			
+		}
 		
 		return word;
 	}

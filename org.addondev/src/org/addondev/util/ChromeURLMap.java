@@ -164,8 +164,6 @@ public class ChromeURLMap {
 	//chrome://stacklink/content/stacklink.js
 	public String convertChrome2Local(String path)
 	{
-		
-		
 		String localpath = null;
 		Matcher m = chrome_content_pattern.matcher(path);
 		if (m.find()) {
