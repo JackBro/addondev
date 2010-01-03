@@ -85,10 +85,9 @@ public class AddonDevTest {
 	
 	@Test
 	public void XULTest() {
-		XULParser p = new XULParser();
-		
-		String fullpath = "stacklink/chrome/content/preference.xul"; 
-		p.parse(basepath.append(fullpath), 0);
+		//XULParser p = new XULParser();
+		//String fullpath = "stacklink/chrome/content/preference.xul"; 
+		//p.parse(basepath.append(fullpath), 0);
 	}
 	
 }

@@ -1,3 +1,41 @@
+
+///////////////
+content stacklink file:///D:/data/src/PDE/eclipse/work/stacklink/chrome/content/  contentaccessible=yes 
+skin	stacklink	classic/1.0	 file:///D:/data/src/PDE/eclipse/work/stacklink/skin/classic/
+
+locale	stacklink	ja-JP		 file:///D:/data/src/PDE/eclipse/work/stacklink/locale/ja-JP/
+locale	stacklink	en-US		 file:///D:/data/src/PDE/eclipse/work/stacklink/locale/en-US/
+
+
+
+//////////////
+Mozilla XULRunner 1.9.1.4
+
+Usage: xulrunner [OPTIONS]
+       xulrunner APP-FILE [APP-OPTIONS...]
+
+OPTIONS
+      --app                  specify APP-FILE (optional)
+  -h, --help                 show this message
+  -v, --version              show version
+  --gre-version              print the GRE version string on stdout
+  --register-global          register this GRE in the machine registry
+  --register-user            register this GRE in the user registry
+  --unregister-global        unregister this GRE formerly registered with
+                             --register-global
+  --unregister-user          unregister this GRE formely registered with
+                             --register-user
+  --find-gre <version>       Find a GRE with version <version> and print
+                             the path on stdout
+  --install-app <application> [<destination> [<directoryname>]]
+                             Install a XUL application.
+
+APP-FILE
+  Application initialization file.
+
+APP-OPTIONS
+  Application specific opti????@?@単?単?
+////////////
 file.getLocation().removeLastSegments(1);
 fBasePath	Path  (id=6886)	
 D:/data/src/PDE/workrepository/plugins/AddonDev/test0

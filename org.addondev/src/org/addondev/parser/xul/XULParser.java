@@ -60,20 +60,7 @@ public class XULParser {
 		String dtd = parseCSS(chromemap, text);
 		
 		
-		List<String> dtdlist = parseDTD(chromemap, text);
-		DTDMap dtdmap = AddonDevPlugin.getDefault().getDTDMap(fProject, false);
-		dtdmap.setLocate(fLocale);
-		for (String dtdpath : dtdlist) {
-			if(dtdmap.hasLocate(fLocale))
-			{
-				
-				
-			}
-			else
-			{
-				dtdmap.parse(FileUtil.getPath(dtdpath));
-			}			
-		}
+
 		//rep dtd
 		
 		
@@ -82,6 +69,8 @@ public class XULParser {
 		FuzzyXMLElement preview = getPreviewNode(document, element);
 		
 		String xml = preview.toXMLString();
+		
+		
 		
 		
 		Matcher m = xmlPattern.matcher(text);
@@ -153,7 +142,7 @@ public class XULParser {
 		return xml;
 	}
 	
-	public List<String> parseDTD(ChromeURLMap map, String text)
+	public List<String> parseDTD(ChromeURLMap map, String text, String previewXML)
 	{
 		ArrayList<String> list = new ArrayList<String>();
 		Matcher m = doctypeOverlayPattern.matcher(text);
@@ -168,6 +157,33 @@ public class XULParser {
 				list.add(local);
 			}
 		}
+		
+		DTDMap dtdmap = AddonDevPlugin.getDefault().getDTDMap(fProject, false);
+		dtdmap.setLocate(fLocale);
+		for (String dtdpath : list) {
+			if(dtdmap.hasLocate(fLocale))
+			{
+				
+				
+			}
+			else
+			{
+				dtdmap.parse(FileUtil.getPath(dtdpath));
+			}			
+		}
+		
+		m = entryPattern.matcher(previewXML);
+		while(m.find())
+		{
+			String dtd = m.group(0); //all
+			String url = m.group(1); //dtd
+			String local = map.convertChrome2Local(url);
+			if(local != null)
+			{
+				list.add(local);
+			}
+		}
+		previewXML
 		
 		return list;
 	}
