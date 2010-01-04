@@ -7,7 +7,9 @@ import org.addondev.editor.xul.formeditor.XULFormEditor;
 import org.addondev.parser.xul.XULParser;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -23,6 +25,29 @@ import org.eclipse.ui.part.FileEditorInput;
 
 public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
+	class IncrementalBuildVisitor implements IResourceDeltaVisitor {
+
+		@Override
+		public boolean visit(IResourceDelta delta) throws CoreException {
+			// TODO Auto-generated method stub
+			IResource resource = delta.getResource();
+			switch (delta.getKind()) 
+			{
+			case IResourceDelta.CHANGED:
+				if(resource instanceof IFile )
+				{
+					IFile file = (IFile)resource;
+					getEditorPart(getProject(), file.getLocation());
+				}
+				break;
+			}
+			
+			return true;
+		}
+		
+	}
+	
+	
 	public static final String BUILDER_ID = "org.addondev.core.AddonIncrementalProjectBuilder";
 	
 	public AddonIncrementalProjectBuilder() {
@@ -36,25 +61,32 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 		if(kind != FULL_BUILD)
 		{
 			IResourceDelta delta = getDelta(getProject());
+			
 			if(delta != null)
 			{
 				//delta.getResource().getName()
-				int kk = delta.getKind();
-				switch (delta.getKind()) {
-				case IResourceDelta.CHANGED:
-					//getEditorPart();
-					IFile file = getProject().getFile("chrome.manifest");
-					IPath fBasePath = file.getLocation().removeLastSegments(1);
-					IPath fBasePath2 = file.getFullPath().removeLastSegments(1);
-					int i=0;
-					i++;
-					
-					getEditorPart(getProject(), delta.getFullPath());
-					break;
-
-				default:
-					break;
-				}
+				delta.accept(new IncrementalBuildVisitor());
+//				int kk = delta.getKind();
+//				switch (delta.getKind()) {
+//				case IResourceDelta.CHANGED:
+//					//getEditorPart();
+////					IFile file = getProject().getFile("chrome.manifest");
+////					IPath fBasePath = file.getLocation().removeLastSegments(1);
+////					IPath fBasePath2 = file.getFullPath().removeLastSegments(1);
+////					int i=0;
+////					i++;
+//					//IPath resource = delta.getResource().getFullPath();
+//					IResource resource = delta.getResource();
+//					if(resource instanceof IFile )
+//					{
+//						
+//						getEditorPart(getProject(), delta.getFullPath());
+//					}
+//					break;
+//
+//				default:
+//					break;
+//				}
 			}
 		}
 		
@@ -135,6 +167,8 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 //				}
 			}
 			
+			//final XULParser xulp = new XULParser(project, "en-US");
+			
 			//
 			editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
 				
@@ -150,8 +184,8 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 						i++;
 						for (XULFormEditor xulform : xulforms) {
 							
-							XULParser xulp = new XULParser(project, "en-US");
-							String previewxml = xulp.parse(path, offset);
+							
+							String previewxml = XULParser.parse(path, offset);
 							
 						}
 					}						

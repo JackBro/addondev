@@ -29,32 +29,33 @@ public class XULParser {
 	
 	private static Pattern doctypeOverlayPattern = Pattern.compile("<!DOCTYPE\\s+overlay\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
 	private static Pattern doctypeprefwindowPattern = Pattern.compile("<!DOCTYPE\\s+prefwindow\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
+	private static Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*?>");
 	
-	private static Pattern stylesheetPattern = Pattern.compile("<?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*?>");
+	//private static Pattern entryPattern = Pattern.compile("\"&(*+);\"");
 	
-	private static Pattern entryPattern = Pattern.compile("\"&(*+);\"");
+	//private IProject fProject;
+	//private String fLocale;
 	
-	private IProject fProject;
-	private String fLocale;
-	
-	private HashSet<String> NodeSet = new HashSet<String>();
+	//private HashSet<String> NodeSet = new HashSet<String>();
 	//private ArrayList<Pattern>
 	
-	public XULParser(IProject project, String locale)
-	{
-		fProject = project;
-		fLocale = locale;
-		
-		//NodeSet.add("dialog");
-		NodeSet.add("prefpane");
-		//NodeSet.add("window");
-	}
+//	public XULParser(IProject project, String locale)
+//	{
+//		//fProject = project;
+//		//fLocale = locale;
+//		
+//		//NodeSet.add("dialog");
+//		//NodeSet.add("prefpane");
+//		//NodeSet.add("window");
+//	}
 
-	public String parse(IPath fullpath, int offset)
+	public static String parse(IPath fullpath, int offset)
 	{
-		ChromeURLMap chromemap = AddonDevPlugin.getDefault().getChromeURLMap(fProject, false);
+		//ChromeURLMap chromemap = AddonDevPlugin.getDefault().getChromeURLMap(fProject, false);
 		
 		String text = FileUtil.getContent(fullpath.toFile());
+		
+		String css = getCSS(text);
 		//text = FileUtils.readFileToString(fullpath.toFile(), "UTF-8");
 		
 		//String dtd = parseCSS(chromemap, text);
@@ -68,12 +69,31 @@ public class XULParser {
 		if(preview != null && preview.getName().equals("prefpane"))
 		{
 			//String t = preview
-			String pname = element.getName();
+			//String pname = element.getName();
+			FuzzyXMLElement pelement = (FuzzyXMLElement) document.getDocumentElement().getChildren()[0];
+			String pname = pelement.getName();
 			if("prefwindow".equals(pname))
 			{
-				element.removeAllChildren();
-				element.appendChild(preview);
-				previewData = element.toXMLString();
+				//pelement.removeAllChildren();
+				
+				FuzzyXMLNode[] nodes = pelement.getChildren();
+				for (FuzzyXMLNode fuzzyXMLNode : nodes) {
+					if(fuzzyXMLNode instanceof FuzzyXMLElement)
+					{
+						FuzzyXMLElement celem = (FuzzyXMLElement)fuzzyXMLNode;
+						if(celem.getName().equals("prefpane") && !celem.equals(preview))
+						{
+							pelement.removeChild(celem);
+							//break;
+						}
+					}
+				}
+				
+				String mm = pelement.toXMLString();
+
+				
+				//pelement.appendChild(preview);
+				previewData = pelement.toXMLString();
 			}
 		}		
 		
@@ -91,7 +111,7 @@ public class XULParser {
 
 	}
 	
-	private FuzzyXMLElement getPreviewNode(FuzzyXMLDocument document, FuzzyXMLElement element)
+	private static FuzzyXMLElement getPreviewNode(FuzzyXMLDocument document, FuzzyXMLElement element)
 	{
 		FuzzyXMLElement previewElement = null;
 		FuzzyXMLElement fnode = document.getDocumentElement();
@@ -99,7 +119,7 @@ public class XULParser {
 		{
 			FuzzyXMLNode firstnode = fnode.getChildren()[0];
 			
-			if(NodeSet.contains(element.getName()))
+			if("prefpane".equals(element.getName()))
 			{
 				previewElement = element;
 			}
@@ -117,12 +137,12 @@ public class XULParser {
 		return previewElement;
 	}
 	
-	private boolean isEnablePreview(FuzzyXMLNode node)
+	private static boolean isEnablePreview(FuzzyXMLNode node)
 	{
 		if(node instanceof FuzzyXMLElement)
 		{
 			FuzzyXMLElement elem = (FuzzyXMLElement)node;
-			if(NodeSet.contains(elem.getName()))
+			if("prefpane".equals(elem.getName()))
 			{
 				return true;
 			}
@@ -130,68 +150,68 @@ public class XULParser {
 		return false;
 	}
 	
-	public String parseCSS(ChromeURLMap map, String text)
+	public static String getCSS(String xml)
 	{
-		Matcher m = stylesheetPattern.matcher(text);
-		String xml = ""; 
-		while(m.find())
-		{
-			String dtd = m.group(0); //all
-			String url = m.group(1); //chrome
-			String local = map.convertChrome2Local(url);
-			if(local != null)
-			{
-				String rep = dtd.replaceFirst(url, local);
-				xml += rep + "\n";
-			}
-		}
+		ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+		patterns.add(doctypeOverlayPattern);
+		patterns.add(doctypeprefwindowPattern);
+		patterns.add(stylesheetPattern);
 		
-		return xml;
-	}
-	
-	public List<String> parseDTD(ChromeURLMap map, String text, String previewXML)
-	{
-		ArrayList<String> list = new ArrayList<String>();
-		Matcher m = doctypeOverlayPattern.matcher(text);
-		String xml = ""; 
-		while(m.find())
-		{
-			String dtd = m.group(0); //all
-			String url = m.group(1); //dtd
-			String local = map.convertChrome2Local(url);
-			if(local != null)
+		String data = ""; 		
+		for (Pattern pattern : patterns) {
+			Matcher m = pattern.matcher(xml);
+			while(m.find())
 			{
-				list.add(local);
-			}
-		}
-		
-		DTDMap dtdmap = AddonDevPlugin.getDefault().getDTDMap(fProject, false);
-		dtdmap.setLocate(fLocale);
-		for (String dtdpath : list) {
-			if(dtdmap.hasLocate(fLocale))
-			{
-				
-				
-			}
-			else
-			{
-				dtdmap.parse(FileUtil.getPath(dtdpath));
+				data += m.group(0) + "\n";
 			}			
 		}
-		
-		m = entryPattern.matcher(previewXML);
-		while(m.find())
-		{
-			String dtd = m.group(0); //all
-			String url = m.group(1); //dtd
-			String local = map.convertChrome2Local(url);
-			if(local != null)
-			{
-				list.add(local);
-			}
-		}
-		
-		
-		return list;
+
+		return data;
 	}
+//	
+//	public List<String> parseDTD(ChromeURLMap map, String text, String previewXML)
+//	{
+//		ArrayList<String> list = new ArrayList<String>();
+//		Matcher m = doctypeOverlayPattern.matcher(text);
+//		String xml = ""; 
+//		while(m.find())
+//		{
+//			String dtd = m.group(0); //all
+//			String url = m.group(1); //dtd
+//			String local = map.convertChrome2Local(url);
+//			if(local != null)
+//			{
+//				list.add(local);
+//			}
+//		}
+//		
+//		DTDMap dtdmap = AddonDevPlugin.getDefault().getDTDMap(fProject, false);
+//		dtdmap.setLocate(fLocale);
+//		for (String dtdpath : list) {
+//			if(dtdmap.hasLocate(fLocale))
+//			{
+//				
+//				
+//			}
+//			else
+//			{
+//				dtdmap.parse(FileUtil.getPath(dtdpath));
+//			}			
+//		}
+//		
+//		m = entryPattern.matcher(previewXML);
+//		while(m.find())
+//		{
+//			String dtd = m.group(0); //all
+//			String url = m.group(1); //dtd
+//			String local = map.convertChrome2Local(url);
+//			if(local != null)
+//			{
+//				list.add(local);
+//			}
+//		}
+//		
+//		
+//		return list;
+//	}
 }
