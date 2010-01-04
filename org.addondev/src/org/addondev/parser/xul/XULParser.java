@@ -45,42 +45,49 @@ public class XULParser {
 		fProject = project;
 		fLocale = locale;
 		
-		NodeSet.add("dialog");
+		//NodeSet.add("dialog");
 		NodeSet.add("prefpane");
-		NodeSet.add("window");
+		//NodeSet.add("window");
 	}
 
-	public void parse(IPath fullpath, int offset)
+	public String parse(IPath fullpath, int offset)
 	{
 		ChromeURLMap chromemap = AddonDevPlugin.getDefault().getChromeURLMap(fProject, false);
 		
-		String text = null;
+		String text = FileUtil.getContent(fullpath.toFile());
 		//text = FileUtils.readFileToString(fullpath.toFile(), "UTF-8");
-		text = FileUtil.getContent(fullpath.toFile());
-		String dtd = parseCSS(chromemap, text);
 		
+		//String dtd = parseCSS(chromemap, text);
 		
-
-		//rep dtd
-		
+		String previewData = text;
 		
 		FuzzyXMLDocument document = new FuzzyXMLParser().parse(text);
 		FuzzyXMLElement element = document.getElementByOffset(offset);
 		FuzzyXMLElement preview = getPreviewNode(document, element);
 		
-		String xml = preview.toXMLString();
-		
-		
-		
-		
-		Matcher m = xmlPattern.matcher(text);
-		int index = 0;
-		while(m.find())
+		if(preview != null && preview.getName().equals("prefpane"))
 		{
-			String url = m.group(1);
-			
-			index = m.regionEnd() + 1;
-		}
+			//String t = preview
+			String pname = element.getName();
+			if("prefwindow".equals(pname))
+			{
+				element.removeAllChildren();
+				element.appendChild(preview);
+				previewData = element.toXMLString();
+			}
+		}		
+		
+		return previewData;
+		
+		
+//		Matcher m = xmlPattern.matcher(text);
+//		int index = 0;
+//		while(m.find())
+//		{
+//			String url = m.group(1);
+//			
+//			index = m.regionEnd() + 1;
+//		}
 
 	}
 	
@@ -183,7 +190,7 @@ public class XULParser {
 				list.add(local);
 			}
 		}
-		previewXML
+		
 		
 		return list;
 	}

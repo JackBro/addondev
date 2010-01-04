@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.addondev.editor.xul.formeditor.XULFormEditor;
+import org.addondev.parser.xul.XULParser;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
@@ -41,13 +42,14 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 				int kk = delta.getKind();
 				switch (delta.getKind()) {
 				case IResourceDelta.CHANGED:
-					getEditorPart();
+					//getEditorPart();
 					IFile file = getProject().getFile("chrome.manifest");
 					IPath fBasePath = file.getLocation().removeLastSegments(1);
 					IPath fBasePath2 = file.getFullPath().removeLastSegments(1);
 					int i=0;
 					i++;
 					
+					getEditorPart(getProject(), delta.getFullPath());
 					break;
 
 				default:
@@ -62,7 +64,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
 	
 	@SuppressWarnings("deprecation")
-	private void getEditorPart(IPath path)
+	private void getEditorPart(final IProject project, final IPath path)
 	{
 		final ArrayList<XULFormEditor> xulforms = new ArrayList<XULFormEditor>();
 		
@@ -81,7 +83,8 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 				//fin.getFile().getFullPath()	
 				if(editorpart instanceof XULFormEditor)
 				{
-					IPath editorpath = ((FileEditorInput)editorpart).getPath();
+					
+					IPath editorpath = ((FileEditorInput)editorpart.getEditorInput()).getPath();
 					if(editorpath.equals(path))
 					{
 						xulforms.add((XULFormEditor) editorpart);
@@ -142,10 +145,13 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 					ISelection selection = provider.getSelection();
 					if (selection instanceof ITextSelection) {
 						ITextSelection textSelection= (ITextSelection) selection;
-						int off = textSelection.getOffset();
+						int offset = textSelection.getOffset();
 						int i=0;
 						i++;
 						for (XULFormEditor xulform : xulforms) {
+							
+							XULParser xulp = new XULParser(project, "en-US");
+							String previewxml = xulp.parse(path, offset);
 							
 						}
 					}						

@@ -125,6 +125,7 @@
             name="name">
       </page>
       <page
+            category="org.addondev.debug.preferencepages"
             class="org.addondev.ui.preferences.XULPreferencePage"
             id="org.addondev.ui.XULPreferencepages"
             name="XUL Editor">

@@ -9,6 +9,8 @@ public class PrefConst {
 	public static final String ECLIPSE_PORT = "org.addondev.pref.eclipse.port";
 	public static final String DEBUGGER_CONEECT_TIMEOUT = "org.addondev.pref.debugger.timeout";
 	
+	public static final String XULRUNNER_PATH = "org.addondev.pref.xulrunner.path";
+	
 	public static final String DEFAULT_DEBUGGER_PORT = "8083";
 	public static final String DEFAULT_ECLIPSE_PORT = "8084";
 	public static final int DEFAULT_DEBUGGER_CONEECT_TIMEOUT = 20000;
