@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jp.aonir.fuzzyxml.FuzzyXMLDocType;
 import jp.aonir.fuzzyxml.FuzzyXMLDocument;
 import jp.aonir.fuzzyxml.FuzzyXMLElement;
 import jp.aonir.fuzzyxml.FuzzyXMLNode;
@@ -93,7 +94,11 @@ public class XULParser {
 				
 				//pelement.appendChild(preview);
 				String css = getCSS(text);
-				previewData = css + pelement.toXMLString();
+				String xml = pelement.toXMLString();
+				xml = xml.replaceAll("&amp;", "&");
+				//xml = xml.replaceAll("&apos;", "\\\"");
+				previewData = "<?xml version=\"1.0\"?>\n" + css + xml;
+				//previewData = css + xml;
 			}
 		}		
 		

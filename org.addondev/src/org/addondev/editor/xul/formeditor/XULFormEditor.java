@@ -30,9 +30,9 @@ public class XULFormEditor extends MultiPageEditorPart {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
+		fBrowserFormPage.dispose();		
 		super.dispose();
-		
-		fBrowserFormPage.dispose();
+
 	}
 
 
@@ -79,7 +79,8 @@ public class XULFormEditor extends MultiPageEditorPart {
 	@Override
 	protected void createPages() {
 		// TODO Auto-generated method stub
-		fBrowserFormPage = new BrowserFormPage();
+		File file = makeXULPreviewFile();
+		fBrowserFormPage = new BrowserFormPage(file);
 		fBrowserFormPage.createControl(getContainer());
 		int pageIndex = addPage(fBrowserFormPage.getControl());
 		setPageText(pageIndex, "Preview");
@@ -87,8 +88,8 @@ public class XULFormEditor extends MultiPageEditorPart {
 	
 	public void settest(String text)
 	{
-		File file = makeXULPreviewFile();
-		fBrowserFormPage.setDocument(file, text);
+		
+		fBrowserFormPage.setDocument(text);
 		
 	}
 	

@@ -38,7 +38,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 				{
 					IFile file = (IFile)resource;
 					
-					getEditorPart(getProject(), file.getLocation());
+					//getEditorPart(getProject(), file.getLocation());
 				}
 				break;
 			}
@@ -92,7 +92,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 		
 		return null;
 	}
-	
+	String ptext;
 	@SuppressWarnings("deprecation")
 	private void getEditorPart(final IProject project, final IPath path)
 	{
@@ -133,6 +133,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 						ITextSelection textSelection= (ITextSelection) selection;
 						int offset = textSelection.getOffset();
 						String previewxml = XULParser.parse(path, offset);
+						ptext = previewxml;
 						for (XULFormEditor xulform : xulforms) {			
 							xulform.settest(previewxml);
 						}	
