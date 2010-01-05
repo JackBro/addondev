@@ -1,6 +1,9 @@
 package org.addondev.util;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,23 +22,30 @@ public class ManifestUtil {
 	private static Pattern contentpattern = Pattern.compile("content\\s+([^\\s]+)\\s+([^\\s]+)");
 	private static Pattern skinepattern   = Pattern.compile("skin\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
 	private static Pattern localepattern  = Pattern.compile("locale\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
-	
-	private String fXulRunnerPath;
+
 	
 	public void makePreviewManifestFile(IProject proj, String XulRunnerPath) throws IOException
 	{
-		IFile file = proj.getFile(MANIFEST_FILENAME);
-		IPath projPath = proj.getFullPath();
-		String text = FileUtil.getContent(file.getFullPath());		
-		String xml = cnvContent(projPath, text);	
-		String name = "xulpreview." + proj.getName() + ".manifest";
-		save(XulRunnerPath, name, xml);
+		String filename = "xulpreview." + proj.getName() + ".manifest";
+		IPath path = new Path(XulRunnerPath).append("chrome").append(filename);
+		if(!path.toFile().exists())
+		{	
+			IFile file = proj.getFile(MANIFEST_FILENAME);
+			IPath projPath = proj.getLocation();
+			String text = FileUtil.getContent(file.getLocation());		
+			String xml = cnvContent(projPath, text);	
+			
+			save(path, xml);
+		}
 	}
 	
-	private void save(String XulRunnerPath, String filename, String data) throws IOException
+	private void save(IPath path, String data) throws IOException
 	{
-		IPath path = new Path(XulRunnerPath).append(filename);
-		FileUtils.writeStringToFile(path.toFile(), data, "UTF-8");
+		//FileUtils.writeStringToFile(path.toFile(), data, "UTF-8");
+		PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(path.toFile())));
+		pw.println(data);
+		pw.flush();
+		pw.close();
 	}
 	
 	private String cnvContent(IPath projPath, String text)

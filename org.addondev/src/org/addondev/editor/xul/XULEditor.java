@@ -46,26 +46,26 @@ public class XULEditor extends TextEditor {
 		// TODO Auto-generated method stub
 		super.doSave(progressMonitor);
 		
-		if(outline!=null)
-		{
-
-			ISelection editorsel = getSelectionProvider().getSelection();
-			ITextSelection textSelection = (ITextSelection)editorsel;
-			int offset = textSelection.getOffset();
-			
-			outline.update(offset);
-						
-//			IStructuredSelection sel = (IStructuredSelection)outline.getSelection();
+//		if(outline!=null)
+//		{
+//
+//			ISelection editorsel = getSelectionProvider().getSelection();
+//			ITextSelection textSelection = (ITextSelection)editorsel;
+//			int offset = textSelection.getOffset();
 //			
-//			Object element = sel.getFirstElement();
-//			 if(element instanceof FuzzyXMLNode)
-//			 {
-//				 String text = ((FuzzyXMLNode)element).toXMLString();
-//				 //File file = getXULTmpFile("tmp.xul");
-//				 
-//				 getXUL(outline.getPreviewElementXML()); 
-//			 }
-		}
+//			outline.update(offset);
+//						
+////			IStructuredSelection sel = (IStructuredSelection)outline.getSelection();
+////			
+////			Object element = sel.getFirstElement();
+////			 if(element instanceof FuzzyXMLNode)
+////			 {
+////				 String text = ((FuzzyXMLNode)element).toXMLString();
+////				 //File file = getXULTmpFile("tmp.xul");
+////				 
+////				 getXUL(outline.getPreviewElementXML()); 
+////			 }
+//		}
 	}
 
 	@Override

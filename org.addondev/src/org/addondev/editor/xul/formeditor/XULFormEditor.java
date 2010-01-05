@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.addondev.plugin.AddonDevPlugin;
+import org.addondev.util.ManifestUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,18 +24,38 @@ public class XULFormEditor extends MultiPageEditorPart {
 	public XULFormEditor() {
 		// TODO Auto-generated constructor stub
 	}
+	
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+		super.dispose();
+		
+		fBrowserFormPage.dispose();
+	}
+
 
 	@Override
 	protected void setInput(IEditorInput input) {
 		// TODO Auto-generated method stub
-		super.setInput(input);
-		
+
 		if(input instanceof FileEditorInput)
 		{
 			FileEditorInput fileinput = (FileEditorInput)input;
-			IProject project = fileinput.getFile().getProject();
+			IProject proj = fileinput.getFile().getProject();
+			ManifestUtil util = new ManifestUtil();
+			String path = "D:/program/xulrunner";
+			try {
+				util.makePreviewManifestFile(proj, path);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}
+		
+		super.setInput(input);
 	}
 
 	@Override

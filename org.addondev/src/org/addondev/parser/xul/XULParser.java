@@ -55,7 +55,6 @@ public class XULParser {
 		
 		String text = FileUtil.getContent(fullpath.toFile());
 		
-		String css = getCSS(text);
 		//text = FileUtils.readFileToString(fullpath.toFile(), "UTF-8");
 		
 		//String dtd = parseCSS(chromemap, text);
@@ -89,11 +88,12 @@ public class XULParser {
 					}
 				}
 				
-				String mm = pelement.toXMLString();
+				//String mm = pelement.toXMLString();
 
 				
 				//pelement.appendChild(preview);
-				previewData = pelement.toXMLString();
+				String css = getCSS(text);
+				previewData = css + pelement.toXMLString();
 			}
 		}		
 		

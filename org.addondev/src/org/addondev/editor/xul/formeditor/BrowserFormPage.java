@@ -32,6 +32,22 @@ public class BrowserFormPage extends Page {
 	private boolean fFileLoaded = false;
 	private Composite composite;
 	
+	//LocationListener fLocationListener;
+	
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		//fBrowser.stop();
+		//fBrowser.
+		//fBrowser.removeLocationListener(listener);
+		super.dispose();
+		
+		//fBrowser.dispose();
+		//fBrowser = null;
+	}
+
+
+
 	public void setDocument(final File file, String text)
 	{
 		if(fBrowser != null)
@@ -84,6 +100,7 @@ public class BrowserFormPage extends Page {
 	@Override
 	public void createControl(Composite parent) {
 		
+		//fLocationListener = 
 		// TODO Auto-generated method stub
 		displayArea = new Composite( parent, SWT.NONE );
 		GridLayout gridLayout = new GridLayout();
@@ -125,7 +142,7 @@ public class BrowserFormPage extends Page {
 								}
 
 								
-								System.out.println("#####changed");
+								//System.out.println("#####changed");
 						}
 					});
 					

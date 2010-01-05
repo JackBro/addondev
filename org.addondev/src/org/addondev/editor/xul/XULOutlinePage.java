@@ -26,10 +26,10 @@ public class XULOutlinePage extends ContentOutlinePage {
 
 	private XULEditor fEditor;
 	private XMLInput input = new XMLInput();
-	private int fElementStartOffset;
+	//private int fElementStartOffset;
 
-	private HashSet<String> NodeSet = new HashSet<String>();
-	private FuzzyXMLElement fPreviewElement;
+	//private HashSet<String> NodeSet = new HashSet<String>();
+	//private FuzzyXMLElement fPreviewElement;
 
 	TreeViewer tree;
 	  
@@ -41,23 +41,23 @@ public class XULOutlinePage extends ContentOutlinePage {
 	public XULOutlinePage(XULEditor editor)
 	{
 		fEditor = editor;
-		NodeSet.add("dialog");
-		NodeSet.add("prefpane");
-		NodeSet.add("window");
+		//NodeSet.add("dialog");
+		//NodeSet.add("prefpane");
+		//NodeSet.add("window");
 	}
 	
-	public int getElementStartOffset()
-	{
-		return fElementStartOffset;
-	}
+//	public int getElementStartOffset()
+//	{
+//		return fElementStartOffset;
+//	}
 	
-	public String getPreviewElementXML()
-	{
-		if(fPreviewElement != null)
-			return fPreviewElement.toXMLString();
-		else
-			return "";
-	}
+//	public String getPreviewElementXML()
+//	{
+//		if(fPreviewElement != null)
+//			return fPreviewElement.toXMLString();
+//		else
+//			return "";
+//	}
 	
 	@Override
 	public void createControl(Composite parent) {
@@ -154,66 +154,66 @@ public class XULOutlinePage extends ContentOutlinePage {
 		});
 		
 		tree.setInput(input);
-		update(-1);
+		//update(-1);
 	}
 
-	private boolean isEnablePreview(FuzzyXMLNode node)
-	{
-		if(node instanceof FuzzyXMLElement)
-		{
-			FuzzyXMLElement elem = (FuzzyXMLElement)node;
-			if(NodeSet.contains(elem.getName()))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+//	private boolean isEnablePreview(FuzzyXMLNode node)
+//	{
+//		if(node instanceof FuzzyXMLElement)
+//		{
+//			FuzzyXMLElement elem = (FuzzyXMLElement)node;
+//			if(NodeSet.contains(elem.getName()))
+//			{
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
-	public void update(int offset)
-	{
-		IDocument doc = fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
-		FuzzyXMLDocument document = new FuzzyXMLParser().parse(doc.get());
-		input.documentElement = document.getDocumentElement();
-		if(offset >= 0)
-		{
-			FuzzyXMLElement element = document.getElementByOffset(offset);
-			tree.setSelection(new StructuredSelection(element));
-
-			//FuzzyXMLElement node = (FuzzyXMLElement) element.getParentNode();
-			//String sno = node.getName();
-			FuzzyXMLElement fnode = document.getDocumentElement();
-			if(fnode.hasChildren())
-			{
-				FuzzyXMLNode firstnode = fnode.getChildren()[0];
-				
-				
-				if(NodeSet.contains(element.getName()))
-				{
-					fPreviewElement = element;
-				}
-				else
-				{
-					FuzzyXMLElement node = element;
-					do		
-					{
-						String tmp = node.toString();
-						node = (FuzzyXMLElement) node.getParentNode();
-					}while(node != null && !isEnablePreview(node) && !node.equals(fnode));
-					fPreviewElement = (FuzzyXMLElement) node;
-				}				
-			}
-			else
-			{
-				
-			}
-			int i=0;
-			i++;
-
-			
-			//tree.setSelection(new sel);
-		}
-		fElementStartOffset = input.documentElement.getOffset();
-		getTreeViewer().refresh();
-	}		  
+//	public void update(int offset)
+//	{
+//		IDocument doc = fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
+//		FuzzyXMLDocument document = new FuzzyXMLParser().parse(doc.get());
+//		input.documentElement = document.getDocumentElement();
+//		if(offset >= 0)
+//		{
+//			FuzzyXMLElement element = document.getElementByOffset(offset);
+//			tree.setSelection(new StructuredSelection(element));
+//
+//			//FuzzyXMLElement node = (FuzzyXMLElement) element.getParentNode();
+//			//String sno = node.getName();
+//			FuzzyXMLElement fnode = document.getDocumentElement();
+//			if(fnode.hasChildren())
+//			{
+//				FuzzyXMLNode firstnode = fnode.getChildren()[0];
+//				
+//				
+//				if(NodeSet.contains(element.getName()))
+//				{
+//					fPreviewElement = element;
+//				}
+//				else
+//				{
+//					FuzzyXMLElement node = element;
+//					do		
+//					{
+//						String tmp = node.toString();
+//						node = (FuzzyXMLElement) node.getParentNode();
+//					}while(node != null && !isEnablePreview(node) && !node.equals(fnode));
+//					fPreviewElement = (FuzzyXMLElement) node;
+//				}				
+//			}
+//			else
+//			{
+//				
+//			}
+//			int i=0;
+//			i++;
+//
+//			
+//			//tree.setSelection(new sel);
+//		}
+//		fElementStartOffset = input.documentElement.getOffset();
+//		getTreeViewer().refresh();
+//	}		  
 }

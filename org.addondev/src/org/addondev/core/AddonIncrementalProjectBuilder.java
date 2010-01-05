@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.ui.IEditorInput;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -37,6 +37,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 				if(resource instanceof IFile )
 				{
 					IFile file = (IFile)resource;
+					
 					getEditorPart(getProject(), file.getLocation());
 				}
 				break;
@@ -64,7 +65,6 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 			
 			if(delta != null)
 			{
-				//delta.getResource().getName()
 				delta.accept(new IncrementalBuildVisitor());
 //				int kk = delta.getKind();
 //				switch (delta.getKind()) {
@@ -92,8 +92,6 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 		
 		return null;
 	}
-
-
 	
 	@SuppressWarnings("deprecation")
 	private void getEditorPart(final IProject project, final IPath path)
@@ -121,57 +119,11 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 					{
 						xulforms.add((XULFormEditor) editorpart);
 					}
-					
 				}
-
-
-//				if(editorpart instanceof XULFormEditor)
-//				{
-//					XULFormEditor xulformeditor = (XULFormEditor)editorpart;
-//					String text = getSourceViewer().getDocument().get();
-//					IEditorInput editorinput = getEditorInput();
-//					
-//					IEditorInput formeditorinput = xulformeditor.getEditorInput();
-//					
-//					if(editorinput instanceof FileEditorInput
-//							&& formeditorinput instanceof FileEditorInput)
-//					{
-//						String editorpath = ((FileEditorInput)editorinput).getPath().toPortableString();
-//						String formeditorpath = ((FileEditorInput)formeditorinput).getPath().toPortableString();
-//						if(editorpath != null && formeditorpath != null
-//								&& editorpath.equals(formeditorpath))
-//						{
-//							xulformeditor.settest(xml);
-//						}
-//					}
-//					
-////					if(input instanceof IFileEditorInput)
-////					{
-////						xulformeditor.setFile(((IFileEditorInput)input).getFile());
-////					}
-//					//xulformeditor.settest(text);
-//					//xulformeditor.setFile(file);
-//					//xulformeditor.settest(xml);
-////					BrowserFormPage formpage = (BrowserFormPage)xulformeditor.setActivePage(BrowserFormPage.ID);
-////					
-////					String text = getSourceViewer().getDocument().get();
-////					formpage.setDocument(text);
-////					
-////					IEditorInput input = getEditorInput();
-////					if(input instanceof IFileEditorInput)
-////					{
-////						
-////						formpage.setFile(((IFileEditorInput)input).getFile());
-////					}
-//					//iWorkbenchWindow.getActivePage().findView(viewId)
-//				}
 			}
 			
-			//final XULParser xulp = new XULParser(project, "en-US");
-			
-			//
-			editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
-				
+			Display.getDefault().asyncExec(new Runnable() {
+			//editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
@@ -180,22 +132,14 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 					if (selection instanceof ITextSelection) {
 						ITextSelection textSelection= (ITextSelection) selection;
 						int offset = textSelection.getOffset();
-						int i=0;
-						i++;
-						for (XULFormEditor xulform : xulforms) {
-							
-							
-							String previewxml = XULParser.parse(path, offset);
-							
-						}
+						String previewxml = XULParser.parse(path, offset);
+						for (XULFormEditor xulform : xulforms) {			
+							xulform.settest(previewxml);
+						}	
 					}						
 				}
-			});			
+			});	
+			
 		}
-		
-	}
-	private void build()
-	{
-		
 	}
 }
