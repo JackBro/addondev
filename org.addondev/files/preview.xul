@@ -3,13 +3,157 @@
 <window id="xuledit" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script type="text/javascript">
+	var xwin;
+	var gddd;
 	function preview(text) {
-	    var xwin = document.getElementById("content");
-		var dataURI = "data:application/vnd.mozilla.xul+xml," + text;
-	    xwin.setAttribute("src",dataURI);
-	}
+		try{
+	    	xwin = document.getElementById("content");
+			var dataURI = "data:application/vnd.mozilla.xul+xml," + text;
+			gddd = text;
+	    	xwin.setAttribute("src",dataURI);
+	    	//xwin.document.location = dataURI;
+	    }catch(exc){
+	    	alert(res);
+	    }
+	};
+
+	function rep()
+	{
+		return "repalce";
+	};
+
+	function getDoc() {
+		//alert("getDoc");
+		var res = "";
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(gddd, "text/xml");
+		//alert(doc);
+ 		var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
+ 		//alert(doc.getElementsByTagName('parsererror'));
+  		//alert(doc.nodeName);
+  
+  			
+  			var obj = doc.getElementsByTagNameNS(errorNS, 'parsererror')[0];
+  			/*
+			for(var name in obj)
+			{
+				try{
+					res += "name = " + name +" : " + obj[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+			alert( res );
+		    */
+		    //alert(doc.getElementsByTagNameNS(errorNS, 'parsererror'));
+  		doc = obj;
+  		
+ 		if((doc.nodeName == 'parsererror') )
+ 		{
+ 			if((doc.namespaceURI == errorNS))
+ 			{
+         		var sourceText = doc.getElementsByTagNameNS(errorNS, 'sourcetext')[0];
+         		//alert(sourceText);
+         		/*
+         					for(var name in sourceText)
+			{
+				try{
+					res += "name = " + name +" : " + sourceText[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+			alert( res );
+			*/
+         		if(!sourceText){
+                 	sourceText = sourceText.firstChild.data;
+                 	alert("!sourceText = " + sourceText);
+         		}
+         	}
+         }
+ 			//throw new Error("Error parsing text " + nativeDoc.documentElement.firstChild.data + " \n"  + sourceText);
+ 	} ;
+	//var ww = window.open('about:blank', 'xulwin', 'chrome,all,resizable=yes,width=400,height=400');
+	//alert(ww);
+	//alert( xwin.childNodes[1].nodeName);
+
+	/*
+		var paragraphCount = document.evaluate( '//parsererror', document, null, XPathResult.ANY_TYPE, null );
+		try {
+			var obj = paragraphCount;
+			for(var name in obj)
+			{
+				try{
+					res += "name = " + name +" : " + obj[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+				alert( res );
+		    }
+		
+		//alert(paragraphCount.iterateNext());
+	  		var thisNode = paragraphCount.iterateNext();
+	  		while (thisNode) 
+	  		{
+	    		alert( thisNode.textContent );
+	    		thisNode = iterator.iterateNext();
+	  		}
+	 	}catch(exc){
+	   		alert(exc);
+	 	}
+	 	*/
+	/*
+	//alert( paragraphCount );
+	var res = "";
+	var obj = paragraphCount;
+		for(var name in obj)
+		{
+			try{
+				res += "name = " + name +" : " + obj[name] + "\n"; 
+			}catch(exc){
+				res += "name = " + name +" ERROR" + "\n"; 
+			}
+		}
+		alert( res );
+		    }catch(exc){
+	    	alert(exc);
+	    }
+	    */
+	//var res = "";
+	
+	//var obj = document.getElementById("content");
+	//alert(obj.children.toString());
+	//var obj = document.documentElement.firstElementChild;
+	
+	//var w = window._content;
+ 	//var d = w.document;
+ 	//alert(document.getElementById("content").attributes);
+	//alert(document.documentElement.body);
+
+	/*
+	var obj = document.getElementById("content").attributes[2];
+
+		for(var name in obj)
+		{
+			try{
+				res += "name = " + name +" : " + obj[name] + "\n"; 
+			}catch(exc){
+				res += "name = " + name +" ERROR" + "\n"; 
+			}
+		}
+
+		alert(res);
+		*/
+		//alert(document.getElementById("content").innerText);
+		//alert(document.getElementById("content").ownerDocument.innerHTML);//getAttribute("src"));
+		//var doc = document.getElementById("content").contentDocument;
+		//alert(document.getElementsByTagName("content").innerHTML);
+		//alert(doc.body.innerHTML);
+		//alert(document.innerHTML);
+	//}
+
 	</script>
 
 	<iframe id="content" src="about:blank" flex="1"/>
-
 </window>

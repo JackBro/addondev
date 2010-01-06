@@ -11,8 +11,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
+import org.eclipse.swt.browser.OpenWindowListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
+import org.eclipse.swt.browser.WindowEvent;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -26,10 +30,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.Page;
-import org.mozilla.interfaces.nsIDOMDocument;
-import org.mozilla.interfaces.nsIDOMWindow;
-import org.mozilla.interfaces.nsIWebBrowser;
-import org.mozilla.xpcom.Mozilla;
+//import org.mozilla.interfaces.nsIDOMDocument;
+//import org.mozilla.interfaces.nsIDOMWindow;
+//import org.mozilla.interfaces.nsIWebBrowser;
+//import org.mozilla.xpcom.Mozilla;
 
 public class BrowserFormPage extends Page {
 
@@ -82,7 +86,7 @@ public class BrowserFormPage extends Page {
 //			//String enc = (String) fBrowser.evaluate("encodeURIComponent(" + fXML +");");
 //			//String res = fXML.replaceAll("\"", "'");
 //			
-
+			
 			
 			setted = false;
 			//fBrowser.execute("alert('res');");
@@ -90,12 +94,13 @@ public class BrowserFormPage extends Page {
 			//Control control =getControl();
 			//fBrowser.getDisplay().syncExec(new Runnable() {
 			//fBrowser.addLocationListener(fLocationListener);
+			
 			displayArea.getDisplay().asyncExec(new Runnable() {
 			//Display.getDefault().asyncExec(new Runnable() {
 
 				@Override
 				public void run() {
-					
+
 //					String encdata = null;
 //					try {
 //						encdata = URLEncoder.encode(text, "UTF-8");
@@ -104,28 +109,25 @@ public class BrowserFormPage extends Page {
 //						e.printStackTrace();
 //					}
 //					String res = encdata.replaceAll("\\+", " ");
-					
+
 					// TODO Auto-generated method stub
-					boolean re = fBrowser.execute("preview('"+ text +"');");
-					String tt = fBrowser.getText();
-					Object ob = fBrowser.getWebBrowser();
-					String uu = fBrowser.getUrl();
+					
+					try {
+						boolean re = fBrowser.execute("preview('"+ text +"');");
+						
+						
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+					//fBrowser.execute("getDoc();");
+					
+					//Object ob = fBrowser.getWebBrowser();
+					//String uu = fBrowser.getUrl();
+					//fBrowser.execute("getDoc();");
+					//String tt = fBrowser.getText();
 
-					fBrowser.addProgressListener(new ProgressListener() {
-                        public void changed(ProgressEvent event) {
-                         	Browser browser = (Browser)event.getSource();
-                        	nsIWebBrowser domBrowser = (nsIWebBrowser)browser.getWebBrowser(); 
-                            //nsIWebBrowser webBrowser = (nsIWebBrowser)fBrowser.getWebBrowser();
-                            //nsIDOMWindow window = webBrowser.getContentDOMWindow();
-                            //nsIDOMDocument document = window.getDocument();
-                            System.out.println("document");
-                        }
-
-                        public void completed(ProgressEvent event) {
-   
-                        }
-					});
-
+					
 
 					int i=0;
 					i++;					
@@ -188,8 +190,41 @@ public class BrowserFormPage extends Page {
 			System.setProperty("org.eclipse.swt.browser.XULRunnerPath", path);
 			fBrowser = new Browser(displayArea, SWT.MOZILLA);
 			
+//			fBrowser.addOpenWindowListener(new OpenWindowListener() {
+//				
+//				@Override
+//				public void open(WindowEvent event) {
+//					// TODO Auto-generated method stub
+//					System.out.println("open");
+//					//if(event.browser != null)
+//					//{
+//					fBrowser.execute("getnode();");
+//					//}
+//				}
+//			});
 			
-			nsIWebBrowser webBrowser = (nsIWebBrowser)fBrowser.getWebBrowser();
+			fBrowser.addProgressListener(new ProgressListener() {
+                public void changed(ProgressEvent event) {
+                 	//Browser browser = (Browser)event.getSource();
+                	//nsIWebBrowser domBrowser = (nsIWebBrowser)browser.getWebBrowser(); 
+                    //nsIWebBrowser webBrowser = (nsIWebBrowser)fBrowser.getWebBrowser();
+                    //nsIDOMWindow window = webBrowser.getContentDOMWindow();
+                    //nsIDOMDocument document = window.getDocument();
+                	//fBrowser.execute("getDoc();");
+                    System.out.println("document");
+                }
+
+                public void completed(ProgressEvent event) {
+                	//Object ddd =  fBrowser.evaluate("return rep();");
+                	 String lat = ((String) fBrowser.evaluate("return rep();"));
+                	int i=0;
+                	i++;
+                	//String hhh = fBrowser.getText();
+                	fBrowser.execute("getDoc();");
+
+                }
+			});
+			//nsIWebBrowser webBrowser = (nsIWebBrowser)fBrowser.getWebBrowser();
 			
 //			fBrowser.setUrl("about:blank");
 			displayArea.getDisplay().asyncExec(new Runnable() {
