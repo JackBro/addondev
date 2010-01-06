@@ -14,6 +14,8 @@ import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.OpenWindowListener;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
+import org.eclipse.swt.browser.StatusTextEvent;
+import org.eclipse.swt.browser.StatusTextListener;
 import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -37,6 +39,8 @@ import org.eclipse.ui.part.Page;
 
 public class BrowserFormPage extends Page {
 
+	
+	
 	public static final String ID = "browser";
 	private Browser fBrowser;
 
@@ -83,7 +87,8 @@ public class BrowserFormPage extends Page {
 		if(fBrowser != null)
 		{
 
-//			//String enc = (String) fBrowser.evaluate("encodeURIComponent(" + fXML +");");
+
+			//String enc = (String) fBrowser.evaluate("return encodeURIComponent(" + "fXML" +");");
 //			//String res = fXML.replaceAll("\"", "'");
 //			
 			
@@ -114,6 +119,7 @@ public class BrowserFormPage extends Page {
 					
 					try {
 						boolean re = fBrowser.execute("preview('"+ text +"');");
+						//boolean re = fBrowser.execute("preview('texttest2');");
 						
 						
 					} catch (Exception e) {
@@ -202,7 +208,20 @@ public class BrowserFormPage extends Page {
 //					//}
 //				}
 //			});
-			
+			fBrowser.addStatusTextListener(new StatusTextListener() {
+				
+				@Override
+				public void changed(StatusTextEvent event) {
+					// TODO Auto-generated method stub
+					if(event.text != null && event.text.length() > 0)
+					{
+						String sss = event.text;
+						
+					}
+					int i=0;
+					i++;
+				}
+			});
 			fBrowser.addProgressListener(new ProgressListener() {
                 public void changed(ProgressEvent event) {
                  	//Browser browser = (Browser)event.getSource();
@@ -211,16 +230,22 @@ public class BrowserFormPage extends Page {
                     //nsIDOMWindow window = webBrowser.getContentDOMWindow();
                     //nsIDOMDocument document = window.getDocument();
                 	//fBrowser.execute("getDoc();");
-                    System.out.println("document");
+                    //System.out.println("document");
                 }
 
                 public void completed(ProgressEvent event) {
-                	//Object ddd =  fBrowser.evaluate("return rep();");
-                	 String lat = ((String) fBrowser.evaluate("return rep();"));
-                	int i=0;
-                	i++;
-                	//String hhh = fBrowser.getText();
-                	fBrowser.execute("getDoc();");
+                	Display.getDefault().syncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+		                	//String lat = ((String) fBrowser.evaluate("return rep();"));
+		                	fBrowser.execute("getDoc();");
+		                 	int i=0;
+		                 	i++;
+						}
+					});
+                	
 
                 }
 			});

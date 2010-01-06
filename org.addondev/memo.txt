@@ -1,4 +1,13 @@
 
+
+///////////////////////////////////////
+
+name = textContent : XML Parsing Error: undefined entity
+Location: file:///D:/data/src/PDE/workrepository/plugins/org.addondev/preview.xul
+Line Number 1, Column 1512:<?xml version="1.0"?><!DOCTYPE prefwindow SYSTEM "chrome://stacklink/locale/stacklink.dtd" ><?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?><?xml-stylesheet href="chrome://mozapps/content/preferences/preferences.css"?><?xml-stylesheet href="chrome://stacklink/skin/preference.css" type="text/css"?><prefwindow id="stacklinkpref" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&stacklink.pref;" width="400" bottons="accept,cancel" ondialogaccept="onDialogAccept();"><prefpane id="appearance" label="&stacklink.pref.appearance;" flex="1">    <preferences id="stacklinkAppearancePreferences"><preference id="extensions.stacklink.label" name="extensions.stacklink.label" type="int"/>             <preference id="extensions.stacklink.panel.pos" name="extensions.stacklink.panel.pos" type="int"/>    <preference id="extensions.stacklink.panel.size.maxheight" name="extensions.stacklink.panel.size.maxheight" type="int"/>    <preference id="extensions.stacklink.panel.size.width" name="extensions.stacklink.panel.size.width" type="int"/>    <preference id="extensions.stacklink.css.use" name="extensions.stacklink.css.use" type="bool"/>     <preference id="extensions.stacklink.css.path" name="extensions.stacklink.css.path" type="wstring"/>                       </preferences><groupbox>        <caption label="&stacklink.pref.label;"/>        <radiogroup id="extensions.stacklink.label-radio" orient="horizontal" preference="extensions.stacklink.label">        <radio value="0" label="&stacklink.pref.label.cropstart;"/>        <radio value="1" label="stacklink.pref.label.cropcenter;"/>        <radio value="2" label="stacklink.pref.label.cropend;"/>          <radio value="3" label="&stacklink.pref.label.wrap;"/>        </radiogroup>           </groupbox>        <groupbox orient="vertical"><caption label="&stacklink.pref.panel;"/><hbox align="center"><label value="&stacklink.pref.panel.pos;"/>            <radiogroup orient="horizontal" id="mergewindows" preference="extensions.stacklink.panel.pos">              <radio value="0" id="stacklink.pref.panel.pos.left-radio" label="&stacklink.pref.panel.pos.left;"/>              <radio value="1" id="stacklink.pref.panel.pos.right-radio" label="&stacklink.pref.panel.pos.right;"/>            </radiogroup> </hbox>            <separator class="groove"/>            <label value="&stacklink.pref.panel.size;"/>    <grid>    <columns>    <column/>    <column flex="1"/>    </columns>    <rows>    <row align="center">    <label value="&stacklink.pref.panel.size.maxheight;"/>    <textbox id="extensions.stacklink.panel.size.maxheight-textbox" preference="extensions.stacklink.panel.size.maxheight"/>    </row>    <row align="center">    <label value="&stacklink.pref.panel.size.width;"/>    <textbox id="extensions.stacklink.panel.size.width-textbox" preference="extensions.stacklink.panel.size.width"/>    </row>    </rows>    </grid></groupbox><groupbox orient="vertical"><caption><checkbox id="useCSS" label="stacklink.pref.css;" preference="extensions.stacklink.css.use" onsyncfrompreference="updateCssUse(&apos;useCSS&apos;);"/>      </caption>    <grid>    <columns>    <column/>    <column flex="1"/>    </columns>    <rows>    <row align="center">    <label value="stacklink.pref.css.path;"/>    <textbox id="css-path" group="useCSS" preference="extensions.stacklink.css.path"/>        <button id="css-path-button" group="useCSS" label="Browse..." oncommand="alert(&apos;s&apos;)"/>        </row>    </rows>    </grid>    <hbox align="center">    <spacer flex="1"/>        <button group="useCSS" label="stacklink.pref.css.apply;" oncommand="updateCss(document.getElementById(&apos;css-path&apos;));"/>    </hbox> </groupbox></prefpane>        <script type="application/x-javascript" src="chrome://stacklink/content/preference.js"/></prefwindow>
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------^
+
+
 ///////////////
 content stacklink file:///D:/data/src/PDE/eclipse/work/stacklink/chrome/content/  contentaccessible=yes 
 skin	stacklink	classic/1.0	 file:///D:/data/src/PDE/eclipse/work/stacklink/skin/classic/
@@ -48,91 +57,222 @@ http://74.125.153.132/search?q=cache:Zuh2eRuMsS4J:www.eisbahn.jp/yoichiro/2007/0
 http://cms.xulbooster.org/index.php?option=com_frontpage&Itemid=1
 http://www.open-force.info/index.php/blog/show/l/77
 
-context.sourceCache.cache = undefined
- ----------
-frame.args = undefined
- ----------
-script xul
-getStackFramesXML key2 = fileName : chrome://browser/content/browser.xul
- ----------
-getStackFramesXML key2 = functionName : onmousedown
- ----------
-getStackFramesXML key2 = baseLineNumber : 1
- ----------
-getStackFramesXML key2 = tag : 13057
- ----------
-getStackFramesXML key2 = setBreakpoint : function setBreakpoint() {
-    [native code]
-}
- ----------
-getStackFramesXML key2 = clearBreakpoint : function clearBreakpoint() {
-    [native code]
-}
- ----------
-getStackFramesXML key2 = functionSource :     function onmousedown(event) {
-        stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6.stackpanel.onClickStatusbarIcon(event);
-    }
- ----------
-getStackFramesXML key2 = pcToLine : function pcToLine() {
-    [native code]
-}
- ----------
-getStackFramesXML key2 = functionObject : [xpconnect wrapped jsdIValue]
- ----------
-getStackFramesXML key2 = flags : 0
- ----------
-getStackFramesXML key2 = QueryInterface : function QueryInterface() {
-    [native code]
-}
- ----------
-getStackFramesXML key2 = isValid : true
- ----------
-getStackFramesXML key2 = version : 0
- ----------
-getStackFramesXML key2 = lineExtent : 1
- ----------
-getStackFramesXML key2 = callCount : 0
- ----------
-getStackFramesXML key2 = maxRecurseDepth : 0
- ----------
-getStackFramesXML key2 = minExecutionTime : 0
- ----------
-getStackFramesXML key2 = maxExecutionTime : 0
- ----------
-getStackFramesXML key2 = totalExecutionTime : 0
- ----------
-getStackFramesXML key2 = minOwnExecutionTime : 0
- ----------
-getStackFramesXML key2 = maxOwnExecutionTime : 0
- ----------
-getStackFramesXML key2 = totalOwnExecutionTime : 0
- ----------
-getStackFramesXML key2 = clearProfileData : function clearProfileData() {
-    [native code]
-}
- ----------
-getStackFramesXML key2 = lineToPc : function lineToPc() {
-    [native code]
-}
- ----------
-getStackFramesXML key2 = isLineExecutable : function isLineExecutable() {
-    [native code]
-}
- ----------
-getStackFramesXML key2 = clearAllBreakpoints : function clearAllBreakpoints() {
-    [native code]
-}
- ----------
-getStackFramesXML key2 = FLAG_PROFILE : 1
- ----------
-getStackFramesXML key2 = FLAG_DEBUG : 2
- ----------
-getStackFramesXML key2 = PCMAP_SOURCETEXT : 1
- ----------
-getStackFramesXML key2 = PCMAP_PRETTYPRINT : 2
- ----------
-convertChromeURL aURI = jar:file:///D:/program/firefox35/chrome/browser.jar!/content/browser/browser.xul/event/seq/81
- ----------
-ce onStop postdata = <xml>  </xml>
- ----------
-send error = [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIXMLHttpRequest.send]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: chrome://chromebug/content/chromebug.xul -> chrome://chromebug_eclipse/content/chromebug_eclipse.js :: anonymous :: line 353"  data: no]
+//////////////////////////////////////////////////////
+
+
+
+function convertToXULElement(str){
+
+var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+	str = str.toXMLString? str.toXMLString() : str;
+	alert("convertToXULElement0 = " + XUL_NS);
+	var xul = (
+		'<box xmlns="'+XUL_NS+'" >'+
+			str + 
+		'</box>').replace(/^  +/gm, '').replace(/\n/g, '');
+	alert("convertToXULElement1 = ");
+	var parser = new DOMParser();
+	var elms = parser.parseFromString(xul, 'application/xml').documentElement.childNodes;
+	alert("convertToXULElement2 = ");
+	
+	var range = document.createRange();
+	//var result = currentDocument().createDocumentFragment();
+	var result = range.createDocumentFragment();
+	
+	alert("convertToXULElement3 = ");
+	for(var i=0 ; i<elms.length ; i++)
+		result.appendChild(elms[i]);
+		
+	range.detach();
+		alert("convertToXULElement = " + result);
+		
+	return result;
+};
+
+function ww()
+{
+//document.documentElement.appendChild(convertToXULElement(<>
+document.getElementById("content").appendChild(convertToXULElement(<>
+  <button label="HELLO"/>
+  <button label="WORLD"/>
+  <button label="!!!"/>
+</>));
+/*
+var range = document.createRange();
+range.selectNodeContents(document.getElementById('content'));
+range.collapse(false);
+range.extractContents();
+//range.setStartAfter(document.getElementById("page-report-button"));
+range.insertNode(range.createContextualFragment(<![CDATA[
+<button label="HELLO"/>
+]]>.toString().replace(/^[\s\t]*|[\s\t]*$/g, '').replace(/>[\s\t]+</g, '><')));
+range.detach();
+*/
+
+};
+/////////////////////
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window id="xuledit" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<script type="application/x-javascript" src="test.js"/>
+
+	<script type="text/javascript">
+	var xwin;
+	var gddd;
+	function preview(text) {
+	
+	ww();
+	/*
+		try{
+	    	xwin = document.getElementById("content");
+			var dataURI = "data:application/vnd.mozilla.xul+xml," + text;
+			gddd = text;
+	    	xwin.setAttribute("src",dataURI);
+	    	//xwin.document.location = dataURI;
+	    }catch(exc){
+	    	alert(res);
+	    }
+	*/
+	};
+
+	function rep()
+	{
+		return "repalce";
+	};
+
+	function getDoc() {
+		//alert("getDoc");
+		var res = "";
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(gddd, "text/xml");
+		//alert(doc);
+ 		var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
+ 		//alert(doc.getElementsByTagName('parsererror'));
+  		//alert(doc.nodeName);
+  
+  			
+  			var obj = doc.getElementsByTagNameNS(errorNS, 'parsererror')[0];
+  			/*
+			for(var name in obj)
+			{
+				try{
+					res += "name = " + name +" : " + obj[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+			alert( res );
+		    */
+		    //alert(doc.getElementsByTagNameNS(errorNS, 'parsererror'));
+  		doc = obj;
+  		
+ 		if((doc.nodeName == 'parsererror') )
+ 		{
+ 			if((doc.namespaceURI == errorNS))
+ 			{
+         		var sourceText = doc.getElementsByTagNameNS(errorNS, 'sourcetext')[0];
+         		//alert(sourceText);
+         		/*
+         					for(var name in sourceText)
+			{
+				try{
+					res += "name = " + name +" : " + sourceText[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+			alert( res );
+			*/
+         		if(!sourceText){
+                 	sourceText = sourceText.firstChild.data;
+                 	alert("!sourceText = " + sourceText);
+         		}
+         	}
+         }
+ 			//throw new Error("Error parsing text " + nativeDoc.documentElement.firstChild.data + " \n"  + sourceText);
+ 	} ;
+	//var ww = window.open('about:blank', 'xulwin', 'chrome,all,resizable=yes,width=400,height=400');
+	//alert(ww);
+	//alert( xwin.childNodes[1].nodeName);
+
+	/*
+		var paragraphCount = document.evaluate( '//parsererror', document, null, XPathResult.ANY_TYPE, null );
+		try {
+			var obj = paragraphCount;
+			for(var name in obj)
+			{
+				try{
+					res += "name = " + name +" : " + obj[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+				alert( res );
+		    }
+		
+		//alert(paragraphCount.iterateNext());
+	  		var thisNode = paragraphCount.iterateNext();
+	  		while (thisNode) 
+	  		{
+	    		alert( thisNode.textContent );
+	    		thisNode = iterator.iterateNext();
+	  		}
+	 	}catch(exc){
+	   		alert(exc);
+	 	}
+	 	*/
+	/*
+	//alert( paragraphCount );
+	var res = "";
+	var obj = paragraphCount;
+		for(var name in obj)
+		{
+			try{
+				res += "name = " + name +" : " + obj[name] + "\n"; 
+			}catch(exc){
+				res += "name = " + name +" ERROR" + "\n"; 
+			}
+		}
+		alert( res );
+		    }catch(exc){
+	    	alert(exc);
+	    }
+	    */
+	//var res = "";
+	
+	//var obj = document.getElementById("content");
+	//alert(obj.children.toString());
+	//var obj = document.documentElement.firstElementChild;
+	
+	//var w = window._content;
+ 	//var d = w.document;
+ 	//alert(document.getElementById("content").attributes);
+	//alert(document.documentElement.body);
+
+	/*
+	var obj = document.getElementById("content").attributes[2];
+
+		for(var name in obj)
+		{
+			try{
+				res += "name = " + name +" : " + obj[name] + "\n"; 
+			}catch(exc){
+				res += "name = " + name +" ERROR" + "\n"; 
+			}
+		}
+
+		alert(res);
+		*/
+		//alert(document.getElementById("content").innerText);
+		//alert(document.getElementById("content").ownerDocument.innerHTML);//getAttribute("src"));
+		//var doc = document.getElementById("content").contentDocument;
+		//alert(document.getElementsByTagName("content").innerHTML);
+		//alert(doc.body.innerHTML);
+		//alert(document.innerHTML);
+	//}
+
+	</script>
+
+	<iframe id="content" src="about:blank" flex="1"/>
+</window>
+
