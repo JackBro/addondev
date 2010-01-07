@@ -1,28 +1,16 @@
 package org.addondev.parser.xul;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jp.aonir.fuzzyxml.FuzzyXMLDocType;
 import jp.aonir.fuzzyxml.FuzzyXMLDocument;
 import jp.aonir.fuzzyxml.FuzzyXMLElement;
 import jp.aonir.fuzzyxml.FuzzyXMLNode;
 import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
-import org.addondev.parser.dtd.DTDMap;
-import org.addondev.plugin.AddonDevPlugin;
-import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.ui.IEditorInput;
 
 public class XULParser {
 	//<!DOCTYPE overlay SYSTEM "chrome://dendzones/locale/dendzones.dtd">
@@ -73,10 +61,23 @@ public class XULParser {
 			FuzzyXMLElement pelement = (FuzzyXMLElement) document.getDocumentElement().getChildren()[0];
 			
 			
-			int poff = pelement.getOffset();
-			int plen = pelement.getLength();
+			//int poff = pelement.getOffset();
+			//int plen = pelement.getLength();
 			
-			int fclen = pelement.getChildren()[0].getOffset();
+			//int fcoff = pelement.getChildren()[0].getOffset();
+			
+			
+			class cl
+			{
+				public int start;
+				public int len;
+				public cl(int start, int len)
+				{
+					this.start = start;
+					this.len = len;
+				}
+			}
+			ArrayList<cl> tt = new ArrayList<cl>();
 			
 			String pname = pelement.getName();
 			if("prefwindow".equals(pname))
@@ -90,22 +91,36 @@ public class XULParser {
 						FuzzyXMLElement celem = (FuzzyXMLElement)fuzzyXMLNode;
 						if(celem.getName().equals("prefpane") && !celem.equals(preview))
 						{
-							pelement.removeChild(celem);
+							tt.add(new cl(celem.getOffset(), celem.getLength()));
+							//pelement.removeChild(celem);
 							//break;
 						}
 					}
 				}
 				
-				//String mm = pelement.toXMLString();
+				String com1= "<!-- ";
+				String com2= " -->";
+				StringBuffer sb = new StringBuffer(text);
+				int inoffset = 0;
+				for (cl t : tt) {
+					sb = sb.insert( t.start+inoffset, com1);
+					inoffset += com1.length();
+					
+					sb = sb.insert( t.start+t.len + inoffset, com2);
+					inoffset += com2.length();	 
+				}
+				
+				String mm = sb.toString();
 				
 				
-				//pelement.appendChild(preview);
-				String css = getCSS(text);
-				String xml = pelement.toXMLString();
-				xml = xml.replaceAll("&amp;", "&");
-				//xml = xml.replaceAll("&apos;", "\\\"");
-				previewData = "<?xml version=\"1.0\"?>\n" + css + xml;
-				//previewData = previewData.replaceAll("\n", "\\\\n");
+//				//pelement.appendChild(preview);
+//				String css = getCSS(text);
+//				String xml = pelement.toXMLString();
+//				xml = xml.replaceAll("&amp;", "&");
+//				//xml = xml.replaceAll("&apos;", "\\\"");
+//				previewData = "<?xml version=\"1.0\"?>\n" + css + xml;
+				
+				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "\\\\n");
 				//previewData = css + xml;
 			}
 		}		

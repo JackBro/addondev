@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<window id="xuledit" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<window id="xulpreview" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script type="text/javascript">
 	<![CDATA[
-	var xwin;
-	var gddd;
 	function preview(text) {
 		try{
-	    	xwin = document.getElementById("content");
+	    	var xwin = document.getElementById("content");
 			var dataURI = "data:application/vnd.mozilla.xul+xml," + text;
-			gddd = text;
 	    	xwin.setAttribute("src",dataURI);
 	    	//xwin.document.location = dataURI;
 	    }catch(exc){
@@ -20,10 +17,7 @@
 
 	function rep(text)
 	{
-	//alert("text = " + text);
-		
-		//var t = text.replace(/A/g, "\n");
-		//alert(text);
+		//alert("text = " + text);
 		var res = "";
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(text, "text/xml");
@@ -45,13 +39,12 @@
 				}
 				alert( res );
 			*/
+			alert( doc.textContent );
  			if((doc.namespaceURI == errorNS))
  			{
          		var sourceText = doc.getElementsByTagNameNS(errorNS, 'sourcetext')[0];
          		//alert(sourceText);
          		
-
-			
          		if(!sourceText){
                  	sourceText = sourceText.firstChild.data;
                  	alert("!sourceText = " + sourceText);
@@ -67,21 +60,18 @@
 
          document.documentElement.appendChild(result);
          */
-         range.insertNode
 		//return "repalce";
 	};
 
-	function getDoc() {
-		//alert("getDoc");
+	function getDoc(text) {
 		var res = "";
 		var parser = new DOMParser();
-		var doc = parser.parseFromString(gddd, "text/xml");
+		var doc = parser.parseFromString(text, "text/xml");
 		//alert(doc);
  		var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
  		//alert(doc.getElementsByTagName('parsererror'));
   		//alert(doc.nodeName);
   
-  			
   			var obj = doc.getElementsByTagNameNS(errorNS, 'parsererror')[0];
   			/*
 			for(var name in obj)

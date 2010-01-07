@@ -126,7 +126,7 @@ public class BrowserFormPage extends Page {
 					
 					try {
 						//boolean re = fBrowser.execute("preview('"+ text +"');");
-						//boolean re = fBrowser.execute("preview('texttest2');");
+						//boolean re = fBrowser.execute("rep('texttest2');");
 						fBrowser.execute("rep('" + text + "');");
 						
 						
