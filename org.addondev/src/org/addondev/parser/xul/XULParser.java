@@ -71,6 +71,13 @@ public class XULParser {
 			//String t = preview
 			//String pname = element.getName();
 			FuzzyXMLElement pelement = (FuzzyXMLElement) document.getDocumentElement().getChildren()[0];
+			
+			
+			int poff = pelement.getOffset();
+			int plen = pelement.getLength();
+			
+			int fclen = pelement.getChildren()[0].getOffset();
+			
 			String pname = pelement.getName();
 			if("prefwindow".equals(pname))
 			{
@@ -90,7 +97,7 @@ public class XULParser {
 				}
 				
 				//String mm = pelement.toXMLString();
-
+				
 				
 				//pelement.appendChild(preview);
 				String css = getCSS(text);
@@ -98,6 +105,7 @@ public class XULParser {
 				xml = xml.replaceAll("&amp;", "&");
 				//xml = xml.replaceAll("&apos;", "\\\"");
 				previewData = "<?xml version=\"1.0\"?>\n" + css + xml;
+				//previewData = previewData.replaceAll("\n", "\\\\n");
 				//previewData = css + xml;
 			}
 		}		

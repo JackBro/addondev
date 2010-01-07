@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -98,6 +99,17 @@ public class XULEditor extends TextEditor {
 		return super.getAdapter(adapter);
 	}
 	
+	public int getl(int offset)
+	{
+		int line = -1;
+		try {
+			line = getSourceViewer().getDocument().getLineOfOffset(offset);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return line;
+	}
 
 	private void getEditorPart(final IProject project, final IPath path)
 	{

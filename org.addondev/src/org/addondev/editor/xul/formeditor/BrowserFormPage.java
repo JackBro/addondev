@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
+import org.addondev.editor.xul.XULEditor;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -25,6 +29,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -44,8 +51,8 @@ public class BrowserFormPage extends Page {
 	public static final String ID = "browser";
 	private Browser fBrowser;
 
-	private boolean fFileLoaded = false;
-	private Composite composite;
+	//private boolean fFileLoaded = false;
+	//private Composite composite;
 	private final File fPreviewXULFile;
 	
 	LocationListener fLocationListener;
@@ -93,7 +100,7 @@ public class BrowserFormPage extends Page {
 //			
 			
 			
-			setted = false;
+			//setted = false;
 			//fBrowser.execute("alert('res');");
 			//fXML = text;
 			//Control control =getControl();
@@ -118,8 +125,9 @@ public class BrowserFormPage extends Page {
 					// TODO Auto-generated method stub
 					
 					try {
-						boolean re = fBrowser.execute("preview('"+ text +"');");
+						//boolean re = fBrowser.execute("preview('"+ text +"');");
 						//boolean re = fBrowser.execute("preview('texttest2');");
+						fBrowser.execute("rep('" + text + "');");
 						
 						
 					} catch (Exception e) {
@@ -171,7 +179,24 @@ public class BrowserFormPage extends Page {
 
 
 	protected Composite displayArea = null;
-	private boolean setted = false;
+	//private boolean setted = false;
+	
+	private void getEditorPart(int offset)
+	{
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for (IWorkbenchWindow iWorkbenchWindow : windows) {
+			//iWorkbenchWindow.getActivePage().
+			//IEditorReference[] editorref = iWorkbenchWindow.getActivePage().getEditorReferences();
+			IEditorPart editor = iWorkbenchWindow.getActivePage().getActiveEditor();
+			if(editor instanceof XULEditor)
+			{
+				XULEditor xule = (XULEditor)editor;
+				int line = xule.getl(offset);
+				int i=0;
+				i++;
+			}
+		}
+	}
 	
 	@Override
 	public void createControl(Composite parent) {
@@ -240,7 +265,8 @@ public class BrowserFormPage extends Page {
 						public void run() {
 							// TODO Auto-generated method stub
 		                	//String lat = ((String) fBrowser.evaluate("return rep();"));
-		                	fBrowser.execute("getDoc();");
+		                	//fBrowser.execute("getDoc();");
+		                	//fBrowser.execute("rep(" + + ");");
 		                 	int i=0;
 		                 	i++;
 						}

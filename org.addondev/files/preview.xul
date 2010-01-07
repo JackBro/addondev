@@ -3,6 +3,7 @@
 <window id="xuledit" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script type="text/javascript">
+	<![CDATA[
 	var xwin;
 	var gddd;
 	function preview(text) {
@@ -17,9 +18,57 @@
 	    }
 	};
 
-	function rep()
+	function rep(text)
 	{
-		return "repalce";
+	//alert("text = " + text);
+		
+		//var t = text.replace(/A/g, "\n");
+		//alert(text);
+		var res = "";
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(text, "text/xml");
+ 		var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
+
+  		var obj = doc.getElementsByTagNameNS(errorNS, 'parsererror')[0];
+  		doc = obj;
+  		
+ 		if((doc.nodeName == 'parsererror') )
+ 		{
+ 		/*
+          		for(var name in doc)
+				{
+					try{
+						res += "name = " + name +" : " + doc[name] + "\n"; 
+					}catch(exc){
+						res += "name = " + name +" ERROR" + "\n"; 
+					}
+				}
+				alert( res );
+			*/
+ 			if((doc.namespaceURI == errorNS))
+ 			{
+         		var sourceText = doc.getElementsByTagNameNS(errorNS, 'sourcetext')[0];
+         		//alert(sourceText);
+         		
+
+			
+         		if(!sourceText){
+                 	sourceText = sourceText.firstChild.data;
+                 	alert("!sourceText = " + sourceText);
+         		}
+         	}
+         	return;
+         }
+         /*
+         var range = document.createRange();
+         var result = range.createDocumentFragment();
+		for(var i=0 ; i<doc.length ; i++)
+			result.appendChild(doc[i]);
+
+         document.documentElement.appendChild(result);
+         */
+         range.insertNode
+		//return "repalce";
 	};
 
 	function getDoc() {
@@ -152,7 +201,7 @@
 		//alert(doc.body.innerHTML);
 		//alert(document.innerHTML);
 	//}
-
+	]]>
 	</script>
 
 	<iframe id="content" src="about:blank" flex="1"/>
