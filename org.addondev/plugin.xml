@@ -148,7 +148,7 @@
             name="AddonDev XUL Editor">
       </editor>
       <editor
-            class="org.addondev.editor.xul.formeditor.XULFormEditor"
+            class="org.addondev.editor.xul.preview.XULPreviewForm"
             default="false"
             extensions="xul"
             id="org.addondev.editor.xul.formeditor"

@@ -1,4 +1,4 @@
-package org.addondev.editor.xul.formeditor;
+package org.addondev.editor.xul.preview;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,11 +17,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
-public class XULFormEditor extends MultiPageEditorPart {
+public class XULPreviewForm extends MultiPageEditorPart {
 
 	private BrowserFormPage fBrowserFormPage;
 	
-	public XULFormEditor() {
+	public XULPreviewForm() {
 		// TODO Auto-generated constructor stub
 	}
 	

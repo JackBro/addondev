@@ -1,7 +1,12 @@
 package org.addondev.ui.preferences;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -35,7 +40,7 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -49,8 +54,9 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 		createDummyLabel(parent);
 		
 		fXULRunnerDirectory = new DirectoryFieldEditor("fXULRunnerDirectory",
-				"fXULRunnerDirectory", parent);
+				"XULRunnerDirectory", parent);
 		addField(fXULRunnerDirectory);
+		fXULRunnerDirectory.setStringValue(fStote.getString(PrefConst.XULRUNNER_PATH));
 		fXULRunnerDirectory.setPropertyChangeListener(new IPropertyChangeListener() {
 			
 			@Override
@@ -61,7 +67,7 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 		});
 		
 		Button regbutton = new Button(parent, SWT.NONE);
-		regbutton.setText("reg");
+		regbutton.setText("register-global");
 		regbutton.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -80,7 +86,7 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 		createDummyLabel(parent);
 		
 		Button unregbutton = new Button(parent, SWT.NONE);
-		unregbutton.setText("unreg");
+		unregbutton.setText("unregister-global");
 		unregbutton.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -97,6 +103,7 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 		});
 		createDummyLabel(parent);
 		createDummyLabel(parent);		
+		
 		
 	}
 	
@@ -118,5 +125,42 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 	private void createDummyLabel(Composite parent)
 	{
 		Label dummy = new Label(parent, SWT.NONE);
+	}
+	
+	private boolean register(String xulpath)
+	{
+		//--register-global 
+		//--unregister-global 
+		//--register-user
+		//--unregister-user 
+
+		IPath path = new Path(xulpath ).append("xulrunner");
+		String fullpath = path.toOSString();
+
+		ProcessBuilder pb = new ProcessBuilder(fullpath,"--register-global");	
+		try {
+			Process p = pb.start();
+			int ret = p.waitFor();
+			
+			IPath filepath = new Path(xulpath ).append("global.reginfo");
+			File file = filepath.toFile();
+			if(file.exists())
+			{
+				System.out.println("exists");
+				return true;
+			}
+			else
+			{
+				System.out.println("not exists");
+				return false;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

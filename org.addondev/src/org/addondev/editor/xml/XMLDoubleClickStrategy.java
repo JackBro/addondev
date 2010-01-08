@@ -2,7 +2,7 @@ package org.addondev.editor.xml;
 
 import org.eclipse.jface.text.*;
 
-public class XULDoubleClickStrategy implements ITextDoubleClickStrategy {
+public class XMLDoubleClickStrategy implements ITextDoubleClickStrategy {
 	protected ITextViewer fText;
 
 	public void doubleClicked(ITextViewer part) {

@@ -14,7 +14,6 @@ import java.util.zip.ZipFile;
 
 
 import org.addondev.plugin.AddonDevPlugin;
-import org.apache.commons.io.FileSystemUtils;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -314,6 +313,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 			}
 			
 		};
+		
 		FileUtils.copyDirectory(srcdir, project.getLocation().toFile(), filter, true);
 		
 		

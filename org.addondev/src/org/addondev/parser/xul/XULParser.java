@@ -41,11 +41,8 @@ public class XULParser {
 	public static String parse(IPath fullpath, int offset)
 	{
 		//ChromeURLMap chromemap = AddonDevPlugin.getDefault().getChromeURLMap(fProject, false);
-		
 		String text = FileUtil.getContent(fullpath.toFile());
-		
 		//text = FileUtils.readFileToString(fullpath.toFile(), "UTF-8");
-		
 		//String dtd = parseCSS(chromemap, text);
 		
 		String previewData = text;
@@ -56,16 +53,7 @@ public class XULParser {
 		
 		if(preview != null && preview.getName().equals("prefpane"))
 		{
-			//String t = preview
-			//String pname = element.getName();
 			FuzzyXMLElement pelement = (FuzzyXMLElement) document.getDocumentElement().getChildren()[0];
-			
-			
-			//int poff = pelement.getOffset();
-			//int plen = pelement.getLength();
-			
-			//int fcoff = pelement.getChildren()[0].getOffset();
-			
 			
 			class cl
 			{
@@ -112,7 +100,7 @@ public class XULParser {
 				
 				String mm = sb.toString();
 				
-				
+////dataurl
 //				//pelement.appendChild(preview);
 //				String css = getCSS(text);
 //				String xml = pelement.toXMLString();
@@ -120,6 +108,7 @@ public class XULParser {
 //				//xml = xml.replaceAll("&apos;", "\\\"");
 //				previewData = "<?xml version=\"1.0\"?>\n" + css + xml;
 				
+//domparser
 				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "\\\\n");
 				//previewData = css + xml;
 			}
@@ -144,9 +133,7 @@ public class XULParser {
 		FuzzyXMLElement previewElement = null;
 		FuzzyXMLElement fnode = document.getDocumentElement();
 		if(fnode.hasChildren())
-		{
-			FuzzyXMLNode firstnode = fnode.getChildren()[0];
-			
+		{			
 			if("prefpane".equals(element.getName()))
 			{
 				previewElement = element;
@@ -156,7 +143,6 @@ public class XULParser {
 				FuzzyXMLElement node = element;
 				do		
 				{
-					String tmp = node.toString();
 					node = (FuzzyXMLElement) node.getParentNode();
 				}while(node != null && !isEnablePreview(node) && !node.equals(fnode));
 				previewElement = (FuzzyXMLElement) node;

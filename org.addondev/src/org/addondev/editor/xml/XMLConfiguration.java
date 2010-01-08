@@ -10,46 +10,46 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
-public class XULConfiguration extends SourceViewerConfiguration {
-	private XULDoubleClickStrategy doubleClickStrategy;
-	private XULTagScanner tagScanner;
-	private XULScanner scanner;
+public class XMLConfiguration extends SourceViewerConfiguration {
+	private XMLDoubleClickStrategy doubleClickStrategy;
+	private XMLTagScanner tagScanner;
+	private XMLScanner scanner;
 	private ColorManager colorManager;
 
-	public XULConfiguration(ColorManager colorManager) {
+	public XMLConfiguration(ColorManager colorManager) {
 		this.colorManager = colorManager;
 	}
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return new String[] {
 			IDocument.DEFAULT_CONTENT_TYPE,
-			XULPartitionScanner.XML_COMMENT,
-			XULPartitionScanner.XML_TAG };
+			XMLPartitionScanner.XML_COMMENT,
+			XMLPartitionScanner.XML_TAG };
 	}
 	public ITextDoubleClickStrategy getDoubleClickStrategy(
 		ISourceViewer sourceViewer,
 		String contentType) {
 		if (doubleClickStrategy == null)
-			doubleClickStrategy = new XULDoubleClickStrategy();
+			doubleClickStrategy = new XMLDoubleClickStrategy();
 		return doubleClickStrategy;
 	}
 
-	protected XULScanner getXMLScanner() {
+	protected XMLScanner getXMLScanner() {
 		if (scanner == null) {
-			scanner = new XULScanner(colorManager);
+			scanner = new XMLScanner(colorManager);
 			scanner.setDefaultReturnToken(
 				new Token(
 					new TextAttribute(
-						colorManager.getColor(IXULColorConstants.DEFAULT))));
+						colorManager.getColor(IXMLColorConstants.DEFAULT))));
 		}
 		return scanner;
 	}
-	protected XULTagScanner getXMLTagScanner() {
+	protected XMLTagScanner getXMLTagScanner() {
 		if (tagScanner == null) {
-			tagScanner = new XULTagScanner(colorManager);
+			tagScanner = new XMLTagScanner(colorManager);
 			tagScanner.setDefaultReturnToken(
 				new Token(
 					new TextAttribute(
-						colorManager.getColor(IXULColorConstants.TAG))));
+						colorManager.getColor(IXMLColorConstants.TAG))));
 		}
 		return tagScanner;
 	}
@@ -59,8 +59,8 @@ public class XULConfiguration extends SourceViewerConfiguration {
 
 		DefaultDamagerRepairer dr =
 			new DefaultDamagerRepairer(getXMLTagScanner());
-		reconciler.setDamager(dr, XULPartitionScanner.XML_TAG);
-		reconciler.setRepairer(dr, XULPartitionScanner.XML_TAG);
+		reconciler.setDamager(dr, XMLPartitionScanner.XML_TAG);
+		reconciler.setRepairer(dr, XMLPartitionScanner.XML_TAG);
 
 		dr = new DefaultDamagerRepairer(getXMLScanner());
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
@@ -69,9 +69,9 @@ public class XULConfiguration extends SourceViewerConfiguration {
 		NonRuleBasedDamagerRepairer ndr =
 			new NonRuleBasedDamagerRepairer(
 				new TextAttribute(
-					colorManager.getColor(IXULColorConstants.XML_COMMENT)));
-		reconciler.setDamager(ndr, XULPartitionScanner.XML_COMMENT);
-		reconciler.setRepairer(ndr, XULPartitionScanner.XML_COMMENT);
+					colorManager.getColor(IXMLColorConstants.XML_COMMENT)));
+		reconciler.setDamager(ndr, XMLPartitionScanner.XML_COMMENT);
+		reconciler.setRepairer(ndr, XMLPartitionScanner.XML_COMMENT);
 
 		return reconciler;
 	}

@@ -2,6 +2,7 @@ package org.addondev.unittest;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -88,6 +89,39 @@ public class AddonDevTest {
 		//XULParser p = new XULParser();
 		//String fullpath = "stacklink/chrome/content/preference.xul"; 
 		//p.parse(basepath.append(fullpath), 0);
+		
+		//--register-global 
+		//--unregister-global 
+		//--register-user
+		//--unregister-user 
+		
+		String xulpath = "D:/program/xulrunner";
+		IPath path = new Path(xulpath ).append("xulrunner");
+		String fullpath = path.toOSString();
+
+		ProcessBuilder pb = new ProcessBuilder(fullpath,"--register-global");
+		
+		try {
+			Process p = pb.start();
+			int ret = p.waitFor();
+			
+			IPath filepath = new Path(xulpath ).append("global.reginfo");
+			File file = filepath.toFile();
+			if(file.exists())
+			{
+				System.out.println("exists");
+			}
+			else
+			{
+				System.out.println("not exists");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -3,7 +3,7 @@ package org.addondev.core;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.addondev.editor.xul.formeditor.XULFormEditor;
+import org.addondev.editor.xul.preview.XULPreviewForm;
 import org.addondev.parser.xul.XULParser;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -96,7 +96,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 	@SuppressWarnings("deprecation")
 	private void getEditorPart(final IProject project, final IPath path)
 	{
-		final ArrayList<XULFormEditor> xulforms = new ArrayList<XULFormEditor>();
+		final ArrayList<XULPreviewForm> xulforms = new ArrayList<XULPreviewForm>();
 		
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (IWorkbenchWindow iWorkbenchWindow : windows) {
@@ -111,13 +111,13 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 				//IEditorPart editorpart = iEditorReference.getEditor(false);			
 				//FileEditorInput fin = (FileEditorInput) editorpart.getEditorInput();
 				//fin.getFile().getFullPath()	
-				if(editorpart instanceof XULFormEditor)
+				if(editorpart instanceof XULPreviewForm)
 				{
 					
 					IPath editorpath = ((FileEditorInput)editorpart.getEditorInput()).getPath();
 					if(editorpath.equals(path))
 					{
-						xulforms.add((XULFormEditor) editorpart);
+						xulforms.add((XULPreviewForm) editorpart);
 					}
 				}
 			}
@@ -134,7 +134,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 						int offset = textSelection.getOffset();
 						String previewxml = XULParser.parse(path, offset);
 						ptext = previewxml;
-						for (XULFormEditor xulform : xulforms) {			
+						for (XULPreviewForm xulform : xulforms) {			
 							xulform.settest(previewxml);
 						}	
 					}						

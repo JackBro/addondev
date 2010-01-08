@@ -2,15 +2,15 @@ package org.addondev.editor.xml;
 
 import org.eclipse.ui.editors.text.TextEditor;
 
-public class XULEditor extends TextEditor {
+public class XMLEditor extends TextEditor {
 
 	private ColorManager colorManager;
 
-	public XULEditor() {
+	public XMLEditor() {
 		super();
 		colorManager = new ColorManager();
-		setSourceViewerConfiguration(new XULConfiguration(colorManager));
-		setDocumentProvider(new XULDocumentProvider());
+		setSourceViewerConfiguration(new XMLConfiguration(colorManager));
+		setDocumentProvider(new XMLDocumentProvider());
 	}
 	public void dispose() {
 		colorManager.dispose();

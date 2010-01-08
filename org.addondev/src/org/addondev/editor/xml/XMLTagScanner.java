@@ -3,12 +3,12 @@ package org.addondev.editor.xml;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.rules.*;
 
-public class XULTagScanner extends RuleBasedScanner {
+public class XMLTagScanner extends RuleBasedScanner {
 
-	public XULTagScanner(ColorManager manager) {
+	public XMLTagScanner(ColorManager manager) {
 		IToken string =
 			new Token(
-				new TextAttribute(manager.getColor(IXULColorConstants.STRING)));
+				new TextAttribute(manager.getColor(IXMLColorConstants.STRING)));
 
 		IRule[] rules = new IRule[3];
 
@@ -17,7 +17,7 @@ public class XULTagScanner extends RuleBasedScanner {
 		// Add a rule for single quotes
 		rules[1] = new SingleLineRule("'", "'", string, '\\');
 		// Add generic whitespace rule.
-		rules[2] = new WhitespaceRule(new XULWhitespaceDetector());
+		rules[2] = new WhitespaceRule(new XMLWhitespaceDetector());
 
 		setRules(rules);
 	}

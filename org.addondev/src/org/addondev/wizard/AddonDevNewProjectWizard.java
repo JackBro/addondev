@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.addondev.plugin.AddonDevPlugin;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
