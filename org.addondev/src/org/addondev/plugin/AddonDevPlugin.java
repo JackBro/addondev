@@ -1,9 +1,11 @@
 package org.addondev.plugin;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.addondev.parser.dtd.DTDMap;
 import org.addondev.templates.JavaScriptTemplateContextType;
@@ -13,6 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
@@ -23,6 +26,8 @@ import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class AddonDevPlugin extends AbstractUIPlugin {
+	
+	public static final String PLUGIN_ID = "org.addondev"; 
 	
 	public static final String IMG_BP_ENABLE = "bp_enable";
 	public static final String IMG_BP_DISABLE = "bp_disable.png";
@@ -102,15 +107,15 @@ public class AddonDevPlugin extends AbstractUIPlugin {
     }
     
     private HashMap<String, ChromeURLMap> fChromeURL = new HashMap<String, ChromeURLMap>();
-    public ChromeURLMap getChromeURLMap(IProject prject, boolean isupdate)
+    public ChromeURLMap getChromeURLMap(IProject project, boolean isupdate)
     {
-    	IFile file = prject.getFile(ChromeURLMap.MANIFEST_FILENAME);
+    	IFile file = project.getFile(ChromeURLMap.MANIFEST_FILENAME);
     	//if(file.getName().equals(ChromeURLMap.MANIFEST_FILENAME) )
     	//{
     		
-    		if(prject != null)
+    		if(project != null)
     		{
-    			String name = prject.getName();
+    			String name = project.getName();
     			if(fChromeURL.containsKey(name))
     			{
     				return fChromeURL.get(name);
@@ -119,13 +124,9 @@ public class AddonDevPlugin extends AbstractUIPlugin {
     			{
     				ChromeURLMap map = new ChromeURLMap();
     				try {
-						map.readManifest(file);
+						map.readManifest(file.getLocation());
 	    				fChromeURL.put(name, map);
 	    				
-					} catch (CoreException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						map = null;
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -139,24 +140,36 @@ public class AddonDevPlugin extends AbstractUIPlugin {
     }
     
     private HashMap<String, DTDMap> fDTDHashMap = new HashMap<String, DTDMap>();
-    public DTDMap getDTDMap(IProject prject, boolean update)
+    public Map<String, String> getEntityMap(IProject project, String chromeuri, String locale, boolean update)
     {
-		if(prject != null)
+		if(project != null)
 		{
-			String name = prject.getName();
+			String name = project.getName();
 			if(fDTDHashMap.containsKey(name))
 			{
-				return fDTDHashMap.get(name);
+				if(fDTDHashMap.get(name).hasLocate(locale))
+				{	
+					return fDTDHashMap.get(name).getEntityMap(locale);
+				}
+				
 			}
 			else
 			{
-		    	DTDMap map = new DTDMap();
-		    	fDTDHashMap.put(name, map);
-		    	return map;
+		    	ChromeURLMap chromeURLMap = getChromeURLMap(project, false);
+		    	String lpath = chromeURLMap.convertChrome2Local(chromeuri);
+		    	
+		    	File file  = new File(lpath);
+		    	if(!file.exists()) return new HashMap<String, String>();;
+		    	
+		    	DTDMap dtdmap = new DTDMap();
+		    	dtdmap.parse(locale, new Path(lpath));
+		    	fDTDHashMap.put(name, dtdmap);
+		    	
+		    	return dtdmap.getEntityMap(locale);
 			}
 		}
 		
-		return null;
+		return new HashMap<String, String>();
 
     }
 }

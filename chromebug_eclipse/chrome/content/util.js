@@ -382,7 +382,7 @@ Firebug.chromebug_eclipse.util = {
 		 return "<xml> " + stackframesxml + " </xml>";	 
 	},
 	
-	generateScopeChain: function (scope) 
+	generateScopeChain: function (scope)
 	{
         var ret = [];
         while (scope) {

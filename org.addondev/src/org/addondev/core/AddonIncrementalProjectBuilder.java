@@ -37,7 +37,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 				if(resource instanceof IFile )
 				{
 					IFile file = (IFile)resource;
-					
+					int i=0;
 					//getEditorPart(getProject(), file.getLocation());
 				}
 				break;

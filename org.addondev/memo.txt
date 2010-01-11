@@ -1,6 +1,19 @@
 http://www13.plala.or.jp/observe/PDE/PDEResourceMarker.html
-
+http://tobysoft.net/wiki/index.php?License%2FMPL
+http://atlanto.web.fc2.com/pdt/index.html
+http://www.masatom.in/pukiwiki/Eclipse/%A5%D7%A5%E9%A5%B0%A5%A4%A5%F3%B3%AB%C8%AF%A4%CETIPS%BD%B8/%A5%D0%A5%C3%A5%AF%A5%B0%A5%E9%A5%A6%A5%F3%A5%C9%A4%C7%BC%C2%B9%D4%A4%B9%A4%EB/
+http://74.125.153.132/search?q=cache:U4rgMoUiLUUJ:codezine.jp/article/detail/353%3Fp%3D2+job.schedule&cd=2&hl=ja&ct=clnk&gl=jp&lr=lang_ja&client=firefox-a
+ToolErrorReporter.java
 ///////////////////////////////////////
+XML パースエラー: 定義されていない実体が使用されています。
+URL: file:///D:/data/src/PDE/work/stacklink/chrome/content/preference.xul
+行番号: 9, 列番号: 1:<prefwindow id="stacklinkpref" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+^
+XML Parsing Error: undefined entity
+Location: file:///D:/data/src/PDE/workrepository/plugins/org.addondev/preview.xul
+Line Number 28, Column 9:        <radio value="0" label="&stacklink.pref.label.cropstart;"/>
+--------^
+//////////////////////////////////////
 
 name = textContent : XML Parsing Error: undefined entity
 Location: file:///D:/data/src/PDE/workrepository/plugins/org.addondev/preview.xul

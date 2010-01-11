@@ -19,6 +19,7 @@ public class XMLDocumentProvider extends FileDocumentProvider {
 						XMLPartitionScanner.XML_COMMENT });
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
+			
 		}
 		return document;
 	}

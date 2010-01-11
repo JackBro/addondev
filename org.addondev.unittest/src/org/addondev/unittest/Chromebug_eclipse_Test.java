@@ -1,4 +1,4 @@
-package org.addondev.debug.unittest;
+package org.addondev.unittest;
 
 import java.io.BufferedReader;
 import java.io.Console;

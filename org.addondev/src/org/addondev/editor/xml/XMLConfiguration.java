@@ -5,18 +5,22 @@ import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
-public class XMLConfiguration extends SourceViewerConfiguration {
+//public class XMLConfiguration extends SourceViewerConfiguration {
+public class XMLConfiguration extends TextSourceViewerConfiguration {
 	private XMLDoubleClickStrategy doubleClickStrategy;
 	private XMLTagScanner tagScanner;
 	private XMLScanner scanner;
 	private ColorManager colorManager;
 
 	public XMLConfiguration(ColorManager colorManager) {
+		super();
 		this.colorManager = colorManager;
 	}
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -54,6 +58,11 @@ public class XMLConfiguration extends SourceViewerConfiguration {
 		return tagScanner;
 	}
 
+	@Override
+	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		// TODO Auto-generated method stub
+		return super.getReconciler(sourceViewer);
+	}
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 

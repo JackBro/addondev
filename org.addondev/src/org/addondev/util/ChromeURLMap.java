@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -23,9 +25,9 @@ public class ChromeURLMap {
 	
 	public static String MANIFEST_FILENAME = "chrome.manifest";
 	
-	private static Pattern contentpattern = Pattern.compile("content\\s+([^\\s]+)\\s+([^\\s]+)");
-	private static Pattern skinepattern   = Pattern.compile("skin\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
-	private static Pattern localepattern  = Pattern.compile("locale\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
+	private static Pattern contentpattern = Pattern.compile("^\\s*content\\s+([^\\s]+)\\s+([^\\s]+)");
+	private static Pattern skinepattern   = Pattern.compile("^\\s*skin\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
+	private static Pattern localepattern  = Pattern.compile("^\\s*locale\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
 	
 	private static Pattern chrome_content_pattern = Pattern.compile("chrome:\\/\\/([^\\s^\\/]+)\\/content\\/(.*)"); 
 	private static Pattern chrome_skin_pattern = Pattern.compile("chrome:\\/\\/([^\\s^\\/]+)\\/skin\\/(.*)"); 
@@ -33,6 +35,8 @@ public class ChromeURLMap {
 	
 	private String fLocale;
 	private IPath fBasePath;
+	
+	private ArrayList<String> fLocaleList = new ArrayList<String>();
 	
 	private HashMap<String, HashMap<String, String>> fContentMap = new HashMap<String, HashMap<String,String>>();
 	private HashMap<String, HashMap<String, String>> fSkinMap = new HashMap<String, HashMap<String,String>>();
@@ -42,6 +46,11 @@ public class ChromeURLMap {
 	public void setLocale(String locate)
 	{
 		fLocale = locate;
+	}
+	
+	public List<String> getLocaleList()
+	{
+		return fLocaleList;
 	}
 	
 	public ChromeURLMap()
@@ -58,6 +67,7 @@ public class ChromeURLMap {
 	
 	public void readManifest(IFile manifest) throws CoreException, IOException
 	{
+		fLocaleList.clear();
 		//fContentMap = new HashMap<String, String>();
 		//IFile file = fProject.getFile(MANIFEST_FILENAME);
 		IFile file = manifest;
@@ -79,6 +89,8 @@ public class ChromeURLMap {
 	public void readManifest(IPath manifestfullpath) throws FileNotFoundException {
 		// TODO Auto-generated method stub
 		//fBasePath = file.getLocation().removeLastSegments(1);
+		fLocaleList.clear();
+		
 		fBasePath = manifestfullpath.removeLastSegments(1);
 		
 		FileInputStream fin = new FileInputStream(manifestfullpath.toFile());
@@ -93,9 +105,9 @@ public class ChromeURLMap {
 			{
 				if(line.length() > 0)
 				{
-				makeContentMap(line);
-				makeSkinMap(line);
-				makeLocaleMap(line);
+					makeContentMap(line);
+					makeSkinMap(line);
+					makeLocaleMap(line);
 				}
 			}			
 		} catch (UnsupportedEncodingException e) {
@@ -170,7 +182,7 @@ public class ChromeURLMap {
 			String name = m.group(1);
 			String file = m.group(2);
 			String uri = fContentMap.get(name).get("uri");
-			localpath = "file:///" + fBasePath.append(uri).append(file).toPortableString();
+			localpath = fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
@@ -180,7 +192,7 @@ public class ChromeURLMap {
 			String file = m.group(2);
 			String uri = fSkinMap.get(name).get("uri");
 			//localpath = uri + file;
-			localpath = "file:///" + fBasePath.append(uri).append(file).toPortableString();
+			localpath = fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
@@ -190,12 +202,27 @@ public class ChromeURLMap {
 			String file = m.group(2);
 			String uri = fLocaleMap.get(name).get(fLocale);
 			//localpath = uri + file;
-			localpath = "file:///" + fBasePath.append(uri).append(file).toPortableString();
+			localpath = fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
 		return localpath;
 	}
+	
+//	public String convertDTDChrome2Local(String path)
+//	{
+//		String localpath = null;
+//		Matcher m = chrome_locale_pattern.matcher(path);
+//		if (m.find()) {
+//			String name = m.group(1);
+//			String file = m.group(2);
+//			String uri = fLocaleMap.get(name).get(fLocale);
+//			//localpath = uri + file;
+//			localpath = fBasePath.append(uri).append(file).toPortableString();
+//			return localpath;
+//		}
+//		return localpath;
+//	}
 	
 	public void makeContentMap(String content)
 	{
@@ -244,6 +271,7 @@ public class ChromeURLMap {
 			String locale = m.group(2);
 			String uri = m.group(3);			
 
+			fLocaleList.add(locale);
 			//map.put("uri", uri);
 			if(fLocaleMap.containsKey(packagename))
 			{
@@ -263,7 +291,7 @@ public class ChromeURLMap {
 		}		
 	}
 
-	
 
+	
 	
 }

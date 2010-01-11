@@ -93,7 +93,7 @@ public class BrowserFormPage extends Page {
 			//fBrowser.getDisplay().syncExec(new Runnable() {
 			//fBrowser.addLocationListener(fLocationListener);
 			
-			displayArea.getDisplay().asyncExec(new Runnable() {
+			displayArea.getDisplay().syncExec(new Runnable() {
 			//Display.getDefault().asyncExec(new Runnable() {
 
 				@Override
@@ -111,8 +111,9 @@ public class BrowserFormPage extends Page {
 					// TODO Auto-generated method stub
 					
 					try {
-						boolean re = fBrowser.execute("preview('"+ text +"');");
-						//fBrowser.execute("rep('" + text + "');");
+						//boolean re = fBrowser.execute("preview('"+ text +"');");
+						fBrowser.execute("rep('" + text + "');");
+						//boolean re = fBrowser.execute("send();");
 						
 						
 					} catch (Exception e) {

@@ -15,6 +15,12 @@
 	    }
 	};
 
+	function send()
+	{
+		var msg = "test1\ntest2";
+		window.status = msg;
+	}
+	
 	function rep(text)
 	{
 		//alert("text = " + text);

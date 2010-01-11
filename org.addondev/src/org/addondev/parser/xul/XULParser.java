@@ -1,6 +1,9 @@
 package org.addondev.parser.xul;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,8 +12,13 @@ import jp.aonir.fuzzyxml.FuzzyXMLElement;
 import jp.aonir.fuzzyxml.FuzzyXMLNode;
 import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
+import org.addondev.editor.xml.XMLPartitionScanner;
+import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.util.FileUtil;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 
 public class XULParser {
 	//<!DOCTYPE overlay SYSTEM "chrome://dendzones/locale/dendzones.dtd">
@@ -20,7 +28,7 @@ public class XULParser {
 	private static Pattern doctypeprefwindowPattern = Pattern.compile("<!DOCTYPE\\s+prefwindow\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
 	private static Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*?>");
 	
-	//private static Pattern entryPattern = Pattern.compile("\"&(*+);\"");
+	private static Pattern entryPattern = Pattern.compile("\"&(.+);\"");
 	
 	//private IProject fProject;
 	//private String fLocale;
@@ -182,6 +190,65 @@ public class XULParser {
 
 		return data;
 	}
+	
+	private static ArrayList<String> getDTDList(String xml)
+	{
+		ArrayList<String> dtdlist = new ArrayList<String>();
+		
+		ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+		patterns.add(doctypeOverlayPattern);
+		patterns.add(doctypeprefwindowPattern);
+	
+		for (Pattern pattern : patterns) {
+			Matcher m = pattern.matcher(xml);
+			while(m.find())
+			{
+				dtdlist.add(m.group(1));
+			}			
+		}
+
+		return dtdlist;
+	}
+	
+	public static HashMap<Integer, Integer> checkEntity(IProject project, IDocument docment, String locale)
+	{
+		HashMap<Integer, Integer> errormap= new HashMap<Integer, Integer>();
+		
+		String xml = docment.get();
+		ArrayList<String> dtdlist = getDTDList(xml);
+		for (String dtd : dtdlist) {
+			Map<String, String> entitymap = AddonDevPlugin.getDefault().getEntityMap(project, dtd, locale, false);
+			//if(entitymap == null ) continue;
+			
+			Matcher m = entryPattern.matcher(xml);
+			while(m.find())
+			{
+				int offset = m.start();
+				String contentype = null;
+				try {
+					contentype = docment.getContentType(offset);
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(contentype != null && !XMLPartitionScanner.XML_COMMENT.equals(contentype))
+				{
+					String entity = m.group(0); //all
+					String entitykey = m.group(1);
+					if(!entitymap.containsKey(entitykey))
+					{
+						errormap.put(m.start(), entity.length());
+					}
+				}
+			}			
+		}
+		
+		return errormap;
+		
+		//ArrayList<String> dtdlist = new ArrayList<String>();
+		
+	}
+	
 //	
 //	public List<String> parseDTD(ChromeURLMap map, String text, String previewXML)
 //	{

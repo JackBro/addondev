@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.addondev.parser.dtd.DTDMap;
 import org.addondev.parser.xul.XULParser;
@@ -67,15 +69,15 @@ public class AddonDevTest {
 		DTDMap dtdmap = new DTDMap();
 
 		String enfullpath = "stacklink/locale/en-US/stacklink.dtd"; 
-		dtdmap.setLocate("en-US");
-		dtdmap.parse(basepath.append(enfullpath));
+		//dtdmap.setLocate("en-US");
+		dtdmap.parse("en-US", basepath.append(enfullpath));
 		
 		assertEquals("Preference", dtdmap.getWord("stacklink.pref"));
 		assertEquals("View label", dtdmap.getWord("stacklink.pref.label"));
 		
 		String jafullpath = "stacklink/locale/ja-JP/stacklink.dtd"; 
-		dtdmap.setLocate("ja-JP");
-		dtdmap.parse(basepath.append(jafullpath));
+		//dtdmap.setLocate("ja-JP");
+		dtdmap.parse("ja-JP", basepath.append(jafullpath));
 		assertEquals("stacklinkの設定", dtdmap.getWord("stacklink.pref"));
 		assertEquals("タイトルの表示", dtdmap.getWord("stacklink.pref.label"));
 		
@@ -121,6 +123,19 @@ public class AddonDevTest {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void dtdregtest()
+	{
+		Pattern entryPattern = Pattern.compile("\"&(.+);\"");
+		String text = "<prefpane id=\"appearance\" label=\"&stacklink.pref.appearance;\" flex=\"1\">";
+		Matcher m = entryPattern.matcher(text);
+		while(m.find())
+		{
+			System.out.println(m.group(0));
+			System.out.println(m.group(1));
 		}
 	}
 	

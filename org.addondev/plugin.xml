@@ -373,5 +373,18 @@
             objectClass="org.addondev.debug.core.model.AddonDevLineBreakpoint">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.addondev.ui.propertypage.AddonDevPropertyPage"
+            id="org.addondev.ui.AddonDevPropertyPage"
+            name="name">
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.core.resources.IProject">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
 
 </plugin>
