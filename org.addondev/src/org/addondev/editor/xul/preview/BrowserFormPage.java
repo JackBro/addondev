@@ -111,8 +111,10 @@ public class BrowserFormPage extends Page {
 					// TODO Auto-generated method stub
 					
 					try {
-						//boolean re = fBrowser.execute("preview('"+ text +"');");
-						fBrowser.execute("rep('" + text + "');");
+						boolean re = fBrowser.execute("preview('"+ text +"');");
+						//fBrowser.execute("previewdom('"+ text +"');");
+						
+						//fBrowser.execute("rep('" + text + "');");
 						//boolean re = fBrowser.execute("send();");
 						
 						
@@ -232,7 +234,7 @@ public class BrowserFormPage extends Page {
 		Composite composite = new Composite(scroll, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		scroll.setContent(composite);
-		//scroll.setMinSize(400,400);
+		scroll.setMinSize(400,400);
 		scroll.setExpandHorizontal(true);
 		scroll.setExpandVertical(true);
 		

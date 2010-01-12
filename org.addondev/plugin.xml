@@ -152,7 +152,7 @@
             default="false"
             extensions="xul"
             id="org.addondev.editor.xul.formeditor"
-            name="AddonDev XUL FormEditor">
+            name="AddonDev XUL Preview">
       </editor>
    </extension>
    <extension
@@ -230,6 +230,15 @@
       </handler>
    </extension>
    <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="AddonDev.command1"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:edit?after=additions">
@@ -271,15 +280,6 @@
                class="org.addondev.core.AddonIncrementalProjectBuilder">
          </run>
       </builder>
-   </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="AddonDev.command1"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+6">
-      </key>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

@@ -169,13 +169,21 @@ public class XULEditor extends XMLEditor {
 	public void doSave(IProgressMonitor progressMonitor) {
 		// TODO Auto-generated method stub
 		super.doSave(progressMonitor);
+		
 		IEditorInput in = getEditorInput();
 		IProject project = ((FileEditorInput)in).getFile().getProject();
-		//getEditorPart(pro, ((FileEditorInput)in).getPath());
+		getEditorPart(project, ((FileEditorInput)in).getPath());
 		
 		IDocument document = getSourceViewer().getDocument();
 		HashMap<Integer, Integer> errormap = XULParser.checkEntity(project, document, "en-US");
 		IResource resource = (IResource)in.getAdapter(IResource.class);
+		
+		try {
+			resource.deleteMarkers(IMarker.PROBLEM, false, 0);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		
 		for (Integer start : errormap.keySet()) {
 			int len = errormap.get(start);
@@ -194,6 +202,7 @@ public class XULEditor extends XMLEditor {
 			map.put(IMarker.LINE_NUMBER, line);
 			map.put(IMarker.CHAR_START, start);
 			map.put(IMarker.CHAR_END, start + len);
+			map.put(IMarker.MESSAGE, "entity not find");
 			map.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 			try {
 				MarkerUtilities.createMarker(resource, map, IMarker.PROBLEM);
