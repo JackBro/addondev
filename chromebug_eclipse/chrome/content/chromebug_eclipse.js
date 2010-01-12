@@ -358,7 +358,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  			//Application.console.log("getvalues valuename = " + valuename);
 	  			//Application.console.log("getvalues frame = " + frame);
 	  			//if(valuename == 'this') depth++;
-	  			
+	  		
 		  		for (let i = 0; i<depth; i++)
 		  		{
 		  			frame = frame.callingFrame;

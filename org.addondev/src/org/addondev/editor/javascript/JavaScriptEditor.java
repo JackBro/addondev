@@ -46,6 +46,17 @@ public class JavaScriptEditor extends TextEditor {
 		//getSourceViewer().
 	}
 
+	
+	
+	@Override
+	public void doSave(IProgressMonitor progressMonitor) {
+		// TODO Auto-generated method stub
+		super.doSave(progressMonitor);
+		
+		JavaScriptValidate.parse(this);
+		
+	}
+
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		
 		//super.doSetInput(input);
@@ -79,6 +90,11 @@ public class JavaScriptEditor extends TextEditor {
 	    ISourceViewer sourceViewer = getSourceViewer();
 	    sourceViewer.setSelectedRange(offset, length);
 	    sourceViewer.revealRange(offset, length);		
+	}
+	
+	public IDocument getDocument()
+	{
+		return getSourceViewer().getDocument();
 	}
 	
 }

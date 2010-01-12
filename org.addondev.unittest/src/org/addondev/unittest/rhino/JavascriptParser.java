@@ -1,4 +1,4 @@
-package org.addondev.unittest;
+package org.addondev.unittest.rhino;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
+import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.JavaScriptException;
@@ -29,8 +31,7 @@ public class JavascriptParser {
   
 	
 	public static ShellContextFactory shellContextFactory = new ShellContextFactory();
-	public static Global global = new Global();
-	static protected merror errorReporter;
+	static protected JavaScriptParserErrorReporter errorReporter;
 	public void test(String sourceString) throws FileNotFoundException
 	{
 		
@@ -68,26 +69,39 @@ public class JavascriptParser {
 //			if(e == null) break;
 //        }
 		
+		//ContextFactory cxfactory = new ContextFactory();
+		//cxfactory.
+		//Context cx =  cxfactory.enterContext();
 	     //errorReporter = new ToolErrorReporter(false, global.getErr());
-		errorReporter = new merror(true, global.getErr());
+		errorReporter = new JavaScriptParserErrorReporter();
+		
+		shellContextFactory.setStrictMode(true);
+        //shellContextFactory.setWarningAsError(true);
 	        shellContextFactory.setErrorReporter(errorReporter);
-	       
+	        
+
+	        
 	        Context cx =  shellContextFactory.enterContext();
+	        
+	        cx.setLocale(Locale.getDefault());
 	        
 	        CompilerEnvirons compilerEnv = new CompilerEnvirons();
 	        compilerEnv.initFromContext(cx);	
-        
+	        compilerEnv.setLanguageVersion(170);
+	        //compilerEnv.setErrorReporter(errorReporter);
 	        //cx.setOptimizationLevel(-1);
 	        Parser p = null;
 	        ScriptOrFnNode root = null;
 	        Script script = null;
         //for (int i=line; i<secs.length; i++)
         //{
+	        long time1 = System.currentTimeMillis();
 			try {
 				p = new Parser(compilerEnv, errorReporter);
 				root = p.parse(sourceString, "<cmd>", 1);
 				//cx.stringIsCompilableUnit(sourceString);
 				//script = cx.compileString(sourceString, "test", 1, null);
+				//script.exec(cx, new Global());
 			} catch (EvaluatorException ee) {
 				// TODO: handle exception
 				System.out.println(ee.lineNumber() + " : " + ee.columnNumber() + " : " + ee.details());
@@ -97,6 +111,8 @@ public class JavascriptParser {
 				System.out.println("VirtualMachineError " + ex.getMessage());
 			}
 				
+			 long time2 = System.currentTimeMillis();
+			 System.out.println("time = " + (time2-time1));
 			int i=0;
 			i++;
         //}

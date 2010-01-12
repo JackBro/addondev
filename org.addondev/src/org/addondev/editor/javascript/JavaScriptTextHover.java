@@ -56,11 +56,11 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 	    {
 			try {
 				text = getTest(textViewer, hoverRegion.getOffset());
+				return text;
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	    	return text;
 	    }
 		return null;
 	}

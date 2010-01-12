@@ -1,6 +1,7 @@
 package org.addondev.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,10 +10,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
+import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
 public class FileUtil {
@@ -111,5 +119,38 @@ public class FileUtil {
 		}
 		
 		return lines.toArray(new String[lines.size()]);
+	}
+	
+	public static String getContentFormUri(String uri) throws IOException
+	{
+		URL url = AddonDevPlugin.getDefault().getBundle().getEntry(uri);
+		
+		InputStream in = url.openStream();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		int len = 0;
+		byte[] buf = new byte[1024 * 8];
+		while((len = in.read(buf))!=-1){
+			out.write(buf,0,len);
+		}
+
+		in.close();
+		out.close();	
+		
+		return out.toString();
+	}
+	
+	public static String getContent(InputStream input) throws IOException
+	{		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		int len = 0;
+		byte[] buf = new byte[1024 * 8];
+		while((len = input.read(buf))!=-1){
+			out.write(buf,0,len);
+		}
+
+		input.close();
+		out.close();	
+		
+		return out.toString();
 	}
 }
