@@ -49,7 +49,9 @@ public class AddonDevPreferenceInitializer extends
 		store.setDefault(PrefConst.FIREFOX_ADDON_MINVERSION, PrefConst.DEFAULT_FIREFOX_ADDON_MINVERSION);
 		store.setDefault(PrefConst.FIREFOX_ADDON_MAXVERSION, PrefConst.DEFAULT_FIREFOX_ADDON_MAXVERSION);
 		
-		
+		store.setDefault(PrefConst.XULRUNNER_PATH, "");
+		store.setDefault(PrefConst.XULPREVIEW_W, 400);
+		store.setDefault(PrefConst.XULPREVIEW_H, 400);		
 		
 		//		store.setDefault(AddonDevPlugin.PREF_COLOR_JAVASCRIPT_COMMENT, 
 //				StringConverter.asString(display.getSystemColor(SWT.COLOR_DARK_GREEN).getRGB()));
