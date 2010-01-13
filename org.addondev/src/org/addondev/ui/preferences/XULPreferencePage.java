@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -30,6 +31,7 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 
 	private IPreferenceStore fStote;
 	private DirectoryFieldEditor fXULRunnerDirectory;
+	private IntegerFieldEditor inteditorH, inteditorW;
 	
 	public XULPreferencePage() {
 		// TODO Auto-generated constructor stub
@@ -51,11 +53,12 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 		Label dirlabel = new Label(parent, SWT.NONE);
 		dirlabel.setText("XULRunner Path");
 		createDummyLabel(parent);
-		createDummyLabel(parent);
+		//createDummyLabel(parent);
 		
-		fXULRunnerDirectory = new DirectoryFieldEditor("fXULRunnerDirectory",
+		fXULRunnerDirectory = new DirectoryFieldEditor(PrefConst.XULRUNNER_PATH,
 				"XULRunnerDirectory", parent);
 		addField(fXULRunnerDirectory);
+		//fXULRunnerDirectory.fillIntoGrid(parent, 2);
 		fXULRunnerDirectory.setStringValue(fStote.getString(PrefConst.XULRUNNER_PATH));
 		fXULRunnerDirectory.setPropertyChangeListener(new IPropertyChangeListener() {
 			
@@ -82,8 +85,8 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 				
 			}
 		});
-		createDummyLabel(parent);
-		createDummyLabel(parent);
+		//createDummyLabel(parent);
+		//createDummyLabel(parent);
 		
 		Button unregbutton = new Button(parent, SWT.NONE);
 		unregbutton.setText("unregister-global");
@@ -104,6 +107,17 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 		createDummyLabel(parent);
 		createDummyLabel(parent);		
 		
+		//createbrankl(parent);
+		Label scrolllabel = new Label(parent, SWT.NONE);
+		scrolllabel.setText("scroll");
+		createDummyLabel(parent);
+		createDummyLabel(parent);
+		inteditorH = new IntegerFieldEditor("h", "MinHeight", parent);
+		createDummyLabel(parent);
+		inteditorW = new IntegerFieldEditor("w", "Minwidth", parent);
+		//createDummyLabel(parent);
+		addField(inteditorH);
+		addField(inteditorW);
 		
 	}
 	
@@ -112,6 +126,8 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 		// TODO Auto-generated method stub
 		
 		fStote.setValue(PrefConst.XULRUNNER_PATH, fXULRunnerDirectory.getStringValue());
+		fStote.setValue(PrefConst.XULRUNNER_PATH, inteditorH.getStringValue());
+		fStote.setValue(PrefConst.XULRUNNER_PATH, inteditorW.getStringValue());
 		
 		return super.performOk();
 	}
@@ -126,6 +142,13 @@ public class XULPreferencePage extends FieldEditorPreferencePage implements
 	{
 		Label dummy = new Label(parent, SWT.NONE);
 	}
+	
+	private void createbrankl(Composite parent)
+	{
+		createDummyLabel(parent);
+		createDummyLabel(parent);
+		createDummyLabel(parent);
+	}	
 	
 	private boolean register(String xulpath)
 	{

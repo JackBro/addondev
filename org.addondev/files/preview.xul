@@ -4,10 +4,13 @@
 
 	<script type="text/javascript">
 	<![CDATA[
+	var xwin;
+	var gddd;
 	function preview(text) {
 		try{
-	    	var xwin = document.getElementById("content");
+	    	xwin = document.getElementById("content");
 			var dataURI = "data:application/vnd.mozilla.xul+xml," + text;
+			gddd = text;
 	    	xwin.setAttribute("src",dataURI);
 	    	//xwin.document.location = dataURI;
 	    }catch(exc){
@@ -15,15 +18,12 @@
 	    }
 	};
 
-	function send()
-	{
-		var msg = "test1\ntest2";
-		window.status = msg;
-	}
-	
 	function rep(text)
 	{
-		//alert("text = " + text);
+	//alert("text = " + text);
+		
+		//var t = text.replace(/A/g, "\n");
+		//alert(text);
 		var res = "";
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(text, "text/xml");
@@ -45,12 +45,13 @@
 				}
 				alert( res );
 			*/
-			alert( doc.textContent );
  			if((doc.namespaceURI == errorNS))
  			{
          		var sourceText = doc.getElementsByTagNameNS(errorNS, 'sourcetext')[0];
          		//alert(sourceText);
          		
+
+			
          		if(!sourceText){
                  	sourceText = sourceText.firstChild.data;
                  	alert("!sourceText = " + sourceText);
@@ -66,18 +67,21 @@
 
          document.documentElement.appendChild(result);
          */
+         range.insertNode
 		//return "repalce";
 	};
 
-	function getDoc(text) {
+	function getDoc() {
+		//alert("getDoc");
 		var res = "";
 		var parser = new DOMParser();
-		var doc = parser.parseFromString(text, "text/xml");
+		var doc = parser.parseFromString(gddd, "text/xml");
 		//alert(doc);
  		var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
  		//alert(doc.getElementsByTagName('parsererror'));
   		//alert(doc.nodeName);
   
+  			
   			var obj = doc.getElementsByTagNameNS(errorNS, 'parsererror')[0];
   			/*
 			for(var name in obj)
@@ -118,6 +122,78 @@
          }
  			//throw new Error("Error parsing text " + nativeDoc.documentElement.firstChild.data + " \n"  + sourceText);
  	} ;
+ 	
+
+
+	
+	function convertToXULElement(str){
+	var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+	var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
+		//str = str.toXMLString? str.toXMLString() : str;
+		//var xul = (
+		//	'<box xmlns="'+XUL_NS+'" >'+
+		//		str + 
+		//	'</box>');//.replace(/^  +/gm, '').replace(/\n/g, '');
+		//str = str.replace(/%0A/g, \n);
+		var xul = str.replace(/\n/g, '');
+		//alert( xul );
+		var parser = new DOMParser();
+		//var doc = parser.parseFromString(xul, "text/xml");// 'application/xml');
+		var doc = parser.parseFromString(xul, 'application/xml');
+
+		var obj = doc.getElementsByTagNameNS(errorNS, 'parsererror')[0];
+		/*
+		var res = "";
+			for(var name in obj)
+			{
+				try{
+					res += "name = " + name +" : " + obj[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+			alert( res );
+		*/
+ 		if( (obj != null && obj != undefined) && (obj.nodeName == 'parsererror') )
+ 		{
+ 			 //if((doc.namespaceURI == errorNS))
+ 			//{
+ 			//	alert(obj.textContent);
+ 			//}
+			var xul = (
+				'<box xmlns="'+XUL_NS+'" >'+ 
+					'<label value="' + 
+						obj.textContent + 
+					'" />' + 
+				'</box>');//.replace(/^  +/gm, '').replace(/\n/g, '');
+ 			doc = parser.parseFromString(xul, 'application/xml');
+ 			
+ 		}
+
+	 		var elms = doc.documentElement.childNodes;
+			var result = document.createDocumentFragment();
+			for(var i=0 ; i<elms.length ; i++)
+				result.appendChild(elms[i]);
+			return result;
+	};
+	
+	//var old = null;
+	function testpreview(str)
+	{
+		//if(old != null)
+		//	document.documentElement.removeChild(old);
+		//old = convertToXULElement(str);
+		while(document.documentElement.firstChild)
+		{
+			document.documentElement.removeChild(document.documentElement.firstChild);
+		}
+		document.documentElement.appendChild(convertToXULElement(str));
+	};
+	
+	//testpreview("<button label=\"HELLO\"/>\n <button label=\"WORLD\"/>\n  <button label=\"!!!\"/>");
+	//testpreview("<button label=\"HELLO\"/>\n <button label=\"WORLD\"/>\n  <button label=\"!!!\"/>");
+ 	 	//document.documentElement.appendChild(convertToXULElement(
+ 	 	//"<button label=\"HELLO\"/>\n <button label=\"WORLD\">\n  <button label=\"!!!\"/>"));
 	//var ww = window.open('about:blank', 'xulwin', 'chrome,all,resizable=yes,width=400,height=400');
 	//alert(ww);
 	//alert( xwin.childNodes[1].nodeName);
@@ -200,5 +276,4 @@
 	]]>
 	</script>
 
-	<iframe id="content" src="about:blank" flex="1"/>
 </window>

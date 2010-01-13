@@ -111,8 +111,9 @@ public class BrowserFormPage extends Page {
 					// TODO Auto-generated method stub
 					
 					try {
-						boolean re = fBrowser.execute("preview('"+ text +"');");
-						//fBrowser.execute("previewdom('"+ text +"');");
+						//boolean re = fBrowser.execute("preview('"+ text +"');");
+						
+						fBrowser.execute("testpreview('"+ text +"');");
 						
 						//fBrowser.execute("rep('" + text + "');");
 						//boolean re = fBrowser.execute("send();");
@@ -235,6 +236,7 @@ public class BrowserFormPage extends Page {
 		composite.setLayout(new GridLayout());
 		scroll.setContent(composite);
 		scroll.setMinSize(400,400);
+		//scroll.setMinSize(0,0);
 		scroll.setExpandHorizontal(true);
 		scroll.setExpandVertical(true);
 		
