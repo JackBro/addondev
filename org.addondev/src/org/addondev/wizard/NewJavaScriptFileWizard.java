@@ -1,6 +1,5 @@
 package org.addondev.wizard;
 
-import org.addondev.editor.javascript.JavaScriptEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;

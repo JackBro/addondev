@@ -7,24 +7,40 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.HashSet;
+
+import jp.aonir.fuzzyxml.FuzzyXMLDocument;
+import jp.aonir.fuzzyxml.FuzzyXMLElement;
+import jp.aonir.fuzzyxml.FuzzyXMLNode;
+import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
 import org.addondev.plugin.AddonDevPlugin;
+import org.addondev.preferences.PrefConst;
+import org.addondev.util.FileUtil;
 import org.addondev.util.ManifestUtil;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 public class XULPreviewForm extends MultiPageEditorPart {
 
+	
+	//setInput -> createPages
+	private IPreferenceStore fStore;
 	private BrowserFormPage fBrowserFormPage;
 	
 	public XULPreviewForm() {
 		// TODO Auto-generated constructor stub
+		fStore = AddonDevPlugin.getDefault().getPreferenceStore();
 	}
-	
 
 	@Override
 	public void dispose() {
@@ -35,24 +51,26 @@ public class XULPreviewForm extends MultiPageEditorPart {
 
 	}
 
-
 	@Override
 	protected void setInput(IEditorInput input) {
 		// TODO Auto-generated method stub
 
 		if(input instanceof FileEditorInput)
 		{
-			FileEditorInput fileinput = (FileEditorInput)input;
-			IProject proj = fileinput.getFile().getProject();
-			ManifestUtil util = new ManifestUtil();
-			String path = "D:/program/xulrunner";
-			try {
-				util.makePreviewManifestFile(proj, path);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			IPath path = new Path(fStore.getString(PrefConst.XULRUNNER_PATH));
+			if(path.toFile().exists())
+			{
+				FileEditorInput fileinput = (FileEditorInput)input;
+				IProject proj = fileinput.getFile().getProject();
+				ManifestUtil util = new ManifestUtil();
+				//String path = "D:/program/xulrunner";
+				try {
+					util.makePreviewManifestFile(proj, path, false);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			
 		}
 		
 		super.setInput(input);
@@ -84,6 +102,40 @@ public class XULPreviewForm extends MultiPageEditorPart {
 		fBrowserFormPage.createControl(getContainer());
 		int pageIndex = addPage(fBrowserFormPage.getControl());
 		setPageText(pageIndex, "Preview");
+	}
+	
+	private boolean canPreview(FileEditorInput input)
+	{
+		try {
+			//String text = FileUtil.getContent(input.getFile().getContents());
+			FuzzyXMLParser parser = new FuzzyXMLParser();
+			FuzzyXMLDocument document = parser.parse(input.getFile().getContents());
+			FuzzyXMLElement element = document.getDocumentElement();
+			if(element.hasChildren())
+			{
+				HashSet<String> set = new HashSet<String>();
+				set.add("prefwindow");
+				set.add("window");
+				set.add("dialog");
+				for (FuzzyXMLNode node : element.getChildren()) {
+					if(node instanceof FuzzyXMLElement)
+					{
+						String name = ((FuzzyXMLElement)node).getName();
+						if(set.contains(name))
+							return true;
+					}
+				}
+				
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	public void settest(String text)
@@ -131,32 +183,5 @@ public class XULPreviewForm extends MultiPageEditorPart {
 		}
 		
 		return file;
-	}
-	
-//	public void setFile(IFile file)
-//	{
-//		
-//		fBrowserFormPage.setFile(file);
-//	}
-	
-//	public void setFile(File file, String xml)
-//	{
-//		fBrowserFormPage.setFile(file, xml);
-//	}
-
-	private void make()
-	{
-
-		URL entry = AddonDevPlugin.getDefault().getBundle().getEntry("/");
-		String pluginDirectory;
-		try {
-			pluginDirectory = FileLocator.resolve(entry).getPath();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		int i=0;
-		i++;
-
 	}
 }

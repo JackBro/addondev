@@ -23,11 +23,12 @@ public class ManifestUtil {
 	private static Pattern localepattern  = Pattern.compile("locale\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
 
 	
-	public void makePreviewManifestFile(IProject proj, String XulRunnerPath) throws IOException
+	public void makePreviewManifestFile(IProject proj, IPath xulrunnerpath, boolean force) throws IOException
 	{
 		String filename = "xulpreview." + proj.getName() + ".manifest";
-		IPath path = new Path(XulRunnerPath).append("chrome").append(filename);
-		if(!path.toFile().exists())
+		//IPath path = new Path(XulRunnerPath).append("chrome").append(filename);
+		IPath path = xulrunnerpath.removeLastSegments(1).append("chrome").append(filename);
+		if(force || !path.toFile().exists())
 		{	
 			IFile file = proj.getFile(MANIFEST_FILENAME);
 			IPath projPath = proj.getLocation();

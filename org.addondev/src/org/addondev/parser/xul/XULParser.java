@@ -94,19 +94,31 @@ public class XULParser {
 					}
 				}
 				
-				String com1= "<!-- ";
-				String com2= " -->";
-				StringBuffer sb = new StringBuffer(text);
+//				String com1= "<!-- ";
+//				String com2= " -->";
+//				StringBuffer sb = new StringBuffer(text);
+//				int inoffset = 0;
+//				for (cl t : tt) {
+//					sb = sb.insert( t.start+inoffset, com1);
+//					inoffset += com1.length();
+//					
+//					sb = sb.insert( t.start+t.len + inoffset, com2);
+//					inoffset += com2.length();	 
+//				}
+//				
+//				String mm = sb.toString();
+				
+				
 				int inoffset = 0;
+				StringBuffer sb = new StringBuffer(text);
 				for (cl t : tt) {
-					sb = sb.insert( t.start+inoffset, com1);
-					inoffset += com1.length();
-					
-					sb = sb.insert( t.start+t.len + inoffset, com2);
-					inoffset += com2.length();	 
+					int start = t.start - inoffset;
+					sb = sb.delete(start, start + t.len);//( t.start+inoffset, com1);
+					inoffset += t.len; 
 				}
 				
 				String mm = sb.toString();
+				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "");
 				
 ////dataurl
 //				//pelement.appendChild(preview);
@@ -116,9 +128,11 @@ public class XULParser {
 //				//xml = xml.replaceAll("&apos;", "\\\"");
 //				previewData = "<?xml version=\"1.0\"?>\n" + css + xml;
 				
-//domparser
-				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "\\\\n");
-				//previewData = css + xml;
+				//previewData = mm.replaceAll("&amp;", "&").replaceAll("\n", "");
+				
+////domparser
+//				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "\\\\n");
+//				//previewData = css + xml;
 			}
 		}		
 		

@@ -7,6 +7,8 @@ import java.net.URLEncoder;
 import org.addondev.editor.xul.XULEditor;
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -22,6 +24,9 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -75,8 +80,6 @@ public class BrowserFormPage extends Page {
 		
 	}
 
-
-
 	public void setDocument(final String text)
 	{
 		if(fBrowser != null)
@@ -111,9 +114,9 @@ public class BrowserFormPage extends Page {
 					// TODO Auto-generated method stub
 					
 					try {
-						//boolean re = fBrowser.execute("preview('"+ text +"');");
+						boolean re = fBrowser.execute("preview('"+ text +"');");
 						
-						fBrowser.execute("testpreview('"+ text +"');");
+						//fBrowser.execute("testpreview('"+ text +"');");
 						
 						//fBrowser.execute("rep('" + text + "');");
 						//boolean re = fBrowser.execute("send();");
@@ -182,8 +185,7 @@ public class BrowserFormPage extends Page {
 	
 	@Override
 	public void createControl(Composite parent) {
-		
-		//fLocationListener = 
+
 		// TODO Auto-generated method stub
 		displayArea = new Composite( parent, SWT.NONE );
 //		GridLayout gridLayout = new GridLayout();
@@ -191,22 +193,31 @@ public class BrowserFormPage extends Page {
 //		gridLayout.marginWidth = 1;
 //		gridLayout.marginHeight = 1;
 //		gridLayout.verticalSpacing = 1;
-//		displayArea.setLayout(gridLayout);
-		displayArea.setLayout(new FillLayout());
+		displayArea.setLayoutData(new GridData(GridData.FILL_BOTH));
+		//displayArea.setLayout(new FillLayout());
+		displayArea.setLayout(new FormLayout());
 
 		try {
-			String path = "D:\\program\\xulrunner";
-			//String path = AddonDevPlugin.getDefault().getPreferenceStore().getString(PrefConst.XULRUNNER_PATH);
+			//String path = "D:\\program\\xulrunner\\xulrunner.exe";
+			String path = AddonDevPlugin.getDefault().getPreferenceStore().getString(PrefConst.XULRUNNER_PATH);
 			if(new File(path).exists())
 			{
-				createBrowser(displayArea, path);
+				IPath xulpath = new Path(path);
+				createBrowser(displayArea, xulpath.removeLastSegments(1).toOSString());
 			}
 			else
 			{
 				Link link = new Link(displayArea, SWT.CENTER);
 				link.setText("in the <a>XULRunner Pref</a> preference page.");
-				GridData data = new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1);
-				link.setLayoutData(data);
+				
+				//GridData data = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+				//link.setLayoutData(data);
+				FormData linkfd = new FormData();
+				linkfd.top = new FormAttachment(50, 1);
+				linkfd.left = new FormAttachment(50, 1);	
+				linkfd.right = new FormAttachment(100, -1);
+				linkfd.bottom = new FormAttachment(100, -1);
+				link.setLayoutData(linkfd);
 				link.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent e) {
 						linkClicked();
@@ -231,6 +242,13 @@ public class BrowserFormPage extends Page {
 		//scroll.setLayout(new FillLayout());
 		//scroll.setExpandHorizontal(true);
 		//scroll.setExpandVertical(true);
+		FormData linkfd = new FormData();
+		linkfd.top = new FormAttachment(0, 1);
+		linkfd.left = new FormAttachment(0, 1);	
+		linkfd.right = new FormAttachment(100, -1);
+		linkfd.bottom = new FormAttachment(100, -1);
+		scroll.setLayoutData(linkfd);
+		
 
 		Composite composite = new Composite(scroll, SWT.NONE);
 		composite.setLayout(new GridLayout());

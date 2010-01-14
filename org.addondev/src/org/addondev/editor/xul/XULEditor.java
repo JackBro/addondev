@@ -60,7 +60,7 @@ public class XULEditor extends XMLEditor {
 		// TODO Auto-generated method stub
 		super.createPartControl(parent);
 		
-		final Job job = new Job("お仕事開始") {
+		final Job job = new Job("start") {
 			
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -70,8 +70,6 @@ public class XULEditor extends XMLEditor {
 			}
 		};
 
-		
-		
 		ISourceViewer sourceViewer = getSourceViewer();
 		IDocument doc = sourceViewer.getDocument();
 		doc.addDocumentListener(new IDocumentListener() {
@@ -80,14 +78,20 @@ public class XULEditor extends XMLEditor {
 			public void documentChanged(DocumentEvent event) {
 				// TODO Auto-generated method stub
 				long curtime = System.currentTimeMillis();
-				if(curtime - lasttime >= 800)
+				if(curtime - lasttime >= 2000)
 				{
-					job.schedule(500);
+					if(job.getState() != Job.RUNNING)
+					{
+						job.schedule(1500);
+					}
 				}
 				else
 				{
-					job.cancel();
-					job.schedule(500);
+					if(job.getState() == Job.WAITING || job.getState() == Job.SLEEPING)
+					{
+						job.cancel();
+						job.schedule(1500);
+					}
 				}
 				
 				lasttime = System.currentTimeMillis();	
@@ -99,64 +103,6 @@ public class XULEditor extends XMLEditor {
 				
 			}
 		});
-	}
-
-
-//	@Override
-//	protected void doSetInput(IEditorInput input) throws CoreException {
-//		// TODO Auto-generated method stub
-//		super.doSetInput(input);
-//		
-//
-//	}
-
-
-
-	@Override
-	protected ISourceViewer createSourceViewer(Composite parent,
-			IVerticalRuler ruler, int styles) {
-		// TODO Auto-generated method stub
-		//ISourceViewer sourceViewer =  super.createSourceViewer(parent, ruler, styles);
-//		
-//		final Job job = new Job("お仕事開始") {
-//		
-//					@Override
-//					protected IStatus run(IProgressMonitor monitor) {
-//						// TODO Auto-generated method stub
-//						System.out.println("job");
-//						return Status.OK_STATUS;
-//					}
-//				};
-		
-//		StyledText textWidget = sourceViewer.getTextWidget();
-//		textWidget.addKeyListener(new KeyListener() {
-//			
-//			@Override
-//			public void keyReleased(KeyEvent e) {
-//				// TODO Auto-generated method stub
-//				//System.out.println("keyReleased");
-//				long curtime = System.currentTimeMillis();
-//				if(curtime - lasttime >= 800)
-//				{
-//					job.schedule(500);
-//				}
-//				else
-//				{
-//					job.cancel();
-//					job.schedule(500);
-//				}
-//				
-//				lasttime = System.currentTimeMillis();
-//			}
-//			
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		});
-		
-		return super.createSourceViewer(parent, ruler, styles);
 	}
 
 	public void dispose() {

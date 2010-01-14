@@ -66,29 +66,33 @@ public class XULPreferencePage extends PreferencePage implements
 		dirlabelfd.left = new FormAttachment(0, 1);
 		dirlabel.setLayoutData(dirlabelfd);
 	
-		Composite dirparent = new Composite(composite, SWT.NONE);
+		Composite xulfileparent = new Composite(composite, SWT.NONE);
 		fXULRunnerFile = new FileFieldEditor(PrefConst.XULRUNNER_PATH,
-				"XULRunnerFile", dirparent);
+				"XULRunnerFile", xulfileparent);
+		fXULRunnerFile.setStringValue("dummy");
 		fXULRunnerFile.setPropertyChangeListener(new IPropertyChangeListener() {
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				// TODO Auto-generated method stub
 				File file = new File(fXULRunnerFile.getStringValue());
-				fRegbutton.setEnabled(file.exists() && file.canExecute());
+				boolean enabled = file.exists() && file.canExecute() && file.getName().contains("xulrunner");
+				fRegbutton.setEnabled(enabled);
+				setValid(enabled);
 			}
 		});
+				
 		FormData dirfd = new FormData();
 		dirfd.top = new FormAttachment(dirlabel, 1);
 		dirfd.left = new FormAttachment(0, 1);	
-		dirfd.right = new FormAttachment(90, -1);
-		dirparent.setLayoutData(dirfd);
+		dirfd.right = new FormAttachment(100, -1);
+		xulfileparent.setLayoutData(dirfd);
 		
 		fRegbutton = new Button(composite, SWT.NONE);
 		fRegbutton.setText("Regster");
 		FormData regfd = new FormData();
 		regfd.top = new FormAttachment(dirlabel, 1);
-		regfd.left = new FormAttachment(dirparent, 1);	
+		regfd.left = new FormAttachment(xulfileparent, 1);	
 		regfd.right = new FormAttachment(100, -1);	
 		fRegbutton.setLayoutData(regfd);
 		fRegbutton.addSelectionListener(new SelectionListener() {
@@ -121,7 +125,7 @@ public class XULPreferencePage extends PreferencePage implements
 		Label scrolllabel = new Label(composite, SWT.NONE);
 		scrolllabel.setText("scroll");
 		FormData scrollfd = new FormData();
-		scrollfd.top = new FormAttachment(fRegbutton, 30);
+		scrollfd.top = new FormAttachment(xulfileparent, 30);
 		scrollfd.left = new FormAttachment(0, 1);
 		scrolllabel.setLayoutData(scrollfd);
 
@@ -141,7 +145,6 @@ public class XULPreferencePage extends PreferencePage implements
 		hfd.right = new FormAttachment(100, -10);	
 		hparent.setLayoutData(hfd);
 		
-
 		fXULRunnerFile.setStringValue(fStote.getString(PrefConst.XULRUNNER_PATH));
 		inteditorW.setStringValue(fStote.getString(PrefConst.XULPREVIEW_W).toString());
 		inteditorH.setStringValue(fStote.getString(PrefConst.XULPREVIEW_H).toString());
@@ -157,42 +160,53 @@ public class XULPreferencePage extends PreferencePage implements
 		fStote.setValue(PrefConst.XULPREVIEW_W, inteditorH.getIntValue());
 		fStote.setValue(PrefConst.XULPREVIEW_H, inteditorW.getIntValue());
 		
+//		MessageBox msgbox = new MessageBox(getShell(), SWT.ICON_INFORMATION | SWT.YES);
+//		msgbox.setText("");
+//		boolean res = register(fXULRunnerFile.getStringValue());
+//		if(res)
+//		{
+//			msgbox.setMessage("OK");
+//		}
+//		else
+//		{
+//			msgbox.setMessage("Not");
+//		}
+		
 		return super.performOk();
-	}
-	
-	@Override
-	public boolean isValid() {
-		// TODO Auto-generated method stub
-		return super.isValid();
+		//return res;
 	}
 
 	private boolean register(String xulpath)
 	{
 		//--register-global 
-		//--unregister-global 
+		//--unregister-global
+		
 		//--register-user
-		//--unregister-user 
+		//--unregister-user
+		//user.reginfo
 
+		boolean res = false;
+		
 		IPath path = new Path(xulpath );
 		String fullpath = path.toOSString();
 
-		ProcessBuilder pb = new ProcessBuilder(fullpath,"--register-global");	
+		ProcessBuilder pb = new ProcessBuilder(fullpath, "--register-user");	
 		try {
 			Process p = pb.start();
 			int ret = p.waitFor();
-			
-			IPath filepath = new Path(xulpath ).append("global.reginfo");
-			File file = filepath.toFile();
-			if(file.exists())
-			{
-				System.out.println("exists");
-				return true;
-			}
-			else
-			{
-				System.out.println("not exists");
-				return false;
-			}
+			res = true;
+//			IPath filepath = new Path(xulpath ).append("global.reginfo");
+//			File file = filepath.toFile();
+//			if(file.exists())
+//			{
+//				System.out.println("exists");
+//				return true;
+//			}
+//			else
+//			{
+//				System.out.println("not exists");
+//				return false;
+//			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -200,7 +214,7 @@ public class XULPreferencePage extends PreferencePage implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return res;
 	}
 
 

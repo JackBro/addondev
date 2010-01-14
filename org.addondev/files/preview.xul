@@ -275,5 +275,6 @@
 	//}
 	]]>
 	</script>
-
+	
+	<iframe id="content" src="about:blank" flex="1"/>
 </window>
