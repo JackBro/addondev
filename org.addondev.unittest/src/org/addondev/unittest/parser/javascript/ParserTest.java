@@ -1,4 +1,4 @@
-package org.addondev.parser.javascript;
+package org.addondev.unittest.parser.javascript;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,6 +11,11 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.addondev.parser.javascript.JsNode;
+import org.addondev.parser.javascript.JsNodeHelper;
+import org.addondev.parser.javascript.Lexer;
+import org.addondev.parser.javascript.NodeManager;
+import org.addondev.parser.javascript.Parser;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

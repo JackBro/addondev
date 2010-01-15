@@ -251,10 +251,10 @@ public class XULEditor extends XMLEditor {
 					if (selection instanceof ITextSelection) {
 						ITextSelection textSelection= (ITextSelection) selection;
 						int offset = textSelection.getOffset();
-						String previewxml = XULParser.parse(path, offset);
-						for (XULPreviewForm xulform : xulforms) {			
-							xulform.settest(previewxml);
-						}	
+//						String previewxml = XULParser.parse(path, offset);
+//						for (XULPreviewForm xulform : xulforms) {			
+//							xulform.settest(previewxml);
+//						}	
 					}						
 				}
 			});	

@@ -130,13 +130,13 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 					ISelectionProvider provider= editor.getEditorSite().getSelectionProvider();
 					ISelection selection = provider.getSelection();
 					if (selection instanceof ITextSelection) {
-						ITextSelection textSelection= (ITextSelection) selection;
-						int offset = textSelection.getOffset();
-						String previewxml = XULParser.parse(path, offset);
-						ptext = previewxml;
-						for (XULPreviewForm xulform : xulforms) {			
-							xulform.settest(previewxml);
-						}	
+//						ITextSelection textSelection= (ITextSelection) selection;
+//						int offset = textSelection.getOffset();
+//						String previewxml = XULParser.parse(path, offset);
+//						ptext = previewxml;
+//						for (XULPreviewForm xulform : xulforms) {			
+//							xulform.settest(previewxml);
+//						}	
 					}						
 				}
 			});	

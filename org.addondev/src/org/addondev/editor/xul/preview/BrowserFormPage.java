@@ -3,6 +3,7 @@ package org.addondev.editor.xul.preview;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import org.addondev.editor.xul.XULEditor;
 import org.addondev.plugin.AddonDevPlugin;
@@ -40,7 +41,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.part.Page;
 
 
-public class BrowserFormPage extends Page {
+public class BrowserFormPage extends XULPreviewPage {
 
 	public static final String ID = "browser";
 	private Browser fBrowser;
@@ -137,32 +138,6 @@ public class BrowserFormPage extends Page {
 			});
 		}
 	}
-	
-//	public void setFile(IFile file)
-//	{
-//		String url="file:///"+file.getRawLocation().toString();
-//		
-//		if(fBrowser != null && !fFileLoaded)
-//		{
-//			fFileLoaded = true;
-//			fBrowser.setUrl(url);
-//		}
-//	}
-	
-	String fXML;
-//	public void setFile(File file, String xml)
-//	{
-//		Path path = new Path(file.getAbsolutePath());
-//		String url="file:///"+path.toPortableString();
-//		
-//		if(fBrowser != null)
-//		{
-//			fXML = xml;
-//			fFileLoaded = true;
-//			fBrowser.setUrl(url);
-//		}
-//	}
-
 
 	protected Composite displayArea = null;
 	
@@ -266,6 +241,8 @@ public class BrowserFormPage extends Page {
 		data.grabExcessHorizontalSpace = true;
 		data.grabExcessVerticalSpace = true;
 		fBrowser.setLayoutData(data);
+		
+		fBrowser.setText("html");
 //		 GridData gd = new GridData();
 //		 gd = new GridData(GridData.FILL_BOTH);
 //         //gd.heightHint = 30;
@@ -414,50 +391,20 @@ public class BrowserFormPage extends Page {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	class PreviewBrowserLocationListener implements LocationListener
-	{
 
-		//private Browser fBrowser;
-		public PreviewBrowserLocationListener(Browser browser) {
-			super();
-			//this.fBrowser = browser;
-		}
 
-		@Override
-		public void changed(LocationEvent event) {
-			// TODO Auto-generated method stub
-			fBrowser.removeLocationListener(this);
-			
-			event.display.asyncExec(new Runnable() {
-				
-				@Override
-				public void run() {
-					
-					//String tmp = URLEncoder.encode("h+h", "UTF-8");
-					//fBrowser.execute("output('"+ fXML +"');");
-					try {
-						String tmp;
 
-							tmp = URLEncoder.encode(fXML, "UTF-8");
-							String res = tmp.replaceAll("\\+", " ");
-							//String enc = (String) fBrowser.evaluate("encodeURIComponent(" + fXML +");");
-							//String res = fXML.replaceAll("\"", "'");
-							fBrowser.execute("preview('"+ res +"');");
-						} catch (UnsupportedEncodingException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-				}
-			});			
-		}
-
-		@Override
-		public void changing(LocationEvent event) {
-			// TODO Auto-generated method stub
-			
-		}
+	@Override
+	public void setDocument(List<String> xuls) {
+		// TODO Auto-generated method stub
 		
 	}
 
+
+
+	@Override
+	public void setPreviewFile(File file) {
+		// TODO Auto-generated method stub
+		
+	}
 }

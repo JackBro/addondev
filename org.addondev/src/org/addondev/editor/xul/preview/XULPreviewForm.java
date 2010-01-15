@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import jp.aonir.fuzzyxml.FuzzyXMLDocument;
@@ -32,10 +33,29 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 
 public class XULPreviewForm extends MultiPageEditorPart {
 
+	private enum XULWindowType
+	{
+		PREFWINDOW,
+		WINDOW,
+		DIALOG,
+		NON
+	}
+	private class XULWindow
+	{
+		public XULWindowType type;
+		public ArrayList<String> xullist;
+		
+		public XULWindow()
+		{
+			xullist = new ArrayList<String>();
+			type = XULWindowType.NON;
+		}
+	}
 	
 	//setInput -> createPages
 	private IPreferenceStore fStore;
 	private BrowserFormPage fBrowserFormPage;
+	private XULPreviewPage fXULPreviewPage;
 	
 	public XULPreviewForm() {
 		// TODO Auto-generated constructor stub
@@ -102,10 +122,19 @@ public class XULPreviewForm extends MultiPageEditorPart {
 		fBrowserFormPage.createControl(getContainer());
 		int pageIndex = addPage(fBrowserFormPage.getControl());
 		setPageText(pageIndex, "Preview");
+
+		PrefwindowPreviewPage fPrefwindowPreviewPage = new PrefwindowPreviewPage();
+		fPrefwindowPreviewPage.createControl(getContainer());
+		int pageIndex2 = addPage(fPrefwindowPreviewPage.getControl());
+		setPageText(pageIndex2, "Preview2");
 	}
+	
+
 	
 	private boolean canPreview(FileEditorInput input)
 	{
+		XULWindow xul = new XULWindow();
+		
 		try {
 			//String text = FileUtil.getContent(input.getFile().getContents());
 			FuzzyXMLParser parser = new FuzzyXMLParser();
@@ -121,8 +150,31 @@ public class XULPreviewForm extends MultiPageEditorPart {
 					if(node instanceof FuzzyXMLElement)
 					{
 						String name = ((FuzzyXMLElement)node).getName();
-						if(set.contains(name))
-							return true;
+						name = name.toLowerCase();
+//						if(set.contains(name))
+//						{
+//							return true;
+//						}
+						if(name == null)
+						{
+							xul.type = XULWindowType.NON;
+						}
+						else if(name.equals("prefwindow"))
+						{
+							xul.type = XULWindowType.PREFWINDOW;
+						}
+						else if(name.equals("window"))
+						{
+							xul.type = XULWindowType.WINDOW;
+						}
+						else if(name.equals("dialog"))
+						{
+							xul.type = XULWindowType.DIALOG;
+						}
+						else
+						{
+							xul.type = XULWindowType.NON;
+						}
 					}
 				}
 				

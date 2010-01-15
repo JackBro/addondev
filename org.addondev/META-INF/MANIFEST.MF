@@ -58,6 +58,7 @@ Export-Package: org.addondev.debug.core.launching;uses:="org.eclipse.debug.core,
    org.eclipse.jface.util,
    org.eclipse.swt.widgets",
  org.addondev.parser.dtd,
+ org.addondev.parser.javascript,
  org.addondev.parser.xul,
  org.addondev.plugin,
  org.addondev.util

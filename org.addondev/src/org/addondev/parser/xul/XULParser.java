@@ -2,7 +2,7 @@ package org.addondev.parser.xul;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,8 +21,18 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 public class XULParser {
-	//<!DOCTYPE overlay SYSTEM "chrome://dendzones/locale/dendzones.dtd">
-	//<?xml-stylesheet href="chrome://dendzones/skin/dendzones.css" type="text/css"?>
+	
+
+	class cl
+	{
+		public int start;
+		public int len;
+		public cl(int start, int len)
+		{
+			this.start = start;
+			this.len = len;
+		}
+	}
 	
 	private static Pattern doctypeOverlayPattern = Pattern.compile("<!DOCTYPE\\s+overlay\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
 	private static Pattern doctypeprefwindowPattern = Pattern.compile("<!DOCTYPE\\s+prefwindow\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
@@ -30,23 +40,91 @@ public class XULParser {
 	
 	private static Pattern entryPattern = Pattern.compile("\"&(.+);\"");
 	
+	
+	private String fElementName;
+	private ArrayList<String> fXULDateList;
 	//private IProject fProject;
 	//private String fLocale;
 	
 	//private HashSet<String> NodeSet = new HashSet<String>();
 	//private ArrayList<Pattern>
+	public void parse(IPath fullpath)
+	{
+		fElementName = null;
+		FuzzyXMLElement targetelement = null;
+		String text = FileUtil.getContent(fullpath.toFile());
+		FuzzyXMLParser parser = new FuzzyXMLParser();
+		FuzzyXMLDocument document = parser.parse(text);
+		FuzzyXMLElement element = document.getDocumentElement();
+		if(element.hasChildren())
+		{
+			HashSet<String> set = new HashSet<String>();
+			set.add("prefwindow");
+			set.add("window");
+			set.add("dialog");
+			for (FuzzyXMLNode node : element.getChildren()) {
+				if(node instanceof FuzzyXMLElement)
+				{
+					String name = ((FuzzyXMLElement)node).getName();
+					name = name.toLowerCase();
+					if(set.contains(name))
+					{
+						fElementName = name;
+						targetelement = ((FuzzyXMLElement)node);
+						break;
+					}
+				}
+			}
+			
+			ArrayList<String> xuldatalist = new ArrayList<String>();
+			if(fElementName == null)
+			{
+				
+			}
+			else if(fElementName.equals("prefwindow"))
+			{
+				ArrayList<cl> elemoffsetlist = new ArrayList<cl>();
+				//ArrayList<FuzzyXMLElement> prefpanellist = new ArrayList<FuzzyXMLElement>();
+				FuzzyXMLNode[] nodes = targetelement.getChildren();
+				for (FuzzyXMLNode fuzzyXMLNode : nodes) {
+					if(fuzzyXMLNode instanceof FuzzyXMLElement)
+					{
+						FuzzyXMLElement chelem = (FuzzyXMLElement)fuzzyXMLNode;
+						if(chelem.getName().equals("prefpane"))
+						{
+							elemoffsetlist.add(new cl(chelem.getOffset(), chelem.getLength()));
+							//prefpanellist.add(chelem);
+							//pelement.removeChild(celem);
+							//break;
+						}
+					}
+				}
+				
+				
+				int inoffset = 0;
+				ArrayList<cl> elemoffsetlist2 = (ArrayList<cl>) elemoffsetlist.clone();
+				for (cl elemoffset : elemoffsetlist) {
+					cl tmp = elemoffset;
+					StringBuffer sb = new StringBuffer(text);
+					for (cl cl2 : elemoffsetlist) {
+						if(cl2.start != tmp.start)
+						{
+							int start = cl2.start - inoffset;
+							sb = sb.delete(start, start + cl2.len);//( t.start+inoffset, com1);
+							inoffset += cl2.len; 							
+						}
+					}
+					xuldatalist.add(sb.toString());
+				}			
+			}
+			else
+			{
+				xuldatalist.add(text);
+			}
+		}
+	}
 	
-//	public XULParser(IProject project, String locale)
-//	{
-//		//fProject = project;
-//		//fLocale = locale;
-//		
-//		//NodeSet.add("dialog");
-//		//NodeSet.add("prefpane");
-//		//NodeSet.add("window");
-//	}
-
-	public static String parse(IPath fullpath, int offset)
+	public String parse(IPath fullpath, int offset)
 	{
 		//ChromeURLMap chromemap = AddonDevPlugin.getDefault().getChromeURLMap(fProject, false);
 		String text = FileUtil.getContent(fullpath.toFile());
@@ -63,16 +141,7 @@ public class XULParser {
 		{
 			FuzzyXMLElement pelement = (FuzzyXMLElement) document.getDocumentElement().getChildren()[0];
 			
-			class cl
-			{
-				public int start;
-				public int len;
-				public cl(int start, int len)
-				{
-					this.start = start;
-					this.len = len;
-				}
-			}
+
 			ArrayList<cl> tt = new ArrayList<cl>();
 			
 			String pname = pelement.getName();
@@ -150,7 +219,7 @@ public class XULParser {
 
 	}
 	
-	private static FuzzyXMLElement getPreviewNode(FuzzyXMLDocument document, FuzzyXMLElement element)
+	private FuzzyXMLElement getPreviewNode(FuzzyXMLDocument document, FuzzyXMLElement element)
 	{
 		FuzzyXMLElement previewElement = null;
 		FuzzyXMLElement fnode = document.getDocumentElement();
@@ -173,7 +242,7 @@ public class XULParser {
 		return previewElement;
 	}
 	
-	private static boolean isEnablePreview(FuzzyXMLNode node)
+	private boolean isEnablePreview(FuzzyXMLNode node)
 	{
 		if(node instanceof FuzzyXMLElement)
 		{
