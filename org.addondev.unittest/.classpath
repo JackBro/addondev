@@ -5,6 +5,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.addondev"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="D:/data/src/PDE/work/rhino/build/rhino1_7R2/js.jar"/>
+	<classpathentry exported="true" kind="lib" path="/rhino/build/rhino1_7R2/js.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Shell"/>
+	<classpathentry kind="lib" path="/org.addondev/lib/FuzzyXML/fuzzyxml.jar"/>
+	<classpathentry kind="lib" path="/org.addondev/lib/FuzzyXML/lib/commons-jxpath-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

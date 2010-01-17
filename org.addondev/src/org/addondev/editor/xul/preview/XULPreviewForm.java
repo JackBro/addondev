@@ -15,6 +15,7 @@ import jp.aonir.fuzzyxml.FuzzyXMLElement;
 import jp.aonir.fuzzyxml.FuzzyXMLNode;
 import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
+import org.addondev.parser.xul.XULParser;
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
 import org.addondev.util.FileUtil;
@@ -31,32 +32,30 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
-public class XULPreviewForm extends MultiPageEditorPart {
+import sun.misc.FpUtils;
 
-	private enum XULWindowType
-	{
-		PREFWINDOW,
-		WINDOW,
-		DIALOG,
-		NON
-	}
-	private class XULWindow
-	{
-		public XULWindowType type;
-		public ArrayList<String> xullist;
-		
-		public XULWindow()
-		{
-			xullist = new ArrayList<String>();
-			type = XULWindowType.NON;
-		}
-	}
+public class XULPreviewForm extends MultiPageEditorPart {
+//public class XULPreviewForm extends FormEditor {
 	
 	//setInput -> createPages
 	private IPreferenceStore fStore;
-	private BrowserFormPage fBrowserFormPage;
+	//private BrowserFormPage fBrowserFormPage;
 	private XULPreviewPage fXULPreviewPage;
 	
+	
+	
+	@Override
+	public String getPartName() {
+		// TODO Auto-generated method stub
+		if( getEditorInput() instanceof FileEditorInput)
+		{
+			FileEditorInput input = (FileEditorInput)getEditorInput();
+			String n= input.getName();
+			return input.getName();
+		}
+		return super.getPartName();
+	}
+
 	public XULPreviewForm() {
 		// TODO Auto-generated constructor stub
 		fStore = AddonDevPlugin.getDefault().getPreferenceStore();
@@ -66,7 +65,7 @@ public class XULPreviewForm extends MultiPageEditorPart {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
-		fBrowserFormPage.dispose();		
+		//fBrowserFormPage.dispose();		
 		super.dispose();
 
 	}
@@ -118,67 +117,20 @@ public class XULPreviewForm extends MultiPageEditorPart {
 	protected void createPages() {
 		// TODO Auto-generated method stub
 		File file = makeXULPreviewFile();
-		fBrowserFormPage = new BrowserFormPage(file);
-		fBrowserFormPage.createControl(getContainer());
-		int pageIndex = addPage(fBrowserFormPage.getControl());
-		setPageText(pageIndex, "Preview");
+//		fBrowserFormPage = new BrowserFormPage(file);
+//		fBrowserFormPage.createControl(getContainer());
+//		int pageIndex = addPage(fBrowserFormPage.getControl());
+//		setPageText(pageIndex, "Preview");
 
-		PrefwindowPreviewPage fPrefwindowPreviewPage = new PrefwindowPreviewPage();
-		fPrefwindowPreviewPage.createControl(getContainer());
-		int pageIndex2 = addPage(fPrefwindowPreviewPage.getControl());
+		fXULPreviewPage = new XULPreviewPage(file);
+		fXULPreviewPage.createControl(getContainer());
+		int pageIndex2 = addPage(fXULPreviewPage.getControl());
 		setPageText(pageIndex2, "Preview2");
-	}
-	
-
-	
-	private boolean canPreview(FileEditorInput input)
-	{
-		XULWindow xul = new XULWindow();
 		
+		FileEditorInput fileinput = (FileEditorInput)getEditorInput();
+		String text = null;
 		try {
-			//String text = FileUtil.getContent(input.getFile().getContents());
-			FuzzyXMLParser parser = new FuzzyXMLParser();
-			FuzzyXMLDocument document = parser.parse(input.getFile().getContents());
-			FuzzyXMLElement element = document.getDocumentElement();
-			if(element.hasChildren())
-			{
-				HashSet<String> set = new HashSet<String>();
-				set.add("prefwindow");
-				set.add("window");
-				set.add("dialog");
-				for (FuzzyXMLNode node : element.getChildren()) {
-					if(node instanceof FuzzyXMLElement)
-					{
-						String name = ((FuzzyXMLElement)node).getName();
-						name = name.toLowerCase();
-//						if(set.contains(name))
-//						{
-//							return true;
-//						}
-						if(name == null)
-						{
-							xul.type = XULWindowType.NON;
-						}
-						else if(name.equals("prefwindow"))
-						{
-							xul.type = XULWindowType.PREFWINDOW;
-						}
-						else if(name.equals("window"))
-						{
-							xul.type = XULWindowType.WINDOW;
-						}
-						else if(name.equals("dialog"))
-						{
-							xul.type = XULWindowType.DIALOG;
-						}
-						else
-						{
-							xul.type = XULWindowType.NON;
-						}
-					}
-				}
-				
-			}
+			text = FileUtil.getContent(fileinput.getFile().getContents());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -186,15 +138,15 @@ public class XULPreviewForm extends MultiPageEditorPart {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return false;
+		ArrayList<String> list = XULParser.parse(text);
+		fXULPreviewPage.setDocument(list);
 	}
 	
-	public void settest(String text)
+	public void setDocument(String text)
 	{
-		
-		fBrowserFormPage.setDocument(text);
-		
+		//ArrayList<String> list = XULParser.parse(text);
+		//fBrowserFormPage.setDocument(text);
+		fXULPreviewPage.setDocument(XULParser.parse(text));
 	}
 	
 	private File makeXULPreviewFile()

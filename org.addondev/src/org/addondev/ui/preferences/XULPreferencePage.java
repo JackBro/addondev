@@ -155,7 +155,6 @@ public class XULPreferencePage extends PreferencePage implements
 	@Override
 	public boolean performOk() {
 		// TODO Auto-generated method stub
-		
 		fStote.setValue(PrefConst.XULRUNNER_PATH, fXULRunnerFile.getStringValue());
 		fStote.setValue(PrefConst.XULPREVIEW_W, inteditorH.getIntValue());
 		fStote.setValue(PrefConst.XULPREVIEW_H, inteditorW.getIntValue());

@@ -83,8 +83,8 @@ public class JavascriptParser {
 	        
 	        Context cx =  shellContextFactory.enterContext();
 	        
-	        cx.setLocale(Locale.getDefault());
-	        cx.setOptimizationLevel(-1);
+	        //cx.setLocale(Locale.getDefault());
+	        //cx.setOptimizationLevel(-1);
 	        
 	        CompilerEnvirons compilerEnv = new CompilerEnvirons();
 	        compilerEnv.initFromContext(cx);	

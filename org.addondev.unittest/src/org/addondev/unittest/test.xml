@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>
+<site>
+  <title>JavaでHello World</title>
+  <page id="28">
+    <title>EJB編</title>
+    <file>ejb.htm</file>
+  </page>
+  <page id="33">
+    <title>DOM編<title>
+    <file>xmldom.htm</file>
+  </page>
+</site>

@@ -41,7 +41,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.part.Page;
 
 
-public class BrowserFormPage extends XULPreviewPage {
+public class BrowserFormPage extends Page {
 
 	public static final String ID = "browser";
 	private Browser fBrowser;
@@ -388,22 +388,6 @@ public class BrowserFormPage extends XULPreviewPage {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void setDocument(List<String> xuls) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void setPreviewFile(File file) {
 		// TODO Auto-generated method stub
 		
 	}

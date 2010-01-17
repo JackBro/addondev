@@ -17,8 +17,8 @@ MyObject3.prototype =
 	    }
 };
 //
-//var tmp = 
-//	new MyObject3();
+va tmp = 
+	new MyObject3();
 //
 //
 mm = "1";
@@ -43,6 +43,11 @@ mm = "1";
 //{
 //    import: function (arg0){}
 //};
-//Components.utils.import("resource://gre/modules/JSON.jsm");
+//var Components = function(){};
+//Components.utils = 
+//{
+//	import:function(arg){}
+//}
+Components.utils.import("resource://gre/modules/JSON.jsm");
 //Application.console.log("onDragStart txt= " + txt);
 

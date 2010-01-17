@@ -10,7 +10,9 @@ Bundle-ClassPath: lib/commons-io-1.4.jar,
  src/,
  .
 Bundle-Activator: org.addondev.plugin.AddonDevPlugin
-Export-Package: org.addondev.debug.core.launching;uses:="org.eclipse.debug.core,org.eclipse.core.runtime,org.eclipse.debug.core.model",
+Export-Package: jp.aonir.fuzzyxml,
+ jp.aonir.fuzzyxml.event,
+ org.addondev.debug.core.launching;uses:="org.eclipse.debug.core,org.eclipse.core.runtime,org.eclipse.debug.core.model",
  org.addondev.debug.core.model;
   uses:="org.eclipse.debug.core,
    org.eclipse.debug.ui,

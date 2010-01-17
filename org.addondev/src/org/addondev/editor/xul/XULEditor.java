@@ -1,13 +1,20 @@
 package org.addondev.editor.xul;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.aonir.fuzzyxml.FuzzyXMLDocument;
+import jp.aonir.fuzzyxml.FuzzyXMLParser;
+import jp.aonir.fuzzyxml.event.FuzzyXMLErrorEvent;
+import jp.aonir.fuzzyxml.event.FuzzyXMLErrorListener;
+
 import org.addondev.editor.xml.XMLEditor;
 import org.addondev.editor.xul.preview.XULPreviewForm;
 import org.addondev.parser.xul.XULParser;
-import org.addondev.plugin.AddonDevPlugin;
+import org.addondev.unittest.Validator;
+import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -21,18 +28,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.IDocumentPartitioningListener;
-import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -41,7 +38,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-public class XULEditor extends XMLEditor {
+public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 
 	//private ColorManager colorManager;
 	private XULOutlinePage outline;
@@ -212,7 +209,7 @@ public class XULEditor extends XMLEditor {
 		}
 		return line;
 	}
-
+	
 	private void getEditorPart(final IProject project, final IPath path)
 	{
 		final ArrayList<XULPreviewForm> xulforms = new ArrayList<XULPreviewForm>();
@@ -232,34 +229,57 @@ public class XULEditor extends XMLEditor {
 				//fin.getFile().getFullPath()	
 				if(editorpart instanceof XULPreviewForm)
 				{
-					
-					IPath editorpath = ((FileEditorInput)editorpart.getEditorInput()).getPath();
+					FileEditorInput fileinput = (FileEditorInput)editorpart.getEditorInput();
+					IPath editorpath = fileinput.getPath();
 					if(editorpath.equals(path))
 					{
-						xulforms.add((XULPreviewForm) editorpart);
+						try {
+							String text = FileUtil.getContent(fileinput.getFile().getContents());
+							((XULPreviewForm) editorpart).setDocument(text);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (CoreException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						//xulforms.add((XULPreviewForm) editorpart);
 					}
 				}
 			}
 			
-			Display.getDefault().asyncExec(new Runnable() {
-			//editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					ISelectionProvider provider= editor.getEditorSite().getSelectionProvider();
-					ISelection selection = provider.getSelection();
-					if (selection instanceof ITextSelection) {
-						ITextSelection textSelection= (ITextSelection) selection;
-						int offset = textSelection.getOffset();
-//						String previewxml = XULParser.parse(path, offset);
-//						for (XULPreviewForm xulform : xulforms) {			
-//							xulform.settest(previewxml);
-//						}	
-					}						
-				}
-			});	
+//			Display.getDefault().asyncExec(new Runnable() {
+//			//editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
+//				@Override
+//				public void run() {
+//					// TODO Auto-generated method stub
+//					ISelectionProvider provider= editor.getEditorSite().getSelectionProvider();
+//					ISelection selection = provider.getSelection();
+//					if (selection instanceof ITextSelection) {
+//						ITextSelection textSelection= (ITextSelection) selection;
+//						int offset = textSelection.getOffset();
+////						String previewxml = XULParser.parse(path, offset);
+////						for (XULPreviewForm xulform : xulforms) {			
+////							xulform.settest(previewxml);
+////						}	
+//					}						
+//				}
+//			});	
 			
 		}
+	}
+
+	public void Validator()
+	{
+		FuzzyXMLParser parser = new FuzzyXMLParser();
+		parser.addErrorListener(this);	
+		FuzzyXMLDocument document = parser.parse(text);
+	}
+	
+	@Override
+	public void error(FuzzyXMLErrorEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

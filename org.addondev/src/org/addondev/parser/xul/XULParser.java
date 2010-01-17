@@ -13,6 +13,7 @@ import jp.aonir.fuzzyxml.FuzzyXMLNode;
 import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
 import org.addondev.editor.xml.XMLPartitionScanner;
+import org.addondev.editor.xul.preview.OffsetInfo;
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IProject;
@@ -21,19 +22,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 public class XULParser {
-	
-
-	class cl
-	{
-		public int start;
-		public int len;
-		public cl(int start, int len)
-		{
-			this.start = start;
-			this.len = len;
-		}
-	}
-	
+		
 	private static Pattern doctypeOverlayPattern = Pattern.compile("<!DOCTYPE\\s+overlay\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
 	private static Pattern doctypeprefwindowPattern = Pattern.compile("<!DOCTYPE\\s+prefwindow\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
 	private static Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*?>");
@@ -41,18 +30,22 @@ public class XULParser {
 	private static Pattern entryPattern = Pattern.compile("\"&(.+);\"");
 	
 	
-	private String fElementName;
-	private ArrayList<String> fXULDateList;
+	//private String fElementName;
+	//private ArrayList<String> fXULDateList;
 	//private IProject fProject;
 	//private String fLocale;
 	
 	//private HashSet<String> NodeSet = new HashSet<String>();
 	//private ArrayList<Pattern>
-	public void parse(IPath fullpath)
+	public static ArrayList<String> parse(String text)
 	{
-		fElementName = null;
+		ArrayList<String> xuldatalist = new ArrayList<String>();
+		
+		//if(text == null)
+		
+		String ElementName = null;
 		FuzzyXMLElement targetelement = null;
-		String text = FileUtil.getContent(fullpath.toFile());
+		//String text = FileUtil.getContent(fullpath.toFile());
 		FuzzyXMLParser parser = new FuzzyXMLParser();
 		FuzzyXMLDocument document = parser.parse(text);
 		FuzzyXMLElement element = document.getDocumentElement();
@@ -69,21 +62,21 @@ public class XULParser {
 					name = name.toLowerCase();
 					if(set.contains(name))
 					{
-						fElementName = name;
+						ElementName = name;
 						targetelement = ((FuzzyXMLElement)node);
 						break;
 					}
 				}
 			}
 			
-			ArrayList<String> xuldatalist = new ArrayList<String>();
-			if(fElementName == null)
+			
+			if(ElementName == null)
 			{
 				
 			}
-			else if(fElementName.equals("prefwindow"))
+			else if(ElementName.equals("prefwindow"))
 			{
-				ArrayList<cl> elemoffsetlist = new ArrayList<cl>();
+				ArrayList<OffsetInfo> elemoffsetlist = new ArrayList<OffsetInfo>();
 				//ArrayList<FuzzyXMLElement> prefpanellist = new ArrayList<FuzzyXMLElement>();
 				FuzzyXMLNode[] nodes = targetelement.getChildren();
 				for (FuzzyXMLNode fuzzyXMLNode : nodes) {
@@ -92,7 +85,7 @@ public class XULParser {
 						FuzzyXMLElement chelem = (FuzzyXMLElement)fuzzyXMLNode;
 						if(chelem.getName().equals("prefpane"))
 						{
-							elemoffsetlist.add(new cl(chelem.getOffset(), chelem.getLength()));
+							elemoffsetlist.add(new OffsetInfo(chelem.getOffset(), chelem.getLength()));
 							//prefpanellist.add(chelem);
 							//pelement.removeChild(celem);
 							//break;
@@ -101,27 +94,36 @@ public class XULParser {
 				}
 				
 				
-				int inoffset = 0;
-				ArrayList<cl> elemoffsetlist2 = (ArrayList<cl>) elemoffsetlist.clone();
-				for (cl elemoffset : elemoffsetlist) {
-					cl tmp = elemoffset;
+				//ArrayList<OffsetInfo> elemoffsetlist2 = (ArrayList<OffsetInfo>) elemoffsetlist.clone();
+				for (OffsetInfo elemoffset : elemoffsetlist) {
+					int inoffset = 0;
+					OffsetInfo tmp = elemoffset;
 					StringBuffer sb = new StringBuffer(text);
-					for (cl cl2 : elemoffsetlist) {
+					for (OffsetInfo cl2 : elemoffsetlist) {
 						if(cl2.start != tmp.start)
 						{
 							int start = cl2.start - inoffset;
-							sb = sb.delete(start, start + cl2.len);//( t.start+inoffset, com1);
+							//sb = sb.delete(start, start + cl2.len);//( t.start+inoffset, com1);
+							sb = sb.delete(start, start + cl2.len);
 							inoffset += cl2.len; 							
 						}
 					}
-					xuldatalist.add(sb.toString());
+					xuldatalist.add(convertText(sb.toString()));
 				}			
 			}
 			else
 			{
-				xuldatalist.add(text);
+				xuldatalist.add(convertText(text));
 			}
 		}
+		
+		return xuldatalist;
+	}
+	
+	private static String convertText(String text)
+	{
+		//return text.replaceAll("&amp;", "&").replaceAll("\n", "");
+		return text.replaceAll("'", "&apos;").replaceAll("\n", "");
 	}
 	
 	public String parse(IPath fullpath, int offset)
@@ -134,6 +136,7 @@ public class XULParser {
 		String previewData = text;
 		
 		FuzzyXMLDocument document = new FuzzyXMLParser().parse(text);
+
 		FuzzyXMLElement element = document.getElementByOffset(offset);
 		FuzzyXMLElement preview = getPreviewNode(document, element);
 		
@@ -142,7 +145,7 @@ public class XULParser {
 			FuzzyXMLElement pelement = (FuzzyXMLElement) document.getDocumentElement().getChildren()[0];
 			
 
-			ArrayList<cl> tt = new ArrayList<cl>();
+			ArrayList<OffsetInfo> tt = new ArrayList<OffsetInfo>();
 			
 			String pname = pelement.getName();
 			if("prefwindow".equals(pname))
@@ -156,7 +159,7 @@ public class XULParser {
 						FuzzyXMLElement celem = (FuzzyXMLElement)fuzzyXMLNode;
 						if(celem.getName().equals("prefpane") && !celem.equals(preview))
 						{
-							tt.add(new cl(celem.getOffset(), celem.getLength()));
+							tt.add(new OffsetInfo(celem.getOffset(), celem.getLength()));
 							//pelement.removeChild(celem);
 							//break;
 						}
@@ -180,7 +183,7 @@ public class XULParser {
 				
 				int inoffset = 0;
 				StringBuffer sb = new StringBuffer(text);
-				for (cl t : tt) {
+				for (OffsetInfo t : tt) {
 					int start = t.start - inoffset;
 					sb = sb.delete(start, start + t.len);//( t.start+inoffset, com1);
 					inoffset += t.len; 
