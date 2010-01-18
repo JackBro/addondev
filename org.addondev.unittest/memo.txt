@@ -1,0 +1,226 @@
+*** src/org/mozilla/javascript/Node.java	Sun Mar 22 14:32:24 2009
+--- src/org/mozilla/javascript/Node.java	Tue Jan 19 03:10:37 2010
+***************
+*** 1115,1121 ****
+            case Token.INC:
+            case Token.DEC:
+            case Token.EXPORT:
+!           case Token.IMPORT:
+            case Token.IF:
+            case Token.ELSE:
+            case Token.SWITCH:
+--- 1115,1121 ----
+            case Token.INC:
+            case Token.DEC:
+            case Token.EXPORT:
+!           //case Token.IMPORT:
+            case Token.IF:
+            case Token.ELSE:
+            case Token.SWITCH:
+*** src/org/mozilla/javascript/Parser.java	Sun Mar 22 14:32:24 2009
+--- src/org/mozilla/javascript/Parser.java	Tue Jan 19 03:31:18 2010
+***************
+*** 379,385 ****
+           * we've collected all the source */
+          Node pn = nf.createLeaf(Token.BLOCK);
+  
+!         try {
+              for (;;) {
+                  int tt = peekToken();
+  
+--- 379,385 ----
+           * we've collected all the source */
+          Node pn = nf.createLeaf(Token.BLOCK);
+  
+!         //try {
+              for (;;) {
+                  int tt = peekToken();
+  
+***************
+*** 390,420 ****
+                  Node n;
+                  if (tt == Token.FUNCTION) {
+                      consumeToken();
+!                     try {
+                          n = function(calledByCompileFunction
+                                       ? FunctionNode.FUNCTION_EXPRESSION
+                                       : FunctionNode.FUNCTION_STATEMENT);
+!                     } catch (ParserException e) {
+!                         break;
+!                     }
+                  } else {
+                      n = statement();
+                  }
+                  nf.addChildToBack(pn, n);
+              }
+!         } catch (StackOverflowError ex) {
+!             String msg = ScriptRuntime.getMessage0(
+!                 "msg.too.deep.parser.recursion");
+!             throw Context.reportRuntimeError(msg, sourceURI,
+!                                              ts.getLineno(), null, 0);
+!         }
+  
+!         if (this.syntaxErrorCount != 0) {
+!             String msg = String.valueOf(this.syntaxErrorCount);
+!             msg = ScriptRuntime.getMessage1("msg.got.syntax.errors", msg);
+!             throw errorReporter.runtimeError(msg, sourceURI, baseLineno,
+!                                              null, 0);
+!         }
+  
+          currentScriptOrFn.setSourceName(sourceURI);
+          currentScriptOrFn.setBaseLineno(baseLineno);
+--- 390,420 ----
+                  Node n;
+                  if (tt == Token.FUNCTION) {
+                      consumeToken();
+!                     //try {
+                          n = function(calledByCompileFunction
+                                       ? FunctionNode.FUNCTION_EXPRESSION
+                                       : FunctionNode.FUNCTION_STATEMENT);
+! //                    } catch (ParserException e) {
+! //                        break;
+! //                    }
+                  } else {
+                      n = statement();
+                  }
+                  nf.addChildToBack(pn, n);
+              }
+! //        } catch (StackOverflowError ex) {
+! //            String msg = ScriptRuntime.getMessage0(
+! //                "msg.too.deep.parser.recursion");
+! //            throw Context.reportRuntimeError(msg, sourceURI,
+! //                                             ts.getLineno(), null, 0);
+! //        }
+  
+! //        if (this.syntaxErrorCount != 0) {
+! //            String msg = String.valueOf(this.syntaxErrorCount);
+! //            msg = ScriptRuntime.getMessage1("msg.got.syntax.errors", msg);
+! //            throw errorReporter.runtimeError(msg, sourceURI, baseLineno,
+! //                                             null, 0);
+! //        }
+  
+          currentScriptOrFn.setSourceName(sourceURI);
+          currentScriptOrFn.setBaseLineno(baseLineno);
+*** src/org/mozilla/javascript/Token.java	Sun Mar 22 14:32:26 2009
+--- src/org/mozilla/javascript/Token.java	Tue Jan 19 02:59:27 2010
+***************
+*** 58,64 ****
+  {
+  
+      // debug flags
+!     public static final boolean printTrees = false;
+      static final boolean printICode = false;
+      static final boolean printNames = printTrees || printICode;
+  
+--- 58,64 ----
+  {
+  
+      // debug flags
+!     public static final boolean printTrees = true;
+      static final boolean printICode = false;
+      static final boolean printNames = printTrees || printICode;
+  
+***************
+*** 376,382 ****
+            case DOT:             return "DOT";
+            case FUNCTION:        return "FUNCTION";
+            case EXPORT:          return "EXPORT";
+!           case IMPORT:          return "IMPORT";
+            case IF:              return "IF";
+            case ELSE:            return "ELSE";
+            case SWITCH:          return "SWITCH";
+--- 376,382 ----
+            case DOT:             return "DOT";
+            case FUNCTION:        return "FUNCTION";
+            case EXPORT:          return "EXPORT";
+!           //case IMPORT:          return "IMPORT";
+            case IF:              return "IF";
+            case ELSE:            return "ELSE";
+            case SWITCH:          return "SWITCH";
+***************
+*** 425,431 ****
+            case ARRAYCOMP:       return "ARRAYCOMP";
+            case WITHEXPR:        return "WITHEXPR";
+            case LETEXPR:         return "LETEXPR";
+!           case DEBUGGER:        return "DEBUGGER";
+          }
+  
+          // Token without name
+--- 425,431 ----
+            case ARRAYCOMP:       return "ARRAYCOMP";
+            case WITHEXPR:        return "WITHEXPR";
+            case LETEXPR:         return "LETEXPR";
+!           //case DEBUGGER:        return "DEBUGGER";
+          }
+  
+          // Token without name
+*** src/org/mozilla/javascript/TokenStream.java	Sun Mar 22 14:32:26 2009
+--- src/org/mozilla/javascript/TokenStream.java	Sun Jan 17 06:30:27 2010
+***************
+*** 155,161 ****
+              Id_char          = Token.RESERVED,
+              Id_class         = Token.RESERVED,
+              Id_const         = Token.CONST,
+!             Id_debugger      = Token.DEBUGGER,
+              Id_double        = Token.RESERVED,
+              Id_enum          = Token.RESERVED,
+              Id_extends       = Token.RESERVED,
+--- 155,161 ----
+              Id_char          = Token.RESERVED,
+              Id_class         = Token.RESERVED,
+              Id_const         = Token.CONST,
+!             //Id_debugger      = Token.DEBUGGER,
+              Id_double        = Token.RESERVED,
+              Id_enum          = Token.RESERVED,
+              Id_extends       = Token.RESERVED,
+***************
+*** 164,170 ****
+              Id_float         = Token.RESERVED,
+              Id_goto          = Token.RESERVED,
+              Id_implements    = Token.RESERVED,
+!             Id_import        = Token.IMPORT,
+              Id_instanceof    = Token.INSTANCEOF,
+              Id_int           = Token.RESERVED,
+              Id_interface     = Token.RESERVED,
+--- 164,170 ----
+              Id_float         = Token.RESERVED,
+              Id_goto          = Token.RESERVED,
+              Id_implements    = Token.RESERVED,
+!             //Id_import        = Token.IMPORT,
+              Id_instanceof    = Token.INSTANCEOF,
+              Id_int           = Token.RESERVED,
+              Id_interface     = Token.RESERVED,
+***************
+*** 249,255 ****
+                      else if (c=='r') { X="return";id=Id_return; }
+                      break L;
+                  case 'h': X="throws";id=Id_throws; break L;
+!                 case 'm': X="import";id=Id_import; break L;
+                  case 'o': X="double";id=Id_double; break L;
+                  case 't': X="static";id=Id_static; break L;
+                  case 'u': X="public";id=Id_public; break L;
+--- 249,255 ----
+                      else if (c=='r') { X="return";id=Id_return; }
+                      break L;
+                  case 'h': X="throws";id=Id_throws; break L;
+!                 //case 'm': X="import";id=Id_import; break L;
+                  case 'o': X="double";id=Id_double; break L;
+                  case 't': X="static";id=Id_static; break L;
+                  case 'u': X="public";id=Id_public; break L;
+***************
+*** 268,274 ****
+              case 8: switch (s.charAt(0)) {
+                  case 'a': X="abstract";id=Id_abstract; break L;
+                  case 'c': X="continue";id=Id_continue; break L;
+!                 case 'd': X="debugger";id=Id_debugger; break L;
+                  case 'f': X="function";id=Id_function; break L;
+                  case 'v': X="volatile";id=Id_volatile; break L;
+                  } break L;
+--- 268,274 ----
+              case 8: switch (s.charAt(0)) {
+                  case 'a': X="abstract";id=Id_abstract; break L;
+                  case 'c': X="continue";id=Id_continue; break L;
+!                 //case 'd': X="debugger";id=Id_debugger; break L;
+                  case 'f': X="function";id=Id_function; break L;
+                  case 'v': X="volatile";id=Id_volatile; break L;
+                  } break L;

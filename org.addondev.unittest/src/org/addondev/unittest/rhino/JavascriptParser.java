@@ -27,6 +27,8 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.mozilla.javascript.tools.shell.Global;
 import org.mozilla.javascript.tools.shell.ShellContextFactory;
 
+import com.sun.xml.internal.ws.org.objectweb.asm.Type;
+
 public class JavascriptParser {
   
 	
@@ -100,6 +102,18 @@ public class JavascriptParser {
 			try {
 				p = new Parser(compilerEnv, errorReporter);
 				root = p.parse(sourceString, "<cmd>", 1);
+				//Token.printTrees = true;
+				//System.out.println(root.getFirstChild().toStringTree( root));
+				//System.out.println(root.toString());
+				//System.out.println(root.toStringTree(root));
+				//dump(root);
+			
+				 System.out.println("Token.printTrees = " + Token.printTrees);
+		        if (Token.printTrees) {
+		            System.out.println(root.toStringTree(root));
+		        }
+				//root.getFirstChild().
+				
 				//cx.stringIsCompilableUnit(sourceString);
 				//script = cx.compileString(sourceString, "test", 1, null);
 				//script.exec(cx, new Global());
@@ -193,5 +207,21 @@ public class JavascriptParser {
 //        } finally {
 //            Context.exit();
 //        }
+	}
+	
+	public void dump(Node node)
+	{
+		System.out.println(Type.getType(node.getClass()) );
+		Node chnode = node.getFirstChild();
+		
+		System.out.println(chnode.getLineno() + " : " + chnode.getString());
+		while(chnode != null)
+		{
+			chnode = chnode.getNext();
+			if(chnode != null)
+			{
+				dump(chnode);
+			}
+		}
 	}
 }
