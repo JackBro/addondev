@@ -13,7 +13,6 @@ import jp.aonir.fuzzyxml.event.FuzzyXMLErrorListener;
 import org.addondev.editor.xml.XMLEditor;
 import org.addondev.editor.xul.preview.XULPreviewForm;
 import org.addondev.parser.xul.XULParser;
-import org.addondev.unittest.Validator;
 import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -271,9 +270,9 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 
 	public void Validator()
 	{
-		FuzzyXMLParser parser = new FuzzyXMLParser();
-		parser.addErrorListener(this);	
-		FuzzyXMLDocument document = parser.parse(text);
+//		FuzzyXMLParser parser = new FuzzyXMLParser();
+//		parser.addErrorListener(this);	
+//		FuzzyXMLDocument document = parser.parse(text);
 	}
 	
 	@Override
