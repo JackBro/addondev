@@ -102,6 +102,16 @@ public class ParserTest {
 	@Test
 	public void testParser03() throws IOException {
 		
+		{
+		String src = getSource(ParserTest.class.getResourceAsStream("system.js"));
+		Lexer lex = new Lexer(src);
+		Parser parser = new Parser(); // パーサーを作成。
+		parser.parse(lex);
+		JsNode node = parser.root;
+		NodeManager.getInstance().SetNode("system", node);
+		node.dump("");
+		}
+		{
 		Lexer lex = null;
 		String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
 		lex = new Lexer(src);
@@ -109,6 +119,7 @@ public class ParserTest {
 		parser.parse(lex);
 		JsNode node = parser.root;
 		node.dump("");
+		}
 	}
 
 	@Test

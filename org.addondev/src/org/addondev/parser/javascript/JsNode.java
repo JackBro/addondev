@@ -129,7 +129,8 @@ public class JsNode {
 //				 
 //			 }			
 //		}
-
+		if(children == null) return null;
+		
 		for (int i = 0; i < children.size(); i++) {
 			if(children.get(i).image.equals(sym))
 			{
@@ -278,7 +279,10 @@ public class JsNode {
 		}
 		return this.children;
 	}
-	
+	public void setType(String type)
+	{
+		fType = type;
+	}
 	public String getType()
 	{
 		String key = null;

@@ -7,6 +7,7 @@ import javax.swing.text.StyledEditorKit.BoldAction;
 public class JsNodeHelper {
 	public static JsNode findChildNode(JsNode node, String image)
 	{
+		if(node.getChildrenNum() == 0) return null;
 		for (int i = 0; i < node.getChildrenNum(); i++) {
 			if(node.getChild(i).getImage().equals(image))
 			{

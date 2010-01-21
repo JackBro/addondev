@@ -22,7 +22,8 @@ public class Parser {
 		{
 			String[] sp = sym.split("\\.");
 			for (int i = 0; i < sp.length; i++) {
-				symlist.add(sp[i]);
+				if(!parent.getImage().equals(sp[i]))
+					symlist.add(sp[i]);
 			}
 		}
 		else
@@ -120,7 +121,7 @@ String fJsDoc;
 			switch (token) {	
 			case TokenType.VAR: // 変数宣言
 			case TokenType.CONST: 	
-				def(parent);		
+				def(parent);
 				break;
 			case TokenType.JSDOC:
 				fJsDoc = lex.value();
@@ -170,7 +171,8 @@ String fJsDoc;
 						
 					}
 					//getToken();
-					String objsym2 = "";	
+					//String objsym2 = "";
+					String objsym2 = lex.value();
 //					if(fromnode.getId().equals("function"))
 //					{
 //						objsym2 = ".prototype";
@@ -193,7 +195,7 @@ String fJsDoc;
 					
 					if(objsym2.length() > 0)
 					{
-						objsym2 = objsym2.substring(1);
+						//objsym2 = objsym2.substring(1);
 					
 						if(token != TokenType.EOS && token != TokenType.VAR && token != TokenType.SYMBOL) //tmp
 						{
@@ -214,11 +216,25 @@ String fJsDoc;
 								//if(res != null)
 								//	mnode.setValueNode(new ValueNode(res));
 							}
-//							else if(token == '=')
-//							{
-//								getToken();
-//								factor(new JsNode(null, "", "", 0));
-//							}
+							else if(token == '(')
+							{
+								getToken();
+								//factor(new JsNode(null, "", "", 0));
+								//factor(mnode);
+								
+								JsNode code = new JsNode(mnode, "function", "anonymous", lex.offset());
+								mnode.addChild(code);
+									
+						    	frame.push();
+								getToken();
+								advanceToken(')');
+								
+								getToken();
+								block(code);
+								
+								frame.pop(); 
+								
+							}
 						}
 					}
 				}
@@ -319,6 +335,7 @@ String fJsDoc;
 			}
 			//
 		}
+
 		else
 		{
 			getToken(); // skip ),
@@ -327,7 +344,8 @@ String fJsDoc;
 				//getToken();
 				node.setOffset(lex.offset());
 				//getToken();
-				
+				//block(node);
+				//fun(node);
 				//objectExpr(node);
 				//block(node);
 			}			
@@ -343,6 +361,7 @@ String fJsDoc;
 	    if(token == TokenType.SYMBOL){
 		    String sym = lex.value();
 		    code = new JsNode(parent, "function", sym, lex.offset());
+		    code.setType(sym);
 			parent.addChild(code);
 			
 			frame.setNode(code);
@@ -439,6 +458,10 @@ String fJsDoc;
 							JsNodeHelper.assignNode(node.getChildrenList(), gnode.getChildrenList()); 
 						}
 					}
+					else
+					{
+						
+					}
 //				}
 //				else
 //				{
@@ -460,7 +483,8 @@ String fJsDoc;
 			frame.push(); //test
 			objectExpr(parent);
 			frame.pop();  //test
-			thisNodeStack.pop();			
+			thisNodeStack.pop();	
+			//node = parent;
 			break;
 		case TokenType.FUNCTION:
 			//parent.setValueNode(valueNode)
@@ -497,7 +521,9 @@ String fJsDoc;
 			if(chNode != null)
 			{
 				node = new JsNode(null, "string", lex.value(), 0);
-				JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
+				//node = new JsNode(parent, "string", lex.value(), 0);
+				//JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
+				JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode.getChildrenList()); 
 			}
 			getToken();
 			break;
@@ -534,6 +560,16 @@ String fJsDoc;
 			 break;
 		}
 		
+//		while(token == ';')
+//		{
+//			//getToken();  // skip ';'
+//		}
+//		if(token != '.')
+//		{
+//			getToken();
+//		}
+//		else
+//		{
 		//String 
 		while(token == '.'){
 			getToken();  // skip '.'
@@ -647,7 +683,7 @@ String fJsDoc;
 				getToken(); //skip ']'
 			}
 		}
-		
+		//}
 //		if(node != null && node.getValueNode() != null)
 //		{
 //			node = node.getValueNode().getNode();
@@ -707,12 +743,13 @@ String fJsDoc;
 				}
 			}
 		}
-		if(token != TokenType.EOS)
+		if(token != '}' && token != TokenType.EOS)
 		{
 			getToken();
-			parent.setEndoffset(lex.offset()-1);
+			//parent.setEndoffset(lex.offset()-1);
 			//getToken();
 		}
+		parent.setEndoffset(lex.offset()-1);
 	}
 	
 	private void newExpr()

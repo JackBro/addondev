@@ -1,13 +1,16 @@
-//MyObject = 
-//{
-//    message3: null,
-//    hello3: function (arg0){
-//		arg0=100;
-//    }
-//}
+var st = "t";
+
+var MyObject = 
+{
+    message3: null,
+    hello3: function (arg0){
+		arg0=100;
+		var h= arg0. ;
+	}
+}
 //
 //MyObject.hello3("b");
-//MyObject.message3="jj";
+MyObject.message3=st;
 //MyObject.add = {};
 
 //function func0(arg0)
@@ -144,27 +147,28 @@
 //        }
 //    },
 //});
-FBL.ns(function() {
-	var tt=0;
-	const p=0;
-	function aa()
-	{
-		
-	}
-	aa();
-	h=o;
-	Firebug.Debugger = extend(Firebug.ActivableModule,
-	{
-	    fbs: fbs, // access to firebug-service in chromebug under browser.xul.DOM.Firebug.Debugger.fbs /*@explore*/
-	    getCurrentFrameKeys: function(context)
-	    {        
-	        this.getFrameKeys(context);
-	    }
-	});
-	aa();
-	//var tt=0;
-	//nn=0;
-});
+//FBL.ns(function() {
+//	var tt=0;
+////	const p=0;
+////	function aa()
+////	{
+////		
+////	}
+////	aa();
+////	h=o;
+//	var Firebug.Debugger = extend(Firebug.ActivableModule,
+//	{
+//	    fbs: fbs, // access to firebug-service in chromebug under browser.xul.DOM.Firebug.Debugger.fbs /*@explore*/
+//	    getCurrentFrameKeys: function(context)
+//	    {        
+//	        this.getFrameKeys(context);
+//	    }
+//	});
+////	aa();
+//	
+//	//var tt=0;
+//	//nn=0;
+//});
 //
 //function Car(brand) {
 //   this.brand = brand;
