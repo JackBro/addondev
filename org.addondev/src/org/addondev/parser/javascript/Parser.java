@@ -12,9 +12,10 @@ public class Parser {
 	
 	private Frame frame = new Frame();
 	private Stack<JsNode> thisNodeStack = new Stack<JsNode>();
+	private Stack<Scope> ScopeStack = new Stack<Scope>();
 	
 	private JsNode getNode(JsNode parent, String sym, int offset)
-	{
+	{	
 		JsNode node = parent;
 		
 		List<String> symlist = new ArrayList<String>();
@@ -149,7 +150,8 @@ String fJsDoc;
 					}
 					
 					getToken(); // skip '='
-					JsNode res = factor(node);
+					factor(node);
+					//JsNode res = factor(node);
 					//if(res != null)
 					//	node.setValueNode(new ValueNode(res));
 				}
@@ -208,11 +210,12 @@ String fJsDoc;
 							//if(token == '=' && !objsym2.contains("prototype.")){
 							if(token == '='){
 								getToken();  // skip '='
-								JsNode res = factor(mnode);
-								if(res != null)
-								{
-									JsNodeHelper.assignNode(fromnode.getChildrenList(), res.getChildrenList()); 
-								}
+								factor(mnode);
+//								JsNode res = factor(mnode);
+//								if(res != null)
+//								{
+//									JsNodeHelper.assignNode(fromnode.getChildrenList(), res.getChildrenList()); 
+//								}
 								//if(res != null)
 								//	mnode.setValueNode(new ValueNode(res));
 							}
@@ -363,6 +366,7 @@ String fJsDoc;
 		    code = new JsNode(parent, "function", sym, lex.offset());
 		    code.setType(sym);
 			parent.addChild(code);
+			ScopeStack.push(new Scope(lex.offset(), code));
 			
 			frame.setNode(code);
 			thisNodeStack.push(code);
@@ -373,6 +377,7 @@ String fJsDoc;
 			
 			block(code);
 			thisNodeStack.pop();
+			ScopeStack.pop);
 			
 			frame.pop(); 
 	    }
@@ -436,10 +441,8 @@ String fJsDoc;
 		}
 		getToken(); //skip symbol
 		if(token == '='){
-			//expr(node);
 			getToken(); // skip '='
 			JsNode res = factor(node);
-			//node.setValueNode(new ValueNode(res));
 			if(res != null)
 			{
 				//if(res.getChildrenList().size() == 0)	
@@ -469,7 +472,6 @@ String fJsDoc;
 //				}
 			}			
 		}
-
 	}
 	
 	private JsNode factor(JsNode parent) throws EOSException {

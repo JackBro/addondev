@@ -1,3 +1,7 @@
+http://www.eclipse.org/dltk/install.php
+http://wiki.eclipse.org/DLTK_IDE_Guide:Step_3._Towards_an_IDE
+
+
 http://www13.plala.or.jp/observe/PDE/PDEResourceMarker.html
 http://tobysoft.net/wiki/index.php?License%2FMPL
 http://atlanto.web.fc2.com/pdt/index.html

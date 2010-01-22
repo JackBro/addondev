@@ -16,24 +16,24 @@ String.prototype = new Object();
 */ 
 String.prototype.length =1;
 
-/**
- * function charAt
- * @type    String
- * @memberOf   String
- * @returns {String}
-*/ 
-String.prototype.charAt= function(index){};
-
-/**
- * function concat
- * @type    String
- * @memberOf   String
- * @returns {String}
-*/ 
-String.prototype.concat= function(value){};
-
-
-function Number(){}
+///**
+// * function charAt
+// * @type    String
+// * @memberOf   String
+// * @returns {String}
+//*/ 
+//String.prototype.charAt= function(index){};
+//
+///**
+// * function concat
+// * @type    String
+// * @memberOf   String
+// * @returns {String}
+//*/ 
+//String.prototype.concat= function(value){};
+//
+//
+function Number(){};
 Number.prototype = new Object();
 
 //function Number(){};
