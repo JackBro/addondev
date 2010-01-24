@@ -58,7 +58,7 @@ public class ParserTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // スキャナを作成。
-		Parser parser = new Parser(); // パーサーを作成。
+		Parser parser = new Parser("test00.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
 		node.dump("");
@@ -81,7 +81,7 @@ public class ParserTest {
 		Lexer lex = null;
 		String src = getSource(ParserTest.class.getResourceAsStream("test00.js"));
 		lex = new Lexer(src);
-		Parser parser = new Parser(); // パーサーを作成。
+		Parser parser = new Parser("test00.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
 		node.dump("");
@@ -93,7 +93,7 @@ public class ParserTest {
 		Lexer lex = null;
 		String src = getSource(ParserTest.class.getResourceAsStream("test02.js"));
 		lex = new Lexer(src);
-		Parser parser = new Parser(); // パーサーを作成。
+		Parser parser = new Parser("test02.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
 		node.dump("");
@@ -105,7 +105,7 @@ public class ParserTest {
 		{
 		String src = getSource(ParserTest.class.getResourceAsStream("system.js"));
 		Lexer lex = new Lexer(src);
-		Parser parser = new Parser(); // パーサーを作成。
+		Parser parser = new Parser("system.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
 		NodeManager.getInstance().SetNode("system", node);
@@ -115,10 +115,10 @@ public class ParserTest {
 		Lexer lex = null;
 		String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
 		lex = new Lexer(src);
-		Parser parser = new Parser(); // パーサーを作成。
+		Parser parser = new Parser("test03.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
-		node.dump("");
+		//node.dump("");
 		}
 	}
 
@@ -128,7 +128,7 @@ public class ParserTest {
 		Lexer lex = null;
 		String src = getSource(ParserTest.class.getResourceAsStream("test04.js"));
 		lex = new Lexer(src);
-		Parser parser = new Parser(); // パーサーを作成。
+		Parser parser = new Parser("test04.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
 		node.dump("");
@@ -242,7 +242,7 @@ public class ParserTest {
 
 		String src = getSource(ParserTest.class.getResourceAsStream("system.js"));
 		Lexer lex = new Lexer(src);
-		Parser parser = new Parser(); // パーサーを作成。
+		Parser parser = new Parser("system.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
 		NodeManager.getInstance().SetNode("system", node);
@@ -250,7 +250,7 @@ public class ParserTest {
 		
 		src = getSource(ParserTest.class.getResourceAsStream("test00.js"));
 		lex = new Lexer(src);
-		parser = new Parser(); // パーサーを作成。
+		parser = new Parser("test00.js"); // パーサーを作成。
 		parser.parse(lex);
 		NodeManager.getInstance().SetNode("test00", parser.root);
 		parser.root.dump("");

@@ -1,17 +1,7 @@
-/* See license.txt for terms of usage */
 
-// Debug lines are marked with  at column 120
-// Use variable name "fileName" for href returned by JSD, file:/ not same as DOM
-// Use variable name "url" for normalizedURL, file:/// comparable to DOM
-// Convert from fileName to URL with normalizeURL
-// We probably don't need denormalizeURL since we don't send .fileName back to JSD
-
-// ************************************************************************************************
-// Constants
 
 
 var st = "t";
-const CLASS_ID = Components.ID("{a380e9c0-cb39-11da-a94d-0800200c9a66}");
 //var MyObject = 
 //{
 //    message3: null,
@@ -27,61 +17,35 @@ const CLASS_ID = Components.ID("{a380e9c0-cb39-11da-a94d-0800200c9a66}");
 
 var st_l = st.length;
 
-function FirebugService()
+
+var nsIIOService = 
 {
-
-    FBTrace = Cc["@joehewitt.com/firebug-trace-service;1"]
-                 .getService(Ci.nsISupports).wrappedJSObject.getTracer("extensions.firebug");
-
-    if (FBTrace.DBG_FBS_ERRORS)
-        FBTrace.sysout("FirebugService Starting");
-
-    fbs = this;
-
-    this.wrappedJSObject = this;
-    //this.timeStamp = new Date();  /* explore */
-//    this.breakpoints = breakpoints; // so chromebug can see it /* explore */
-//    this.onDebugRequests = 0;  // the number of times we called onError but did not call onDebug
-//    fbs._lastErrorDebuggr = null;
-//
-//
-//    if(FBTrace.DBG_FBS_ERRORS)
-//        this.osOut("FirebugService Starting, FBTrace should be up\n");
-//
-//    this.enabled = false;
-//    this.profiling = false;
-//
-//    prefs = PrefService.getService(nsIPrefBranch2);
-//    fbs.prefDomain = "extensions.firebug.service."
-//    prefs.addObserver(fbs.prefDomain, fbs, false);
-//
-//    var observerService = Cc["@mozilla.org/observer-service;1"]
-//        .getService(Ci.nsIObserverService);
-//    observerService.addObserver(QuitApplicationGrantedObserver, "quit-application-granted", false);
-//    observerService.addObserver(QuitApplicationRequestedObserver, "quit-application-requested", false);
-//    observerService.addObserver(QuitApplicationObserver, "quit-application", false);
-//
-//    this.scriptsFilter = "all";
-//    // XXXjj For some reason the command line will not function if we allow chromebug to see it.?
-//    this.alwayFilterURLsStarting = ["chrome://chromebug", "x-jsd:ppbuffer", "chrome://firebug/content/commandLine.js"];  // TODO allow override
-//    this.onEvalScriptCreated.kind = "eval";
-//    this.onTopLevelScriptCreated.kind = "top-level";
-//    this.onEventScriptCreated.kind = "event";
-//
-//    this.onXScriptCreatedByTag = {}; // fbs functions by script tag
-//    this.nestedScriptStack = Components.classes["@mozilla.org/array;1"]
-//                        .createInstance(Components.interfaces.nsIMutableArray); 
+  message3: null,
+  hello3: function (arg0){}
 }
-FirebugService.prototype =
+
+var Components = 
 {
-    osOut: function(str)
-    {
-    
-    },
-	get lastErrorWindow()
-	{
-	}
+	/**
+	 * @type    createInstanceComponents
+	 * @memberOf   Components
+	*/ 	
+	classes:function(){}
 }
+
+createInstanceComponents = 
+{
+	/**
+	 * @type    interfaces
+	 * @memberOf   createInstanceComponents
+	*/ 	
+	createInstance:function(arg){}
+}
+
+
+//const Components.classes;
+//const Ci = Components.interfaces;
+var ioService = Components.classes["@mozilla.org/network/io-service;1"].createInstance(Components.interfaces.nsIIOService);
 //
 //function func0(arg0)
 //{

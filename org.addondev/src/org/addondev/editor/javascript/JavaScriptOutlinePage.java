@@ -59,17 +59,17 @@ public class JavaScriptOutlinePage extends ContentOutlinePage {
         });
         
         Parser parser = null;
-        try
-        {
-        String text = document.get();        
-		Lexer lex = new Lexer(text);
-		parser = new Parser(); // パーサーを作成。
-		parser.parse(lex);
-		tree.setInput(parser.root);
-        }catch(Exception e)
-        {
-        	return;
-        }
+//        try
+//        {
+//        String text = document.get();        
+//		Lexer lex = new Lexer(text);
+//		parser = new Parser(); // パーサーを作成。
+//		parser.parse(lex);
+//		tree.setInput(parser.root);
+//        }catch(Exception e)
+//        {
+//        	return;
+//        }
 		//tree.setInput(parser.root);
 	}
 

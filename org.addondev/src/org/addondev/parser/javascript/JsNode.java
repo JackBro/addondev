@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//import jp.addondev.parser.javascript.SimpleNode;
 
 public class JsNode {
 	private static Pattern fJsDocTypePattern = Pattern.compile("@type\\s+(\\w+)");
@@ -12,6 +11,7 @@ public class JsNode {
 	
 	private JsNode parent;
 	private ArrayList<JsNode> children;
+	private JsNode fBindNode = null;
 	private String id;
 	private String image;
 	private int fOffset;
@@ -37,18 +37,6 @@ public class JsNode {
 		this.fJsDoc = fJsDoc;
 	}
 
-//	private boolean isvisible;
-//	private ValueNode valueNode;
-//	
-//	public ValueNode getValueNode() {
-//		return valueNode;
-//	}
-//
-//	public void setValueNode(ValueNode valueNode) {
-//		this.valueNode = valueNode;
-//	}
-
-	
 	public JsNode getClone(JsNode p)
 	{
 		JsNode node = new JsNode(p, id, image, fOffset);
@@ -69,7 +57,6 @@ public class JsNode {
 		this.id = id;
 		this.image = image;
 		this.fOffset = offset;
-		//this.isvisible = true;
 		offset = -1;
 	}
 	
@@ -87,7 +74,6 @@ public class JsNode {
 		this.id = id;
 		this.image = image;
 		this.fOffset = offset;
-		//this.isvisible = isvisible;
 		offset = -1;
 	}
 
@@ -107,28 +93,14 @@ public class JsNode {
 	}
 	
 	public int getChildrenNum() {
-		// TODO Auto-generated method stub
 		return children == null?0:children.size();
 	}
 	
 	public JsNode getChild(int i) {
-		// TODO Auto-generated method stub
 		return children.get(i);
 	}
 	
 	public JsNode getChild(String sym) {
-		// TODO Auto-generated method stub
-//		if(children == null || (children != null && children.size() == 0))
-//		{
-//			 Matcher m = pattern.matcher(fJsDoc);
-//			 if (m.find()) {
-//			     String key = m.group(1); // key = "Name";
-//			     //String value = m.group(2); // value = "Regular Expressions";
-//			     //System.out.println("key   = " + key);
-//			     //System.out.println("value = ");
-//				 
-//			 }			
-//		}
 		if(children == null) return null;
 		
 		for (int i = 0; i < children.size(); i++) {
@@ -140,35 +112,29 @@ public class JsNode {
 		return null;
 	}
 	
-	public JsNode getChild(Frame localframe, String sym) {
-		// TODO Auto-generated method stub
-//		if(children == null || (children != null && children.size() == 0))
-//		{
-//			 Matcher m = pattern.matcher(fJsDoc);
-//			 if (m.find()) {
-//			     String key = m.group(1); // key = "Name";
-//			     //String value = m.group(2); // value = "Regular Expressions";
-//			     //System.out.println("key   = " + key);
-//			     //System.out.println("value = ");
-//				 
-//			 }			
-//		}
-
-		for (int i = 0; i < children.size(); i++) {
-			if(children.get(i).image.equals(sym))
-			{
-				return children.get(i);
-			}
-		}
-		
-		String type = getType();
-		
-		return null;
+	public void setBindNode(JsNode node)
+	{
+		fBindNode = node;
+		children = null;
 	}
 	
-//	public int getLine()
-//	{
-//		return line;
+	public JsNode getBindNode()
+	{
+		return fBindNode;
+	}
+	
+//	public JsNode getChild(Frame localframe, String sym) {
+//
+//		for (int i = 0; i < children.size(); i++) {
+//			if(children.get(i).image.equals(sym))
+//			{
+//				return children.get(i);
+//			}
+//		}
+//		
+//		String type = getType();
+//		
+//		return null;
 //	}
 	
 	public int getOffset()
@@ -208,13 +174,6 @@ public class JsNode {
 		int s = fOffset;
 		int e = endoffset;
 		String val = "";
-//		if(getChildrenNum() >0)
-//		{
-//			val = getChild(0).getId();
-//		}
-		//if(valueNode != null && valueNode.getNode() != null)
-		//	val = valueNode.getNode().id;
-		//String val = valueNode == null?"":ValueNode.id;
 		System.out.println(toString(prefix) + " : " + image + " = " + val + " s:e= " + s + ":" + e);
 		if (children != null) {
 			for (int i = 0; i < children.size(); ++i) {
@@ -223,6 +182,16 @@ public class JsNode {
 					n.dump(prefix + " ");
 				}
 			}
+		}
+		else if(fBindNode != null)
+		{
+			JsNode[] bnodes = fBindNode.getChildren();
+			for (int i = 0; i < bnodes.length; ++i) {
+				JsNode n = bnodes[i];
+				if (n != null) {
+					n.dump(prefix + " ");
+				}
+			}			
 		}
 	}
 	

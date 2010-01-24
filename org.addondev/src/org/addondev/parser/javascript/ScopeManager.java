@@ -1,32 +1,48 @@
 package org.addondev.parser.javascript;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
+import java.util.Map.Entry;
 
 public class ScopeManager {
-	private ArrayList<Scope> fScopeStack;
-	private int stackindex;
 	
-	public Scope getScope()
+	private static ScopeManager instance;
+
+	private HashMap<String, Scope> fScopeMap;
+
+	
+	public static ScopeManager instance()
 	{
-		return fScopeStack.get(stackindex);
+		if(instance == null)
+			instance = new ScopeManager();
+		
+		return instance;
+	}	
+	
+	private ScopeManager()
+	{
+		fScopeMap = new HashMap<String, Scope>();
 	}
 	
-	public ScopeManager()
+	public void setScope(String name, Scope scope)
 	{
-		fScopeStack = new ArrayList<Scope>();
-		stackindex = 0;
+		if(fScopeMap.containsKey(name))
+		{
+			fScopeMap.remove(name);
+		}	
+		fScopeMap.put(name, scope);		
 	}
 	
-	public void pushScope(Scope scope)
+	public JsNode getNode(String image)
 	{
-		fScopeStack.add(scope);
-		stackindex++;
-	}
-	
-	public void popScope()
-	{
-		fScopeStack.remove(stackindex);
-		stackindex--;
+		JsNode node = null;
+		for(Scope n : fScopeMap.values()) {
+			node = n.getNode(image);
+			if(node != null)
+				break;
+		}
+		return node;		
 	}
 }

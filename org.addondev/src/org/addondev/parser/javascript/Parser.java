@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import com.sun.org.apache.bcel.internal.generic.FSTORE;
+
 public class Parser {
 	private Lexer lex;
 	private int token;
+	private String fName;
 	
 	public JsNode root;
 	
 	private Frame frame = new Frame();
 	private Stack<JsNode> thisNodeStack = new Stack<JsNode>();
 	private Stack<Scope> ScopeStack = new Stack<Scope>();
+	private ScopeStack fScopeStack = new ScopeStack();
 	
 	private JsNode getNode(JsNode parent, String sym, int offset)
 	{	
@@ -62,6 +66,28 @@ public class Parser {
 		fJsDoc = "";
 	}
 	
+	private JsNode getNode(String image)
+	{
+		JsNode node = null;
+		if("this".equals(image))
+		{
+			node = fScopeStack.getCurrntScope().getNode(image);
+		}
+		else
+		{
+			node = fScopeStack.getCurrntScope().getNode(image); //current
+			if(node == null)
+			{
+				node = fScopeStack.getScope(0).getNode(image); //global this src
+			}
+			if(node == null)
+			{
+				node = ScopeManager.instance().getNode(image); //global thoer src
+			}
+		}
+		return node;
+	}
+	
 	private void advanceToken(char c) throws EOSException
 	{
 		while (token != c) 
@@ -93,18 +119,17 @@ public class Parser {
 			token = TokenType.EOS; // 次のトークンが存在しないときにはEOSを設定しておく。
 		}
 	}
-
-//	private void assign(JsNode assignedNode, )
-//	{
-//		
-//	}
+	
+	public Parser(String name)
+	{
+		fName = name;
+	}
 	
 	private JsNode program() throws EOSException {
 		root = new JsNode(null, "root", "root", 0);
 		thisNodeStack.push(root); //global
+		fScopeStack.pushScope(new Scope(0, root));
 		
-		// TODO Auto-generated method stub
-		//nodestakc.push(new NodePass(root, "root"));
 		frame.push();
 		while (token != TokenType.EOS) {
 			stmt(root);
@@ -113,7 +138,12 @@ public class Parser {
 		frame.pop();
 		
 		thisNodeStack.pop();
-		//nodestakc.pop();
+
+		fScopeStack.getCurrntScope().setEnd(lex.offset());
+		fScopeStack.popScope();
+		
+		ScopeManager.instance().setScope(fName, fScopeStack.getScope(0));
+		
 		return root;
 	}
 String fJsDoc;
@@ -137,20 +167,34 @@ String fJsDoc;
 				getToken();
 				if (token == '=') {
 					String sym = lex.value();
-					JsNode node = null;
-					if(!frame.hasNodeAllFrame(sym))
+					
+					JsNode node = getNode(sym);
+					if(node == null)
 					{
 						node = new JsNode(root, "var", sym, lex.offset());
 						root.addChild(node);
-						frame.setRootNode(node);
-					}
-					else	
-					{
-						node = frame.findNodeAllFrame(sym);
 					}
 					
+					
+//					JsNode node = null;
+//					if(!frame.hasNodeAllFrame(sym))
+//					{
+//						node = new JsNode(root, "var", sym, lex.offset());
+//						root.addChild(node);
+//						frame.setRootNode(node);
+//					}
+//					else	
+//					{
+//						node = frame.findNodeAllFrame(sym);
+//					}
+					
 					getToken(); // skip '='
-					factor(node);
+					JsNode res = factor(node);
+					
+					node.setBindNode(res.getBindNode()==null?res:res.getBindNode());
+					
+
+					
 					//JsNode res = factor(node);
 					//if(res != null)
 					//	node.setValueNode(new ValueNode(res));
@@ -172,8 +216,15 @@ String fJsDoc;
 						}
 						
 					}
-					//getToken();
-					//String objsym2 = "";
+
+					JsNode fnode = getNode(sym);
+					//JsNode chNode = fnode.getChild(val);
+					if(fnode == null)
+					{
+						fnode = new JsNode(parent, "var", sym, lex.offset());
+						parent.addChild(fnode);
+					}
+					
 					String objsym2 = lex.value();
 //					if(fromnode.getId().equals("function"))
 //					{
@@ -187,10 +238,19 @@ String fJsDoc;
 							break;
 						}
 						String val = lex.value();
-//						if(!val.equals("prototype"))
-//						{
-//							objsym2 = objsym2 +"."+ lex.value();
-//						}
+						
+						JsNode m = fnode.getChild(val);
+						if(m == null)
+						{
+							JsNode cnode = new JsNode(fnode, "var", val, lex.offset());
+							fnode.addChild(cnode);
+							fnode = cnode;
+						}
+						else
+						{
+							fnode = m;
+						}
+						
 						objsym2 = objsym2 +"."+ lex.value();
 						getToken();	//symbol
 					}
@@ -262,7 +322,7 @@ String fJsDoc;
 	private void functionExpr(JsNode node) throws EOSException {
 		// TODO Auto-generated method stub
 		JsNode code = null;
-		List<JsNode> arglist = new ArrayList<JsNode>();
+		//List<JsNode> arglist = new ArrayList<JsNode>();
 		
 		getToken(); //skip (
 		if (token != ')') {
@@ -338,7 +398,6 @@ String fJsDoc;
 			}
 			//
 		}
-
 		else
 		{
 			getToken(); // skip ),
@@ -363,10 +422,12 @@ String fJsDoc;
 		//char ch = (char)token;
 	    if(token == TokenType.SYMBOL){
 		    String sym = lex.value();
-		    code = new JsNode(parent, "function", sym, lex.offset());
+		    int offset = lex.offset();
+		    code = new JsNode(parent, "function", sym, offset);
 		    code.setType(sym);
 			parent.addChild(code);
-			ScopeStack.push(new Scope(lex.offset(), code));
+			//ScopeStack.push(new Scope(lex.offset(), code));
+			fScopeStack.pushScope(new Scope(offset, code));
 			
 			frame.setNode(code);
 			thisNodeStack.push(code);
@@ -377,7 +438,10 @@ String fJsDoc;
 			
 			block(code);
 			thisNodeStack.pop();
-			ScopeStack.pop);
+			Scope scope = fScopeStack.popScope();
+			int endoffset = lex.offset();
+			scope.setEnd(endoffset);
+			//ScopeStack.pop);
 			
 			frame.pop(); 
 	    }
@@ -402,76 +466,75 @@ String fJsDoc;
 		getToken();	
 		while (token != '}' && token != TokenType.EOS) {
 			stmt(parent);
-			//parent.setEndoffset(lex.offset());
 			getToken(); 
 		}
-		//parent.setEndoffset(lex.offset());
-		//getToken();
 	}
 	
 	private void def(JsNode parent) throws EOSException {
-		// TODO Auto-generated method stub
 		getToken(); // skip 'var'
 		if (token != TokenType.SYMBOL) {
 			// throw new Exception("文法エラーです。");
 		}
 		String sym = lex.value();
-		//JsNode node = new JsNode(parent, "var", sym, lex.offset());
-		JsNode node =null;
-		JsNode pnode = parent;
-		if(sym.contains("."))
-		{
-			String[] sp = sym.split("\\.");
-			//String objsym = sp[0];			
-			for (int i = 0; i < sp.length; i++) {
-				node = new JsNode(pnode, "var", sp[i], lex.offset()+sp[i].length());
-				pnode.addChild(node);
-				if(i==0)
-				{
-					frame.setNode(node);					
-				}
-				pnode = node;
-			}			
-		}
-		else
-		{
-			node = new JsNode(parent, "var", sym, lex.offset());
-			parent.addChild(node);
-			frame.setNode(node);
-		}
-		getToken(); //skip symbol
-		if(token == '='){
-			getToken(); // skip '='
-			JsNode res = factor(node);
-			if(res != null)
-			{
-				//if(res.getChildrenList().size() == 0)	
-				//{
-					String type = res.getType();
-					if(type != null)
-					{
-						JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
-						JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-						if(chNode != null)
-						{
-							JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList());  
-						}	
-						else
-						{
-							JsNodeHelper.assignNode(node.getChildrenList(), gnode.getChildrenList()); 
-						}
-					}
-					else
-					{
-						
-					}
-//				}
-//				else
+		JsNode node = new JsNode(parent, "var", sym, lex.offset());
+		parent.addChild(node);
+		
+//		getToken(); //skip symbol
+//		if(token == '='){
+//			
+//		}
+		stmt(node);
+		//factor(parent);
+		
+//		String sym = lex.value();
+//		JsNode node =null;
+//		JsNode pnode = parent;
+//		if(sym.contains("."))
+//		{
+//			String[] sp = sym.split("\\.");
+//			//String objsym = sp[0];			
+//			for (int i = 0; i < sp.length; i++) {
+//				node = new JsNode(pnode, "var", sp[i], lex.offset()+sp[i].length());
+//				pnode.addChild(node);
+//				if(i==0)
 //				{
-//					JsNodeHelper.assignNode(node.getChildrenList(), res.getChildrenList());
+//					frame.setNode(node);					
 //				}
-			}			
-		}
+//				pnode = node;
+//			}			
+//		}
+//		else
+//		{
+//			node = new JsNode(parent, "var", sym, lex.offset());
+//			parent.addChild(node);
+//			frame.setNode(node);
+//		}
+//		getToken(); //skip symbol
+//		if(token == '='){
+//			getToken(); // skip '='
+//			JsNode res = factor(node);
+//			if(res != null)
+//			{
+//					String type = res.getType();
+//					if(type != null)
+//					{
+//						JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
+//						JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+//						if(chNode != null)
+//						{
+//							JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList());  
+//						}	
+//						else
+//						{
+//							JsNodeHelper.assignNode(node.getChildrenList(), gnode.getChildrenList()); 
+//						}
+//					}
+//					else
+//					{
+//						
+//					}
+//			}			
+//		}
 	}
 	
 	private JsNode factor(JsNode parent) throws EOSException {
@@ -489,8 +552,6 @@ String fJsDoc;
 			//node = parent;
 			break;
 		case TokenType.FUNCTION:
-			//parent.setValueNode(valueNode)
-			//parent.setValueNode(new ValueNode(fJsDoc));
 			thisNodeStack.push(parent);
 			advanceToken('(');
 			frame.push();	
@@ -503,14 +564,20 @@ String fJsDoc;
 		case TokenType.NEW:
 			getToken();
 			String obj = lex.value(); 
-			node = frame.findNodeGlobalFrame(obj);
+//			node = frame.findNodeGlobalFrame(obj);	
+//			JsNode chNode2 = JsNodeHelper.findChildNode(node, "prototype");
+//			if(chNode2 != null)
+//			{
+//				//parent.getChildrenList().clear();
+//				JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode2.getChildrenList());
+//			}		
 			
-			JsNode chNode2 = JsNodeHelper.findChildNode(node, "prototype");
-			if(chNode2 != null)
+			node = getNode(obj);
+			JsNode pnode = node==null?null:node.getChild("prototype");
+			if(pnode != null)
 			{
-				//parent.getChildrenList().clear();
-				JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode2.getChildrenList());
-			}			
+				JsNodeHelper.assignCloneNode(parent.getChildrenList(), pnode.getChildrenList());
+			}
 			break;
 		case TokenType.ARRAY:
 			node = new JsNode(null, "array", lex.value(), 0);
@@ -525,7 +592,8 @@ String fJsDoc;
 				node = new JsNode(null, "string", lex.value(), 0);
 				//node = new JsNode(parent, "string", lex.value(), 0);
 				//JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
-				JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode.getChildrenList()); 
+				//JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode.getChildrenList()); 
+				JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
 			}
 			getToken();
 			break;
@@ -542,36 +610,25 @@ String fJsDoc;
 			 getToken();
 			break;
 		case TokenType.SYMBOL:
-			//String sym = lex.value();	
 			getToken();
 			if(token == '('){
 				functionExpr(parent);
 		    }
 			else
 			{
-				if(frame.hasNodeFrame(sym))
-				{
-					node = frame.findNodeFrame(sym);
-					//parent.getChildrenList().clear();
-					//JsNodeHelper.assignNode(parent.getChildrenList(), node.getChildrenList());
-				}				
+//				if(frame.hasNodeFrame(sym))
+//				{
+//					node = frame.findNodeFrame(sym);
+//					//parent.getChildrenList().clear();
+//					//JsNodeHelper.assignNode(parent.getChildrenList(), node.getChildrenList());
+//				}	
+				node = getNode(sym);
 			}
-
 			break;
 		 default:	 
 			 break;
 		}
 		
-//		while(token == ';')
-//		{
-//			//getToken();  // skip ';'
-//		}
-//		if(token != '.')
-//		{
-//			getToken();
-//		}
-//		else
-//		{
 		//String 
 		while(token == '.'){
 			getToken();  // skip '.'
@@ -579,38 +636,72 @@ String fJsDoc;
 			
 			if(node != null)
 			{
-				JsNode anode = node.getChild(sym);
+				JsNode tnode = node.getBindNode()==null?node:node.getBindNode();
+				JsNode anode = tnode.getChild(sym);
 				if(anode == null)
 				{
 					String type = node.getType();
 					if(type != null)
 					{
+//						JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
+//						JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+//						if(chNode != null)
+//						{
+//							node = new JsNode(null, type, lex.value(), 0);
+//							JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
+//							//JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode.getChildrenList()); 
+//						}	
 						JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
 						JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
 						if(chNode != null)
 						{
-							node = new JsNode(null, type, lex.value(), 0);
+							node = new JsNode(null, "var", lex.value(), 0);
 							JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
-							//JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode.getChildrenList()); 
-						}					
+						}
+						else
+						{
+
+						}
 					}
 				}
 				else
 				{
 					node =anode;
 				}
-				//JsNode chnode = node.getChild(sym);
 			}
 			
 			getToken();  // skip symbol
-			
 			if(token == '(')
 			{
-				//if(node != null)
-				//	node = node.getChild(sym);
-				
 				if(node != null)
 				{
+					String type = node.getType();
+					if(type != null)
+					{
+						if("interfaces".equals(type))
+						{
+							String param = null;
+						    if(token != ')'){
+						    	getToken();
+						    	param = lex.value();
+						    	while(token != ')'){
+						    		if(token != ','){
+
+						    		}
+						    		getToken();  // skip ','
+						    	}
+						    }
+						    if(param != null)
+						    {
+						    	node = NodeManager.getInstance().getGlobalNode(param);
+						    }
+						}
+						else
+						{
+							
+						}
+					}
+					
 					if(sym.equals("createInstance"))
 					{
 					    ArrayList<JsNode> list = null;
@@ -659,10 +750,7 @@ String fJsDoc;
 							}							
 						}
 					}
-//					else if(node.getValueNode().getReturns() != null)
-//					{
-//						node = frame.findNodeGlobalFrame(node.getValueNode().getReturns());
-//					}
+
 				}
 				else
 				{
@@ -671,25 +759,14 @@ String fJsDoc;
 					//getToken();
 				}
 			}
-//			else //if(token == TokenType.SYMBOL)
-//			{
-//				if(node != null)
-//					node = node.getChild(sym);
-//				
-//				//getToken();
-//			}
-			
-			if(token == '[')
+			else if(token == '[')
 			{
 				advanceToken(']');
 				getToken(); //skip ']'
 			}
+			
 		}
-		//}
-//		if(node != null && node.getValueNode() != null)
-//		{
-//			node = node.getValueNode().getNode();
-//		}
+
 		return node;
 			//return node.getValueNode()!=null?node.getValueNode():node;
 	}
