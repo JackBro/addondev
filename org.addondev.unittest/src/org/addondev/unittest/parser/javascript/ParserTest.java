@@ -118,7 +118,7 @@ public class ParserTest {
 		Parser parser = new Parser("test03.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
-		//node.dump("");
+		node.dump("");
 		}
 	}
 

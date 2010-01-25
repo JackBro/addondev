@@ -7,6 +7,7 @@ import javax.swing.text.StyledEditorKit.BoldAction;
 public class JsNodeHelper {
 	public static JsNode findChildNode(JsNode node, String image)
 	{
+		if(node == null) return null;
 		if(node.getChildrenNum() == 0) return null;
 		for (int i = 0; i < node.getChildrenNum(); i++) {
 			if(node.getChild(i).getImage().equals(image))
@@ -28,21 +29,21 @@ public class JsNodeHelper {
 		return false;
 	}
 	
-	public static void assignNode(ArrayList<JsNode> node1, ArrayList<JsNode> node2)
+	public static void assignNode(ArrayList<JsNode> toNode, ArrayList<JsNode> fromNode)
 	{
-		for (JsNode jsNode : node2) {
-			if(!hasNode(node1, jsNode))
-				node1.add(jsNode);
+		for (JsNode jsNode : fromNode) {
+			if(!hasNode(toNode, jsNode))
+				toNode.add(jsNode);
 		}
 	}
 	
-	public static void assignCloneNode(ArrayList<JsNode> node1, ArrayList<JsNode> node2)
+	public static void assignCloneNode(ArrayList<JsNode> toNode, ArrayList<JsNode> fromNode)
 	{
 		//if(node1 == null) node1 = new ArrayList<JsNode>();
 		//node1.clear();
 		
-		for (JsNode jsNode : node2) {
-			node1.add(jsNode.getClone(null));
+		for (JsNode jsNode : fromNode) {
+			toNode.add(jsNode.getClone(null));
 		}
 	}
 	

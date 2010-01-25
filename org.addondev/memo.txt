@@ -1,3 +1,7 @@
+http://www.hellohiro.com/reflection.htm
+http://d.hatena.ne.jp/token7/
+../bin/xpidl -m java nsIScriptableInputStream.idl
+
 http://www.eclipse.org/dltk/install.php
 http://wiki.eclipse.org/DLTK_IDE_Guide:Step_3._Towards_an_IDE
 

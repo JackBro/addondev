@@ -11,7 +11,10 @@ public class JsNode {
 	
 	private JsNode parent;
 	private ArrayList<JsNode> children;
-	private JsNode fBindNode = null;
+	//private JsNode fBindNode = null;
+	
+	private static  ArrayList<JsNode> non = new ArrayList<JsNode>();
+	
 	private String id;
 	private String image;
 	private int fOffset;
@@ -87,10 +90,25 @@ public class JsNode {
 		return image;
 	}
 	
-	public JsNode[] getChildren()
-	{
-		return children == null?null:children.toArray(new JsNode[children.size()]);
-	}
+//	private ArrayList<JsNode> getChildNodes()
+//	{
+//		if(children != null)
+//		{
+//			return children;
+//		}
+//		else if(fBindNode != null)
+//		{
+//			return fBindNode.getChildNodes();
+//		}
+//		else
+//			return non;
+//	}
+	
+//	public ArrayList<JsNode> getChildren()
+//	{
+//		//return children == null?null:children.toArray(new JsNode[children.size()]);
+//		return children;
+//	}
 	
 	public int getChildrenNum() {
 		return children == null?0:children.size();
@@ -112,16 +130,16 @@ public class JsNode {
 		return null;
 	}
 	
-	public void setBindNode(JsNode node)
-	{
-		fBindNode = node;
-		children = null;
-	}
-	
-	public JsNode getBindNode()
-	{
-		return fBindNode;
-	}
+//	public void setBindNode(JsNode node)
+//	{
+//		fBindNode = node;
+//		children = null;
+//	}
+//	
+//	public JsNode getBindNode()
+//	{
+//		return fBindNode;
+//	}
 	
 //	public JsNode getChild(Frame localframe, String sym) {
 //
@@ -148,6 +166,9 @@ public class JsNode {
 	
 	public void addChild(JsNode child)
 	{
+//		if(fBindNode != null)
+//			fBindNode = null;
+		
 		if(children == null)
 			children = new ArrayList<JsNode>();
 		
@@ -183,16 +204,16 @@ public class JsNode {
 				}
 			}
 		}
-		else if(fBindNode != null)
-		{
-			JsNode[] bnodes = fBindNode.getChildren();
-			for (int i = 0; i < bnodes.length; ++i) {
-				JsNode n = bnodes[i];
-				if (n != null) {
-					n.dump(prefix + " ");
-				}
-			}			
-		}
+//		else if(fBindNode != null)
+//		{
+//			JsNode[] bnodes = fBindNode.getChildren();
+//			for (int i = 0; i < bnodes.length; ++i) {
+//				JsNode n = bnodes[i];
+//				if (n != null) {
+//					n.dump(prefix + " ");
+//				}
+//			}			
+//		}
 	}
 	
 	private static class ttmp
@@ -237,10 +258,10 @@ public class JsNode {
 		//return fOffsetNode;
 	}
 
-	public void setChildren(ArrayList<JsNode> children) {
+	public void setChildNode(ArrayList<JsNode> children) {
 		this.children = children;
 	}
-	public ArrayList<JsNode> getChildrenList() {
+	public ArrayList<JsNode> getChildNode() {
 		if(this.children == null)
 		{
 			this.children = new ArrayList<JsNode>();

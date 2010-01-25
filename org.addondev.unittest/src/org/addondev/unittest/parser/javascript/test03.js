@@ -1,6 +1,6 @@
 
-
-
+var ary = [];
+var num = 10;
 var st = "t";
 //var MyObject = 
 //{
@@ -15,7 +15,7 @@ var st = "t";
 //MyObject.message3=st;
 //MyObject.add = {};
 
-var st_l = st.length;
+//var st_l = st.length;
 
 
 var nsIIOService = 
@@ -24,23 +24,49 @@ var nsIIOService =
   hello3: function (arg0){}
 }
 
-var Components = 
-{
-	/**
-	 * @type    createInstanceComponents
-	 * @memberOf   Components
-	*/ 	
-	classes:function(){}
-}
+//var Components = 
+//{
+//	/**
+//	 * @type    createInstanceComponents
+//	 * @memberOf   Components
+//	*/ 	
+//	classes:function(){}
+//}
 
-createInstanceComponents = 
-{
-	/**
-	 * @type    interfaces
-	 * @memberOf   createInstanceComponents
-	*/ 	
-	createInstance:function(arg){}
-}
+function Components(){};
+/**
+ * @memberOf   Components
+*/ 	
+Components.classes = function(){};
+
+/**
+ * @type    interfaces
+ * @memberOf   Components
+*/ 	
+Components.classes.createInstance = function(){};
+
+/**
+ * @type    service
+ * @memberOf   Components
+*/
+Components.classes.getService = function(){};
+
+
+//var createInstanceComponents = 
+//{
+//	/**
+//	 * @type    interfaces
+//	 * @memberOf   createInstanceComponents
+//	*/ 	
+//	createInstance:function(arg){}
+//}
+//
+//function createInstanceComponents(){};
+///**
+// * @type    interfaces
+// * @memberOf   createInstanceComponents
+//*/ 	
+//createInstanceComponents.createInstance = function(){};
 
 
 //const Components.classes;

@@ -1,10 +1,6 @@
 package org.addondev.parser.javascript;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Map.Entry;
 
 public class ScopeManager {
 	

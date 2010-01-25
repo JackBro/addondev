@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.sun.org.apache.bcel.internal.generic.FSTORE;
-
 public class Parser {
 	private Lexer lex;
 	private int token;
 	private String fName;
+	private String fJsDoc;
 	
 	public JsNode root;
 	
@@ -38,16 +37,23 @@ public class Parser {
 		for (int i = 0; i < symlist.size(); i++) {
 			String s = symlist.get(i);
 			JsNode newnode = null;
-			JsNode[] childs = node.getChildren();
-			if(childs != null)
+			ArrayList<JsNode> child = node.getChildNode();
+			if(child != null)
 			{
-			for (int j = 0; j < childs.length; j++) {
-				if(childs[j].getImage().equals(s))
-				{
-					newnode = childs[j];
-					break;
+				for (JsNode jsNode : child) {
+					if(jsNode.getImage().equals(s))
+					{
+						newnode = jsNode;
+						break;
+					}					
 				}
-			}
+//			for (int j = 0; j < childs.length; j++) {
+//				if(childs[j].getImage().equals(s))
+//				{
+//					newnode = childs[j];
+//					break;
+//				}
+//			}
 			}
 			if(newnode == null)
 			{
@@ -66,7 +72,7 @@ public class Parser {
 		fJsDoc = "";
 	}
 	
-	private JsNode getNode(String image)
+	private JsNode findNode(String image)
 	{
 		JsNode node = null;
 		if("this".equals(image))
@@ -85,6 +91,24 @@ public class Parser {
 				node = ScopeManager.instance().getNode(image); //global thoer src
 			}
 		}
+		return node;
+	}
+	
+	private JsNode getNodeByType(String type)
+	{
+		JsNode node = null;
+		JsNode gnode = findNode(type);
+		JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+		if(chNode != null)
+		{
+			node = new JsNode(null, "var", lex.value(), 0);
+			JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
+		}
+		else
+		{
+			node = gnode;
+		}	
+		
 		return node;
 	}
 	
@@ -146,7 +170,7 @@ public class Parser {
 		
 		return root;
 	}
-String fJsDoc;
+
 	private void stmt(JsNode parent) throws EOSException {	
 		// TODO Auto-generated method stub
 			switch (token) {	
@@ -166,9 +190,10 @@ String fJsDoc;
 			case TokenType.SYMBOL:	
 				getToken();
 				if (token == '=') {
+					//getToken(); //skep =
 					String sym = lex.value();
 					
-					JsNode node = getNode(sym);
+					JsNode node = findNode(sym);
 					if(node == null)
 					{
 						node = new JsNode(root, "var", sym, lex.offset());
@@ -190,8 +215,16 @@ String fJsDoc;
 					
 					getToken(); // skip '='
 					JsNode res = factor(node);
-					
-					node.setBindNode(res.getBindNode()==null?res:res.getBindNode());
+					if(res == null)
+					{
+						//node.setBindNode();
+						//parent.setBindNode(node);
+					}
+					else
+					{
+						//node.setBindNode(res.getBindNode()==null?res:res.getBindNode());
+						JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
+					}
 					
 
 					
@@ -217,7 +250,7 @@ String fJsDoc;
 						
 					}
 
-					JsNode fnode = getNode(sym);
+					JsNode fnode = findNode(sym);
 					//JsNode chNode = fnode.getChild(val);
 					if(fnode == null)
 					{
@@ -424,7 +457,7 @@ String fJsDoc;
 		    String sym = lex.value();
 		    int offset = lex.offset();
 		    code = new JsNode(parent, "function", sym, offset);
-		    code.setType(sym);
+		    //code.setType(sym);
 			parent.addChild(code);
 			//ScopeStack.push(new Scope(lex.offset(), code));
 			fScopeStack.pushScope(new Scope(offset, code));
@@ -441,14 +474,16 @@ String fJsDoc;
 			Scope scope = fScopeStack.popScope();
 			int endoffset = lex.offset();
 			scope.setEnd(endoffset);
-			//ScopeStack.pop);
 			
 			frame.pop(); 
 	    }
 	    else if(token == '(') //anonymous
 	    {
-	    	code = new JsNode(parent, "function", "anonymous", lex.offset());
+	    	int offset = lex.offset();	 
+	    	code = new JsNode(parent, "function", "anonymous", offset);
 	    	parent.addChild(code);
+   	
+	    	fScopeStack.pushScope(new Scope(offset, code));
 				
 	    	frame.push();
 			getToken();
@@ -456,6 +491,10 @@ String fJsDoc;
 			
 			getToken();
 			block(code);
+
+			Scope scope = fScopeStack.popScope();
+			int endoffset = lex.offset();
+			scope.setEnd(endoffset);			
 			
 			frame.pop(); 
 	    }
@@ -479,12 +518,23 @@ String fJsDoc;
 		JsNode node = new JsNode(parent, "var", sym, lex.offset());
 		parent.addChild(node);
 		
-//		getToken(); //skip symbol
-//		if(token == '='){
-//			
-//		}
-		stmt(node);
-		//factor(parent);
+		getToken(); //skip symbol
+		if(token == '='){
+			getToken(); //skip =
+			JsNode res =factor(node);
+			if(res == null)
+			{
+				//node.setBindNode();
+				//parent.setBindNode(node);
+			}
+			else
+			{
+				//node.setBindNode(res.getBindNode()==null?res:res.getBindNode());
+				JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
+			}			
+		}
+		//stmt(node);
+		
 		
 //		String sym = lex.value();
 //		JsNode node =null;
@@ -563,51 +613,49 @@ String fJsDoc;
 			break;
 		case TokenType.NEW:
 			getToken();
-			String obj = lex.value(); 
-//			node = frame.findNodeGlobalFrame(obj);	
-//			JsNode chNode2 = JsNodeHelper.findChildNode(node, "prototype");
-//			if(chNode2 != null)
-//			{
-//				//parent.getChildrenList().clear();
-//				JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode2.getChildrenList());
-//			}		
-			
-			node = getNode(obj);
+			String obj = lex.value(); 			
+			node = findNode(obj);
 			JsNode pnode = node==null?null:node.getChild("prototype");
 			if(pnode != null)
 			{
-				JsNodeHelper.assignCloneNode(parent.getChildrenList(), pnode.getChildrenList());
+				JsNodeHelper.assignCloneNode(parent.getChildNode(), pnode.getChildNode());
 			}
 			break;
 		case TokenType.ARRAY:
-			node = new JsNode(null, "array", lex.value(), 0);
+			//node = new JsNode(null, "Array", lex.value(), 0);
 			//parent.setValueNode(new ValueNode(jsdoc));
-			 getToken();
+			// getToken();
+			node = getNodeByType("Array");
+			advanceToken(']');
+			getToken(); //skip ']'
 			break;
 		case TokenType.STRING:
-			JsNode gnode = NodeManager.getInstance().getGlobalNode("String");
-			JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-			if(chNode != null)
-			{
-				node = new JsNode(null, "string", lex.value(), 0);
-				//node = new JsNode(parent, "string", lex.value(), 0);
-				//JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
-				//JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode.getChildrenList()); 
-				JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
-			}
+//			JsNode gnode = NodeManager.getInstance().getGlobalNode("String");
+//			if(gnode != null)
+//			{
+//				JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+//				if(chNode != null)
+//				{
+//					node = new JsNode(null, "string", lex.value(), 0); 
+//					JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
+//				}
+//			}
+			node = getNodeByType("String");
 			getToken();
 			break;
 		case TokenType.INT:
-			//node = new JsNode(null, "int", lex.value(), 0);
-
 //			JsNode gnode1 = NodeManager.getInstance().getGlobalNode("Number");
-//			JsNode chNode1 = JsNodeHelper.findChildNode(gnode1, "prototype");
-//			if(chNode1 != null)
+//			if(gnode1 != null)
 //			{
-//				node = new JsNode(null, "Number", lex.value(), 0);
-//				JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode1.getChildrenList()); 
-//			}			
-			 getToken();
+//				JsNode chNode1 = JsNodeHelper.findChildNode(gnode1, "prototype");
+//				if(chNode1 != null)
+//				{
+//					node = new JsNode(null, "Number", lex.value(), 0);
+//					JsNodeHelper.assignCloneNode(node.getChildNode(), chNode1.getChildNode()); 
+//				}
+//			}
+			node = getNodeByType("Number");
+			getToken();
 			break;
 		case TokenType.SYMBOL:
 			getToken();
@@ -616,13 +664,7 @@ String fJsDoc;
 		    }
 			else
 			{
-//				if(frame.hasNodeFrame(sym))
-//				{
-//					node = frame.findNodeFrame(sym);
-//					//parent.getChildrenList().clear();
-//					//JsNodeHelper.assignNode(parent.getChildrenList(), node.getChildrenList());
-//				}	
-				node = getNode(sym);
+				node = findNode(sym);
 			}
 			break;
 		 default:	 
@@ -633,43 +675,7 @@ String fJsDoc;
 		while(token == '.'){
 			getToken();  // skip '.'
 			sym = lex.value();
-			
-			if(node != null)
-			{
-				JsNode tnode = node.getBindNode()==null?node:node.getBindNode();
-				JsNode anode = tnode.getChild(sym);
-				if(anode == null)
-				{
-					String type = node.getType();
-					if(type != null)
-					{
-//						JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
-//						JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-//						if(chNode != null)
-//						{
-//							node = new JsNode(null, type, lex.value(), 0);
-//							JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
-//							//JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode.getChildrenList()); 
-//						}	
-						JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
-						JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-						if(chNode != null)
-						{
-							node = new JsNode(null, "var", lex.value(), 0);
-							JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
-						}
-						else
-						{
-
-						}
-					}
-				}
-				else
-				{
-					node =anode;
-				}
-			}
-			
+				
 			getToken();  // skip symbol
 			if(token == '(')
 			{
@@ -683,13 +689,11 @@ String fJsDoc;
 							String param = null;
 						    if(token != ')'){
 						    	getToken();
-						    	param = lex.value();
+						    	//param = lex.value();
 						    	while(token != ')'){
-						    		if(token != ','){
-
-						    		}
 						    		getToken();  // skip ','
 						    	}
+						    	param = lex.value();
 						    }
 						    if(param != null)
 						    {
@@ -698,59 +702,50 @@ String fJsDoc;
 						}
 						else
 						{
+//							JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
+//							if(gnode == null) gnode = findNode(type);
+//							JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+//							if(chNode != null)
+//							{
+//								node = new JsNode(null, "var", lex.value(), 0);
+//								JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
+//							}
+//							else
+//							{
+//								node = gnode;
+//							}	
 							
+							node = getNodeByType(type);
 						}
-					}
-					
-					if(sym.equals("createInstance"))
-					{
-					    ArrayList<JsNode> list = null;
-					    if(token != ')'){
-					    	getToken();
-					      list = new ArrayList<JsNode>();
-					      JsNode param = factor(node);
-					      //String param = lex.value();
-					      list.add(param);
-					      while(token != ')'){
-					        if(token != ','){
-					          //throw new Exception("文法エラーです。");
-							      int hh=0;
-							      hh++;
-					        }
-					        getToken();  // skip ','
-					        param = factor(node);
-					        list.add(param);
-					      }
-					      JsNode inode = frame.findNodeGlobalFrame(param.getImage());
-					      int hh=0;
-					      hh++;
-					    }
-						
 					}
 					else
 					{
-						String type = node.getType();
-						if(type != null)
+						JsNode anode = node.getChild(sym);
+						if(anode != null)
 						{
-							JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
-							if(gnode != null)
+							type = anode.getType();
+							if("interfaces".equals(type))
 							{
-								node = new JsNode(null, type, "", 0);
-								if(JsNodeHelper.hasChildNode(gnode, "prototype"))
-								{
-									JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-									JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList()); 
-								}
-								else
-								{
-									JsNodeHelper.assignNode(node.getChildrenList(), gnode.getChildrenList()); 
-								}
+								String param = null;
+							    if(token != ')'){
+							    	getToken();
+							    	while(token != ')'){
+							    		getToken();  // skip ','
+							    	}
+							    	param = lex.value();
+							    }
+							    if(param != null)
+							    {
+							    	node = NodeManager.getInstance().getGlobalNode(param);
+							    	if(node == null) node = findNode(param);
+							    }
+							}
+							else
+							{
 								
-								//JsNodeHelper.assignCloneNode(parent.getChildrenList(), chNode.getChildrenList()); 
-							}							
+							}
 						}
 					}
-
 				}
 				else
 				{
@@ -759,18 +754,71 @@ String fJsDoc;
 					//getToken();
 				}
 			}
-			else if(token == '[')
+			else
 			{
-				advanceToken(']');
-				getToken(); //skip ']'
+				if(token == '[')
+				{
+					advanceToken(']');
+					getToken(); //skip ']'
+					
+				}
+				
+				if(node != null)
+				{
+					JsNode anode = node.getChild(sym);
+					if(anode == null)
+					{
+						String type = node.getType();
+						if(type != null)
+						{
+//							JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
+//							if(gnode == null) gnode = findNode(type);
+//							JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+//							if(chNode != null)
+//							{
+//								node = new JsNode(null, "var", lex.value(), 0);
+//								JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
+//							}
+//							else
+//							{
+//								node = gnode;
+//							}
+							node = getNodeByType(type);
+						}
+					}
+					else
+					{
+						String type = anode.getType();
+						if(type != null)
+						{
+//							JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
+//							if(gnode == null) gnode = findNode(type);
+//							JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+//							if(chNode != null)
+//							{
+//								node = new JsNode(null, "var", lex.value(), 0);
+//								JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
+//							}
+//							else
+//							{
+//								node = gnode;
+//							}
+							node = getNodeByType(type);
+						}
+						else
+						{
+							node =anode;
+						}
+					}
+				}				
 			}
-			
 		}
 
 		return node;
-			//return node.getValueNode()!=null?node.getValueNode():node;
 	}
 
+
+	
 	private void objectExpr(JsNode parent) throws EOSException {
 		// TODO Auto-generated method stub
 		//getToken();
@@ -808,7 +856,7 @@ String fJsDoc;
 					frame.pop();
 					
 					//advanceToken('}');
-					int e = lex.offset();
+					//int e = lex.offset();
 					//node.setEndoffset(lex.offset());
 					//parent.setEndoffset(lex.offset());
 				}
@@ -817,7 +865,7 @@ String fJsDoc;
 					JsNode node = new JsNode(parent, "var", sym, lex.offset());
 					parent.addChild(node);
 					objectExpr(node);
-					int e = lex.offset();
+					//int e = lex.offset();
 					//parent.setEndoffset(lex.offset());
 				}
 			}

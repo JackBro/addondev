@@ -22,7 +22,8 @@ public class JavaScriptContentProvider implements ITreeContentProvider {
 		//return n.getChildren();
 		
 		JsNode n = (JsNode)parentElement;
-		return n.getChildren();
+		//return n.getChildNode();
+		return n.getChildNode().toArray(new JsNode[n.getChildNode().size()]);
 	}
 
 	@Override
@@ -54,7 +55,8 @@ public class JavaScriptContentProvider implements ITreeContentProvider {
 		//return node.getChildren();
 		
 		JsNode node = (JsNode)inputElement;
-		return node.getChildren();
+		//return node.getChildren();
+		return node.getChildNode().toArray(new JsNode[node.getChildNode().size()]);
 		
 		
 //		ArrayList<String> checklist = new  ArrayList<String>();

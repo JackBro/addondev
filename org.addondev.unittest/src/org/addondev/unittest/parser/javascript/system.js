@@ -39,9 +39,14 @@ Number.prototype = new Object();
 //function Number(){};
 //
 //
-//function Array(){};
+function Array(){};
+Array.prototype = new Object();
 //Array.prototype.length = 1;
-//Array.prototype.pop = function(){};
+/**
+ * @type    Object
+ * @memberOf   Array
+*/
+Array.prototype.pop = function(){};
 //Array.prototype.push = function(args){};
 //
 //

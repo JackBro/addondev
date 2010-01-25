@@ -1,5 +1,6 @@
 package org.addondev.parser.javascript;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Scope {
@@ -25,7 +26,7 @@ public class Scope {
 	}
 	public JsNode getNode(String image) {
 		//return map.get(image);
-		JsNode[] nodes = node.getChildren();
+		ArrayList<JsNode> nodes = node.getChildNode();
 		if(nodes == null) return null;
 		for (JsNode jsnode : nodes) {
 			String key = jsnode.getImage();
