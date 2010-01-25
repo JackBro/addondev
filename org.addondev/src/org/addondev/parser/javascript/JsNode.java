@@ -85,6 +85,11 @@ public class JsNode {
 		return id;
 	}
 	
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+	
 	public String getImage()
 	{
 		return image;

@@ -14,7 +14,7 @@ public class Parser {
 	
 	private Frame frame = new Frame();
 	private Stack<JsNode> thisNodeStack = new Stack<JsNode>();
-	private Stack<Scope> ScopeStack = new Stack<Scope>();
+	//private Stack<Scope> ScopeStack = new Stack<Scope>();
 	private ScopeStack fScopeStack = new ScopeStack();
 	
 	private JsNode getNode(JsNode parent, String sym, int offset)
@@ -136,7 +136,6 @@ public class Parser {
 	}
 
 	private void getToken() {
-		// TODO Auto-generated method stub
 		if (lex.advance()) {
 			token = lex.token();
 		} else {
@@ -151,7 +150,7 @@ public class Parser {
 	
 	private JsNode program() throws EOSException {
 		root = new JsNode(null, "root", "root", 0);
-		thisNodeStack.push(root); //global
+		//thisNodeStack.push(root); //global
 		fScopeStack.pushScope(new Scope(0, root));
 		
 		frame.push();
@@ -161,10 +160,10 @@ public class Parser {
 		}
 		frame.pop();
 		
-		thisNodeStack.pop();
+		//thisNodeStack.pop();
 
-		fScopeStack.getCurrntScope().setEnd(lex.offset());
-		fScopeStack.popScope();
+		Scope scope = fScopeStack.popScope();
+		scope.setEnd(lex.offset());
 		
 		ScopeManager.instance().setScope(fName, fScopeStack.getScope(0));
 		
@@ -200,19 +199,6 @@ public class Parser {
 						root.addChild(node);
 					}
 					
-					
-//					JsNode node = null;
-//					if(!frame.hasNodeAllFrame(sym))
-//					{
-//						node = new JsNode(root, "var", sym, lex.offset());
-//						root.addChild(node);
-//						frame.setRootNode(node);
-//					}
-//					else	
-//					{
-//						node = frame.findNodeAllFrame(sym);
-//					}
-					
 					getToken(); // skip '='
 					JsNode res = factor(node);
 					if(res == null)
@@ -225,12 +211,6 @@ public class Parser {
 						//node.setBindNode(res.getBindNode()==null?res:res.getBindNode());
 						JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
 					}
-					
-
-					
-					//JsNode res = factor(node);
-					//if(res != null)
-					//	node.setValueNode(new ValueNode(res));
 				}
 				else if(token == '.')
 				{
@@ -334,7 +314,6 @@ public class Parser {
 						}
 					}
 				}
-				
 				break;
 			case '{':
 				block(parent);
@@ -353,7 +332,6 @@ public class Parser {
 	}
 	
 	private void functionExpr(JsNode node) throws EOSException {
-		// TODO Auto-generated method stub
 		JsNode code = null;
 		//List<JsNode> arglist = new ArrayList<JsNode>();
 		
@@ -436,16 +414,19 @@ public class Parser {
 			getToken(); // skip ),
 			if(token == '{')
 			{
+				//getToken(); // skip {
+				//node.setOffset(lex.offset());
 				//getToken();
-				node.setOffset(lex.offset());
-				//getToken();
-				//block(node);
+				fScopeStack.pushScope(new Scope(lex.offset()+1, node));
+				block(node);
 				//fun(node);
 				//objectExpr(node);
 				//block(node);
+				Scope scope = fScopeStack.popScope();
+				scope.setEnd(lex.offset());
+				getToken(); // skip }
 			}			
 		}
-		//getToken();
 	}	
 	
 	private void fun(JsNode parent) throws EOSException {
@@ -463,14 +444,14 @@ public class Parser {
 			fScopeStack.pushScope(new Scope(offset, code));
 			
 			frame.setNode(code);
-			thisNodeStack.push(code);
+			//thisNodeStack.push(code);
 			frame.push();				
 			getToken();
 			advanceToken('(');
 			functionExpr(code);
 			
 			block(code);
-			thisNodeStack.pop();
+			//thisNodeStack.pop();
 			Scope scope = fScopeStack.popScope();
 			int endoffset = lex.offset();
 			scope.setEnd(endoffset);
@@ -534,57 +515,6 @@ public class Parser {
 			}			
 		}
 		//stmt(node);
-		
-		
-//		String sym = lex.value();
-//		JsNode node =null;
-//		JsNode pnode = parent;
-//		if(sym.contains("."))
-//		{
-//			String[] sp = sym.split("\\.");
-//			//String objsym = sp[0];			
-//			for (int i = 0; i < sp.length; i++) {
-//				node = new JsNode(pnode, "var", sp[i], lex.offset()+sp[i].length());
-//				pnode.addChild(node);
-//				if(i==0)
-//				{
-//					frame.setNode(node);					
-//				}
-//				pnode = node;
-//			}			
-//		}
-//		else
-//		{
-//			node = new JsNode(parent, "var", sym, lex.offset());
-//			parent.addChild(node);
-//			frame.setNode(node);
-//		}
-//		getToken(); //skip symbol
-//		if(token == '='){
-//			getToken(); // skip '='
-//			JsNode res = factor(node);
-//			if(res != null)
-//			{
-//					String type = res.getType();
-//					if(type != null)
-//					{
-//						JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
-//						JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-//						if(chNode != null)
-//						{
-//							JsNodeHelper.assignCloneNode(node.getChildrenList(), chNode.getChildrenList());  
-//						}	
-//						else
-//						{
-//							JsNodeHelper.assignNode(node.getChildrenList(), gnode.getChildrenList()); 
-//						}
-//					}
-//					else
-//					{
-//						
-//					}
-//			}			
-//		}
 	}
 	
 	private JsNode factor(JsNode parent) throws EOSException {
@@ -594,17 +524,18 @@ public class Parser {
 		switch(token){
 		case '{':
 			parent.setOffset(lex.offset());
-			thisNodeStack.push(parent);
+			//thisNodeStack.push(parent);
 			frame.push(); //test
 			objectExpr(parent);
 			frame.pop();  //test
-			thisNodeStack.pop();	
+			//thisNodeStack.pop();	
 			//node = parent;
 			break;
 		case TokenType.FUNCTION:
 			thisNodeStack.push(parent);
 			advanceToken('(');
-			frame.push();	
+			frame.push();
+			//parent.setId("function");
 			functionExpr(parent);			
 			advanceToken('{');			
 			block(parent);
@@ -819,8 +750,9 @@ public class Parser {
 
 
 	
-	private void objectExpr(JsNode parent) throws EOSException {
-		// TODO Auto-generated method stub
+	private void objectExpr(JsNode parent) throws EOSException 
+	{
+		fScopeStack.pushScope(new Scope(lex.offset(), parent));
 		//getToken();
 		while (token != '}'){
 			if(token == TokenType.EOS)
@@ -839,6 +771,8 @@ public class Parser {
 				} else if (token == TokenType.FUNCTION) {
 					JsNode node = new JsNode(parent, "function", sym, lex.offset());
 					parent.addChild(node);
+					//fScopeStack.pushScope(new Scope(lex.offset(), node));
+					
 					advanceToken('(');
 					
 					frame.push();
@@ -855,6 +789,8 @@ public class Parser {
 					//block(node);
 					frame.pop();
 					
+					//Scope scope = fScopeStack.popScope();
+					//scope.setEnd(lex.offset());
 					//advanceToken('}');
 					//int e = lex.offset();
 					//node.setEndoffset(lex.offset());
@@ -877,10 +813,7 @@ public class Parser {
 			//getToken();
 		}
 		parent.setEndoffset(lex.offset()-1);
-	}
-	
-	private void newExpr()
-	{
-		
+		Scope scope = fScopeStack.popScope();
+		scope.setEnd(lex.offset());
 	}
 }
