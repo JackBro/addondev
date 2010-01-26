@@ -1,17 +1,24 @@
 
-var ary = [];
-//var num = 10;
-var st = "t";
+//var ary = [];
+////var num = 10;
+//var st = "t";
 //
-var MyObject = 
-{
-    message3: null,  
-    hello3: function (arg0){
-		//arg0=100;
-		this.h= 10;
-	
-	}
-}
+//var MyObject = 
+//{
+////    message3: null,  
+//    hello3: function (arg0, arg1){
+//		//arg0=100;
+//		this.h= 10;
+//	
+//	}
+//}
+//
+//Firebug.Debugger = extend(Firebug.ActivableModule,
+//{
+//	fbs: fbs,
+//	hello3: function (arg0, arg1){
+//	}
+//});
 //////
 //////MyObject.hello3("b");
 ////MyObject.message3=st;
@@ -20,28 +27,20 @@ var MyObject =
 ////var st_l = st.length;
 //
 //
-//var nsIIOService = 
-//{
-//  message3: null,
-//  hello3: function (arg0)
-//  {
-//	this.ll=0;
-//  }
-//}
 
-Components2 = function()
-{
-	
-	//this.tesy = 10;
-	var tth=10;
-}
-Components2.prototype =
-{
-	test:function()
-	{
-		this.gg = 0;
-	}
-}
+//Components2 = function()
+//{
+//	
+//	//this.tesy = 10;
+//	var tth=10;
+//}
+//Components2.prototype =
+//{
+//	test:function()
+//	{
+//		this.gg = 0;
+//	}
+//}
 //
 ////var c2 = new Components2();
 //
@@ -58,23 +57,37 @@ Components2.prototype =
 ////	classes:function(){}
 ////}
 //
-//function Components(){};
-///**
-// * @memberOf   Components
-//*/ 	
-//Components.classes = function(){};
-//
-///**
-// * @type    interfaces
-// * @memberOf   Components
-//*/ 	
-//Components.classes.createInstance = function(){};
-//
+var nsIIOService = 
+{
+  message3: null,
+  hello3: function (arg0)
+  {
+	//this.ll=0;
+  }
+}
+
+function Components(){};
+/**
+ * @memberOf   Components
+*/ 	
+Components.classes = function(){};
+
+/**
+ * @type    interfaces
+ * @memberOf   Components
+*/ 	
+Components.classes.createInstance = function(){};
+
 ///**
 // * @type    service
 // * @memberOf   Components
 //*/
 //Components.classes.getService = function(){};
+
+////const Components.classes;
+////const Ci = Components.interfaces;
+var ioService = Components.classes["@mozilla.org/network/io-service;1"].createInstance(Components.interfaces.nsIIOService);
+
 //
 //
 ////var createInstanceComponents = 
@@ -94,9 +107,7 @@ Components2.prototype =
 ////createInstanceComponents.createInstance = function(){};
 //
 //
-////const Components.classes;
-////const Ci = Components.interfaces;
-//var ioService = Components.classes["@mozilla.org/network/io-service;1"].createInstance(Components.interfaces.nsIIOService);
+
 ////
 //function func0(arg0)
 //{

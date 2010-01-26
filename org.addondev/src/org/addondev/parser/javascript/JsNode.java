@@ -20,6 +20,8 @@ public class JsNode {
 	private int fOffset;
 	private int endoffset;
 	
+	private String codeassist;
+	
 	private String fJsDoc;	
 	private String fType;	
 	
@@ -94,26 +96,6 @@ public class JsNode {
 	{
 		return image;
 	}
-	
-//	private ArrayList<JsNode> getChildNodes()
-//	{
-//		if(children != null)
-//		{
-//			return children;
-//		}
-//		else if(fBindNode != null)
-//		{
-//			return fBindNode.getChildNodes();
-//		}
-//		else
-//			return non;
-//	}
-	
-//	public ArrayList<JsNode> getChildren()
-//	{
-//		//return children == null?null:children.toArray(new JsNode[children.size()]);
-//		return children;
-//	}
 	
 	public int getChildrenNum() {
 		return children == null?0:children.size();
@@ -209,16 +191,6 @@ public class JsNode {
 				}
 			}
 		}
-//		else if(fBindNode != null)
-//		{
-//			JsNode[] bnodes = fBindNode.getChildren();
-//			for (int i = 0; i < bnodes.length; ++i) {
-//				JsNode n = bnodes[i];
-//				if (n != null) {
-//					n.dump(prefix + " ");
-//				}
-//			}			
-//		}
 	}
 	
 	private static class ttmp
