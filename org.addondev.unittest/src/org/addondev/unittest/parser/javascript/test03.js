@@ -1,17 +1,17 @@
 
-//var ary = [];
+var ary = [];
 //var num = 10;
-//var st = "t";
+var st = "t";
 //
-//var MyObject = 
-//{
-//    message3: null,
-//    hello3: function (arg0){
-//		arg0=100;
-//		var h= arg0;
-//		
-//	}
-//}
+var MyObject = 
+{
+    message3: null,  
+    hello3: function (arg0){
+		//arg0=100;
+		this.h= 10;
+	
+	}
+}
 //////
 //////MyObject.hello3("b");
 ////MyObject.message3=st;
@@ -31,8 +31,9 @@
 
 Components2 = function()
 {
-	this.tesy = 10;
-	var tth;
+	
+	//this.tesy = 10;
+	var tth=10;
 }
 Components2.prototype =
 {
@@ -41,6 +42,10 @@ Components2.prototype =
 		this.gg = 0;
 	}
 }
+//
+////var c2 = new Components2();
+//
+//var b.c = 100;
 
 //var gb = new Components2();
 //gb.tesy;

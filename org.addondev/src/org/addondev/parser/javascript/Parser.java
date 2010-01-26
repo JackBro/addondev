@@ -2,7 +2,6 @@ package org.addondev.parser.javascript;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class Parser {
 	private Lexer lex;
@@ -13,7 +12,7 @@ public class Parser {
 	public JsNode root;
 	
 	private Frame frame = new Frame();
-	private Stack<JsNode> thisNodeStack = new Stack<JsNode>();
+	//private Stack<JsNode> thisNodeStack = new Stack<JsNode>();
 	//private Stack<Scope> ScopeStack = new Stack<Scope>();
 	private ScopeStack fScopeStack = new ScopeStack();
 	
@@ -75,12 +74,12 @@ public class Parser {
 	private JsNode findNode(String image)
 	{
 		JsNode node = null;
-		if("this".equals(image))
-		{
-			node = fScopeStack.getCurrntScope().getNode(image);
-		}
-		else
-		{
+//		if("this".equals(image))
+//		{
+//			node = fScopeStack.getCurrntScope().getNode(image);
+//		}
+//		else
+//		{
 			node = fScopeStack.getCurrntScope().getNode(image); //current
 			if(node == null)
 			{
@@ -90,7 +89,7 @@ public class Parser {
 			{
 				node = ScopeManager.instance().getNode(image); //global thoer src
 			}
-		}
+//		}
 		return node;
 	}
 	
@@ -171,7 +170,6 @@ public class Parser {
 	}
 
 	private void stmt(JsNode parent) throws EOSException {	
-		// TODO Auto-generated method stub
 			switch (token) {	
 			case TokenType.VAR: // 変数宣言
 			case TokenType.CONST: 	
@@ -191,8 +189,18 @@ public class Parser {
 				if (token == '=') {
 					//getToken(); //skep =
 					String sym = lex.value();
+					JsNode node = null;
+					if("this".equals(sym) && parent.getId().equals("propfunction"))
+					{
+						node = parent.getParent();
+						
+					}
+					else
+					{
+						node = findNode(sym);
+					}
 					
-					JsNode node = findNode(sym);
+					//JsNode node = findNode(sym);
 					if(node == null)
 					{
 						node = new JsNode(root, "var", sym, lex.offset());
@@ -214,105 +222,154 @@ public class Parser {
 				}
 				else if(token == '.')
 				{
-					JsNode fromnode;
 					String sym = lex.value();
-					if(sym.equals("this"))
+					JsNode node = null;
+					if("this".equals(sym) && parent.getId().equals("propfunction"))
 					{
-						fromnode = thisNodeStack.lastElement();
+						node = parent.getParent();
+						
 					}
 					else
 					{
-						fromnode = frame.findNodeGlobalFrame(sym);
-						if(fromnode == null)
-						{
-							fromnode = frame.findNodeCurrentFrame(sym);
-						}
-						
+						node = findNode(sym);
 					}
-
-					JsNode fnode = findNode(sym);
-					//JsNode chNode = fnode.getChild(val);
-					if(fnode == null)
+					//JsNode node = findNode(sym);
+					
+					if(node == null)
 					{
-						fnode = new JsNode(parent, "var", sym, lex.offset());
-						parent.addChild(fnode);
+						node = new JsNode(root, "var", sym, lex.offset());
+						root.addChild(node);
 					}
 					
-					String objsym2 = lex.value();
-//					if(fromnode.getId().equals("function"))
-//					{
-//						objsym2 = ".prototype";
-//					}
+					//getToken(); // skip .
 					while(token == '.')
 					{
 						getToken();	//.	
-						if(token != TokenType.SYMBOL)
-						{
-							break;
-						}
+//						if(token != TokenType.SYMBOL)
+//						{
+//							break;
+//						}
 						String val = lex.value();
 						
-						JsNode m = fnode.getChild(val);
+						JsNode m = node.getChild(val);
 						if(m == null)
 						{
-							JsNode cnode = new JsNode(fnode, "var", val, lex.offset());
-							fnode.addChild(cnode);
-							fnode = cnode;
+							JsNode cnode = new JsNode(node, "var", val, lex.offset());
+							node.addChild(cnode);
+							node = cnode;
 						}
 						else
 						{
-							fnode = m;
-						}
-						
-						objsym2 = objsym2 +"."+ lex.value();
-						getToken();	//symbol
+							node = m;
+						}	
+						getToken();	//.	
 					}
+
+					if(token == '='){
+						getToken();  // skip '='
+						factor(node);
+						//getToken();
+					}		
 					
-					if(objsym2.length() > 0)
-					{
-						//objsym2 = objsym2.substring(1);
-					
-						if(token != TokenType.EOS && token != TokenType.VAR && token != TokenType.SYMBOL) //tmp
-						{
-							if(fromnode == null)
-							{
-								fromnode = root;
-							}
-							JsNode mnode = getNode(fromnode, objsym2, 0);
-							setJsDoc(fJsDoc, mnode);
-							//if(token == '=' && !objsym2.contains("prototype.")){
-							if(token == '='){
-								getToken();  // skip '='
-								factor(mnode);
-//								JsNode res = factor(mnode);
-//								if(res != null)
-//								{
-//									JsNodeHelper.assignNode(fromnode.getChildrenList(), res.getChildrenList()); 
-//								}
-								//if(res != null)
-								//	mnode.setValueNode(new ValueNode(res));
-							}
-							else if(token == '(')
-							{
-								getToken();
-								//factor(new JsNode(null, "", "", 0));
-								//factor(mnode);
-								
-								JsNode code = new JsNode(mnode, "function", "anonymous", lex.offset());
-								mnode.addChild(code);
-									
-						    	frame.push();
-								getToken();
-								advanceToken(')');
-								
-								getToken();
-								block(code);
-								
-								frame.pop(); 
-								
-							}
-						}
-					}
+//					JsNode fromnode;
+//					String sym = lex.value();
+//					if(sym.equals("this"))
+//					{
+//						fromnode = thisNodeStack.lastElement();
+//					}
+//					else
+//					{
+//						fromnode = frame.findNodeGlobalFrame(sym);
+//						if(fromnode == null)
+//						{
+//							fromnode = frame.findNodeCurrentFrame(sym);
+//						}
+//						
+//					}
+//
+//					JsNode fnode = findNode(sym);
+//					//JsNode chNode = fnode.getChild(val);
+//					if(fnode == null)
+//					{
+//						fnode = new JsNode(parent, "var", sym, lex.offset());
+//						parent.addChild(fnode);
+//					}
+//					
+//					String objsym2 = lex.value();
+////					if(fromnode.getId().equals("function"))
+////					{
+////						objsym2 = ".prototype";
+////					}
+//					while(token == '.')
+//					{
+//						getToken();	//.	
+//						if(token != TokenType.SYMBOL)
+//						{
+//							break;
+//						}
+//						String val = lex.value();
+//						
+//						JsNode m = fnode.getChild(val);
+//						if(m == null)
+//						{
+//							JsNode cnode = new JsNode(fnode, "var", val, lex.offset());
+//							fnode.addChild(cnode);
+//							fnode = cnode;
+//						}
+//						else
+//						{
+//							fnode = m;
+//						}
+//						
+//						objsym2 = objsym2 +"."+ lex.value();
+//						getToken();	//symbol
+//					}
+//					
+//					if(objsym2.length() > 0)
+//					{
+//						//objsym2 = objsym2.substring(1);
+//					
+//						if(token != TokenType.EOS && token != TokenType.VAR && token != TokenType.SYMBOL) //tmp
+//						{
+//							if(fromnode == null)
+//							{
+//								fromnode = root;
+//							}
+//							JsNode mnode = getNode(fromnode, objsym2, 0);
+//							setJsDoc(fJsDoc, mnode);
+//							//if(token == '=' && !objsym2.contains("prototype.")){
+//							if(token == '='){
+//								getToken();  // skip '='
+//								factor(mnode);
+////								JsNode res = factor(mnode);
+////								if(res != null)
+////								{
+////									JsNodeHelper.assignNode(fromnode.getChildrenList(), res.getChildrenList()); 
+////								}
+//								//if(res != null)
+//								//	mnode.setValueNode(new ValueNode(res));
+//							}
+//							else if(token == '(')
+//							{
+//								getToken();
+//								//factor(new JsNode(null, "", "", 0));
+//								//factor(mnode);
+//								
+//								JsNode code = new JsNode(mnode, "function", "anonymous", lex.offset());
+//								mnode.addChild(code);
+//									
+//						    	frame.push();
+//								getToken();
+//								advanceToken(')');
+//								
+//								getToken();
+//								block(code);
+//								
+//								frame.pop(); 
+//								
+//							}
+//						}
+//					}
 				}
 				break;
 			case '{':
@@ -408,6 +465,20 @@ public class Parser {
 				}
 			}
 			//
+			getToken(); // skip ),
+			if(token == '{')
+			{
+				//getToken(); // skip {
+				//node.setOffset(lex.offset());
+				//getToken();
+				fScopeStack.pushScope(new Scope(lex.offset()+1, node));
+				block(node);
+				//fun(node);
+				//objectExpr(node);
+				//block(node);
+				Scope scope = fScopeStack.popScope();
+				scope.setEnd(lex.offset());
+			}			
 		}
 		else
 		{
@@ -424,7 +495,6 @@ public class Parser {
 				//block(node);
 				Scope scope = fScopeStack.popScope();
 				scope.setEnd(lex.offset());
-				getToken(); // skip }
 			}			
 		}
 	}	
@@ -450,7 +520,7 @@ public class Parser {
 			advanceToken('(');
 			functionExpr(code);
 			
-			block(code);
+			//block(code);
 			//thisNodeStack.pop();
 			Scope scope = fScopeStack.popScope();
 			int endoffset = lex.offset();
@@ -488,6 +558,7 @@ public class Parser {
 			stmt(parent);
 			getToken(); 
 		}
+		//getToken(); //skip }
 	}
 	
 	private void def(JsNode parent) throws EOSException {
@@ -532,15 +603,16 @@ public class Parser {
 			//node = parent;
 			break;
 		case TokenType.FUNCTION:
-			thisNodeStack.push(parent);
+			//thisNodeStack.push(parent);
 			advanceToken('(');
 			frame.push();
 			//parent.setId("function");
 			functionExpr(parent);			
-			advanceToken('{');			
-			block(parent);
+			//advanceToken('{');			
+			//block(parent);
+			String ll = lex.value();
 			frame.pop();
-			thisNodeStack.pop();			
+			//thisNodeStack.pop();			
 			break;
 		case TokenType.NEW:
 			getToken();
@@ -752,7 +824,7 @@ public class Parser {
 	
 	private void objectExpr(JsNode parent) throws EOSException 
 	{
-		fScopeStack.pushScope(new Scope(lex.offset(), parent));
+		//fScopeStack.pushScope(new Scope(lex.offset(), parent));
 		//getToken();
 		while (token != '}'){
 			if(token == TokenType.EOS)
@@ -769,24 +841,24 @@ public class Parser {
 					JsNode node = new JsNode(parent, "var", sym, lex.offset());
 					parent.addChild(node);
 				} else if (token == TokenType.FUNCTION) {
-					JsNode node = new JsNode(parent, "function", sym, lex.offset());
+					JsNode node = new JsNode(parent, "propfunction", sym, lex.offset());
 					parent.addChild(node);
-					//fScopeStack.pushScope(new Scope(lex.offset(), node));
+					//fScopeStack.pushScope(new Scope(lex.offset(), node, "prop"));
 					
 					advanceToken('(');
 					
 					frame.push();
-					//methodCall(sym, node);
+
 					functionExpr(node);
-					getToken();	
-					while (token != '}' && token != TokenType.EOS) {
-						stmt(node);
-						//parent.setEndoffset(lex.offset());
-						//node.setEndoffset(lex.offset());
-						getToken(); 
-						node.setEndoffset(lex.offset()-1);
-					}
-					//block(node);
+//					getToken();	
+//					while (token != '}' && token != TokenType.EOS) {
+//						stmt(node);
+//						//parent.setEndoffset(lex.offset());
+//						//node.setEndoffset(lex.offset());
+//						getToken(); 
+//						node.setEndoffset(lex.offset()-1);
+//					}
+
 					frame.pop();
 					
 					//Scope scope = fScopeStack.popScope();
@@ -813,7 +885,7 @@ public class Parser {
 			//getToken();
 		}
 		parent.setEndoffset(lex.offset()-1);
-		Scope scope = fScopeStack.popScope();
-		scope.setEnd(lex.offset());
+		//Scope scope = fScopeStack.popScope();
+		//scope.setEnd(lex.offset());
 	}
 }

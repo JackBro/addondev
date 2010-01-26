@@ -40,7 +40,6 @@ public class Lexer {
 	public boolean advance() {
 		skipWhiteSpace();
 		int c = reader.read();
-		char ch = (char)c;
 		if (c < 0) {
 			return false;
 		}

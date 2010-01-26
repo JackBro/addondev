@@ -1,14 +1,21 @@
 package org.addondev.parser.javascript;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.HashMap;
 
 public class Scope {
 	private int startOffset;
 	private int endOffset;
+	private String fType;
 	private JsNode node;
-	private HashMap<String, JsNode> map;
+	//private HashMap<String, JsNode> map;
 	
+	public String getType() {
+		return fType;
+	}
+	public void setType(String Type) {
+		this.fType = Type;
+	}
 	public int getStart() {
 		return startOffset;
 	}
@@ -50,13 +57,31 @@ public class Scope {
 		this.endOffset = endOffset;
 		this.node = node;
 		
-		map = new HashMap<String, JsNode>();
+		//map = new HashMap<String, JsNode>();
 	}
 	public Scope(int startOffset, JsNode node) {
 		super();
 		this.startOffset = startOffset;
 		this.node = node;
 		
-		map = new HashMap<String, JsNode>();
+		//map = new HashMap<String, JsNode>();
+	}
+	
+	public Scope(int startOffset, int endOffset, JsNode node, String type) {
+		super();
+		this.startOffset = startOffset;
+		this.endOffset = endOffset;
+		this.node = node;
+		this.fType = type;
+		
+		//map = new HashMap<String, JsNode>();
+	}
+	public Scope(int startOffset, JsNode node, String type) {
+		super();
+		this.startOffset = startOffset;
+		this.node = node;
+		this.fType = type;
+		
+		//map = new HashMap<String, JsNode>();
 	}
 }
