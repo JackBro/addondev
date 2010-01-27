@@ -282,7 +282,12 @@ public class Parser {
 							assignChildNode(res, node);
 						}
 						//getToken();
-					}		
+					}	
+					else if(token == '(')
+					{
+						//factor(node);
+						functionExpr(node);
+					}
 					
 //					JsNode fromnode;
 //					String sym = lex.value();
@@ -545,24 +550,25 @@ public class Parser {
 	    }
 	    else if(token == '(') //anonymous
 	    {
-	    	int offset = lex.offset();	 
-	    	code = new JsNode(parent, "function", "anonymous", offset);
-	    	parent.addChild(code);
-   	
-	    	fScopeStack.pushScope(new Scope(offset, code));
-				
-	    	//frame.push();
-			getToken();
-			advanceToken(')');
-			
-			getToken();
-			block(code);
-
-			Scope scope = fScopeStack.popScope();
-			int endoffset = lex.offset();
-			scope.setEnd(endoffset);			
+//	    	int offset = lex.offset();	 
+//	    	code = new JsNode(parent, "function", "anonymous", offset);
+//	    	parent.addChild(code);
+//   	
+//	    	fScopeStack.pushScope(new Scope(offset, code));
+//				
+//	    	//frame.push();
+//			getToken();
+//			advanceToken(')');
+//			
+//			getToken();
+//			block(code);
+//
+//			Scope scope = fScopeStack.popScope();
+//			int endoffset = lex.offset();
+//			scope.setEnd(endoffset);			
 			
 			//frame.pop(); 
+	    	functionExpr(parent);
 	    }
 	}
 
