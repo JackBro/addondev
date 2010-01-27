@@ -6,11 +6,9 @@ import java.util.Map;
 
 public class NodeManager {
 	private static NodeManager instance;
-	private ArrayList<JsNode> nodeList;
 	private HashMap<String, JsNode> nodeMap;
 	
 	private NodeManager(){
-		nodeList = new ArrayList<JsNode>();
 		nodeMap = new HashMap<String, JsNode>();
 	}
 	

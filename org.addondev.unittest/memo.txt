@@ -1,3 +1,5 @@
+java -jar js.jar  test.js
+
 *** src/org/mozilla/javascript/Node.java	Sun Mar 22 14:32:24 2009
 --- src/org/mozilla/javascript/Node.java	Tue Jan 19 03:10:37 2010
 ***************

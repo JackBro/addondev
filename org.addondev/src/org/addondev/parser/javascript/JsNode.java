@@ -11,10 +11,7 @@ public class JsNode {
 	
 	private JsNode parent;
 	private ArrayList<JsNode> children;
-	//private JsNode fBindNode = null;
-	
-	private static  ArrayList<JsNode> non = new ArrayList<JsNode>();
-	
+
 	private String id;
 	private String image;
 	private int fOffset;
@@ -199,11 +196,10 @@ public class JsNode {
 	}
 	
 	private  JsNode fOffsetNode;
-	private boolean fff;
+
 	public JsNode getNodeFromOffset(int offset)
 	{
 		fOffsetNode = null;
-		fff = false;
 		_getNodeFromOffset(offset);
 		return ttmp.node;
 	}
@@ -222,7 +218,6 @@ public class JsNode {
 					}
 					else if(fOffsetNode != null)
 					{
-						fff = true;
 						System.out.println("!fOffsetNode = " + fOffsetNode.getId() + " : " + fOffsetNode.getImage());
 						//return fOffsetNode;
 						break;

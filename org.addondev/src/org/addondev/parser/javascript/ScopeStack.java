@@ -6,6 +6,11 @@ public class ScopeStack {
 	private ArrayList<Scope> fScopeStack;
 	private int stackindex;
 	
+	public ArrayList<Scope> getScopeList()
+	{
+		return fScopeStack;
+	}
+	
 	public ScopeStack()
 	{
 		fScopeStack = new ArrayList<Scope>();

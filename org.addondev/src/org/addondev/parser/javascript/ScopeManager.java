@@ -1,12 +1,15 @@
 package org.addondev.parser.javascript;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ScopeManager {
 	
 	private static ScopeManager instance;
 
-	private HashMap<String, Scope> fScopeMap;
+	///private static Scope scope;
+	
+	private HashMap<String, ScopeStack> fScopeStackMap;
 
 	
 	public static ScopeManager instance()
@@ -19,26 +22,48 @@ public class ScopeManager {
 	
 	private ScopeManager()
 	{
-		fScopeMap = new HashMap<String, Scope>();
+		fScopeStackMap = new HashMap<String, ScopeStack>();
 	}
 	
-	public void setScope(String name, Scope scope)
+	public void setScopeStack(String name, ScopeStack scopestack)
 	{
-		if(fScopeMap.containsKey(name))
+		if(fScopeStackMap.containsKey(name))
 		{
-			fScopeMap.remove(name);
+			fScopeStackMap.remove(name);
 		}	
-		fScopeMap.put(name, scope);		
+		fScopeStackMap.put(name, scopestack);		
 	}
 	
-	public JsNode getNode(String image)
+	public JsNode getGlobalNode(String image)
 	{
 		JsNode node = null;
-		for(Scope n : fScopeMap.values()) {
-			node = n.getNode(image);
+		for(ScopeStack n : fScopeStackMap.values()) {
+			node = n.getScope(0).getNode(image);
 			if(node != null)
 				break;
 		}
 		return node;		
+	}
+	
+	public Scope getScope(String name, int offset)
+	{
+		if(fScopeStackMap.containsKey(name))
+		{
+			Scope tmp = null;
+			ScopeStack stack =  fScopeStackMap.get(name);
+			ArrayList<Scope> scopes = stack.getScopeList();
+			for (Scope scope : scopes) {
+				if(offset >= scope.getStart() && offset<=scope.getEnd())
+				{
+					tmp = scope;
+				}
+				else
+				{
+					return tmp;
+				}
+			}
+		}
+
+		return null;
 	}
 }

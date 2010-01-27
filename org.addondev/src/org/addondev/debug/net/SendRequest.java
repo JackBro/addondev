@@ -107,7 +107,9 @@ public class SendRequest {
 		http.setRequestMethod("GET");
 		http.connect();
 
-		String res="";	
+		//String res="";
+		//StringBuilder
+		StringBuffer res = new StringBuffer();
 		
         InputStream in = http.getInputStream();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -115,7 +117,8 @@ public class SendRequest {
         int len;
         while((len = in.read(buff)) != -1) {
         	//out.write(buff, 0, len);
-        	res += new String(buff);
+        	//res += new String(buff);
+        	res.append(new String(buff));
         }
         in.close();
         out.close();
@@ -124,7 +127,7 @@ public class SendRequest {
 			
 		if(http!=null)  http.disconnect();
 		
-		return res;
+		return res.toString();
 	}
 	
 	private static String RequestData(String command, String data) throws IOException
@@ -148,7 +151,9 @@ public class SendRequest {
 		osw.close();
 		os.close();
 
-		String res="";		
+		//String res="";	
+		StringBuffer res = new StringBuffer();
+		
         InputStream in = http.getInputStream();
 //        //ByteArrayOutputStream out = new ByteArrayOutputStream();
 //        byte buff[] = new byte[1024];
@@ -165,7 +170,8 @@ public class SendRequest {
         BufferedReader sockin = new BufferedReader(new InputStreamReader(in));
         while ((str = sockin.readLine()) != null) {
             //System.out.println(str);
-        	res += str;
+        	//res += str;
+        	res.append(str);
           }
         sockin.close();
         in.close();
@@ -184,6 +190,6 @@ public class SendRequest {
 			
 		if(http!=null)  http.disconnect();
 		
-		return res;
+		return res.toString();
 	}
 }

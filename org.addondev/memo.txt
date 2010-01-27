@@ -1,3 +1,9 @@
+http://www.eclipse.org/tptp/index.php
+http://www.computerworld.jp/topics/osst/145669.html
+
+eclipse\dropins\findbugs\eclipse\plugins\edu.umd.cs.findbugs.plugin.eclipse_1.3.9.20090821
+http://findbugs.sourceforge.net/
+
 http://www.hellohiro.com/reflection.htm
 http://d.hatena.ne.jp/token7/
 ../bin/xpidl -m java nsIScriptableInputStream.idl

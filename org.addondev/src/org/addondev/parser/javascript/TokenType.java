@@ -23,8 +23,3 @@ public class TokenType {
 	public static final int JSDOC = 274; //	
 	public static final int NEW = 275; //	
 }
-
-//enum attr
-//{
-//	
-//}

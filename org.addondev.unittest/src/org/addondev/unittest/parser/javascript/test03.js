@@ -78,14 +78,14 @@ Components.classes = function(){};
 */ 	
 Components.classes.createInstance = function(){};
 
-///**
-// * @type    service
-// * @memberOf   Components
-//*/
-//Components.classes.getService = function(){};
+/**
+ * @type    service
+ * @memberOf   Components
+*/
+Components.classes.getService = function(){};
 
-////const Components.classes;
-////const Ci = Components.interfaces;
+//const Components.classes;
+//const Ci = Components.interfaces;
 var ioService = Components.classes["@mozilla.org/network/io-service;1"].createInstance(Components.interfaces.nsIIOService);
 
 //
@@ -188,20 +188,20 @@ var ioService = Components.classes["@mozilla.org/network/io-service;1"].createIn
 
 //var test0, tes1, test2;
 
-//Firebug.Debugger = extend(Firebug.ActivableModule,
-//{
-//	fbs: fbs,
-//	
-//    initialize: function()
-//    {
-//        this.nsICryptoHash = Components.interfaces["nsICryptoHash"];
-//        this.debuggerName =  window.location.href+"--"+FBL.getUniqueId(); /*@explore*/
-//        this.toString = function() { return this.debuggerName; } /*@explore*/ //bug
-//        this.hash_service = CCSV("@mozilla.org/security/hash;1", "nsICryptoHash");
-//
-//        this.wrappedJSObject = this;  // how we communicate with fbs
-//        this.panelName = "script";
-//
+Firebug.Debugger = extend(Firebug.ActivableModule,
+{
+	fbs: fbs,
+	
+    initialize: function()
+    {
+        //this.nsICryptoHash = Components.interfaces["nsICryptoHash"];
+        //this.debuggerName =  window.location.href+"--"+FBL.getUniqueId(); /*@explore*/
+        //this.toString = function() { return this.debuggerName; } /*@explore*/ //bug
+        //this.hash_service = CCSV("@mozilla.org/security/hash;1", "nsICryptoHash");
+
+        //this.wrappedJSObject = this;  // how we communicate with fbs
+        this.panelName = "script";
+
 //        Firebug.broadcast = function encapsulateFBSBroadcast(message, args)
 //        {
 //            fbs.broadcast(message, args);
@@ -209,14 +209,14 @@ var ioService = Components.classes["@mozilla.org/network/io-service;1"].createIn
 //        
 //        this.onFunctionCall = bind(this.onFunctionCall, this);  
 //        Firebug.ActivableModule.initialize.apply(this, arguments);
-//    },
-//    
-//    getCurrentFrameKeys: function()
-//    {
-//		this.hhhh=200;
-//		var tt = 10;
-//    },
-//    
+    },
+    
+    getCurrentFrameKeys: function()
+    {
+		this.hhhh=200;
+		var tt = 10;
+    },
+    
 //    focusWatch: function(context)
 //    {
 //        if (context.detached)
@@ -232,8 +232,10 @@ var ioService = Components.classes["@mozilla.org/network/io-service;1"].createIn
 //        	Firebug.CommandLine.isReadyElsePreparing({title:"reaady", tf:function(){var p = tr;}});
 //            watchPanel.editNewWatch();
 //        }
-//    },
-//});
+//    }
+});
+
+var name = Firebug.Debugger.panelName;
 //FBL.ns(function() {
 //	var tt=0;
 ////	const p=0;

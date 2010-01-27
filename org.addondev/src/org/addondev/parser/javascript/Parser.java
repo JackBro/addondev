@@ -11,59 +11,10 @@ public class Parser {
 	
 	public JsNode root;
 	
-	private Frame frame = new Frame();
+	//private Frame frame = new Frame();
 	//private Stack<JsNode> thisNodeStack = new Stack<JsNode>();
 	//private Stack<Scope> ScopeStack = new Stack<Scope>();
 	private ScopeStack fScopeStack = new ScopeStack();
-	
-	private JsNode getNode(JsNode parent, String sym, int offset)
-	{	
-		JsNode node = parent;
-		
-		List<String> symlist = new ArrayList<String>();
-		if(sym.contains("."))
-		{
-			String[] sp = sym.split("\\.");
-			for (int i = 0; i < sp.length; i++) {
-				if(!parent.getImage().equals(sp[i]))
-					symlist.add(sp[i]);
-			}
-		}
-		else
-		{
-			symlist.add(sym);
-		}
-		for (int i = 0; i < symlist.size(); i++) {
-			String s = symlist.get(i);
-			JsNode newnode = null;
-			ArrayList<JsNode> child = node.getChildNode();
-			if(child != null)
-			{
-				for (JsNode jsNode : child) {
-					if(jsNode.getImage().equals(s))
-					{
-						newnode = jsNode;
-						break;
-					}					
-				}
-//			for (int j = 0; j < childs.length; j++) {
-//				if(childs[j].getImage().equals(s))
-//				{
-//					newnode = childs[j];
-//					break;
-//				}
-//			}
-			}
-			if(newnode == null)
-			{
-				newnode = new JsNode(node, "var", s, offset);
-				node.addChild(newnode);
-			}
-			node = newnode;
-		}			
-		
-		return node;
-	}
 	
 	private void setJsDoc(JsNode node, String jsDoc)
 	{
@@ -83,25 +34,42 @@ public class Parser {
 			node = fScopeStack.getCurrntScope().getNode(image); //current
 			if(node == null)
 			{
-				node = fScopeStack.getScope(0).getNode(image); //global this src
+				node = fScopeStack.getScope(0).getNode(image); //global this
 			}
 			if(node == null)
 			{
-				node = ScopeManager.instance().getNode(image); //global thoer src
+				node = ScopeManager.instance().getGlobalNode(image); //global other
 			}
 //		}
 		return node;
+	}
+	
+	private JsNode findChildNode(JsNode node, String image)
+	{
+		if(node == null) return null;
+		ArrayList<JsNode> childs = node.getChildNode();
+		if(childs == null) return null;
+		
+		for (JsNode child : childs) {
+			if(child.getImage().equals(image))
+			{
+				return child;
+			}			
+		}		
+		return null;		
 	}
 	
 	private JsNode getNodeByType(String type)
 	{
 		JsNode node = null;
 		JsNode gnode = findNode(type);
-		JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+		//JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
+		JsNode chNode = findChildNode(gnode, "prototype");
 		if(chNode != null)
 		{
 			node = new JsNode(null, "var", lex.value(), 0);
-			JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
+			//JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
+			cloneChildNode(chNode, node);
 		}
 		else
 		{
@@ -109,6 +77,47 @@ public class Parser {
 		}	
 		
 		return node;
+	}
+	
+	private void cloneChildNode(JsNode srcNode, JsNode distNode)
+	{
+		List<JsNode> srcChildNodes = srcNode.getChildNode();
+		List<JsNode> distChildNodes = distNode.getChildNode();
+		
+		for (JsNode node : srcChildNodes) 
+		{
+			distChildNodes.add(node.getClone(distNode));
+		}
+	}
+	
+	private void assignChildNode(JsNode srcNode, JsNode distNode)
+	{
+		List<JsNode> srcChildNodes = srcNode.getChildNode();
+		List<JsNode> distChildNodes = distNode.getChildNode();
+		
+//		for (JsNode node : srcChildNodes) 
+//		{
+//			if(!distChildNodes.contains(node))
+//			{
+//				distChildNodes.add(node);
+//			}
+//		}
+		for (int i = 0; i < srcChildNodes.size(); i++) {
+			if(!hasNode(distChildNodes, srcChildNodes.get(i)))
+			{
+				distChildNodes.add(srcChildNodes.get(i));
+			}
+		}
+	}
+	
+	private boolean hasNode(List<JsNode> nodelist, JsNode node)
+	{
+		for (JsNode jsNode : nodelist) {
+			if(jsNode.getImage().equals(node.getImage()))
+				return true;
+		}	
+		
+		return false;
 	}
 	
 	private void advanceToken(char c) throws EOSException
@@ -152,19 +161,19 @@ public class Parser {
 		//thisNodeStack.push(root); //global
 		fScopeStack.pushScope(new Scope(0, root));
 		
-		frame.push();
+		//frame.push();
 		while (token != TokenType.EOS) {
 			stmt(root);
 			getToken(); 
 		}
-		frame.pop();
+		//frame.pop();
 		
 		//thisNodeStack.pop();
 
 		Scope scope = fScopeStack.popScope();
 		scope.setEnd(lex.offset());
 		
-		ScopeManager.instance().setScope(fName, fScopeStack.getScope(0));
+		ScopeManager.instance().setScopeStack(fName, fScopeStack);
 		
 		return root;
 	}
@@ -209,15 +218,10 @@ public class Parser {
 					
 					getToken(); // skip '='
 					JsNode res = factor(node);
-					if(res == null)
+					if(res != null)
 					{
-						//node.setBindNode();
-						//parent.setBindNode(node);
-					}
-					else
-					{
-						//node.setBindNode(res.getBindNode()==null?res:res.getBindNode());
-						JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
+						//JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
+						assignChildNode(res, node);
 					}
 				}
 				else if(token == '.')
@@ -271,7 +275,12 @@ public class Parser {
 
 					if(token == '='){
 						getToken();  // skip '='
-						factor(node);
+						JsNode res = factor(node);
+						if(res != null)
+						{
+							//JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
+							assignChildNode(res, node);
+						}
 						//getToken();
 					}		
 					
@@ -382,14 +391,6 @@ public class Parser {
 			default:
 				//getToken(); 
 			}
-	}
-
-	private void methodCall(JsNode node) throws EOSException {
-		if (token != ')') {
-			while (token != ')') {
-				
-			}
-		}
 	}
 	
 	private void functionExpr(JsNode node) throws EOSException {
@@ -527,9 +528,9 @@ public class Parser {
 			//ScopeStack.push(new Scope(lex.offset(), code));
 			//fScopeStack.pushScope(new Scope(offset, code));
 			
-			frame.setNode(code);
+			//frame.setNode(code);
 			//thisNodeStack.push(code);
-			frame.push();				
+			//frame.push();				
 			getToken();
 			advanceToken('(');
 			functionExpr(code);
@@ -540,7 +541,7 @@ public class Parser {
 			//int endoffset = lex.offset();
 			//scope.setEnd(endoffset);
 			
-			frame.pop(); 
+			//frame.pop(); 
 	    }
 	    else if(token == '(') //anonymous
 	    {
@@ -550,7 +551,7 @@ public class Parser {
    	
 	    	fScopeStack.pushScope(new Scope(offset, code));
 				
-	    	frame.push();
+	    	//frame.push();
 			getToken();
 			advanceToken(')');
 			
@@ -561,7 +562,7 @@ public class Parser {
 			int endoffset = lex.offset();
 			scope.setEnd(endoffset);			
 			
-			frame.pop(); 
+			//frame.pop(); 
 	    }
 	}
 
@@ -588,90 +589,62 @@ public class Parser {
 		if(token == '='){
 			getToken(); //skip =
 			JsNode res =factor(node);
-			if(res == null)
+			if(res != null)
 			{
-				//node.setBindNode();
-				//parent.setBindNode(node);
-			}
-			else
-			{
-				//node.setBindNode(res.getBindNode()==null?res:res.getBindNode());
-				JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
-			}			
+				//JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
+				assignChildNode(res, node);
+			}		
 		}
-		//stmt(node);
 	}
 	
 	private JsNode factor(JsNode parent) throws EOSException {
-		// TODO Auto-generated method stub
 		JsNode node = null;
 		String sym = lex.value();
 		switch(token){
 		case '{':
 			parent.setOffset(lex.offset());
 			//thisNodeStack.push(parent);
-			frame.push(); //test
+			//frame.push(); //test
 			objectExpr(parent);
-			frame.pop();  //test
+			//frame.pop();  //test
 			//thisNodeStack.pop();	
 			//node = parent;
 			break;
 		case TokenType.FUNCTION:
 			//thisNodeStack.push(parent);
 			advanceToken('(');
-			frame.push();
+			//frame.push();
 			//parent.setId("function");
 			setJsDoc(parent, fJsDoc);
 			functionExpr(parent);			
 			//advanceToken('{');			
 			//block(parent);
-			String ll = lex.value();
-			frame.pop();
+			//String ll = lex.value();
+			//frame.pop();
 			//thisNodeStack.pop();			
 			break;
 		case TokenType.NEW:
 			getToken();
 			String obj = lex.value(); 			
-			node = findNode(obj);
-			JsNode pnode = node==null?null:node.getChild("prototype");
-			if(pnode != null)
+			JsNode tnode = findNode(obj);
+			JsNode prototypenode = tnode==null?null:tnode.getChild("prototype");
+			if(prototypenode != null)
 			{
-				JsNodeHelper.assignCloneNode(parent.getChildNode(), pnode.getChildNode());
+				node = new JsNode(null, "var", sym, 0);
+				//JsNodeHelper.assignCloneNode(parent.getChildNode(), prototypenode.getChildNode());
+				cloneChildNode(prototypenode, node);
 			}
 			break;
 		case TokenType.ARRAY:
-			//node = new JsNode(null, "Array", lex.value(), 0);
-			//parent.setValueNode(new ValueNode(jsdoc));
-			// getToken();
 			node = getNodeByType("Array");
 			advanceToken(']');
 			getToken(); //skip ']'
 			break;
 		case TokenType.STRING:
-//			JsNode gnode = NodeManager.getInstance().getGlobalNode("String");
-//			if(gnode != null)
-//			{
-//				JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-//				if(chNode != null)
-//				{
-//					node = new JsNode(null, "string", lex.value(), 0); 
-//					JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
-//				}
-//			}
 			node = getNodeByType("String");
 			getToken();
 			break;
 		case TokenType.INT:
-//			JsNode gnode1 = NodeManager.getInstance().getGlobalNode("Number");
-//			if(gnode1 != null)
-//			{
-//				JsNode chNode1 = JsNodeHelper.findChildNode(gnode1, "prototype");
-//				if(chNode1 != null)
-//				{
-//					node = new JsNode(null, "Number", lex.value(), 0);
-//					JsNodeHelper.assignCloneNode(node.getChildNode(), chNode1.getChildNode()); 
-//				}
-//			}
 			node = getNodeByType("Number");
 			getToken();
 			break;
@@ -720,24 +693,12 @@ public class Parser {
 						    }
 						    if(param != null)
 						    {
-						    	node = NodeManager.getInstance().getGlobalNode(param);
+						    	//node = NodeManager.getInstance().getGlobalNode(param);
+						    	node = findNode(param);
 						    }
 						}
 						else
-						{
-//							JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
-//							if(gnode == null) gnode = findNode(type);
-//							JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-//							if(chNode != null)
-//							{
-//								node = new JsNode(null, "var", lex.value(), 0);
-//								JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
-//							}
-//							else
-//							{
-//								node = gnode;
-//							}	
-							
+						{							
 							node = getNodeByType(type);
 						}
 					}
@@ -759,8 +720,9 @@ public class Parser {
 							    }
 							    if(param != null)
 							    {
-							    	node = NodeManager.getInstance().getGlobalNode(param);
-							    	if(node == null) node = findNode(param);
+							    	//node = NodeManager.getInstance().getGlobalNode(param);
+							    	//if(node == null) node = findNode(param);
+							    	node = findNode(param);
 							    }
 							}
 							else
@@ -770,12 +732,12 @@ public class Parser {
 						}
 					}
 				}
-				else
-				{
-					//functionExpr(node);
-					functionExpr(node);
-					//getToken();
-				}
+//				else
+//				{
+//					//functionExpr(node);
+//					functionExpr(node);
+//					//getToken();
+//				}
 			}
 			else
 			{
@@ -794,18 +756,6 @@ public class Parser {
 						String type = node.getType();
 						if(type != null)
 						{
-//							JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
-//							if(gnode == null) gnode = findNode(type);
-//							JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-//							if(chNode != null)
-//							{
-//								node = new JsNode(null, "var", lex.value(), 0);
-//								JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
-//							}
-//							else
-//							{
-//								node = gnode;
-//							}
 							node = getNodeByType(type);
 						}
 					}
@@ -814,18 +764,6 @@ public class Parser {
 						String type = anode.getType();
 						if(type != null)
 						{
-//							JsNode gnode = NodeManager.getInstance().getGlobalNode(type);
-//							if(gnode == null) gnode = findNode(type);
-//							JsNode chNode = JsNodeHelper.findChildNode(gnode, "prototype");
-//							if(chNode != null)
-//							{
-//								node = new JsNode(null, "var", lex.value(), 0);
-//								JsNodeHelper.assignCloneNode(node.getChildNode(), chNode.getChildNode()); 
-//							}
-//							else
-//							{
-//								node = gnode;
-//							}
 							node = getNodeByType(type);
 						}
 						else
@@ -866,7 +804,7 @@ public class Parser {
 					
 					advanceToken('(');
 					
-					frame.push();
+					//frame.push();
 
 					functionExpr(node);
 //					getToken();	
@@ -878,11 +816,12 @@ public class Parser {
 //						node.setEndoffset(lex.offset()-1);
 //					}
 
-					frame.pop();
+					//frame.pop();
 					
 					//Scope scope = fScopeStack.popScope();
 					//scope.setEnd(lex.offset());
-					//advanceToken('}');
+					advanceToken('}');
+					getToken();	
 					//int e = lex.offset();
 					//node.setEndoffset(lex.offset());
 					//parent.setEndoffset(lex.offset());

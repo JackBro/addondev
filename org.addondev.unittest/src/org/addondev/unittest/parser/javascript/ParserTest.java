@@ -68,7 +68,7 @@ public class ParserTest {
 		
 		//JsNode node = JsNodeHelper.findChildNode(parser.root, t);
 		JsNode node2 = parser.root.getNodeFromOffset(offset);
-		JsNode offsetnode = JsNodeHelper.findChildNode(node2, "f");
+		//JsNode offsetnode = JsNodeHelper.findChildNode(node2, "f");
 		
 		System.out.println(node2.getId() + " : " + node2.getImage());
 		
@@ -108,7 +108,7 @@ public class ParserTest {
 		Parser parser = new Parser("system.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
-		NodeManager.getInstance().SetNode("system", node);
+		//NodeManager.getInstance().SetNode("system", node);
 		node.dump("");
 		}
 		{
@@ -245,14 +245,14 @@ public class ParserTest {
 		Parser parser = new Parser("system.js"); // パーサーを作成。
 		parser.parse(lex);
 		JsNode node = parser.root;
-		NodeManager.getInstance().SetNode("system", node);
+		//NodeManager.getInstance().SetNode("system", node);
 		node.dump("");
 		
 		src = getSource(ParserTest.class.getResourceAsStream("test00.js"));
 		lex = new Lexer(src);
 		parser = new Parser("test00.js"); // パーサーを作成。
 		parser.parse(lex);
-		NodeManager.getInstance().SetNode("test00", parser.root);
+		//NodeManager.getInstance().SetNode("test00", parser.root);
 		parser.root.dump("");
 	}
 	

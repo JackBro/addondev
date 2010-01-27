@@ -142,7 +142,8 @@ public class Lexer {
 	
 	//private StringBuffer buf = new StringBuffer();
 	private void lexString(char ch) {
-		StringBuffer buf = new StringBuffer();
+		//StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		// TODO Auto-generated method stub
 		while (true) {
 			int c = reader.read();
