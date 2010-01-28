@@ -28,54 +28,16 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub		
-
-//		IProject pro = workspace.getRoot().getProject("/helloworld-0.0.6"); //ok
-//		IProject pro2 = workspace.getRoot().getProject("helloworld-0.0.6"); //ok
-//		
-//		IPath pp = configuration.getLocation();
-//		
-//		String pn = configuration.getName();
-//		
-//		//helloworld-0.0.6/chrome/content/helloworld/helloWorld.js
-//		String p="helloworld-0.0.6/chrome/content/helloworld/helloWorld.js";
-//		String chpath = AddonDevUtil.getURI(p);	
-//		
-		//String startuofile = configuration.getAttribute(JSMainTab.STARTUPFILE, (String)null);
-		//String file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString();
-		
-		//IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(startuofile));
-		//String fullpath = file.getFullPath().toString();
-		
-//		String startuofile = configuration.getAttribute(JSMainTab.STARTUPFILE, (String)null);
-//		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(startuofile));
-//		String fullpath  = file.getLocation().toString();
-		//IFile file;
-		//file.getContents(force)
-		
+		// TODO Auto-generated method stub				
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			
-//			AddonDevUtil addondevutil = new AddonDevUtil(configuration);	
-//			try {
-//				addondevutil.init(configuration);
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			} catch (ParserConfigurationException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			} catch (SAXException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			} catch (TransformerException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-
 			try 
 			{		
 				
 				//IPath p =  addondevutil.getPath("chrome://helloworld/content/helloWorld.js");
+				
+				
+				
 				
 				AddonDebugTarget target = new AddonDebugTarget(configuration, launch);
 				target.init();
@@ -91,5 +53,4 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
 			}
 		}
 	}
-
 }
