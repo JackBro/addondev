@@ -132,6 +132,19 @@ public class Parser {
 		}
 	}
 	
+	private void getToken() {
+		if (lex.advance()) {
+			token = lex.token();
+		} else {
+			token = TokenType.EOS; // 次のトークンが存在しないときにはEOSを設定しておく。
+		}
+	}
+
+	public Parser(String name)
+	{
+		fName = name;
+	}
+	
 	public JsNode parse(Lexer lexer) {
 		JsNode code = null;
 		lex = lexer;
@@ -142,18 +155,31 @@ public class Parser {
 		}
 		return code;
 	}
-
-	private void getToken() {
-		if (lex.advance()) {
-			token = lex.token();
-		} else {
-			token = TokenType.EOS; // 次のトークンが存在しないときにはEOSを設定しておく。
+	
+	public JsNode parse(String src) {
+		JsNode code = null;
+		try {
+			lex = new Lexer(src);
+			code = program();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return code;
 	}
 	
-	public Parser(String name)
-	{
-		fName = name;
+	public JsNode parse(String src, Scope scope) {
+		root = new JsNode(null, "root", "root", 0);
+		try {
+			lex = new Lexer(src);
+			fScopeStack.pushScope(scope);
+			while (token != TokenType.EOS) {
+				stmt(root);
+				getToken(); 
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return root;
 	}
 	
 	private JsNode program() throws EOSException {
@@ -764,6 +790,12 @@ public class Parser {
 						{
 							node = getNodeByType(type);
 						}
+						else
+						{
+							JsNode valnode = new JsNode(node, "var", sym, lex.offset());
+							node.addChild(valnode);
+							node =valnode;							
+						}
 					}
 					else
 					{
@@ -775,6 +807,8 @@ public class Parser {
 						else
 						{
 							node =anode;
+							//JsNode valnode = new JsNode(parent, "var", sym, lex.offset());
+							//node =anode;
 						}
 					}
 				}				

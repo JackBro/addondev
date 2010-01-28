@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
@@ -721,7 +722,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 				String filename = map.get("filename");
 				int line = Integer.parseInt(map.get("line"));
 				String msg = map.get("msg");
-				IPath path = fAddonDevUtil.getPath(filename);
+				IPath path = new Path(filename);
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 				IMarker marker = resource.createMarker(IMarker.PROBLEM);
 				marker.setAttribute(IMarker.LINE_NUMBER, line);
@@ -990,13 +991,15 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		String xml = "";
 		for (IBreakpoint breakpoint : breakpoints) {
 			if (breakpoint instanceof ILineBreakpoint) {
-				IProject project = ((AddonDevLineBreakpoint)breakpoint).getProject();
-				String path = fAddonDevUtil.convertChrome(project, ((AddonDevLineBreakpoint)breakpoint).getPath().toPortableString());
+				AddonDevLineBreakpoint addonbreakpoint = (AddonDevLineBreakpoint)breakpoint;
+				IProject project = addonbreakpoint.getProject();
+				//String path = fAddonDevUtil.convertChrome(project, ((AddonDevLineBreakpoint)breakpoint).getPath().toPortableString());
+				String path = AddonDevPlugin.getDefault().getChromeURLMap(project, false).convertLocal2Chrome(addonbreakpoint.getFullPath());
 				int line = 0;
 
 				try {
 					path = URLEncoder.encode(path, "UTF-8");
-					line = ((AddonDevLineBreakpoint)breakpoint).getLineNumber();
+					line = addonbreakpoint.getLineNumber();
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

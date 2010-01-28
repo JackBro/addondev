@@ -80,7 +80,7 @@ public class AddonDevLineBreakpoint extends LineBreakpoint {
 //    	 return m;
 //    }
 	
-	public IPath getPath()
+	public IPath getFullPath()
 	{
 		//IPath /helloworld-0.0.6/chrome/content/helloworld/helloWorld.js
 		//IPath pth = getMarker().getResource().getFullPath();
@@ -91,7 +91,7 @@ public class AddonDevLineBreakpoint extends LineBreakpoint {
 		//return path;
 	}
 	
-	public IPath getFullPath()
+	public IPath getLocation()
 	{
 		//IPath /helloworld-0.0.6/chrome/content/helloworld/helloWorld.js
 		//IPath pth = getMarker().getResource().getFullPath();

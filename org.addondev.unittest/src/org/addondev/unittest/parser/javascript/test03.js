@@ -51,36 +51,36 @@
 ////	classes:function(){}
 ////}
 //
-//var nsIIOService = 
-//{
-//  message3: null,
-//  hello3: function (arg0)
-//  {
-//	//this.ll=0;
-//  }
-//}
-//
-//function Components(){};
-///**
-// * @memberOf   Components
-//*/ 	
-//Components.classes = function(){};
-//
-///**
-// * @type    interfaces
-// * @memberOf   Components
-//*/ 	
-//Components.classes.createInstance = function(){};
-//
-///**
-// * @type    service
-// * @memberOf   Components
-//*/
-//Components.classes.getService = function(){};
-//
-////const Components.classes;
-////const Ci = Components.interfaces;
-//var ioService = Components.classes["@mozilla.org/network/io-service;1"].createInstance(Components.interfaces.nsIIOService);
+var nsIIOService = 
+{
+  message3: null,
+  hello3: function (arg0)
+  {
+	//this.ll=0;
+  }
+}
+
+function Components(){};
+/**
+ * @memberOf   Components
+*/ 	
+Components.classes = function(){};
+
+/**
+ * @type    interfaces
+ * @memberOf   Components
+*/ 	
+Components.classes.createInstance = function(){};
+
+/**
+ * @type    service
+ * @memberOf   Components
+*/
+Components.classes.getService = function(){};
+
+//const Components.classes;
+//const Ci = Components.interfaces;
+var ioService = Components.classes["@mozilla.org/network/io-service;1"].createInstance(Components.interfaces.nsIIOService);
 
 
 
@@ -210,7 +210,7 @@
 
 
 myExt.ns(function() { 
-//	with (myExt.LIB) 
+	with (myExt.LIB) 
 {
 
 	var m = "A";
@@ -218,6 +218,56 @@ myExt.ns(function() {
 
 }});
 
+
+
+//var stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6 = {};
+//(function(){
+//	
+//const Cc = Components.classes;
+//const Ci = Components.interfaces;
+//
+//const SAVEFILE = '';
+//const version = '0.1.0';
+//
+//var viewtypeAry = ['start','center','end','wrap'];
+//
+//var $ = stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6;
+//var $_ = 'stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6';
+//
+//$.stackpanel = {
+//	isItemAppended:false,
+//	
+//	load: function()
+//	{
+//
+//		if(this.save_restore)
+//		{
+//			try
+//			{
+//				var file = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties).get("ProfD", Ci.nsILocalFile);
+//				file.append('stacklink.js');
+//				if(file.exists())
+//				{
+//					var stritems = $.util.read(file);
+//					if (typeof(JSON) == "undefined") {
+//					  Components.utils.import("resource://gre/modules/JSON.jsm");
+//					  JSON.parse = JSON.fromString;
+//					  JSON.stringify = JSON.toString;
+//					}
+//
+//					this.tmpitems = JSON.parse(stritems);	
+//				}
+//			}
+//			catch(ex)
+//			{
+//				Components.utils.reportError("load restor error : " + ex);
+//				this.tmpitems = null;
+//			}
+//		}
+//	}
+//}
+//window.addEventListener("load", function(e) { $.stackpanel.load(e); }, false);
+//})();
 
 //CmdUtils.CreateCommand({
 //	   name:'macro',

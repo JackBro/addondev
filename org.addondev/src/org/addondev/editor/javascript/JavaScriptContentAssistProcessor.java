@@ -11,6 +11,8 @@ import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.JsNodeHelper;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Parser;
+import org.addondev.parser.javascript.Scope;
+import org.addondev.parser.javascript.ScopeManager;
 import org.addondev.plugin.AddonDevPlugin;
 import org.addondev.templates.JavaScriptTemplateCompletionProcessor;
 import org.eclipse.core.runtime.FileLocator;
@@ -34,26 +36,27 @@ public class JavaScriptContentAssistProcessor implements
 			int offset) {
 		
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
-		// TODO Auto-generated method stub
+		
 		// ワークベンチの取得
-//		IWorkbench workbench = PlatformUI.getWorkbench();
-//		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-//
-//		//アクティブなエディタの取得
-//		IEditorPart editor = window.getActivePage().getActiveEditor();
-//		AbstractTextEditor aEditor = (AbstractTextEditor) editor;
-//		//aEditor
-//		//return null;
-//		
-//        String src = viewer.getDocument().get();        
-//		Lexer lex = new Lexer(src);
-//		Parser parser = new Parser(); // パーサーを作成。
-//		parser.parse(lex);
-//		//tree.setInput(parser.root);
-//		
-//		parser.root.dump("");
-//		
-//		String t = getAssistTarget(src, offset);
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+
+		//アクティブなエディタの取得
+		IEditorPart editor = window.getActivePage().getActiveEditor();
+		if(editor instanceof JavaScriptEditor)
+		{
+			JavaScriptEditor jsEditor = (JavaScriptEditor) editor;
+			String src = jsEditor.getDocument().get();
+//			
+//			Parser parser = new Parser("");
+//			parser.parse(src);
+//			Scope scope = ScopeManager.instance().getScope("", offset);
+			
+			String t = getAssistTarget(src, offset);
+			System.out.println("Target = " + t);
+		}
+
+
 //		
 //		
 //		JsNode node2 = parser.root.getNodeFromOffset(offset);

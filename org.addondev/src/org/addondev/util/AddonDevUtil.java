@@ -78,12 +78,12 @@ public class AddonDevUtil {
 		//try
 		//{
 			debugprojects = getDebugProjects(fLaunchConfiguration, root.getProjects());
-			setContentMap(debugprojects);
+			//setContentMap(debugprojects);
 			
 			String path =  fLaunchConfiguration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH, "");
 			checkAddonFile(path, debugprojects);
 			
-			contentMap(debugprojects);
+			//contentMap(debugprojects);
 		//}
 		//catch (Exception e) {
 		//	// TODO: handle exception
@@ -115,90 +115,90 @@ public class AddonDevUtil {
 		return result.toArray(new IProject[result.size()]);
 	}
 	
-	private void setContentMap(IProject[] debugprojects) throws CoreException, IOException
-	{
-		mapProject2Chrome.clear();
-		mapChrome2Projec.clear();		
-		
-		for (int i = 0; i < debugprojects.length; i++) 
-		{
-			String projectname = debugprojects[i].getName();		
-			IFile file = debugprojects[i].getFile("chrome.manifest");
-			List<List<String>> list = new ArrayList<List<String>>();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents(), "UTF-8"));
-			while (reader.ready()) 
-			{
-				String line = reader.readLine();
-				if(contentlinepattern.matcher(line).matches())
-				{
-					String[] strs = contentslipitpattern.split(line);
-					if(strs.length >= 3)
-					{	
-						List<String> list2 = new ArrayList<String>();
-						list2.add(strs[1]); //chrome
-						list2.add(strs[2]); //path
-						list.add(list2);
-						
-						if(!mapChrome2Projec.containsKey(strs[1]))
-						{
-							List<String> plist = new ArrayList<String>();
-							plist.add(projectname);
-							plist.add(strs[2]);
-							mapChrome2Projec.put(strs[1], plist);
-						}
-					}
-				}
-			}
-			mapProject2Chrome.put(projectname, list);
-		}
-	}
+//	private void setContentMap(IProject[] debugprojects) throws CoreException, IOException
+//	{
+//		mapProject2Chrome.clear();
+//		mapChrome2Projec.clear();		
+//		
+//		for (int i = 0; i < debugprojects.length; i++) 
+//		{
+//			String projectname = debugprojects[i].getName();		
+//			IFile file = debugprojects[i].getFile("chrome.manifest");
+//			List<List<String>> list = new ArrayList<List<String>>();
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents(), "UTF-8"));
+//			while (reader.ready()) 
+//			{
+//				String line = reader.readLine();
+//				if(contentlinepattern.matcher(line).matches())
+//				{
+//					String[] strs = contentslipitpattern.split(line);
+//					if(strs.length >= 3)
+//					{	
+//						List<String> list2 = new ArrayList<String>();
+//						list2.add(strs[1]); //chrome
+//						list2.add(strs[2]); //path
+//						list.add(list2);
+//						
+//						if(!mapChrome2Projec.containsKey(strs[1]))
+//						{
+//							List<String> plist = new ArrayList<String>();
+//							plist.add(projectname);
+//							plist.add(strs[2]);
+//							mapChrome2Projec.put(strs[1], plist);
+//						}
+//					}
+//				}
+//			}
+//			mapProject2Chrome.put(projectname, list);
+//		}
+//	}
 	
-	private void contentMap(IProject[] debugprojects) throws CoreException, IOException
-	{
-		chromeMap.clear();	
-		
-		for (int i = 0; i < debugprojects.length; i++) 
-		{
-			String projectname = debugprojects[i].getName();		
-			IFile file = debugprojects[i].getFile("chrome.manifest");
-			List<String> list = new ArrayList<String>();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents(), "UTF-8"));
-			while (reader.ready()) 
-			{
-				String line = reader.readLine();
-				if(contentlinepattern.matcher(line).matches())
-				{
-					String[] strs = contentslipitpattern.split(line);
-					if(strs.length >= 3)
-					{	
-						list.add(strs[1]);
-						list.add(strs[2]);
-						chromeMap.put(projectname, list);
-						break;
-					}
-				}
-			}
-		}
-	}
+//	private void contentMap(IProject[] debugprojects) throws CoreException, IOException
+//	{
+//		chromeMap.clear();	
+//		
+//		for (int i = 0; i < debugprojects.length; i++) 
+//		{
+//			String projectname = debugprojects[i].getName();		
+//			IFile file = debugprojects[i].getFile("chrome.manifest");
+//			List<String> list = new ArrayList<String>();
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents(), "UTF-8"));
+//			while (reader.ready()) 
+//			{
+//				String line = reader.readLine();
+//				if(contentlinepattern.matcher(line).matches())
+//				{
+//					String[] strs = contentslipitpattern.split(line);
+//					if(strs.length >= 3)
+//					{	
+//						list.add(strs[1]);
+//						list.add(strs[2]);
+//						chromeMap.put(projectname, list);
+//						break;
+//					}
+//				}
+//			}
+//		}
+//	}
 	
-	public String convertChrome(IProject project, String filePath)
-	{
-		if(chromeMap.containsKey(project.getName()))
-		{
-			String root = project.getFile("chrome.manifest").getFullPath().removeLastSegments(1).toPortableString();
-			
-			filePath = filePath.replaceFirst(root, "");
-			
-			List<String> list = chromeMap.get(project.getName());
-			String addonname = list.get(0);
-			String content = list.get(1);
-			
-			String chromepath = "chrome:/" + filePath.replace(content, addonname + "/content/");
-			
-			return chromepath;
-		}
-		return null;
-	}
+//	public String convertChrome(IProject project, String filePath)
+//	{
+//		if(chromeMap.containsKey(project.getName()))
+//		{
+//			String root = project.getFile("chrome.manifest").getFullPath().removeLastSegments(1).toPortableString();
+//			
+//			filePath = filePath.replaceFirst(root, "");
+//			
+//			List<String> list = chromeMap.get(project.getName());
+//			String addonname = list.get(0);
+//			String content = list.get(1);
+//			
+//			String chromepath = "chrome:/" + filePath.replace(content, addonname + "/content/");
+//			
+//			return chromepath;
+//		}
+//		return null;
+//	}
 	
 	private void checkAddonFile(String profiledir, IProject[] debugprojects) throws IOException, ParserConfigurationException, SAXException, TransformerException, CoreException
 	{	
@@ -280,54 +280,54 @@ public class AddonDevUtil {
 		return commands.toArray(new String[commands.size()]);
 	}
 	
-	// /hello/content/main/hello.js -> chrome://hello/content/hello.js
-	
-	//mapProject2Chrome projectname:{chrome, path},{chrome, path}
-	// helloworld-0.0.6/chrome/content/helloworld/helloWorld.js
-	public String getURI(IPath path)
-	{
-		String projectname = path.segment(0);
-		String repath = path.removeFirstSegments(1).removeLastSegments(1).toString() + "/";
-
-		if(mapProject2Chrome.containsKey(projectname))
-		{
-			List<List<String>> list = mapProject2Chrome.get(projectname);
-			int cnt = list.size();
-			for (int i = 0; i < cnt; i++) 
-			{	
-				if(list.get(i).get(1).equals(repath))
-				{
-					return "chrome://" +list.get(i).get(0)+ "/content/" + path.lastSegment();
-				}
-			}
-		}
-		return null;
-	}
-	
-	// chrome://hello/content/hello.js -> /hello/content/main/hello.js
-	// chrome:[projectname, path]
-	public IPath getPath(String URI)
-	{
-		
-		IPath path = new Path(URI);
-		return path;
-		//return ResourcesPlugin.getWorkspace().getRoot().getFile(projectpath.append(path).append(file)).getLocation();
-//		Matcher m = p.matcher(URI);
-//		if (m.find()) 
+//	// /hello/content/main/hello.js -> chrome://hello/content/hello.js
+//	
+//	//mapProject2Chrome projectname:{chrome, path},{chrome, path}
+//	// helloworld-0.0.6/chrome/content/helloworld/helloWorld.js
+//	public String getURI(IPath path)
+//	{
+//		String projectname = path.segment(0);
+//		String repath = path.removeFirstSegments(1).removeLastSegments(1).toString() + "/";
+//
+//		if(mapProject2Chrome.containsKey(projectname))
 //		{
-//			String chrome = m.group(2);
-//			if(mapChrome2Projec.containsKey(chrome))
-//			{
-//				List<String> list = mapChrome2Projec.get(chrome);
-//				String projectname = list.get(0);
-//				String path = list.get(1);
-//				String file = m.group(4);
-//				
-//				IPath projectpath = new Path(projectname);
-//				
-//				return ResourcesPlugin.getWorkspace().getRoot().getFile(projectpath.append(path).append(file)).getLocation();
+//			List<List<String>> list = mapProject2Chrome.get(projectname);
+//			int cnt = list.size();
+//			for (int i = 0; i < cnt; i++) 
+//			{	
+//				if(list.get(i).get(1).equals(repath))
+//				{
+//					return "chrome://" +list.get(i).get(0)+ "/content/" + path.lastSegment();
+//				}
 //			}
 //		}
-//		throw new NullPointerException();
-	}
+//		return null;
+//	}
+	
+//	// chrome://hello/content/hello.js -> /hello/content/main/hello.js
+//	// chrome:[projectname, path]
+//	public IPath getPath(String URI)
+//	{
+//		
+//		IPath path = new Path(URI);
+//		return path;
+//		//return ResourcesPlugin.getWorkspace().getRoot().getFile(projectpath.append(path).append(file)).getLocation();
+////		Matcher m = p.matcher(URI);
+////		if (m.find()) 
+////		{
+////			String chrome = m.group(2);
+////			if(mapChrome2Projec.containsKey(chrome))
+////			{
+////				List<String> list = mapChrome2Projec.get(chrome);
+////				String projectname = list.get(0);
+////				String path = list.get(1);
+////				String file = m.group(4);
+////				
+////				IPath projectpath = new Path(projectname);
+////				
+////				return ResourcesPlugin.getWorkspace().getRoot().getFile(projectpath.append(path).append(file)).getLocation();
+////			}
+////		}
+////		throw new NullPointerException();
+//	}
 }

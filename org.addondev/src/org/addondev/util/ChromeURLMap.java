@@ -172,17 +172,16 @@ public class ChromeURLMap {
 		return chromeurl;
 	}
 	
-	//content 	stacklink	chrome/content/
-	//chrome://stacklink/content/stacklink.js
-	public String convertChrome2Local(String path)
+	public String convertChrome2Local(String path, String prefix)
 	{
+		prefix = prefix==null?"":prefix;
 		String localpath = null;
 		Matcher m = chrome_content_pattern.matcher(path);
 		if (m.find()) {
 			String name = m.group(1);
 			String file = m.group(2);
 			String uri = fContentMap.get(name).get("uri");
-			localpath = fBasePath.append(uri).append(file).toPortableString();
+			localpath = prefix + fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
@@ -192,7 +191,7 @@ public class ChromeURLMap {
 			String file = m.group(2);
 			String uri = fSkinMap.get(name).get("uri");
 			//localpath = uri + file;
-			localpath = fBasePath.append(uri).append(file).toPortableString();
+			localpath = prefix + fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
@@ -202,11 +201,18 @@ public class ChromeURLMap {
 			String file = m.group(2);
 			String uri = fLocaleMap.get(name).get(fLocale);
 			//localpath = uri + file;
-			localpath = fBasePath.append(uri).append(file).toPortableString();
+			localpath = prefix + fBasePath.append(uri).append(file).toPortableString();
 			return localpath;
 		}
 		
-		return localpath;
+		return localpath;		
+	}
+	
+	//content 	stacklink	chrome/content/
+	//chrome://stacklink/content/stacklink.js
+	public String convertChrome2Local(String path)
+	{
+		return convertChrome2Local(path, null);
 	}
 	
 //	public String convertDTDChrome2Local(String path)

@@ -1,10 +1,9 @@
-package org.addondev.unittest;
+package org.addondev.unittest.filemap;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,18 +11,16 @@ import jp.aonir.fuzzyxml.FuzzyXMLDocument;
 import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
 import org.addondev.parser.dtd.DTDMap;
-import org.addondev.parser.xul.XULParser;
-import org.addondev.plugin.AddonDevPlugin;
+import org.addondev.unittest.Validator;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AddonDevTest {
+public class MapTest {
 
 	private IPath basepath = new Path("D:/data/src/PDE/workrepositry/plugins/org.addondev.unittest");
 	
@@ -143,23 +140,23 @@ public class AddonDevTest {
 		}
 	}
 	
-	@Test
-	public void parserTest()
-	{
-		String text = null;
-		try {
-			text = FileUtil.getContent(AddonDevTest.class.getResourceAsStream("test.xml"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		FuzzyXMLParser parser = new FuzzyXMLParser();
-		
-		parser.addErrorListener( new Validator());
-		FuzzyXMLDocument document = parser.parse(text);
-		System.out.println("FuzzyXMLDocument document = parser.parse(text);");
-		int i=0;
-		i++;
-	}
+//	@Test
+//	public void parserTest()
+//	{
+//		String text = null;
+//		try {
+//			text = FileUtil.getContent(MapTest.class.getResourceAsStream("test.xml"));
+//			FuzzyXMLParser parser = new FuzzyXMLParser();
+//			
+//			parser.addErrorListener( new Validator());
+//			FuzzyXMLDocument document = parser.parse(text);
+//			System.out.println("FuzzyXMLDocument document = parser.parse(text);");
+//			int i=0;
+//			i++;
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 }

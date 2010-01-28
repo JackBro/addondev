@@ -62,7 +62,7 @@ public class AddonDevBreakpointPropertiesRulerAction extends Action implements I
 			if(ibreakpoint instanceof AddonDevLineBreakpoint)
 			{
 				AddonDevLineBreakpoint breakpoint = (AddonDevLineBreakpoint)ibreakpoint;
-				if(breakpoint.getFullPath().equals(resource.getLocation()))	
+				if(breakpoint.getLocation().equals(resource.getLocation()))	
 				{
 					int bline = -1;
 					try {
