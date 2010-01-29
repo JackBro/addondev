@@ -39,8 +39,8 @@ public class AddonDevPreferenceInitializer extends
 		store.setDefault(PrefConst.COLOR_JAVASCRIPT_STRING, 
 				StringConverter.asString(PrefConst.DEFAULT_COLOR_JAVASCRIPT_STRING));
 		
-		store.setDefault(PrefConst.DEBUGGER_PORT, PrefConst.DEFAULT_DEBUGGER_PORT);
-		store.setDefault(PrefConst.ECLIPSE_PORT, PrefConst.DEFAULT_ECLIPSE_PORT);
+		//store.setDefault(PrefConst.DEBUGGER_PORT, PrefConst.DEFAULT_DEBUGGER_PORT);
+		//store.setDefault(PrefConst.ECLIPSE_PORT, PrefConst.DEFAULT_ECLIPSE_PORT);
 		store.setDefault(PrefConst.DEBUGGER_CONEECT_TIMEOUT, PrefConst.DEFAULT_DEBUGGER_CONEECT_TIMEOUT);
 		
 		

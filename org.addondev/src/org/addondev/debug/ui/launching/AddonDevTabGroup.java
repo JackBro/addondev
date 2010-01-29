@@ -16,7 +16,7 @@ public class AddonDevTabGroup extends AbstractLaunchConfigurationTabGroup {
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		// TODO Auto-generated method stub
 		setTabs(new ILaunchConfigurationTab[] {
-				new AddonDevMainTab(),
+				new AddonDevLaunchMainTab(),
 				//new SourceLookupTab(),
 				new CommonTab()
 		});

@@ -1,7 +1,5 @@
 package org.addondev.debug.core.model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -11,15 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-
 import org.addondev.debug.net.SendRequest;
 import org.addondev.debug.net.SimpleServer;
 import org.addondev.debug.ui.model.AddonDevDebugModelPresentation;
 import org.addondev.plugin.AddonDevPlugin;
-import org.addondev.preferences.PrefConst;
-import org.addondev.util.AddonDevUtil;
 import org.addondev.util.XMLUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
@@ -44,7 +37,6 @@ import org.eclipse.debug.core.model.ILineBreakpoint;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -70,7 +62,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	private AddonDevThread fThread;
 	private IThread[] fThreads;
 	
-	private AddonDevUtil fAddonDevUtil;
+	//private AddonDevUtil fAddonDevUtil;
 	//private List<IProject> fDebugProjects;
 
 	private ArrayList<IBreakpoint> fBreakpointList = new ArrayList<IBreakpoint>();
@@ -84,114 +76,31 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		this.fCloseBrowser = closeBrowser;
 	}
 
-	public AddonDebugTarget(ILaunchConfiguration configuration, ILaunch launch) throws Exception {
+	public AddonDebugTarget(ILaunchConfiguration configuration, ILaunch launch)
+	{
 		// TODO Auto-generated constructor stub
 		fConfiguration = configuration;
 		fLaunch = launch;	
 		fStore = AddonDevPlugin.getDefault().getPreferenceStore();	
-		
-		fAddonDevUtil = new AddonDevUtil(configuration);
+
+		//fAddonDevUtil = new AddonDevUtil(configuration);
 		DebugPlugin.getDefault().addDebugEventListener(this);
 	}
 	
-	public void init() throws CoreException, IOException, ParserConfigurationException, SAXException, TransformerException
+	public void startPrcess(int eclispport, int chromebugport, List<String> commandline) throws CoreException, IOException
 	{
-		fAddonDevUtil.init();
+		SimpleServer.getInstance().start(this, eclispport);
 		
+		//IPreferenceStore store = AddonDevPlugin.getDefault().getPreferenceStore();
 		
-		
-		
-	}
-	
-	public void check()
-	{
-		String firefoxpath = fConfiguration.getAttribute(PrefConst.FIREFOX_PATH, "");
-		String profilepath = fConfiguration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH , "");		
-
-		int eclispport = fStore.getInt(PrefConst.ECLIPSE_PORT);
-		int debuggerport = fStore.getInt(PrefConst.DEBUGGER_PORT);			
-		
-		if(new File(firefoxpath).exists())
-		{
-			//throw new FileNotFoundException("");
-			//errmsg += "FileNotFound" + "\n";
-		}
-		if(new File(profilepath).exists())
-		{
-			//errmsg += "FileNotFound" + "\n";
-		}	
-		
-		//checkAddonFile
-	}
-		
-	private void getDebugStartCommandLine() throws CoreException, FileNotFoundException
-	{
-		String errmsg = null;
-		
-		List<String> commands = new ArrayList<String>();	
-		
-		String firefoxpath = fConfiguration.getAttribute(PrefConst.FIREFOX_PATH, "");
-		String profilepath = fConfiguration.getAttribute(PrefConst.FIREFOX_PROFILE_PATH , "");		
-
-		int eclispport = fStore.getInt(PrefConst.ECLIPSE_PORT);
-		int debuggerport = fStore.getInt(PrefConst.DEBUGGER_PORT);			
-		
-		if(new File(firefoxpath).exists())
-		{
-			//throw new FileNotFoundException("");
-			errmsg += "FileNotFound" + "\n";
-		}
-		if(new File(profilepath).exists())
-		{
-			errmsg += "FileNotFound" + "\n";
-		}
-		
-		commands.add(firefoxpath);	
-		commands.add("-no-remote");
-		commands.add("-profile");
-		commands.add("\"" + profilepath + "\"");
-		
-
-		commands.add("-ce_eport");
-		commands.add(String.valueOf(eclispport));
-		commands.add("-ce_cport");
-		commands.add(String.valueOf(debuggerport));
-		
-		commands.add("-chrome");
-		commands.add("chrome://chromebug/content/chromebug.xul");
-		
-		String firefoxargs = fConfiguration.getAttribute(PrefConst.FIREFOX_ARGS, "");
-		if(firefoxargs.trim().length() > 0)
-		{
-			String args = firefoxargs.trim();
-			if(args.contains(" "))
-			{
-				for (String arg : args.split(" ")) {
-					commands.add(arg);
-				}					
-			}
-			else
-			{
-				commands.add(args);
-			}
-	
-		}
-		//return commands.toArray(new String[commands.size()]);		
-	}
-	
-	public void startPrcess(ILaunchConfiguration configuration, ILaunch launch) throws Exception
-	{
-		IPreferenceStore store = AddonDevPlugin.getDefault().getPreferenceStore();
-		
-		int eclispport = store.getInt(PrefConst.ECLIPSE_PORT);
-		SendRequest.debuggerport = store.getString(PrefConst.DEBUGGER_PORT);
-		
+		//int eclispport = store.getInt(PrefConst.ECLIPSE_PORT);
+		SendRequest.setDebuggerPort(chromebugport); //store.getString(PrefConst.DEBUGGER_PORT);
 		//AddonDevPlugin.startServer(this, eclispport);
-		SimpleServer.getInstance().Start(this, eclispport);
+
 		
-		String[] commandLine = fAddonDevUtil.getDebugStartCommandLine();
+		String[] commandLine = commandline.toArray(new String[commandline.size()]);
 		Process process = DebugPlugin.exec(commandLine, null);
-		fProcess = DebugPlugin.newProcess(launch, process, commandLine[0]);
+		fProcess = DebugPlugin.newProcess(fLaunch, process, commandLine[0]);
 		
 		fTerminated = false;
 		
@@ -204,7 +113,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		started();		
 		fThread.setBreakpoints(null);
 		fThread.setStepping(false);
-		fThread.SetStackFrames(null);
+		fThread.setStackFrames(null);
 	}
 	
 	public void startDebug()
@@ -259,13 +168,8 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 	{
 		started();		
 		EventInit();
-		fThread.SetStackFrames(null);
+		fThread.setStackFrames(null);
 		SendRequest.reload();
-	}
-
-	public AddonDevUtil getAddonDevUtil()
-	{
-		return fAddonDevUtil;
 	}
 	
 	@Override
@@ -364,7 +268,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 				}
 			}
 			fTerminated = true;
-			SimpleServer.getInstance().Stop();
+			SimpleServer.getInstance().stop();
 			//fireTerminateEvent();
 			//fThread.fireTerminateEvent();
 		}
@@ -704,13 +608,13 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 		
 		AddonDevStackFrame[] stackframes = null;
 		try {
-			stackframes = XMLUtils.StackFramesFromXML(this, data);
+			stackframes = XMLUtils.stackFramesFromXML(this, data);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 		
-		fThread.SetStackFrames(stackframes);
+		fThread.setStackFrames(stackframes);
 		fThread.suspend();
 	}
 
@@ -839,7 +743,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 			//return null;
 		}
 		try {
-			variables = XMLUtils.VariablesFromXML(this, stackFramedepth, xmldata, parent);
+			variables = XMLUtils.variablesFromXML(this, stackFramedepth, xmldata, parent);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -870,7 +774,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 			//return null;
 		}
 		try {
-			variables = XMLUtils.VariablesFromXML(this, stackFramedepth, xmldata, parent);
+			variables = XMLUtils.variablesFromXML(this, stackFramedepth, xmldata, parent);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -913,7 +817,7 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 			e.printStackTrace();
 		}
 		try {
-			variables = XMLUtils.VariablesFromXML(this, stackFramedepth, xmldata, parent);
+			variables = XMLUtils.variablesFromXML(this, stackFramedepth, xmldata, parent);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1030,11 +934,11 @@ public class AddonDebugTarget extends PlatformObject implements IDebugTarget, IL
 				Object source = event.getSource();
 				if (source instanceof AddonDebugTarget)
 				{
-					SimpleServer.getInstance().Stop();
+					SimpleServer.getInstance().stop();
 					fCloseBrowser = true;
 					fTerminated = true;					
 				}else if (source instanceof IProcess) {
-					SimpleServer.getInstance().Stop();
+					SimpleServer.getInstance().stop();
 					fTerminated = true;
 					fCloseBrowser = true;
 					fThread.fireTerminateEvent();

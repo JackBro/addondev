@@ -25,43 +25,35 @@ import org.eclipse.core.runtime.Path;
 
 public class FileUtil {
 	
-	public static String getContent(IPath path)
+	public static String getContent(IPath path) throws IOException
 	{
 		return getContent(path.toFile());
 	}
 	
-	public static String getContent(File file)
+	public static String getContent(File file) throws IOException
 	{	
-		String res = "";
-		
-		InputStream in = null;
-		try {
-			in = new FileInputStream(file);
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		int len = 0;
-		byte[] buf = new byte[1024 * 8];
-		try {
-			while((len = in.read(buf))!=-1){
-				out.write(buf,0,len);
-			}
-			res = out.toString();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		try {
-			in.close();
-			out.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		InputStream in = new FileInputStream(file);
+		String res = getContent(in);
+//		ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		int len = 0;
+//		byte[] buf = new byte[1024 * 8];
+//		try {
+//			while((len = in.read(buf))!=-1){
+//				out.write(buf,0,len);
+//			}
+//			res = out.toString();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		try {
+//			in.close();
+//			out.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		return res;
 	}
@@ -80,77 +72,67 @@ public class FileUtil {
 		return null;
 	}
 	
-	public static String[] getContentLines(IPath fullpath) throws FileNotFoundException {
-		// TODO Auto-generated method stub
-		
-		ArrayList<String> lines = new ArrayList<String>();
-		
-		FileInputStream fin = new FileInputStream(fullpath.toFile());
-		
-		InputStreamReader inputreader = null;
-		BufferedReader bufferreader = null;
-		try {
-			inputreader = new InputStreamReader(fin, "UTF-8");
-			bufferreader = new BufferedReader(inputreader);
-			String line = null;
-			while((line = bufferreader.readLine()) != null)
-			{
-				if(line.length() > 0)
-				{
-					lines.add(line);
-				}
-			}			
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		finally
-		{
-			try {
-				if(inputreader != null ) inputreader.close();
-				if(bufferreader != null ) bufferreader.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return lines.toArray(new String[lines.size()]);
-	}
-	
 	public static String getContentFormUri(String uri) throws IOException
 	{
 		URL url = AddonDevPlugin.getDefault().getBundle().getEntry(uri);
-		
 		InputStream in = url.openStream();
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		int len = 0;
-		byte[] buf = new byte[1024 * 8];
-		while((len = in.read(buf))!=-1){
-			out.write(buf,0,len);
-		}
-
-		in.close();
-		out.close();	
+		String res = getContent(in);
 		
-		return out.toString();
+		return res;	
+//		ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		int len = 0;
+//		byte[] buf = new byte[1024 * 8];
+//		while((len = in.read(buf))!=-1){
+//			out.write(buf,0,len);
+//		}
+//
+//		in.close();
+//		out.close();	
+//		
+//		return out.toString();
 	}
 	
 	public static String getContent(InputStream input) throws IOException
 	{		
+//		ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		int len = 0;
+//		byte[] buf = new byte[1024 * 8];
+//		while((len = input.read(buf))!=-1){
+//			out.write(buf,0,len);
+//		}
+//
+//		input.close();
+//		out.close();	
+//		
+//		return out.toString();
+		
+		String res = null;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		int len = 0;
 		byte[] buf = new byte[1024 * 8];
-		while((len = input.read(buf))!=-1){
-			out.write(buf,0,len);
+		try {
+			while((len = input.read(buf))!=-1){
+				out.write(buf,0,len);
+			}
+			res = out.toString();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
 		}
-
-		input.close();
-		out.close();	
+		finally
+		{
+			try {
+				if(input !=null) input.close();
+				if(out !=null) out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}
 		
-		return out.toString();
+		return res;
 	}
+	
+	
 }

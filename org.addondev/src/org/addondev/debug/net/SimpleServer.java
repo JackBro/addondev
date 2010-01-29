@@ -56,7 +56,7 @@ public class SimpleServer {
 //        working = false;
 //	}
 	
-	public void Start(IDebugTarget debugtarget, int port) throws IOException
+	public void start(IDebugTarget debugtarget, int port) throws IOException
 	{	
 		fTarget = (AddonDebugTarget) debugtarget;
 		fPort = port;
@@ -67,7 +67,7 @@ public class SimpleServer {
         working = true;
 	}
 	
-	public void Stop() {
+	public void stop() {
 		server.stop(0);
 		working = false;
 	}

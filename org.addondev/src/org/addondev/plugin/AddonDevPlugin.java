@@ -109,34 +109,30 @@ public class AddonDevPlugin extends AbstractUIPlugin {
     private HashMap<String, ChromeURLMap> fChromeURL = new HashMap<String, ChromeURLMap>();
     public ChromeURLMap getChromeURLMap(IProject project, boolean isupdate)
     {
-    	IFile file = project.getFile(ChromeURLMap.MANIFEST_FILENAME);
-    	//if(file.getName().equals(ChromeURLMap.MANIFEST_FILENAME) )
-    	//{
-    		
-    		if(project != null)
-    		{
-    			String name = project.getName();
-    			if(fChromeURL.containsKey(name))
-    			{
-    				return fChromeURL.get(name);
-    			}
-    			else
-    			{
-    				ChromeURLMap map = new ChromeURLMap();
-    				try {
-						map.readManifest(file.getLocation());
-	    				fChromeURL.put(name, map);
-	    				
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						map = null;
-					}
-					return map;
-    			}
-    		}
-    		return null;
-    	//}
+		if(project != null)
+		{
+			IFile file = project.getFile(ChromeURLMap.MANIFEST_FILENAME);
+			String name = project.getName();
+			if(fChromeURL.containsKey(name))
+			{
+				return fChromeURL.get(name);
+			}
+			else
+			{
+				ChromeURLMap map = new ChromeURLMap();
+				try {
+					map.readManifest(file.getLocation());
+    				fChromeURL.put(name, map);
+    				
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					map = null;
+				}
+				return map;
+			}
+		}
+		return null;
     }
     
     private HashMap<String, DTDMap> fDTDHashMap = new HashMap<String, DTDMap>();

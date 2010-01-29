@@ -269,7 +269,7 @@ public class AddonDevThread extends PlatformObject implements IThread {
         return super.getAdapter(adapter);
     }
 
-	public void SetStackFrames(IStackFrame[] stack)
+	public void setStackFrames(IStackFrame[] stack)
 	{
         this.stack = stack;
 	}

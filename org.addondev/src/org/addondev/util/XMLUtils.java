@@ -2,8 +2,6 @@ package org.addondev.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringBufferInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -11,9 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.TransformerException;
 
 
 import org.addondev.debug.core.model.AddonDebugTarget;
@@ -23,12 +24,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.sun.org.apache.xpath.internal.XPathAPI;
 
 public class XMLUtils {
 	static SAXParserFactory parserFactory = SAXParserFactory.newInstance();
@@ -104,7 +109,7 @@ public class XMLUtils {
             }
 		}
 	}
-	static public AddonDevStackFrame[] StackFramesFromXML(AddonDebugTarget target, String payload) throws CoreException {
+	static public AddonDevStackFrame[] stackFramesFromXML(AddonDebugTarget target, String payload) throws CoreException {
         SAXParser parser = null;
 		try {
 			parser = getSAXParser();
@@ -126,10 +131,6 @@ public class XMLUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		//JSStackFrame stackframe = info.stacks.get(0);
-		//IVariable[] vals = (IVariable[]) info.locals.toArray(new JSVariable[0]);
-		//stackframe.setVariables(vals);
 		return (AddonDevStackFrame[]) info.stacks.toArray(new AddonDevStackFrame[0]);
 	}
 	
@@ -182,7 +183,7 @@ public class XMLUtils {
 //			}
 		}
 	}
-	static public ArrayList<IVariable> VariablesFromXML(AddonDebugTarget target, String stackFrameID, String payload, String parent) throws CoreException {
+	static public ArrayList<IVariable> variablesFromXML(AddonDebugTarget target, String stackFrameID, String payload, String parent) throws CoreException {
         SAXParser parser = null;
 		try {
 			parser = getSAXParser();
@@ -246,5 +247,27 @@ public class XMLUtils {
 		XMLdata data = new XMLdata();
 		parser.parse(new ByteArrayInputStream(payload.trim().getBytes("UTF-8")), data);
 		return data.mapList;
+	}
+	
+	
+	//
+	public static String getAddonIDFromRDF(String rdf) throws ParserConfigurationException, SAXException, IOException, TransformerException
+	{
+		
+		DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = fact.newDocumentBuilder();
+		Document doc = builder.parse(rdf);
+
+        Node n;		        
+        String id = null;
+        NodeIterator nl = XPathAPI.selectNodeIterator(doc, "/RDF/Description/*");
+        while ((n = nl.nextNode()) != null) {
+            if(n.getNodeName().equals("em:id"))
+            {
+            	id = n.getTextContent();
+            	break;
+            }
+        }              
+        return id;		
 	}
 }

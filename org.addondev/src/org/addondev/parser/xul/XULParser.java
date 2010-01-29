@@ -1,5 +1,6 @@
 package org.addondev.parser.xul;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,17 +27,8 @@ public class XULParser {
 	private static Pattern doctypeOverlayPattern = Pattern.compile("<!DOCTYPE\\s+overlay\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
 	private static Pattern doctypeprefwindowPattern = Pattern.compile("<!DOCTYPE\\s+prefwindow\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
 	private static Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*?>");
-	
 	private static Pattern entryPattern = Pattern.compile("\"&(.+);\"");
-	
-	
-	//private String fElementName;
-	//private ArrayList<String> fXULDateList;
-	//private IProject fProject;
-	//private String fLocale;
-	
-	//private HashSet<String> NodeSet = new HashSet<String>();
-	//private ArrayList<Pattern>
+
 	public static ArrayList<String> parse(String text)
 	{
 		ArrayList<String> xuldatalist = new ArrayList<String>();
@@ -126,101 +118,90 @@ public class XULParser {
 		return text.replaceAll("'", "&apos;").replaceAll("\n", "");
 	}
 	
-	public String parse(IPath fullpath, int offset)
-	{
-		//ChromeURLMap chromemap = AddonDevPlugin.getDefault().getChromeURLMap(fProject, false);
-		String text = FileUtil.getContent(fullpath.toFile());
-		//text = FileUtils.readFileToString(fullpath.toFile(), "UTF-8");
-		//String dtd = parseCSS(chromemap, text);
-		
-		String previewData = text;
-		
-		FuzzyXMLDocument document = new FuzzyXMLParser().parse(text);
-
-		FuzzyXMLElement element = document.getElementByOffset(offset);
-		FuzzyXMLElement preview = getPreviewNode(document, element);
-		
-		if(preview != null && preview.getName().equals("prefpane"))
-		{
-			FuzzyXMLElement pelement = (FuzzyXMLElement) document.getDocumentElement().getChildren()[0];
-			
-
-			ArrayList<OffsetInfo> tt = new ArrayList<OffsetInfo>();
-			
-			String pname = pelement.getName();
-			if("prefwindow".equals(pname))
-			{
-				//pelement.removeAllChildren();
-				
-				FuzzyXMLNode[] nodes = pelement.getChildren();
-				for (FuzzyXMLNode fuzzyXMLNode : nodes) {
-					if(fuzzyXMLNode instanceof FuzzyXMLElement)
-					{
-						FuzzyXMLElement celem = (FuzzyXMLElement)fuzzyXMLNode;
-						if(celem.getName().equals("prefpane") && !celem.equals(preview))
-						{
-							tt.add(new OffsetInfo(celem.getOffset(), celem.getLength()));
-							//pelement.removeChild(celem);
-							//break;
-						}
-					}
-				}
-				
-//				String com1= "<!-- ";
-//				String com2= " -->";
-//				StringBuffer sb = new StringBuffer(text);
+//	public String parse(IPath fullpath, int offset) throws IOException
+//	{
+//		//ChromeURLMap chromemap = AddonDevPlugin.getDefault().getChromeURLMap(fProject, false);
+//		String text = FileUtil.getContent(fullpath.toFile());
+//		//text = FileUtils.readFileToString(fullpath.toFile(), "UTF-8");
+//		//String dtd = parseCSS(chromemap, text);
+//		
+//		String previewData = text;
+//		
+//		FuzzyXMLDocument document = new FuzzyXMLParser().parse(text);
+//
+//		FuzzyXMLElement element = document.getElementByOffset(offset);
+//		FuzzyXMLElement preview = getPreviewNode(document, element);
+//		
+//		if(preview != null && preview.getName().equals("prefpane"))
+//		{
+//			FuzzyXMLElement pelement = (FuzzyXMLElement) document.getDocumentElement().getChildren()[0];
+//			
+//
+//			ArrayList<OffsetInfo> tt = new ArrayList<OffsetInfo>();
+//			
+//			String pname = pelement.getName();
+//			if("prefwindow".equals(pname))
+//			{
+//				//pelement.removeAllChildren();
+//				
+//				FuzzyXMLNode[] nodes = pelement.getChildren();
+//				for (FuzzyXMLNode fuzzyXMLNode : nodes) {
+//					if(fuzzyXMLNode instanceof FuzzyXMLElement)
+//					{
+//						FuzzyXMLElement celem = (FuzzyXMLElement)fuzzyXMLNode;
+//						if(celem.getName().equals("prefpane") && !celem.equals(preview))
+//						{
+//							tt.add(new OffsetInfo(celem.getOffset(), celem.getLength()));
+//							//pelement.removeChild(celem);
+//							//break;
+//						}
+//					}
+//				}
+//				
+////				String com1= "<!-- ";
+////				String com2= " -->";
+////				StringBuffer sb = new StringBuffer(text);
+////				int inoffset = 0;
+////				for (cl t : tt) {
+////					sb = sb.insert( t.start+inoffset, com1);
+////					inoffset += com1.length();
+////					
+////					sb = sb.insert( t.start+t.len + inoffset, com2);
+////					inoffset += com2.length();	 
+////				}
+////				
+////				String mm = sb.toString();
+//				
+//				
 //				int inoffset = 0;
-//				for (cl t : tt) {
-//					sb = sb.insert( t.start+inoffset, com1);
-//					inoffset += com1.length();
-//					
-//					sb = sb.insert( t.start+t.len + inoffset, com2);
-//					inoffset += com2.length();	 
+//				StringBuffer sb = new StringBuffer(text);
+//				for (OffsetInfo t : tt) {
+//					int start = t.start - inoffset;
+//					sb = sb.delete(start, start + t.len);//( t.start+inoffset, com1);
+//					inoffset += t.len; 
 //				}
 //				
 //				String mm = sb.toString();
-				
-				
-				int inoffset = 0;
-				StringBuffer sb = new StringBuffer(text);
-				for (OffsetInfo t : tt) {
-					int start = t.start - inoffset;
-					sb = sb.delete(start, start + t.len);//( t.start+inoffset, com1);
-					inoffset += t.len; 
-				}
-				
-				String mm = sb.toString();
-				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "");
-				
-////dataurl
-//				//pelement.appendChild(preview);
-//				String css = getCSS(text);
-//				String xml = pelement.toXMLString();
-//				xml = xml.replaceAll("&amp;", "&");
-//				//xml = xml.replaceAll("&apos;", "\\\"");
-//				previewData = "<?xml version=\"1.0\"?>\n" + css + xml;
-				
-				//previewData = mm.replaceAll("&amp;", "&").replaceAll("\n", "");
-				
-////domparser
-//				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "\\\\n");
-//				//previewData = css + xml;
-			}
-		}		
-		
-		return previewData;
-		
-		
-//		Matcher m = xmlPattern.matcher(text);
-//		int index = 0;
-//		while(m.find())
-//		{
-//			String url = m.group(1);
-//			
-//			index = m.regionEnd() + 1;
-//		}
-
-	}
+//				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "");
+//				
+//////dataurl
+////				//pelement.appendChild(preview);
+////				String css = getCSS(text);
+////				String xml = pelement.toXMLString();
+////				xml = xml.replaceAll("&amp;", "&");
+////				//xml = xml.replaceAll("&apos;", "\\\"");
+////				previewData = "<?xml version=\"1.0\"?>\n" + css + xml;
+//				
+//				//previewData = mm.replaceAll("&amp;", "&").replaceAll("\n", "");
+//				
+//////domparser
+////				previewData = mm.replaceAll("'", "&apos;").replaceAll("\n", "\\\\n");
+////				//previewData = css + xml;
+//			}
+//		}		
+//		
+//		return previewData;
+//	}
 	
 	private FuzzyXMLElement getPreviewNode(FuzzyXMLDocument document, FuzzyXMLElement element)
 	{
@@ -330,55 +311,5 @@ public class XULParser {
 		}
 		
 		return errormap;
-		
-		//ArrayList<String> dtdlist = new ArrayList<String>();
-		
 	}
-	
-//	
-//	public List<String> parseDTD(ChromeURLMap map, String text, String previewXML)
-//	{
-//		ArrayList<String> list = new ArrayList<String>();
-//		Matcher m = doctypeOverlayPattern.matcher(text);
-//		String xml = ""; 
-//		while(m.find())
-//		{
-//			String dtd = m.group(0); //all
-//			String url = m.group(1); //dtd
-//			String local = map.convertChrome2Local(url);
-//			if(local != null)
-//			{
-//				list.add(local);
-//			}
-//		}
-//		
-//		DTDMap dtdmap = AddonDevPlugin.getDefault().getDTDMap(fProject, false);
-//		dtdmap.setLocate(fLocale);
-//		for (String dtdpath : list) {
-//			if(dtdmap.hasLocate(fLocale))
-//			{
-//				
-//				
-//			}
-//			else
-//			{
-//				dtdmap.parse(FileUtil.getPath(dtdpath));
-//			}			
-//		}
-//		
-//		m = entryPattern.matcher(previewXML);
-//		while(m.find())
-//		{
-//			String dtd = m.group(0); //all
-//			String url = m.group(1); //dtd
-//			String local = map.convertChrome2Local(url);
-//			if(local != null)
-//			{
-//				list.add(local);
-//			}
-//		}
-//		
-//		
-//		return list;
-//	}
 }

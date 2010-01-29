@@ -239,11 +239,15 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		out.close();	
 		
 		String text = out.toString();
-		for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
-		{
-			String key = (String) iterator.next();
+		for (Object obj : param.entrySet()) {
+			String key = (String) obj;
 			text = text.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
 		}
+//		for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
+//		{
+//			String key = (String) iterator.next();
+//			text = text.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
+//		}
 		
 		IFile distfile = project.getFile(distpath);
 		distfile.create(new ByteArrayInputStream(text.getBytes()), true, monitor);

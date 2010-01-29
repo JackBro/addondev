@@ -11,7 +11,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class SendRequest {
-	public static String debuggerport;
+	private static String fDebuggerPort;
+	
+	
 	
 //	public static void setBreakPoint(String filename, int line) throws IOException
 //	{	
@@ -21,6 +23,14 @@ public class SendRequest {
 //		RequestData(cmd);
 //	}
 	
+	public static int getDebuggerPort() {
+		return Integer.parseInt(fDebuggerPort);
+	}
+
+	public static void setDebuggerPort(int port) {
+		SendRequest.fDebuggerPort = String.valueOf(port);
+	}
+
 	public static void setBreakPoint(String data) throws IOException
 	{	
 		//String cmd = "setbreakpoint";
@@ -102,7 +112,7 @@ public class SendRequest {
 	
 	private static String RequestData(String command) throws IOException
 	{			
-		URL url1 = new URL("http://localhost:" + debuggerport + "/?cmd=" + command);
+		URL url1 = new URL("http://localhost:" + fDebuggerPort + "/?cmd=" + command);
 		HttpURLConnection http = (HttpURLConnection)url1.openConnection();
 		http.setRequestMethod("GET");
 		http.connect();
@@ -132,7 +142,7 @@ public class SendRequest {
 	
 	private static String RequestData(String command, String data) throws IOException
 	{			
-		URL url1 = new URL("http://localhost:" + debuggerport + "/?cmd=" + command);
+		URL url1 = new URL("http://localhost:" + fDebuggerPort + "/?cmd=" + command);
 		HttpURLConnection http = (HttpURLConnection)url1.openConnection();
 		http.setRequestMethod("POST");
 

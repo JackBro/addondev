@@ -110,7 +110,7 @@ public class Chromebug_eclipse_Test{
     public Chromebug_eclipse_Test() throws IOException {
     
     	try {
-    		SendRequest.debuggerport = "8083";
+    		SendRequest.setDebuggerPort(8083);
 			server = new SimpleServer(8084);
 			server.Start();
 		} catch (Exception e) {

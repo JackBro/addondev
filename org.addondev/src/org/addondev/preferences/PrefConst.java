@@ -13,15 +13,9 @@ public class PrefConst {
 	public static final String XULPREVIEW_W = "org.addondev.pref.xulpreview.width";
 	public static final String XULPREVIEW_H = "org.addondev.pref.xulpreview.height";
 	
-	public static final String DEFAULT_DEBUGGER_PORT = "8083";
-	public static final String DEFAULT_ECLIPSE_PORT = "8084";
+	//public static final String DEFAULT_DEBUGGER_PORT = "8083";
+	//public static final String DEFAULT_ECLIPSE_PORT = "8084";
 	public static final int DEFAULT_DEBUGGER_CONEECT_TIMEOUT = 20000;
-	
-	public static final String FIREFOX_PATH = "org.addondev.pref.firefox.path";
-	//public static final String FIREFOX_PROFILE_NANE = "org.addondev.pref.firefox.profile.name";
-	public static final String FIREFOX_PROFILE_PATH = "org.addondev.pref.firefox.profile.path";
-	public static final String FIREFOX_ARGS = "org.addondev.pref.firefox.args";
-	public static final String FIREFOX_DEBUGTARGETADDONS = "org.addondev.pref.firefox.debugtargetaddons";
 	
 	public static final String FIREFOX_ADDON_GUID = "org.addondev.pref.firefox.addon.guid";
 	public static final String FIREFOX_ADDON_VERSION = "org.addondev.pref.firefox.addon.version";
