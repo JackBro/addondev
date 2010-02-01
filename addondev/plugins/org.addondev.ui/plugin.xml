@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.addondev.ui.editor.javascript.JavaScriptEditor"
+            default="false"
+            extensions="js"
+            id="org.addondev.editor.javascript"
+            name="AddonDev JavaScript Editor">
+      </editor>
+      <editor
+            class="org.addondev.ui.editor.xul.XULEditor"
+            default="false"
+            extensions="xul"
+            id="org.addondev.editor.xul"
+            name="AddonDev XUL Editor">
+      </editor>
+      <editor
+            class="org.addondev.ui.editor.xul.preview.XULPreviewForm"
+            default="false"
+            extensions="xul"
+            id="org.addondev.editor.xul.formeditor"
+            name="AddonDev XUL Preview">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="org.addondev.debug.BreakpointRulerActions"
+            targetID="org.addondev.editor.javascript">
+         <action
+               actionID="RulerDoubleClick"
+               class="org.addondev.debug.ui.actions.AddonDevBreakpointRulerActionDelegate"
+               id="org.addondev.debug.BreakpointRulerAction"
+               label="Add Breakpoint">
+         </action>
+      </editorContribution>
+      <editorContribution
+            id="org.addondev.debug.SelectLineRulerActions"
+            targetID="org.addondev.editor.javascript">
+         <action
+               actionID="RulerClick"
+               class="org.addondev.debug.ui.actions.SelectLineRulerActionDelegate"
+               id="org.addondev.debug.SelectLineRulerAction"
+               label="SelectLine">
+         </action>
+      </editorContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.addondev.category"
+            name="Addon Dev">
+      </category>
+      <wizard
+            category="org.addondev.category"
+            class="org.addondev.ui.wizard.AddonDevNewProjectWizard"
+            hasPages="true"
+            icon="icons/addon.png"
+            id="org.addondev.wizzard.addondevwizard"
+            name="AddonDev Project"
+            project="true">
+      </wizard>
+      <wizard
+            category="org.addondev.category"
+            class="org.addondev.ui.wizard.NewJavaScriptFileWizard"
+            id="org.addondev.wizard1"
+            name="JavaScript File"
+            project="false">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.addondev.category.wizard.import"
+            class="org.addondev.ui.wizard.AddonDevImportWizard"
+            id="org.addondev.wizard.addonimportwizard"
+            name="Firefox Addon">
+      </wizard>
+      <category
+            id="org.addondev.category.wizard.import"
+            name="Addon Dev">
+      </category>
+   </extension>
+
+</plugin>

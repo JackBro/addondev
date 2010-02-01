@@ -8,6 +8,8 @@ import org.eclipse.core.runtime.CoreException;
 
 public class AddonDevNature implements IProjectNature {
 	
+	public static final String NATUREID = "org.addondev.nature";
+	
 	private IProject project;
 	
 	@Override

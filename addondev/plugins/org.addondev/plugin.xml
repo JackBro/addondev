@@ -2,30 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.editorActions">
-     
-      <editorContribution
-            id="org.addondev.debug.BreakpointRulerActions"
-            targetID="org.addondev.editor.javascript">
-         <action
-               actionID="RulerDoubleClick"
-               class="org.addondev.debug.ui.actions.AddonDevBreakpointRulerActionDelegate"
-               id="org.addondev.debug.BreakpointRulerAction"
-               label="Add Breakpoint">
-         </action>
-      </editorContribution>n>
-      <editorContribution
-            id="org.addondev.debug.SelectLineRulerActions"
-            targetID="org.addondev.editor.javascript">
-         <action
-               actionID="RulerClick"
-               class="org.addondev.debug.ui.actions.SelectLineRulerActionDelegate"
-               id="org.addondev.debug.SelectLineRulerAction"
-               label="SelectLine">
-         </action>
-      </editorContribution>
-   </extension>
-   <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
             class="org.addondev.debug.ui.launching.AddonDevTabGroup"
@@ -99,6 +75,28 @@
       </shortcut>
    </extension>
    <extension
+         point="org.eclipse.debug.core.sourcePathComputers">
+      <sourcePathComputer
+            class="org.addondev.debug.core.AddonDevSourcePathComputerDelegate"
+            id="org.addondev.debug.core.addondevsourcepathcomputer">
+      </sourcePathComputer>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourceLocators">
+      <sourceLocator
+            class="org.addondev.debug.core.AddonDevPersistableSourceLocator"
+          	id="org.addondev.debug.core.addondevsourcelocatorcator"
+            name="name">
+      </sourceLocator>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.watchExpressionDelegates">
+      <watchExpressionDelegate
+            debugModel="org.addondev.debug"
+            delegateClass="org.addondev.debug.core.AddonDevWatchExpressionDelegate">
+      </watchExpressionDelegate>
+   </extension>
+   <extension
          point="org.eclipse.ui.views">
       <category
             id="jp.javascript.debug"
@@ -112,20 +110,68 @@
       </view>
    </extension>
    <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.addondev.ui.editor.javascript.JavaScriptEditor"
+            default="false"
+            extensions="js"
+            id="org.addondev.editor.javascript"
+            name="AddonDev JavaScript Editor">
+      </editor>
+      <editor
+            class="org.addondev.ui.editor.xul.XULEditor"
+            default="false"
+            extensions="xul"
+            id="org.addondev.editor.xul"
+            name="AddonDev XUL Editor">
+      </editor>
+      <editor
+            class="org.addondev.ui.editor.xul.preview.XULPreviewForm"
+            default="false"
+            extensions="xul"
+            id="org.addondev.editor.xul.formeditor"
+            name="AddonDev XUL Preview">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+     
+      <editorContribution
+            id="org.addondev.debug.BreakpointRulerActions"
+            targetID="org.addondev.editor.javascript">
+         <action
+               actionID="RulerDoubleClick"
+               class="org.addondev.debug.ui.actions.AddonDevBreakpointRulerActionDelegate"
+               id="org.addondev.debug.BreakpointRulerAction"
+               label="Add Breakpoint">
+         </action>
+      </editorContribution>n>
+      <editorContribution
+            id="org.addondev.debug.SelectLineRulerActions"
+            targetID="org.addondev.editor.javascript">
+         <action
+               actionID="RulerClick"
+               class="org.addondev.debug.ui.actions.SelectLineRulerActionDelegate"
+               id="org.addondev.debug.SelectLineRulerAction"
+               label="SelectLine">
+         </action>
+      </editorContribution>
+   </extension>
+   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="org.addondev.ui.preferences.AddonDevPreferencePage"
-            id="org.addondev.debug.preferencepages"
+            id="org.addondev.ui.preferencepages"
             name="AddonDev">
       </page>
       <page
-            category="org.addondev.debug.preferencepages"
+            category="org.addondev.ui.preferencepages"
             class="org.addondev.ui.preferences.JavaScriptEditorPreferencePage"
             id="AddonDev.page1"
             name="name">
       </page>
       <page
-            category="org.addondev.debug.preferencepages"
+            category="org.addondev.ui.preferencepages"
             class="org.addondev.ui.preferences.XULPreferencePage"
             id="org.addondev.ui.XULPreferencepages"
             name="XUL Editor">
@@ -138,30 +184,6 @@
       </page>
    </extension>
    <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.addondev.editor.javascript.JavaScriptEditor"
-            default="false"
-            extensions="js"
-            id="org.addondev.editor.javascript"
-            name="AddonDev JavaScript Editor">
-      </editor>
-      <editor
-            class="org.addondev.editor.xul.XULEditor"
-            default="false"
-            extensions="xul"
-            id="org.addondev.editor.xul"
-            name="AddonDev XUL Editor">
-      </editor>
-      <editor
-            class="org.addondev.editor.xul.preview.XULPreviewForm"
-            default="false"
-            extensions="xul"
-            id="org.addondev.editor.xul.formeditor"
-            name="AddonDev XUL Preview">
-      </editor>
-   </extension>
-   <extension
          point="org.eclipse.ui.newWizards">
       <category
             id="org.addondev.category"
@@ -169,7 +191,7 @@
       </category>
       <wizard
             category="org.addondev.category"
-            class="org.addondev.wizard.AddonDevNewProjectWizard"
+            class="org.addondev.ui.wizard.AddonDevNewProjectWizard"
             hasPages="true"
             icon="icons/addon.png"
             id="org.addondev.wizzard.addondevwizard"
@@ -178,7 +200,7 @@
       </wizard>
       <wizard
             category="org.addondev.category"
-            class="org.addondev.wizard.NewJavaScriptFileWizard"
+            class="org.addondev.ui.wizard.NewJavaScriptFileWizard"
             id="org.addondev.wizard1"
             name="JavaScript File"
             project="false">
@@ -188,7 +210,7 @@
          point="org.eclipse.ui.importWizards">
       <wizard
             category="org.addondev.category.wizard.import"
-            class="org.addondev.wizard.AddonDevImportWizard"
+            class="org.addondev.ui.wizard.AddonDevImportWizard"
             id="org.addondev.wizard.addonimportwizard"
             name="Firefox Addon">
       </wizard>
@@ -231,7 +253,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.addondev.editor.javascript.actions.samplehandler"
+            class="org.addondev.ui.editor.javascript.actions.samplehandler"
             commandId="AddonDev.command1">
       </handler>
    </extension>
@@ -321,42 +343,6 @@
                menubarPath="additions">
          </action>
       </viewerContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.addondev.objectContribution2"
-            objectClass="org.addondev.debug.core.model.AddonDevLineBreakpoint">
-         <menu
-               id="org.addondev.menu1"
-               label="label">
-         </menu>
-         <action
-               class="org.addondev.Action3"
-               id="org.addondev.action3"
-               label="label2">
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
-         point="org.eclipse.debug.core.sourcePathComputers">
-      <sourcePathComputer
-            class="org.addondev.debug.core.AddonDevSourcePathComputerDelegate"
-            id="org.addondev.debug.core.addondevsourcepathcomputer">
-      </sourcePathComputer>
-   </extension>
-   <extension
-         point="org.eclipse.debug.core.sourceLocators">
-      <sourceLocator
-            class="org.addondev.debug.core.AddonDevPersistableSourceLocator"
-          	id="org.addondev.debug.core.addondevsourcelocatorcator"
-            name="name">
-      </sourceLocator>
-   </extension>
-   <extension
-         point="org.eclipse.debug.core.watchExpressionDelegates">
-      <watchExpressionDelegate
-            debugModel="org.addondev.debug"
-            delegateClass="org.addondev.debug.core.AddonDevWatchExpressionDelegate">
-      </watchExpressionDelegate>
    </extension>
    <extension
          point="org.eclipse.ui.editors.templates">

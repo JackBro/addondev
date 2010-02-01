@@ -3,8 +3,8 @@ package org.addondev.core;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.addondev.editor.xul.preview.XULPreviewForm;
 import org.addondev.parser.xul.XULParser;
+import org.addondev.ui.editor.xul.preview.XULPreviewForm;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

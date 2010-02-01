@@ -1,7 +1,7 @@
 package org.addondev.preferences;
 
 
-import org.addondev.plugin.AddonDevPlugin;
+import org.addondev.core.AddonDevPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;

@@ -1,6 +1,6 @@
 package org.addondev.templates;
 
-import org.addondev.plugin.AddonDevPlugin;
+import org.addondev.core.AddonDevPlugin;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.templates.Template;
