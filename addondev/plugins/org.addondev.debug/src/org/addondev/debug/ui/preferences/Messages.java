@@ -1,4 +1,4 @@
-package org.addondev.ui.preferences;
+package org.addondev.debug.ui.preferences;
 
 import org.eclipse.osgi.util.NLS;
 

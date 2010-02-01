@@ -88,7 +88,7 @@ public class XULPreviewPreferencePage extends PreferencePage implements
 	
 		Composite xulfileparent = new Composite(xulrunnergroup, SWT.NONE);
 		xulfileparent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		fXULRunnerFile = new FileFieldEditor(PrefConst.XULRUNNER_PATH,
+		fXULRunnerFile = new FileFieldEditor(AddonDevUIPrefConst.XULRUNNER_PATH,
 				"XULRunnerFile", xulfileparent);
 		fXULRunnerFile.setStringValue("dummy");
 		fXULRunnerFile.setPropertyChangeListener(new IPropertyChangeListener() {
@@ -172,7 +172,7 @@ public class XULPreviewPreferencePage extends PreferencePage implements
         //GridData scrolldata2 = new GridData(GridData.FILL_HORIZONTAL);
         //scrolldata2.horizontalSpan = 5;
 		//wparent.setLayoutData(scrolldata2);
-		fInteditorW = new IntegerFieldEditor(PrefConst.XULPREVIEW_W, "Minwidth", sparent);
+		fInteditorW = new IntegerFieldEditor(AddonDevUIPrefConst.XULPREVIEW_W, "Minwidth", sparent);
 		fInteditorW.getTextControl(sparent).addVerifyListener(fIntegerVerifyListener);
 //		FormData wfd = new FormData();
 //		wfd.top = new FormAttachment(scrolllabel, 1);
@@ -186,7 +186,7 @@ public class XULPreviewPreferencePage extends PreferencePage implements
         //GridData scrolldata2 = new GridData(GridData.FILL_HORIZONTAL);
        // scrolldata2.horizontalSpan = 5;
         //hparent.setLayoutData(scrolldata2);
-		fInteditorH = new IntegerFieldEditor(PrefConst.XULPREVIEW_H, "MinHeight", sparent);
+		fInteditorH = new IntegerFieldEditor(AddonDevUIPrefConst.XULPREVIEW_H, "MinHeight", sparent);
 		fInteditorH.getTextControl(sparent).addVerifyListener(fIntegerVerifyListener);
 //		FormData hfd = new FormData();
 //		hfd.top = new FormAttachment(scrolllabel, 1);
@@ -194,9 +194,9 @@ public class XULPreviewPreferencePage extends PreferencePage implements
 //		hfd.right = new FormAttachment(100, -10);	
 //		hparent.setLayoutData(hfd);
 		
-		fXULRunnerFile.setStringValue(fStote.getString(PrefConst.XULRUNNER_PATH));
-		fInteditorW.setStringValue(fStote.getString(PrefConst.XULPREVIEW_W).toString());
-		fInteditorH.setStringValue(fStote.getString(PrefConst.XULPREVIEW_H).toString());
+		fXULRunnerFile.setStringValue(fStote.getString(AddonDevUIPrefConst.XULRUNNER_PATH));
+		fInteditorW.setStringValue(fStote.getString(AddonDevUIPrefConst.XULPREVIEW_W).toString());
+		fInteditorH.setStringValue(fStote.getString(AddonDevUIPrefConst.XULPREVIEW_H).toString());
 		
 		return parent;
 	}
@@ -204,9 +204,9 @@ public class XULPreviewPreferencePage extends PreferencePage implements
 	@Override
 	public boolean performOk() {
 		// TODO Auto-generated method stub
-		fStote.setValue(PrefConst.XULRUNNER_PATH, fXULRunnerFile.getStringValue());
-		fStote.setValue(PrefConst.XULPREVIEW_W, fInteditorH.getIntValue());
-		fStote.setValue(PrefConst.XULPREVIEW_H, fInteditorW.getIntValue());
+		fStote.setValue(AddonDevUIPrefConst.XULRUNNER_PATH, fXULRunnerFile.getStringValue());
+		fStote.setValue(AddonDevUIPrefConst.XULPREVIEW_W, fInteditorH.getIntValue());
+		fStote.setValue(AddonDevUIPrefConst.XULPREVIEW_H, fInteditorW.getIntValue());
 	
 		return super.performOk();
 	}

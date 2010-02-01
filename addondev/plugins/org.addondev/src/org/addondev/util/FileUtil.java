@@ -1,14 +1,17 @@
 package org.addondev.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,27 +37,6 @@ public class FileUtil {
 	{	
 		InputStream in = new FileInputStream(file);
 		String res = getContent(in);
-//		ByteArrayOutputStream out = new ByteArrayOutputStream();
-//		int len = 0;
-//		byte[] buf = new byte[1024 * 8];
-//		try {
-//			while((len = in.read(buf))!=-1){
-//				out.write(buf,0,len);
-//			}
-//			res = out.toString();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		try {
-//			in.close();
-//			out.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
 		return res;
 	}
 	
@@ -79,33 +61,10 @@ public class FileUtil {
 		String res = getContent(in);
 		
 		return res;	
-//		ByteArrayOutputStream out = new ByteArrayOutputStream();
-//		int len = 0;
-//		byte[] buf = new byte[1024 * 8];
-//		while((len = in.read(buf))!=-1){
-//			out.write(buf,0,len);
-//		}
-//
-//		in.close();
-//		out.close();	
-//		
-//		return out.toString();
 	}
 	
 	public static String getContent(InputStream input) throws IOException
-	{		
-//		ByteArrayOutputStream out = new ByteArrayOutputStream();
-//		int len = 0;
-//		byte[] buf = new byte[1024 * 8];
-//		while((len = input.read(buf))!=-1){
-//			out.write(buf,0,len);
-//		}
-//
-//		input.close();
-//		out.close();	
-//		
-//		return out.toString();
-		
+	{			
 		String res = null;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		int len = 0;
@@ -134,5 +93,21 @@ public class FileUtil {
 		return res;
 	}
 	
-	
+	public static void write(File file, String text) throws IOException
+	{
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+			pw.print(text);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		finally
+		{
+			if(pw != null) pw.close(); 
+		}
+		
+	}
 }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -28,13 +27,13 @@ public class AddonDevSourcePathComputerDelegate implements
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		List<ISourceContainer> containers = new ArrayList<ISourceContainer>();
 		for (IProject project : projects) {
-			if(project.hasNature(AddonDevPlugin.NATUREID))
+			if(project.hasNature(AddonDevNature.NATUREID))
 			{
 				containers.add(new ProjectSourceContainer(project, false));
 			}
 		}
 		
-		IPath path = AddonDevPlugin.getWorkspace().getRoot().getLocation();
+		IPath path = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 		File dir = path.append("tmp").toFile();
 		if(!dir.exists())
 		{

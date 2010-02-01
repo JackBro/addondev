@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import org.addondev.debug.core.model.AddonDevStackFrame;
 import org.addondev.editor.javascript.JavaScriptEditor;
-import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -34,7 +34,7 @@ public class AddonDevPersistableSourceLocator implements
 	public void initializeDefaults(ILaunchConfiguration configuration)
 			throws CoreException {
 		// TODO Auto-generated method stub
-		IPath path = AddonDevPlugin.getWorkspace().getRoot().getLocation();
+		IPath path = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 		dir = path.append("tmp").toFile();
 		if(!dir.exists())
 		{
@@ -71,7 +71,7 @@ public class AddonDevPersistableSourceLocator implements
 		AddonDevStackFrame frame = (AddonDevStackFrame)element;
 		
 		String filefullpath = frame.getFileFullPath();
-		IWorkspaceRoot root = AddonDevPlugin.getWorkspace().getRoot();
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IPath path = new Path(filefullpath);
 		//IPath path = new Path(filefullpath);
 		//Path.fromPortableString(filefullpath);

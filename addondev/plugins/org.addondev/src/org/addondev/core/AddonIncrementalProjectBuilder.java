@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.addondev.parser.xul.XULParser;
-import org.addondev.ui.editor.xul.preview.XULPreviewForm;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -24,7 +23,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
 public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
-
+	
+	public static final String BUILDER_ID = "org.addondev.core.AddonIncrementalProjectBuilder";
+	
 	class IncrementalBuildVisitor implements IResourceDeltaVisitor {
 
 		@Override
@@ -48,8 +49,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 		
 	}
 	
-	
-	public static final String BUILDER_ID = "org.addondev.core.AddonIncrementalProjectBuilder";
+
 	
 	public AddonIncrementalProjectBuilder() {
 		// TODO Auto-generated constructor stub

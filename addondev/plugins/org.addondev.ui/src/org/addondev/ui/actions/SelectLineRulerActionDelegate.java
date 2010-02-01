@@ -1,9 +1,9 @@
-package org.addondev.debug.ui.actions;
+package org.addondev.ui.actions;
 
-import org.addondev.editor.javascript.JavaScriptEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.events.MouseEvent;
@@ -31,25 +31,27 @@ public class SelectLineRulerActionDelegate extends AbstractRulerActionDelegate {
 	@Override
 	public void mouseDown(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(fEditor instanceof JavaScriptEditor)
-		{
+		//if(fEditor instanceof JavaScriptEditor)
+		//{
 			IDocument document= fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
 			int line = fRuler.getLineOfLastMouseButtonActivity();
 			int offset = -1;
-			int linelength = -1;
+			int length = -1;
 			try {
 				offset = document.getLineOffset(line);
-				linelength = document.getLineLength(line);
+				length = document.getLineLength(line);
 			} catch (BadLocationException ex) {
 				// TODO Auto-generated catch block
 				ex.printStackTrace();
 			}
-			if(offset >= 0 && linelength >= 0)
+			if(offset >= 0 && length >= 0)
 			{
-				JavaScriptEditor jseditor = (JavaScriptEditor)fEditor;
-				jseditor.setSelection(offset, linelength);
+				//JavaScriptEditor jseditor = (JavaScriptEditor)fEditor;
+				//jseditor.setSelection(offset, linelength);
+				//TextSelection sel
+				fEditor.getSelectionProvider().setSelection(new TextSelection(offset, length));
 			}
-		}
+		//}
 		super.mouseDown(e);
 	}
 }

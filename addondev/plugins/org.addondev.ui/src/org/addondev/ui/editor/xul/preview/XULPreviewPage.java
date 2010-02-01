@@ -94,7 +94,7 @@ public class XULPreviewPage extends Page{
 		
 		fTabFolder = new TabFolder(fStackComposite, SWT.NONE);
 		
-		String path = AddonDevPlugin.getDefault().getPreferenceStore().getString(PrefConst.XULRUNNER_PATH);
+		String path = AddonDevPlugin.getDefault().getPreferenceStore().getString(AddonDevUIPrefConst.XULRUNNER_PATH);
 		if(!new File(path).exists())
 		{
 			fStackLayout.topControl = fLinkComposite;
@@ -120,7 +120,7 @@ public class XULPreviewPage extends Page{
 
 	public void setDocument(List<String> xuls) {
 		if(xuls.size() == 0) return;
-		String path = AddonDevPlugin.getDefault().getPreferenceStore().getString(PrefConst.XULRUNNER_PATH);
+		String path = AddonDevPlugin.getDefault().getPreferenceStore().getString(AddonDevUIPrefConst.XULRUNNER_PATH);
 		if(!new File(path).exists()) return;
 		
 		if(fStackLayout.topControl != fTabFolder)
@@ -274,7 +274,7 @@ public class XULPreviewPage extends Page{
 		scroll.setExpandHorizontal(true);
 		scroll.setExpandVertical(true);
 
-		String path = AddonDevPlugin.getDefault().getPreferenceStore().getString(PrefConst.XULRUNNER_PATH);
+		String path = AddonDevPlugin.getDefault().getPreferenceStore().getString(AddonDevUIPrefConst.XULRUNNER_PATH);
 		IPath dir = new Path(path).removeLastSegments(1);
 		System.setProperty("org.eclipse.swt.browser.XULRunnerPath", dir.toOSString());
 		final Browser browser = new Browser(composite, SWT.MOZILLA);

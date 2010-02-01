@@ -33,7 +33,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
-import sun.misc.FpUtils;
 
 public class XULPreviewForm extends MultiPageEditorPart {
 //public class XULPreviewForm extends FormEditor {
@@ -59,7 +58,7 @@ public class XULPreviewForm extends MultiPageEditorPart {
 
 	public XULPreviewForm() {
 		// TODO Auto-generated constructor stub
-		fStore = AddonDevPlugin.getDefault().getPreferenceStore();
+		fStore = AddonDevUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	@Override
@@ -77,7 +76,7 @@ public class XULPreviewForm extends MultiPageEditorPart {
 
 		if(input instanceof FileEditorInput)
 		{
-			IPath path = new Path(fStore.getString(PrefConst.XULRUNNER_PATH));
+			IPath path = new Path(fStore.getString(AddonDevUIPrefConst.XULRUNNER_PATH));
 			if(path.toFile().exists())
 			{
 				FileEditorInput fileinput = (FileEditorInput)input;

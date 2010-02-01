@@ -15,6 +15,7 @@ import org.addondev.debug.preferences.DebugPrefConst;
 import org.addondev.debug.ui.launching.AddonDevLaunchMainTab;
 import org.addondev.debug.util.FindPort;
 import org.addondev.debug.util.XMLUtils;
+import org.addondev.util.FileUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -192,7 +193,8 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
 			}
 			else
 			{		
-				FileUtils.writeStringToFile(file, path);
+				//FileUtils.writeStringToFile(file, path);
+				FileUtil.write(file, path);
 			}	
 	}
 	

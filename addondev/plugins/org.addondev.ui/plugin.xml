@@ -38,11 +38,11 @@
          </action>
       </editorContribution>
       <editorContribution
-            id="org.addondev.debug.SelectLineRulerActions"
+            id="org.addondev.ui.SelectLineRulerActions"
             targetID="org.addondev.editor.javascript">
          <action
                actionID="RulerClick"
-               class="org.addondev.debug.ui.actions.SelectLineRulerActionDelegate"
+               class="org.addondev.ui.actions.SelectLineRulerActionDelegate"
                id="org.addondev.debug.SelectLineRulerAction"
                label="SelectLine">
          </action>

@@ -12,8 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.addondev.debug.net.SendRequest;
 import org.addondev.debug.net.SimpleServer;
 import org.addondev.debug.ui.model.AddonDevDebugModelPresentation;
+import org.addondev.debug.util.XMLUtils;
 import org.addondev.plugin.AddonDevPlugin;
-import org.addondev.util.XMLUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -81,7 +81,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		// TODO Auto-generated constructor stub
 		fConfiguration = configuration;
 		fLaunch = launch;	
-		fStore = AddonDevPlugin.getDefault().getPreferenceStore();	
+		//fStore = AddonDevPlugin.getDefault().getPreferenceStore();	
 
 		//fAddonDevUtil = new AddonDevUtil(configuration);
 		DebugPlugin.getDefault().addDebugEventListener(this);
@@ -834,28 +834,29 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		 
 	        if (adapter.equals(ILaunch.class)){
 	            return fLaunch;
-	        }else if (adapter.equals(IResource.class)) {
-	            // used by Variable ContextManager, and Project:Properties menu item
-//	            if( file!=null ) {
-//	                IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(file[0]);
-//	                
-//	                if (files != null && files.length > 0){
-//	                    return files[0];
-//
-//	                }else{
-//	                    return null;
-//	                    
-//	                }
-//	            }
-	        } else if (adapter.equals(IPropertySource.class)){
-	            return fLaunch.getAdapter(adapter);
-	            
-	        } else if (adapter.equals(ITaskListResourceAdapter.class) 
-	                || adapter.equals(org.eclipse.debug.ui.actions.IRunToLineTarget.class) 
-	                || adapter.equals(org.eclipse.debug.ui.actions.IToggleBreakpointsTarget.class) 
-	                ){
-	            return  super.getAdapter(adapter);
 	        }
+//	        else if (adapter.equals(IResource.class)) {
+//	            // used by Variable ContextManager, and Project:Properties menu item
+////	            if( file!=null ) {
+////	                IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(file[0]);
+////	                
+////	                if (files != null && files.length > 0){
+////	                    return files[0];
+////
+////	                }else{
+////	                    return null;
+////	                    
+////	                }
+////	            }
+//	        } else if (adapter.equals(IPropertySource.class)){
+//	            return fLaunch.getAdapter(adapter);
+//	            
+//	        } else if (adapter.equals(ITaskListResourceAdapter.class) 
+//	                || adapter.equals(org.eclipse.debug.ui.actions.IRunToLineTarget.class) 
+//	                || adapter.equals(org.eclipse.debug.ui.actions.IToggleBreakpointsTarget.class) 
+//	                ){
+//	            return  super.getAdapter(adapter);
+//	        }
 //	        else if (adapter == IDebugElement.class) {
 //				return this;
 //			}

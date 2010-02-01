@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.addondev.core.AddonDevNature;
-import org.addondev.plugin.AddonDevPlugin;
-import org.addondev.preferences.PrefConst;
+import org.addondev.debug.core.AddonDevDebugPlugin;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -14,7 +13,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
-import org.eclipse.jdt.internal.ui.preferences.ProjectSelectionDialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -95,7 +93,7 @@ public class AddonDevLaunchMainTab extends AbstractLaunchConfigurationTab {
 	@Override
 	public Image getImage() {
 		// TODO Auto-generated method stub
-		return AddonDevPlugin.getDefault().getImage(AddonDevPlugin.IMG_ADDON);
+		return AddonDevDebugPlugin.getDefault().getImage(AddonDevDebugPlugin.IMG_ADDON);
 		//return super.getImage();
 	}
 
@@ -137,7 +135,7 @@ public class AddonDevLaunchMainTab extends AbstractLaunchConfigurationTab {
                 ArrayList<IProject> pythonProjects = new ArrayList<IProject>();
                 for (IProject project:projects) {
                    try {
-                       if (project.isOpen() && project.hasNature(AddonDevPlugin.NATUREID)) {
+                       if (project.isOpen() && project.hasNature(AddonDevNature.NATUREID)) {
                            pythonProjects.add(project);
                        }
                    } catch (CoreException exception) {

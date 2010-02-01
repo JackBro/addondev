@@ -13,8 +13,8 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 
+import org.addondev.core.AddonDevNature;
 import org.addondev.core.AddonDevPlugin;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -397,7 +397,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
 			//String newNatureId = "AddonDev.addondevnature";
-			addNature(AddonDevPlugin.NATUREID, description, project, monitor);			
+			addNature(AddonDevNature.NATUREID, description, project, monitor);			
 			String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
 			addNature(newNatureId, description, project, monitor);
 

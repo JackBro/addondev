@@ -1,7 +1,7 @@
 package org.addondev.debug.ui.preferences;
 
 
-import org.addondev.core.AddonDevPlugin;
+import org.addondev.debug.core.AddonDevDebugPlugin;
 import org.addondev.debug.preferences.DebugPrefConst;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -53,7 +53,7 @@ public class DebugPreferencePage extends PreferencePage implements
 	public DebugPreferencePage() {
 		// TODO Auto-generated constructor stub
 		super(Messages.DebugPreferencePage_0);
-		setPreferenceStore(AddonDevPlugin.getDefault().getPreferenceStore());	
+		setPreferenceStore(AddonDevDebugPlugin.getDefault().getPreferenceStore());	
 		fStore = getPreferenceStore();
 	}
 

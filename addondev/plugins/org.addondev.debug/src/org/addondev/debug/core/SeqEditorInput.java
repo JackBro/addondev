@@ -3,7 +3,7 @@ package org.addondev.debug.core;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
+import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -43,7 +43,7 @@ public class SeqEditorInput implements IEditorInput {
 	{
 		File f = new File(dir, filename);
 		
-		FileUtils.writeStringToFile(f, fn);		
+		FileUtil.write(f, fn);		
 	}
 
 	@Override

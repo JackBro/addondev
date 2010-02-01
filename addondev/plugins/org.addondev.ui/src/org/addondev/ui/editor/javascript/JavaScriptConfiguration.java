@@ -48,7 +48,7 @@ public class JavaScriptConfiguration extends
 		DefaultDamagerRepairer dr = null;
 		
 		if (defaultScanner == null) {
-			fDefaultToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_FOREGROUND)));
+			fDefaultToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND)));
 			defaultScanner = new JavaScriptScanner(AddonDevPlugin.getDefault().getPreferenceStore());
 			defaultScanner.setDefaultReturnToken(fDefaultToken);
 		}
@@ -58,7 +58,7 @@ public class JavaScriptConfiguration extends
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 			
 		if (fCommentScanner == null) {
-			fCommnetToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_COMMENT)));
+			fCommnetToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT)));
 			fCommentScanner = new RuleBasedScanner();
 			fCommentScanner.setDefaultReturnToken(fCommnetToken);
 		}		

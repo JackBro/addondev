@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.addondev.core.AddonDevPlugin;
+import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -221,7 +222,7 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 	private void createFile(IProject project, String srcpath, String distpath,
 			Map param, IProgressMonitor monitor) throws IOException, CoreException {
 		
-		URL url = AddonDevPlugin.getDefault().getBundle().getEntry(srcpath);
+		URL url = AddonDevUIPlugin.getDefault().getBundle().getEntry(srcpath);
 		//URL dirUrl = FileLocator.toFileURL(url);
 		//File file = new File(dirUrl.getFile());
 		//String tt = FileUtils.readFileToString(file);

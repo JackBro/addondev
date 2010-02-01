@@ -39,7 +39,7 @@ public class AddonDevPropertyPage extends PropertyPage implements
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
         Label label = new Label(composite,SWT.NONE);
-        label.setText("作成者：");
+        label.setText("：");
         
         creator = new Combo(composite, SWT.READ_ONLY);
         creator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

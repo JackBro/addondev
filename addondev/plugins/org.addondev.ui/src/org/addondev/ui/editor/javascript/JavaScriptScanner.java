@@ -49,12 +49,12 @@ public class JavaScriptScanner extends RuleBasedScanner {
 	
 	protected List<IRule> createRules(){
 				
-		Color backgroundcolor = ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_BACKGROUND);
-		Color keywordcolor =  ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_KEYWORD);
+		Color backgroundcolor = ResourceManager.getInstance().getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_BACKGROUND);
+		Color keywordcolor =  ResourceManager.getInstance().getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD);
 
 		IToken keywordtoken = new Token(new TextAttribute(keywordcolor, backgroundcolor, SWT.BOLD));
 
-		Color defaultColor = ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_FOREGROUND);
+		Color defaultColor = ResourceManager.getInstance().getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND);
 		IToken defaulttoken = new Token(new TextAttribute(defaultColor));
 		
 		List<IRule> rules = new ArrayList<IRule>();
@@ -64,7 +64,7 @@ public class JavaScriptScanner extends RuleBasedScanner {
 		}
 		rules.add(wordRule);
 		
-		Color stringcolor  = ResourceManager.getInstance().getColor(PrefConst.COLOR_JAVASCRIPT_STRING);
+		Color stringcolor  = ResourceManager.getInstance().getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING);
 		IToken stringtoken = new Token(new TextAttribute(stringcolor));
 		rules.add(new SingleLineRule("\"", "\"", stringtoken, '\\'));
 		rules.add(new SingleLineRule("'", "'", stringtoken, '\\'));
