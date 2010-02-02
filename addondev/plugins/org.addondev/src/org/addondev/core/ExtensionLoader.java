@@ -26,6 +26,8 @@ public class ExtensionLoader {
 		{
 			IExtensionRegistry registry = Platform.getExtensionRegistry();		
 			IExtensionPoint point = registry.getExtensionPoint(id);
+			extensions = point.getExtensions();
+			cache.put(id, extensions);
 		}
 		
 		for (int i = 0; i < extensions.length; i++) {
