@@ -16,9 +16,10 @@ import jp.aonir.fuzzyxml.FuzzyXMLNode;
 import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
 import org.addondev.core.AddonDevPlugin;
-import org.addondev.parser.xul.XULParser;
 import org.addondev.preferences.PrefConst;
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.editor.xul.XULParser;
+import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.FileUtil;
 import org.addondev.util.ManifestUtil;
 import org.eclipse.core.resources.IProject;

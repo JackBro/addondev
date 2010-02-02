@@ -1,9 +1,10 @@
 package org.addondev.core;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import org.addondev.parser.xul.XULParser;
+import org.addondev.builder.IAddonDevBuilder;
+import org.addondev.editor.IAddonDevEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -32,19 +33,33 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			// TODO Auto-generated method stub
 			IResource resource = delta.getResource();
-			switch (delta.getKind()) 
-			{
-			case IResourceDelta.CHANGED:
-				if(resource instanceof IFile )
-				{
-					IFile file = (IFile)resource;
-					int i=0;
-					//getEditorPart(getProject(), file.getLocation());
-				}
-				break;
+			
+			List<IAddonDevBuilder> visitors = ExtensionLoader.getExtensions(ExtensionLoader.EXTENSION_POINT_ID);
+			for (IAddonDevBuilder iAddonDevBuilder : visitors) {
+				iAddonDevBuilder.visit(delta);
 			}
 			
+//			switch (delta.getKind()) 
+//			{
+//			case IResourceDelta.CHANGED:
+//				if(resource instanceof IFile )
+//				{
+//					IFile file = (IFile)resource;
+//					int i=0;
+//					getEditorPart(getProject(), file);
+//				}
+//				break;
+//			}
+			
 			return true;
+		}
+		
+		private void checkFile(IResource resource)
+		{
+			if (resource instanceof IFile && resource.getName().equals("chrome.manifest")) 
+			{
+				
+			}
 		}
 		
 	}
@@ -66,81 +81,38 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 			if(delta != null)
 			{
 				delta.accept(new IncrementalBuildVisitor());
-//				int kk = delta.getKind();
-//				switch (delta.getKind()) {
-//				case IResourceDelta.CHANGED:
-//					//getEditorPart();
-////					IFile file = getProject().getFile("chrome.manifest");
-////					IPath fBasePath = file.getLocation().removeLastSegments(1);
-////					IPath fBasePath2 = file.getFullPath().removeLastSegments(1);
-////					int i=0;
-////					i++;
-//					//IPath resource = delta.getResource().getFullPath();
-//					IResource resource = delta.getResource();
-//					if(resource instanceof IFile )
-//					{
-//						
-//						getEditorPart(getProject(), delta.getFullPath());
-//					}
-//					break;
-//
-//				default:
-//					break;
-//				}
 			}
 		}
 		
 		return null;
 	}
-	String ptext;
+	
 	@SuppressWarnings("deprecation")
-	private void getEditorPart(final IProject project, final IPath path)
+	private void getEditorPart(final IProject project, final IFile file)
 	{
-		final ArrayList<XULPreviewForm> xulforms = new ArrayList<XULPreviewForm>();
+		//final ArrayList<XULPreviewForm> xulforms = new ArrayList<XULPreviewForm>();
 		
 		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (IWorkbenchWindow iWorkbenchWindow : windows) {
-			//iWorkbenchWindow.getActivePage().
-			//IEditorReference[] editorref = iWorkbenchWindow.getActivePage().getEditorReferences();
-			final IEditorPart editor = iWorkbenchWindow.getActivePage().getActiveEditor();
-			
-			IEditorPart[] editorref = iWorkbenchWindow.getActivePage().getEditors();
-			
-			for (IEditorPart editorpart : editorref) {
-			//for (IEditorReference iEditorReference : editorref) {
-				//IEditorPart editorpart = iEditorReference.getEditor(false);			
-				//FileEditorInput fin = (FileEditorInput) editorpart.getEditorInput();
-				//fin.getFile().getFullPath()	
-				if(editorpart instanceof XULPreviewForm)
+			//final IEditorPart editor = iWorkbenchWindow.getActivePage().getActiveEditor();		
+			IEditorPart[] editors = iWorkbenchWindow.getActivePage().getEditors();	
+			for (final IEditorPart editor : editors) {
+				if(editor instanceof IAddonDevEditor)
 				{
-					
-					IPath editorpath = ((FileEditorInput)editorpart.getEditorInput()).getPath();
-					if(editorpath.equals(path))
+					IProject editorproject = ((FileEditorInput)editor.getEditorInput()).getFile().getProject();
+					if(editorproject != null && editorproject.getName().equals(project.getName()))
 					{
-						xulforms.add((XULPreviewForm) editorpart);
+						
+						Display.getDefault().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub	
+								((IAddonDevEditor)editor).Changed(file);
+							}
+						});
 					}
 				}
 			}
-			
-			Display.getDefault().asyncExec(new Runnable() {
-			//editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					ISelectionProvider provider= editor.getEditorSite().getSelectionProvider();
-					ISelection selection = provider.getSelection();
-					if (selection instanceof ITextSelection) {
-//						ITextSelection textSelection= (ITextSelection) selection;
-//						int offset = textSelection.getOffset();
-//						String previewxml = XULParser.parse(path, offset);
-//						ptext = previewxml;
-//						for (XULPreviewForm xulform : xulforms) {			
-//							xulform.settest(previewxml);
-//						}	
-					}						
-				}
-			});	
-			
 		}
 	}
 }

@@ -4,6 +4,7 @@ package org.addondev.ui.editor.javascript;
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
 import org.addondev.preferences.ResourceManager;
+import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;

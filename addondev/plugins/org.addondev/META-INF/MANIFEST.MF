@@ -10,9 +10,12 @@ Bundle-ClassPath: lib/commons-io-1.4.jar,
  src/,
  .
 Bundle-Activator: org.addondev.core.AddonDevPlugin
-Export-Package: org.addondev.core,
+Export-Package: org.addondev.builder,
+ org.addondev.core,
+ org.addondev.editorinput,
  org.addondev.parser.dtd,
  org.addondev.parser.javascript,
+ org.addondev.preferences,
  org.addondev.util
 Require-Bundle: org.eclipse.equinox.preferences,
  org.eclipse.equinox.common,

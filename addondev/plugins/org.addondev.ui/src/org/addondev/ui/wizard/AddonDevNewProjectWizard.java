@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.addondev.core.AddonDevNature;
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.core.resources.IFile;
@@ -185,7 +186,7 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
 			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
 			//String newNatureId = "AddonDev.addondevnature";
-			addNature(AddonDevPlugin.NATUREID, projectDescription, project, monitor);			
+			addNature(AddonDevNature.NATUREID, projectDescription, project, monitor);			
 			//newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
 			//addNature(newNatureId, projectDescription, project, monitor);
 

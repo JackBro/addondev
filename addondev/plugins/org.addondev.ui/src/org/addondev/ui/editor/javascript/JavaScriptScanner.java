@@ -6,13 +6,14 @@ import java.util.List;
 
 import org.addondev.preferences.PrefConst;
 import org.addondev.preferences.ResourceManager;
-import org.eclipse.jdt.internal.ui.text.JavaWordDetector;
+import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
@@ -22,6 +23,16 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
 public class JavaScriptScanner extends RuleBasedScanner {
+	
+	private class JavaWordDetector implements IWordDetector {
+		public boolean isWordStart(char c) {
+			return Character.isJavaIdentifierStart(c);
+		}
+		public boolean isWordPart(char c) {
+			return Character.isJavaIdentifierPart(c);
+		}
+	}
+	
 	private IPreferenceStore fPreferenceStore;
 	static String[] fKeywords= {
 		"let",

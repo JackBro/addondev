@@ -7,11 +7,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jp.aonir.fuzzyxml.FuzzyXMLDocument;
-import jp.aonir.fuzzyxml.FuzzyXMLParser;
-
 import org.addondev.parser.dtd.DTDMap;
-import org.addondev.unittest.Validator;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
 import org.eclipse.core.runtime.IPath;

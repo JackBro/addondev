@@ -9,11 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.addondev.core.AddonDevPlugin;
 import org.addondev.debug.net.SendRequest;
 import org.addondev.debug.net.SimpleServer;
 import org.addondev.debug.ui.model.AddonDevDebugModelPresentation;
 import org.addondev.debug.util.XMLUtils;
-import org.addondev.plugin.AddonDevPlugin;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -39,8 +40,6 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
 import org.xml.sax.SAXException;
 
 

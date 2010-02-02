@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.addondev.ui.editor.javascript.texthover" name="javascript.texthover" schema="schema/org.addondev.ui.editor.javascript.texthover.exsd"/>
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -83,6 +84,12 @@
             id="org.addondev.category.wizard.import"
             name="Addon Dev">
       </category>
+   </extension>
+   <extension
+         point="org.addondev.builder">
+      <new_element
+            class="org.addondev.ui.builder.AddonDevBuilder">
+      </new_element>
    </extension>
 
 </plugin>

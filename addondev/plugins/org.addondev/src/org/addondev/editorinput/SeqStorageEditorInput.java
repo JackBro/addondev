@@ -1,4 +1,4 @@
-package org.addondev.debug.core;
+package org.addondev.editorinput;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;

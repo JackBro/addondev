@@ -1,6 +1,6 @@
 package org.addondev.ui.editor.javascript;
 
-import org.addondev.debug.core.SeqEditorInput;
+import org.addondev.editorinput.SeqEditorInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;

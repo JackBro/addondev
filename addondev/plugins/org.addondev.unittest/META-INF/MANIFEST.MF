@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;bundle-version="3.5.0",
  org.addondev;bundle-version="1.0.0",
  org.junit;bundle-version="3.8.2",
- org.junit4;bundle-version="4.5.0"
+ org.junit4;bundle-version="4.5.0",
+ org.addondev.debug;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.debug.core.model
 Bundle-ActivationPolicy: lazy

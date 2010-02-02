@@ -1,6 +1,7 @@
-package org.addondev.ui.editor.javascript;
+package org.addondev.debug.ui.editor.texthover;
 
 import org.addondev.debug.core.model.AddonDevStackFrame;
+import org.addondev.ui.editor.hover.IAddonDevTextHover;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.ui.DebugUITools;
@@ -10,15 +11,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
+public class JavaScriptTextHover implements IAddonDevTextHover {
 
 	private boolean textHoverEnable = false;
 	
@@ -30,7 +29,7 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 	}
 
 	@Override
-	public synchronized String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// TODO Auto-generated method stub
 		if(!textHoverEnable) return null;
 		
@@ -74,7 +73,6 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		// TODO Auto-generated method stub
-		//return null;
 		return new IInformationControlCreator() {
 			@Override
 			public IInformationControl createInformationControl(Shell parent) {
@@ -118,4 +116,5 @@ public class JavaScriptTextHover implements ITextHover, ITextHoverExtension {
 		
 		return null;
 	}
+
 }

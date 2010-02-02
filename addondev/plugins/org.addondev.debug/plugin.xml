@@ -155,5 +155,11 @@
          </action>
       </viewerContribution>
    </extension>
+   <extension
+         point="org.addondev.ui.editor.javascript.texthover">
+      <new_element
+            class="org.addondev.debug.ui.editor.texthover.JavaScriptTextHover">
+      </new_element>
+   </extension>
 
 </plugin>

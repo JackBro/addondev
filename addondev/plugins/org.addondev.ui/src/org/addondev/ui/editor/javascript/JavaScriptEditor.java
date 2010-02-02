@@ -1,8 +1,6 @@
 package org.addondev.ui.editor.javascript;
 
 import org.addondev.core.AddonDevPlugin;
-import org.addondev.debug.core.SeqEditorInput;
-import org.addondev.debug.core.SeqStorageEditorInput;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
@@ -62,15 +60,16 @@ public class JavaScriptEditor extends TextEditor {
 			//super.doSetInput(input);
 		} else if(input instanceof IStorageEditorInput){
 			setDocumentProvider(new JavaScriptDocumentProvider());
-		} else if(input instanceof SeqEditorInput){
-			//setDocumentProvider(new JavaScriptDocumentProvider());
-			setDocumentProvider(new JavaScriptDocumentProvider());
-			//getDocumentProvider().getDocument(null).set("test");
-		}
-		else if(input instanceof SeqStorageEditorInput)
-		{
-			setDocumentProvider(new JavaScriptDocumentProvider());
-		}
+		} 
+//		else if(input instanceof SeqEditorInput){
+//			//setDocumentProvider(new JavaScriptDocumentProvider());
+//			setDocumentProvider(new JavaScriptDocumentProvider());
+//			//getDocumentProvider().getDocument(null).set("test");
+//		}
+//		else if(input instanceof SeqStorageEditorInput)
+//		{
+//			setDocumentProvider(new JavaScriptDocumentProvider());
+//		}
 		super.doSetInput(input);
 	}
 

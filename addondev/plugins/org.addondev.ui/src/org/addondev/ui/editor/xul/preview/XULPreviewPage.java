@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
+import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.PreferenceDialog;

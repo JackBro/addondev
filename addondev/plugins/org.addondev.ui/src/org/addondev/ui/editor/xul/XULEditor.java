@@ -10,7 +10,6 @@ import jp.aonir.fuzzyxml.FuzzyXMLParser;
 import jp.aonir.fuzzyxml.event.FuzzyXMLErrorEvent;
 import jp.aonir.fuzzyxml.event.FuzzyXMLErrorListener;
 
-import org.addondev.parser.xul.XULParser;
 import org.addondev.ui.editor.xml.XMLEditor;
 import org.addondev.ui.editor.xul.preview.XULPreviewForm;
 import org.addondev.util.FileUtil;

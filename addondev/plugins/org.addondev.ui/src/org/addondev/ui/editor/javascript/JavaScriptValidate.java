@@ -10,11 +10,10 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.RhinoException;
-import org.mozilla.javascript.tools.shell.ShellContextFactory;
 
 public class JavaScriptValidate {
 	
-	public static ShellContextFactory shellContextFactory = new ShellContextFactory();
+	//public static ShellContextFactory shellContextFactory = new ShellContextFactory();
 	protected static JavaScriptParserErrorReporter errorReporter = new JavaScriptParserErrorReporter();
 
 	public static void parse(JavaScriptEditor editor)

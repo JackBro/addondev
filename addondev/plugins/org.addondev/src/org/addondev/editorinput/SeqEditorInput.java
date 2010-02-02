@@ -1,4 +1,4 @@
-package org.addondev.debug.core;
+package org.addondev.editorinput;
 
 import java.io.File;
 import java.io.IOException;
