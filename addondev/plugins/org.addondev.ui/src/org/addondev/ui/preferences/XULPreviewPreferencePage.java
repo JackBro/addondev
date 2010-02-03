@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
+import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -31,7 +32,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class XULPreviewPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
 
-	private class IntegerVerifyListener implements VerifyListener
+	private static class IntegerVerifyListener implements VerifyListener
 	{
 		@Override
 		public void verifyText(VerifyEvent e) {
@@ -53,7 +54,7 @@ public class XULPreviewPreferencePage extends PreferencePage implements
 	
 	public XULPreviewPreferencePage() {
 		// TODO Auto-generated constructor stub
-		fStote = AddonDevPlugin.getDefault().getPreferenceStore();
+		fStote = AddonDevUIPlugin.getDefault().getPreferenceStore();
 		setPreferenceStore(fStote);
 	}
 

@@ -1,6 +1,6 @@
 package org.addondev.debug.preferences;
 
-public class DebugPrefConst {
+public class AddonDevDebugPrefConst {
 	
 	public static final String DEBUG_PORT_AUTO = "org.addondev.debug.pref.port.auto";
 	public static final String DEBUG_PORT_AUTO_ECLIPSE_START = "org.addondev.debug.pref.port.auto.eclipse.start";

@@ -1,22 +1,12 @@
 package org.addondev.ui.editor.xul.preview;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 
-import jp.aonir.fuzzyxml.FuzzyXMLDocument;
-import jp.aonir.fuzzyxml.FuzzyXMLElement;
-import jp.aonir.fuzzyxml.FuzzyXMLNode;
-import jp.aonir.fuzzyxml.FuzzyXMLParser;
 
-import org.addondev.core.AddonDevPlugin;
-import org.addondev.preferences.PrefConst;
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.editor.xul.XULParser;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
@@ -29,7 +19,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
@@ -162,24 +151,27 @@ public class XULPreviewForm extends MultiPageEditorPart {
 			{
 				URL url = AddonDevUIPlugin.getDefault().getBundle().getEntry("files/preview.xul");
 				InputStream in = url.openStream();
-				StringBuffer buf = new StringBuffer();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-				String line = null;
-				//String res = "";
-				while ((line = reader.readLine()) != null) {
-					buf.append(line + "\n");
-				}
-
-				in.close();
-				reader.close();
+//				StringBuffer buf = new StringBuffer();
+//				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//
+//				String line = null;
+//				//String res = "";
+//				while ((line = reader.readLine()) != null) {
+//					buf.append(line + "\n");
+//				}
+//
+//				in.close();
+//				reader.close();
+//				
+//				String text = buf.toString();
 				
-				String text = buf.toString();
-				file.createNewFile();
-				FileWriter fw = new FileWriter(file);
-				fw.write(text);
-				fw.close();
+				String text = FileUtil.getContent(in);
 				
+//				file.createNewFile();
+//				FileWriter fw = new FileWriter(file);
+//				fw.write(text);
+//				fw.close();
+				FileUtil.write(file, text);
 				//FileUtils.writeStringToFile(file, text);
 			}
 		} catch (IOException e) {

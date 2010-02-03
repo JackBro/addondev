@@ -14,14 +14,13 @@ import java.util.zip.ZipFile;
 
 
 import org.addondev.core.AddonDevNature;
-import org.addondev.core.AddonDevPlugin;
+import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
@@ -314,7 +313,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 			
 		};
 		
-		//FileUtils.copyDirectory(srcdir, project.getLocation().toFile(), filter, true);
+		FileUtil.copyDirectory(srcdir, project.getLocation().toFile(), filter, true);
 		
 		
 //		IProjectDescription description = project.getDescription();

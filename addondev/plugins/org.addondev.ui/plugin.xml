@@ -8,7 +8,7 @@
             class="org.addondev.ui.editor.javascript.JavaScriptEditor"
             default="false"
             extensions="js"
-            id="org.addondev.editor.javascript"
+            id="org.addondev.ui.editor.javascript"
             name="AddonDev JavaScript Editor">
       </editor>
       <editor
@@ -29,18 +29,8 @@
    <extension
          point="org.eclipse.ui.editorActions">
       <editorContribution
-            id="org.addondev.debug.BreakpointRulerActions"
-            targetID="org.addondev.editor.javascript">
-         <action
-               actionID="RulerDoubleClick"
-               class="org.addondev.debug.ui.actions.AddonDevBreakpointRulerActionDelegate"
-               id="org.addondev.debug.BreakpointRulerAction"
-               label="Add Breakpoint">
-         </action>
-      </editorContribution>
-      <editorContribution
             id="org.addondev.ui.SelectLineRulerActions"
-            targetID="org.addondev.editor.javascript">
+            targetID="org.addondev.ui.editor.javascript">
          <action
                actionID="RulerClick"
                class="org.addondev.ui.actions.SelectLineRulerActionDelegate"
@@ -144,10 +134,29 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="org.addondev.ui.preferences.AddonDevPreferencePage"
+            category="org.addondev.ui.preferencepages"
+            class="org.addondev.ui.preferences.AddonDevNewProjectPreferencePage"
             id="org.addondev.ui.preferencepages"
             name="AddonDev">
       </page>
+      <page
+            category="org.addondev.ui.preferencepages"
+            class="org.addondev.ui.preferences.XULPreviewPreferencePage"
+            id="org.addondev.ui.XULPreferencepages"
+            name="XUL Editor">
+      </page>
+      <page
+            category="org.addondev.ui.preferencepages"
+            class="org.addondev.ui.preferences.JavaScriptEditorPreferencePage"
+            id="AddonDev.page1"
+            name="name">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.addondev.ui.preferences.AddonDevUIPreferenceInitializer">
+      </initializer>
    </extension>
 
 </plugin>

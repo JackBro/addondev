@@ -11,7 +11,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
@@ -116,11 +115,6 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		}
 		setErrorMessage(null);
 		setPageComplete(true);
-	}
-	
-	private String getPreference(String name)
-	{
-		return	AddonDevUIPlugin.getDefault().getPreferenceStore().getString(name);
 	}
 	
 	public String getID()

@@ -2,7 +2,7 @@ package org.addondev.debug.ui.preferences;
 
 
 import org.addondev.debug.core.AddonDevDebugPlugin;
-import org.addondev.debug.preferences.DebugPrefConst;
+import org.addondev.debug.preferences.AddonDevDebugPrefConst;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -67,16 +67,16 @@ public class DebugPreferencePage extends PreferencePage implements
 		// TODO Auto-generated method stub
 		createPortGroup(parent);
 		
-		fAutoButton.setSelection(fStore.getBoolean(DebugPrefConst.DEBUG_PORT_AUTO));
-		fManualButton.setSelection(!fStore.getBoolean(DebugPrefConst.DEBUG_PORT_AUTO));
+		fAutoButton.setSelection(fStore.getBoolean(AddonDevDebugPrefConst.DEBUG_PORT_AUTO));
+		fManualButton.setSelection(!fStore.getBoolean(AddonDevDebugPrefConst.DEBUG_PORT_AUTO));
 				
-		fEclipsePortStartText.setText(String.valueOf(fStore.getInt(DebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_START)));
-		fEclipsePortEndText.setText(String.valueOf(fStore.getInt(DebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_END)));
-		fDebuggerStartPortText.setText(String.valueOf(fStore.getInt(DebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_START)));
-		fDebuggerStartEndPortText.setText(String.valueOf(fStore.getInt(DebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_END)));
+		fEclipsePortStartText.setText(String.valueOf(fStore.getInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_START)));
+		fEclipsePortEndText.setText(String.valueOf(fStore.getInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_END)));
+		fDebuggerStartPortText.setText(String.valueOf(fStore.getInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_START)));
+		fDebuggerStartEndPortText.setText(String.valueOf(fStore.getInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_END)));
 		
-		fEclipsePortText.setText(String.valueOf(fStore.getInt(DebugPrefConst.DEBUG_PORT_MANUAL_ECLIPSE)));
-		fDebuggerPortText.setText(String.valueOf(fStore.getInt(DebugPrefConst.DEBUG_PORT_MANUAL_DEBUGGER)));
+		fEclipsePortText.setText(String.valueOf(fStore.getInt(AddonDevDebugPrefConst.DEBUG_PORT_MANUAL_ECLIPSE)));
+		fDebuggerPortText.setText(String.valueOf(fStore.getInt(AddonDevDebugPrefConst.DEBUG_PORT_MANUAL_DEBUGGER)));
 		
 		
 		fEclipsePortStartText.setEnabled(fAutoButton.getSelection());
@@ -140,7 +140,7 @@ public class DebugPreferencePage extends PreferencePage implements
 	        eclipseRangeLabel.setText("-"); //$NON-NLS-1$
 	        fEclipsePortEndText = createText(rangComposite);
 	        Label debuggerPortRange = new Label(rangComposite, SWT.NONE);
-	        debuggerPortRange.setText(Messages.DebugPreferencePage_5);
+	        debuggerPortRange.setText(Messages.DebugPreferencePage_4);
 	        fDebuggerStartPortText = createText(rangComposite);
 	        Label debuggerRangeLabel = new Label(rangComposite, SWT.NONE);
 	        debuggerRangeLabel.setText("-"); //$NON-NLS-1$
@@ -155,7 +155,7 @@ public class DebugPreferencePage extends PreferencePage implements
 	        assignComposite.setLayout(alayout);  
 	        
 	        fManualButton = new Button(assignComposite, SWT.RADIO);
-	        fManualButton.setText(Messages.DebugPreferencePage_7);
+	        fManualButton.setText(Messages.DebugPreferencePage_5);
 	        fManualButton.addSelectionListener(new SelectionListener() {
 				
 				@Override
@@ -181,27 +181,27 @@ public class DebugPreferencePage extends PreferencePage implements
 	        createDummy(assignComposite);
 
 	        Label eclipsePort = new Label(assignComposite, SWT.NONE);
-	        eclipsePort.setText(Messages.DebugPreferencePage_8);
+	        eclipsePort.setText(Messages.DebugPreferencePage_6);
 	        
 	        fEclipsePortText = createText(assignComposite);
 			
 	        Label debuggerPort = new Label(assignComposite, SWT.NONE);
-	        debuggerPort.setText(Messages.DebugPreferencePage_9);
+	        debuggerPort.setText(Messages.DebugPreferencePage_7);
 	        fDebuggerPortText = createText(assignComposite);
 	 }
 	
 	@Override
 	protected void performDefaults() {	
-		fAutoButton.setSelection(fStore.getDefaultBoolean(DebugPrefConst.DEBUG_PORT_AUTO));
-		fManualButton.setSelection(!fStore.getDefaultBoolean(DebugPrefConst.DEBUG_PORT_AUTO));
+		fAutoButton.setSelection(fStore.getDefaultBoolean(AddonDevDebugPrefConst.DEBUG_PORT_AUTO));
+		fManualButton.setSelection(!fStore.getDefaultBoolean(AddonDevDebugPrefConst.DEBUG_PORT_AUTO));
 		
-		fEclipsePortStartText.setText(String.valueOf(fStore.getDefaultInt(DebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_START)));
-		fEclipsePortEndText.setText(String.valueOf(fStore.getDefaultInt(DebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_END)));
-		fDebuggerStartPortText.setText(String.valueOf(fStore.getDefaultInt(DebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_START)));
-		fDebuggerStartEndPortText.setText(String.valueOf(fStore.getDefaultInt(DebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_END)));
+		fEclipsePortStartText.setText(String.valueOf(fStore.getDefaultInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_START)));
+		fEclipsePortEndText.setText(String.valueOf(fStore.getDefaultInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_END)));
+		fDebuggerStartPortText.setText(String.valueOf(fStore.getDefaultInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_START)));
+		fDebuggerStartEndPortText.setText(String.valueOf(fStore.getDefaultInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_END)));
 		
-		fEclipsePortText.setText(String.valueOf(fStore.getDefaultInt(DebugPrefConst.DEBUG_PORT_MANUAL_ECLIPSE)));
-		fDebuggerPortText.setText(String.valueOf(fStore.getDefaultInt(DebugPrefConst.DEBUG_PORT_MANUAL_DEBUGGER)));		
+		fEclipsePortText.setText(String.valueOf(fStore.getDefaultInt(AddonDevDebugPrefConst.DEBUG_PORT_MANUAL_ECLIPSE)));
+		fDebuggerPortText.setText(String.valueOf(fStore.getDefaultInt(AddonDevDebugPrefConst.DEBUG_PORT_MANUAL_DEBUGGER)));		
 		
 		super.performDefaults();
 	}
@@ -210,15 +210,15 @@ public class DebugPreferencePage extends PreferencePage implements
 	
 	@Override
 	public boolean performOk() {	
-		fStore.setValue(DebugPrefConst.DEBUG_PORT_AUTO, fAutoButton.getSelection());
+		fStore.setValue(AddonDevDebugPrefConst.DEBUG_PORT_AUTO, fAutoButton.getSelection());
 		
-		fStore.setValue(DebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_START, Integer.parseInt(fEclipsePortStartText.getText()));
-		fStore.setValue(DebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_END, Integer.parseInt(fEclipsePortEndText.getText()));
-		fStore.setValue(DebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_START, Integer.parseInt(fDebuggerStartPortText.getText()));
-		fStore.setValue(DebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_END, Integer.parseInt(fDebuggerStartEndPortText.getText()));
+		fStore.setValue(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_START, Integer.parseInt(fEclipsePortStartText.getText()));
+		fStore.setValue(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_END, Integer.parseInt(fEclipsePortEndText.getText()));
+		fStore.setValue(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_START, Integer.parseInt(fDebuggerStartPortText.getText()));
+		fStore.setValue(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_END, Integer.parseInt(fDebuggerStartEndPortText.getText()));
 		
-		fStore.setValue(DebugPrefConst.DEBUG_PORT_MANUAL_ECLIPSE, Integer.parseInt(fEclipsePortText.getText()));
-		fStore.setValue(DebugPrefConst.DEBUG_PORT_MANUAL_DEBUGGER, Integer.parseInt(fDebuggerPortText.getText()));
+		fStore.setValue(AddonDevDebugPrefConst.DEBUG_PORT_MANUAL_ECLIPSE, Integer.parseInt(fEclipsePortText.getText()));
+		fStore.setValue(AddonDevDebugPrefConst.DEBUG_PORT_MANUAL_DEBUGGER, Integer.parseInt(fDebuggerPortText.getText()));
 		
 		return true;
 	}

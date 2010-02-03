@@ -746,7 +746,8 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
+		if(variables == null) return null; 
 		return variables.get(0);
 	}
 		

@@ -11,7 +11,7 @@ import javax.xml.transform.TransformerException;
 import org.addondev.debug.core.AddonDevDebugPlugin;
 import org.addondev.debug.core.model.AddonDevDebugTarget;
 import org.addondev.debug.net.SimpleServer;
-import org.addondev.debug.preferences.DebugPrefConst;
+import org.addondev.debug.preferences.AddonDevDebugPrefConst;
 import org.addondev.debug.ui.launching.AddonDevLaunchMainTab;
 import org.addondev.debug.util.FindPort;
 import org.addondev.debug.util.XMLUtils;
@@ -104,19 +104,19 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
 					AddonDevDebugPlugin.PLUGIN_ID, IStatus.OK, "メッセージ１", new FileNotFoundException("")));
 		}
 		
-		if(store.getBoolean(DebugPrefConst.DEBUG_PORT_AUTO))
+		if(store.getBoolean(AddonDevDebugPrefConst.DEBUG_PORT_AUTO))
 		{
 			fEclipsePort = FindPort.getFreePort("localhost", 
-					store.getInt(DebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_START),
-					store.getInt(DebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_END));
+					store.getInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_START),
+					store.getInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_ECLIPSE_END));
 			fDebuggerPort = FindPort.getFreePort("localhost", 
-					store.getInt(DebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_START), 
-					store.getInt(DebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_END));			
+					store.getInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_START), 
+					store.getInt(AddonDevDebugPrefConst.DEBUG_PORT_AUTO_DEBUGGER_END));			
 		}
 		else
 		{
-			int eport = store.getInt(DebugPrefConst.DEBUG_PORT_MANUAL_ECLIPSE);
-			int dport = store.getInt(DebugPrefConst.DEBUG_PORT_MANUAL_DEBUGGER);
+			int eport = store.getInt(AddonDevDebugPrefConst.DEBUG_PORT_MANUAL_ECLIPSE);
+			int dport = store.getInt(AddonDevDebugPrefConst.DEBUG_PORT_MANUAL_DEBUGGER);
 			fEclipsePort = FindPort.getFreePort("localhost", eport, eport);
 			fDebuggerPort = FindPort.getFreePort("localhost", dport, dport);				
 		}

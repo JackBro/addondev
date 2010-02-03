@@ -47,7 +47,7 @@ public class JavaScriptEditor extends TextEditor {
 		// TODO Auto-generated method stub
 		super.doSave(progressMonitor);
 		
-		JavaScriptValidate.parse(this);
+		//JavaScriptValidate.parse(this);
 		
 	}
 

@@ -3,12 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: AddonDev Plug-in
 Bundle-SymbolicName: org.addondev;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: lib/commons-io-1.4.jar,
- lib/FuzzyXML/fuzzyxml.jar,
- lib/FuzzyXML/lib/commons-jxpath-1.2.jar,
- lib/rhino/js.jar,
- src/,
- .
+Bundle-ClassPath: src/,
+ .,
+ lib/commons-io/commons-io-1.4.jar
 Bundle-Activator: org.addondev.core.AddonDevPlugin
 Export-Package: org.addondev.builder,
  org.addondev.core,

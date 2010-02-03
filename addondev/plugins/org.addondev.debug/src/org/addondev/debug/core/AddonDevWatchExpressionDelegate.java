@@ -79,7 +79,7 @@ public class AddonDevWatchExpressionDelegate implements
 		// TODO Auto-generated method stub
 		IValue value = null;
 		try {
-			value = fVariable.getValue();
+			value = fVariable==null?null:fVariable.getValue();
 		} catch (DebugException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

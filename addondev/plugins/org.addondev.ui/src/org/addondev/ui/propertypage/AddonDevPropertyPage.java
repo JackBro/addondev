@@ -3,6 +3,7 @@ package org.addondev.ui.propertypage;
 import java.util.List;
 
 import org.addondev.core.AddonDevPlugin;
+import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.util.ChromeURLMap;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -53,7 +54,7 @@ public class AddonDevPropertyPage extends PropertyPage implements
         String locale = null;
 		try {
 			
-			locale = project.getPersistentProperty(new QualifiedName(AddonDevPlugin.PLUGIN_ID , LOCALE));
+			locale = project.getPersistentProperty(new QualifiedName(AddonDevUIPlugin.PLUGIN_ID , LOCALE));
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

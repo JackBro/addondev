@@ -259,17 +259,16 @@ public class AddonDevLaunchMainTab extends AbstractLaunchConfigurationTab {
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		boolean result = super.isValid(launchConfig);
 		if (result) {
-		//String name = fprofilename.getText();
-		String profiledir = fProfiledir.getStringValue();
-		if (profiledir.length() == 0) {
-			result = true;
-		}
-		
+			//String name = fprofilename.getText();
+			String profiledir = fProfiledir.getStringValue();
+			if (profiledir.length() == 0) {
+			result = false;
+			}
 		}
 		if (result) {
-			String dir = fProfiledir.VALUE;
+			String dir = fProfiledir.getStringValue();
 			File file = new File(dir);
-			if(file.exists())
+			if(!file.exists())
 			{
 				result = false;
 			}

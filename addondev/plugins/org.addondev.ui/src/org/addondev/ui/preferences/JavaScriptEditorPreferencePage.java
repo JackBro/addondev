@@ -2,6 +2,7 @@ package org.addondev.ui.preferences;
 
 
 import org.addondev.core.AddonDevPlugin;
+import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -19,7 +20,7 @@ public class JavaScriptEditorPreferencePage extends
 
 	public JavaScriptEditorPreferencePage() {
 		// TODO Auto-generated constructor stub
-		setPreferenceStore(AddonDevPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(AddonDevUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	public JavaScriptEditorPreferencePage(int style) {

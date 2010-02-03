@@ -1,7 +1,7 @@
 package org.addondev.ui.preferences;
 
-import org.addondev.core.AddonDevPlugin;
-import org.addondev.preferences.PrefConst;
+
+import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -24,7 +24,7 @@ public class AddonDevNewProjectPreferencePage extends FieldEditorPreferencePage 
 	
 	public AddonDevNewProjectPreferencePage() {
 		// TODO Auto-generated constructor stub
-		fStote = AddonDevPlugin.getDefault().getPreferenceStore();
+		fStote = AddonDevUIPlugin.getDefault().getPreferenceStore();
 		setPreferenceStore(fStote);
 	}
 

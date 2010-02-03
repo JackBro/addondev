@@ -121,8 +121,8 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.addondev.ui.preferencepages"
-            class="org.addondev.ui.preferences.DebugPreferencePage"
-            id="org.addondev.ui.preferences.DebugPreferencePage"
+            class="org.addondev.debug.ui.preferences.DebugPreferencePage"
+            id="org.addondev.debug.ui.preferences.DebugPreferencePage"
             name="Debug">
       </page>
    </extension>
@@ -160,6 +160,12 @@
       <new_element
             class="org.addondev.debug.ui.editor.texthover.JavaScriptTextHover">
       </new_element>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.addondev.debug.preferences.AddonDevDebugPreferenceInitializer">
+      </initializer>
    </extension>
 
 </plugin>

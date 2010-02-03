@@ -22,24 +22,6 @@
             id="org.addondev.ui.preferencepages"
             name="AddonDev">
       </page>
-      <page
-            category="org.addondev.ui.preferencepages"
-            class="org.addondev.ui.preferences.JavaScriptEditorPreferencePage"
-            id="AddonDev.page1"
-            name="name">
-      </page>
-      <page
-            category="org.addondev.ui.preferencepages"
-            class="org.addondev.ui.preferences.XULPreferencePage"
-            id="org.addondev.ui.XULPreferencepages"
-            name="XUL Editor">
-      </page>
-      <page
-            category="org.addondev.debug.preferencepages"
-            class="org.addondev.ui.preferences.DebugPreferencePage"
-            id="org.addondev.ui.preferences.DebugPreferencePage"
-            name="Debug">
-      </page>
    </extension>
    <extension
          id="org.addondev.debug.marktype.linebreakpoint"

@@ -23,8 +23,6 @@ public class NewJavaScriptFileWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		// TODO Auto-generated method stub
 		boolean res = false;
-
-		String fileName = fNewPage.getFileName();
 		IFile newfile = fNewPage.createNewFile();
 		if(newfile != null)
 		{

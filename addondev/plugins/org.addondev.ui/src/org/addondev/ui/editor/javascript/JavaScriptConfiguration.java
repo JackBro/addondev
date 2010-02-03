@@ -4,7 +4,9 @@ package org.addondev.ui.editor.javascript;
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.preferences.PrefConst;
 import org.addondev.preferences.ResourceManager;
+import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
@@ -44,13 +46,14 @@ public class JavaScriptConfiguration extends
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer) {
 		// TODO Auto-generated method stub
+		IPreferenceStore store = AddonDevUIPlugin.getDefault().getPreferenceStore();
 		//return super.getPresentationReconciler(sourceViewer);
 		PresentationReconciler reconciler = new PresentationReconciler();
 		DefaultDamagerRepairer dr = null;
 		
 		if (defaultScanner == null) {
-			fDefaultToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND)));
-			defaultScanner = new JavaScriptScanner(AddonDevPlugin.getDefault().getPreferenceStore());
+			fDefaultToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND)));
+			defaultScanner = new JavaScriptScanner(store);
 			defaultScanner.setDefaultReturnToken(fDefaultToken);
 		}
 		
@@ -59,7 +62,7 @@ public class JavaScriptConfiguration extends
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 			
 		if (fCommentScanner == null) {
-			fCommnetToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT)));
+			fCommnetToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT)));
 			fCommentScanner = new RuleBasedScanner();
 			fCommentScanner.setDefaultReturnToken(fCommnetToken);
 		}		

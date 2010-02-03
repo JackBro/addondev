@@ -2,18 +2,14 @@ package org.addondev.ui.wizard;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.addondev.core.AddonDevNature;
-import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -23,7 +19,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -242,8 +237,11 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		
 		String text = out.toString();
 		for (Object obj : param.entrySet()) {
-			String key = (String) obj;
-			text = text.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
+			if(obj instanceof String)
+			{
+				String key = (String) obj;
+				text = text.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
+			}
 		}
 //		for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
 //		{

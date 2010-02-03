@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 
 import junit.framework.TestCase;
 
+import org.addondev.debug.net.SendRequest;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.junit.After;
 import org.junit.Before;

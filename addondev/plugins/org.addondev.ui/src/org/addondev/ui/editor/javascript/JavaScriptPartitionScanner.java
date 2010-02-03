@@ -1,5 +1,8 @@
 package org.addondev.ui.editor.javascript;
 
+import java.util.ArrayList;
+
+import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
@@ -12,10 +15,11 @@ public class JavaScriptPartitionScanner extends RuleBasedPartitionScanner {
 	public JavaScriptPartitionScanner(){
 		IToken comment  = new Token(JS_COMMENT);
 		
-		IPredicateRule[] rules = new IPredicateRule[1];
-		rules[0] = new MultiLineRule("/*" , "*/" ,comment);
+		ArrayList<IPredicateRule> rules = new ArrayList<IPredicateRule>();
+		rules.add(new MultiLineRule("/*" , "*/" ,comment));
+		rules.add(new EndOfLineRule("//", comment));
 		
-		setPredicateRules(rules);
+		setPredicateRules(rules.toArray(new IPredicateRule[rules.size()]));
 		//setRules(rules);
 	}
 }

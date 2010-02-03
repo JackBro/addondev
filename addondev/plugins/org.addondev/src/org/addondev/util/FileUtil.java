@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -19,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.addondev.core.AddonDevPlugin;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -91,6 +93,11 @@ public class FileUtil {
 		}
 		
 		return res;
+	}
+	
+	public static void copyDirectory(File src, File dist, FileFilter filter, Boolean foce) throws IOException
+	{
+		FileUtils.copyDirectory(src, dist, filter, true);
 	}
 	
 	public static void write(File file, String text) throws IOException
