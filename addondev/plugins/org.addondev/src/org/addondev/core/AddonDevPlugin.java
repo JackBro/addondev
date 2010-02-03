@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.addondev.parser.dtd.DTDMap;
-import org.addondev.templates.JavaScriptTemplateContextType;
 import org.addondev.util.ChromeURLMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -33,10 +32,7 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	public static final String IMG_BP_DISABLE = "bp_disable.png";
 	public static final String IMG_ADDON = "addondev";
 	
-    public static final String TEMPLATE_STORE_ID = "org.addondev.templates.store";
-	
-    private TemplateStore fStore;
-	private ContributionContextTypeRegistry fRegistry = null;
+    
 		
 	private static AddonDevPlugin plugin;
 	
@@ -83,27 +79,6 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 	public static IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
 	}
-	
-    public ContextTypeRegistry getContextTypeRegistry() {
-        if (fRegistry == null) {
-            fRegistry = new ContributionContextTypeRegistry();
-            fRegistry.addContextType(JavaScriptTemplateContextType.JAVASCRIPT_CONTEXT_TYPE);
-        }
-        return fRegistry;
-    }
-
-    public TemplateStore getTemplateStore() {
-        if (fStore == null) {
-            fStore = new ContributionTemplateStore(getContextTypeRegistry(), getPreferenceStore(), TEMPLATE_STORE_ID);
-            try {
-                fStore.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        }
-        return fStore;
-    }
     
     private HashMap<String, ChromeURLMap> fChromeURL = new HashMap<String, ChromeURLMap>();
     public ChromeURLMap getChromeURLMap(IProject project, boolean isupdate)

@@ -1,4 +1,4 @@
-package org.addondev.templates;
+package org.addondev.ui.template;
 
 import org.eclipse.jface.text.templates.GlobalTemplateVariables;
 import org.eclipse.jface.text.templates.TemplateContextType;

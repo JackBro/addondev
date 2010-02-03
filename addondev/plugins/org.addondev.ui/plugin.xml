@@ -75,13 +75,13 @@
    <extension
          point="org.eclipse.ui.importWizards">
       <wizard
-            category="org.addondev.category.wizard.import"
+            category="org.addondev.ui.wizard.import"
             class="org.addondev.ui.wizard.AddonDevImportWizard"
             id="org.addondev.wizard.addonimportwizard"
             name="Firefox Addon">
       </wizard>
       <category
-            id="org.addondev.category.wizard.import"
+            id="org.addondev.ui.wizard.import"
             name="Addon Dev">
       </category>
    </extension>
@@ -90,6 +90,64 @@
       <new_element
             class="org.addondev.ui.builder.AddonDevBuilder">
       </new_element>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.templates">
+      <contextType
+            class="org.addondev.ui.template.JavaScriptTemplateContextType"
+            id="org.addondev.ui.template.javascript"
+            name="JavaScript">
+      </contextType>
+      <include
+            file="templates/code/javascript_templates.xml">
+      </include>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="AddonDev.category1"
+            name="name">
+      </category>
+      <command
+            categoryId="AddonDev.category1"
+            id="AddonDev.command1"
+            name="name cmd">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.addondev.ui.editor.javascript.actions.samplehandler"
+            commandId="AddonDev.command1">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="AddonDev.command1"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:edit?after=additions">
+         <command
+               commandId="AddonDev.command1"
+               label="test"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.addondev.ui.preferences.AddonDevPreferencePage"
+            id="org.addondev.ui.preferencepages"
+            name="AddonDev">
+      </page>
    </extension>
 
 </plugin>

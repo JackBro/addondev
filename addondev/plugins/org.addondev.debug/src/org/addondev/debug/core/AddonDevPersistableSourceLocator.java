@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.addondev.debug.core.model.AddonDevStackFrame;
-import org.addondev.editorinput.SeqEditorInput;
-import org.addondev.editorinput.SeqStorageEditorInput;
+import org.addondev.editor.input.SeqEditorInput;
+import org.addondev.editor.input.SeqStorageEditorInput;
 import org.addondev.ui.editor.javascript.JavaScriptEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;

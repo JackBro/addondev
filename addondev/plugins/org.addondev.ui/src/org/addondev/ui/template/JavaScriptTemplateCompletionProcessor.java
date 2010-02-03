@@ -1,6 +1,6 @@
-package org.addondev.templates;
+package org.addondev.ui.template;
 
-import org.addondev.core.AddonDevPlugin;
+import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.templates.Template;
@@ -16,7 +16,7 @@ public class JavaScriptTemplateCompletionProcessor extends
 			IRegion region) {
 		// TODO Auto-generated method stub
 		//return null;
-		return AddonDevPlugin.getDefault()
+		return AddonDevUIPlugin.getDefault()
 		.getContextTypeRegistry().getContextType(JavaScriptTemplateContextType.JAVASCRIPT_CONTEXT_TYPE);
 	}
 
@@ -30,7 +30,7 @@ public class JavaScriptTemplateCompletionProcessor extends
 	protected Template[] getTemplates(String contextTypeId) {
 		// TODO Auto-generated method stub
 		//return null;
-		return AddonDevPlugin.getDefault().getTemplateStore().getTemplates();
+		return AddonDevUIPlugin.getDefault().getTemplateStore().getTemplates();
 	}
 
 }

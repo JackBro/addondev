@@ -14,7 +14,7 @@ import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
-import org.addondev.templates.JavaScriptTemplateCompletionProcessor;
+import org.addondev.ui.template.JavaScriptTemplateCompletionProcessor;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;

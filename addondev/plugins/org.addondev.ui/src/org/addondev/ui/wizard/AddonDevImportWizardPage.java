@@ -314,7 +314,7 @@ public class AddonDevImportWizardPage extends WizardPage {
 			
 		};
 		
-		FileUtils.copyDirectory(srcdir, project.getLocation().toFile(), filter, true);
+		//FileUtils.copyDirectory(srcdir, project.getLocation().toFile(), filter, true);
 		
 		
 //		IProjectDescription description = project.getDescription();

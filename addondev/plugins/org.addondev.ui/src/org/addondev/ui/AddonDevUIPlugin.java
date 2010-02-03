@@ -1,5 +1,12 @@
 package org.addondev.ui;
 
+import java.io.IOException;
+
+import org.addondev.ui.template.JavaScriptTemplateContextType;
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
+import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -13,6 +20,10 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static AddonDevUIPlugin plugin;
+	
+    private TemplateStore fTemplateStore;
+	private ContributionContextTypeRegistry fRegistry = null;
+	public static final String TEMPLATE_STORE_ID = "org.addondev.templates.store";
 	
 	/**
 	 * The constructor
@@ -47,4 +58,26 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public ContextTypeRegistry getContextTypeRegistry() {
+		if (fRegistry == null) {
+			fRegistry = new ContributionContextTypeRegistry();
+			fRegistry
+					.addContextType(JavaScriptTemplateContextType.JAVASCRIPT_CONTEXT_TYPE);
+		}
+		return fRegistry;
+	}
+
+	public TemplateStore getTemplateStore() {
+		if (fTemplateStore == null) {
+			fTemplateStore = new ContributionTemplateStore(getContextTypeRegistry(),
+					getPreferenceStore(), TEMPLATE_STORE_ID);
+			try {
+				fTemplateStore.load();
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		}
+		return fTemplateStore;
+	}
 }

@@ -70,12 +70,12 @@ public class JavaScriptConfiguration extends
 		return reconciler;		
 	}	
 	
-	@Override
-	public ITextHover getTextHover(ISourceViewer sourceViewer,
-			String contentType) {
-		// TODO Auto-generated method stub
-		return new JavaScriptTextHover(sourceViewer, contentType);
-	}
+//	@Override
+//	public ITextHover getTextHover(ISourceViewer sourceViewer,
+//			String contentType) {
+//		// TODO Auto-generated method stub
+//		return new JavaScriptTextHover(sourceViewer, contentType);
+//	}
 
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {

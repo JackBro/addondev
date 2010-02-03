@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.addondev.builder.IAddonDevBuilder;
-import org.addondev.editor.IAddonDevEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -87,32 +86,32 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 		return null;
 	}
 	
-	@SuppressWarnings("deprecation")
-	private void getEditorPart(final IProject project, final IFile file)
-	{
-		//final ArrayList<XULPreviewForm> xulforms = new ArrayList<XULPreviewForm>();
-		
-		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-		for (IWorkbenchWindow iWorkbenchWindow : windows) {
-			//final IEditorPart editor = iWorkbenchWindow.getActivePage().getActiveEditor();		
-			IEditorPart[] editors = iWorkbenchWindow.getActivePage().getEditors();	
-			for (final IEditorPart editor : editors) {
-				if(editor instanceof IAddonDevEditor)
-				{
-					IProject editorproject = ((FileEditorInput)editor.getEditorInput()).getFile().getProject();
-					if(editorproject != null && editorproject.getName().equals(project.getName()))
-					{
-						
-						Display.getDefault().asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub	
-								((IAddonDevEditor)editor).Changed(file);
-							}
-						});
-					}
-				}
-			}
-		}
-	}
+//	@SuppressWarnings("deprecation")
+//	private void getEditorPart(final IProject project, final IFile file)
+//	{
+//		//final ArrayList<XULPreviewForm> xulforms = new ArrayList<XULPreviewForm>();
+//		
+//		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+//		for (IWorkbenchWindow iWorkbenchWindow : windows) {
+//			//final IEditorPart editor = iWorkbenchWindow.getActivePage().getActiveEditor();		
+//			IEditorPart[] editors = iWorkbenchWindow.getActivePage().getEditors();	
+//			for (final IEditorPart editor : editors) {
+//				if(editor instanceof IAddonDevEditor)
+//				{
+//					IProject editorproject = ((FileEditorInput)editor.getEditorInput()).getFile().getProject();
+//					if(editorproject != null && editorproject.getName().equals(project.getName()))
+//					{
+//						
+//						Display.getDefault().asyncExec(new Runnable() {
+//							@Override
+//							public void run() {
+//								// TODO Auto-generated method stub	
+//								((IAddonDevEditor)editor).Changed(file);
+//							}
+//						});
+//					}
+//				}
+//			}
+//		}
+//	}
 }
