@@ -12,11 +12,11 @@ public class JavaScriptTemplateContextType extends TemplateContextType {
         addResolver(new GlobalTemplateVariables.Cursor());
         addResolver(new GlobalTemplateVariables.WordSelection());
         addResolver(new GlobalTemplateVariables.LineSelection());
-        addResolver(new GlobalTemplateVariables.Dollar());
-        addResolver(new GlobalTemplateVariables.Date());
-        addResolver(new GlobalTemplateVariables.Year());
-        addResolver(new GlobalTemplateVariables.Time());
-        addResolver(new GlobalTemplateVariables.User());
+//        addResolver(new GlobalTemplateVariables.Dollar());
+//        addResolver(new GlobalTemplateVariables.Date());
+//        addResolver(new GlobalTemplateVariables.Year());
+//        addResolver(new GlobalTemplateVariables.Time());
+//        addResolver(new GlobalTemplateVariables.User());
 	}
 
 	public JavaScriptTemplateContextType(String id) {

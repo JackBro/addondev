@@ -151,6 +151,17 @@
             id="AddonDev.page1"
             name="name">
       </page>
+      <page
+            category="org.addondev.ui.preferencepages"
+            class="org.addondev.ui.JavaScriptTemplatePreferencePage"
+            id="org.addondev.ui.page1"
+            name="name">
+      </page>
+      <page
+            class="org.addondev.ui.WorkbenchPreferencePage1"
+            id="org.addondev.ui.page1"
+            name="name">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

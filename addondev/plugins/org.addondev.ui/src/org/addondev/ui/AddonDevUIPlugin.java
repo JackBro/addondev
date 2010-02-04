@@ -1,9 +1,14 @@
 package org.addondev.ui;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import org.addondev.ui.template.JavaScriptTemplateContextType;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
+import org.eclipse.jface.text.templates.persistence.TemplateReaderWriter;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
@@ -23,7 +28,7 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 	
     private TemplateStore fTemplateStore;
 	private ContributionContextTypeRegistry fRegistry = null;
-	public static final String TEMPLATE_STORE_ID = "org.addondev.templates.store";
+	public static final String TEMPLATE_STORE_ID = "org.addondev.ui.templates.store";
 	
 	/**
 	 * The constructor
@@ -61,8 +66,7 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 	public ContextTypeRegistry getContextTypeRegistry() {
 		if (fRegistry == null) {
 			fRegistry = new ContributionContextTypeRegistry();
-			fRegistry
-					.addContextType(JavaScriptTemplateContextType.JAVASCRIPT_CONTEXT_TYPE);
+			fRegistry.addContextType(JavaScriptTemplateContextType.JAVASCRIPT_CONTEXT_TYPE);
 		}
 		return fRegistry;
 	}
@@ -78,6 +82,39 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 				throw new RuntimeException(e);
 			}
 		}
+		
+		if(fTemplateStore.getTemplates().length == 0)
+		{
+			URL url = getBundle().getEntry("templates/code/javascript_templates.xml");
+			importTemplate(url);
+		}
 		return fTemplateStore;
+	}
+	
+	private void importTemplate(URL url)
+	{
+		InputStream input = null;
+		try {
+			input = new BufferedInputStream(url.openStream());
+			TemplateReaderWriter reader= new TemplateReaderWriter();
+			TemplatePersistenceData[] datas= reader.read(input, null);
+			for (int i= 0; i < datas.length; i++) {
+				TemplatePersistenceData data= datas[i];
+				fTemplateStore.add(data);
+			}
+			fTemplateStore.save();
+			fTemplateStore.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if(input !=null)
+				try {
+					input.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
 	}
 }
