@@ -161,6 +161,8 @@ public class ChromeURLMap {
 			HashMap<String, String> map = fContentMap.get(key1);
 			String uri = map.get("uri");
 			IPath path = fBasePath.append(uri);
+			String fp = fullpath.toPortableString();
+			String pp = path.toPortableString();
 			if(fullpath.toPortableString().indexOf(path.toPortableString()) == 0)
 			{
 				chromeurl = "chrome://" + 

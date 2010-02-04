@@ -182,9 +182,9 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
         }
 		IPath extensionsDirPath = new Path(fProfileDir).append("extensions");
 		InputStream in = project.getFile("install.rdf").getContents();
-		String rdf = FileUtil.getContent(in);
+		//String rdf = FileUtil.getContent(in);
 		
-		String id = XMLUtils.getAddonIDFromRDF(rdf);
+		String id = XMLUtils.getAddonIDFromRDF(in);
 			String path = extensionsDirPath.append(id).toOSString();
 			File file = new File(path);	
 			if(file.exists())
@@ -192,15 +192,15 @@ public class AddonDevLaunchDelegate extends LaunchConfigurationDelegate implemen
 				
 			}
 			else
-			{		
+			{	String projectpath = project.getLocation().toOSString();	
 				//FileUtils.writeStringToFile(file, path);
-				FileUtil.write(file, path);
+				FileUtil.write(file, projectpath);
 			}	
 	}
 	
 	private String[] getCommandLine()
 	{		
-		String cmdlines = String.format("%s -no-remote -profile \"%s\" -ce_eport %d -ce_cport %d chrome chrome://chromebug/content/chromebug.xul",
+		String cmdlines = String.format("%s -no-remote -profile \"%s\" -ce_eport %d -ce_cport %d -chrome chrome://chromebug/content/chromebug.xul",
 				fFirefoxPath, fProfileDir, fEclipsePort, fDebuggerPort);
 		
 		return cmdlines.split("\\s");

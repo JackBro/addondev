@@ -43,15 +43,34 @@ public class JavaScriptContentAssistProcessor implements
 
 		//アクティブなエディタの取得
 		IEditorPart editor = window.getActivePage().getActiveEditor();
-		if(editor instanceof JavaScriptEditor)
-		{
+		if (editor instanceof JavaScriptEditor) {
 			JavaScriptEditor jsEditor = (JavaScriptEditor) editor;
 			String src = jsEditor.getDocument().get();
-//			
-//			Parser parser = new Parser("");
-//			parser.parse(src);
-//			Scope scope = ScopeManager.instance().getScope("", offset);
-			
+			//			
+			Parser parser = new Parser("test");
+			parser.parse(src);
+			Scope scope = ScopeManager.instance().getScope("test", offset);
+
+			ArrayList<JsNode> chnodes = scope.getNode().getChild("t").getChildNode();//getChildNode();
+			for (JsNode node : chnodes) {
+				result.add(
+						new CompletionProposal(
+								node.getImage(), 
+								offset, 
+								0,
+								node.getImage().length())
+//						new CompletionProposal(
+//								node.getImage(), 
+//								offset, 
+//								0,
+//								node.getImage().length(),
+//								null,
+//								"node.getfJsDoc()",
+//								null,
+//								"node.getfJsDoc()")				
+				);
+			}
+
 			String t = getAssistTarget(src, offset);
 			System.out.println("Target = " + t);
 		}

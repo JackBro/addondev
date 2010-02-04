@@ -16,6 +16,8 @@ import org.addondev.parser.javascript.JsNodeHelper;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.NodeManager;
 import org.addondev.parser.javascript.Parser;
+import org.addondev.parser.javascript.Scope;
+import org.addondev.parser.javascript.ScopeManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -112,12 +114,20 @@ public class ParserTest {
 		node.dump("");
 		}
 		{
-		Lexer lex = null;
+		//Lexer lex = null;
 		String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
-		lex = new Lexer(src);
-		Parser parser = new Parser("test03.js"); // パーサーを作成。
-		parser.parse(lex);
-		JsNode node = parser.root;
+		//lex = new Lexer(src);
+		//Parser parser = new Parser("test03.js"); // パーサーを作成。
+		//parser.parse(lex);
+		//JsNode node = parser.root;
+		//node.dump("");
+		
+		Parser parser = new Parser("test03.js");
+		parser.parse(src);
+		//JsNode node = parser.parse(src);
+		//node.dump("");
+		Scope scope = ScopeManager.instance().getScope("test03.js", 0);
+		JsNode node = scope.getNode().getChild("t");
 		node.dump("");
 		}
 	}

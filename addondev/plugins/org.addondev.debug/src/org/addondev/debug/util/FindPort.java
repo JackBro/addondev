@@ -21,12 +21,14 @@ public class FindPort {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
+				freeport = port;
+				break;
 			}
 			finally
 			{
 				try
 				{
-					sock.close();
+					if(sock != null) sock.close();
 				} catch (IOException e) {
 					// TODO: handle exception
 				}

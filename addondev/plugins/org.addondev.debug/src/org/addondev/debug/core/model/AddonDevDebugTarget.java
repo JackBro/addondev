@@ -299,7 +299,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		if(fCloseBrowser && !isTerminated())
 			return true;
 		
-		return !isSuspended();
+		return isSuspended();
 	}
 
 	@Override
@@ -905,7 +905,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 				AddonDevLineBreakpoint addonbreakpoint = (AddonDevLineBreakpoint)breakpoint;
 				IProject project = addonbreakpoint.getProject();
 				//String path = fAddonDevUtil.convertChrome(project, ((AddonDevLineBreakpoint)breakpoint).getPath().toPortableString());
-				String path = AddonDevPlugin.getDefault().getChromeURLMap(project, false).convertLocal2Chrome(addonbreakpoint.getFullPath());
+				String path = AddonDevPlugin.getDefault().getChromeURLMap(project, false).convertLocal2Chrome(addonbreakpoint.getLocation());
 				int line = 0;
 
 				try {

@@ -5,7 +5,7 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 
 public class JavaScriptTemplateContextType extends TemplateContextType {
 	
-	public static final String JAVASCRIPT_CONTEXT_TYPE = "org.addondev.templates.javascript";
+	public static final String JAVASCRIPT_CONTEXT_TYPE = "org.addondev.ui.template.javascript";
 
 	public JavaScriptTemplateContextType() {
 		// TODO Auto-generated constructor stub

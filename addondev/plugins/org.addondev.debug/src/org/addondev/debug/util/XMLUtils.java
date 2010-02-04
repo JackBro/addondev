@@ -2,6 +2,7 @@ package org.addondev.debug.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -251,12 +252,12 @@ public class XMLUtils {
 	
 	
 	//
-	public static String getAddonIDFromRDF(String rdf) throws ParserConfigurationException, SAXException, IOException, TransformerException
+	public static String getAddonIDFromRDF(InputStream input) throws ParserConfigurationException, SAXException, IOException, TransformerException
 	{
 		
 		DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = fact.newDocumentBuilder();
-		Document doc = builder.parse(rdf);
+		Document doc = builder.parse(input);
 
         Node n;		        
         String id = null;

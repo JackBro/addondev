@@ -233,7 +233,7 @@ public class AddonDevLaunchMainTab extends AbstractLaunchConfigurationTab {
 			fProjectText.setText(configuration.getAttribute(TARGET_PROJECT, ""));
 			fFirefoxPathEditor.setStringValue(configuration.getAttribute(FIREFOX_PATH, ""));
 			fProfiledir.setStringValue(configuration.getAttribute(FIREFOX_PROFILE_PATH, ""));
-			fArgsText.setStringValue(configuration.getAttribute(FIREFOX_ARGS, ""));
+			fArgsText.setStringValue(configuration.getAttribute(FIREFOX_ARGS, ""));//"%s -no-remote -profile \"%s\" -ce_eport %d -ce_cport %d -chrome chrome://chromebug/content/chromebug.xul"));
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

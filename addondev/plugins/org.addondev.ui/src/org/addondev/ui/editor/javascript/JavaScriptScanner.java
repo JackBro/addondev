@@ -11,6 +11,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
@@ -75,10 +76,16 @@ public class JavaScriptScanner extends RuleBasedScanner {
 		}
 		rules.add(wordRule);
 		
-		Color stringcolor  = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING);
-		IToken stringtoken = new Token(new TextAttribute(stringcolor));
-		rules.add(new SingleLineRule("\"", "\"", stringtoken, '\\'));
-		rules.add(new SingleLineRule("'", "'", stringtoken, '\\'));
+		//Color stringcolor  = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING);
+		//IToken stringtoken = new Token(new TextAttribute(stringcolor));
+		
+		//Color commnetcolor  = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT);
+		//IToken commnettoken = new Token(new TextAttribute(commnetcolor));
+		
+		//rules.add(new EndOfLineRule("//", commnettoken));
+		//rules.add(new SingleLineRule("\"", "\"", stringtoken, '\\'));
+		//rules.add(new SingleLineRule("'", "'", stringtoken, '\\'));
+
 		
 		return rules;
 	}

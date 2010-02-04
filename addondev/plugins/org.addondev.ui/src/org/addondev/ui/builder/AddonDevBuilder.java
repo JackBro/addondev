@@ -12,7 +12,7 @@ public class AddonDevBuilder implements IAddonDevBuilder {
 	@Override
 	public void visit(IResourceDelta delta) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }

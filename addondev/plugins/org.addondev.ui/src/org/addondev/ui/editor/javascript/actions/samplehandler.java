@@ -86,6 +86,12 @@ public class samplehandler extends AbstractHandler {
 		for (String string : lines) {
 			buf.append("//").append(string).append(rnt);
 		}
+		char lc = text.charAt(text.length()-1);
+		
+		if(lc!='\n' && lc!='\r' )
+		{
+			buf = buf.delete(buf.length()-rnt.length(), buf.length());
+		}
 		
 		try {
 			document.replace(offset, length, buf.toString());

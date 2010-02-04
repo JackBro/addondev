@@ -18,8 +18,8 @@ public class JavaScriptDocumentProvider extends FileDocumentProvider {
 				new FastPartitioner(
 					new JavaScriptPartitionScanner(),
 					new String[] {
-						JavaScriptPartitionScanner.JS_COMMENT
-						});
+						JavaScriptPartitionScanner.JS_COMMENT,
+						JavaScriptPartitionScanner.JS_STRING});
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
 		}
@@ -36,8 +36,8 @@ public class JavaScriptDocumentProvider extends FileDocumentProvider {
 					new FastPartitioner(
 						new JavaScriptPartitionScanner(),
 						new String[] {
-							JavaScriptPartitionScanner.JS_COMMENT
-							});
+							JavaScriptPartitionScanner.JS_COMMENT,
+							JavaScriptPartitionScanner.JS_STRING});
 				partitioner.connect(document);
 				document.setDocumentPartitioner(partitioner);
 			}

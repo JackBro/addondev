@@ -1,4 +1,15 @@
+var MyObject = 
+{
+	message3: null,  
+	hello3: function (arg0, arg1){
+		//arg0=100;
+		this.h= 10;
+	}
+}
 
+var t = MyObject;
+
+t.
 //var ary = [];
 ////var num = 10;
 //var st = "t";
@@ -51,36 +62,36 @@
 ////	classes:function(){}
 ////}
 //
-var nsIIOService = 
-{
-  message3: null,
-  hello3: function (arg0)
-  {
-	//this.ll=0;
-  }
-}
-
-function Components(){};
-/**
- * @memberOf   Components
-*/ 	
-Components.classes = function(){};
-
-/**
- * @type    interfaces
- * @memberOf   Components
-*/ 	
-Components.classes.createInstance = function(){};
-
-/**
- * @type    service
- * @memberOf   Components
-*/
-Components.classes.getService = function(){};
-
-//const Components.classes;
-//const Ci = Components.interfaces;
-var ioService = Components.classes["@mozilla.org/network/io-service;1"].createInstance(Components.interfaces.nsIIOService);
+//var nsIIOService = 
+//{
+//  message3: null,
+//  hello3: function (arg0)
+//  {
+//	//this.ll=0;
+//  }
+//}
+//
+//function Components(){};
+///**
+// * @memberOf   Components
+//*/ 	
+//Components.classes = function(){};
+//
+///**
+// * @type    interfaces
+// * @memberOf   Components
+//*/ 	
+//Components.classes.createInstance = function(){};
+//
+///**
+// * @type    service
+// * @memberOf   Components
+//*/
+//Components.classes.getService = function(){};
+//
+////const Components.classes;
+////const Ci = Components.interfaces;
+//var ioService = Components.classes["@mozilla.org/network/io-service;1"].createInstance(Components.interfaces.nsIIOService);
 
 
 
@@ -209,14 +220,14 @@ var ioService = Components.classes["@mozilla.org/network/io-service;1"].createIn
 //var name = Firebug.Debugger.panelName;
 
 
-myExt.ns(function() { 
-	with (myExt.LIB) 
-{
-
-	var m = "A";
-	dump("myExtension.Module2 initialization " + getCurrentURI() + "\n");
-
-}});
+//myExt.ns(function() { 
+//	with (myExt.LIB) 
+//{
+//
+//	var m = "A";
+//	dump("myExtension.Module2 initialization " + getCurrentURI() + "\n");
+//
+//}});
 
 
 

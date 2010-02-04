@@ -155,8 +155,9 @@ public class Parser {
 		}
 		return code;
 	}
-	
+	int endoff;
 	public JsNode parse(String src) {
+		endoff = src.length();
 		JsNode code = null;
 		try {
 			lex = new Lexer(src);
@@ -185,7 +186,7 @@ public class Parser {
 	private JsNode program() throws EOSException {
 		root = new JsNode(null, "root", "root", 0);
 		//thisNodeStack.push(root); //global
-		fScopeStack.pushScope(new Scope(0, root));
+		fScopeStack.pushScope(new Scope(0, endoff, root));
 		
 		//frame.push();
 		while (token != TokenType.EOS) {
@@ -196,8 +197,8 @@ public class Parser {
 		
 		//thisNodeStack.pop();
 
-		Scope scope = fScopeStack.popScope();
-		scope.setEnd(lex.offset());
+		//Scope scope = fScopeStack.popScope();
+		//scope.setEnd(lex.offset());
 		
 		ScopeManager.instance().setScopeStack(fName, fScopeStack);
 		
@@ -279,6 +280,11 @@ public class Parser {
 							break;
 						}
 						getToken();	//.	
+						
+						if(token == TokenType.EOS)
+						{
+							break;
+						}
 //						if(token != TokenType.SYMBOL)
 //						{
 //							break;
