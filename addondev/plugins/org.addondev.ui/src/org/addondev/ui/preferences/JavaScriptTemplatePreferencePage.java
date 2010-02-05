@@ -1,5 +1,6 @@
-package org.addondev.ui;
+package org.addondev.ui.preferences;
 
+import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 

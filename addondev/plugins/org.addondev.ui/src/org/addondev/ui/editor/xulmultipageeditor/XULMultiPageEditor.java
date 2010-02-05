@@ -1,4 +1,4 @@
-package org.addondev.ui.editor.xul.preview;
+package org.addondev.ui.editor.xulmultipageeditor;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.editor.xul.XULEditor;
 import org.addondev.ui.editor.xul.XULParser;
+import org.addondev.ui.editor.xul.preview.XULPreviewPage;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.FileUtil;
 import org.addondev.util.ManifestUtil;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -26,14 +26,12 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 
-public class XULPreviewForm extends MultiPageEditorPart {
-//public class XULPreviewForm extends FormEditor {
+public class XULMultiPageEditor extends MultiPageEditorPart {
 	
 	//setInput -> createPages
 	private IPreferenceStore fStore;
+	private XULEditor fXULEditor;
 	private XULPreviewPage fXULPreviewPage;
-	
-	
 	
 	@Override
 	public String getPartName() {
@@ -41,13 +39,12 @@ public class XULPreviewForm extends MultiPageEditorPart {
 		if( getEditorInput() instanceof FileEditorInput)
 		{
 			FileEditorInput input = (FileEditorInput)getEditorInput();
-			String n= input.getName();
 			return input.getName();
 		}
 		return super.getPartName();
 	}
 
-	public XULPreviewForm() {
+	public XULMultiPageEditor() {
 		// TODO Auto-generated constructor stub
 		fStore = AddonDevUIPlugin.getDefault().getPreferenceStore();
 	}
@@ -89,19 +86,19 @@ public class XULPreviewForm extends MultiPageEditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		// TODO Auto-generated method stub
-
+		fXULEditor.doSave(monitor);
 	}
 
 	@Override
 	public void doSaveAs() {
 		// TODO Auto-generated method stub
-
+		fXULEditor.doSaveAs();
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
 		// TODO Auto-generated method stub
-		return false;
+		return (fXULEditor != null) && fXULEditor.isSaveAsAllowed();
 	}
 
 	@Override
@@ -109,7 +106,9 @@ public class XULPreviewForm extends MultiPageEditorPart {
 		// TODO Auto-generated method stub
 		
 		try {
-			addPage(new XULEditor(), getEditorInput());
+			fXULEditor = new XULEditor();
+			int pageIndex1 = addPage(fXULEditor, getEditorInput());
+			setPageText(pageIndex1, "Source");
 		} catch (PartInitException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -117,27 +116,24 @@ public class XULPreviewForm extends MultiPageEditorPart {
 		
 		
 		File file = makeXULPreviewFile();
-//		fBrowserFormPage = new BrowserFormPage(file);
-//		fBrowserFormPage.createControl(getContainer());
-//		int pageIndex = addPage(fBrowserFormPage.getControl());
-//		setPageText(pageIndex, "Preview");
 
 		fXULPreviewPage = new XULPreviewPage(file);
 		fXULPreviewPage.createControl(getContainer());
 		int pageIndex2 = addPage(fXULPreviewPage.getControl());
-		setPageText(pageIndex2, "Preview2");
+		setPageText(pageIndex2, "Preview");
 		
-		FileEditorInput fileinput = (FileEditorInput)getEditorInput();
-		String text = null;
-		try {
-			text = FileUtil.getContent(fileinput.getFile().getContents());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		FileEditorInput fileinput = (FileEditorInput)getEditorInput();
+//		String text = null;
+//		try {
+//			text = FileUtil.getContent(fileinput.getFile().getContents());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		String text = fXULEditor.getText();
 		ArrayList<String> list = XULParser.parse(text);
 		fXULPreviewPage.setDocument(list);
 	}
@@ -147,6 +143,18 @@ public class XULPreviewForm extends MultiPageEditorPart {
 		//ArrayList<String> list = XULParser.parse(text);
 		//fBrowserFormPage.setDocument(text);
 		fXULPreviewPage.setDocument(XULParser.parse(text));
+	}
+	
+	public void refresh()
+	{
+		fXULPreviewPage.refresf();
+	}
+	
+	public void reLoad()
+	{
+		String text = fXULEditor.getText();
+		ArrayList<String> list = XULParser.parse(text);
+		fXULPreviewPage.setDocument(list);		
 	}
 	
 	private File makeXULPreviewFile()

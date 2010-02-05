@@ -1,5 +1,6 @@
 package org.addondev.core;
 
+import org.addondev.builder.AddonIncrementalProjectBuilder;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;

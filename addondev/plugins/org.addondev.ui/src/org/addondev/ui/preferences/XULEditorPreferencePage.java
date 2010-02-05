@@ -3,8 +3,7 @@ package org.addondev.ui.preferences;
 import java.io.File;
 import java.io.IOException;
 
-import org.addondev.core.AddonDevPlugin;
-import org.addondev.preferences.PrefConst;
+
 import org.addondev.ui.AddonDevUIPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -29,7 +28,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class XULPreviewPreferencePage extends PreferencePage implements
+public class XULEditorPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
 
 	private static class IntegerVerifyListener implements VerifyListener
@@ -52,7 +51,9 @@ public class XULPreviewPreferencePage extends PreferencePage implements
 	private Button fRegbutton;
 	private IntegerVerifyListener fIntegerVerifyListener = new IntegerVerifyListener();
 	
-	public XULPreviewPreferencePage() {
+	private Button autob, xulb, dtdb, cssb;
+	
+	public XULEditorPreferencePage() {
 		// TODO Auto-generated constructor stub
 		fStote = AddonDevUIPlugin.getDefault().getPreferenceStore();
 		setPreferenceStore(fStote);
@@ -71,7 +72,6 @@ public class XULPreviewPreferencePage extends PreferencePage implements
         GridLayout layout = new GridLayout();
         composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-//		composite.setLayout(new FormLayout());
 		
 		Group xulrunnergroup= new Group(composite, SWT.NONE);
         GridLayout xullayout = new GridLayout();
@@ -79,13 +79,6 @@ public class XULPreviewPreferencePage extends PreferencePage implements
         GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
         xulrunnergroup.setLayoutData(data);	
         xulrunnergroup.setText("XULRunner Path");
-		
-//		Label dirlabel = new Label(composite, SWT.NONE);
-//		dirlabel.setText("XULRunner Path");
-//		FormData dirlabelfd = new FormData();
-//		dirlabelfd.top = new FormAttachment(0, 1);
-//		dirlabelfd.left = new FormAttachment(0, 1);
-//		dirlabel.setLayoutData(dirlabelfd);
 	
 		Composite xulfileparent = new Composite(xulrunnergroup, SWT.NONE);
 		xulfileparent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -103,20 +96,9 @@ public class XULPreviewPreferencePage extends PreferencePage implements
 				//setValid(enabled);
 			}
 		});
-				
-//		FormData dirfd = new FormData();
-//		dirfd.top = new FormAttachment(dirlabel, 1);
-//		dirfd.left = new FormAttachment(0, 1);	
-//		dirfd.right = new FormAttachment(100, -1);
-//		xulfileparent.setLayoutData(dirfd);
 		
 		fRegbutton = new Button(xulrunnergroup, SWT.NONE);
 		fRegbutton.setText("Regster");
-//		FormData regfd = new FormData();
-//		regfd.top = new FormAttachment(dirlabel, 1);
-//		regfd.left = new FormAttachment(xulfileparent, 1);	
-//		regfd.right = new FormAttachment(100, -1);	
-//		fRegbutton.setLayoutData(regfd);
 		fRegbutton.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -147,19 +129,11 @@ public class XULPreviewPreferencePage extends PreferencePage implements
 		Group scrollgroup= new Group(composite, SWT.NONE);
         GridLayout scrolllayout = new GridLayout();
         
-        //scrolllayout.numColumns = 2;
         scrollgroup.setLayout(scrolllayout);
         GridData scrolldata = new GridData(GridData.FILL_HORIZONTAL);//GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
-        //scrolldata.horizontalSpan = 5;
         scrollgroup.setLayoutData(scrolldata);      
         scrollgroup.setText("XULRunner Path");
 		
-//		Label scrolllabel = new Label(parent, SWT.NONE);
-//		scrolllabel.setText("scroll");
-//		FormData scrollfd = new FormData();
-//		scrollfd.top = new FormAttachment(xulfileparent, 30);
-//		scrollfd.left = new FormAttachment(0, 1);
-//		scrolllabel.setLayoutData(scrollfd);
 
 		Composite sparent = new Composite(scrollgroup, SWT.NONE);
         GridData scrolldata2 = new GridData(GridData.FILL_HORIZONTAL);
@@ -169,35 +143,55 @@ public class XULPreviewPreferencePage extends PreferencePage implements
         scrolllayout2.numColumns = 2;
         sparent.setLayout(scrolllayout2);
         
-		//Composite wparent = new Composite(scrollgroup, SWT.NONE);
-        //GridData scrolldata2 = new GridData(GridData.FILL_HORIZONTAL);
-        //scrolldata2.horizontalSpan = 5;
-		//wparent.setLayoutData(scrolldata2);
 		fInteditorW = new IntegerFieldEditor(AddonDevUIPrefConst.XULPREVIEW_W, "Minwidth", sparent);
 		fInteditorW.getTextControl(sparent).addVerifyListener(fIntegerVerifyListener);
-//		FormData wfd = new FormData();
-//		wfd.top = new FormAttachment(scrolllabel, 1);
-//		wfd.left = new FormAttachment(0, 1);
-//		wfd.right = new FormAttachment(50, -10);	
-//		wparent.setLayoutData(wfd);
 		
-		//Composite hparent = new Composite(scrollgroup, SWT.NONE);
-		//hparent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		//Composite hparent = new Composite(scrollgroup, SWT.NONE);
-        //GridData scrolldata2 = new GridData(GridData.FILL_HORIZONTAL);
-       // scrolldata2.horizontalSpan = 5;
-        //hparent.setLayoutData(scrolldata2);
 		fInteditorH = new IntegerFieldEditor(AddonDevUIPrefConst.XULPREVIEW_H, "MinHeight", sparent);
 		fInteditorH.getTextControl(sparent).addVerifyListener(fIntegerVerifyListener);
-//		FormData hfd = new FormData();
-//		hfd.top = new FormAttachment(scrolllabel, 1);
-//		hfd.left = new FormAttachment(wparent, 10);	
-//		hfd.right = new FormAttachment(100, -10);	
-//		hparent.setLayoutData(hfd);
 		
-		fXULRunnerFile.setStringValue(fStote.getString(AddonDevUIPrefConst.XULRUNNER_PATH));
-		fInteditorW.setStringValue(fStote.getString(AddonDevUIPrefConst.XULPREVIEW_W).toString());
-		fInteditorH.setStringValue(fStote.getString(AddonDevUIPrefConst.XULPREVIEW_H).toString());
+		
+//auto
+		Group autogroup= new Group(composite, SWT.NONE);
+        GridLayout autolayput = new GridLayout();
+        autogroup.setLayout(autolayput);
+        autogroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));	
+        autogroup.setText("auto"); 
+        
+        autob = new Button(autogroup, SWT.CHECK);
+        autob.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				boolean enabled = autob.getSelection();
+				xulb.setEnabled(enabled);
+				dtdb.setEnabled(enabled);
+				cssb.setEnabled(enabled);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        
+        GridData bdata = new GridData(GridData.FILL_HORIZONTAL);
+        bdata.horizontalIndent = 10;
+
+        xulb = new Button(autogroup, SWT.CHECK);
+        xulb.setText("XUL");
+        xulb.setLayoutData(bdata);
+
+        dtdb = new Button(autogroup, SWT.CHECK);
+        dtdb.setText("dtdb");
+        dtdb.setLayoutData(bdata);
+        
+        cssb = new Button(autogroup, SWT.CHECK);
+        cssb.setText("cssb");
+        cssb.setLayoutData(bdata);
+		
+        setValues();
 		
 		return parent;
 	}
@@ -212,6 +206,24 @@ public class XULPreviewPreferencePage extends PreferencePage implements
 		return super.performOk();
 	}
 
+	protected void setValues()
+	{
+		fXULRunnerFile.setStringValue(fStote.getString(AddonDevUIPrefConst.XULRUNNER_PATH));
+		fInteditorW.setStringValue(fStote.getString(AddonDevUIPrefConst.XULPREVIEW_W).toString());
+		fInteditorH.setStringValue(fStote.getString(AddonDevUIPrefConst.XULPREVIEW_H).toString());		
+		
+		autob.setSelection(fStote.getBoolean(AddonDevUIPrefConst.XULPREVIEW_REFRESH_AUTO));	
+		xulb.setSelection(fStote.getBoolean(AddonDevUIPrefConst.XULPREVIEW_REFRESH_XUL));	
+		dtdb.setSelection(fStote.getBoolean(AddonDevUIPrefConst.XULPREVIEW_REFRESH_DTD));	
+		cssb.setSelection(fStote.getBoolean(AddonDevUIPrefConst.XULPREVIEW_REFRESH_CSS));	
+		
+		boolean enabled = autob.getSelection();
+		xulb.setEnabled(enabled);
+		dtdb.setEnabled(enabled);
+		cssb.setEnabled(enabled);
+		
+	}
+	
 	private boolean register(String xulpath)
 	{
 		//--register-global 

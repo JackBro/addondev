@@ -1,9 +1,9 @@
-package org.addondev.core;
+package org.addondev.builder;
 
 import java.util.List;
 import java.util.Map;
 
-import org.addondev.builder.IAddonDevBuilder;
+import org.addondev.core.ExtensionLoader;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -32,6 +32,7 @@ public class AddonIncrementalProjectBuilder extends IncrementalProjectBuilder {
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			// TODO Auto-generated method stub
 			IResource resource = delta.getResource();
+			IProject project = getProject();
 			
 			List<IAddonDevBuilder> visitors = ExtensionLoader.getExtensions(ExtensionLoader.EXTENSION_POINT_ID);
 			for (IAddonDevBuilder iAddonDevBuilder : visitors) {

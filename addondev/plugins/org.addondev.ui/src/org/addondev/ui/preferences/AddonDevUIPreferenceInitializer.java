@@ -39,7 +39,12 @@ public class AddonDevUIPreferenceInitializer extends
 		
 		store.setDefault(AddonDevUIPrefConst.XULRUNNER_PATH, "");
 		store.setDefault(AddonDevUIPrefConst.XULPREVIEW_W, 400);
-		store.setDefault(AddonDevUIPrefConst.XULPREVIEW_H, 400);		
+		store.setDefault(AddonDevUIPrefConst.XULPREVIEW_H, 400);	
+		
+		store.setDefault(AddonDevUIPrefConst.XULPREVIEW_REFRESH_AUTO, false);
+		store.setDefault(AddonDevUIPrefConst.XULPREVIEW_REFRESH_XUL, false);
+		store.setDefault(AddonDevUIPrefConst.XULPREVIEW_REFRESH_DTD, false);
+		store.setDefault(AddonDevUIPrefConst.XULPREVIEW_REFRESH_CSS, false);
 	}
 
 	@Override

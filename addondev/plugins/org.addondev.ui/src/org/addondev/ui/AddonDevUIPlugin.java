@@ -102,8 +102,8 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 				TemplatePersistenceData data= datas[i];
 				fTemplateStore.add(data);
 			}
-			fTemplateStore.save();
-			fTemplateStore.load();
+			//fTemplateStore.save();
+			//fTemplateStore.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -62,7 +62,7 @@
       <builder
             hasNature="true">
          <run
-               class="org.addondev.core.AddonIncrementalProjectBuilder">
+               class="org.addondev.builder.AddonIncrementalProjectBuilder">
          </run>
       </builder>
    </extension>

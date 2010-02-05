@@ -115,7 +115,13 @@ public class XULParser {
 	private static String convertText(String text)
 	{
 		//return text.replaceAll("&amp;", "&").replaceAll("\n", "");
-		return text.replaceAll("'", "&apos;").replaceAll("\n", "");
+		
+		//if()
+		//{
+			text = text.replaceFirst("chrome://stacklink/skin/preference.css", "file:///D:/data/src/PDE/workrepository/work/stacklink/skin/classic/preference.css");
+		//}
+		return text.replaceAll("'", "&apos;").replaceAll("\n", "\\\\n");
+		//	return	text.replaceAll("&amp;", "&").replaceAll("\n", "");
 	}
 	
 //	public String parse(IPath fullpath, int offset) throws IOException

@@ -9,7 +9,12 @@ public class AddonDevUIPrefConst {
 	public static final String XULPREVIEW_W = "org.addondev.pref.xulpreview.width";
 	public static final String XULPREVIEW_H = "org.addondev.pref.xulpreview.height";
 	
-
+	public static final String XULPREVIEW_REFRESH_AUTO = "org.addondev.pref.xulpreview.refresh.auto";
+	public static final String XULPREVIEW_REFRESH_XUL = "org.addondev.pref.xulpreview.refresh.xul";
+	public static final String XULPREVIEW_REFRESH_DTD = "org.addondev.pref.xulpreview.refresh.dtd";
+	public static final String XULPREVIEW_REFRESH_CSS = "org.addondev.pref.xulpreview.refresh.css";
+	
+	
 	public static final String FIREFOX_ADDON_GUID = "org.addondev.pref.firefox.addon.guid";
 	public static final String FIREFOX_ADDON_VERSION = "org.addondev.pref.firefox.addon.version";
 	public static final String FIREFOX_ADDON_MINVERSION = "org.addondev.pref.firefox.addon.minversion";

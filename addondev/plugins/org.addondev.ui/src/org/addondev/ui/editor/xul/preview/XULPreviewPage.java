@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.addondev.core.AddonDevPlugin;
-import org.addondev.preferences.PrefConst;
+
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.eclipse.core.runtime.IPath;
@@ -15,8 +14,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
-import org.eclipse.swt.browser.StatusTextEvent;
-import org.eclipse.swt.browser.StatusTextListener;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -63,7 +60,9 @@ public class XULPreviewPage extends Page{
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					boolean re = fBrowser.execute("preview('"+ fXUL +"');");
+					//boolean re = fBrowser.execute("preview('"+ fXUL +"');");
+					boolean re = fBrowser.execute("rep('"+ fXUL +"');");
+					//fBrowser.refresh();
 					int i=0;
 					i++;
 				}
@@ -78,6 +77,7 @@ public class XULPreviewPage extends Page{
 	private StackLayout fStackLayout;
 	private Composite fLinkComposite;
 	private ArrayList<Browser> fBrowserList = new ArrayList<Browser>();
+	private ArrayList<String> fXULList = new ArrayList<String>();
 	private String fPreviewXULURL;
 	
 	public XULPreviewPage(File file) {
@@ -120,8 +120,10 @@ public class XULPreviewPage extends Page{
 
 	}
 
+	int cnt=0;
 	public void setDocument(List<String> xuls) {
 		if(xuls.size() == 0) return;
+		
 		String path = AddonDevUIPlugin.getDefault().getPreferenceStore().getString(AddonDevUIPrefConst.XULRUNNER_PATH);
 		if(!new File(path).exists()) return;
 		
@@ -130,6 +132,12 @@ public class XULPreviewPage extends Page{
 			fStackLayout.topControl = fTabFolder;
 			fTabFolder.layout();
 		}
+		
+//		TabItem[] ii = fTabFolder.getItems();
+//		for (TabItem tabItem : ii) {
+//			tabItem.dispose();
+//		}
+//		fBrowserList.clear();
 		
 		int diff = xuls.size() - fTabFolder.getItems().length;
 		if(diff > 0)
@@ -170,54 +178,59 @@ public class XULPreviewPage extends Page{
 			final String xul = xuls.get(i);
 			final Browser browser = fBrowserList.get(i);
 			
-			if(browser.getUrl().equals(fPreviewXULURL))
-			{
-				Display.getDefault().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						boolean re = browser.execute("preview('"+ xul +"');");
-					}
-					
-				});				
-			}
-			else
-			{
-				browser.addProgressListener(new PreviewBrowserProgressListener(browser, xul));
-				
+//			if(browser.getUrl().equals(fPreviewXULURL))
+//			{
+//				Display.getDefault().asyncExec(new Runnable() {
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+//						boolean re = browser.execute("preview('"+ xul +"');");
+//						
+//					}
+//					
+//				});				
+//			}
+//			else
+//			{
+				browser.addProgressListener(new PreviewBrowserProgressListener(browser, xul));		
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 							//URL url = getClass().getResource("preview.xul");
-							//String url="file://"+fPreviewXULFile.toURI().getRawPath();
-							browser.setUrl(fPreviewXULURL);
-							//fBrowser.setUrl("about:blank");
-						}
-				});				
-				
-//				browser.addProgressListener(new ProgressListener() {
-//		            public void changed(ProgressEvent event) {
-//		            }
-//
-//		            public void completed(ProgressEvent event) {
-//		            	Display.getDefault().syncExec(new Runnable() {
-//							
-//							@Override
-//							public void run() {
-//								// TODO Auto-generated method stub
-//			                	//String lat = ((String) fBrowser.evaluate("return rep();"));
-//			                	//fBrowser.execute("getDoc();");
-//			                	//fBrowser.execute("rep(" + + ");");
-//								
-//			                 	int i=0;
-//			                 	i++;
+//							String url="file:///D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.ui/preview.xul";
+//							String url2="file:///D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.ui/preview2.xul";
+//							//browser.refresh();
+//							if(cnt%2==0)
+//							{
+//								browser.setUrl(url);
 //							}
-//						});
-//		            }
-//				});
-//
-				
-			}
+//							else
+//							{
+//								browser.setUrl(url2);
+//							}
+						//Browser.clearSessions();
+							browser.setUrl(fPreviewXULURL);
+							//browser.redraw();
+							//browser.refresh();
+							//fBrowser.setUrl("about:blank");
+							cnt++;
+						}
+				});								
+//			}
 			
+		}
+	}
+	
+	public void refresf()
+	{
+		for (Browser browser : fBrowserList) {
+			browser.refresh();
+		}
+	}
+	
+	public void reLoad()
+	{
+		for (Browser browser : fBrowserList) {
+			browser.refresh();
 		}
 	}
 	

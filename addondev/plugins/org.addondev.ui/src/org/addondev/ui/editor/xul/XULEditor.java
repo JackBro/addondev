@@ -196,6 +196,11 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 		return super.getAdapter(adapter);
 	}
 	
+	public String getText()
+	{
+		return getSourceViewer().getDocument().get();
+	}
+	
 	public int getl(int offset)
 	{
 		int line = -1;
