@@ -167,5 +167,15 @@
             class="org.addondev.debug.preferences.AddonDevDebugPreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            adaptable="true"
+            class="org.addondev.debug.ui.propertypages.AddonDevBreakPointPropertyPage"
+            id="org.addondev.debug.ui.propertypages.AddonDevBreakPointPropertyPage"
+            name="breakpoint"
+            objectClass="org.addondev.debug.core.model.AddonDevLineBreakpoint">
+      </page>
+   </extension>
 
 </plugin>

@@ -16,24 +16,35 @@ import jp.aonir.fuzzyxml.FuzzyXMLParser;
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.editor.xml.XMLPartitionScanner;
 import org.addondev.ui.editor.xul.preview.OffsetInfo;
+import org.addondev.ui.preferences.AddonDevUIPrefConst;
+import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
+import org.addondev.util.Locale;
+import org.addondev.util.StringUtil;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 public class XULParser {
 		
-	private static Pattern doctypeOverlayPattern = Pattern.compile("<!DOCTYPE\\s+overlay\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
-	private static Pattern doctypeprefwindowPattern = Pattern.compile("<!DOCTYPE\\s+prefwindow\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>");
-	private static Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*?>");
+	private static Pattern doctypeOverlayPattern = Pattern.compile("<!DOCTYPE\\s+overlay\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>", Pattern.MULTILINE);
+	private static Pattern doctypeprefwindowPattern = Pattern.compile("<!DOCTYPE\\s+prefwindow\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>", Pattern.MULTILINE);
+	private static Pattern doctypePattern = Pattern.compile("<!DOCTYPE\\s+.*\\s+\"([^\"]+)\"\\s*>", Pattern.MULTILINE);
+	private static Pattern doctypepackPattern = Pattern.compile("(chrome:\\/\\/[^\\/]+)\\/.+", Pattern.MULTILINE);
+	private static Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*\\?>", Pattern.MULTILINE);
 	private static Pattern entryPattern = Pattern.compile("\"&(.+);\"");
 
-	public static ArrayList<String> parse(String text)
+	public static ArrayList<String> parse(IProject project, Locale locale, IFile file) throws IOException, CoreException
 	{
-		ArrayList<String> xuldatalist = new ArrayList<String>();
+		String text = FileUtil.getContent(file.getContents());
 		
-		//if(text == null)
+		ArrayList<String> xuldatalist = new ArrayList<String>();
+		int decstart = 0;
+		int decend = 0;
 		
 		String ElementName = null;
 		FuzzyXMLElement targetelement = null;
@@ -56,6 +67,9 @@ public class XULParser {
 					{
 						ElementName = name;
 						targetelement = ((FuzzyXMLElement)node);
+						
+						decstart = 0;
+						decend = node.getOffset();
 						break;
 					}
 				}
@@ -100,28 +114,107 @@ public class XULParser {
 							inoffset += cl2.len; 							
 						}
 					}
-					xuldatalist.add(convertText(sb.toString()));
+					xuldatalist.add(convertText(project, locale, file, sb.toString(), decstart, decend));
 				}			
 			}
 			else
 			{
-				xuldatalist.add(convertText(text));
+				xuldatalist.add(convertText(project, locale, file, text, decstart, decend));
 			}
 		}
 		
 		return xuldatalist;
 	}
 	
-	private static String convertText(String text)
+	private static String convertText(IProject project, Locale locale,  IFile file, String xml, int decstart, int decend)
 	{
-		//return text.replaceAll("&amp;", "&").replaceAll("\n", "");
-		
 		//if()
 		//{
-			text = text.replaceFirst("chrome://stacklink/skin/preference.css", "file:///D:/data/src/PDE/workrepository/work/stacklink/skin/classic/preference.css");
+		//	text = text.replaceFirst("chrome://stacklink/skin/preference.css", "file:///D:/data/src/PDE/workrepository/work/stacklink/skin/classic/preference.css");
 		//}
-		return text.replaceAll("'", "&apos;").replaceAll("\n", "\\\\n");
-		//	return	text.replaceAll("&amp;", "&").replaceAll("\n", "");
+		//return text;
+		xml = convertChrome2LocalDec(project, locale, file, xml, decstart, decend);
+		//data url
+		return xml.replaceAll("'", "&apos;").replaceAll("\n", " ");
+		
+		//dom
+		//return text.replaceAll("'", "&apos;").replaceAll("\n", "");//replaceAll("\n", "\\\\n");
+	}
+	
+	public static String convertChrome2LocalDec(IProject project, Locale locale, IFile file, String xml, int decstart, int decend)
+	{
+		ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+		//patterns.add(doctypeOverlayPattern);
+		//patterns.add(doctypeprefwindowPattern);
+		patterns.add(doctypePattern);
+		patterns.add(stylesheetPattern);
+		
+		String dectext = xml.substring(decstart, decend);
+		String ret = dectext;
+		ChromeURLMap map = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+		
+//		String strlocale = null;
+//		try {
+//			strlocale = project.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"));
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			//e.printStackTrace();
+//		}
+//		if(strlocale == null)
+//		{
+//			strlocale = map.getLocaleList().get(0).getName();
+//		}
+//		Locale locale = Locale.getLocale(strlocale);
+		
+		for (Pattern pattern : patterns) {
+			Matcher m = pattern.matcher(dectext);
+			while(m.find())
+			{
+				if(m.groupCount() == 1)
+				{
+					if(m.pattern().equals(doctypePattern))
+					{
+						Matcher pm = doctypepackPattern.matcher(m.group(0));
+						if(pm.find())
+						{
+							String restr = pm.group(1) + locale.getName();
+							String res = m.group(0).replaceFirst(pm.group(1), restr);
+							ret = ret.replaceAll(m.group(0), res);
+							//System.out.println("lacate path = " + res);
+						}						
+					}
+					else
+					{
+						String path = m.group(1);
+						if(!path.contains("/"))
+						{
+							String local = file.getLocation().removeLastSegments(1).append(path).toPortableString();
+							local = "file:///" + local;
+							ret = ret.replaceAll(path, local);
+							int i=0;
+							i++;
+						}
+						else
+						{
+							String local = map.convertChrome2Local(path, "file:///");
+							if(local !=null)
+							{
+								//m.appendReplacement(buf, local);
+								ret = ret.replaceAll(path, local);
+							}							
+						}
+					}
+				}
+				else
+				{
+					break;
+				}
+			}			
+		}
+//		String mm = xml.replace(dectext, ret);
+//		return xml;
+		
+		return xml.replace(dectext, ret);
 	}
 	
 //	public String parse(IPath fullpath, int offset) throws IOException

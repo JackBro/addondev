@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.ChromeURLMap;
+import org.addondev.util.Locale;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
@@ -45,16 +47,17 @@ public class AddonDevPropertyPage extends PropertyPage implements
         creator = new Combo(composite, SWT.READ_ONLY);
         creator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         ChromeURLMap map = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
-        List<String> localelist = map.getLocaleList();
-        for (String locale : localelist) {
-        	creator.add(locale);
+        List<Locale> localelist = map.getLocaleList();
+        for (Locale locale : localelist) {
+        	creator.add(locale.getName());
 		}
         
 		
         String locale = null;
 		try {
 			
-			locale = project.getPersistentProperty(new QualifiedName(AddonDevUIPlugin.PLUGIN_ID , LOCALE));
+			locale = project.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , LOCALE));
+			//locale = project.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , map.getLocaleList().get(0).getName()));
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +79,7 @@ public class AddonDevPropertyPage extends PropertyPage implements
 		IProject project = (IProject)getElement();
 		String locale =creator.getItem(creator.getSelectionIndex());
 		try {
-			project.setPersistentProperty(new QualifiedName(AddonDevPlugin.PLUGIN_ID , LOCALE), locale);
+			project.setPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , LOCALE), locale);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

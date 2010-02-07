@@ -3,7 +3,14 @@ package org.addondev.ui.wizard;
 
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
+import org.addondev.util.Locale;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -73,7 +80,21 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
       	//fname = addText(composite, "name");
       	fcreator = addText(composite, "creator");
       	fhomepageURL = addText(composite, "homepageURL");
-				
+      	
+      	//CheckboxTableViewer view = CheckboxTableViewer.newCheckList(parent, SWT.NONE);
+        // Checkbox table viewer of decorators
+      	CheckboxTableViewer checkboxViewer = CheckboxTableViewer.newCheckList(composite,
+                SWT.SINGLE | SWT.TOP | SWT.BORDER);
+        checkboxViewer.getTable().setLayoutData(
+                new GridData(GridData.FILL_BOTH));
+        //checkboxViewer.getTable().setFont(decoratorsComposite.getFont());
+        checkboxViewer.setLabelProvider(new LabelProvider() {
+            public String getText(Object element) {
+                return ((Locale) element).getName();
+            }
+        });
+        checkboxViewer.setContentProvider(new ArrayContentProvider());
+        checkboxViewer.setInput(Locale.values());
       	
       	doValidate();
       	

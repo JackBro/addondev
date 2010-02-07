@@ -10,9 +10,11 @@ import jp.aonir.fuzzyxml.FuzzyXMLParser;
 import jp.aonir.fuzzyxml.event.FuzzyXMLErrorEvent;
 import jp.aonir.fuzzyxml.event.FuzzyXMLErrorListener;
 
+import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.editor.xml.XMLEditor;
-import org.addondev.ui.editor.xul.preview.XULPreviewForm;
+import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.FileUtil;
+import org.addondev.util.Locale;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -20,14 +22,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -113,10 +118,32 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 		
 		IEditorInput in = getEditorInput();
 		IProject project = ((FileEditorInput)in).getFile().getProject();
-		getEditorPart(project, ((FileEditorInput)in).getPath());
+		//getEditorPart(project, ((FileEditorInput)in).getPath());
 		
+		String strlocale = null;
+		Locale locale = null;
+		try {
+			strlocale = project.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"));
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(strlocale != null)
+		{
+			locale = Locale.getLocale(strlocale);
+		}
+		if(locale == null)
+		{
+			IStatus status = new Status(IStatus.ERROR, AddonDevUIPlugin.PLUGIN_ID, 
+					IStatus.OK, "メッセージ１", new Exception(
+			        "エラーメッセージ１"));
+			Shell shell = getSite().getWorkbenchWindow().getShell();
+			ErrorDialog.openError(shell, null, null, status);
+			return;
+		}
+				
 		IDocument document = getSourceViewer().getDocument();
-		HashMap<Integer, Integer> errormap = XULParser.checkEntity(project, document, "en-US");
+		HashMap<Integer, Integer> errormap = XULParser.checkEntity(project, document, locale.getName());
 		IResource resource = (IResource)in.getAdapter(IResource.class);
 		
 		try {
@@ -213,64 +240,64 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 		return line;
 	}
 	
-	private void getEditorPart(final IProject project, final IPath path)
-	{
-		final ArrayList<XULPreviewForm> xulforms = new ArrayList<XULPreviewForm>();
-		
-		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-		for (IWorkbenchWindow iWorkbenchWindow : windows) {
-			//iWorkbenchWindow.getActivePage().
-			//IEditorReference[] editorref = iWorkbenchWindow.getActivePage().getEditorReferences();
-			final IEditorPart editor = iWorkbenchWindow.getActivePage().getActiveEditor();
-			
-			IEditorPart[] editorref = iWorkbenchWindow.getActivePage().getEditors();
-			
-			for (IEditorPart editorpart : editorref) {
-			//for (IEditorReference iEditorReference : editorref) {
-				//IEditorPart editorpart = iEditorReference.getEditor(false);			
-				//FileEditorInput fin = (FileEditorInput) editorpart.getEditorInput();
-				//fin.getFile().getFullPath()	
-				if(editorpart instanceof XULPreviewForm)
-				{
-					FileEditorInput fileinput = (FileEditorInput)editorpart.getEditorInput();
-					IPath editorpath = fileinput.getPath();
-					if(editorpath.equals(path))
-					{
-						try {
-							String text = FileUtil.getContent(fileinput.getFile().getContents());
-							((XULPreviewForm) editorpart).setDocument(text);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (CoreException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						//xulforms.add((XULPreviewForm) editorpart);
-					}
-				}
-			}
-			
-//			Display.getDefault().asyncExec(new Runnable() {
-//			//editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
-//				@Override
-//				public void run() {
-//					// TODO Auto-generated method stub
-//					ISelectionProvider provider= editor.getEditorSite().getSelectionProvider();
-//					ISelection selection = provider.getSelection();
-//					if (selection instanceof ITextSelection) {
-//						ITextSelection textSelection= (ITextSelection) selection;
-//						int offset = textSelection.getOffset();
-////						String previewxml = XULParser.parse(path, offset);
-////						for (XULPreviewForm xulform : xulforms) {			
-////							xulform.settest(previewxml);
-////						}	
-//					}						
+//	private void getEditorPart(final IProject project, final IPath path)
+//	{
+//		final ArrayList<XULPreviewForm> xulforms = new ArrayList<XULPreviewForm>();
+//		
+//		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+//		for (IWorkbenchWindow iWorkbenchWindow : windows) {
+//			//iWorkbenchWindow.getActivePage().
+//			//IEditorReference[] editorref = iWorkbenchWindow.getActivePage().getEditorReferences();
+//			final IEditorPart editor = iWorkbenchWindow.getActivePage().getActiveEditor();
+//			
+//			IEditorPart[] editorref = iWorkbenchWindow.getActivePage().getEditors();
+//			
+//			for (IEditorPart editorpart : editorref) {
+//			//for (IEditorReference iEditorReference : editorref) {
+//				//IEditorPart editorpart = iEditorReference.getEditor(false);			
+//				//FileEditorInput fin = (FileEditorInput) editorpart.getEditorInput();
+//				//fin.getFile().getFullPath()	
+//				if(editorpart instanceof XULPreviewForm)
+//				{
+//					FileEditorInput fileinput = (FileEditorInput)editorpart.getEditorInput();
+//					IPath editorpath = fileinput.getPath();
+//					if(editorpath.equals(path))
+//					{
+//						try {
+//							String text = FileUtil.getContent(fileinput.getFile().getContents());
+//							((XULPreviewForm) editorpart).setDocument(text);
+//						} catch (IOException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						} catch (CoreException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//						//xulforms.add((XULPreviewForm) editorpart);
+//					}
 //				}
-//			});	
-			
-		}
-	}
+//			}
+//			
+////			Display.getDefault().asyncExec(new Runnable() {
+////			//editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
+////				@Override
+////				public void run() {
+////					// TODO Auto-generated method stub
+////					ISelectionProvider provider= editor.getEditorSite().getSelectionProvider();
+////					ISelection selection = provider.getSelection();
+////					if (selection instanceof ITextSelection) {
+////						ITextSelection textSelection= (ITextSelection) selection;
+////						int offset = textSelection.getOffset();
+//////						String previewxml = XULParser.parse(path, offset);
+//////						for (XULPreviewForm xulform : xulforms) {			
+//////							xulform.settest(previewxml);
+//////						}	
+////					}						
+////				}
+////			});	
+//			
+//		}
+//	}
 
 	public void Validator()
 	{

@@ -127,15 +127,17 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 			{
 		    	ChromeURLMap chromeURLMap = getChromeURLMap(project, false);
 		    	String lpath = chromeURLMap.convertChrome2Local(chromeuri);
-		    	
-		    	File file  = new File(lpath);
-		    	if(!file.exists()) return new HashMap<String, String>();;
-		    	
-		    	DTDMap dtdmap = new DTDMap();
-		    	dtdmap.parse(locale, new Path(lpath));
-		    	fDTDHashMap.put(name, dtdmap);
-		    	
-		    	return dtdmap.getEntityMap(locale);
+		    	if(lpath != null)
+		    	{
+			    	File file  = new File(lpath);
+			    	if(!file.exists()) return new HashMap<String, String>();;
+			    	
+			    	DTDMap dtdmap = new DTDMap();
+			    	dtdmap.parse(locale, new Path(lpath));
+			    	fDTDHashMap.put(name, dtdmap);
+			    	
+			    	return dtdmap.getEntityMap(locale);
+		    	}
 			}
 		}
 		

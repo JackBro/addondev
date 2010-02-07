@@ -4,6 +4,7 @@ import org.eclipse.swt.graphics.RGB;
 
 public class AddonDevUIPrefConst {
 	public static final String IMPORT_PATH = "org.addondev.import.path";
+	public static final String LOCALE = "org.addondev.ui.locale";
 	
 	public static final String XULRUNNER_PATH = "org.addondev.pref.xulrunner.path";
 	public static final String XULPREVIEW_W = "org.addondev.pref.xulpreview.width";

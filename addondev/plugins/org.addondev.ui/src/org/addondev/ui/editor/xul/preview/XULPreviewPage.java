@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
+import org.addondev.util.ChromeURLMap;
+import org.addondev.util.Locale;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -16,13 +20,17 @@ import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -60,8 +68,8 @@ public class XULPreviewPage extends Page{
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					//boolean re = fBrowser.execute("preview('"+ fXUL +"');");
-					boolean re = fBrowser.execute("rep('"+ fXUL +"');");
+					boolean re = fBrowser.execute("preview('"+ fXUL +"');");
+					//boolean re = fBrowser.execute("rep('"+ fXUL +"');");
 					//fBrowser.refresh();
 					int i=0;
 					i++;
@@ -72,6 +80,7 @@ public class XULPreviewPage extends Page{
 		
 	}
 	
+	private IProject fProject;
 	private TabFolder fTabFolder ;
 	private Composite fStackComposite;
 	private StackLayout fStackLayout;
@@ -80,8 +89,9 @@ public class XULPreviewPage extends Page{
 	private ArrayList<String> fXULList = new ArrayList<String>();
 	private String fPreviewXULURL;
 	
-	public XULPreviewPage(File file) {
+	public XULPreviewPage(IProject project, File file) {
 		super();
+		fProject = project;
 		fPreviewXULURL = "file://"+file.toURI().getRawPath();
 	}
 
@@ -270,7 +280,22 @@ public class XULPreviewPage extends Page{
 		form.setLayoutData(new GridData(GridData.FILL_BOTH));
 		form.setLayout(new FormLayout());
 
-		ScrolledComposite scroll = new ScrolledComposite(form, SWT.H_SCROLL | SWT.V_SCROLL);
+//		Combo combo = new Combo(form, SWT.READ_ONLY);
+//		FormData combofd = new FormData();
+//		combofd.top = new FormAttachment(0, 1);
+//		combofd.left = new FormAttachment(0, 1);
+//		combo.setLayoutData(combofd);		
+//		ChromeURLMap map = AddonDevPlugin.getDefault().getChromeURLMap(fProject, false);
+//		if(map != null)
+//		{
+//			List<Locale> locales = map.getLocaleList();
+//			for (Locale locale : locales) {
+//				combo.add(locale.getName());
+//			}
+//			combo.setText(map.getLocale().getName());
+//		}
+		
+		final ScrolledComposite scroll = new ScrolledComposite(form, SWT.H_SCROLL | SWT.V_SCROLL);
 		//scroll.setLayout(new FillLayout());
 		//scroll.setExpandHorizontal(true);
 		//scroll.setExpandVertical(true);
@@ -285,9 +310,9 @@ public class XULPreviewPage extends Page{
 		composite.setLayout(new GridLayout());
 		scroll.setContent(composite);
 		scroll.setMinSize(400,400);
-		//scroll.setMinSize(0,0);
 		scroll.setExpandHorizontal(true);
 		scroll.setExpandVertical(true);
+	
 
 		String path = AddonDevUIPlugin.getDefault().getPreferenceStore().getString(AddonDevUIPrefConst.XULRUNNER_PATH);
 		IPath dir = new Path(path).removeLastSegments(1);
@@ -296,7 +321,19 @@ public class XULPreviewPage extends Page{
 		
 		fBrowserList.add(browser);
 		browser.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+		browser.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseScrolled(MouseEvent e) {
+				// TODO Auto-generated method stub
+				//scroll.getVerticalBar().setIncrement(e.count*10);
+				int sel = scroll.getVerticalBar().getSelection();
+				scroll.getVerticalBar().setSelection(sel - e.count*5);
+				Point p = scroll.getOrigin();
+				scroll.setOrigin(p.x, p.y - e.count*5);
+				//composite.getVerticalBar().setIncrement(e.count);
+			}
+		});
 //		browser.addStatusTextListener(new StatusTextListener() {
 //			
 //			@Override

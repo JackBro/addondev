@@ -1,3 +1,249 @@
+﻿<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<window id="xulpreview" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script type="text/javascript">
+	<![CDATA[
+	var xwin;
+	var gddd;
+	function preview(text) {
+		//alert(text);
+		try{
+	    	xwin = document.getElementById("content");
+			var dataURI = "data:application/vnd.mozilla.xul+xml," + text;
+			gddd = text;
+	    	xwin.setAttribute("src",dataURI);
+	    	//xwin.document.location = dataURI;
+	    }catch(exc){
+	    	alert(res);
+	    }
+	};
+
+	function rep(text)
+	{
+	testpreview(text);
+	
+	};
+
+	function getDoc() {
+		//alert("getDoc");
+		var res = "";
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(gddd, "text/xml");
+		//alert(doc);
+ 		var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
+ 		//alert(doc.getElementsByTagName('parsererror'));
+  		//alert(doc.nodeName);
+  
+  			
+  			var obj = doc.getElementsByTagNameNS(errorNS, 'parsererror')[0];
+  			/*
+			for(var name in obj)
+			{
+				try{
+					res += "name = " + name +" : " + obj[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+			alert( res );
+		    */
+		    //alert(doc.getElementsByTagNameNS(errorNS, 'parsererror'));
+  		doc = obj;
+  		
+ 		if((doc.nodeName == 'parsererror') )
+ 		{
+ 			if((doc.namespaceURI == errorNS))
+ 			{
+         		var sourceText = doc.getElementsByTagNameNS(errorNS, 'sourcetext')[0];
+         		//alert(sourceText);
+         		/*
+         					for(var name in sourceText)
+			{
+				try{
+					res += "name = " + name +" : " + sourceText[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+			alert( res );
+			*/
+         		if(!sourceText){
+                 	sourceText = sourceText.firstChild.data;
+                 	alert("!sourceText = " + sourceText);
+         		}
+         	}
+         }
+ 			//throw new Error("Error parsing text " + nativeDoc.documentElement.firstChild.data + " \n"  + sourceText);
+ 	} ;
+ 	
+
+
+	
+	function convertToXULElement(str){
+	var XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+	var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
+		str = str.toXMLString? str.toXMLString() : str;
+		//var xul = (
+		//	'<box xmlns="'+XUL_NS+'" >'+
+		//		str + 
+		//	'</box>');//.replace(/^  +/gm, '').replace(/\n/g, '');
+		//str = str.replace(/%0A/g, \n);
+		//var xul = str.replace(/\n/g, '');
+		var xul = str;//.replace(/\n/g, "");
+		
+		//alert( xul );
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(xul, 'application/xml');
+		//var doc = parser.parseFromString(xul, "text/xml"));
+
+		var obj = doc.getElementsByTagNameNS(errorNS, 'parsererror')[0];
+		/*
+		var res = "";
+			for(var name in obj)
+			{
+				try{
+					res += "name = " + name +" : " + obj[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+			alert( res );
+		*/
+ 		if( (obj != null && obj != undefined) && (obj.nodeName == 'parsererror') )
+ 		{
+ 			 //if((doc.namespaceURI == errorNS))
+ 			//{
+ 				alert(obj.textContent);
+ 			//}
+			var xul = (
+				'<box xmlns="'+XUL_NS+'" >'+ 
+					'<label value="' + 
+						obj.textContent + 
+					'" />' + 
+				'</box>').replace(/^  +/gm, '').replace(/\n/g, '');
+ 			doc = parser.parseFromString(xul, 'application/xml');
+ 			//doc = parser.parseFromString(xul, "text/xml");
+ 			
+ 		}
+
+	 		var elms = doc.documentElement.childNodes;
+			var result = document.createDocumentFragment();
+			for(var i=0 ; i<elms.length ; i++)
+			{
+				//alert( elms[i] );
+				result.appendChild(elms[i]);
+			}
+			//alert(result);
+			return result;
+	};
+	
+	//var old = null;
+	function testpreview(str)
+	{
+		//if(old != null)
+		//	document.documentElement.removeChild(old);
+		//old = convertToXULElement(str);
+		while(document.documentElement.firstChild)
+		{
+			document.documentElement.removeChild(document.documentElement.firstChild);
+		}
+		document.documentElement.appendChild(convertToXULElement(str));
+	};
+	
+	//testpreview("<button label=\"HELLO\"/>\n <button label=\"WORLD\"/>\n  <button label=\"!!!\"/>");
+	//testpreview("<button label=\"HELLO\"/>\n <button label=\"WORLD\"/>\n  <button label=\"!!!\"/>");
+ 	 	//document.documentElement.appendChild(convertToXULElement(
+ 	 	//"<button label=\"HELLO\"/>\n <button label=\"WORLD\">\n  <button label=\"!!!\"/>"));
+	//var ww = window.open('about:blank', 'xulwin', 'chrome,all,resizable=yes,width=400,height=400');
+	//alert(ww);
+	//alert( xwin.childNodes[1].nodeName);
+
+	/*
+		var paragraphCount = document.evaluate( '//parsererror', document, null, XPathResult.ANY_TYPE, null );
+		try {
+			var obj = paragraphCount;
+			for(var name in obj)
+			{
+				try{
+					res += "name = " + name +" : " + obj[name] + "\n"; 
+				}catch(exc){
+					res += "name = " + name +" ERROR" + "\n"; 
+				}
+			}
+				alert( res );
+		    }
+		
+		//alert(paragraphCount.iterateNext());
+	  		var thisNode = paragraphCount.iterateNext();
+	  		while (thisNode) 
+	  		{
+	    		alert( thisNode.textContent );
+	    		thisNode = iterator.iterateNext();
+	  		}
+	 	}catch(exc){
+	   		alert(exc);
+	 	}
+	 	*/
+	/*
+	//alert( paragraphCount );
+	var res = "";
+	var obj = paragraphCount;
+		for(var name in obj)
+		{
+			try{
+				res += "name = " + name +" : " + obj[name] + "\n"; 
+			}catch(exc){
+				res += "name = " + name +" ERROR" + "\n"; 
+			}
+		}
+		alert( res );
+		    }catch(exc){
+	    	alert(exc);
+	    }
+	    */
+	//var res = "";
+	
+	//var obj = document.getElementById("content");
+	//alert(obj.children.toString());
+	//var obj = document.documentElement.firstElementChild;
+	
+	//var w = window._content;
+ 	//var d = w.document;
+ 	//alert(document.getElementById("content").attributes);
+	//alert(document.documentElement.body);
+
+	/*
+	var obj = document.getElementById("content").attributes[2];
+
+		for(var name in obj)
+		{
+			try{
+				res += "name = " + name +" : " + obj[name] + "\n"; 
+			}catch(exc){
+				res += "name = " + name +" ERROR" + "\n"; 
+			}
+		}
+
+		alert(res);
+		*/
+		//alert(document.getElementById("content").innerText);
+		//alert(document.getElementById("content").ownerDocument.innerHTML);//getAttribute("src"));
+		//var doc = document.getElementById("content").contentDocument;
+		//alert(document.getElementsByTagName("content").innerHTML);
+		//alert(doc.body.innerHTML);
+		//alert(document.innerHTML);
+	//}
+	]]>
+	</script>
+	<iframe id="content" src="about:blank" flex="1"/>
+
+</window>
+
+
+http://d.hatena.ne.jp/taichitaichi/searchdiary?of=15&word=*[eclipse]
+
 http://www.eclipse.org/tptp/index.php
 http://www.computerworld.jp/topics/osst/145669.html
 

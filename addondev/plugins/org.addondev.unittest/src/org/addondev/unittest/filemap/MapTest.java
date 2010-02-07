@@ -4,12 +4,14 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.addondev.parser.dtd.DTDMap;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
+import org.addondev.util.Locale;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
@@ -126,14 +128,57 @@ public class MapTest {
 	@Test
 	public void dtdregtest()
 	{
-		Pattern entryPattern = Pattern.compile("\"&(.+);\"");
-		String text = "<prefpane id=\"appearance\" label=\"&stacklink.pref.appearance;\" flex=\"1\">";
-		Matcher m = entryPattern.matcher(text);
-		while(m.find())
-		{
-			System.out.println(m.group(0));
-			System.out.println(m.group(1));
+		Locale l = Locale.getLocale("da-DK");
+		
+		Pattern doctypePattern = Pattern.compile("<!DOCTYPE\\s+.*\\s+\"([^\"]+)\"\\s*>", Pattern.MULTILINE);
+		Pattern doctypepackPattern = Pattern.compile("(chrome:\\/\\/[^\\/]+)\\/.+", Pattern.MULTILINE);
+		Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*\\?>", Pattern.MULTILINE);
+		
+		ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+		patterns.add(doctypePattern);
+		patterns.add(stylesheetPattern);
+		
+		String text = 
+			"<?xml-stylesheet href=\"chrome://mozapps/content/preferences/preferences.css\"?>\n"
+			+"<?xml-stylesheet href=\"chrome://stacklink/skin/preference.css\" type=\"text/css\"?>\n"
+			+ "<!DOCTYPE prefwindow SYSTEM \"chrome://stacklink/locale/stacklink.dtd\" >";
+		String ret = text;
+		for (Pattern pattern : patterns) {
+			Matcher m = pattern.matcher(text);
+			//
+			System.out.println("cnt = " + m.groupCount());
+			while(m.find())
+			{
+				if(m.pattern().equals(doctypePattern))
+				{
+					Matcher m2 = doctypepackPattern.matcher(m.group(0));
+					if(m2.find())
+					{
+						//ret = ret.replaceAll(m2.group(1), "local");
+						System.out.println("m2.group(0) = " + m2.group(0));
+						System.out.println("m2.group(1) = " + m2.group(1));
+						String restr = m2.group(1) + "JP";
+						String res = m.group(0).replaceFirst(m2.group(1), restr);
+						System.out.println("lacate path = " + res);
+					}
+				}
+				else
+				{
+					System.out.println(m.group(0));
+					System.out.println(m.group(1));
+					//ret = ret.replaceAll(m.group(1), "local");
+				}
+			}
 		}
+		System.out.println("ret = " + ret);
+//		Pattern entryPattern = Pattern.compile("\"&(.+);\"");
+//		String text = "<prefpane id=\"appearance\" label=\"&stacklink.pref.appearance;\" flex=\"1\">";
+//		Matcher m = entryPattern.matcher(text);
+//		while(m.find())
+//		{
+//			System.out.println(m.group(0));
+//			System.out.println(m.group(1));
+//		}
 	}
 	
 //	@Test
