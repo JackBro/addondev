@@ -7,10 +7,14 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.addondev.core.AddonDevNature;
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.preferences.AddonDevUIPrefConst;
+import org.addondev.util.FileUtil;
+import org.addondev.util.Locale;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -22,8 +26,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -35,11 +41,23 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 
 	private WizardNewProjectCreationPage page1;
 	private AddonDevNewProjectWizardPage page2;
+	private AddonDevNewProjectWizardPage2 page3;
 	private HashMap<String, String> param;
 
 	public AddonDevNewProjectWizard() {
 		// TODO Auto-generated constructor stub
 		setWindowTitle("addon dev");
+	}
+
+	@Override
+	public IWizardPage getNextPage(IWizardPage page) {
+		// TODO Auto-generated method stub
+		if(page instanceof AddonDevNewProjectWizardPage2)
+		{
+
+			page3.setLocals(page2.getLocals());
+		}
+		return super.getNextPage(page);
 	}
 
 	@Override
@@ -52,6 +70,10 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		page2 = new AddonDevNewProjectWizardPage("page2");
 		page2.page1 = page1;
 		addPage(page2);
+		
+		page3 = new AddonDevNewProjectWizardPage2("page3");
+		page3.fNewProjectPage = page2;
+		addPage(page3);
 	}
 
 	@Override
@@ -171,8 +193,10 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 				
 				createFile(project, "templates/project/addon.js", "chrome/content/" + param.get("name") + ".js", param, monitor);
 				createFile(project, "templates/project/common/install.rdf", "install.rdf", param, monitor);
-				createFile(project, "templates/project/common/chrome.manifest", "chrome.manifest", param, monitor);
+				//createFile(project, "templates/project/common/chrome.manifest", "chrome.manifest", param, monitor);
+				createManifestFile(project, "templates/project/common/chrome.manifest", "chrome.manifest", param, page2.getLocals(), monitor);
 				createFile(project, "templates/project/common/overlay.xul", "overlay.xul", param, monitor);
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -184,6 +208,8 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 			addNature(AddonDevNature.NATUREID, projectDescription, project, monitor);			
 			//newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
 			//addNature(newNatureId, projectDescription, project, monitor);
+			project.setPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"), page3.getDefaultLocale());
+			
 
 		} finally {
 			monitor.done();
@@ -243,13 +269,56 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 				text = text.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
 			}
 		}
-//		for (Iterator iterator = param.keySet().iterator(); iterator.hasNext();) 
-//		{
-//			String key = (String) iterator.next();
-//			text = text.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
-//		}
 		
 		IFile distfile = project.getFile(distpath);
 		distfile.create(new ByteArrayInputStream(text.getBytes()), true, monitor);
 	}
+	
+	private void createManifestFile(IProject project, String srcpath, String distpath,
+			Map param, Locale[] locales, IProgressMonitor monitor) throws IOException, CoreException {
+		URL url = AddonDevUIPlugin.getDefault().getBundle().getEntry(srcpath);
+		
+//		InputStream in = url.openStream();
+//		ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		int len = 0;
+//		byte[] buf = new byte[1024 * 8];
+//		while((len = in.read(buf))!=-1){
+//			out.write(buf,0,len);
+//		}
+//
+//		in.close();
+//		out.close();	
+//		String text = out.toString();	
+		
+		//locale	${name}	en-US	locale/en-US/
+		
+		String text = FileUtil.getContent(url.openStream());
+		
+
+		for (Object obj : param.entrySet()) {
+			if(obj instanceof String)
+			{
+				String key = (String) obj;
+				text = text.replaceAll("\\$\\{" + key + "\\}", (String) param.get(key));
+			}
+		}
+		String name = (String) param.get("name");
+		text += "\n";
+		for (Locale locale : locales) {
+			text += String.format("locale %s %s	locale/%s/", name, locale.getName(), locale.getName()) + "\n";
+		}
+		
+		IFile distfile = project.getFile(distpath);
+		distfile.create(new ByteArrayInputStream(text.getBytes()), true, monitor);		
+	}
+	
+	private void createLocaleFile(IProject project, Map param, Locale[] locales, IProgressMonitor monitor) throws CoreException {
+		String name = (String) param.get("name");
+		for (Locale locale : locales) {
+			IFile file;
+			file = project.getFile(String.format("chrome/locale/%s/%s.dtd", locale.getName(), name));
+			file.create(null, true, monitor);			
+		}
+	}
 }
+

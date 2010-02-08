@@ -1,18 +1,22 @@
 package org.addondev.ui.editor.xul.preview;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.editor.xul.XULParser;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.Locale;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -38,6 +42,7 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.Page;
 
 public class XULPreviewPage extends Page{
@@ -85,6 +90,7 @@ public class XULPreviewPage extends Page{
 	private Composite fStackComposite;
 	private StackLayout fStackLayout;
 	private Composite fLinkComposite;
+	private Composite fPropertyLinkComposite;
 	private ArrayList<Browser> fBrowserList = new ArrayList<Browser>();
 	private ArrayList<String> fXULList = new ArrayList<String>();
 	private String fPreviewXULURL;
@@ -117,6 +123,8 @@ public class XULPreviewPage extends Page{
 			fStackLayout.topControl = fTabFolder;
 			//fTabFolder.layout();
 		}
+		
+		
 	}
 
 	@Override
@@ -130,9 +138,55 @@ public class XULPreviewPage extends Page{
 
 	}
 
-	int cnt=0;
-	public void setDocument(List<String> xuls) {
-		if(xuls.size() == 0) return;
+
+	//public void setDocument(List<String> xuls) {
+	public void setDocument(FileEditorInput input) {
+		//IProject project = input.getFile().getProject();
+		String strlocale = null;
+		Locale locale = null;
+		try {
+			strlocale = fProject.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"));
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(strlocale != null)
+		{
+			locale = Locale.getLocale(strlocale);
+
+		}
+		if(locale == null)
+		{
+			if(fPropertyLinkComposite == null)
+			{
+				fPropertyLinkComposite = createPropertyLinkControl(fStackComposite);
+				fStackLayout.topControl = fPropertyLinkComposite;
+			}
+			//project
+//			IStatus status = new Status(IStatus.ERROR, AddonDevUIPlugin.PLUGIN_ID, 
+//					IStatus.OK, "メッセージ１", new Exception(
+//			        "エラーメッセージ１"));
+//			Shell shell = getSite().getWorkbenchWindow().getShell();
+//			ErrorDialog.openError(shell, null, null, status);
+			return;
+		}
+		if(fStackLayout.topControl != fTabFolder)
+		{
+			fStackLayout.topControl = fTabFolder;
+		}
+		
+		//fXULPreviewPage.setDocument(XULParser.parse(project, locale, ((FileEditorInput)getEditorInput()).getFile()));
+		List<String> xuls = null;
+		try {
+			xuls = XULParser.parse(fProject, locale, input.getFile());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (CoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(!(xuls != null && xuls.size() > 0)) return;
 		
 		String path = AddonDevUIPlugin.getDefault().getPreferenceStore().getString(AddonDevUIPrefConst.XULRUNNER_PATH);
 		if(!new File(path).exists()) return;
@@ -222,7 +276,6 @@ public class XULPreviewPage extends Page{
 							//browser.redraw();
 							//browser.refresh();
 							//fBrowser.setUrl("about:blank");
-							cnt++;
 						}
 				});								
 //			}
@@ -272,6 +325,37 @@ public class XULPreviewPage extends Page{
 		String pageId = "org.addondev.ui.XULPreferencepages";
 		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(
 				 null, pageId, new String[]{pageId}, null);
+		dialog.open();
+	}
+	
+	private Composite createPropertyLinkControl(Composite parent)
+	{
+		Composite form = new Composite(parent, SWT.NONE);
+		form.setLayout(new FormLayout());
+		
+		Link link = new Link(form, SWT.CENTER);
+		link.setText("in the <a>Project Property</a> property page.");
+		
+		FormData linkfd = new FormData();
+		linkfd.top = new FormAttachment(50, 1);
+		linkfd.left = new FormAttachment(50, 1);	
+		linkfd.right = new FormAttachment(100, -1);
+		linkfd.bottom = new FormAttachment(100, -1);
+		link.setLayoutData(linkfd);
+		link.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				PropertylinkClicked();
+			}
+		});	
+		
+		return form;
+	}
+
+	protected void PropertylinkClicked() {
+		// TODO Auto-generated method stub
+		String pageId = "org.addondev.ui.propertypage.AddonDevPropertyPage";
+		PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(
+				null, fProject, pageId, new String[]{pageId}, null);
 		dialog.open();
 	}
 

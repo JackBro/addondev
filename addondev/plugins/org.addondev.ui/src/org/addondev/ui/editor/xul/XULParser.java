@@ -133,6 +133,7 @@ public class XULParser {
 		//	text = text.replaceFirst("chrome://stacklink/skin/preference.css", "file:///D:/data/src/PDE/workrepository/work/stacklink/skin/classic/preference.css");
 		//}
 		//return text;
+		
 		xml = convertChrome2LocalDec(project, locale, file, xml, decstart, decend);
 		//data url
 		return xml.replaceAll("'", "&apos;").replaceAll("\n", " ");

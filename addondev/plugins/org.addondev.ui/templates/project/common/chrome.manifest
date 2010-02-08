@@ -1,6 +1,4 @@
 content	${name}	content/
 overlay	chrome://browser/content/browser.xul	chrome://${name}/content/overlay.xul
 
-locale	${name}	en-US	locale/en-US/
-
 skin	${name}	classic/1.0	skin/classic/

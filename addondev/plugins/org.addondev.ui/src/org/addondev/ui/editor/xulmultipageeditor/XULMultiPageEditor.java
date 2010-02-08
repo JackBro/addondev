@@ -131,48 +131,19 @@ public class XULMultiPageEditor extends MultiPageEditorPart {
 		int pageIndex2 = addPage(fXULPreviewPage.getControl());
 		setPageText(pageIndex2, "Preview");
 		
+		
 		String text = fXULEditor.getText();
 //		ArrayList<String> list = XULParser.parse(project, locale, text);
 //		fXULPreviewPage.setDocument(list);
 		
-		setDocument(text);
+		setDocument(fileinput);
 	}
 	
-	private void setDocument(String text)
+	private void setDocument(FileEditorInput fileinput)
 	{
-		IProject project = ((FileEditorInput)getEditorInput()).getFile().getProject();
-		String strlocale = null;
-		Locale locale = null;
-		try {
-			strlocale = project.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"));
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(strlocale != null)
-		{
-			locale = Locale.getLocale(strlocale);
-		}
-		if(locale == null)
-		{
-			IStatus status = new Status(IStatus.ERROR, AddonDevUIPlugin.PLUGIN_ID, 
-					IStatus.OK, "メッセージ１", new Exception(
-			        "エラーメッセージ１"));
-			Shell shell = getSite().getWorkbenchWindow().getShell();
-			ErrorDialog.openError(shell, null, null, status);
-		}
-		else
-		{
-			try {
-				fXULPreviewPage.setDocument(XULParser.parse(project, locale, ((FileEditorInput)getEditorInput()).getFile()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		//IProject project = ((FileEditorInput)getEditorInput()).getFile().getProject();
+		//fXULPreviewPage.setDocument(XULParser.parse(project, locale, ((FileEditorInput)getEditorInput()).getFile()));
+		fXULPreviewPage.setDocument((FileEditorInput)getEditorInput());
 	}
 	
 	public void refresh()
@@ -186,7 +157,8 @@ public class XULMultiPageEditor extends MultiPageEditorPart {
 		String text = fXULEditor.getText();
 //		ArrayList<String> list = XULParser.parse(project, text);
 //		fXULPreviewPage.setDocument(list);
-		setDocument(text);
+		//setDocument(text);
+		setDocument((FileEditorInput)getEditorInput());
 	}
 	
 	private File makeXULPreviewFile()
@@ -211,4 +183,5 @@ public class XULMultiPageEditor extends MultiPageEditorPart {
 		
 		return file;
 	}
+	
 }

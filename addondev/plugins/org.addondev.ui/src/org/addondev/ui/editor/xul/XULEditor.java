@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -33,8 +34,10 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
@@ -103,6 +106,11 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 				
 			}
 		});
+		
+		IEditorSite editorSite = getEditorSite();
+		IActionBars actionBars = editorSite.getActionBars();
+		IStatusLineManager manager = actionBars.getStatusLineManager();
+		manager.setErrorMessage("IStatusLineManager");
 	}
 
 	public void dispose() {
@@ -166,6 +174,7 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 				e1.printStackTrace();
 			}
 
+
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(IMarker.LINE_NUMBER, line);
 			map.put(IMarker.CHAR_START, start);
@@ -177,7 +186,7 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}			
+			}	
 		}
 
 //		if(outline!=null)

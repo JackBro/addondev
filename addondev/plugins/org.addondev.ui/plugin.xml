@@ -184,7 +184,7 @@
          point="org.eclipse.ui.propertyPages">
       <page
             class="org.addondev.ui.propertypage.AddonDevPropertyPage"
-            id="org.addondev.ui.AddonDevPropertyPage"
+            id="org.addondev.ui.propertypage.AddonDevPropertyPage"
             name="name">
          <enabledWhen>
             <instanceof

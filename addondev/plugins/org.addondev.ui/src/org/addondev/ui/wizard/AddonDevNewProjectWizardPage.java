@@ -1,6 +1,9 @@
 package org.addondev.ui.wizard;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.Locale;
@@ -11,6 +14,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -18,6 +22,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
@@ -45,6 +50,10 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	private Text fcreator;
 	private Text fhomepageURL;
 	
+	private CheckboxTableViewer fCheckboxViewer;
+	
+	private ArrayList<Locale> fLocales;
+	
 	public WizardNewProjectCreationPage page1;
 
 	protected AddonDevNewProjectWizardPage(String pageName) {
@@ -62,7 +71,20 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		// TODO Auto-generated method stub	
 		//String projectname = page1.getProjectName();
 		
-        Composite composite = new Composite(parent, SWT.NONE);
+        Composite pcomposite = new Composite(parent, SWT.NONE);
+        GridLayout playout = new GridLayout();
+        playout.numColumns = 1;
+        pcomposite.setLayout(playout);
+        //pcomposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Group installgroup = new Group(pcomposite, SWT.NONE);
+		installgroup.setText("install");
+        GridLayout installlayout = new GridLayout();
+        installlayout.numColumns = 1;
+        installgroup.setLayout(installlayout);
+        installgroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+        Composite composite = new Composite(installgroup, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
         composite.setLayout(layout);
@@ -81,24 +103,38 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
       	fcreator = addText(composite, "creator");
       	fhomepageURL = addText(composite, "homepageURL");
       	
+      	
+		Group localegroup = new Group(pcomposite, SWT.NONE);
+		localegroup.setText("Locale");     	
+        GridLayout localelayout = new GridLayout();
+        //localelayout.numColumns = 1;
+		localegroup.setLayout(localelayout);
+//		localegroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));  
+	    GridData data = new GridData(GridData.FILL_BOTH);
+	    localegroup.setLayoutData(data);
+		
       	//CheckboxTableViewer view = CheckboxTableViewer.newCheckList(parent, SWT.NONE);
         // Checkbox table viewer of decorators
-      	CheckboxTableViewer checkboxViewer = CheckboxTableViewer.newCheckList(composite,
-                SWT.SINGLE | SWT.TOP | SWT.BORDER);
-        checkboxViewer.getTable().setLayoutData(
-                new GridData(GridData.FILL_BOTH));
+	    fCheckboxViewer = CheckboxTableViewer.newCheckList(localegroup,
+                SWT.BORDER  | SWT.V_SCROLL);
+      	//checkboxViewer.getTable().getVerticalBar().setVisible(true);
+        //checkboxViewer.getTable().setLayoutData(
+        //        new GridData(GridData.FILL_HORIZONTAL));
         //checkboxViewer.getTable().setFont(decoratorsComposite.getFont());
-        checkboxViewer.setLabelProvider(new LabelProvider() {
+	    fCheckboxViewer.setLabelProvider(new LabelProvider() {
             public String getText(Object element) {
                 return ((Locale) element).getName();
             }
         });
-        checkboxViewer.setContentProvider(new ArrayContentProvider());
-        checkboxViewer.setInput(Locale.values());
+        GridData tabledata = new GridData(GridData.FILL_BOTH);
+        fCheckboxViewer.getTable().setLayoutData(tabledata);
+        fCheckboxViewer.setContentProvider(new ArrayContentProvider());
+        fCheckboxViewer.setInput(Locale.values());
       	
+        
       	doValidate();
       	
-		setControl(composite);
+		setControl(pcomposite);
 	}
 	
 	private Text addText(Composite parent, String label, String defaultValue) {
@@ -171,4 +207,18 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		return fhomepageURL.getText();
 	}
 
+	public Locale[] getLocals()
+	{
+		
+		ArrayList<Locale> locales = new ArrayList<Locale>();
+		Object[] objs = fCheckboxViewer.getCheckedElements();
+		for (Object obj : objs) {
+			if(obj instanceof Locale)
+			{
+				locales.add((Locale) obj);
+			}
+		}
+
+		return locales.toArray(new Locale[locales.size()]);
+	}	
 }
