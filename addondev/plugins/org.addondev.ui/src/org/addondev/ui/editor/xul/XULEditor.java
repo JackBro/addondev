@@ -106,11 +106,7 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 				
 			}
 		});
-		
-		IEditorSite editorSite = getEditorSite();
-		IActionBars actionBars = editorSite.getActionBars();
-		IStatusLineManager manager = actionBars.getStatusLineManager();
-		manager.setErrorMessage("IStatusLineManager");
+
 	}
 
 	public void dispose() {

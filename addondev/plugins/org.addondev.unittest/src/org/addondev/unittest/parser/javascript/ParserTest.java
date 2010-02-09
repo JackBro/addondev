@@ -104,15 +104,15 @@ public class ParserTest {
 	@Test
 	public void testParser03() throws IOException {
 		
-		{
-		String src = getSource(ParserTest.class.getResourceAsStream("system.js"));
-		Lexer lex = new Lexer(src);
-		Parser parser = new Parser("system.js"); // パーサーを作成。
-		parser.parse(lex);
-		JsNode node = parser.root;
-		//NodeManager.getInstance().SetNode("system", node);
-		node.dump("");
-		}
+//		{
+//		String src = getSource(ParserTest.class.getResourceAsStream("system.js"));
+//		Lexer lex = new Lexer(src);
+//		Parser parser = new Parser("system.js"); // パーサーを作成。
+//		parser.parse(lex);
+//		JsNode node = parser.root;
+//		//NodeManager.getInstance().SetNode("system", node);
+//		node.dump("");
+//		}
 		{
 		//Lexer lex = null;
 		String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
@@ -127,7 +127,8 @@ public class ParserTest {
 		//JsNode node = parser.parse(src);
 		//node.dump("");
 		Scope scope = ScopeManager.instance().getScope("test03.js", 0);
-		JsNode node = scope.getNode().getChild("t");
+		//JsNode node = scope.getNode().getChild("t");
+		JsNode node = parser.root;
 		node.dump("");
 		}
 	}

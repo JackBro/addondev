@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 import org.addondev.ui.AddonDevUIPlugin;
@@ -24,10 +25,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
@@ -141,14 +145,29 @@ public class XULMultiPageEditor extends MultiPageEditorPart {
 	
 	private void setDocument(FileEditorInput fileinput)
 	{
+		List<String> list;
+		try {
+			list = checkLocale(fileinput);
+			fXULPreviewPage.setDocument(list);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			
+			IEditorSite editorSite = getEditorSite();
+			IActionBars actionBars = editorSite.getActionBars();
+			IStatusLineManager manager = actionBars.getStatusLineManager();
+			manager.setErrorMessage("ERROR : " + e.getMessage());
+		}
+		
 		//IProject project = ((FileEditorInput)getEditorInput()).getFile().getProject();
 		//fXULPreviewPage.setDocument(XULParser.parse(project, locale, ((FileEditorInput)getEditorInput()).getFile()));
-		fXULPreviewPage.setDocument((FileEditorInput)getEditorInput());
+		//fXULPreviewPage.setDocument((FileEditorInput)getEditorInput());
 	}
 	
 	public void refresh()
 	{
 		fXULPreviewPage.refresf();
+		
 	}
 	
 	public void reLoad()
@@ -182,6 +201,40 @@ public class XULMultiPageEditor extends MultiPageEditorPart {
 		}
 		
 		return file;
+	}
+	
+	public List<String> checkLocale(FileEditorInput input) throws Exception
+	{
+		IProject project = input.getFile().getProject();
+		String strlocale = null;
+		Locale locale = null;
+		List<String> xuls = null;
+		try {
+			strlocale = project.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"));
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(strlocale == null)
+		{
+			throw new Exception("not setting project locale");
+		}
+
+		locale = Locale.getLocale(strlocale);
+
+		if(locale == null)
+		{
+			throw new Exception("not fild locale " + strlocale);
+			//project
+//			IStatus status = new Status(IStatus.ERROR, AddonDevUIPlugin.PLUGIN_ID, 
+//					IStatus.OK, "メッセージ１", new Exception(
+//			        "エラーメッセージ１"));
+//			Shell shell = getSite().getWorkbenchWindow().getShell();
+//			ErrorDialog.openError(shell, null, null, status);
+		}
+		
+		xuls = XULParser.parse(project, locale, input.getFile());
+		return xuls;
 	}
 	
 }

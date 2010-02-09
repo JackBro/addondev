@@ -139,54 +139,54 @@ public class XULPreviewPage extends Page{
 	}
 
 
-	//public void setDocument(List<String> xuls) {
-	public void setDocument(FileEditorInput input) {
+	public void setDocument(List<String> xuls) {
+	//public void setDocument(FileEditorInput input) {
 		//IProject project = input.getFile().getProject();
-		String strlocale = null;
-		Locale locale = null;
-		try {
-			strlocale = fProject.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"));
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(strlocale != null)
-		{
-			locale = Locale.getLocale(strlocale);
-
-		}
-		if(locale == null)
-		{
-			if(fPropertyLinkComposite == null)
-			{
-				fPropertyLinkComposite = createPropertyLinkControl(fStackComposite);
-				fStackLayout.topControl = fPropertyLinkComposite;
-			}
-			//project
-//			IStatus status = new Status(IStatus.ERROR, AddonDevUIPlugin.PLUGIN_ID, 
-//					IStatus.OK, "メッセージ１", new Exception(
-//			        "エラーメッセージ１"));
-//			Shell shell = getSite().getWorkbenchWindow().getShell();
-//			ErrorDialog.openError(shell, null, null, status);
-			return;
-		}
-		if(fStackLayout.topControl != fTabFolder)
-		{
-			fStackLayout.topControl = fTabFolder;
-		}
-		
-		//fXULPreviewPage.setDocument(XULParser.parse(project, locale, ((FileEditorInput)getEditorInput()).getFile()));
-		List<String> xuls = null;
-		try {
-			xuls = XULParser.parse(fProject, locale, input.getFile());
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (CoreException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		if(!(xuls != null && xuls.size() > 0)) return;
+//		String strlocale = null;
+//		Locale locale = null;
+//		try {
+//			strlocale = fProject.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"));
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		if(strlocale != null)
+//		{
+//			locale = Locale.getLocale(strlocale);
+//
+//		}
+//		if(locale == null)
+//		{
+//			if(fPropertyLinkComposite == null)
+//			{
+//				fPropertyLinkComposite = createPropertyLinkControl(fStackComposite);
+//				fStackLayout.topControl = fPropertyLinkComposite;
+//			}
+//			//project
+////			IStatus status = new Status(IStatus.ERROR, AddonDevUIPlugin.PLUGIN_ID, 
+////					IStatus.OK, "メッセージ１", new Exception(
+////			        "エラーメッセージ１"));
+////			Shell shell = getSite().getWorkbenchWindow().getShell();
+////			ErrorDialog.openError(shell, null, null, status);
+//			return;
+//		}
+//		if(fStackLayout.topControl != fTabFolder)
+//		{
+//			fStackLayout.topControl = fTabFolder;
+//		}
+//		
+//		//fXULPreviewPage.setDocument(XULParser.parse(project, locale, ((FileEditorInput)getEditorInput()).getFile()));
+//		List<String> xuls = null;
+//		try {
+//			xuls = XULParser.parse(fProject, locale, input.getFile());
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (CoreException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		if(!(xuls != null && xuls.size() > 0)) return;
 		
 		String path = AddonDevUIPlugin.getDefault().getPreferenceStore().getString(AddonDevUIPrefConst.XULRUNNER_PATH);
 		if(!new File(path).exists()) return;

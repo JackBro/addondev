@@ -1,5 +1,7 @@
 package org.addondev.ui.editor.xul;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,16 +18,12 @@ import jp.aonir.fuzzyxml.FuzzyXMLParser;
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.editor.xml.XMLPartitionScanner;
 import org.addondev.ui.editor.xul.preview.OffsetInfo;
-import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
 import org.addondev.util.Locale;
-import org.addondev.util.StringUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
@@ -48,7 +46,6 @@ public class XULParser {
 		
 		String ElementName = null;
 		FuzzyXMLElement targetelement = null;
-		//String text = FileUtil.getContent(fullpath.toFile());
 		FuzzyXMLParser parser = new FuzzyXMLParser();
 		FuzzyXMLDocument document = parser.parse(text);
 		FuzzyXMLElement element = document.getDocumentElement();
@@ -126,7 +123,7 @@ public class XULParser {
 		return xuldatalist;
 	}
 	
-	private static String convertText(IProject project, Locale locale,  IFile file, String xml, int decstart, int decend)
+	private static String convertText(IProject project, Locale locale,  IFile file, String xml, int decstart, int decend) throws FileNotFoundException
 	{
 		//if()
 		//{
@@ -142,7 +139,7 @@ public class XULParser {
 		//return text.replaceAll("'", "&apos;").replaceAll("\n", "");//replaceAll("\n", "\\\\n");
 	}
 	
-	public static String convertChrome2LocalDec(IProject project, Locale locale, IFile file, String xml, int decstart, int decend)
+	public static String convertChrome2LocalDec(IProject project, Locale locale, IFile file, String xml, int decstart, int decend) throws FileNotFoundException
 	{
 		ArrayList<Pattern> patterns = new ArrayList<Pattern>();
 		//patterns.add(doctypeOverlayPattern);
@@ -154,37 +151,32 @@ public class XULParser {
 		String ret = dectext;
 		ChromeURLMap map = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
 		
-//		String strlocale = null;
-//		try {
-//			strlocale = project.getPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"));
-//		} catch (CoreException e) {
-//			// TODO Auto-generated catch block
-//			//e.printStackTrace();
-//		}
-//		if(strlocale == null)
-//		{
-//			strlocale = map.getLocaleList().get(0).getName();
-//		}
-//		Locale locale = Locale.getLocale(strlocale);
-		
 		for (Pattern pattern : patterns) {
 			Matcher m = pattern.matcher(dectext);
 			while(m.find())
 			{
 				if(m.groupCount() == 1)
 				{
-					if(m.pattern().equals(doctypePattern))
+					if(m.pattern().equals(doctypePattern)) //dtd
 					{
+						if(m.group(1) != null) //path
+						{
+							String dtdpath = map.convertChrome2Local(m.group(1));
+							if(!new File(dtdpath).exists())
+							{
+								throw new FileNotFoundException("notfild");
+							}
+						}
+						
 						Matcher pm = doctypepackPattern.matcher(m.group(0));
 						if(pm.find())
 						{
 							String restr = pm.group(1) + locale.getName();
 							String res = m.group(0).replaceFirst(pm.group(1), restr);
 							ret = ret.replaceAll(m.group(0), res);
-							//System.out.println("lacate path = " + res);
 						}						
 					}
-					else
+					else //css
 					{
 						String path = m.group(1);
 						if(!path.contains("/"))
@@ -302,42 +294,42 @@ public class XULParser {
 //		
 //		return previewData;
 //	}
-	
-	private FuzzyXMLElement getPreviewNode(FuzzyXMLDocument document, FuzzyXMLElement element)
-	{
-		FuzzyXMLElement previewElement = null;
-		FuzzyXMLElement fnode = document.getDocumentElement();
-		if(fnode.hasChildren())
-		{			
-			if("prefpane".equals(element.getName()))
-			{
-				previewElement = element;
-			}
-			else
-			{
-				FuzzyXMLElement node = element;
-				do		
-				{
-					node = (FuzzyXMLElement) node.getParentNode();
-				}while(node != null && !isEnablePreview(node) && !node.equals(fnode));
-				previewElement = (FuzzyXMLElement) node;
-			}				
-		}
-		return previewElement;
-	}
-	
-	private boolean isEnablePreview(FuzzyXMLNode node)
-	{
-		if(node instanceof FuzzyXMLElement)
-		{
-			FuzzyXMLElement elem = (FuzzyXMLElement)node;
-			if("prefpane".equals(elem.getName()))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+//	
+//	private FuzzyXMLElement getPreviewNode(FuzzyXMLDocument document, FuzzyXMLElement element)
+//	{
+//		FuzzyXMLElement previewElement = null;
+//		FuzzyXMLElement fnode = document.getDocumentElement();
+//		if(fnode.hasChildren())
+//		{			
+//			if("prefpane".equals(element.getName()))
+//			{
+//				previewElement = element;
+//			}
+//			else
+//			{
+//				FuzzyXMLElement node = element;
+//				do		
+//				{
+//					node = (FuzzyXMLElement) node.getParentNode();
+//				}while(node != null && !isEnablePreview(node) && !node.equals(fnode));
+//				previewElement = (FuzzyXMLElement) node;
+//			}				
+//		}
+//		return previewElement;
+//	}
+//	
+//	private boolean isEnablePreview(FuzzyXMLNode node)
+//	{
+//		if(node instanceof FuzzyXMLElement)
+//		{
+//			FuzzyXMLElement elem = (FuzzyXMLElement)node;
+//			if("prefpane".equals(elem.getName()))
+//			{
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	public static String getCSS(String xml)
 	{

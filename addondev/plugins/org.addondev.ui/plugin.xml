@@ -193,5 +193,207 @@
          </enabledWhen>
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors.templates">
+      <contextType
+            class="org.addondev.ui.TemplateContextType1"
+            id="org.addondev.ui.contextType1">
+      </contextType>
+     
+     
+     
+     
+     
+     
+      <template
+            contextTypeId="org.addondev.ui.template6"
+            id="org.addondev.ui.template6"
+            name="contextmenu">
+         <pattern>
+            &lt;popup id=&quot;contentAreaContextMenu&quot;&gt;
+    &lt;menuitem id=&quot;${name}-context&quot; label=&quot;&amp;${name}.context.label;&quot;
+              accesskey=&quot;&amp;${name}.context.accesskey;&quot;
+              insertafter=&quot;context-stop&quot;
+              oncommand=&quot;&quot;/&gt;
+  &lt;/popup&gt;
+         </pattern>
+      </template>
+      <template
+            autoinsert="true"
+            contextTypeId="org.addondev.ui.template7"
+            id="org.addondev.ui.template7"
+            name="menu">
+         <pattern>
+            &lt;menupopup id=&quot;menu_ToolsPopup&quot;&gt;
+    &lt;menuitem id=&quot;${name}-menu&quot; label=&quot;&amp;${name}.menu.label;&quot;
+              oncommand=&quot;&quot;/&gt;
+&lt;/menupopup&gt;
+         </pattern>
+      </template>
+      <template
+            autoinsert="true"
+            contextTypeId="org.addondev.ui.template8"
+            id="org.addondev.ui.template8"
+            name="sidebar">
+         <pattern>
+            &lt;menupopup id=&quot;viewSidebarMenu&quot;&gt;
+    &lt;menuitem key=&quot;key_openSidebar_sidebar&quot; observes=&quot;viewSidebar_sidebar&quot; /&gt;
+  &lt;/menupopup&gt;
+
+  &lt;keyset id=&quot;mainKeyset&quot;&gt;
+    &lt;key id=&quot;key_openSidebar_sidebar&quot; command=&quot;viewSidebar_sidebar&quot; /&gt;
+  &lt;/keyset&gt;
+
+  &lt;broadcasterset id=&quot;mainBroadcasterSet&quot;&gt;
+    &lt;broadcaster id=&quot;viewSidebar_sidebar&quot;
+                 label=&quot;&amp;${name}.sidebar.label;&quot;
+                 autoCheck=&quot;false&quot;
+                 type=&quot;checkbox&quot;
+                 group=&quot;sidebar&quot;
+                 sidebarurl=&quot;chrome://${name}/content/${name}-sidebar.xul&quot;
+                 sidebartitle=&quot;&amp;${name}.sidebar.label;&quot;
+                 oncommand=&quot;&quot; /&gt;
+  &lt;/broadcasterset&gt;
+         </pattern>
+      </template>
+                 
+                  <template
+                        autoinsert="true"
+                        contextTypeId="org.addondev.ui.template9"
+                        id="org.addondev.ui.template9"
+                        name="toolbar">
+                     <pattern>
+                        &lt;toolbarpalette id=&quot;BrowserToolbarPalette&quot;&gt;
+  &lt;toolbarbutton id=&quot;toobarbutton-toolbar-button&quot; class=&quot;toolbarbutton-1 chromeclass-toolbar-additional&quot;
+    label=&quot;&amp;toobarbuttonToolbarButton.label;&quot; tooltiptext=&quot;&amp;toobarbuttonToolbarButton.tooltip;&quot;
+    oncommand=&quot;toobarbutton.onToolbarButtonCommand()&quot;/&gt;
+  &lt;/toolbarpalette&gt;
+                        <toolbox id="navigator-toolbox">
+    <toolbar class="chromeclass-toolbar" toolbarname="&toolbarToolbar.name;" customizable="true" id="toolbar-toolbar">
+      <label value="&toolbarToolbar.label;"/>
+    </toolbar>
+  </toolbox>
+                     </pattern>
+                  </template> <template
+                        autoinsert="true"
+                        contextTypeId="org.addondev.ui.template9"
+                        id="org.addondev.ui.template9"
+                        name="toolbarbutton">
+                     <pattern>
+                        &lt;toolbarpalette id=&quot;BrowserToolbarPalette&quot;&gt;
+  &lt;toolbarbutton id=&quot;toobarbutton-toolbar-button&quot; class=&quot;toolbarbutton-1 chromeclass-toolbar-additional&quot;
+    label=&quot;&amp;toobarbuttonToolbarButton.label;&quot; tooltiptext=&quot;&amp;toobarbuttonToolbarButton.tooltip;&quot;
+    oncommand=&quot;toobarbutton.onToolbarButtonCommand()&quot;/&gt;
+  &lt;/toolbarpalette&gt;
+                        <toolbox id="navigator-toolbox">
+    <toolbar class="chromeclass-toolbar" toolbarname="&toolbarToolbar.name;" customizable="true" id="toolbar-toolbar">
+      <label value="&toolbarToolbar.label;"/>
+    </toolbar>
+  </toolbox>
+                     </pattern>
+                  </template> <template
+            autoinsert="true"
+            contextTypeId="org.addondev.ui.template4"
+            id="org.addondev.ui.template4"
+            name="name">
+         <pattern>
+            &lt;toolbarpalette id=&quot;BrowserToolbarPalette&quot;&gt;
+  &lt;toolbarbutton id=&quot;toobarbutton-toolbar-button&quot; class=&quot;toolbarbutton-1 chromeclass-toolbar-additional&quot;
+    label=&quot;&amp;toobarbuttonToolbarButton.label;&quot; tooltiptext=&quot;&amp;toobarbuttonToolbarButton.tooltip;&quot;
+    oncommand=&quot;toobarbutton.onToolbarButtonCommand()&quot;/&gt;
+  &lt;/toolbarpalette&gt;
+
+ <broadcasterset id="mainBroadcasterSet">
+    <broadcaster id="viewSidebar_sidebar"
+                 label="&sidebarSidebar.label;"
+                 autoCheck="false"
+                 type="checkbox"
+                 group="sidebar"
+                 sidebarurl="chrome://sidebar/content/ff-sidebar.xul"
+                 sidebartitle="&sidebarSidebar.label;"
+                 oncommand="toggleSidebar('viewSidebar_sidebar');" />
+  </broadcasterset>
+         </pattern>
+      </template> <template
+            autoinsert="true"
+            contextTypeId="org.addondev.ui.template3"
+            id="org.addondev.ui.template3"
+            name="name">
+         <pattern>
+            &lt;popup id=&quot;contentAreaContextMenu&quot;&gt;
+    &lt;menuitem id=&quot;context-context&quot; label=&quot;&amp;contextContext.label;&quot;
+              accesskey=&quot;&amp;contextContext.accesskey;&quot;
+              insertafter=&quot;context-stop&quot;
+              oncommand=&quot;context.onMenuItemCommand(event)&quot;/&gt;
+  &lt;/popup&gt; <menupopup id="menu_ToolsPopup">
+  <menuitem id="menu-hello" label="&menu.label;"
+            oncommand="menu.onMenuItemCommand(event);"/>
+</menupopup>
+         </pattern>
+      </template> <template
+            autoinsert="true"
+            contextTypeId="org.addondev.ui.template2"
+            id="org.addondev.ui.template2"
+            name="name">
+         <pattern>
+            <popup id="contentAreaContextMenu">
+  <menuitem id="${name}-context" label="&${name}.context.label;"
+            accesskey="&${name}.context.accesskey;"
+            insertafter="context-stop"
+            oncommand=""/>
+</popup>
+         </pattern>
+      </template> <template
+            autoinsert="true"
+            contextTypeId="org.addondev.ui.template2"
+            id="org.addondev.ui.template2"
+            name="name">
+         <pattern>
+            <popup id="contentAreaContextMenu">
+  <menuitem id="context-context" label="&contextContext.label;"
+            accesskey="&contextContext.accesskey;"
+            insertafter="context-stop"
+            oncommand="context.onMenuItemCommand(event)"/>
+</popup>
+         </pattern>
+      </template> <template
+            autoinsert="true"
+            contextTypeId="org.addondev.ui.template2"
+            id="org.addondev.ui.template2"
+            name="name">
+         <pattern>
+            <menupopup id="menu_ToolsPopup">
+  <menuitem id="menu-hello" label="&menu.label;"
+              oncommand="menu.onMenuItemCommand(event);"/>
+</menupopup>
+         </pattern>
+      </template> <template
+            autoinsert="true"
+            contextTypeId="org.addondev.ui.template1"
+            id="org.addondev.ui.template1"
+            name="name">
+         <pattern>
+            <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://${name}/skin/${name}.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://${name}/locale//${name}.dtd">
+
+<overlay id="${name}-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript;version=${javascriptvar}" src="chrome://${name}/content/${name}.js" />
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="context-strings" src="chrome://${name}/locale/${name}.properties"/>
+  </stringbundleset>
+
+  ${context_template}
+  ${menu_template}
+  ${sidebar_template}
+  ${toolbarbutton_template}
+  ${toolbar_template}
+
+</overlay>
+         </pattern>
+      </template>
+   </extension>
 
 </plugin>

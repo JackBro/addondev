@@ -187,11 +187,13 @@ public class Parser {
 		root = new JsNode(null, "root", "root", 0);
 		//thisNodeStack.push(root); //global
 		fScopeStack.pushScope(new Scope(0, endoff, root));
-		
+		int offset = lex.offset();
 		//frame.push();
 		while (token != TokenType.EOS) {
 			stmt(root);
 			getToken(); 
+			if(offset == lex.offset()) throw new EOSException();
+			offset = lex.offset();
 		}
 		//frame.pop();
 		
