@@ -9,10 +9,14 @@ import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.Locale;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -21,6 +25,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -34,6 +39,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		// TODO Auto-generated method stub
 		fid.setText(page1.getProjectName() + "@dev.org");
 		//fname.setText(page1.getProjectName());
+        fCheckboxViewer.setInput(Locale.values());
 		super.setVisible(visible);
 	}
 
@@ -51,6 +57,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	private Text fhomepageURL;
 	
 	private CheckboxTableViewer fCheckboxViewer;
+	private Combo creator;
 	
 	private ArrayList<Locale> fLocales;
 	
@@ -126,11 +133,38 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
                 return ((Locale) element).getName();
             }
         });
+	    
+	    fCheckboxViewer.addCheckStateListener(new ICheckStateListener() {
+			
+			@Override
+			public void checkStateChanged(CheckStateChangedEvent event) {
+				// TODO Auto-generated method stub
+				if(event.getElement() instanceof Locale)
+				{
+					String locale = ((Locale)event.getElement()).getName();
+					if(event.getChecked())
+					{
+						creator.add(locale);
+					}
+					else
+					{
+						creator.remove(locale);
+					}
+				}
+			}
+		});
+
         GridData tabledata = new GridData(GridData.FILL_BOTH);
         fCheckboxViewer.getTable().setLayoutData(tabledata);
         fCheckboxViewer.setContentProvider(new ArrayContentProvider());
-        fCheckboxViewer.setInput(Locale.values());
+        //fCheckboxViewer.setInput(Locale.values());
       	
+        Label label = new Label(localegroup, SWT.NONE);
+        label.setText("：");
+        
+        creator = new Combo(localegroup, SWT.READ_ONLY);
+        creator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));  
+        
         
       	doValidate();
       	
