@@ -68,7 +68,7 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 		if (fRegistry == null) {
 			fRegistry = new ContributionContextTypeRegistry();
 			fRegistry.addContextType(JavaScriptTemplateContextType.JAVASCRIPT_CONTEXT_TYPE);
-			fRegistry.addContextType(ExtensionTemplateContextType.EXTENSION_CONTEXT_TYPE);
+			fRegistry.addContextType(ExtensionTemplateContextType.EXTENSION);
 		}
 		return fRegistry;
 	}

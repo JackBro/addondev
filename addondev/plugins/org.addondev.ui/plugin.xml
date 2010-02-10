@@ -199,12 +199,6 @@
             class="org.addondev.ui.template.ExtensionTemplateContextType"
             id="org.addondev.ui.template.Extension">
       </contextType>
-     
-     
-     
-     
-     
-     
       <template
             contextTypeId="org.addondev.ui.template.Extension"
             id="org.addondev.ui.template6"
@@ -222,7 +216,7 @@
             autoinsert="true"
             contextTypeId="org.addondev.ui.template.Extension"
             id="org.addondev.ui.template7"
-            name="menu">
+            name="menu_template">
          <pattern>
             &lt;menupopup id=&quot;menu_ToolsPopup&quot;&gt;
     &lt;menuitem id=&quot;${name}-menu&quot; label=&quot;&amp;${name}.menu.label;&quot;
@@ -308,6 +302,45 @@
   ${toolbar_template}
 
 &lt;/overlay&gt;
+                                 </pattern>
+                              </template>
+                              <template
+                                    autoinsert="true"
+                                    contextTypeId="org.addondev.ui.template.Extension"
+                                    id="org.addondev.ui.template1"
+                                    name="installrfd">
+                                 <pattern>
+                                    &amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&amp;lt;RDF xmlns=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot; xmlns:em=&quot;http://www.mozilla.org/2004/em-rdf#&quot;&amp;gt;
+  &amp;lt;Description about=&quot;urn:mozilla:install-manifest&quot;&amp;gt;
+    &amp;lt;em:id&amp;gt;${id}&amp;lt;/em:id&amp;gt;
+    &amp;lt;em:type&amp;gt;2&amp;lt;/em:type&amp;gt;
+    &amp;lt;em:name&amp;gt;${name}&amp;lt;/em:name&amp;gt;
+    &amp;lt;em:version&amp;gt;${version}&amp;lt;/em:version&amp;gt;
+    &amp;lt;em:creator&amp;gt;${creator}&amp;lt;/em:creator&amp;gt;
+    &amp;lt;em:contributor&amp;gt;&amp;lt;/em:contributor&amp;gt;
+    &amp;lt;em:optionsURL&amp;gt;${options}&amp;lt;/em:optionsURL&amp;gt;
+    &amp;lt;em:targetApplication&amp;gt;
+      &amp;lt;Description&amp;gt;
+        &amp;lt;em:id&amp;gt;${appid}&amp;lt;/em:id&amp;gt;
+        &amp;lt;em:minVersion&amp;gt;${minversion}&amp;lt;/em:minVersion&amp;gt;
+        &amp;lt;em:maxVersion&amp;gt;${maxversion}&amp;lt;/em:maxVersion&amp;gt;
+      &amp;lt;/Description&amp;gt;
+    &amp;lt;/em:targetApplication&amp;gt;
+  &amp;lt;/Description&amp;gt;
+&amp;lt;/RDF&amp;gt;
+                                 </pattern>
+                              </template>
+                              <template
+                                    autoinsert="true"
+                                    contextTypeId="org.addondev.ui.template2"
+                                    id="org.addondev.ui.template2"
+                                    name="name">
+                                 <pattern>
+                                    content ${name} chrome/content/
+skin    ${name} classic/1.0 chrome/skin/classic/
+overlay chrome://browser/content/browser.xul chrome://${name}/content/overlay.xul
+${locates}
                                  </pattern>
                               </template>
    </extension>

@@ -4,7 +4,7 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 
 public class ExtensionTemplateContextType extends TemplateContextType {
 
-	public static final String EXTENSION_CONTEXT_TYPE = "org.addondev.ui.template.Extension";
+	public static final String EXTENSION = "org.addondev.ui.template.Extension";
 	
 	public ExtensionTemplateContextType() {
 		// TODO Auto-generated constructor stub

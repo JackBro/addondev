@@ -1,4 +1,13 @@
-﻿http://answertaker.com/security/antispyware/superantispyware.html
+﻿/chrome/content/ff-overlay.xul
+/chrome/content/ff-overlay.js
+/chrome/content/options.xul
+/chrome/locale/en-US/overlay.dtd
+/chrome/skin/overlay.css
+/defaults/preferences/prefs.js
+/chrome.manifest
+/install.rdf
+
+http://answertaker.com/security/antispyware/superantispyware.html
 https://addons.mozilla.org/ja/developers/tools/builder
 http://www.eclipse.org/forums/index.php?t=msg&goto=369125&
 http://blog.8maki.jp/2009/10/nixysa-npapi-gluecode-genereator.html

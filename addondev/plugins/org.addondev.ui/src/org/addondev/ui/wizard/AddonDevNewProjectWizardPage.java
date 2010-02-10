@@ -48,7 +48,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	private Text fid;
 	private Text fversion;
 	
-	private Text ftargetApplicationid;
+	private Text fApplicationID;
 	private Text fminVersion;
 	private Text fmaxVersion;
 	
@@ -101,7 +101,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
         fid = addText(composite, "ID");
       	fversion = addText(composite, "version", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION));
       	
-      	ftargetApplicationid = addText(composite, "targetApplication ID", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_GUID));
+      	fApplicationID = addText(composite, "targetApplication ID", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_GUID));
       	fminVersion = addText(composite, "minVersion", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MINVERSION));
       	fmaxVersion = addText(composite, "maxVersion", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MAXVERSION));
       	
@@ -218,7 +218,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	}
 	public String getTargetApplicationID()
 	{
-		return ftargetApplicationid.getText();
+		return fApplicationID.getText();
 	}
 	public String getMinVersion()
 	{
