@@ -88,6 +88,7 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		final IProject project = page1.getProjectHandle();	
 
 		String name = project.getName();
+		String id = page2.getID();
 		String version = page2.getVersion();
 		String firefoxid = page2.getTargetApplicationID();
 		String minversion = page2.getMinVersion();
@@ -98,8 +99,9 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 
 		param = new HashMap<String, String>();
 		param.put("name", name);
+		param.put("id", id);
 		param.put("version", version);
-		param.put("firefoxid", firefoxid);
+		param.put("appid", firefoxid);
 		param.put("minversion", minversion);
 		param.put("maxversion", maxversion);
 		param.put("description", description);

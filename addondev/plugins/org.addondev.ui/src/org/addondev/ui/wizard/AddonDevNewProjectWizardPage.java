@@ -25,6 +25,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -39,7 +40,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		// TODO Auto-generated method stub
 		fid.setText(page1.getProjectName() + "@dev.org");
 		//fname.setText(page1.getProjectName());
-        fCheckboxViewer.setInput(Locale.values());
+        //fCheckboxViewer.setInput(Locale.values());
 		super.setVisible(visible);
 	}
 
@@ -58,6 +59,9 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	
 	private CheckboxTableViewer fCheckboxViewer;
 	private Combo creator;
+	
+	private Button fPrefCheck, fToolbarCheck, fToolbarButtonCheck, 
+	fMenuCheck, fContextMenuCheck, fSidebarCheck;
 	
 	private ArrayList<Locale> fLocales;
 	
@@ -111,60 +115,61 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
       	fhomepageURL = addText(composite, "homepageURL");
       	
       	
-		Group localegroup = new Group(pcomposite, SWT.NONE);
-		localegroup.setText("Locale");     	
-        GridLayout localelayout = new GridLayout();
-        //localelayout.numColumns = 1;
-		localegroup.setLayout(localelayout);
-//		localegroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));  
-	    GridData data = new GridData(GridData.FILL_BOTH);
-	    localegroup.setLayoutData(data);
-		
-      	//CheckboxTableViewer view = CheckboxTableViewer.newCheckList(parent, SWT.NONE);
-        // Checkbox table viewer of decorators
-	    fCheckboxViewer = CheckboxTableViewer.newCheckList(localegroup,
-                SWT.BORDER  | SWT.V_SCROLL);
-      	//checkboxViewer.getTable().getVerticalBar().setVisible(true);
-        //checkboxViewer.getTable().setLayoutData(
-        //        new GridData(GridData.FILL_HORIZONTAL));
-        //checkboxViewer.getTable().setFont(decoratorsComposite.getFont());
-	    fCheckboxViewer.setLabelProvider(new LabelProvider() {
-            public String getText(Object element) {
-                return ((Locale) element).getName();
-            }
-        });
-	    
-	    fCheckboxViewer.addCheckStateListener(new ICheckStateListener() {
-			
-			@Override
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				// TODO Auto-generated method stub
-				if(event.getElement() instanceof Locale)
-				{
-					String locale = ((Locale)event.getElement()).getName();
-					if(event.getChecked())
-					{
-						creator.add(locale);
-					}
-					else
-					{
-						creator.remove(locale);
-					}
-				}
-			}
-		});
-
-        GridData tabledata = new GridData(GridData.FILL_BOTH);
-        fCheckboxViewer.getTable().setLayoutData(tabledata);
-        fCheckboxViewer.setContentProvider(new ArrayContentProvider());
-        //fCheckboxViewer.setInput(Locale.values());
-      	
-        Label label = new Label(localegroup, SWT.NONE);
-        label.setText("：");
+//		Group localegroup = new Group(pcomposite, SWT.NONE);
+//		localegroup.setText("Locale");     	
+//        GridLayout localelayout = new GridLayout();
+//        //localelayout.numColumns = 1;
+//		localegroup.setLayout(localelayout);
+////		localegroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));  
+//	    GridData data = new GridData(GridData.FILL_BOTH);
+//	    localegroup.setLayoutData(data);
+//		
+//      	//CheckboxTableViewer view = CheckboxTableViewer.newCheckList(parent, SWT.NONE);
+//        // Checkbox table viewer of decorators
+//	    fCheckboxViewer = CheckboxTableViewer.newCheckList(localegroup,
+//                SWT.BORDER  | SWT.V_SCROLL);
+//      	//checkboxViewer.getTable().getVerticalBar().setVisible(true);
+//        //checkboxViewer.getTable().setLayoutData(
+//        //        new GridData(GridData.FILL_HORIZONTAL));
+//        //checkboxViewer.getTable().setFont(decoratorsComposite.getFont());
+//	    fCheckboxViewer.setLabelProvider(new LabelProvider() {
+//            public String getText(Object element) {
+//                return ((Locale) element).getName();
+//            }
+//        });
+//	    
+//	    fCheckboxViewer.addCheckStateListener(new ICheckStateListener() {
+//			
+//			@Override
+//			public void checkStateChanged(CheckStateChangedEvent event) {
+//				// TODO Auto-generated method stub
+//				if(event.getElement() instanceof Locale)
+//				{
+//					String locale = ((Locale)event.getElement()).getName();
+//					if(event.getChecked())
+//					{
+//						creator.add(locale);
+//					}
+//					else
+//					{
+//						creator.remove(locale);
+//					}
+//				}
+//			}
+//		});
+//
+//        GridData tabledata = new GridData(GridData.FILL_BOTH);
+//        fCheckboxViewer.getTable().setLayoutData(tabledata);
+//        fCheckboxViewer.setContentProvider(new ArrayContentProvider());
+//        //fCheckboxViewer.setInput(Locale.values());
+//      	
+//        Label label = new Label(localegroup, SWT.NONE);
+//        label.setText("：");
+//        
+//        creator = new Combo(localegroup, SWT.READ_ONLY);
+//        creator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));  
         
-        creator = new Combo(localegroup, SWT.READ_ONLY);
-        creator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));  
-        
+        createOption(pcomposite);
         
       	doValidate();
       	
@@ -194,6 +199,35 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	
 	private Text addText(Composite parent, String label) {
 		return addText(parent, label, "");
+	}
+	
+	private void createOption(Composite parent)
+	{
+		Group group = new Group(parent, SWT.NONE);
+		group.setText("Locale");     	
+        GridLayout localelayout = new GridLayout();
+        group.setLayout(localelayout);
+	    GridData data = new GridData(GridData.FILL_BOTH);
+	    group.setLayoutData(data);
+	    
+        fPrefCheck = new Button(group, SWT.CHECK);
+        fPrefCheck.setText("pref");
+ 
+        fToolbarCheck = new Button(group, SWT.CHECK);
+        fToolbarCheck.setText("pref");
+        
+        fToolbarButtonCheck = new Button(group, SWT.CHECK);
+        fToolbarButtonCheck.setText("pref");
+        
+        fMenuCheck = new Button(group, SWT.CHECK);
+        fMenuCheck.setText("pref");
+        
+        fContextMenuCheck = new Button(group, SWT.CHECK);
+        fContextMenuCheck.setText("pref");
+        
+        fSidebarCheck = new Button(group, SWT.CHECK);
+        fSidebarCheck.setText("pref");
+        		
 	}
 	
 	private void doValidate()
@@ -228,10 +262,6 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	{
 		return fmaxVersion.getText();
 	}
-//	public String getName()
-//	{
-//		return fname.getText();
-//	}
 	public String getCreator()
 	{
 		return fcreator.getText();
