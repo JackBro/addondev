@@ -2,7 +2,9 @@ package org.addondev.ui.wizard;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
@@ -204,7 +206,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	private void createOption(Composite parent)
 	{
 		Group group = new Group(parent, SWT.NONE);
-		group.setText("Locale");     	
+		group.setText("Option");     	
         GridLayout localelayout = new GridLayout();
         group.setLayout(localelayout);
 	    GridData data = new GridData(GridData.FILL_BOTH);
@@ -214,19 +216,19 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
         fPrefCheck.setText("pref");
  
         fToolbarCheck = new Button(group, SWT.CHECK);
-        fToolbarCheck.setText("pref");
+        fToolbarCheck.setText("Toolbar");
         
         fToolbarButtonCheck = new Button(group, SWT.CHECK);
-        fToolbarButtonCheck.setText("pref");
+        fToolbarButtonCheck.setText("ToolbarButton");
         
         fMenuCheck = new Button(group, SWT.CHECK);
-        fMenuCheck.setText("pref");
+        fMenuCheck.setText("Menu");
         
         fContextMenuCheck = new Button(group, SWT.CHECK);
-        fContextMenuCheck.setText("pref");
+        fContextMenuCheck.setText("ContextMenu");
         
         fSidebarCheck = new Button(group, SWT.CHECK);
-        fSidebarCheck.setText("pref");
+        fSidebarCheck.setText("Sidebar");
         		
 	}
 	
@@ -242,33 +244,58 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		setPageComplete(true);
 	}
 	
-	public String getID()
+	public Map<String, String> getInstallParam()
 	{
-		return fid.getText();
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("name", page1.getProjectName());
+		param.put("id", fid.getText());
+		param.put("version", fversion.getText());
+		param.put("appid", fApplicationID.getText());
+		param.put("minversion", fminVersion.getText());
+		param.put("maxversion", fmaxVersion.getText());
+		param.put("description", "");
+		param.put("creator", fcreator.getText());
+		param.put("homepageurl", fhomepageURL.getText());	
+		
+		param.put("locale", "en-US");	
+		
+		return param;
 	}
-	public String getVersion()
+	
+	public Map<String, String> getFileParam()
 	{
-		return fversion.getText();
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("install.rdf", "install.rdf");
+		param.put("chrome.manifest", "chrome.manifest");
+		param.put("main.js", "chrome/content/main.js");
+		param.put("overlay.xul", "chrome/content/overlay.xul");
+		param.put("prefs.js", "defaults/preferences/prefs.js");
+		
+		if(fPrefCheck.getSelection())  
+			param.put("options.xul", "chrome/content/options.xul");
+		
+		if(fSidebarCheck.getSelection()) 
+		{
+			param.put("sidebar.xul", "chrome/content/sidebar.xul");
+			param.put("sidebar.js", "chrome/content/sidebar.js");
+		}
+
+		param.put("overlay.dtd", "chrome/locale/en-US/overlay.dtd");
+		param.put("overlay.css", "chrome/skin/overlay.css");	
+		
+		return param;
 	}
-	public String getTargetApplicationID()
+	
+	public Map<String, String> getOptionParam()
 	{
-		return fApplicationID.getText();
-	}
-	public String getMinVersion()
-	{
-		return fminVersion.getText();
-	}
-	public String getMaxVersion()
-	{
-		return fmaxVersion.getText();
-	}
-	public String getCreator()
-	{
-		return fcreator.getText();
-	}
-	public String geHomepageURL()
-	{
-		return fhomepageURL.getText();
+		HashMap<String, String> param = new HashMap<String, String>();
+		if(fContextMenuCheck.getSelection()) 	param.put("context", "overlay.xul");
+		if(fMenuCheck.getSelection()) 			param.put("menu", "overlay.xul");
+		if(fSidebarCheck.getSelection()) 		param.put("sidebar", "overlay.xul");
+		if(fToolbarButtonCheck.getSelection()) 	param.put("toolbarbutton", "overlay.xul");
+		if(fToolbarCheck.getSelection()) 		param.put("toolbar", "overlay.xul");
+		
+		return param;
 	}
 
 	public Locale[] getLocals()
@@ -284,5 +311,5 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		}
 
 		return locales.toArray(new Locale[locales.size()]);
-	}	
+	}
 }

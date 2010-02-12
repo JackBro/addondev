@@ -1,4 +1,0 @@
-content	${name}	content/
-overlay	chrome://browser/content/browser.xul	chrome://${name}/content/overlay.xul
-
-skin	${name}	classic/1.0	skin/classic/

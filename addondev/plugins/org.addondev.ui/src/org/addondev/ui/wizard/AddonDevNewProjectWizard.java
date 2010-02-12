@@ -28,6 +28,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -42,7 +44,7 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 	private WizardNewProjectCreationPage page1;
 	private AddonDevNewProjectWizardPage page2;
 	private AddonDevNewProjectWizardPage2 page3;
-	private HashMap<String, String> param;
+	//private HashMap<String, String> param;
 
 	public AddonDevNewProjectWizard() {
 		// TODO Auto-generated constructor stub
@@ -87,26 +89,26 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		// TODO Auto-generated method stub
 		final IProject project = page1.getProjectHandle();	
 
-		String name = project.getName();
-		String id = page2.getID();
-		String version = page2.getVersion();
-		String firefoxid = page2.getTargetApplicationID();
-		String minversion = page2.getMinVersion();
-		String maxversion = page2.getMaxVersion();
-		String description = page2.getDescription();
-		String creator = page2.getCreator();
-		String homepageurl = page2.geHomepageURL();
-
-		param = new HashMap<String, String>();
-		param.put("name", name);
-		param.put("id", id);
-		param.put("version", version);
-		param.put("appid", firefoxid);
-		param.put("minversion", minversion);
-		param.put("maxversion", maxversion);
-		param.put("description", description);
-		param.put("creator", creator);
-		param.put("homepageurl", homepageurl);		
+//		String name = project.getName();
+//		String id = page2.getID();
+//		String version = page2.getVersion();
+//		String firefoxid = page2.getTargetApplicationID();
+//		String minversion = page2.getMinVersion();
+//		String maxversion = page2.getMaxVersion();
+//		String description = page2.getDescription();
+//		String creator = page2.getCreator();
+//		String homepageurl = page2.geHomepageURL();
+//
+//		param = new HashMap<String, String>();
+//		param.put("name", name);
+//		param.put("id", id);
+//		param.put("version", version);
+//		param.put("appid", firefoxid);
+//		param.put("minversion", minversion);
+//		param.put("maxversion", maxversion);
+//		param.put("description", description);
+//		param.put("creator", creator);
+//		param.put("homepageurl", homepageurl);		
 		
 
 		IPath newPath = null;
@@ -120,13 +122,35 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 				.newProjectDescription(project.getName());
 		projectDescription.setLocation(newPath);
 		
-
-		// final String projectType = getProjectType();
-		// define the operation to create a new project
+		final Map<String, String> installparam = page2.getInstallParam();
+		final Map<String, String> fileparam = page2.getFileParam();
+		final Map<String, String> optionparam = page2.getOptionParam();
+		
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			protected void execute(IProgressMonitor monitor)
 					throws CoreException {
-				createProject(projectDescription, project, monitor);
+				try {
+					createProject(projectDescription, project, installparam, fileparam, optionparam, monitor);
+				} catch (OperationCanceledException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TemplateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+//				CreateFireFoxTemplate ftmp = new CreateFireFoxTemplate();
+//				try {
+//					ftmp.createPtoject(project, installparam, fileparam, optionparam, monitor);
+//				} catch (BadLocationException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (TemplateException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 		};
 
@@ -139,6 +163,8 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+
 	}
 
 	private synchronized void addNature(String newNatureId, IProjectDescription projectDescription, IProject project, IProgressMonitor monitor)
@@ -160,62 +186,100 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 	}
 	
 	private void createProject(IProjectDescription projectDescription,
-			IProject project, IProgressMonitor monitor) throws CoreException,
-			OperationCanceledException {
+			IProject project, Map<String, String> installparam, Map<String, String> fileparam, Map<String, String> optionparam, IProgressMonitor monitor) throws CoreException,
+			OperationCanceledException, BadLocationException, TemplateException {
+//		try {
+//			monitor.beginTask("", 2000);
+//			
+//	//		String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
+//	//		if (!projectDescription.hasNature(newNatureId)) {
+//	//			String[] ids = projectDescription.getNatureIds();
+//	//			String[] newIds = new String[ids.length + 1];
+//	//			System.arraycopy(ids, 0, newIds, 0, ids.length);
+//	//			newIds[ids.length] = newNatureId;
+//	//			projectDescription.setNatureIds(newIds);
+//	//			project.setDescription(projectDescription, monitor);
+//	//		}			
+//	
+//			
+//			
+//			project.create(projectDescription, new SubProgressMonitor(monitor, 1000));
+//	
+//			if (monitor.isCanceled()) {
+//				throw new OperationCanceledException();
+//			}
+//	
+//			project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(monitor, 1000));
+//	
+//			createFolder(project, monitor);
+//	
+//			try {
+//				//createFile(project, "chrome/content/" + param.get("name") + ".js", AddonDevNewProjectWizard.class.getResourceAsStream("addon.js"), param, monitor);
+//				//createFile(project, "install.rdf", AddonDevNewProjectWizard.class.getResourceAsStream("install.rdf"), param, monitor);
+//				//createFile(project, "chrome.manifest", AddonDevNewProjectWizard.class.getResourceAsStream("chrome.manifest"), param, monitor);
+//				//createFile(project, "overlay.xul", AddonDevNewProjectWizard.class.getResourceAsStream("overlay.xul"), param, monitor);
+//				
+//				createFile(project, "templates/project/addon.js", "chrome/content/" + param.get("name") + ".js", param, monitor);
+//				createFile(project, "templates/project/common/install.rdf", "install.rdf", param, monitor);
+//				//createFile(project, "templates/project/common/chrome.manifest", "chrome.manifest", param, monitor);
+//				createManifestFile(project, "templates/project/common/chrome.manifest", "chrome.manifest", param, page2.getLocals(), monitor);
+//				createFile(project, "templates/project/common/overlay.xul", "overlay.xul", param, monitor);
+//				
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
+//			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
+//			//String newNatureId = "AddonDev.addondevnature";
+//			addNature(AddonDevNature.NATUREID, projectDescription, project, monitor);			
+//			//newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
+//			//addNature(newNatureId, projectDescription, project, monitor);
+//			project.setPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"), page3.getDefaultLocale());
+//			
+//
+//		} finally {
+//			monitor.done();
+//		}		
+		
 		try {
-			monitor.beginTask("", 2000);
-			
-	//		String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
-	//		if (!projectDescription.hasNature(newNatureId)) {
-	//			String[] ids = projectDescription.getNatureIds();
-	//			String[] newIds = new String[ids.length + 1];
-	//			System.arraycopy(ids, 0, newIds, 0, ids.length);
-	//			newIds[ids.length] = newNatureId;
-	//			projectDescription.setNatureIds(newIds);
-	//			project.setDescription(projectDescription, monitor);
-	//		}			
-	
-			
-			
-			project.create(projectDescription, new SubProgressMonitor(monitor, 1000));
-	
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
-	
-			project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(monitor, 1000));
-	
-			createFolder(project, monitor);
-	
-			try {
-				//createFile(project, "chrome/content/" + param.get("name") + ".js", AddonDevNewProjectWizard.class.getResourceAsStream("addon.js"), param, monitor);
-				//createFile(project, "install.rdf", AddonDevNewProjectWizard.class.getResourceAsStream("install.rdf"), param, monitor);
-				//createFile(project, "chrome.manifest", AddonDevNewProjectWizard.class.getResourceAsStream("chrome.manifest"), param, monitor);
-				//createFile(project, "overlay.xul", AddonDevNewProjectWizard.class.getResourceAsStream("overlay.xul"), param, monitor);
-				
-				createFile(project, "templates/project/addon.js", "chrome/content/" + param.get("name") + ".js", param, monitor);
-				createFile(project, "templates/project/common/install.rdf", "install.rdf", param, monitor);
-				//createFile(project, "templates/project/common/chrome.manifest", "chrome.manifest", param, monitor);
-				createManifestFile(project, "templates/project/common/chrome.manifest", "chrome.manifest", param, page2.getLocals(), monitor);
-				createFile(project, "templates/project/common/overlay.xul", "overlay.xul", param, monitor);
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_7.html
-			//http://yoichiro.cocolog-nifty.com/eclipse/2004/03/post_6.html
-			//String newNatureId = "AddonDev.addondevnature";
-			addNature(AddonDevNature.NATUREID, projectDescription, project, monitor);			
-			//newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
-			//addNature(newNatureId, projectDescription, project, monitor);
-			project.setPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"), page3.getDefaultLocale());
-			
+		monitor.beginTask("", 2000);
+		
+//		String newNatureId = "org.eclipse.wst.jsdt.core.jsNature";
+//		if (!projectDescription.hasNature(newNatureId)) {
+//			String[] ids = projectDescription.getNatureIds();
+//			String[] newIds = new String[ids.length + 1];
+//			System.arraycopy(ids, 0, newIds, 0, ids.length);
+//			newIds[ids.length] = newNatureId;
+//			projectDescription.setNatureIds(newIds);
+//			project.setDescription(projectDescription, monitor);
+//		}			
 
-		} finally {
-			monitor.done();
-		}		
+		
+		
+		project.create(projectDescription, new SubProgressMonitor(monitor, 1000));
+
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+
+		project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(monitor, 1000));
+
+
+		CreateFireFoxTemplate ftmp = new CreateFireFoxTemplate();
+		ftmp.createPtoject(project, installparam, fileparam, optionparam, monitor);		
+
+		addNature(AddonDevNature.NATUREID, projectDescription, project, monitor);			
+
+		//project.setPersistentProperty(new QualifiedName(AddonDevUIPrefConst.LOCALE , "LOCALE"), page3.getDefaultLocale());
+		
+
+	} finally {
+		monitor.done();
+	}		
+	
+		
 	}
 
 	@Override
