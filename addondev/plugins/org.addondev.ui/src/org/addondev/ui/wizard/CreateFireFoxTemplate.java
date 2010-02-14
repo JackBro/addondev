@@ -1,16 +1,28 @@
 package org.addondev.ui.wizard;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.template.ExtensionTemplateContextType;
+import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -24,16 +36,106 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.osgi.framework.Bundle;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class CreateFireFoxTemplate {
 	
-	public void createPtoject(IProject project, Map<String, String> param, List<Template> templates, List<Template> optiontemplates, IProgressMonitor monitor) throws BadLocationException, TemplateException, CoreException
+	private class TemplateFile
 	{
-		TemplateStore store = AddonDevUIPlugin.getDefault().getTemplateStore();
+		private String src, dist;
 		
-		// AddonDevUIPlugin.getDefault().getTemplateStore().
+		public String getSrc() {
+			return src;
+		}
+
+		public String getDist() {
+			return dist;
+		}
+
+		public TemplateFile(String src, String dist) {
+			this.src = src;
+			this.dist = dist;
+		}
+	}
+	
+	private class TemplateOption
+	{
+		private String src, id;
+
+		public String getSrc() {
+			return src;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public TemplateOption(String src, String id) {
+			this.src = src;
+			this.id = id;
+		}
+	}
+	
+	private class XMLHandler extends DefaultHandler{
+
+		private ArrayList<TemplateFile> files;
+		private ArrayList<TemplateOption> options;
+
+//		public XMLHandler()
+//		{
+//			files = new ArrayList<TemplateFile>();
+//			options = new ArrayList<TemplateOption>();
+//		}
+
+		public XMLHandler(ArrayList<TemplateFile> files,
+				ArrayList<TemplateOption> options) {
+			this.files = files;
+			this.options = options;
+		}
+		
+		@Override
+		public void startElement(String uri,
+                String localName,
+                String qName,
+                Attributes attributes) throws SAXException {
+			// TODO Auto-generated method stub
+			//uper.startElement(arg0, arg1, arg2, arg3);
+			if (qName.equals("file"))
+			{
+				String src = attributes.getValue("src");
+				String dist = attributes.getValue("dist");
+				files.add(new TemplateFile(src, dist));
+			}
+			else if(qName.equals("option"))
+			{
+				String src = attributes.getValue("src");
+				String id = attributes.getValue("id");
+				options.add(new TemplateOption(src, id));
+			}
+		}		
+	}
+	
+	public void createPtoject(IProject project, 
+			Map<String, String> param, List<String> templatefiles, IProgressMonitor monitor) throws BadLocationException, TemplateException, CoreException
+	{
+		//TemplateStore store = AddonDevUIPlugin.getDefault().getTemplateStore();
+		String typeid = ExtensionTemplateContextType.EXTENSION;
+		Bundle bundle = AddonDevUIPlugin.getDefault().getBundle();
+		ArrayList<TemplateFile> files = new ArrayList<TemplateFile>();
+		ArrayList<TemplateOption> options = new ArrayList<TemplateOption>();
+
+		SAXParserFactory spfactory = SAXParserFactory.newInstance();
+	    SAXParser parser = spfactory.newSAXParser();
+	    for (String template : templatefiles) {
+	    	InputStream input = bundle.getEntry(template).openStream();
+	    	parser.parse(input, new XMLHandler(files, options));
+		}
+		
 		TemplateContextType contextType = AddonDevUIPlugin.getDefault()
-				.getContextTypeRegistry().getContextType(ExtensionTemplateContextType.EXTENSION);
+				.getContextTypeRegistry().getContextType(typeid);
 		IDocument document = new Document();
 		TemplateContext context = new DocumentTemplateContext(contextType, document, 0, 0);
 		for (Entry<String, String> template2 : param.entrySet()) {
@@ -42,18 +144,27 @@ public class CreateFireFoxTemplate {
 			context.setVariable(key, value);
 		}
 		
-		//HashMap<String,String> options = new HashMap<String, String>();
-		for (Template template : optiontemplates) {
+		for (TemplateOption option : options) {
+			InputStream input = bundle.getEntry(option.src).openStream();
+			String text = FileUtil.getContent(input);
+			Template template = new Template(option.id, "", typeid, text, false);
 			TemplateBuffer buffer = context.evaluate(template);
-			//options.put(template.getName(), buffer.toString());
-			context.setVariable(template.getName(), buffer.toString());
+			context.setVariable(template.getName(), buffer.getString());
 		}
 		
-		for (Template template : templates) {
+		for (TemplateFile templatefile : files) {
+			InputStream input = bundle.getEntry(templatefile.src).openStream();
+			String text = FileUtil.getContent(input);
+			Template template = new Template(templatefile.getDist(), "", typeid, text, false);
 			TemplateBuffer buffer = context.evaluate(template);
-			IFile file = project.getFile(template.getName());
-			file.create(new ByteArrayInputStream(buffer.toString().getBytes()), true, monitor);
+			IFile file = project.getFile(templatefile.getDist());
+			file.create(new ByteArrayInputStream(buffer.getString().getBytes()), true, monitor);
 		}		
+	}
+	
+	public void createPtoject()
+	{
+		
 	}
 	
 	public void createPtoject(IProject project, Map<String, String> param, Map<String, String> fileparam, Map<String, String> optionparam, IProgressMonitor monitor) throws BadLocationException, TemplateException, CoreException

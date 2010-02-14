@@ -2,8 +2,8 @@
 <templates>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.installrdf" name="install.rdf"
->&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.installrdf" name="install.rdf">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#"&gt;
   &lt;Description about="urn:mozilla:install-manifest"&gt;
     &lt;em:id&gt;${id}&lt;/em:id&gt;
@@ -24,25 +24,25 @@
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.chromemanifest" name="chrome.manifest"
->content ${name} chrome/content/
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.chromemanifest" name="chrome.manifest">
+content ${name} chrome/content/
 skin    ${name} classic/1.0 chrome/skin/classic/
 overlay chrome://browser/content/browser.xul chrome://${name}/content/overlay.xul
 locale  ${name} ${locale} locale/${locale}/
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.overlayxul" name="overlay.xul"
->&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.overlayxul" name="overlay.xul">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?&gt;
-&lt;?xml-stylesheet href="chrome://${name}/skin/${name}.css" type="text/css"?&gt;
-&lt;!DOCTYPE overlay SYSTEM "chrome://${name}/locale/${name}.dtd"&gt;
+&lt;?xml-stylesheet href="chrome://${name}/skin/overlay.css" type="text/css"?&gt;
+&lt;!DOCTYPE overlay SYSTEM "chrome://${name}/locale/overlay.dtd"&gt;
 
 &lt;overlay id="${name}-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"&gt;
-  &lt;script type="application/x-javascript;version=${javascriptvar}" src="chrome://${name}/content/${name}.js" /&gt;
+  &lt;script type="application/x-javascript;version=${javascriptvar}" src="chrome://${name}/content/overlay.js" /&gt;
 
   &lt;stringbundleset id="stringbundleset"&gt;
-    &lt;stringbundle id="context-strings" src="chrome://${name}/locale/${name}.properties"/&gt;
+    &lt;stringbundle id="context-strings" src="chrome://${name}/locale/overlay.properties"/&gt;
   &lt;/stringbundleset&gt;
 
   ${context}
@@ -55,17 +55,17 @@ locale  ${name} ${locale} locale/${locale}/
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.menu" name="menu"
->&lt;menupopup id="menu_ToolsPopup"&gt;
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.menu" name="menu">
+&lt;menupopup id="menu_ToolsPopup"&gt;
     &lt;menuitem id="${name}-menu" label="${name}.menu.label;"
               oncommand=""/&gt;
 &lt;/menupopup&gt;
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.context" name="context"
->&lt;popup id="contentAreaContextMenu"&gt;
-    &lt;menuitem id="${name}-context" label="${name}.context.label;"
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.context" name="context">
+&lt;popup id="contentAreaContextMenu"&gt;
+    &lt;menuitem id="${name}-context" label="&amp;${name}.context.label;"
               accesskey="${name}.context.accesskey;"
               insertafter="context-stop"
               oncommand=""/&gt;
@@ -73,19 +73,10 @@ locale  ${name} ${locale} locale/${locale}/
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.toolbar" name="toolbar"
->&lt;toolbarpalette id="BrowserToolbarPalette"&gt;
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.toolbarbutton" name="toolbarbutton">
+&lt;toolbarpalette id="BrowserToolbarPalette"&gt;
   &lt;toolbarbutton id="toobarbutton-toolbar-button" class="toolbarbutton-1 chromeclass-toolbar-additional"
-    label="&amp;toobarbuttonToolbarButton.label;" tooltiptext="&amp;toobarbuttonToolbarButton.tooltip;"
-    oncommand="toobarbutton.onToolbarButtonCommand()"/&gt;
-&lt;/toolbarpalette&gt;
-</template>
-
-<template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.toolbarbutton" name="toolbarbutton"
->&lt;toolbarpalette id="BrowserToolbarPalette"&gt;
-  &lt;toolbarbutton id="toobarbutton-toolbar-button" class="toolbarbutton-1 chromeclass-toolbar-additional"
-    label="&amp;toobarbuttonToolbarButton.label;" tooltiptext="&amp;toobarbuttonToolbarButton.tooltip;"
+    label="&amp;${name}.toobarbutton.label;" tooltiptext="&amp;${name}.toobarbutton.tooltip;"
     oncommand="toobarbutton.onToolbarButtonCommand()"/&gt;
 &lt;/toolbarpalette&gt;
 </template>
@@ -97,24 +88,24 @@ locale  ${name} ${locale} locale/${locale}/
 &lt;/menupopup&gt;
 
 &lt;keyset id="mainKeyset"&gt;
-  &lt;key id="key_openSidebar_all" command="viewSidebar_all" /&gt;
+  &lt;key id="key_openSidebar_${name}" command="viewSidebar_${name}" /&gt;
 &lt;/keyset&gt;
 
 &lt;broadcasterset id="mainBroadcasterSet"&gt;
-  &lt;broadcaster id="viewSidebar_all"
-               label="&amp;allSidebar.label;"
+  &lt;broadcaster id="viewSidebar_${name}"
+               label="&amp;${name}.sidebar.label;"
                autoCheck="false"
                type="checkbox"
                group="sidebar"
                sidebarurl="chrome://${name}/content/sidebar.xul"
-               sidebartitle="&amp;allSidebar.label;"
-               oncommand="toggleSidebar('viewSidebar_all');" /&gt;
+               sidebartitle="&amp;${name}.sidebar.label;"
+               oncommand="toggleSidebar('viewSidebar_${name}');" /&gt;
 &lt;/broadcasterset&gt;	
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.sidebarxul" name="sidebar.xul"
->&lt;?xml version="1.0"?&gt;
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.sidebarxul" name="sidebar.xul">
+&lt;?xml version="1.0"?&gt;
 &lt;?xml-stylesheet href="chrome://global/skin/" type"text/css" ?&gt;
 &lt;!DOCTYPE page SYSTEM "chrome://${name}/locale/overlay.dtd"&gt;
 
@@ -129,8 +120,8 @@ locale  ${name} ${locale} locale/${locale}/
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.sidebarjs" name="sidebar.js"
->function startup() {
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.sidebarjs" name="sidebar.js">
+function startup() {
                  
 }
 
@@ -143,45 +134,43 @@ window.addEventListener("unload", shutdown, false);
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.optionsxul" name="options.xul"
->&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.optionsxul" name="options.xul">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;?xml-stylesheet href="chrome://global/skin/" type="text/css"?&gt;
-&lt;!DOCTYPE prefwindow SYSTEM "chrome://all/locale/options.dtd"&gt;
-&lt;prefwindow id="all-preferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&amp;prefwindow.title;"&gt;
-  &lt;prefpane id="pane1" label="&amp;pane1.title;"&gt;
+&lt;!DOCTYPE prefwindow SYSTEM "chrome://${name}/locale/options.dtd"&gt;
+&lt;prefwindow id="${name}-preferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&amp;${name}.prefwindow.title;"&gt;
+  &lt;prefpane id="pane1" label="&amp;${name}.pane1.title;"&gt;
     &lt;preferences&gt;
-      &lt;preference id="boolpref1" name="extensions.all.boolpref" type="bool"/&gt;
-      &lt;preference id="intpref1" name="extensions.all.intpref" type="int"/&gt;
-      &lt;preference id="stringpref1" name="extensions.all.stringpref" type="string"/&gt;
+      &lt;preference id="boolpref1" name="extensions.${name}.boolpref" type="bool"/&gt;
+      &lt;preference id="intpref1" name="extensions.${name}.intpref" type="int"/&gt;
+      &lt;preference id="stringpref1" name="extensions.${name}.stringpref" type="string"/&gt;
     &lt;/preferences&gt;
-    &lt;checkbox id="checkboolpref" preference="boolpref1" label="&amp;checkboolpref.label;" accesskey="&amp;checkboolpref.accesskey;"/&gt;
-    &lt;label accesskey="&amp;intpref.accesskey;" control="textintpref"&gt;&amp;intpref.label;&lt;/label&gt;&lt;textbox id="textintpref" preference="intpref1"/&gt;
-    &lt;label accesskey="&amp;stringpref.accesskey;" control="textstringpref"&gt;&amp;stringpref.label;&lt;/label&gt;&lt;textbox id="textstringpref" preference="stringpref1"/&gt;
+    &lt;checkbox id="checkboolpref" preference="boolpref1" label="&amp;${name}.checkboolpref.label;" accesskey="&amp;${name}.checkboolpref.accesskey;"/&gt;
+    &lt;label accesskey="&amp;${name}.intpref.accesskey;" control="textintpref"&gt;&amp;${name}.intpref.label;&lt;/label&gt;&lt;textbox id="textintpref" preference="intpref1"/&gt;
+    &lt;label accesskey="&amp;${name}.stringpref.accesskey;" control="textstringpref"&gt;&amp;${name}.stringpref.label;&lt;/label&gt;&lt;textbox id="textstringpref" preference="stringpref1"/&gt;
   &lt;/prefpane&gt;
 &lt;/prefwindow&gt;
 </template>
 
+
+
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.mainjs" name="main.js"
->
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.mainjs" name="overlay.js">
 
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.prefsjs" name="prefs.js"
->
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.prefsjs" name="prefs.js">
 
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.overlaydtd" name="overlay.dtd"
->
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.overlaydtd" name="overlay.dtd">
 
 </template>
 
 <template autoinsert="false" context="org.addondev.ui.template.Extension" deleted="false" 
-	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.overlaycss" name="overlay.css"
->
+	description="" enabled="true" id="org.addondev.ui.templates.project.firefox.overlaycss" name="overlay.css">
 
 </template>
 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<option src="templates/project/firefox/option/sidebar/sidebar_overlay.dtd" id="sidebar_overlay.dtd" />
+<option src="templates/project/firefox/option/sidebar/sidebar_overlay.xul" id="sidebar_overlay.xul"/>
+<file   src="templates/project/firefox/option/sidebar/sidebar.js" dist="chrome/content/sidebar.js"/>
+<file   src="templates/project/firefox/option/sidebar/sidebar.xul" dist="chrome/content/sidebar.xul"/>

@@ -1,0 +1,7 @@
+  
+  <popup id="contentAreaContextMenu">
+    <menuitem id="context-${name}" label="&${name}.context.label;"
+              accesskey="&${name}.context.accesskey;"
+              insertafter="context-stop"
+              oncommand="test.onMenuItemCommand(event)"/>
+  </popup>

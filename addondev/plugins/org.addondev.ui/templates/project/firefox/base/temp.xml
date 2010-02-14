@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<file src="templates/project/firefox/base/overlay.js" dist="chrome/content/overlay.js"/>
+<file src="templates/project/firefox/base/overlay.xul" dist="chrome/content/overlay.xul"/>
+<file src="templates/project/firefox/base/overlay.dtd" dist="chrome/locale/en-US/overlay.dtd"/>
+<file src="templates/project/firefox/base/chrome.manifest" dist="chrome.manifest"/>
+<file src="templates/project/firefox/base/install.rdf" dist="install.rdf"/>

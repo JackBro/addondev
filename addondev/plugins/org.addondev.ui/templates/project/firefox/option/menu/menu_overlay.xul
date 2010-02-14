@@ -1,0 +1,4 @@
+  <menupopup id="menu_ToolsPopup">
+    <menuitem id="test-hello" label="&${name}.menu.label;"
+              oncommand="${name}.onMenuItemCommand(event);"/>
+  </menupopup>

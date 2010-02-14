@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>${id}</em:id>
+    <em:type>2</em:type>
+    <em:name>${name}</em:name>
+    <em:version>${version}</em:version>
+    <em:creator>${creator}</em:creator>
+    <em:optionsURL>${options}</em:optionsURL>
+    <em:targetApplication>
+      <Description>
+        <em:id>${appid}</em:id>
+        <em:minVersion>${minversion}</em:minVersion>
+        <em:maxVersion>${maxversion}</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>
