@@ -62,7 +62,9 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	private CheckboxTableViewer fCheckboxViewer;
 	private Combo creator;
 	
-	private Button fPrefCheck, fToolbarCheck, fToolbarButtonCheck, 
+	private Button fPrefCheck, 
+	//fToolbarCheck,
+	fToolbarButtonCheck, 
 	fMenuCheck, fContextMenuCheck, fSidebarCheck;
 	
 	private ArrayList<Locale> fLocales;
@@ -215,8 +217,8 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
         fPrefCheck = new Button(group, SWT.CHECK);
         fPrefCheck.setText("pref");
  
-        fToolbarCheck = new Button(group, SWT.CHECK);
-        fToolbarCheck.setText("Toolbar");
+        //fToolbarCheck = new Button(group, SWT.CHECK);
+        //fToolbarCheck.setText("Toolbar");
         
         fToolbarButtonCheck = new Button(group, SWT.CHECK);
         fToolbarButtonCheck.setText("ToolbarButton");
@@ -262,38 +264,40 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		return param;
 	}
 	
-	public Map<String, String> getFileParam()
-	{
-		HashMap<String, String> param = new HashMap<String, String>();
-		param.put("install.rdf", "install.rdf");
-		param.put("chrome.manifest", "chrome.manifest");
-		param.put("main.js", "chrome/content/main.js");
-		param.put("overlay.xul", "chrome/content/overlay.xul");
-		param.put("prefs.js", "defaults/preferences/prefs.js");
-		
-		if(fPrefCheck.getSelection())  
-			param.put("options.xul", "chrome/content/options.xul");
-		
-		if(fSidebarCheck.getSelection()) 
-		{
-			param.put("sidebar.xul", "chrome/content/sidebar.xul");
-			param.put("sidebar.js", "chrome/content/sidebar.js");
-		}
-
-		param.put("overlay.dtd", "chrome/locale/en-US/overlay.dtd");
-		param.put("overlay.css", "chrome/skin/overlay.css");	
-		
-		return param;
-	}
+//	public Map<String, String> getFileParam()
+//	{
+//		HashMap<String, String> param = new HashMap<String, String>();
+//		param.put("install.rdf", "install.rdf");
+//		param.put("chrome.manifest", "chrome.manifest");
+//		param.put("main.js", "chrome/content/main.js");
+//		param.put("overlay.xul", "chrome/content/overlay.xul");
+//		param.put("prefs.js", "defaults/preferences/prefs.js");
+//		
+//		if(fPrefCheck.getSelection())  
+//			param.put("options.xul", "chrome/content/options.xul");
+//		
+//		if(fSidebarCheck.getSelection()) 
+//		{
+//			param.put("sidebar.xul", "chrome/content/sidebar.xul");
+//			param.put("sidebar.js", "chrome/content/sidebar.js");
+//		}
+//
+//		param.put("overlay.dtd", "chrome/locale/en-US/overlay.dtd");
+//		param.put("overlay.css", "chrome/skin/overlay.css");	
+//		
+//		return param;
+//	}
 	
-	public Map<String, String> getOptionParam()
+	public List<String> getFilesParam()
 	{
-		HashMap<String, String> param = new HashMap<String, String>();
-		if(fContextMenuCheck.getSelection()) 	param.put("context", "overlay.xul");
-		if(fMenuCheck.getSelection()) 			param.put("menu", "overlay.xul");
-		if(fSidebarCheck.getSelection()) 		param.put("sidebar", "overlay.xul");
-		if(fToolbarButtonCheck.getSelection()) 	param.put("toolbarbutton", "overlay.xul");
-		if(fToolbarCheck.getSelection()) 		param.put("toolbar", "overlay.xul");
+		ArrayList<String> param = new ArrayList<String>();
+		param.add("templates/project/firefox/base/templates.xml");
+		
+		if(fContextMenuCheck.getSelection()) 	param.add("templates/project/firefox/option/context/templates.xml");
+		if(fMenuCheck.getSelection()) 			param.add("templates/project/firefox/option/menu/templates.xml");
+		if(fSidebarCheck.getSelection()) 		param.add("templates/project/firefox/option/sidebar/templates.xml");
+		if(fToolbarButtonCheck.getSelection()) 	param.add("templates/project/firefox/option/toolbarbutton/templates.xml");
+		//if(fToolbarCheck.getSelection()) 		param.add("toolbar", "overlay.xul");
 		
 		return param;
 	}

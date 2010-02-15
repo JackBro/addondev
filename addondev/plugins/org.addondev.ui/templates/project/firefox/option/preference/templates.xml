@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+<option src="templates/project/firefox/option/preference/menu_overlay.dtd" id="overlay_dtd" />
+<option src="templates/project/firefox/option/preference/menu_overlay.xul" id="overlay_xul"/>
+<option src="templates/project/firefox/option/preference/preference_install.rdf" id="options"/>
+</templates>

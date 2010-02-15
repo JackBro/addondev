@@ -1,21 +1,6 @@
 package org.addondev.ui.wizard;
 
-import java.util.List;
-
-import org.addondev.core.AddonDevPlugin;
-import org.addondev.ui.AddonDevUIPlugin;
-import org.addondev.ui.template.ExtensionTemplateContextType;
-import org.addondev.util.ChromeURLMap;
 import org.addondev.util.Locale;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.templates.DocumentTemplateContext;
-import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.TemplateBuffer;
-import org.eclipse.jface.text.templates.TemplateContext;
-import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

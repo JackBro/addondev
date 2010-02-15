@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+<option src="templates/project/firefox/option/toolbarbutton/toolbarbutton_overlay.dtd" id="overlay_dtd" />
+<option src="templates/project/firefox/option/toolbarbutton/toolbarbutton_overlay.js" id="overlay_js"/>
+<option src="templates/project/firefox/option/toolbarbutton/toolbarbutton_overlay.xul" id="overlay_xul"/>
+</templates>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+<option src="templates/project/firefox/option/context/context_overlay.dtd" id="overlay_dtd" />
+<option src="templates/project/firefox/option/context/context_overlay.xul" id="overlay_xul"/>
+<option src="templates/project/firefox/option/context/context_overlay1.js" id="overlay_onload_js"/>
+<option src="templates/project/firefox/option/context/context_overlay2.js" id="overlay_props_js"/>
+</templates>

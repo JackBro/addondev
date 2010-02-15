@@ -1,15 +1,13 @@
 
 var ${name} = {
 	onLoad: function() {
-		${context_overlay1.js}
+		${overlay_onload_js}
 	},
 	
-	${context_overlay2.js}
-	${menu_overlay.js}
-	${toolbarbutton_overlay.js}
+	${overlay_props_js}
 	
 	onUnLoad: function() {
-		
+		${overlay_onunload_js}
 	}	
 }
 

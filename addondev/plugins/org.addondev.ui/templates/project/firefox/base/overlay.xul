@@ -4,16 +4,12 @@
 <!DOCTYPE overlay SYSTEM "chrome://${name}/locale/overlay.dtd">
 
 <overlay id="${name}-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript;version=${javascriptvar}" src="chrome://${name}/content/overlay.js" />
+  <script type="application/x-javascript;version=1.8" src="chrome://${name}/content/overlay.js" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="context-strings" src="chrome://${name}/locale/overlay.properties"/>
   </stringbundleset>
 
-  ${context_overlay.xul}
-  ${menu_overlay.xul}
-  ${toolbarbutton_overlay.xul}
-  ${toolbar_overlay.xul}
-  ${sidebar_overlay.xul}
+  ${overlay_xul}
   
 </overlay>

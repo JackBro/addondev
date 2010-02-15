@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.addondev.core.AddonDevNature;
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
@@ -37,6 +39,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.xml.sax.SAXException;
 
 
 public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
@@ -123,34 +126,33 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 		projectDescription.setLocation(newPath);
 		
 		final Map<String, String> installparam = page2.getInstallParam();
-		final Map<String, String> fileparam = page2.getFileParam();
-		final Map<String, String> optionparam = page2.getOptionParam();
+		//final Map<String, String> fileparam = page2.getFileParam();
+		final List<String> filesparam = page2.getFilesParam();
 		
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			protected void execute(IProgressMonitor monitor)
 					throws CoreException {
-				try {
-					createProject(projectDescription, project, installparam, fileparam, optionparam, monitor);
-				} catch (OperationCanceledException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (TemplateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-//				CreateFireFoxTemplate ftmp = new CreateFireFoxTemplate();
-//				try {
-//					ftmp.createPtoject(project, installparam, fileparam, optionparam, monitor);
-//				} catch (BadLocationException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (TemplateException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+					try {
+						createProject(projectDescription, project, installparam, filesparam, monitor);
+					} catch (OperationCanceledException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (BadLocationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (TemplateException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ParserConfigurationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SAXException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 			}
 		};
 
@@ -186,8 +188,8 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 	}
 	
 	private void createProject(IProjectDescription projectDescription,
-			IProject project, Map<String, String> installparam, Map<String, String> fileparam, Map<String, String> optionparam, IProgressMonitor monitor) throws CoreException,
-			OperationCanceledException, BadLocationException, TemplateException {
+			IProject project, Map<String, String> installparam, List<String> filesparam, IProgressMonitor monitor) throws CoreException,
+			OperationCanceledException, BadLocationException, TemplateException, ParserConfigurationException, SAXException, IOException {
 //		try {
 //			monitor.beginTask("", 2000);
 //			
@@ -268,7 +270,8 @@ public class AddonDevNewProjectWizard extends Wizard implements INewWizard {
 
 
 		CreateFireFoxTemplate ftmp = new CreateFireFoxTemplate();
-		ftmp.createPtoject(project, installparam, fileparam, optionparam, monitor);		
+		//ftmp.createPtoject(project, installparam, fileparam, optionparam, monitor);
+		ftmp.createPtoject(project, installparam, filesparam, monitor);
 
 		addNature(AddonDevNature.NATUREID, projectDescription, project, monitor);			
 
