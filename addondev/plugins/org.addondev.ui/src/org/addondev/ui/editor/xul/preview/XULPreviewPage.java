@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.AddonDevUIPlugin;
-import org.addondev.ui.editor.xul.XULParser;
+import org.addondev.ui.editor.xul.XULChecker;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.Locale;
@@ -139,7 +139,7 @@ public class XULPreviewPage extends Page{
 	}
 
 
-	public void setDocument(List<String> xuls) {
+	public void setDocument(EnumXULWindow type, List<String> xuls) {
 	//public void setDocument(FileEditorInput input) {
 		//IProject project = input.getFile().getProject();
 //		String strlocale = null;
@@ -236,6 +236,14 @@ public class XULPreviewPage extends Page{
 				fBrowserList.remove(fBrowserList.size()-1);
 				items[items.length-1].dispose();
 			}
+		}
+		
+		TabItem[] items = fTabFolder.getItems();
+		for (int i = 0; i < items.length; i++) {
+			if(type == EnumXULWindow.PREFWINDOW)
+				items[i].setText("prefpanel" + i);
+			else
+				items[i].setText(type.name());
 		}
 		
 		for (int i = 0; i < xuls.size(); i++) {

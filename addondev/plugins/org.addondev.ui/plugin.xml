@@ -12,20 +12,6 @@
             name="AddonDev JavaScript Editor">
       </editor>
       <editor
-            class="org.addondev.ui.editor.xul.XULEditor"
-            default="false"
-            extensions="xul"
-            id="org.addondev.editor.xul"
-            name="AddonDev XUL Editor">
-      </editor>
-      <editor
-            class="org.addondev.ui.editor.xul.preview.XULPreviewForm"
-            default="false"
-            extensions="xul"
-            id="org.addondev.editor.xul.formeditor"
-            name="AddonDev XUL Preview">
-      </editor>
-      <editor
             class="org.addondev.ui.editor.xulmultipageeditor.XULMultiPageEditor"
             default="false"
             extensions="xul"
@@ -58,7 +44,7 @@
             hasPages="true"
             icon="icons/addon.png"
             id="org.addondev.wizzard.addondevwizard"
-            name="AddonDev Project"
+            name="Project Template"
             project="true">
       </wizard>
       <wizard

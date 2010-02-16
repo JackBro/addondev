@@ -147,7 +147,7 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 		}
 				
 		IDocument document = getSourceViewer().getDocument();
-		HashMap<Integer, Integer> errormap = XULParser.checkEntity(project, document, locale.getName());
+		HashMap<Integer, Integer> errormap = XULChecker.checkEntity(project, document, locale.getName());
 		IResource resource = (IResource)in.getAdapter(IResource.class);
 		
 		try {

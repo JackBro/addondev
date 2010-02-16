@@ -10,7 +10,9 @@ import java.util.List;
 
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.editor.xul.XULEditor;
-import org.addondev.ui.editor.xul.XULParser;
+import org.addondev.ui.editor.xul.XULChecker;
+import org.addondev.ui.editor.xul.preview.EnumXULWindow;
+import org.addondev.ui.editor.xul.preview.XULParser;
 import org.addondev.ui.editor.xul.preview.XULPreviewPage;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.addondev.util.FileUtil;
@@ -143,12 +145,16 @@ public class XULMultiPageEditor extends MultiPageEditorPart {
 		setDocument(fileinput);
 	}
 	
-	private void setDocument(FileEditorInput fileinput)
+	private void setDocument(FileEditorInput input)
 	{
-		List<String> list;
 		try {
-			list = checkLocale(fileinput);
-			fXULPreviewPage.setDocument(list);
+			//list = checkLocale(fileinput);
+			Locale locale = checkLocale(input);
+			XULParser parser = new XULParser();
+			parser.parse(input.getFile().getProject(), locale, input.getFile());
+			List<String> list = parser.getXULs();
+			EnumXULWindow windowtype = parser.getWindowType();
+			fXULPreviewPage.setDocument(windowtype, list);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -203,7 +209,7 @@ public class XULMultiPageEditor extends MultiPageEditorPart {
 		return file;
 	}
 	
-	public List<String> checkLocale(FileEditorInput input) throws Exception
+	public Locale checkLocale(FileEditorInput input) throws Exception
 	{
 		IProject project = input.getFile().getProject();
 		String strlocale = null;
@@ -233,8 +239,9 @@ public class XULMultiPageEditor extends MultiPageEditorPart {
 //			ErrorDialog.openError(shell, null, null, status);
 		}
 		
-		xuls = XULParser.parse(project, locale, input.getFile());
-		return xuls;
+		return locale;
+		//xuls = XULChecker.parse(project, locale, input.getFile());
+		//return xuls;
 	}
 	
 }
