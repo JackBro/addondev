@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.addondev.ui.template.ExtensionTemplateContextType;
+import org.addondev.ui.template.ProjectTemplateContextType;
 import org.addondev.ui.template.JavaScriptTemplateContextType;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
@@ -68,7 +68,7 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 		if (fRegistry == null) {
 			fRegistry = new ContributionContextTypeRegistry();
 			fRegistry.addContextType(JavaScriptTemplateContextType.JAVASCRIPT_CONTEXT_TYPE);
-			fRegistry.addContextType(ExtensionTemplateContextType.EXTENSION);
+			fRegistry.addContextType(ProjectTemplateContextType.PROJECT);
 		}
 		return fRegistry;
 	}

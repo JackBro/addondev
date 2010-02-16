@@ -53,7 +53,9 @@ public class JavascriptSyntaxCheck {
 		// shellContextFactory.setErrorReporter(errorReporter);
 
 		// Context cx = shellContextFactory.enterContext();
+
 		Context cx = factory.enterContext();
+		
 		// cx.setLocale(Locale.getDefault());
 		// cx.setOptimizationLevel(-1);
 
@@ -69,6 +71,7 @@ public class JavascriptSyntaxCheck {
 		try {
 			p = new Parser(compilerEnv, errorReporter);
 			root = p.parse(sourceString, "<cmd>", 1);
+			
 		} catch (EvaluatorException ee) {
 			// TODO: handle exception
 			System.out.println(ee.lineNumber() + " : " + ee.columnNumber()

@@ -2,23 +2,38 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://${name}/skin/preference.css" type="text/css"?>
 <!DOCTYPE prefwindow SYSTEM "chrome://${name}/locale/overlay.dtd">
+
 <prefwindow id="${name}-preferences" 
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
-	title="&prefwindow.title;">
-  <prefpane id="appearance" label="&pane1.title;">
+	title="&${name}.pref.title;">
+  <prefpane id="appearance" label="&${name}.pref.pane1.title;">
     <preferences>
       <preference id="boolpref1" name="extensions.all.boolpref" type="bool"/>
       <preference id="intpref1" name="extensions.all.intpref" type="int"/>
-      <preference id="stringpref1" name="extensions.all.stringpref" type="string"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
+      <preference id="stringpref1" name="extensions.all.stringpref" type="string"/>
     </preferences>
-    <checkbox id="checkboolpref" preference="boolpref1" label="&checkboolpref.label;" accesskey="&checkboolpref.accesskey;"/>
-    <label accesskey="&intpref.accesskey;" control="textintpref">
-    	&intpref.label;
+    <checkbox id="checkboolpref" preference="boolpref1" label="&${name}.pref.checkboolpref.label;" accesskey="&${name}.pref.checkboolpref.accesskey;"/>
+    <label accesskey="&${name}.pref.intpref.accesskey;" control="textintpref">
+    	&${name}.pref.intpref.label;
     </label>
     <textbox id="textintpref" preference="intpref1"/>
-    <label accesskey="&stringpref.accesskey;" control="textstringpref">
-    	&stringpref.label;
+    <label accesskey="&${name}.pref.stringpref.accesskey;" control="textstringpref">
+    	&${name}.pref.stringpref.label;
     </label>
     <textbox id="textstringpref" preference="stringpref1"/>
+  </prefpane>
+  
+  <prefpane id="behavior" label="&${name}.pref.behavior.title;" flex="1">
+	    <preferences id="stacklinkBehaviorPreferences">
+	    	<preference id="extensions.stacklink.mouse.left" name="extensions.stacklink.mouse.left" type="int"/>  
+	    </preferences>
+	    <label value="&stacklink.pref.mouse.click.left;"/>
+		<menulist id="mouse-click-left" preference="extensions.stacklink.mouse.left">
+        	<menupopup>
+          		<menuitem value="0" label="&stacklink.pref.function.loadcurrenttab;"/>
+            	<menuitem value="1" label="&stacklink.pref.function.opennewtab;"/>	
+            	<menuitem value="2" label="&stacklink.pref.function.selecttab;"/>
+            </menupopup>
+        </menulist>	
   </prefpane>
 </prefwindow>

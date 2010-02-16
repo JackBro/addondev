@@ -4,7 +4,7 @@
 var MyObject3 = function (){};
 MyObject3.prototype = 
 {
-    debugger: null, 
+    debugge: null, 
 //    
 //    hello3: function (arg0)
 //    {

@@ -14,7 +14,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.addondev.ui.AddonDevUIPlugin;
-import org.addondev.ui.template.ExtensionTemplateContextType;
+import org.addondev.ui.template.ProjectTemplateContextType;
 import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -128,7 +128,7 @@ public class CreateFireFoxTemplate {
 			Map<String, String> param, List<String> templatefiles, IProgressMonitor monitor) throws BadLocationException, TemplateException, CoreException, ParserConfigurationException, SAXException, IOException
 	{
 		//TemplateStore store = AddonDevUIPlugin.getDefault().getTemplateStore();
-		String typeid = ExtensionTemplateContextType.EXTENSION;
+		String typeid = ProjectTemplateContextType.PROJECT;
 		Bundle bundle = AddonDevUIPlugin.getDefault().getBundle();
 		ArrayList<TemplateFile> files = new ArrayList<TemplateFile>();
 		HashMap<String, ArrayList<TemplateOption>> options = new HashMap<String, ArrayList<TemplateOption>>();
@@ -199,12 +199,12 @@ public class CreateFireFoxTemplate {
 	
 	public void createPtoject(IProject project, Map<String, String> param, Map<String, String> fileparam, Map<String, String> optionparam, IProgressMonitor monitor) throws BadLocationException, TemplateException, CoreException
 	{
-		String typeid = ExtensionTemplateContextType.EXTENSION;
+		String typeid = ProjectTemplateContextType.PROJECT;
 		TemplateStore store = AddonDevUIPlugin.getDefault().getTemplateStore();
 		//Template[] tmps =  store.getTemplates(typeid);
 		
 		TemplateContextType contextType = AddonDevUIPlugin.getDefault()
-			.getContextTypeRegistry().getContextType(ExtensionTemplateContextType.EXTENSION);
+			.getContextTypeRegistry().getContextType(ProjectTemplateContextType.PROJECT);
 		IDocument document = new Document();
 		TemplateContext context = new DocumentTemplateContext(contextType, document, 0, 0);
 		for (Entry<String, String> template2 : param.entrySet()) {

@@ -1,14 +1,13 @@
 package org.addondev.ui.wizard;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
-import org.addondev.util.Locale;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -25,6 +24,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -40,7 +41,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	@Override
 	public void setVisible(boolean visible) {
 		// TODO Auto-generated method stub
-		fid.setText(page1.getProjectName() + "@dev.org");
+		//fid.setText(page1.getProjectName() + "@dev.org");
 		//fname.setText(page1.getProjectName());
         //fCheckboxViewer.setInput(Locale.values());
 		super.setVisible(visible);
@@ -59,22 +60,18 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	private Text fcreator;
 	private Text fhomepageURL;
 	
-	private CheckboxTableViewer fCheckboxViewer;
-	private Combo creator;
+	//private CheckboxTableViewer fCheckboxViewer;
+	//private Combo creator;
 	
-	private Button fPrefCheck, 
-	//fToolbarCheck,
-	fToolbarButtonCheck, 
+	private Button fPrefCheck, fPreferenceCheck, fToolbarButtonCheck, 
 	fMenuCheck, fContextMenuCheck, fSidebarCheck;
 	
-	private ArrayList<Locale> fLocales;
+	//private ArrayList<Locale> fLocales;
 	
 	public WizardNewProjectCreationPage page1;
 
 	protected AddonDevNewProjectWizardPage(String pageName) {
 		super(pageName);
-		//setPageComplete(false);
-		// TODO Auto-generated constructor stub
 		setTitle("Fire FoxExtension");
 		setDescription("Fire FoxExtension install.rdt");
 		
@@ -83,14 +80,11 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		// TODO Auto-generated method stub	
-		//String projectname = page1.getProjectName();
 		
         Composite pcomposite = new Composite(parent, SWT.NONE);
         GridLayout playout = new GridLayout();
         playout.numColumns = 1;
         pcomposite.setLayout(playout);
-        //pcomposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Group installgroup = new Group(pcomposite, SWT.NONE);
 		installgroup.setText("install");
@@ -101,23 +95,41 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		
         Composite composite = new Composite(installgroup, SWT.NONE);
         GridLayout layout = new GridLayout();
-        layout.numColumns = 2;
+        layout.numColumns = 3;
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		//fid = addText(composite, "ID", projectname + "@dev.org");
         fid = addText(composite, "ID");
+        Button uuidbutton = new Button(composite, SWT.NONE);
+        uuidbutton.setText("Generate");
+        uuidbutton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				UUID id = UUID.randomUUID();
+				fid.setText("{" + id.toString() + "}");
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+      	
+			}
+		});
+        
       	fversion = addText(composite, "version", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION));
-      	
-      	fApplicationID = addText(composite, "targetApplication ID", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_GUID));
+      	new Label(composite, SWT.NONE);
+      	fApplicationID = addText(composite, "Application ID", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_GUID));
+      	new Label(composite, SWT.NONE);
       	fminVersion = addText(composite, "minVersion", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MINVERSION));
+      	new Label(composite, SWT.NONE);
       	fmaxVersion = addText(composite, "maxVersion", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MAXVERSION));
-      	
-      	//fname = addText(composite, "name", projectname);
-      	//fname = addText(composite, "name");
+      	new Label(composite, SWT.NONE);
       	fcreator = addText(composite, "creator");
+      	new Label(composite, SWT.NONE);
       	fhomepageURL = addText(composite, "homepageURL");
-      	
+      	new Label(composite, SWT.NONE);
       	
 //		Group localegroup = new Group(pcomposite, SWT.NONE);
 //		localegroup.setText("Locale");     	
@@ -217,8 +229,8 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
         fPrefCheck = new Button(group, SWT.CHECK);
         fPrefCheck.setText("pref");
  
-        //fToolbarCheck = new Button(group, SWT.CHECK);
-        //fToolbarCheck.setText("Toolbar");
+        fPreferenceCheck = new Button(group, SWT.CHECK);
+        fPreferenceCheck.setText("Preference");
         
         fToolbarButtonCheck = new Button(group, SWT.CHECK);
         fToolbarButtonCheck.setText("ToolbarButton");
@@ -258,35 +270,10 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		param.put("description", "");
 		param.put("creator", fcreator.getText());
 		param.put("homepageurl", fhomepageURL.getText());	
-		
 		param.put("locale", "en-US");	
 		
 		return param;
 	}
-	
-//	public Map<String, String> getFileParam()
-//	{
-//		HashMap<String, String> param = new HashMap<String, String>();
-//		param.put("install.rdf", "install.rdf");
-//		param.put("chrome.manifest", "chrome.manifest");
-//		param.put("main.js", "chrome/content/main.js");
-//		param.put("overlay.xul", "chrome/content/overlay.xul");
-//		param.put("prefs.js", "defaults/preferences/prefs.js");
-//		
-//		if(fPrefCheck.getSelection())  
-//			param.put("options.xul", "chrome/content/options.xul");
-//		
-//		if(fSidebarCheck.getSelection()) 
-//		{
-//			param.put("sidebar.xul", "chrome/content/sidebar.xul");
-//			param.put("sidebar.js", "chrome/content/sidebar.js");
-//		}
-//
-//		param.put("overlay.dtd", "chrome/locale/en-US/overlay.dtd");
-//		param.put("overlay.css", "chrome/skin/overlay.css");	
-//		
-//		return param;
-//	}
 	
 	public List<String> getFilesParam()
 	{
@@ -297,23 +284,8 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 		if(fMenuCheck.getSelection()) 			param.add("templates/project/firefox/option/menu/templates.xml");
 		if(fSidebarCheck.getSelection()) 		param.add("templates/project/firefox/option/sidebar/templates.xml");
 		if(fToolbarButtonCheck.getSelection()) 	param.add("templates/project/firefox/option/toolbarbutton/templates.xml");
-		//if(fToolbarCheck.getSelection()) 		param.add("toolbar", "overlay.xul");
+		if(fPreferenceCheck.getSelection()) 	param.add("templates/project/firefox/option/preference/templates.xml");
 		
 		return param;
-	}
-
-	public Locale[] getLocals()
-	{
-		
-		ArrayList<Locale> locales = new ArrayList<Locale>();
-		Object[] objs = fCheckboxViewer.getCheckedElements();
-		for (Object obj : objs) {
-			if(obj instanceof Locale)
-			{
-				locales.add((Locale) obj);
-			}
-		}
-
-		return locales.toArray(new Locale[locales.size()]);
 	}
 }
