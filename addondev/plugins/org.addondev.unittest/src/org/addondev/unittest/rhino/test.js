@@ -4,7 +4,7 @@
 var MyObject3 = function (){};
 MyObject3.prototype = 
 {
-    debugge: null, 
+    debugger: null, 
 //    
 //    hello3: function (arg0)
 //    {
@@ -21,7 +21,7 @@ MyObject3.prototype =
 //
 //
 Components.utils.import("resource://gre/modules/JSON.jsm");
-var nn=10;
+va nn=10;
 var n=10;
 let mm = "1";
 //

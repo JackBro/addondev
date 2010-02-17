@@ -7,13 +7,12 @@ import java.net.URL;
 
 import org.addondev.rhino.JavascriptSyntaxCheck;
 import org.addondev.util.FileUtil;
+import org.junit.Test;
 
 public class javascriptparserTest {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+	@Test
+	public void JavascriptSyntaxCheckTest() {
 		// TODO Auto-generated method stub
 		//JavascriptParser p = new JavascriptParser();
 		

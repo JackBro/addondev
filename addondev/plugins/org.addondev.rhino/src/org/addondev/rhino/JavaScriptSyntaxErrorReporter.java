@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+
 import org.mozilla.javascript.*;
 
 public class JavaScriptSyntaxErrorReporter implements ErrorReporter {
