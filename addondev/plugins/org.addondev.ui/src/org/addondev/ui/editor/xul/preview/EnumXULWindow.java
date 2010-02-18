@@ -2,7 +2,7 @@ package org.addondev.ui.editor.xul.preview;
 
 
 public enum EnumXULWindow {
-	PREFWINDOW("prepwindow"),
+	PREFWINDOW("prefwindow"),
 	WINDOW("window"),
 	DIALOG("dialog"),
 	PAGE("page"),

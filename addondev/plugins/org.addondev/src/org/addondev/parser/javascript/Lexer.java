@@ -13,8 +13,7 @@ public class Lexer {
 	private static Map<String, Integer> reserved = new HashMap<String, Integer>(); // 予約語を保持する
 
 	static { // 予約語を登録
-		//reserved.put("true", new Integer(TokenType.TRUE));
-		//reserved.put("false", new Integer(TokenType.FALSE));
+
 		//reserved.put("if", new Integer(TokenType.IF));
 		//reserved.put("else", new Integer(TokenType.ELSE));
 		//reserved.put("while", new Integer(TokenType.WHILE)); // while
@@ -22,6 +21,9 @@ public class Lexer {
 		reserved.put("var", new Integer(TokenType.VAR));
 		reserved.put("const", new Integer(TokenType.CONST));
 		reserved.put("new", new Integer(TokenType.NEW));
+		//reserved.put("true", new Integer(TokenType.TRUE));
+		//reserved.put("false", new Integer(TokenType.FALSE));
+		
 		
 		//reserved.put("try", new Integer(TokenType.TRY));
 		//reserved.put("catch", new Integer(TokenType.CATCH));
@@ -53,6 +55,7 @@ public class Lexer {
 	    case ')':
 	    case '.':	    	
 	    case '^':
+	    case '~':
 	    case '[':
 	    case ']':
 	    case '\\':
