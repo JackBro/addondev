@@ -8,9 +8,9 @@
 	title="&${name}.pref.title;">
   <prefpane id="appearance" label="&${name}.pref.pane1.title;">
     <preferences>
-      <preference id="boolpref1" name="extensions.all.boolpref" type="bool"/>
-      <preference id="intpref1" name="extensions.all.intpref" type="int"/>
-      <preference id="stringpref1" name="extensions.all.stringpref" type="string"/>
+      <preference id="boolpref1" name="extensions.${name}.boolpref" type="bool"/>
+      <preference id="intpref1" name="extensions.${name}.intpref" type="int"/>
+      <preference id="stringpref1" name="extensions.${name}.stringpref" type="string"/>
     </preferences>
     <checkbox id="checkboolpref" preference="boolpref1" label="&${name}.pref.checkboolpref.label;" accesskey="&${name}.pref.checkboolpref.accesskey;"/>
     <label accesskey="&${name}.pref.intpref.accesskey;" control="textintpref">
@@ -25,14 +25,14 @@
   
   <prefpane id="behavior" label="&${name}.pref.behavior.title;" flex="1">
 	    <preferences id="stacklinkBehaviorPreferences">
-	    	<preference id="extensions.stacklink.mouse.left" name="extensions.stacklink.mouse.left" type="int"/>  
+	    	<preference id="extensions.stacklink.mouse.left" name="extensions.${name}.mouse.left" type="int"/>  
 	    </preferences>
-	    <label value="&stacklink.pref.mouse.click.left;"/>
-		<menulist id="mouse-click-left" preference="extensions.stacklink.mouse.left">
+	    <label value="&${name}.pref.mouse.click.left;"/>
+		<menulist id="mouse-click-left" preference="extensions.${name}.mouse.left">
         	<menupopup>
-          		<menuitem value="0" label="&stacklink.pref.function.loadcurrenttab;"/>
-            	<menuitem value="1" label="&stacklink.pref.function.opennewtab;"/>	
-            	<menuitem value="2" label="&stacklink.pref.function.selecttab;"/>
+          		<menuitem value="0" label="&${name}.pref.function.loadcurrenttab;"/>
+            	<menuitem value="1" label="&${name}.pref.function.opennewtab;"/>	
+            	<menuitem value="2" label="&${name}.pref.function.selecttab;"/>
             </menupopup>
         </menulist>	
   </prefpane>

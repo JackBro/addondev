@@ -1,4 +1,6 @@
-﻿resource stacklink_modules modules/
+﻿http://wasabili.blog4.fc2.com/page-2.html
+
+resource stacklink_modules modules/
 		Components.utils.import("resource://stacklink_modules/test.js");
 		TestObj.msg("onClickStatusbarIcon");
 //test.js
@@ -18,8 +20,8 @@ var TestObj=
 # Please give the version number for Firebug and Firefox when discussing issues.
 # Firebug 1.3 works with Firefox 3.0 and Firefox 2.0
 # Firebug 1.4 works with Firefox 3.0 and Firefox 3.5
-# Firebug 1.5 works with Firefox 3.5 and Firefox 3.6
-# Firebug 1.6 will work with Firefox 3.6 and Firefox 3.7
+# Firebug 1.5 works with Firefox 3.5 and Firefox 3.6 
+# Firebug 1.6 will work with Firefox 3.6 and Firefox 3.7 //bindings.xml debug
 # Firebug Lite works with IE, Safari, and Opera
 
 /chrome/content/ff-overlay.xul
