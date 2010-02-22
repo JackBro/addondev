@@ -189,5 +189,14 @@
             file="templates/project/firefox.xml">
       </include>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.addondev.ui.view.TemplateView"
+            id="org.addondev.ui.view.TemplateView"
+            name="Addon Template"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>
