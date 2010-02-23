@@ -19,7 +19,8 @@ public class JavaScriptPartitionScanner extends RuleBasedPartitionScanner {
 		ArrayList<IPredicateRule> rules = new ArrayList<IPredicateRule>();
 		
 		IToken comment  = new Token(JS_COMMENT);
-		rules.add(new MultiLineRule("/*" , "*/" ,comment));
+		//rules.add(new MultiLineRule("/*" , "*/" ,comment));
+		rules.add(new MultiLineRule("/*", "*/", comment, (char) 0, true));
 		rules.add(new EndOfLineRule("//", comment));
 		
 		IToken string = new Token(JS_STRING);

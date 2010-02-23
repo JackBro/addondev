@@ -42,8 +42,9 @@ public class XMLConfiguration extends TextSourceViewerConfiguration {
 			IDocument.DEFAULT_CONTENT_TYPE,
 			
 			XMLPartitionScanner.XML_COMMENT,
-			XMLPartitionScanner.XML_TAG,
-			XMLPartitionScanner.XML_CDATA};
+			XMLPartitionScanner.XML_TAG
+			,XMLPartitionScanner.XML_CDATA
+			};
 	}
 	public ITextDoubleClickStrategy getDoubleClickStrategy(
 		ISourceViewer sourceViewer,
@@ -74,6 +75,21 @@ public class XMLConfiguration extends TextSourceViewerConfiguration {
 		return tagScanner;
 	}
 	
+	
+	protected RuleBasedScanner getXMLCommentScanner() {
+		if (fCommentScanner == null) {
+			fCommentScanner = new RuleBasedScanner();
+			//fCommentScanner = new JavaScriptScanner(fStore);
+			//fCommentScanner = new XMLCommentScanner(colorManager);
+			//fCommentScanner = new XMLCommentScanner(fStore);
+			fCommentScanner.setDefaultReturnToken(
+				new Token(
+					new TextAttribute(
+						colorManager.getColor(IXMLColorConstants.XML_COMMENT))));
+		}
+		return fCommentScanner;
+	}
+	
 	protected JavaScriptScanner getXMLCDATAScanner() {
 		if (cdataScanner == null) {
 			
@@ -94,26 +110,24 @@ public class XMLConfiguration extends TextSourceViewerConfiguration {
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 
-		DefaultDamagerRepairer dr =
-			new DefaultDamagerRepairer(getXMLTagScanner());
+		DefaultDamagerRepairer dr = null;
+	
+		dr = new DefaultDamagerRepairer(getXMLTagScanner());
 		reconciler.setDamager(dr, XMLPartitionScanner.XML_TAG);
 		reconciler.setRepairer(dr, XMLPartitionScanner.XML_TAG);
 		
-		NonRuleBasedDamagerRepairer ndr =
-			new NonRuleBasedDamagerRepairer(
-				new TextAttribute(
-					colorManager.getColor(IXMLColorConstants.XML_COMMENT)));
-		reconciler.setDamager(ndr, XMLPartitionScanner.XML_COMMENT);
-		reconciler.setRepairer(ndr, XMLPartitionScanner.XML_COMMENT);
-		
-//			if (fCommentScanner == null) {
-//			fCommnetToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(fStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT)));
-//			fCommentScanner = new RuleBasedScanner();
+//		if (fCommentScanner == null) {
+//			//fCommnetToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(fStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT)));
+//			fCommnetToken = new Token(new TextAttribute(colorManager.getColor(IXMLColorConstants.XML_COMMENT)));
+//			//fCommentScanner = new RuleBasedScanner();
+//			fCommentScanner = new XMLCommentScanner(this.colorManager);
 //			fCommentScanner.setDefaultReturnToken(fCommnetToken);
 //		}		
 //		dr = new DefaultDamagerRepairer(fCommentScanner);
-//		reconciler.setDamager(dr, XMLPartitionScanner.XML_COMMENT);
-//		reconciler.setRepairer(dr, XMLPartitionScanner.XML_COMMENT);
+		
+		dr = new DefaultDamagerRepairer(getXMLCommentScanner());
+		reconciler.setDamager(dr, XMLPartitionScanner.XML_COMMENT);
+		reconciler.setRepairer(dr, XMLPartitionScanner.XML_COMMENT);
 
 		dr = new DefaultDamagerRepairer(getXMLCDATAScanner());
 		reconciler.setDamager(dr, XMLPartitionScanner.XML_CDATA);
@@ -124,7 +138,12 @@ public class XMLConfiguration extends TextSourceViewerConfiguration {
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
 		
-		
+//		NonRuleBasedDamagerRepairer ndr =
+//			new NonRuleBasedDamagerRepairer(
+//				new TextAttribute(
+//					colorManager.getColor(IXMLColorConstants.XML_COMMENT)));
+//		reconciler.setDamager(ndr, XMLPartitionScanner.XML_COMMENT);
+//		reconciler.setRepairer(ndr, XMLPartitionScanner.XML_COMMENT);	
 
 
 		return reconciler;

@@ -16,8 +16,9 @@ public class XMLDocumentProvider extends FileDocumentProvider {
 					new XMLPartitionScanner(),
 					new String[] {			
 						XMLPartitionScanner.XML_TAG,
-						XMLPartitionScanner.XML_COMMENT,
-						XMLPartitionScanner.XML_CDATA});
+						XMLPartitionScanner.XML_COMMENT
+						,XMLPartitionScanner.XML_CDATA
+						});
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
 			

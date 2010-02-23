@@ -66,13 +66,6 @@ public class XULConfiguration extends SourceViewerConfiguration {
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
-		NonRuleBasedDamagerRepairer ndr =
-			new NonRuleBasedDamagerRepairer(
-				new TextAttribute(
-					colorManager.getColor(IXULColorConstants.XML_COMMENT)));
-		reconciler.setDamager(ndr, XULPartitionScanner.XML_COMMENT);
-		reconciler.setRepairer(ndr, XULPartitionScanner.XML_COMMENT);
-
 		return reconciler;
 	}
 
