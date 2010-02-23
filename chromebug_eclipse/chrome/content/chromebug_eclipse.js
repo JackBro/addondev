@@ -9,6 +9,8 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 {
 	initialize: function() 
 	{
+		//var path = Firebug.chromebug_eclipse.util.getFilePathFromURL("chrome://stacklink/content/stacklink.js");
+		//Application.console.log("chrome://stacklink/content/stacklink.js -> " + path);
 		//Application.console.log("urlFilters = " +  urlFilters);
 		//Application.console.log("chromebug_eclipseModle initialize");
 		
@@ -460,7 +462,7 @@ ChromeDebuggerPanel.prototype = extend(Firebug.Panel,
     title: "ChromeDebugger", 
 
     initialize: function() {
-      Firebug.Panel.initialize.apply(this, arguments);
+		Firebug.Panel.initialize.apply(this, arguments);
       //Firebug.Debugger.addListener(this);   
       //LOG("ChromeDebuggerPanel initialize");
       //LOG("FBL.TabWatcher.getContextByWindow = " + FBL.TabWatcher.getContextByWindow);

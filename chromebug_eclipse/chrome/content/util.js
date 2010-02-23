@@ -461,10 +461,10 @@ Firebug.chromebug_eclipse.util = {
     			Application.console.log("convertChromeURL chromeurl = " + chromeurl);
     		}
     	
-    		if (chromeurl.indexOf('file://') != 0) 
-    		{
-    			return chromeurl;
-    		}
+//    		if (chromeurl.indexOf('file://') != 0) 
+//    		{
+//    			return chromeurl;
+//    		}
     	
     		//var file = Components.classes["@mozilla.org/file/local;1"]
     		//                              .createInstance(Components.interfaces.nsILocalFile);

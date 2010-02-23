@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <templates>
-	<template autoinsert="false" context="org.addondev.ui.template.javascript" deleted="false" description="iterate over array with temporary variable" enabled="true" id="org.addondev.ui.templates.for_temp" name="for">
+
+<template id="org.addondev.ui.templates.for_temp" name="for" autoinsert="false" context="org.addondev.ui.template.javascript" deleted="false" description="iterate over array with temporary variable" enabled="true">
 for (var ${index} = 0; ${index} &lt; ${array}.length; ${index}++) {
 	var ${array_element} = ${array}[${index}];
 	${cursor}
 }
-	</template>
+</template>
+
+<template id="org.addondev.ui.templates.for_" name="window" autoinsert="false" context="org.addondev.ui.template.javascript" deleted="false" description="iterate over array with temporary variable" enabled="true">
+var WindowManager = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator);
+var browser = WindowMediator.getMostRecentWindow('navigator:browser');
+</template>
+
+<template id="org.addondev.ui.templates.chromeurl" name="chromeurl" autoinsert="false" context="org.addondev.ui.template.javascript" deleted="false" description="iterate over array with temporary variable" enabled="true">
+//"chrome://stacklink/content/stacklink.js
+//->
+//file:///D:/data/src/PDE/work/stacklink/chrome/content/stacklink.js
+
+var uri = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService)
+.newURI(aURI, null, null);
+var ChromeRegistry = Cc["@mozilla.org/chrome/chrome-registry;1"].getService(Ci.nsIChromeRegistry);
+chromeurl = ChromeRegistry.convertChromeURL(uri).spec;
+
+
+//file:///D:/data/src/PDE/work/stacklink/chrome/content/stacklink.js
+//->
+//D:\data\src\PDE\work\stacklink\chrome\content\stacklink.js
+var ios = Components.classes['...@mozilla.org/network/io-service;1'].getService(Components.interfaces.nsIIOService);
+var fileHandler = ios.getProtocolHandler('file').QueryInterface(Ci.nsIFileProtocolHandler);
+return fileHandler.getFileFromURLSpec(chromeurl).path;
+</template>
+
 </templates>

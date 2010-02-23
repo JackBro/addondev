@@ -14,12 +14,13 @@ public class XMLPartitionScanner extends RuleBasedPartitionScanner {
 
 		IToken xmlComment = new Token(XML_COMMENT);
 		IToken tag = new Token(XML_TAG);
+		IToken xmlCDATA = new Token(XML_CDATA);
 
 		ArrayList<IPredicateRule> rules = new ArrayList<IPredicateRule>();
-
-		rules.add(new MultiLineRule("<![CDATA[", "]]>", xmlComment));
+		
 		rules.add(new MultiLineRule("<!--", "-->", xmlComment));
 		rules.add(new TagRule(tag));
+		rules.add(new MultiLineRule("<![CDATA[", "]]>", xmlCDATA));
 
 		setPredicateRules(rules.toArray(new IPredicateRule[rules.size()]));
 	}

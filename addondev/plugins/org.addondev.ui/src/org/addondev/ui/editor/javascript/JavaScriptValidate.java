@@ -1,6 +1,7 @@
 package org.addondev.ui.editor.javascript;
 
 import java.util.Locale;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;

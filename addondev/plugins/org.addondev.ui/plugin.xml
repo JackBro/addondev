@@ -18,6 +18,13 @@
             id="org.addondev.ui.editor.xulmultipageeditor.XULMultiPageEditor"
             name="XUL">
       </editor>
+      <editor
+            class="org.addondev.ui.editor.xml.XMLEditor"
+            default="false"
+            extensions="xml"
+            id="org.addondev.ui.editor.xml"
+            name="XML">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">

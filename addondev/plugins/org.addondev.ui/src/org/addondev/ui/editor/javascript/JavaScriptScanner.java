@@ -79,10 +79,10 @@ public class JavaScriptScanner extends RuleBasedScanner {
 		//Color stringcolor  = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING);
 		//IToken stringtoken = new Token(new TextAttribute(stringcolor));
 		
-		//Color commnetcolor  = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT);
-		//IToken commnettoken = new Token(new TextAttribute(commnetcolor));
+		Color commnetcolor  = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT);
+		IToken commnettoken = new Token(new TextAttribute(commnetcolor));
 		
-		//rules.add(new EndOfLineRule("//", commnettoken));
+		rules.add(new EndOfLineRule("//", commnettoken));
 		//rules.add(new SingleLineRule("\"", "\"", stringtoken, '\\'));
 		//rules.add(new SingleLineRule("'", "'", stringtoken, '\\'));
 

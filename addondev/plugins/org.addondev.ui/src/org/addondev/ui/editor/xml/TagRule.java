@@ -6,6 +6,7 @@ public class TagRule extends MultiLineRule {
 
 	public TagRule(IToken token) {
 		super("<", ">", token);
+		
 	}
 	protected boolean sequenceDetected(
 		ICharacterScanner scanner,
