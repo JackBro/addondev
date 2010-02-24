@@ -57,7 +57,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.addondev.ui.editor.hover.IAddonDevTextHover"/>
+                  <meta.attribute kind="java" basedOn=":org.addondev.ui.editor.hover.IJavaScriptTextHover"/>
                </appinfo>
             </annotation>
          </attribute>

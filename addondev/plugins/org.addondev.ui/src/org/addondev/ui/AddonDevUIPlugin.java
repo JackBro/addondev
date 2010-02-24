@@ -31,6 +31,8 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 	private ContributionContextTypeRegistry fRegistry = null;
 	public static final String TEMPLATE_STORE_ID = "org.addondev.ui.templates.store";
 	
+	public static final String EXTENSION_POINT_ID_JAVASCRIPTTEXTHOVER = "org.addondev.ui.editor.javascript.texthover";
+	
 	/**
 	 * The constructor
 	 */

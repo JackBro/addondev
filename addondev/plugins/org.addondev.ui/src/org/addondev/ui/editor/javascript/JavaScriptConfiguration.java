@@ -1,8 +1,13 @@
 package org.addondev.ui.editor.javascript;
 
 
+import java.util.List;
+
+import org.addondev.builder.IAddonDevBuilder;
+import org.addondev.core.ExtensionLoader;
 import org.addondev.preferences.ResourceManager;
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.editor.hover.IJavaScriptTextHover;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
@@ -115,6 +120,16 @@ public class JavaScriptConfiguration extends TextSourceViewerConfiguration {
 		result[0] = strategy;
 		
 		return result;
+	}
+
+	@Override
+	public ITextHover getTextHover(ISourceViewer sourceViewer,
+			String contentType) {
+		// TODO Auto-generated method stub
+		
+		List<IJavaScriptTextHover> visitors = ExtensionLoader.getExtensions(AddonDevUIPlugin.EXTENSION_POINT_ID_JAVASCRIPTTEXTHOVER);
+		
+		return super.getTextHover(sourceViewer, contentType);
 	}
 
 }

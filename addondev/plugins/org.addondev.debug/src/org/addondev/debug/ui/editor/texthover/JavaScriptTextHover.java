@@ -1,7 +1,7 @@
 package org.addondev.debug.ui.editor.texthover;
 
 import org.addondev.debug.core.model.AddonDevStackFrame;
-import org.addondev.ui.editor.hover.IAddonDevTextHover;
+import org.addondev.ui.editor.hover.IJavaScriptTextHover;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.ui.DebugUITools;
@@ -17,7 +17,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-public class JavaScriptTextHover implements IAddonDevTextHover {
+public class JavaScriptTextHover implements IJavaScriptTextHover {
 
 	private boolean textHoverEnable = false;
 	
@@ -115,6 +115,12 @@ public class JavaScriptTextHover implements IAddonDevTextHover {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void setContentType(String contentType) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
