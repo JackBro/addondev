@@ -1,6 +1,5 @@
 package org.addondev.ui.editor.javascript.actions;
 
-//import jp.addondev.debug.ui.PseudoSplitView;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,40 +7,14 @@ import java.util.regex.Pattern;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.jface.window.ApplicationWindow;
-import org.eclipse.jface.window.DefaultToolTip;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.jface.dialogs.Dialog;
-
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class samplehandler extends AbstractHandler {
+public class ToggleCommentHandler extends AbstractHandler {
 	
 	private static Pattern rnp = Pattern.compile("\r\n");
 	private static Pattern rp = Pattern.compile("\r");
@@ -51,17 +24,13 @@ public class samplehandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// TODO Auto-generated method stub
 		IEditorPart ep = HandlerUtil.getActiveEditor(event);
-		//ep.
 		ITextEditor js  = (ITextEditor)ep;
 		IDocument document = js.getDocumentProvider().getDocument(js.getEditorInput());
-		String ss = ep.getEditorInput().getName();
 		
 		TextSelection sel = (TextSelection)js.getSelectionProvider().getSelection();
 
 		int offset = sel.getOffset();
 		int length = sel.getLength();
-		//int orgffset = offset;
-		//int orglength = length;
 		
 		int res = 0;
 		try {

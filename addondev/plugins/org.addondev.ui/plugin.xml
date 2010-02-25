@@ -110,7 +110,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.addondev.ui.editor.javascript.actions.samplehandler"
+            class="org.addondev.ui.editor.javascript.actions.ToggleCommentHandler"
             commandId="AddonDev.command1">
       </handler>
       <handler
