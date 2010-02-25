@@ -19,19 +19,12 @@ import org.eclipse.ui.editors.text.EditorsUI;
 
 public class JavaScriptTextHover implements IJavaScriptTextHover {
 
-	private boolean textHoverEnable = false;
-	
-	public JavaScriptTextHover(ISourceViewer sourceViewer, String contentType) {
-		// TODO Auto-generated constructor stub
-        if(IDocument.DEFAULT_CONTENT_TYPE.equals(contentType)){
-        	textHoverEnable = true;
-        }
-	}
+	private boolean fEnable = false;
 
 	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// TODO Auto-generated method stub
-		if(!textHoverEnable) return null;
+		if(!fEnable) return null;
 		
 		IAdaptable object = DebugUITools.getDebugContext();
 	    IDebugElement context = null;
@@ -51,16 +44,16 @@ public class JavaScriptTextHover implements IJavaScriptTextHover {
 				e.printStackTrace();
 			}
 	    }
-	    else
-	    {
-			try {
-				text = getTest(textViewer, hoverRegion.getOffset());
-				return text;
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    }
+//	    else
+//	    {
+//			try {
+//				text = getTest(textViewer, hoverRegion.getOffset());
+//				return text;
+//			} catch (BadLocationException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//	    }
 		return null;
 	}
 
@@ -118,9 +111,10 @@ public class JavaScriptTextHover implements IJavaScriptTextHover {
 	}
 
 	@Override
-	public void setContentType(String contentType) {
+	public boolean isEnable(String contentType) {
 		// TODO Auto-generated method stub
-		
+		fEnable = IDocument.DEFAULT_CONTENT_TYPE.equals(contentType);
+		return fEnable;
 	}
 
 }

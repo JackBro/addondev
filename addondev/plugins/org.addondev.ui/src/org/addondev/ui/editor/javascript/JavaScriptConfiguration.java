@@ -128,7 +128,12 @@ public class JavaScriptConfiguration extends TextSourceViewerConfiguration {
 		// TODO Auto-generated method stub
 		
 		List<IJavaScriptTextHover> visitors = ExtensionLoader.getExtensions(AddonDevUIPlugin.EXTENSION_POINT_ID_JAVASCRIPTTEXTHOVER);
-		
+		for (IJavaScriptTextHover textHover : visitors) {
+			if(textHover.isEnable(contentType))
+			{
+				return textHover;
+			}
+		}
 		return super.getTextHover(sourceViewer, contentType);
 	}
 

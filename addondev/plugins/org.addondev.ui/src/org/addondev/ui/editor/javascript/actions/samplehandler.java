@@ -43,9 +43,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class samplehandler extends AbstractHandler {
 	
-	private Pattern rnp = Pattern.compile("\r\n");
-	private Pattern rp = Pattern.compile("\r");
-	private Pattern np = Pattern.compile("\n");
+	private static Pattern rnp = Pattern.compile("\r\n");
+	private static Pattern rp = Pattern.compile("\r");
+	private static Pattern np = Pattern.compile("\n");
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -57,9 +57,11 @@ public class samplehandler extends AbstractHandler {
 		String ss = ep.getEditorInput().getName();
 		
 		TextSelection sel = (TextSelection)js.getSelectionProvider().getSelection();
-		
+
 		int offset = sel.getOffset();
 		int length = sel.getLength();
+		//int orgffset = offset;
+		//int orglength = length;
 		
 		int res = 0;
 		try {
@@ -81,10 +83,21 @@ public class samplehandler extends AbstractHandler {
 		} //sel.getText();
 		String rnt = rn(text);
 		String[] lines = text.split(rnt);
+
 		
 		StringBuffer buf = new StringBuffer();
-		for (String string : lines) {
-			buf.append("//").append(string).append(rnt);
+		
+		if(isStartWithComment(lines))
+		{
+			for (String line : lines) {
+				buf.append(line.replaceFirst("//", "")).append(rnt);;
+			}			
+		}
+		else
+		{
+			for (String string : lines) {
+				buf.append("//").append(string).append(rnt);
+			}
 		}
 		char lc = text.charAt(text.length()-1);
 		
@@ -95,6 +108,7 @@ public class samplehandler extends AbstractHandler {
 		
 		try {
 			document.replace(offset, length, buf.toString());
+			js.selectAndReveal(offset, buf.length());	
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -139,5 +153,16 @@ public class samplehandler extends AbstractHandler {
 		{
 			return 0;
 		}
+	}
+	
+	private boolean isStartWithComment(String[] lines)
+	{
+		for (String line : lines) {
+			if(!line.trim().startsWith("//"))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }

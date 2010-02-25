@@ -6,6 +6,7 @@ import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
 
 public interface IJavaScriptTextHover extends ITextHover, ITextHoverExtension {
-	public void setContentType(String contentType);
+	//public void setContentType(String contentType);
+	public boolean isEnable(String contentType);
 	//public void getHoverInfo(ITextViewer textViewer, IRegion hoverRegion, String contentType;
 }

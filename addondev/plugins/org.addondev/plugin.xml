@@ -8,12 +8,6 @@
             id="jp.javascript.debug"
             name="JavaScriptDev">
       </category>
-      <view
-            class="org.addondev.debug.ui.PseudoSplitView"
-            id="org.addondev.debug.ui.PseudoSplitView"
-            name="name"
-            restorable="true">
-      </view>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

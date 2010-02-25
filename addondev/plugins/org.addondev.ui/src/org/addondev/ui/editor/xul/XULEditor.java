@@ -47,7 +47,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 
 	//private ColorManager colorManager;
-	private XULOutlinePage outline;
+	//private XULOutlinePage outline;
 
 	public XULEditor() {
 		super();
@@ -211,21 +211,6 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 	public void doSaveAs() {
 		// TODO Auto-generated method stub
 		super.doSaveAs();
-	}
-	
-	
-	@Override
-	public Object getAdapter(Class adapter) {
-		// TODO Auto-generated method stub
-		if (IContentOutlinePage.class.equals(adapter)) 
-		{
-			if (outline == null) 
-			{
-				outline = new XULOutlinePage(this);
-			}
-			return outline;
-		}
-		return super.getAdapter(adapter);
 	}
 	
 	public String getText()

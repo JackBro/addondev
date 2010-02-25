@@ -8,13 +8,15 @@
             class="org.addondev.ui.editor.javascript.JavaScriptEditor"
             default="false"
             extensions="js"
+            icon="icons/editor_js.png"
             id="org.addondev.ui.editor.javascript"
-            name="AddonDev JavaScript Editor">
+            name="JavaScript">
       </editor>
       <editor
             class="org.addondev.ui.editor.xulmultipageeditor.XULMultiPageEditor"
             default="false"
             extensions="xul"
+            icon="icons/editor_xul.png"
             id="org.addondev.ui.editor.xulmultipageeditor.XULMultiPageEditor"
             name="XUL">
       </editor>
@@ -22,6 +24,7 @@
             class="org.addondev.ui.editor.xml.XMLEditor"
             default="false"
             extensions="xml"
+            icon="icons/editor_xml.png"
             id="org.addondev.ui.editor.xml"
             name="XML">
       </editor>
@@ -133,6 +136,17 @@
                label="test"
                style="push">
          </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=edit">
+         <menu
+               label="Source">
+            <command
+                  commandId="AddonDev.command1"
+                  label="Toggle Comment"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension
