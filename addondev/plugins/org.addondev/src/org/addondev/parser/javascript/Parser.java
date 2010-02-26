@@ -192,7 +192,10 @@ public class Parser {
 		while (token != TokenType.EOS) {
 			stmt(root);
 			getToken(); 
-			if(offset == lex.offset()) throw new EOSException();
+			
+			//if(offset == lex.offset()) 
+			//	throw new EOSException();
+			
 			offset = lex.offset();
 		}
 		//frame.pop();
@@ -209,6 +212,11 @@ public class Parser {
 
 	private void stmt(JsNode parent) throws EOSException {	
 			switch (token) {	
+			case '/':
+				int i=0;
+				lex.jsRex();
+				//getToken(); 
+				break;
 			case TokenType.VAR: // 変数宣言
 			case TokenType.CONST: 	
 				def(parent);
@@ -633,7 +641,8 @@ public class Parser {
 			{
 				//JsNodeHelper.assignNode(node.getChildNode(), res.getChildNode());
 				assignChildNode(res, node);
-			}		
+			}	
+			//getToken(); //test 100226
 		}
 	}
 	
@@ -641,6 +650,11 @@ public class Parser {
 		JsNode node = null;
 		String sym = lex.value();
 		switch(token){
+		case '/':
+			int i=0;
+			lex.jsRex();
+			//getToken(); 
+			break;
 		case '{':
 			parent.setOffset(lex.offset());
 			//thisNodeStack.push(parent);

@@ -117,6 +117,10 @@
             class="org.addondev.ui.editor.xulmultipageeditor.actions.RefreshHandler"
             commandId="org.addondev.ui.handler1">
       </handler>
+      <handler
+            class="org.addondev.ui.editor.xml.action.ToggleCommentHandler"
+            commandId="org.addondev.ui.handler1">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">

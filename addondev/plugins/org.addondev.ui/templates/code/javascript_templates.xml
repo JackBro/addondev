@@ -32,4 +32,20 @@ var fileHandler = ios.getProtocolHandler('file').QueryInterface(Ci.nsIFileProtoc
 return fileHandler.getFileFromURLSpec(chromeurl).path;
 </template>
 
+<template id="org.addondev.ui.templates.profile" name="profile" autoinsert="false" context="org.addondev.ui.template.javascript" deleted="false" description="iterate over array with temporary variable" enabled="true">
+var file = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties).get("ProfD", Ci.nsILocalFile);
+file.append('stacklink.js');
+if(file.exists())
+{
+	var stritems = $.util.read(file);
+	if (typeof(JSON) == "undefined") {
+	  Components.utils.import("resource://gre/modules/JSON.jsm");
+	  JSON.parse = JSON.fromString;
+	  JSON.stringify = JSON.toString;
+	}
+
+	this.tmpitems = JSON.parse(stritems);	
+}
+</template>
+
 </templates>

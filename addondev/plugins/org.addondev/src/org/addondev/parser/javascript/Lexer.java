@@ -258,6 +258,29 @@ public class Lexer {
 	      }
 	    }		
 	}
+	
+	public void jsRex() {
+		// TODO Auto-generated method stub
+		int d = 0;
+	    int c = '\0';
+	    while(true){
+	    	d = c;
+	      c = reader.read();
+	      if(c < 0){
+	        //throw new Exception("コメント中にファイルの終端に到達しました。");
+	    	  break;
+	      }
+	      
+	      //if(c != '\\'){
+	        //c = reader.read();
+	        if(d != '\\' && c == '/'){
+	        //if(c == '/'){
+	        	
+	          break;
+	        }
+	      //}
+	    }	
+	}
 
 	public int token() {
 		// TODO Auto-generated method stub
