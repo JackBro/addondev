@@ -193,8 +193,8 @@ public class Parser {
 			stmt(root);
 			getToken(); 
 			
-			//if(offset == lex.offset()) 
-			//	throw new EOSException();
+			if(offset == lex.offset() && token != TokenType.EOS) 
+				throw new EOSException();
 			
 			offset = lex.offset();
 		}
@@ -328,7 +328,7 @@ public class Parser {
 					else if(token == '(')
 					{
 						//factor(node);
-						functionExpr(node);
+						functionCall(node);
 					}
 					
 //					JsNode fromnode;
@@ -440,36 +440,59 @@ public class Parser {
 			}
 	}
 	
-	private void functionExpr(JsNode node) throws EOSException {
+	private void functionDef(JsNode node) throws EOSException {
+		getToken(); //skip (
+		
+		ArrayList<String> args = new ArrayList<String>();
+		
+		if (token != ')') {
+
+			//factor(node);
+			args.add(lex.value());
+			getToken();
+			
+			while (token != ')') 
+			{	
+				if(token == TokenType.EOS)
+				{
+					break;
+				}
+				getToken();  // skip ,
+				
+				//factor(node);
+				args.add(lex.value());
+				getToken();
+				
+				int i = 0;
+			}
+
+			getToken(); // skip ),
+			if(token == '{')
+			{
+				//getToken(); // skip {
+				//node.setOffset(lex.offset());
+				//getToken();
+				fScopeStack.pushScope(new Scope(lex.offset()+1, node));
+				for (String arg : args) {
+					JsNode argnode = new JsNode(node, "var", arg, 0);
+					node.addChild(argnode);
+				}
+				block(node);
+				//fun(node);
+				//objectExpr(node);
+				//block(node);
+				Scope scope = fScopeStack.popScope();
+				scope.setEnd(lex.offset());
+			}			
+		}
+	}
+	
+	private void functionCall(JsNode node) throws EOSException {
 		JsNode code = null;
 		
 		getToken(); //skip (
 		if (token != ')') {
-//			if(token == '{')
-//			{
-//				getToken(); //{
-//				node.setOffset(lex.offset());
-//				
-//				objectExpr(node);
-//				frame.setNode(node);
-//			}
-//			else if(token == TokenType.FUNCTION)
-//			{
-//				while (token != '(') {
-//					getToken();
-//				}
-//				frame.setNode(node);
-//				
-//				functionExpr(node);
-//				block(node);
-//			}
-//			else //symbol, number, strigg
-//			{
-//				String arg = lex.value();
-//				frame.setNode(arg);
-//				//factor(node);
-//				getToken();		
-//			}
+
 			factor(node);
 
 			while (token != ')') 
@@ -479,61 +502,20 @@ public class Parser {
 					break;
 				}
 				getToken();  // skip ,
-				
 				factor(node);
-				//getToken();  // skip ,
 				
-//				if(token == TokenType.EOS)
-//				{
-//					throw new EOSException();
-//				}
-//				
-//				if (token != ',') {
-//					//throw new Exception("文法エラーです。");
-//				}
-//				while (token != ',') {
-//					if(token == TokenType.EOS)
-//					{
-//						return;
-//						//throw new EOSException();
-//					}
-//					getToken(); // skip ','
-//					if(token == ')' || token == TokenType.VAR) //tmp
-//					{
-//						return;
-//					}
-//				}
-//				
-//				getToken(); // skip ',
-//				if(token == '{')
-//				{
-//					getToken();
-//					if(code == null)
-//					{	
-//						objectExpr(node);
-//						frame.setNode(node);
-//					}
-//					else
-//					{
-//						objectExpr(node);
-//					}
-//				}
-//				else
-//				{
-//					String arg = lex.value();
-//					frame.setNode(arg);
-//					//factor(node);
-//					getToken();
-//				}
+				int i = 0;
 			}
-			//
+
 			getToken(); // skip ),
 			if(token == '{')
 			{
 				//getToken(); // skip {
 				//node.setOffset(lex.offset());
 				//getToken();
-				fScopeStack.pushScope(new Scope(lex.offset()+1, node));
+				int of = lex.offset();
+				//fScopeStack.pushScope(new Scope(lex.offset()+1, node));
+				fScopeStack.pushScope(new Scope(lex.offset(), node));
 				block(node);
 				//fun(node);
 				//objectExpr(node);
@@ -580,7 +562,7 @@ public class Parser {
 			//frame.push();				
 			getToken();
 			advanceToken('(');
-			functionExpr(code);
+			functionCall(code);
 			
 			//block(code);
 			//thisNodeStack.pop();
@@ -610,7 +592,7 @@ public class Parser {
 //			scope.setEnd(endoffset);			
 			
 			//frame.pop(); 
-	    	functionExpr(parent);
+	    	functionCall(parent);
 	    }
 	}
 
@@ -670,7 +652,7 @@ public class Parser {
 			//frame.push();
 			//parent.setId("function");
 			setJsDoc(parent, fJsDoc);
-			functionExpr(parent);			
+			functionCall(parent);			
 			//advanceToken('{');			
 			//block(parent);
 			//String ll = lex.value();
@@ -705,7 +687,7 @@ public class Parser {
 		case TokenType.SYMBOL:
 			getToken();
 			if(token == '('){
-				functionExpr(parent);
+				functionCall(parent);
 		    }
 			else
 			{
@@ -868,7 +850,9 @@ public class Parser {
 					
 					//frame.push();
 
-					functionExpr(node);
+					functionCall(node);
+					//functionDef(node);
+					
 //					getToken();	
 //					while (token != '}' && token != TokenType.EOS) {
 //						stmt(node);

@@ -1,12 +1,13 @@
 package org.addondev.parser.javascript;
 
 public enum ObjectType {
-	object,
-	array,
-	function,
-	string,
-	numbser,
-	nsIIOService,
-	nsILocalFile,
-	nsIFileOutputStream
+	OBJECT,
+	PARAM,
+	ARRAY,
+	FUNCTION,
+	STRING,
+	NUMBSER,
+	NSIIOSERVICE,
+	NSILOCALFILE,
+	NSIFILEOUTPUTSTREAM
 }

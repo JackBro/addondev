@@ -7,6 +7,8 @@ import java.net.URL;
 
 import org.addondev.ui.template.ProjectTemplateContextType;
 import org.addondev.ui.template.JavaScriptTemplateContextType;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.jface.text.templates.persistence.TemplateReaderWriter;
@@ -64,6 +66,12 @@ public class AddonDevUIPlugin extends AbstractUIPlugin {
 	 */
 	public static AddonDevUIPlugin getDefault() {
 		return plugin;
+	}
+	
+	public static void log(String message, Exception e) {
+	    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+	            IStatus.OK, message, e);
+	    getDefault().getLog().log(status);
 	}
 
 	public ContextTypeRegistry getContextTypeRegistry() {

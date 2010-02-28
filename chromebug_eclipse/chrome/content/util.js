@@ -359,7 +359,12 @@ Firebug.chromebug_eclipse.util = {
 		 	{
 		 		continue;
 		 	}
-		 	var fn = stackframe.fn;
+		 	var fn;
+		 	if(path.indexOf('jar:file://') == 0)
+		 	{
+		 		fn = stackframe.fn;
+		 	}
+		 	//Application.console.log("getStackFramesXML stackframe.fn = " +  stackframe.fn);
 		 	if(fn == undefined)
 		 	{
 		 		fn = "";
@@ -461,10 +466,11 @@ Firebug.chromebug_eclipse.util = {
     			Application.console.log("convertChromeURL chromeurl = " + chromeurl);
     		}
     	
-//    		if (chromeurl.indexOf('file://') != 0) 
-//    		{
-//    			return chromeurl;
-//    		}
+    		//jar:file:///D:/program/firefox36/chrome/browser.jar!/content/browser/browser.xul
+    		if (chromeurl.indexOf('jar:file://') == 0) 
+    		{
+    			return chromeurl;
+    		}
     	
     		//var file = Components.classes["@mozilla.org/file/local;1"]
     		//                              .createInstance(Components.interfaces.nsILocalFile);

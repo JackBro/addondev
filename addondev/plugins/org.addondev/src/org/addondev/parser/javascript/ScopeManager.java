@@ -52,7 +52,11 @@ public class ScopeManager {
 			Scope tmp = null;
 			ScopeStack stack =  fScopeStackMap.get(name);
 			ArrayList<Scope> scopes = stack.getScopeList();
+			if(offset == 0) return scopes.get(0);
+			
 			for (Scope scope : scopes) {
+				if(scope.getStart() == scope.getEnd()) continue;
+				
 				if(offset >= scope.getStart() && offset<=scope.getEnd())
 				{
 					tmp = scope;
@@ -62,6 +66,7 @@ public class ScopeManager {
 					return tmp;
 				}
 			}
+			return tmp;
 		}
 
 		return null;

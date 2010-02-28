@@ -1,4 +1,6 @@
-﻿http://wasabili.blog4.fc2.com/
+﻿convertChromeURL chromeurl = jar:file:///D:/program/firefox36/chrome/browser.jar!/content/browser/browser.xul
+
+http://wasabili.blog4.fc2.com/
 http://mypace75.blog92.fc2.com/
 
 http://kwappa.txt-nifty.com/blog/2009/04/post-b816.html

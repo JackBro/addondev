@@ -82,29 +82,29 @@ public class AddonDevPersistableSourceLocator implements
 		//IFile file = root.getFileForLocation(path);
 		
 		if(file != null && file.exists())
-		//if(file != null)
 		{
 			return new FileEditorInput(file);
 		}
 		else
 		{
-//			//fLaunchConfiguration.
-			SeqEditorInput f = new SeqEditorInput(dir, filefullpath, frame.getURL(), frame.getFn());
-			try {
-				f.createFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//IPath tmppath = new Path(dir.getAbsolutePath()).append(f.getName());
-			//IFile tmpfile = root.getFileForLocation(tmppath);
-			File ff = new File(dir, f.getName());
-//			return new FileEditorInput(tmpfile);
-//			//return new SeqEditorInput(filefullpath, frame.getURL(), frame.getFn());
-			
-			LocalFileStorage lfile = new LocalFileStorage(ff);
-			//filePath = ((LocalFileStorage) element).getFullPath();
-			return new SeqStorageEditorInput(lfile);
+////			//fLaunchConfiguration.
+//			SeqEditorInput f = new SeqEditorInput(dir, filefullpath, frame.getURL(), frame.getFn());
+//			try {
+//				f.createFile();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			//IPath tmppath = new Path(dir.getAbsolutePath()).append(f.getName());
+//			//IFile tmpfile = root.getFileForLocation(tmppath);
+//			File ff = new File(dir, f.getName());
+////			return new FileEditorInput(tmpfile);
+////			//return new SeqEditorInput(filefullpath, frame.getURL(), frame.getFn());
+//			
+//			LocalFileStorage lfile = new LocalFileStorage(ff);
+//			//filePath = ((LocalFileStorage) element).getFullPath();
+//			return new SeqStorageEditorInput(lfile);
+			return new SeqStorageEditorInput(frame.getURL(), frame.getURL(), frame.getFn());
 
 		}
 	}

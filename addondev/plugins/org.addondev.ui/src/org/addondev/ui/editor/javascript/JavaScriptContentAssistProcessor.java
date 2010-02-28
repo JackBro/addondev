@@ -37,39 +37,58 @@ public class JavaScriptContentAssistProcessor implements
 		
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		
-		// ワークベンチの取得
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-
-		//アクティブなエディタの取得
 		IEditorPart editor = window.getActivePage().getActiveEditor();
 		if (editor instanceof JavaScriptEditor) {
 			JavaScriptEditor jsEditor = (JavaScriptEditor) editor;
 			String src = jsEditor.getDocument().get();
 			//			
-//			Parser parser = new Parser("test");
-//			parser.parse(src);
-//			Scope scope = ScopeManager.instance().getScope("test", offset);
-//
-//			ArrayList<JsNode> chnodes = scope.getNode().getChild("t").getChildNode();//getChildNode();
-//			for (JsNode node : chnodes) {
-//				result.add(
+			Parser parser = new Parser("test");
+			parser.parse(src);
+			Scope scope;
+			if(offset == src.length())
+			{
+				//offset = 0;
+				scope = ScopeManager.instance().getScope("test", 0);
+			}
+			else
+			{
+				scope = ScopeManager.instance().getScope("test", offset);
+			}
+
+			String t = getAssistTarget(src, offset);
+			//new Parser("tmp").p;
+			JsNode tnode = scope.getNode();
+			
+			if(t.length() > 0)
+			{
+				String[] ts = t.split("\\.");
+				
+				for (String string : ts) {
+					tnode = tnode.getChild(string);
+				}
+			}
+			//ArrayList<JsNode> chnodes = scope.getNode().getChild("t").getChildNode();//getChildNode();
+			ArrayList<JsNode> chnodes =tnode.getChildNode();//getChildNode();
+			for (JsNode node : chnodes) {
+				result.add(
+						new CompletionProposal(
+								node.getImage(), 
+								offset, 
+								0,
+								node.getImage().length())
 //						new CompletionProposal(
 //								node.getImage(), 
 //								offset, 
 //								0,
-//								node.getImage().length())
-////						new CompletionProposal(
-////								node.getImage(), 
-////								offset, 
-////								0,
-////								node.getImage().length(),
-////								null,
-////								"node.getfJsDoc()",
-////								null,
-////								"node.getfJsDoc()")				
-//				);
-//			}
+//								node.getImage().length(),
+//								null,
+//								"node.getfJsDoc()",
+//								null,
+//								"node.getfJsDoc()")				
+				);
+			}
 //
 //			String t = getAssistTarget(src, offset);
 //			System.out.println("Target = " + t);

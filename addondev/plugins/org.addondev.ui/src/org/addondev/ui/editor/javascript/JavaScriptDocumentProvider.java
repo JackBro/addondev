@@ -1,10 +1,14 @@
 package org.addondev.ui.editor.javascript;
 
-import org.addondev.editor.input.SeqEditorInput;
+import java.io.IOException;
+
+import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.util.FileUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
 public class JavaScriptDocumentProvider extends FileDocumentProvider {
@@ -25,13 +29,23 @@ public class JavaScriptDocumentProvider extends FileDocumentProvider {
 		}
 		else
 		{
-			if(element instanceof SeqEditorInput)
+			//if(element instanceof SeqEditorInput)
+			if(element instanceof IStorageEditorInput)
 			{
-				SeqEditorInput seqinput = (SeqEditorInput)element;
+				IStorageEditorInput seqinput = (IStorageEditorInput)element;
 				
 				document = super.createEmptyDocument();
 				//document = super.createDocument(element);
-				document.set(seqinput.getFn());
+				String text = "";
+				try {
+					text = FileUtil.getContent(seqinput.getStorage().getContents());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					AddonDevUIPlugin.log("JavaScriptDocumentProvider", e);
+				}
+				//document.set(seqinput.getFn());
+				document.set(text);
 				IDocumentPartitioner partitioner =
 					new FastPartitioner(
 						new JavaScriptPartitionScanner(),
