@@ -4,24 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import org.addondev.preferences.PrefConst;
-import org.addondev.preferences.ResourceManager;
+import org.addondev.ui.ColorManager;
+import org.addondev.ui.IColorManager;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
-import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 
 public class JavaScriptScanner extends RuleBasedScanner {
 	
@@ -34,7 +30,9 @@ public class JavaScriptScanner extends RuleBasedScanner {
 		}
 	}
 	
-	private IPreferenceStore fPreferenceStore;
+	private IPreferenceStore fStore;
+	private IColorManager fColorManager;
+	
 	static String[] fKeywords= {
 		"let",
 		"abstract",
@@ -54,19 +52,24 @@ public class JavaScriptScanner extends RuleBasedScanner {
 	};
 	public JavaScriptScanner(IPreferenceStore fPreferenceStore) {
 		super();
-		this.fPreferenceStore = fPreferenceStore;
+		this.fStore = fPreferenceStore;
+		fColorManager = ColorManager.getInstance();//.setPreferenceStore(fStore);
+		fColorManager.setPreferenceStore(fStore);
 		List<IRule> rules = createRules();
 		setRules(rules.toArray(new IRule[rules.size()]));
 	}
 	
 	protected List<IRule> createRules(){
 				
-		Color backgroundcolor = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_BACKGROUND);
-		Color keywordcolor =  ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD);
-
+		//Color backgroundcolor = ResourceManager.getInstance().getColor(fStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_BACKGROUND);
+		//Color keywordcolor =  ResourceManager.getInstance().getColor(fStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD);
+		Color backgroundcolor = fColorManager.getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_BACKGROUND);
+		Color keywordcolor =  fColorManager.getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD);
+		
 		IToken keywordtoken = new Token(new TextAttribute(keywordcolor, backgroundcolor, SWT.BOLD));
 
-		Color defaultColor = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND);
+		//Color defaultColor = ResourceManager.getInstance().getColor(fStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND);
+		Color defaultColor = fColorManager.getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND);
 		IToken defaulttoken = new Token(new TextAttribute(defaultColor));
 		
 		List<IRule> rules = new ArrayList<IRule>();
@@ -79,14 +82,14 @@ public class JavaScriptScanner extends RuleBasedScanner {
 		//Color stringcolor  = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING);
 		//IToken stringtoken = new Token(new TextAttribute(stringcolor));
 		
-		Color commnetcolor  = ResourceManager.getInstance().getColor(fPreferenceStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT);
+		//Color commnetcolor  = ResourceManager.getInstance().getColor(fStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT);
+		Color commnetcolor  = fColorManager.getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT);
 		IToken commnettoken = new Token(new TextAttribute(commnetcolor));
 		
 		rules.add(new EndOfLineRule("//", commnettoken));
 		//rules.add(new SingleLineRule("\"", "\"", stringtoken, '\\'));
 		//rules.add(new SingleLineRule("'", "'", stringtoken, '\\'));
 
-		
 		return rules;
 	}
 }

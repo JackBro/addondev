@@ -1,7 +1,6 @@
 package org.addondev.preferences;
 
 
-import org.addondev.core.AddonDevPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;

@@ -250,7 +250,6 @@ public class AddonDevImportWizardPage extends WizardPage {
 			 
 	            File outFile = new File(distDir.getAbsoluteFile(), ze.getName());
 	            if (ze.isDirectory()) {
-	                // ZipEntry がディレクトリの場合はディレクトリを作成。
 	                outFile.mkdirs();
 	            } else {
 	            	

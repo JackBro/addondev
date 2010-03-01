@@ -56,7 +56,8 @@ public class FileUtil {
 		return null;
 	}
 	
-	public static String getContentFormUri(URL url) throws IOException
+	//public static String getContentFormUri(URL url) throws IOException
+	public static String getContent(URL url) throws IOException
 	{
 		//URL url = AddonDevPlugin.getDefault().getBundle().getEntry(uri);
 		InputStream in = url.openStream();
