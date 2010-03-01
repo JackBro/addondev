@@ -31,6 +31,7 @@ public class AddonDevUIPrefConst {
 	public static final String COLOR_JAVASCRIPT_KEYWORD = "org.addondev.pref.color.javascript.keyword"; 
 	public static final String COLOR_JAVASCRIPT_STRING = "org.addondev.pref.color.javascript.string"; 
 	public static final String BOLD_SUFFIX = ".bold";
+	public static final String ITALIC_SUFFIX = ".italic";
 	
 	
 	public static final RGB DEFAULT_COLOR_JAVASCRIPT_COMMENT = new RGB(0, 128, 0);

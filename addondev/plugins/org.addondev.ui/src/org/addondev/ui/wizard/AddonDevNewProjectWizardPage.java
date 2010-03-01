@@ -24,6 +24,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -56,17 +57,12 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	private Text fminVersion;
 	private Text fmaxVersion;
 	
-	//private Text fname;
 	private Text fcreator;
 	private Text fhomepageURL;
 	
-	//private CheckboxTableViewer fCheckboxViewer;
-	//private Combo creator;
 	
 	private Button fPrefCheck, fPreferenceCheck, fToolbarButtonCheck, 
 	fMenuCheck, fContextMenuCheck, fSidebarCheck;
-	
-	//private ArrayList<Locale> fLocales;
 	
 	public WizardNewProjectCreationPage page1;
 
@@ -80,125 +76,28 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		
-        Composite pcomposite = new Composite(parent, SWT.NONE);
-        GridLayout playout = new GridLayout();
-        playout.numColumns = 1;
-        pcomposite.setLayout(playout);
-		
-		Group installgroup = new Group(pcomposite, SWT.NONE);
-		installgroup.setText("install");
-        GridLayout installlayout = new GridLayout();
-        installlayout.numColumns = 1;
-        installgroup.setLayout(installlayout);
-        installgroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-        Composite composite = new Composite(installgroup, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        layout.numColumns = 3;
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-        fid = addText(composite, "ID");
-        Button uuidbutton = new Button(composite, SWT.NONE);
-        uuidbutton.setText("Generate");
-        uuidbutton.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				UUID id = UUID.randomUUID();
-				fid.setText("{" + id.toString() + "}");
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-      	
-			}
-		});
-        
-      	fversion = addText(composite, "version", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION));
-      	new Label(composite, SWT.NONE);
-      	fApplicationID = addText(composite, "Application ID", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_GUID));
-      	new Label(composite, SWT.NONE);
-      	fminVersion = addText(composite, "minVersion", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MINVERSION));
-      	new Label(composite, SWT.NONE);
-      	fmaxVersion = addText(composite, "maxVersion", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MAXVERSION));
-      	new Label(composite, SWT.NONE);
-      	fcreator = addText(composite, "creator");
-      	new Label(composite, SWT.NONE);
-      	fhomepageURL = addText(composite, "homepageURL");
-      	new Label(composite, SWT.NONE);
-      	
-//		Group localegroup = new Group(pcomposite, SWT.NONE);
-//		localegroup.setText("Locale");     	
-//        GridLayout localelayout = new GridLayout();
-//        //localelayout.numColumns = 1;
-//		localegroup.setLayout(localelayout);
-////		localegroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));  
-//	    GridData data = new GridData(GridData.FILL_BOTH);
-//	    localegroup.setLayoutData(data);
-//		
-//      	//CheckboxTableViewer view = CheckboxTableViewer.newCheckList(parent, SWT.NONE);
-//        // Checkbox table viewer of decorators
-//	    fCheckboxViewer = CheckboxTableViewer.newCheckList(localegroup,
-//                SWT.BORDER  | SWT.V_SCROLL);
-//      	//checkboxViewer.getTable().getVerticalBar().setVisible(true);
-//        //checkboxViewer.getTable().setLayoutData(
-//        //        new GridData(GridData.FILL_HORIZONTAL));
-//        //checkboxViewer.getTable().setFont(decoratorsComposite.getFont());
-//	    fCheckboxViewer.setLabelProvider(new LabelProvider() {
-//            public String getText(Object element) {
-//                return ((Locale) element).getName();
-//            }
-//        });
-//	    
-//	    fCheckboxViewer.addCheckStateListener(new ICheckStateListener() {
-//			
-//			@Override
-//			public void checkStateChanged(CheckStateChangedEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getElement() instanceof Locale)
-//				{
-//					String locale = ((Locale)event.getElement()).getName();
-//					if(event.getChecked())
-//					{
-//						creator.add(locale);
-//					}
-//					else
-//					{
-//						creator.remove(locale);
-//					}
-//				}
-//			}
-//		});
-//
-//        GridData tabledata = new GridData(GridData.FILL_BOTH);
-//        fCheckboxViewer.getTable().setLayoutData(tabledata);
-//        fCheckboxViewer.setContentProvider(new ArrayContentProvider());
-//        //fCheckboxViewer.setInput(Locale.values());
-//      	
-//        Label label = new Label(localegroup, SWT.NONE);
-//        label.setText("：");
-//        
-//        creator = new Combo(localegroup, SWT.READ_ONLY);
-//        creator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));  
-        
-        createOption(pcomposite);
+		Composite container = new Composite(parent, SWT.NONE);
+		container.setLayout(new GridLayout());
+		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+	
+		createInstallInfo(container);
+        createOption(container);
         
       	doValidate();
       	
-		setControl(pcomposite);
+		setControl(container);
 	}
 	
 	private Text addText(Composite parent, String label, String defaultValue) {
         Label L = new Label(parent, SWT.NONE);
         L.setText(label);
 
-        Text text = new Text(parent, SWT.BORDER);
+        Text text = new Text(parent, SWT.BORDER );
         text.setText(defaultValue);
-        text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		text.setLayoutData(gd);
 
         text.addModifyListener(new ModifyListener(){
 
@@ -215,6 +114,49 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
 	
 	private Text addText(Composite parent, String label) {
 		return addText(parent, label, "");
+	}
+	
+	private void createInstallInfo(Composite parent)
+	{
+		Group installgroup = new Group(parent, SWT.NONE);
+		installgroup.setText("install");
+		GridLayout layout = new GridLayout(3, false);
+		layout.marginWidth = layout.marginHeight = 3;
+		installgroup.setLayout(layout);
+		installgroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		Label label = new Label(installgroup, SWT.NONE);
+		label.setText("ID");
+
+        fid = new Text(installgroup, SWT.BORDER );
+        fid.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		fid.addModifyListener(new ModifyListener(){
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				// TODO Auto-generated method stub
+				doValidate();
+			}
+        	
+        });
+
+        Button uuidbutton = new Button(installgroup, SWT.NONE);
+        uuidbutton.setText("Generate");
+        uuidbutton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				fid.setText("{"+ UUID.randomUUID().toString() +"}");
+			}
+		});
+        
+
+      	fversion = addText(installgroup, "version", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION));
+      	fApplicationID = addText(installgroup, "Application ID", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_GUID));
+      	fminVersion = addText(installgroup, "minVersion", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MINVERSION));
+      	fmaxVersion = addText(installgroup, "maxVersion", fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MAXVERSION));
+      	fcreator = addText(installgroup, "creator");
+      	fhomepageURL = addText(installgroup, "homepageURL");		
 	}
 	
 	private void createOption(Composite parent)
@@ -242,8 +184,7 @@ public class AddonDevNewProjectWizardPage extends WizardPage {
         fContextMenuCheck.setText("ContextMenu");
         
         fSidebarCheck = new Button(group, SWT.CHECK);
-        fSidebarCheck.setText("Sidebar");
-        		
+        fSidebarCheck.setText("Sidebar"); 		
 	}
 	
 	private void doValidate()

@@ -90,7 +90,7 @@ public abstract class SyntaxColorPage {
 			String key = colors[i][1];
 			RGB setting = PreferenceConverter.getColor(store, key);
 			boolean bold = store.getBoolean(key + AddonDevUIPrefConst.BOLD_SUFFIX);
-			//boolean italic = store.getBoolean(key + IPDEColorConstants.P_ITALIC_SUFFIX);
+			boolean italic = store.getBoolean(key + AddonDevUIPrefConst.ITALIC_SUFFIX);
 			list[i] = new ColorElement(displayName, key, setting);
 		}
 		return list;
@@ -103,7 +103,7 @@ public abstract class SyntaxColorPage {
 		
 		createElementTable(container);
 		createPreview(container);
-		
+	
 		return container;
 	}
 	
