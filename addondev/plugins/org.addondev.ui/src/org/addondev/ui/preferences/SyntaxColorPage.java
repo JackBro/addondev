@@ -31,7 +31,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 public abstract class SyntaxColorPage {
 
 	private TableViewer fTableViewer;
-	private Button fBoldButton;
+	private Button fBoldButton, fItalicButton;
 	
 	private SourceViewer fSourceViewer;
 	private PropertyChangeSourceViewerConfiguration fSourceViewerConfiguration;
@@ -41,11 +41,15 @@ public abstract class SyntaxColorPage {
 		private String fName;
 		private String fColorKey;
 		private RGB fColorValue;
+		private boolean fBold;
+		private boolean fItalic;
 		
-		public ColorElement(String name, String colorkey, RGB colorvalue) {
+		public ColorElement(String name, String colorkey, RGB colorvalue, boolean bold,  boolean italic) {
 			this.fName = name;
 			this.fColorKey = colorkey;
 			this.fColorValue = colorvalue;
+			this.fBold = bold;
+			this.fItalic = italic;
 		}
 		
 		public String getName() {
@@ -69,16 +73,41 @@ public abstract class SyntaxColorPage {
 		}
 
 		public void setColorValue(RGB fColorValue) {
-			fSourceViewerConfiguration.update(
-					new PropertyChangeEvent(this, fColorKey, this.fColorValue, fColorValue));
+			//fSourceViewerConfiguration.update(
+			//		new PropertyChangeEvent(this, fColorKey, this.fColorValue, fColorValue));
+			firePropertyChange(new PropertyChangeEvent(this, fColorKey, this.fColorValue, fColorValue));
 			this.fColorValue = fColorValue;
-			fSourceViewer.invalidateTextPresentation();
+			//fSourceViewer.invalidateTextPresentation();
+		}
+
+		public boolean isBold() {
+			return fBold;
+		}
+
+		public void setBold(boolean bold) {
+			firePropertyChange(new PropertyChangeEvent(this, fColorKey + AddonDevUIPrefConst.BOLD_SUFFIX, this.fBold, bold));
+			this.fBold = bold;
+		}
+
+		public boolean isItalic() {
+			return fItalic;
+		}
+
+		public void setItalic(boolean italic) {
+			firePropertyChange(new PropertyChangeEvent(this, fColorKey + AddonDevUIPrefConst.ITALIC_SUFFIX, this.fItalic, italic));
+			this.fItalic = italic;
 		}
 
 		@Override
 		public String toString() {
 			// TODO Auto-generated method stub
 			return getName();
+		}
+		
+		private void firePropertyChange(PropertyChangeEvent event)
+		{
+			fSourceViewerConfiguration.update(event);
+			fSourceViewer.invalidateTextPresentation();
 		}
 	}
 	
@@ -96,7 +125,7 @@ public abstract class SyntaxColorPage {
 			RGB setting = PreferenceConverter.getColor(store, key);
 			boolean bold = store.getBoolean(key + AddonDevUIPrefConst.BOLD_SUFFIX);
 			boolean italic = store.getBoolean(key + AddonDevUIPrefConst.ITALIC_SUFFIX);
-			list[i] = new ColorElement(displayName, key, setting);
+			list[i] = new ColorElement(displayName, key, setting, bold, italic);
 		}
 		return list;
 	}
@@ -154,6 +183,24 @@ public abstract class SyntaxColorPage {
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		fBoldButton.setLayoutData(gd);	
+		fBoldButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ColorElement item = getColorElement(fTableViewer);
+				item.setBold(fBoldButton.getSelection());
+			}
+		});
+		
+		fItalicButton = new Button(colorComposite, SWT.CHECK);
+		fItalicButton.setText("Italic");
+		gd = new GridData();
+		gd.horizontalSpan = 2;
+		fItalicButton.setLayoutData(gd);	
+		fItalicButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ColorElement item = getColorElement(fTableViewer);
+				item.setItalic(fItalicButton.getSelection());				
+			}
+		});
 		
 		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
@@ -162,6 +209,8 @@ public abstract class SyntaxColorPage {
 				// TODO Auto-generated method stub
 				ColorElement item = getColorElement(fTableViewer);
 				colorSelector.setColorValue(item.getColorValue());
+				fBoldButton.setSelection(item.isBold());
+				fItalicButton.setSelection(item.isItalic());
 			}
 		});
 		
@@ -202,6 +251,13 @@ public abstract class SyntaxColorPage {
 	
 	public void performOk()
 	{
-		
+		IPreferenceStore store = AddonDevUIPlugin.getDefault().getPreferenceStore();
+		int count = fTableViewer.getTable().getItemCount();
+		for (int i = 0; i < count; i++) {
+			ColorElement item = (ColorElement) fTableViewer.getElementAt(i);
+			PreferenceConverter.setValue(store, item.getColorKey(), item.getColorValue());
+			store.setValue(item.getColorKey() + AddonDevUIPrefConst.BOLD_SUFFIX, item.isBold());
+			store.setValue(item.getColorKey() + AddonDevUIPrefConst.ITALIC_SUFFIX, item.isItalic());
+		}		
 	}
 }

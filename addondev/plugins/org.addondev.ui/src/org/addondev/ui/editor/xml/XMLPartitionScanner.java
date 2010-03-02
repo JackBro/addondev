@@ -21,11 +21,5 @@ public class XMLPartitionScanner extends RuleBasedPartitionScanner {
 		rules.add(new MultiLineRule("<![CDATA[", "]]>", xmlCDATA, (char) 0, true));
 		rules.add(new MultiLineRule("<!--", "-->", xmlComment, (char) 0, true));
 		setPredicateRules(rules.toArray(new IPredicateRule[rules.size()]));
-		
-//		IPredicateRule[] rules = new IPredicateRule[3];
-//		rules[0] = new TagRule(tag);;
-//		rules[1] = new MultiLineRule("<![CDATA[", "]]>", xmlCDATA);
-//		rules[2] = new MultiLineRule("<!--", "-->", xmlComment);
-//		setPredicateRules(rules);
 	}
 }

@@ -6,13 +6,10 @@ import java.util.List;
 import org.addondev.core.ExtensionLoader;
 import org.addondev.preferences.ResourceManager;
 import org.addondev.ui.AddonDevUIPlugin;
-import org.addondev.ui.ColorManager;
 import org.addondev.ui.editor.PropertyChangeSourceViewerConfiguration;
 import org.addondev.ui.editor.hover.IJavaScriptTextHover;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextHover;
@@ -27,9 +24,6 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 public class JavaScriptConfiguration extends PropertyChangeSourceViewerConfiguration {
 	private RuleBasedScanner defaultScanner;
@@ -43,7 +37,6 @@ public class JavaScriptConfiguration extends PropertyChangeSourceViewerConfigura
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		// TODO Auto-generated method stub
-		//return super.getConfiguredContentTypes(sourceViewer);
 		return new String[] {
 				IDocument.DEFAULT_CONTENT_TYPE,
 				JavaScriptPartitionScanner.JS_COMMENT,
@@ -55,7 +48,6 @@ public class JavaScriptConfiguration extends PropertyChangeSourceViewerConfigura
 			ISourceViewer sourceViewer) {
 		// TODO Auto-generated method stub
 		IPreferenceStore store = AddonDevUIPlugin.getDefault().getPreferenceStore();
-		//return super.getPresentationReconciler(sourceViewer);
 		PresentationReconciler reconciler = new PresentationReconciler();
 		DefaultDamagerRepairer dr = null;
 		
@@ -89,13 +81,6 @@ public class JavaScriptConfiguration extends PropertyChangeSourceViewerConfigura
 		
 		return reconciler;		
 	}	
-	
-//	@Override
-//	public ITextHover getTextHover(ISourceViewer sourceViewer,
-//			String contentType) {
-//		// TODO Auto-generated method stub
-//		return new JavaScriptTextHover(sourceViewer, contentType);
-//	}
 
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
@@ -114,12 +99,6 @@ public class JavaScriptConfiguration extends PropertyChangeSourceViewerConfigura
 	public IAutoEditStrategy[] getAutoEditStrategies(
 			ISourceViewer sourceViewer, String contentType) {
 		// TODO Auto-generated method stub
-		//return super.getAutoEditStrategies(sourceViewer, contentType);
-//		IAutoEditStrategy[] pstrategies = super.getAutoEditStrategies(sourceViewer, contentType);
-//		IAutoEditStrategy[] strategies = new IAutoEditStrategy[pstrategies.length+1];
-//		System.arraycopy(pstrategies, 0, strategies, 0, pstrategies.length);
-//		strategies[pstrategies.length-1] = new JavaScriptAutoIndentStrategy();
-//		return strategies;
 		IAutoEditStrategy strategy = new JavaScriptAutoIndentStrategy();
 		IAutoEditStrategy[] result = new IAutoEditStrategy[1];
 		result[0] = strategy;
@@ -142,19 +121,24 @@ public class JavaScriptConfiguration extends PropertyChangeSourceViewerConfigura
 		return super.getTextHover(sourceViewer, contentType);
 	}
 	
+	
+	
 	public boolean update(PropertyChangeEvent event)
 	{
-		if(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT.equals(event.getProperty()))
+		if(event.getProperty().startsWith(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT))
 		{
-			TextAttribute attr = (TextAttribute) fCommnetToken.getData();
-			//Color foreground = attr.getForeground();
-			Color background = attr.getBackground();
-			int style = attr.getStyle();
-			ColorRegistry cr = JFaceResources.getColorRegistry();
-			cr.put(event.getProperty(), (RGB)event.getNewValue());
-			//ColorManager.getInstance(). event.getNewValue()
-			fCommnetToken.setData(new TextAttribute(cr.get(event.getProperty()), background, style));
-			//fCommentScanner.setDefaultReturnToken(fCommnetToken.setData(new TextAttribute(foreground, background, style)));
+			setSyntax(event, fCommnetToken, AddonDevUIPrefConst.BOLD_SUFFIX, AddonDevUIPrefConst.ITALIC_SUFFIX);
+			return true;
+		}
+		else if(event.getProperty().startsWith(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD))
+		{
+			Token token = ((JavaScriptScanner)defaultScanner).getKeywordToken();
+			setSyntax(event, token, AddonDevUIPrefConst.BOLD_SUFFIX, AddonDevUIPrefConst.ITALIC_SUFFIX);
+			return true;
+		}
+		else if(event.getProperty().startsWith(AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING))
+		{
+			setSyntax(event, fStringToken, AddonDevUIPrefConst.BOLD_SUFFIX, AddonDevUIPrefConst.ITALIC_SUFFIX);
 			return true;
 		}
 		

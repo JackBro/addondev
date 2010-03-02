@@ -65,16 +65,16 @@ public class ParserTest {
 		JsNode node = parser.root;
 		node.dump("");
 		
-		int offset = 183;
-		//String t = getAssistTarget(src, offset);
-		
-		//JsNode node = JsNodeHelper.findChildNode(parser.root, t);
-		JsNode node2 = parser.root.getNodeFromOffset(offset);
-		//JsNode offsetnode = JsNodeHelper.findChildNode(node2, "f");
-		
-		System.out.println(node2.getId() + " : " + node2.getImage());
-		
-		node2.dump("");
+//		int offset = 183;
+//		//String t = getAssistTarget(src, offset);
+//		
+//		//JsNode node = JsNodeHelper.findChildNode(parser.root, t);
+//		JsNode node2 = parser.root.getNodeFromOffset(offset);
+//		//JsNode offsetnode = JsNodeHelper.findChildNode(node2, "f");
+//		
+//		System.out.println(node2.getId() + " : " + node2.getImage());
+//		
+//		node2.dump("");
 	}
 	
 	@Test

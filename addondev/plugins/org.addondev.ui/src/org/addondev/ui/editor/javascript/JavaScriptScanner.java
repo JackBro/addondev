@@ -33,6 +33,9 @@ public class JavaScriptScanner extends RuleBasedScanner {
 	private IPreferenceStore fStore;
 	private IColorManager fColorManager;
 	
+	private Token fKeywordToken;
+	
+	
 	static String[] fKeywords= {
 		"let",
 		"abstract",
@@ -50,6 +53,13 @@ public class JavaScriptScanner extends RuleBasedScanner {
 		"var", "volatile",
 		"while"
 	};
+	
+	
+	
+	public Token getKeywordToken() {
+		return fKeywordToken;
+	}
+
 	public JavaScriptScanner(IPreferenceStore fPreferenceStore) {
 		super();
 		this.fStore = fPreferenceStore;
@@ -66,7 +76,11 @@ public class JavaScriptScanner extends RuleBasedScanner {
 		Color backgroundcolor = fColorManager.getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_BACKGROUND);
 		Color keywordcolor =  fColorManager.getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD);
 		
-		IToken keywordtoken = new Token(new TextAttribute(keywordcolor, backgroundcolor, SWT.BOLD));
+		boolean bold = fStore.getBoolean(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD + AddonDevUIPrefConst.BOLD_SUFFIX);
+		boolean italic = fStore.getBoolean(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD + AddonDevUIPrefConst.ITALIC_SUFFIX);
+		
+		int keywordstyle = (bold?SWT.BOLD:SWT.NORMAL) | (italic?SWT.ITALIC:SWT.NORMAL);
+		fKeywordToken = new Token(new TextAttribute(keywordcolor, backgroundcolor, keywordstyle));//SWT.BOLD));
 
 		//Color defaultColor = ResourceManager.getInstance().getColor(fStore, AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND);
 		Color defaultColor = fColorManager.getColor(AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND);
@@ -75,7 +89,7 @@ public class JavaScriptScanner extends RuleBasedScanner {
 		List<IRule> rules = new ArrayList<IRule>();
 		WordRule wordRule = new WordRule(new JavaWordDetector(), defaulttoken);
 		for (String keyword : fKeywords) {
-			 wordRule.addWord(keyword, keywordtoken); // ワードの追加
+			 wordRule.addWord(keyword, fKeywordToken); // ワードの追加
 		}
 		rules.add(wordRule);
 		

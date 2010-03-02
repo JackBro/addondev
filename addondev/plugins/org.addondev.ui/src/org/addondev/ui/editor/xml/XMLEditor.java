@@ -14,7 +14,8 @@ public class XMLEditor extends TextEditor {
 	public XMLEditor() {
 		super();
 		colorManager = new ColorManager();
-		setSourceViewerConfiguration(new XMLConfiguration(colorManager));
+		//setSourceViewerConfiguration(new XMLConfiguration(colorManager));
+		setSourceViewerConfiguration(new XMLConfiguration());
 		setDocumentProvider(new XMLDocumentProvider());
 	}
 	public void dispose() {

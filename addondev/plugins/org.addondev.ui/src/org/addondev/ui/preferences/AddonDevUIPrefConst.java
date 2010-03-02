@@ -30,6 +30,13 @@ public class AddonDevUIPrefConst {
 	public static final String COLOR_JAVASCRIPT_COMMENT = "org.addondev.pref.color.javascript.comment"; 
 	public static final String COLOR_JAVASCRIPT_KEYWORD = "org.addondev.pref.color.javascript.keyword"; 
 	public static final String COLOR_JAVASCRIPT_STRING = "org.addondev.pref.color.javascript.string"; 
+	
+	public static final String COLOR_XML_FOREGROUND = "org.addondev.pref.color.xml.foreground"; 
+	public static final String COLOR_XML_TAG = "org.addondev.pref.color.xml.tag"; 
+	public static final String COLOR_XML_COMMENT = "org.addondev.pref.color.xml.comment"; 
+	public static final String COLOR_XML_KEYWORD = "org.addondev.pref.color.xml.keyword"; 
+	public static final String COLOR_XML_STRING = "org.addondev.pref.color.xml.string";	
+	
 	public static final String BOLD_SUFFIX = ".bold";
 	public static final String ITALIC_SUFFIX = ".italic";
 	
@@ -37,4 +44,9 @@ public class AddonDevUIPrefConst {
 	public static final RGB DEFAULT_COLOR_JAVASCRIPT_COMMENT = new RGB(0, 128, 0);
 	public static final RGB DEFAULT_COLOR_JAVASCRIPT_KEYWORD = new RGB(150, 0, 50);
 	public static final RGB DEFAULT_COLOR_JAVASCRIPT_STRING = new RGB(0, 0, 170);
+	
+	public static final RGB DEFAULT_COLOR_XML_TAG = new RGB(0, 128, 128);
+	public static final RGB DEFAULT_COLOR_XML_COMMENT = new RGB(0, 128, 0);
+	public static final RGB DEFAULT_COLOR_XML_KEYWORD = new RGB(150, 0, 50);
+	public static final RGB DEFAULT_COLOR_XML_STRING = new RGB(0, 0, 170);
 }

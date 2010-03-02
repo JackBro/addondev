@@ -169,7 +169,10 @@ public class JavaScriptEditor extends TextEditor implements IPropertyChangeListe
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		// TODO Auto-generated method stub
-		fSourceViewerConfiguration.update(event);
-		//getSourceViewer().invalidateTextPresentation();
+		if(fSourceViewerConfiguration.update(event))
+		{
+			//getSourceViewer().invalidateTextPresentation();
+		}
+		
 	}
 }

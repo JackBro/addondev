@@ -9,8 +9,7 @@ import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
-public class AddonDevUIPreferenceInitializer extends
-		AbstractPreferenceInitializer {
+public class AddonDevUIPreferenceInitializer extends AbstractPreferenceInitializer {
 	public AddonDevUIPreferenceInitializer() {
 		// TODO Auto-generated constructor stub
 		IPreferenceStore store = AddonDevUIPlugin.getDefault().getPreferenceStore();
@@ -18,34 +17,66 @@ public class AddonDevUIPreferenceInitializer extends
 		
 		String bgcolor = editorstore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT) ? 
 				editorstore.getDefaultString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND):editorstore.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND);
-		//store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_BACKGROUND, bgcolor);
 		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_BACKGROUND, 
 				StringConverter.asRGB(bgcolor));
 		
 		String fgcolor = editorstore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT) ? 
 				editorstore.getDefaultString(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND):editorstore.getString(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND);
-		//store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND, fgcolor);
 		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_FOREGROUND, 
 				StringConverter.asRGB(fgcolor));
 		
-		//store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD, 
-		//		StringConverter.asString(AddonDevUIPrefConst.DEFAULT_COLOR_JAVASCRIPT_KEYWORD));
-		//PreferenceConverter.setValue(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD, 
-		//		AddonDevUIPrefConst.DEFAULT_COLOR_JAVASCRIPT_KEYWORD);
 		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD, 
 				AddonDevUIPrefConst.DEFAULT_COLOR_JAVASCRIPT_KEYWORD);
+		store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD + AddonDevUIPrefConst.BOLD_SUFFIX
+				, true);
+		store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD + AddonDevUIPrefConst.ITALIC_SUFFIX
+				, false);
 		
-		//store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT, 
-		//		StringConverter.asString(AddonDevUIPrefConst.DEFAULT_COLOR_JAVASCRIPT_COMMENT));
-		//PreferenceConverter.setValue(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT, 
-		//		AddonDevUIPrefConst.DEFAULT_COLOR_JAVASCRIPT_COMMENT);
 		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT, 
 				AddonDevUIPrefConst.DEFAULT_COLOR_JAVASCRIPT_COMMENT);
+		store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT + AddonDevUIPrefConst.BOLD_SUFFIX
+				, false);
+		store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT + AddonDevUIPrefConst.ITALIC_SUFFIX
+				, false);
 		
-		//store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING, 
-		//		StringConverter.asString(AddonDevUIPrefConst.DEFAULT_COLOR_JAVASCRIPT_STRING));
 		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING, 
 				AddonDevUIPrefConst.DEFAULT_COLOR_JAVASCRIPT_STRING);
+		store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING + AddonDevUIPrefConst.BOLD_SUFFIX
+				, false);
+		store.setDefault(AddonDevUIPrefConst.COLOR_JAVASCRIPT_STRING + AddonDevUIPrefConst.ITALIC_SUFFIX
+				, false);
+		
+		//XUL
+		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_XML_FOREGROUND, 
+				StringConverter.asRGB(fgcolor));
+		
+		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_XML_TAG, 
+				AddonDevUIPrefConst.DEFAULT_COLOR_XML_TAG);
+		store.setDefault(AddonDevUIPrefConst.COLOR_XML_TAG + AddonDevUIPrefConst.BOLD_SUFFIX
+				, true);
+		store.setDefault(AddonDevUIPrefConst.COLOR_XML_TAG + AddonDevUIPrefConst.ITALIC_SUFFIX
+				, false);		
+		
+		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_XML_KEYWORD, 
+				AddonDevUIPrefConst.DEFAULT_COLOR_XML_KEYWORD);
+		store.setDefault(AddonDevUIPrefConst.COLOR_XML_KEYWORD + AddonDevUIPrefConst.BOLD_SUFFIX
+				, true);
+		store.setDefault(AddonDevUIPrefConst.COLOR_XML_KEYWORD + AddonDevUIPrefConst.ITALIC_SUFFIX
+				, false);
+		
+		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_XML_COMMENT, 
+				AddonDevUIPrefConst.DEFAULT_COLOR_XML_COMMENT);
+		store.setDefault(AddonDevUIPrefConst.COLOR_XML_COMMENT + AddonDevUIPrefConst.BOLD_SUFFIX
+				, false);
+		store.setDefault(AddonDevUIPrefConst.COLOR_XML_COMMENT + AddonDevUIPrefConst.ITALIC_SUFFIX
+				, false);
+		
+		PreferenceConverter.setDefault(store, AddonDevUIPrefConst.COLOR_XML_STRING, 
+				AddonDevUIPrefConst.DEFAULT_COLOR_XML_STRING);
+		store.setDefault(AddonDevUIPrefConst.COLOR_XML_STRING + AddonDevUIPrefConst.BOLD_SUFFIX
+				, false);
+		store.setDefault(AddonDevUIPrefConst.COLOR_XML_STRING + AddonDevUIPrefConst.ITALIC_SUFFIX
+				, false);		
 		
 		store.setDefault(AddonDevUIPrefConst.FIREFOX_ADDON_GUID, AddonDevUIPrefConst.DEFAULT_FIREFOX_ADDON_GUID);
 		store.setDefault(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION, AddonDevUIPrefConst.DEFAULT_FIREFOX_ADDON_VERSION);

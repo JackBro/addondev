@@ -2,15 +2,26 @@ package org.addondev.ui.preferences;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.editor.PropertyChangeSourceViewerConfiguration;
+import org.addondev.ui.editor.javascript.JavaScriptConfiguration;
+import org.addondev.ui.editor.javascript.JavaScriptPartitionScanner;
+import org.addondev.ui.editor.xml.XMLConfiguration;
+import org.addondev.ui.editor.xml.XMLPartitionScanner;
+import org.addondev.util.FileUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -25,8 +36,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 public class XULEditorPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
@@ -45,7 +59,60 @@ public class XULEditorPreferencePage extends PreferencePage implements
 		}
 	}	
 	
+	class XULSyntaxColorPage extends SyntaxColorPage
+	{
+		private String[][] COLOR_STRINGS = new String[][] {
+				{"tag", AddonDevUIPrefConst.COLOR_XML_TAG},
+				{"keyword", AddonDevUIPrefConst.COLOR_XML_KEYWORD}, 
+				{"commnet", AddonDevUIPrefConst.COLOR_XML_COMMENT},
+				{"string", AddonDevUIPrefConst.COLOR_XML_STRING}
+			};
+		
+		@Override
+		protected String[][] getColorStrings() {
+			// TODO Auto-generated method stub
+			return COLOR_STRINGS;
+		}
+
+		@Override
+		protected IDocument getDocument() {
+			// TODO Auto-generated method stub
+			InputStream in = getClass().getResourceAsStream("xmlpreview.xml");
+			String text = "";
+			try {
+				text = FileUtil.getContent(in);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			IDocument document = new Document(text);
+			IDocumentPartitioner partitioner =
+				new FastPartitioner(
+					new XMLPartitionScanner(),
+					new String[] {
+						IDocument.DEFAULT_CONTENT_TYPE,
+						XMLPartitionScanner.XML_CDATA,
+						XMLPartitionScanner.XML_COMMENT,
+						XMLPartitionScanner.XML_TAG});
+			partitioner.connect(document);
+			document.setDocumentPartitioner(partitioner);
+			
+			return document;
+		}
+
+		@Override
+		protected TextSourceViewerConfiguration getSourceViewerConfiguration() {
+			// TODO Auto-generated method stub
+			PropertyChangeSourceViewerConfiguration conf = new XMLConfiguration();
+			return (TextSourceViewerConfiguration)conf;
+		}
+		
+	}
+	
 	private IPreferenceStore fStote;
+	
+	private XULSyntaxColorPage fXULSyntaxColorPage;
+	
 	private FileFieldEditor fXULRunnerFile;
 	private IntegerFieldEditor fInteditorH, fInteditorW;
 	private Button fRegbutton;
@@ -68,10 +135,43 @@ public class XULEditorPreferencePage extends PreferencePage implements
 	@Override
 	protected Control createContents(Composite parent) {
 		// TODO Auto-generated method stub
-		final Composite composite = new Composite(parent, SWT.NONE);
+		Composite composite = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		TabFolder tabFolder = new TabFolder(composite,SWT.NULL);
+		
+		TabItem item1 = new TabItem(tabFolder,SWT.NULL);
+		item1.setText("Editor");
+		item1.setControl(createEditor(tabFolder));
+		
+		TabItem item2 = new TabItem(tabFolder,SWT.NULL);
+		item2.setText("Preview");
+		item2.setControl(createPreview(tabFolder));		
+		
+		return parent;
+	}
+	
+	private Control createEditor(Composite parent)
+	{
+		Composite composite = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));	
+		
+		fXULSyntaxColorPage = new XULSyntaxColorPage();
+		fXULSyntaxColorPage.createControl(composite);
+		
+		return composite;
+	}
+	
+	private Control createPreview(Composite parent)
+	{
+		final Composite composite = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));		
 		
 		Group xulrunnergroup= new Group(composite, SWT.NONE);
         GridLayout xullayout = new GridLayout();
@@ -192,9 +292,10 @@ public class XULEditorPreferencePage extends PreferencePage implements
         cssb.setLayoutData(bdata);
 		
         setValues();
-		
-		return parent;
+        
+        return composite;
 	}
+	
 	
 	@Override
 	public boolean performOk() {

@@ -6,15 +6,16 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 
-public class AddonDevNewProjectPreferencePage extends FieldEditorPreferencePage implements
+public class NewProjectPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
-
+	
 	private IPreferenceStore fStote;
 	
 	private StringFieldEditor fGUID;
@@ -22,7 +23,7 @@ public class AddonDevNewProjectPreferencePage extends FieldEditorPreferencePage 
 	private StringFieldEditor fMinVersion;
 	private StringFieldEditor fMaxVersion;
 	
-	public AddonDevNewProjectPreferencePage() {
+	public NewProjectPreferencePage() {
 		// TODO Auto-generated constructor stub
 		fStote = AddonDevUIPlugin.getDefault().getPreferenceStore();
 		setPreferenceStore(fStote);
@@ -50,24 +51,16 @@ public class AddonDevNewProjectPreferencePage extends FieldEditorPreferencePage 
 		// TODO Auto-generated method stub
 		Composite parent = getFieldEditorParent();
 		
-//		Label debuglabel = new Label(parent, SWT.NONE);
-//		debuglabel.setText("debug");
-//		createDummyLabel(parent);
-//
-//		//fEclipsePort = createStringFieldEditor("name", "labelText", parent, fStote.getString(PrefConst.ECLIPSE_PORT));
-//		//fDebuggerPort = createStringFieldEditor("name", "labelText", parent, fStote.getString(PrefConst.DEBUGGER_PORT));
-//		
-//		createDummyLabel(parent);
-//		createDummyLabel(parent);
-		
 		Label projectlabel = new Label(parent, SWT.NONE);
 		projectlabel.setText("project");
-		createDummyLabel(parent);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		projectlabel.setLayoutData(gd);
 		
-		fGUID = createStringFieldEditor(AddonDevUIPrefConst.FIREFOX_ADDON_GUID, "labelText", parent, fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_GUID));
-		fVersion = createStringFieldEditor(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION, "labelText", parent, fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION));   
-		fMinVersion = createStringFieldEditor(AddonDevUIPrefConst.FIREFOX_ADDON_MINVERSION, "labelText", parent, fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MINVERSION));
-		fMaxVersion = createStringFieldEditor(AddonDevUIPrefConst.FIREFOX_ADDON_MAXVERSION, "labelText", parent, fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MAXVERSION));
+		fGUID = createStringFieldEditor(AddonDevUIPrefConst.FIREFOX_ADDON_GUID, "ID", parent, fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_GUID));
+		fVersion = createStringFieldEditor(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION, "Version", parent, fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_VERSION));   
+		fMinVersion = createStringFieldEditor(AddonDevUIPrefConst.FIREFOX_ADDON_MINVERSION, "MinVersion", parent, fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MINVERSION));
+		fMaxVersion = createStringFieldEditor(AddonDevUIPrefConst.FIREFOX_ADDON_MAXVERSION, "MaxVersio", parent, fStote.getString(AddonDevUIPrefConst.FIREFOX_ADDON_MAXVERSION));
 	}
 	
 	private StringFieldEditor createStringFieldEditor(String name, String label, Composite parent, String value)
@@ -75,10 +68,5 @@ public class AddonDevNewProjectPreferencePage extends FieldEditorPreferencePage 
 		StringFieldEditor field = new StringFieldEditor(name, label, parent);
 		field.setStringValue(value);
 		return field;
-	}
-	
-	private void createDummyLabel(Composite parent)
-	{
-		Label dummy = new Label(parent, SWT.NONE);
 	}
 }

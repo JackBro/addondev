@@ -18,8 +18,11 @@ public class Parser {
 	
 	private void setJsDoc(JsNode node, String jsDoc)
 	{
-		node.setfJsDoc(jsDoc);
-		fJsDoc = "";
+		if(fJsDoc.length() > 0)
+		{
+			node.setfJsDoc(jsDoc);
+			fJsDoc = "";
+		}
 	}
 	
 	private JsNode findNode(String image)
@@ -836,51 +839,54 @@ public class Parser {
 			
 			String sym = lex.value();
 			getToken();
-			if (token == ':') {
-				getToken();
-				if (token == TokenType.SYMBOL || token == TokenType.STRING) {
-					JsNode node = new JsNode(parent, "var", sym, lex.offset());
-					parent.addChild(node);
-				} else if (token == TokenType.FUNCTION) {
-					JsNode node = new JsNode(parent, "propfunction", sym, lex.offset());
-					parent.addChild(node);
-					//fScopeStack.pushScope(new Scope(lex.offset(), node, "prop"));
-					
-					advanceToken('(');
-					
-					//frame.push();
-
-					functionCall(node);
-					//functionDef(node);
-					
-//					getToken();	
-//					while (token != '}' && token != TokenType.EOS) {
-//						stmt(node);
-//						//parent.setEndoffset(lex.offset());
-//						//node.setEndoffset(lex.offset());
-//						getToken(); 
-//						node.setEndoffset(lex.offset()-1);
-//					}
-
-					//frame.pop();
-					
-					//Scope scope = fScopeStack.popScope();
-					//scope.setEnd(lex.offset());
-					advanceToken('}');
-					getToken();	
-					//int e = lex.offset();
-					//node.setEndoffset(lex.offset());
-					//parent.setEndoffset(lex.offset());
-				}
-				else if(token == '{')
-				{
-					JsNode node = new JsNode(parent, "var", sym, lex.offset());
-					parent.addChild(node);
-					objectExpr(node);
-					//int e = lex.offset();
-					//parent.setEndoffset(lex.offset());
-				}
+			switch (token) {
+				case TokenType.JSDOC:
+					fJsDoc = lex.value();
+					break;
+				
+				case ':':
+					getToken();
+					if (token == TokenType.SYMBOL || token == TokenType.STRING) {	
+						JsNode node = new JsNode(parent, "var", sym, lex.offset());
+						setJsDoc(node, fJsDoc);
+						parent.addChild(node);	
+					} else if (token == TokenType.FUNCTION) {
+						JsNode node = new JsNode(parent, "propfunction", sym, lex.offset());
+						setJsDoc(node, fJsDoc);
+						parent.addChild(node);			
+						advanceToken('(');
+						functionCall(node);
+						advanceToken('}');
+						getToken();	
+					}
+					else if(token == '{')
+					{
+						JsNode node = new JsNode(parent, "var", sym, lex.offset());
+						parent.addChild(node);
+						objectExpr(node);
+					}				
+				break;
 			}
+//			if (token == ':') {
+//				getToken();
+//				if (token == TokenType.SYMBOL || token == TokenType.STRING) {
+//					JsNode node = new JsNode(parent, "var", sym, lex.offset());
+//					parent.addChild(node);
+//				} else if (token == TokenType.FUNCTION) {
+//					JsNode node = new JsNode(parent, "propfunction", sym, lex.offset());
+//					parent.addChild(node);			
+//					advanceToken('(');
+//					functionCall(node);
+//					advanceToken('}');
+//					getToken();	
+//				}
+//				else if(token == '{')
+//				{
+//					JsNode node = new JsNode(parent, "var", sym, lex.offset());
+//					parent.addChild(node);
+//					objectExpr(node);
+//				}
+//			}
 		}
 		if(token != '}' && token != TokenType.EOS)
 		{

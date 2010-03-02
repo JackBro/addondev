@@ -112,8 +112,18 @@
 //var MyObject = function(){};
 var SMyObject = //.prototype = 
 {
-    //message3: null,
+	/**
+	 * 
+	 * @type objaect
+	 * 
+	 */
+	message3: null,
     
+    /**
+     * 
+     * @type interfaces
+     * 
+     */
     hello3: function (arg0, arg1){
     	//arg0 = 100;
     	//var aa=0;

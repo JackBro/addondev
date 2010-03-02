@@ -17,7 +17,7 @@ public class JsNode {
 	private int fOffset;
 	private int endoffset;
 	
-	private String codeassist;
+	//private String codeassist;
 	
 	private String fJsDoc;	
 	private String fType;	
@@ -114,31 +114,6 @@ public class JsNode {
 		return null;
 	}
 	
-//	public void setBindNode(JsNode node)
-//	{
-//		fBindNode = node;
-//		children = null;
-//	}
-//	
-//	public JsNode getBindNode()
-//	{
-//		return fBindNode;
-//	}
-	
-//	public JsNode getChild(Frame localframe, String sym) {
-//
-//		for (int i = 0; i < children.size(); i++) {
-//			if(children.get(i).image.equals(sym))
-//			{
-//				return children.get(i);
-//			}
-//		}
-//		
-//		String type = getType();
-//		
-//		return null;
-//	}
-	
 	public int getOffset()
 	{
 		return fOffset;
@@ -150,9 +125,6 @@ public class JsNode {
 	
 	public void addChild(JsNode child)
 	{
-//		if(fBindNode != null)
-//			fBindNode = null;
-		
 		if(children == null)
 			children = new ArrayList<JsNode>();
 		
@@ -179,7 +151,7 @@ public class JsNode {
 		int s = fOffset;
 		int e = endoffset;
 		String val = "";
-		System.out.println(toString(prefix) + " : " + image + " = " + val + " s:e= " + s + ":" + e);
+		System.out.println(toString(prefix) + " : " + image + " = " + val + " type=" + getType());//" s:e= " + s + ":" + e);
 		if (children != null) {
 			for (int i = 0; i < children.size(); ++i) {
 				JsNode n = children.get(i);
@@ -190,49 +162,6 @@ public class JsNode {
 		}
 	}
 	
-	private static class ttmp
-	{
-		public static JsNode node;
-	}
-	
-	private  JsNode fOffsetNode;
-
-	public JsNode getNodeFromOffset(int offset)
-	{
-		fOffsetNode = null;
-		_getNodeFromOffset(offset);
-		return ttmp.node;
-	}
-	public void _getNodeFromOffset(int offset)
-	{
-		//if(fff) return fOffsetNode;
-		if (children != null) {
-			for (int i = 0; i < children.size(); ++i) {
-				JsNode n = children.get(i);
-				if (n != null) {
-					if((offset > n.getOffset() && offset < n.getEndoffset()) && fOffsetNode == null)
-					{
-						fOffsetNode = n;
-						ttmp.node = n;
-						System.out.println("fOffsetNode = " + fOffsetNode.getId() + " : " + fOffsetNode.getImage());
-					}
-					else if(fOffsetNode != null)
-					{
-						System.out.println("!fOffsetNode = " + fOffsetNode.getId() + " : " + fOffsetNode.getImage());
-						//return fOffsetNode;
-						break;
-					}
-					n._getNodeFromOffset(offset);
-					//if(fff) break;
-				}
-			}
-		}
-		//return fOffsetNode;
-	}
-
-	public void setChildNode(ArrayList<JsNode> children) {
-		this.children = children;
-	}
 	public ArrayList<JsNode> getChildNode() {
 		if(this.children == null)
 		{

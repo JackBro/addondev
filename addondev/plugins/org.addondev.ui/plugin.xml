@@ -157,21 +157,27 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.addondev.ui.preferencepages"
-            class="org.addondev.ui.preferences.AddonDevNewProjectPreferencePage"
+            class="org.addondev.ui.preferences.NewProjectPreferencePage"
             id="org.addondev.ui.preferencepages"
-            name="AddonDev">
+            name="Project default">
       </page>
       <page
             category="org.addondev.ui.preferencepages"
+            class="org.addondev.ui.WorkbenchPreferencePage1"
+            id="org.addondev.ui.preferencepages.editor"
+            name="Editor">
+      </page>
+      <page
+            category="org.addondev.ui.preferencepages.editor"
             class="org.addondev.ui.preferences.XULEditorPreferencePage"
             id="org.addondev.ui.XULPreferencepages"
             name="XUL Editor">
       </page>
       <page
-            category="org.addondev.ui.preferencepages"
+            category="org.addondev.ui.preferencepages.editor"
             class="org.addondev.ui.preferences.JavaScriptEditorPreferencePage"
             id="AddonDev.page1"
-            name="name">
+            name="JavaScript">
       </page>
       <page
             category="org.addondev.ui.preferencepages"
