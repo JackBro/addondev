@@ -7,6 +7,7 @@ import java.net.URL;
 
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.editor.PropertyChangeSourceViewerConfiguration;
 import org.addondev.ui.editor.javascript.JavaScriptConfiguration;
 import org.addondev.ui.editor.javascript.JavaScriptPartitionScanner;
 import org.addondev.util.FileUtil;
@@ -14,12 +15,14 @@ import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
@@ -84,7 +87,8 @@ public class JavaScriptEditorPreferencePage extends PreferencePage implements IW
 		@Override
 		protected TextSourceViewerConfiguration getSourceViewerConfiguration() {
 			// TODO Auto-generated method stub
-			return new JavaScriptConfiguration();
+			PropertyChangeSourceViewerConfiguration conf = new JavaScriptConfiguration();
+			return (TextSourceViewerConfiguration)conf;
 		}
 		
 	}
@@ -104,6 +108,15 @@ public class JavaScriptEditorPreferencePage extends PreferencePage implements IW
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean performOk() {
+		// TODO Auto-generated method stub
+		PreferenceConverter.setValue(AddonDevUIPlugin.getDefault().getPreferenceStore(),
+				AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD, 
+				new RGB(255, 0, 0));
+		return super.performOk();
 	}
 
 //	public JavaScriptEditorPreferencePage() {

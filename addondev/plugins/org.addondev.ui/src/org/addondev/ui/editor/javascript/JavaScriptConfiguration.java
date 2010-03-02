@@ -3,13 +3,16 @@ package org.addondev.ui.editor.javascript;
 
 import java.util.List;
 
-import org.addondev.builder.IAddonDevBuilder;
 import org.addondev.core.ExtensionLoader;
 import org.addondev.preferences.ResourceManager;
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.ColorManager;
+import org.addondev.ui.editor.PropertyChangeSourceViewerConfiguration;
 import org.addondev.ui.editor.hover.IJavaScriptTextHover;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextHover;
@@ -23,10 +26,12 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
-public class JavaScriptConfiguration extends TextSourceViewerConfiguration {
+public class JavaScriptConfiguration extends PropertyChangeSourceViewerConfiguration {
 	private RuleBasedScanner defaultScanner;
 	private RuleBasedScanner fCommentScanner;
 	private RuleBasedScanner fStringScanner;
@@ -135,6 +140,30 @@ public class JavaScriptConfiguration extends TextSourceViewerConfiguration {
 			}
 		}
 		return super.getTextHover(sourceViewer, contentType);
+	}
+	
+	public boolean update(PropertyChangeEvent event)
+	{
+		if(AddonDevUIPrefConst.COLOR_JAVASCRIPT_COMMENT.equals(event.getProperty()))
+		{
+			TextAttribute attr = (TextAttribute) fCommnetToken.getData();
+			//Color foreground = attr.getForeground();
+			Color background = attr.getBackground();
+			int style = attr.getStyle();
+			ColorRegistry cr = JFaceResources.getColorRegistry();
+			cr.put(event.getProperty(), (RGB)event.getNewValue());
+			//ColorManager.getInstance(). event.getNewValue()
+			fCommnetToken.setData(new TextAttribute(cr.get(event.getProperty()), background, style));
+			//fCommentScanner.setDefaultReturnToken(fCommnetToken.setData(new TextAttribute(foreground, background, style)));
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void update()
+	{
+		
 	}
 
 }

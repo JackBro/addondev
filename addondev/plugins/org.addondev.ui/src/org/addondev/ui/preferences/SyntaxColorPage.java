@@ -1,12 +1,14 @@
 package org.addondev.ui.preferences;
 
 import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.editor.PropertyChangeSourceViewerConfiguration;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,7 +34,7 @@ public abstract class SyntaxColorPage {
 	private Button fBoldButton;
 	
 	private SourceViewer fSourceViewer;
-	private TextSourceViewerConfiguration fSourceViewerConfiguration;
+	private PropertyChangeSourceViewerConfiguration fSourceViewerConfiguration;
 	
 	class ColorElement
 	{
@@ -67,7 +69,10 @@ public abstract class SyntaxColorPage {
 		}
 
 		public void setColorValue(RGB fColorValue) {
+			fSourceViewerConfiguration.update(
+					new PropertyChangeEvent(this, fColorKey, this.fColorValue, fColorValue));
 			this.fColorValue = fColorValue;
+			fSourceViewer.invalidateTextPresentation();
 		}
 
 		@Override
@@ -177,7 +182,7 @@ public abstract class SyntaxColorPage {
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));	
 		
 		fSourceViewer = new SourceViewer(previewComp, null, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		fSourceViewerConfiguration = getSourceViewerConfiguration();
+		fSourceViewerConfiguration = (PropertyChangeSourceViewerConfiguration) getSourceViewerConfiguration();
 
 		if (fSourceViewerConfiguration != null)
 			fSourceViewer.configure(fSourceViewerConfiguration);
@@ -193,5 +198,10 @@ public abstract class SyntaxColorPage {
 	private ColorElement getColorElement(TableViewer viewer) {
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 		return (ColorElement) selection.getFirstElement();
+	}
+	
+	public void performOk()
+	{
+		
 	}
 }

@@ -1,5 +1,7 @@
 package org.addondev.ui.editor.javascript;
 
+import org.addondev.ui.AddonDevUIPlugin;
+import org.addondev.ui.editor.PropertyChangeSourceViewerConfiguration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -28,7 +30,7 @@ import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.RhinoException;
 
-public class JavaScriptEditor extends TextEditor {
+public class JavaScriptEditor extends TextEditor implements IPropertyChangeListener  {
 
 	public static final String JAVASCRIPT_EDIT_CONTEXT = "#AddonDevJavascriptEditContext";
 	public static final String ID = "org.addondev.ui.editor.javascript";
@@ -44,10 +46,21 @@ public class JavaScriptEditor extends TextEditor {
 		}
 	}
 
+	private PropertyChangeSourceViewerConfiguration fSourceViewerConfiguration;
 	public JavaScriptEditor() {
 		super();
 		// TODO Auto-generated constructor stub
-		setSourceViewerConfiguration(new JavaScriptConfiguration());
+		fSourceViewerConfiguration = new JavaScriptConfiguration();
+		setSourceViewerConfiguration(fSourceViewerConfiguration);
+		AddonDevUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		super.dispose();
+		AddonDevUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
+		//AddonDevUIPlugin.getDefault().getPreferenceStore().
 	}
 
 	@Override
@@ -78,6 +91,7 @@ public class JavaScriptEditor extends TextEditor {
 		} else if (input instanceof IStorageEditorInput) {
 			setDocumentProvider(new JavaScriptDocumentProvider());
 		}
+		//getSourceViewer().invalidateTextPresentation()
 		// else if(input instanceof SeqEditorInput){
 		// //setDocumentProvider(new JavaScriptDocumentProvider());
 		// setDocumentProvider(new JavaScriptDocumentProvider());
@@ -150,5 +164,12 @@ public class JavaScriptEditor extends TextEditor {
 		} catch (VirtualMachineError ex) {
 			System.out.println("VirtualMachineError " + ex.getMessage());
 		}
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		// TODO Auto-generated method stub
+		fSourceViewerConfiguration.update(event);
+		//getSourceViewer().invalidateTextPresentation();
 	}
 }
