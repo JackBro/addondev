@@ -1,6 +1,7 @@
 package org.addondev.parser.javascript;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,8 +12,10 @@ public class JsNode {
 	
 	private JsNode parent;
 	private ArrayList<JsNode> children;
+	private HashMap<String, JsNode> fSymbalTable; 
 
 	private String id;
+	private 
 	private String image;
 	private int fOffset;
 	private int endoffset;
@@ -60,6 +63,7 @@ public class JsNode {
 		this.image = image;
 		this.fOffset = offset;
 		offset = -1;
+		fSymbalTable = new HashMap<String, JsNode>();
 	}
 	
 	/**
@@ -77,6 +81,7 @@ public class JsNode {
 		this.image = image;
 		this.fOffset = offset;
 		offset = -1;
+		fSymbalTable = new HashMap<String, JsNode>();
 	}
 
 	public String getId()
@@ -129,6 +134,11 @@ public class JsNode {
 			children = new ArrayList<JsNode>();
 		
 		children.add(child);
+	}
+	
+	public void addChildNode(JsNode node)
+	{
+		fSymbalTable.put(node.getImage(), node);
 	}
 	
 	public JsNode getParent()

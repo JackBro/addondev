@@ -21,5 +21,6 @@ public class TokenType {
 	public static final int VAR = 272; // 'def'
 	public static final int CONST = 273; // 'const'	
 	public static final int JSDOC = 274; //	
-	public static final int NEW = 275; //	
+	public static final int NEW = 275; //
+	//public static final int LET = 276; //
 }
