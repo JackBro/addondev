@@ -114,6 +114,16 @@ public class ParserTest {
 //		node.dump("");
 //		}
 		{
+			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));		
+			Parser parser = new Parser("system.js");
+			parser.parse(src);			
+		}
+		{
+			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));		
+			Parser parser = new Parser("xpcom.js");
+			parser.parse(src);			
+		}
+		{
 		//Lexer lex = null;
 		String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
 		//lex = new Lexer(src);
@@ -126,7 +136,7 @@ public class ParserTest {
 		parser.parse(src);
 		//JsNode node = parser.parse(src);
 		//node.dump("");
-		Scope scope = ScopeManager.instance().getScope("test03.js", 0);
+		//Scope scope = ScopeManager.instance().getScope("test03.js", 0);
 		//JsNode node = scope.getNode().getChild("t");
 		JsNode node = parser.root;
 		node.dump("");

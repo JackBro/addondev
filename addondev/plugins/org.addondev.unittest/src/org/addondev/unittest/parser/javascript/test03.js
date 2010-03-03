@@ -107,7 +107,7 @@
 //
 //}
 
-//var m="100";
+var m="100";
 
 //var MyObject = function(){};
 var SMyObject = //.prototype = 
@@ -132,3 +132,4 @@ var SMyObject = //.prototype =
 
 //var tmp = new MyObject();
 
+var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);

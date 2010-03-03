@@ -35,7 +35,8 @@ public class XMLCommentScanner extends RuleBasedScanner {
 			return Character.isJavaIdentifierPart(c);
 		}
 	}
-	public XMLCommentScanner(ColorManager manager) {
+	//public XMLCommentScanner(ColorManager manager) {
+	public XMLCommentScanner() {
 //		super();
 //	
 //		IToken string =

@@ -47,6 +47,7 @@ public class JavaScriptEditor extends TextEditor implements IPropertyChangeListe
 	}
 
 	private PropertyChangeSourceViewerConfiguration fSourceViewerConfiguration;
+	
 	public JavaScriptEditor() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -60,7 +61,6 @@ public class JavaScriptEditor extends TextEditor implements IPropertyChangeListe
 		// TODO Auto-generated method stub
 		super.dispose();
 		AddonDevUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
-		//AddonDevUIPlugin.getDefault().getPreferenceStore().
 	}
 
 	@Override
@@ -171,8 +171,7 @@ public class JavaScriptEditor extends TextEditor implements IPropertyChangeListe
 		// TODO Auto-generated method stub
 		if(fSourceViewerConfiguration.update(event))
 		{
-			//getSourceViewer().invalidateTextPresentation();
+			getSourceViewer().invalidateTextPresentation();
 		}
-		
 	}
 }

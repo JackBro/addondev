@@ -35,8 +35,7 @@ Components.classes.getService = function(){};
 
 
 //function nsILocalFile(){};
-var nsILocalFile =
-{
+var nsILocalFile = {
 	/**
 	 * 
 	 */
@@ -47,10 +46,9 @@ var nsILocalFile =
 	 * 
 	 */
 	initWithFile : function(aFile){};
-}
+};
 
-var nsIFile = 
-{
+var nsIFile = {
 		append : function(node){};
 		
 		/**
@@ -59,5 +57,5 @@ var nsIFile =
 		 * 
 		 */
 		getPath : function(){};
-}
+};
 

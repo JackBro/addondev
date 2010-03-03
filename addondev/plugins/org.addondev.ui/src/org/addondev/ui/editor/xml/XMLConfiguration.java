@@ -29,7 +29,7 @@ public class XMLConfiguration extends PropertyChangeSourceViewerConfiguration {
 	private XMLScanner scanner;
 	private JavaScriptScanner cdataScanner;
 	private RuleBasedScanner fCommentScanner;
-	private Token fCommnetToken, fTagToken, fDefaulrToken;
+	private Token fCommnetToken, fTagToken, fStringToken, fDefaulrToken;
 
 	//public XMLConfiguration(ColorManager colorManager) {
 	public XMLConfiguration() {
@@ -64,6 +64,7 @@ public class XMLConfiguration extends PropertyChangeSourceViewerConfiguration {
 	protected XMLTagScanner getXMLTagScanner() {
 		if (tagScanner == null) {
 			tagScanner = new XMLTagScanner(fStore);
+			fStringToken = tagScanner.getStringToken();
 			fTagToken = new Token(new TextAttribute(ResourceManager.getInstance().getColor(fStore, AddonDevUIPrefConst.COLOR_XML_TAG)));
 			tagScanner.setDefaultReturnToken(fTagToken);
 		}
@@ -122,6 +123,27 @@ public class XMLConfiguration extends PropertyChangeSourceViewerConfiguration {
 	@Override
 	public boolean update(PropertyChangeEvent event) {
 		// TODO Auto-generated method stub
+		if(event.getProperty().startsWith(AddonDevUIPrefConst.COLOR_XML_COMMENT))
+		{
+			setSyntax(event, fCommnetToken, AddonDevUIPrefConst.BOLD_SUFFIX, AddonDevUIPrefConst.ITALIC_SUFFIX);
+			return true;
+		}
+//		else if(event.getProperty().startsWith(AddonDevUIPrefConst.COLOR_XML_KEYWORD))
+//		{
+//			Token token = ((JavaScriptScanner)defaultScanner).getKeywordToken();
+//			setSyntax(event, token, AddonDevUIPrefConst.BOLD_SUFFIX, AddonDevUIPrefConst.ITALIC_SUFFIX);
+//			return true;
+//		}
+		else if(event.getProperty().startsWith(AddonDevUIPrefConst.COLOR_XML_STRING))
+		{
+			setSyntax(event, fStringToken, AddonDevUIPrefConst.BOLD_SUFFIX, AddonDevUIPrefConst.ITALIC_SUFFIX);
+			return true;
+		}
+		else if(event.getProperty().startsWith(AddonDevUIPrefConst.COLOR_XML_TAG))
+		{
+			setSyntax(event, fTagToken, AddonDevUIPrefConst.BOLD_SUFFIX, AddonDevUIPrefConst.ITALIC_SUFFIX);
+			return true;
+		}		
 		return false;
 	}
 	@Override

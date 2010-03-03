@@ -45,8 +45,14 @@ public class AddonDevUIPrefConst {
 	public static final RGB DEFAULT_COLOR_JAVASCRIPT_KEYWORD = new RGB(150, 0, 50);
 	public static final RGB DEFAULT_COLOR_JAVASCRIPT_STRING = new RGB(0, 0, 170);
 	
-	public static final RGB DEFAULT_COLOR_XML_TAG = new RGB(0, 128, 128);
-	public static final RGB DEFAULT_COLOR_XML_COMMENT = new RGB(0, 128, 0);
+	public static final RGB DEFAULT_COLOR_XML_TAG = new RGB(0, 0, 128);
+	public static final RGB DEFAULT_COLOR_XML_COMMENT = new RGB(204, 204, 204);
 	public static final RGB DEFAULT_COLOR_XML_KEYWORD = new RGB(150, 0, 50);
-	public static final RGB DEFAULT_COLOR_XML_STRING = new RGB(0, 0, 170);
+	public static final RGB DEFAULT_COLOR_XML_STRING = new RGB(0, 170, 0);
+	
+//	RGB XML_COMMENT = new RGB(255, 0, 0);
+//	RGB PROC_INSTR = new RGB(128, 128, 128);
+//	RGB STRING = new RGB(0, 128, 0);
+//	RGB DEFAULT = new RGB(0, 0, 0);
+//	RGB TAG = new RGB(0, 0, 128);
 }

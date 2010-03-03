@@ -73,11 +73,8 @@ public abstract class SyntaxColorPage {
 		}
 
 		public void setColorValue(RGB fColorValue) {
-			//fSourceViewerConfiguration.update(
-			//		new PropertyChangeEvent(this, fColorKey, this.fColorValue, fColorValue));
 			firePropertyChange(new PropertyChangeEvent(this, fColorKey, this.fColorValue, fColorValue));
 			this.fColorValue = fColorValue;
-			//fSourceViewer.invalidateTextPresentation();
 		}
 
 		public boolean isBold() {

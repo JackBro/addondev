@@ -11,9 +11,6 @@ public class Parser {
 	
 	public JsNode root;
 	
-	//private Frame frame = new Frame();
-	//private Stack<JsNode> thisNodeStack = new Stack<JsNode>();
-	//private Stack<Scope> ScopeStack = new Stack<Scope>();
 	private ScopeStack fScopeStack = new ScopeStack();
 	
 	private void setJsDoc(JsNode node, String jsDoc)
@@ -333,106 +330,6 @@ public class Parser {
 						//factor(node);
 						functionCall(node);
 					}
-					
-//					JsNode fromnode;
-//					String sym = lex.value();
-//					if(sym.equals("this"))
-//					{
-//						fromnode = thisNodeStack.lastElement();
-//					}
-//					else
-//					{
-//						fromnode = frame.findNodeGlobalFrame(sym);
-//						if(fromnode == null)
-//						{
-//							fromnode = frame.findNodeCurrentFrame(sym);
-//						}
-//						
-//					}
-//
-//					JsNode fnode = findNode(sym);
-//					//JsNode chNode = fnode.getChild(val);
-//					if(fnode == null)
-//					{
-//						fnode = new JsNode(parent, "var", sym, lex.offset());
-//						parent.addChild(fnode);
-//					}
-//					
-//					String objsym2 = lex.value();
-////					if(fromnode.getId().equals("function"))
-////					{
-////						objsym2 = ".prototype";
-////					}
-//					while(token == '.')
-//					{
-//						getToken();	//.	
-//						if(token != TokenType.SYMBOL)
-//						{
-//							break;
-//						}
-//						String val = lex.value();
-//						
-//						JsNode m = fnode.getChild(val);
-//						if(m == null)
-//						{
-//							JsNode cnode = new JsNode(fnode, "var", val, lex.offset());
-//							fnode.addChild(cnode);
-//							fnode = cnode;
-//						}
-//						else
-//						{
-//							fnode = m;
-//						}
-//						
-//						objsym2 = objsym2 +"."+ lex.value();
-//						getToken();	//symbol
-//					}
-//					
-//					if(objsym2.length() > 0)
-//					{
-//						//objsym2 = objsym2.substring(1);
-//					
-//						if(token != TokenType.EOS && token != TokenType.VAR && token != TokenType.SYMBOL) //tmp
-//						{
-//							if(fromnode == null)
-//							{
-//								fromnode = root;
-//							}
-//							JsNode mnode = getNode(fromnode, objsym2, 0);
-//							setJsDoc(fJsDoc, mnode);
-//							//if(token == '=' && !objsym2.contains("prototype.")){
-//							if(token == '='){
-//								getToken();  // skip '='
-//								factor(mnode);
-////								JsNode res = factor(mnode);
-////								if(res != null)
-////								{
-////									JsNodeHelper.assignNode(fromnode.getChildrenList(), res.getChildrenList()); 
-////								}
-//								//if(res != null)
-//								//	mnode.setValueNode(new ValueNode(res));
-//							}
-//							else if(token == '(')
-//							{
-//								getToken();
-//								//factor(new JsNode(null, "", "", 0));
-//								//factor(mnode);
-//								
-//								JsNode code = new JsNode(mnode, "function", "anonymous", lex.offset());
-//								mnode.addChild(code);
-//									
-//						    	frame.push();
-//								getToken();
-//								advanceToken(')');
-//								
-//								getToken();
-//								block(code);
-//								
-//								frame.pop(); 
-//								
-//							}
-//						}
-//					}
 				}
 				break;
 			case '{':
@@ -555,46 +452,13 @@ public class Parser {
 		    String sym = lex.value();
 		    int offset = lex.offset();
 		    code = new JsNode(parent, "function", sym, offset);
-		    //code.setType(sym);
-			parent.addChild(code);
-			//ScopeStack.push(new Scope(lex.offset(), code));
-			//fScopeStack.pushScope(new Scope(offset, code));
-			
-			//frame.setNode(code);
-			//thisNodeStack.push(code);
-			//frame.push();				
+			parent.addChild(code);			
 			getToken();
 			advanceToken('(');
-			functionCall(code);
-			
-			//block(code);
-			//thisNodeStack.pop();
-			//Scope scope = fScopeStack.popScope();
-			//int endoffset = lex.offset();
-			//scope.setEnd(endoffset);
-			
-			//frame.pop(); 
+			functionCall(code); 
 	    }
 	    else if(token == '(') //anonymous
 	    {
-//	    	int offset = lex.offset();	 
-//	    	code = new JsNode(parent, "function", "anonymous", offset);
-//	    	parent.addChild(code);
-//   	
-//	    	fScopeStack.pushScope(new Scope(offset, code));
-//				
-//	    	//frame.push();
-//			getToken();
-//			advanceToken(')');
-//			
-//			getToken();
-//			block(code);
-//
-//			Scope scope = fScopeStack.popScope();
-//			int endoffset = lex.offset();
-//			scope.setEnd(endoffset);			
-			
-			//frame.pop(); 
 	    	functionCall(parent);
 	    }
 	}

@@ -3,21 +3,13 @@ package org.addondev.ui.preferences;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-
-import org.addondev.core.AddonDevPlugin;
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.editor.PropertyChangeSourceViewerConfiguration;
 import org.addondev.ui.editor.javascript.JavaScriptConfiguration;
 import org.addondev.ui.editor.javascript.JavaScriptPartitionScanner;
 import org.addondev.util.FileUtil;
-import org.eclipse.jface.preference.ColorFieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
@@ -52,8 +44,6 @@ public class JavaScriptEditorPreferencePage extends PreferencePage implements IW
 		@Override
 		protected IDocument getDocument() {
 			// TODO Auto-generated method stub
-			StringBuffer buffer = new StringBuffer();
-			
 			InputStream in = getClass().getResourceAsStream("javascriptpreview.js");
 			String text = "";
 			try {
@@ -62,25 +52,15 @@ public class JavaScriptEditorPreferencePage extends PreferencePage implements IW
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			String delimiter = System.getProperty("line.separator"); //$NON-NLS-1$
-//			buffer.append("function(){};"); //$NON-NLS-1$
-//			buffer.append(delimiter);
-//			buffer.append("//function(){};"); //$NON-NLS-1$
-//			buffer.append(delimiter);
-			buffer.append(text);
-			IDocument document = new Document(buffer.toString());
-			
-			//IDocument document = super.createDocument(element);
-			if (document != null) {
-				IDocumentPartitioner partitioner =
-					new FastPartitioner(
-						new JavaScriptPartitionScanner(),
-						new String[] {
-							JavaScriptPartitionScanner.JS_COMMENT,
-							JavaScriptPartitionScanner.JS_STRING});
-				partitioner.connect(document);
-				document.setDocumentPartitioner(partitioner);
-			}
+			IDocument document = new Document(text);
+			IDocumentPartitioner partitioner =
+				new FastPartitioner(
+					new JavaScriptPartitionScanner(),
+					new String[] {
+						JavaScriptPartitionScanner.JS_COMMENT,
+						JavaScriptPartitionScanner.JS_STRING});
+			partitioner.connect(document);
+			document.setDocumentPartitioner(partitioner);
 			return document;
 		}
 
@@ -117,44 +97,5 @@ public class JavaScriptEditorPreferencePage extends PreferencePage implements IW
 				AddonDevUIPrefConst.COLOR_JAVASCRIPT_KEYWORD, 
 				new RGB(255, 0, 0));
 		return super.performOk();
-	}
-
-//	public JavaScriptEditorPreferencePage() {
-//		// TODO Auto-generated constructor stub
-//		setPreferenceStore(AddonDevUIPlugin.getDefault().getPreferenceStore());
-//	}
-//
-//	public JavaScriptEditorPreferencePage(int style) {
-//		super(style);
-//		// TODO Auto-generated constructor stub
-//	}
-//
-//	public JavaScriptEditorPreferencePage(String title, int style) {
-//		super(title, style);
-//		// TODO Auto-generated constructor stub
-//	}
-//
-//	public JavaScriptEditorPreferencePage(String title,
-//			ImageDescriptor image, int style) {
-//		super(title, image, style);
-//		// TODO Auto-generated constructor stub
-//	}
-//
-//	@Override
-//	protected void createFieldEditors() {
-//		// TODO Auto-generated method stub
-//		//prefstote = getPreferenceStore();
-//		
-//		Composite p = getFieldEditorParent();
-//		addField(new ColorFieldEditor(
-//				JAVASCRIPT_COLOR_COMMENT, "Timeout to connect to shell (secs).", p));
-//	}
-//
-//	@Override
-//	public void init(IWorkbench workbench) {
-//		// TODO Auto-generated method stub
-//
-//	}
-
-	
+	}	
 }

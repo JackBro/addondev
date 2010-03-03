@@ -1,31 +1,24 @@
 package org.addondev.ui.editor.xul;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.aonir.fuzzyxml.FuzzyXMLDocument;
-import jp.aonir.fuzzyxml.FuzzyXMLParser;
 import jp.aonir.fuzzyxml.event.FuzzyXMLErrorEvent;
 import jp.aonir.fuzzyxml.event.FuzzyXMLErrorListener;
 
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.editor.xml.XMLEditor;
 import org.addondev.ui.preferences.AddonDevUIPrefConst;
-import org.addondev.util.FileUtil;
 import org.addondev.util.Locale;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -34,15 +27,9 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.MarkerUtilities;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 
@@ -54,7 +41,6 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 		//colorManager = new ColorManager();
 		//setSourceViewerConfiguration(new XULConfiguration(colorManager));
 		//setDocumentProvider(new XULDocumentProvider());
-
 	}
 	
 	private long lasttime = 0;
@@ -301,6 +287,4 @@ public class XULEditor extends XMLEditor implements FuzzyXMLErrorListener {
 		// TODO Auto-generated method stub
 		
 	}
-	
-
 }
