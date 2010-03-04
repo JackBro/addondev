@@ -577,18 +577,37 @@ public class Parser {
 			 break;
 		}
 		
-		//String 
 		while(token == '.'){
 			getToken();  // skip '.'
-			sym = lex.value();
-				
-			node = node.getChild(sym);
-			getToken();  // skip symbol
-			if(token == '(')
+			sym = lex.value();	
+			JsNode tnode = node.getChild(sym);
+			
+			if(tnode == null)
 			{
-				if(node != null)
+				tnode = new JsNode(node, "var", sym, lex.offset());
+				node.addChild(tnode);		
+				node = tnode;	
+				getToken();  // skip symbol
+
+				if(token == '(')
 				{
-					String type = node.getType();
+//			    	while(token != ')'){
+//			    		getToken();  // skip ','
+//			    	}
+					functionCall(node);
+				}
+				else if(token == '[')
+				{
+					advanceToken(']');
+					getToken(); //skip ']'
+				}
+			}
+			else
+			{
+				getToken();  // skip symbol
+				if(token == '(')
+				{
+					String type = tnode.getType();
 					if(type != null)
 					{
 						if("interfaces".equals(type))
@@ -596,15 +615,10 @@ public class Parser {
 							String param = null;
 						    if(token != ')'){
 						    	getToken();
-						    	//param = lex.value();
 						    	while(token != ')'){
 						    		getToken();  // skip ','
 						    	}
 						    	param = lex.value();
-						    }
-						    if(param != null)
-						    {
-						    	//node = NodeManager.getInstance().getGlobalNode(param);
 						    	node = findNode(param);
 						    }
 						}
@@ -614,94 +628,32 @@ public class Parser {
 						}
 					}
 					else
-					{
-						//JsNode anode = node.getChild(sym);
-						node = null;
-						break;
-						//node = node.getChild(sym);
-						
-						
-//				    	while(token != ')'){
-//				    		getToken();  // skip ','
-//				    	}
-//				    	getToken(); 
-//						if(anode != null)
-//						{
-//							int i=0;
-//							type = anode.getType();
-//							if("interfaces".equals(type))
-//							{
-//								String param = null;
-//							    if(token != ')'){
-//							    	getToken();
-//							    	while(token != ')'){
-//							    		getToken();  // skip ','
-//							    	}
-//							    	param = lex.value();
-//							    }
-//							    if(param != null)
-//							    {
-//							    	//node = NodeManager.getInstance().getGlobalNode(param);
-//							    	//if(node == null) node = findNode(param);
-//							    	node = findNode(param);
-//							    }
-//							}
-//							else
-//							{
-//								//
-//								
-//							}
-//						}
+					{				
+						JsNode ttnode = new JsNode(tnode, "var", sym, lex.offset());
+						node.addChild(ttnode);		
+						node = ttnode;	
+						getToken();  // skip symbol
+
+						if(token == '(')
+						{
+							functionCall(node);
+						}
+						else if(token == '[')
+						{
+							advanceToken(']');
+							getToken(); //skip ']'
+						}
 					}
 				}
-//				else
-//				{
-//					//functionExpr(node);
-//					functionExpr(node);
-//					//getToken();
-//				}
-			}
-			else
-			{
-				if(token == '[')
+				else
 				{
-					advanceToken(']');
-					getToken(); //skip ']'
-					
+					if(token == '[')
+					{
+						advanceToken(']');
+						getToken(); //skip ']'	
+					}
+					node = tnode;
 				}
-				
-//				if(node != null)
-//				{
-//					JsNode anode = node.getChild(sym);
-//					if(anode == null)
-//					{
-//						String type = node.getType();
-//						if(type != null)
-//						{
-//							node = getNodeByType(type);
-//						}
-//						else
-//						{
-//							JsNode valnode = new JsNode(node, "var", sym, lex.offset());
-//							node.addChild(valnode);
-//							node =valnode;							
-//						}
-//					}
-//					else
-//					{
-//						String type = anode.getType();
-//						if(type != null)
-//						{
-//							node = getNodeByType(type);
-//						}
-//						else
-//						{
-//							node =anode;
-//							//JsNode valnode = new JsNode(parent, "var", sym, lex.offset());
-//							//node =anode;
-//						}
-//					}
-//				}				
 			}
 		}
 
@@ -712,7 +664,6 @@ public class Parser {
 			{
 				String param = null;
 			    if(token != ')'){
-			    	//getToken();
 			    	while(token != ')'){
 			    		getToken();  // skip ','
 			    	}
@@ -727,8 +678,6 @@ public class Parser {
 		
 		return node;
 	}
-
-
 	
 	private void objectExpr(JsNode parent) throws EOSException 
 	{

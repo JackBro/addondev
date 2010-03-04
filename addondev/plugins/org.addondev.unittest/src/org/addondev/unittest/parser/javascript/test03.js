@@ -117,7 +117,8 @@ var SMyObject = //.prototype =
 		garg=100;
     }
 };
-var sm = SMyObject.hello3(arg0, arg1);
+//
+//var sm = SMyObject.hello3(arg0, arg1);
 //var tmp = new MyObject();
 
 var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);

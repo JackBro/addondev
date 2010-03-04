@@ -229,5 +229,33 @@
             restorable="true">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationType="org.addondev.ui.specification1"
+            colorPreferenceKey="javaScriptOccurrenceIndicationColor"
+            colorPreferenceValue="255,0,0"
+            contributesToHeader="false"
+            highlightPreferenceKey="javaScriptOccurrenceHighlighting"
+            highlightPreferenceValue="true"
+            includeOnPreferencePage="true"
+            isGoToNextNavigationTarget="false"
+            isGoToPreviousNavigationTarget="false"
+            label="test"
+            overviewRulerPreferenceKey="javaScriptOccurrenceIndicationInOverviewRuler"
+            overviewRulerPreferenceValue="true"
+            presentationLayer="4"
+            textPreferenceKey="javaScriptOccurrenceIndication"
+            textPreferenceValue="false"
+            verticalRulerPreferenceKey="javaScriptOccurrenceIndicationInVerticalRuler"
+            verticalRulerPreferenceValue="false">
+      </specification>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            name="org.addondev.ui.specification1">
+      </type>
+   </extension>
 
 </plugin>

@@ -15,12 +15,12 @@ public class JsNode {
 	private HashMap<String, JsNode> fSymbalTable; 
 
 	private String id;
-	//private 
+	private EnumNode fNodeType;
+	
 	private String image;
 	private int fOffset;
 	private int endoffset;
-	
-	//private String codeassist;
+
 	
 	private String fJsDoc;	
 	private String fType;	
@@ -57,24 +57,6 @@ public class JsNode {
 	 * @param offset
 	 */
 	public JsNode(JsNode parent, String id, String image, int offset)
-	{
-		this.parent = parent;
-		this.id = id;
-		this.image = image;
-		this.fOffset = offset;
-		offset = -1;
-		fSymbalTable = new HashMap<String, JsNode>();
-	}
-	
-	/**
-	 * 
-	 * @param parent
-	 * @param id
-	 * @param image
-	 * @param offset
-	 * @param isvisible
-	 */
-	public JsNode(JsNode parent, String id, String image, int offset, boolean isvisible)
 	{
 		this.parent = parent;
 		this.id = id;

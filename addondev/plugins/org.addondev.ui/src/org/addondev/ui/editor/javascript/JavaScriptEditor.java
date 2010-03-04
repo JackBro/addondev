@@ -2,24 +2,17 @@ package org.addondev.ui.editor.javascript;
 
 import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.ui.editor.PropertyChangeSourceViewerConfiguration;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.AnnotationRulerColumn;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -30,6 +23,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
@@ -85,23 +79,43 @@ public class JavaScriptEditor extends TextEditor implements IPropertyChangeListe
 		// TODO Auto-generated method stub
 		super.doSave(progressMonitor);
 
-		getSourceViewer().setRangeIndication(0, 10, true);
-		StyleRange range = new StyleRange();
-		range.start = 0;
-		range.length = 4;
-		Display  display = getSite().getShell().getDisplay();
-		org.eclipse.swt.graphics.Color blue = display.getSystemColor(SWT.COLOR_BLUE);
-        org.eclipse.swt.graphics.Color red = display.getSystemColor(SWT.COLOR_RED);
+//		getSourceViewer().setRangeIndication(0, 10, true);
+//		StyleRange range = new StyleRange();
+//		range.start = 0;
+//		range.length = 4;
+//		Display  display = getSite().getShell().getDisplay();
+//		org.eclipse.swt.graphics.Color blue = display.getSystemColor(SWT.COLOR_BLUE);
+//        org.eclipse.swt.graphics.Color red = display.getSystemColor(SWT.COLOR_RED);
+//
+//		//range.foreground = blue;
+//		range.background = red;
+//		//range.fontStyle = SWT.BOLD;
+//		getSourceViewer().getTextWidget().setStyleRange(range);
+		//IDocumentProvider documentProvider= getDocumentProvider();
+		//IAnnotationModel annotationModel= documentProvider.getAnnotationModel(getEditorInput());
+		IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+		String msg = "";
+		try {
+			msg = getDocument().get(0, 10);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Annotation an = new Annotation("org.addondev.ui.specification1", false, msg);
 
-		//range.foreground = blue;
-		range.background = red;
-		//range.fontStyle = SWT.BOLD;
-		getSourceViewer().getTextWidget().setStyleRange(range);
+		//an.
+		//AnnotationRulerColumn ran = new AnnotationRulerColumn(3);
+		//ran.toDocumentLineNumber(2);
+		Position position = new Position(0,10);
+		//am.addAnnotation(new ProjectionAnnotation(), position);
+		//annotationModel.addAnnotation(an, position);
 		
-		IAnnotationModel am = getSourceViewer().getAnnotationModel();
-		Annotation an = new Annotation("type", false, "text");
-		Position position = new Position(1);
-		am.addAnnotation(new ProjectionAnnotation(), position);
+		
+		Annotation an2 = new Annotation("org.addondev.ui.specification1", false, "msg");
+		Position position2 = new Position(32,5);
+		//am.addAnnotation(new ProjectionAnnotation(), position);
+		annotationModel.addAnnotation(an2, position2);
+		//annotationModel.addAnnotation(new ProjectionAnnotation(), position);
 		
 		// JavaScriptValidate.parse(this);
 		doValidate();
