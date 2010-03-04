@@ -215,7 +215,7 @@ public class Lexer {
 		offset = reader.offset();
 		
 		tok = TokenType.SYMBOL;
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		while (true) {
 			int c = reader.read();
 			if (c < 0) {
@@ -237,7 +237,7 @@ public class Lexer {
 	
 	private void jsDoc() {
 		// TODO Auto-generated method stub
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("/**");
 	    int c = '\0';
 	    while(true){

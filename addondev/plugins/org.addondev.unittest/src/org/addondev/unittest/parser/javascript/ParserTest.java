@@ -104,24 +104,20 @@ public class ParserTest {
 	@Test
 	public void testParser03() throws IOException {
 		
+
 //		{
-//		String src = getSource(ParserTest.class.getResourceAsStream("system.js"));
-//		Lexer lex = new Lexer(src);
-//		Parser parser = new Parser("system.js"); // パーサーを作成。
-//		parser.parse(lex);
-//		JsNode node = parser.root;
-//		//NodeManager.getInstance().SetNode("system", node);
-//		node.dump("");
+//			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));		
+//			Parser parser = new Parser("system.js");
+//			parser.parse(src);	
+//			//JsNode node = parser.root;
+//			//node.dump("");
 //		}
-		{
-			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));		
-			Parser parser = new Parser("system.js");
-			parser.parse(src);			
-		}
 		{
 			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));		
 			Parser parser = new Parser("xpcom.js");
-			parser.parse(src);			
+			parser.parse(src);		
+			//JsNode node = parser.root;
+			//node.dump("");
 		}
 		{
 		//Lexer lex = null;

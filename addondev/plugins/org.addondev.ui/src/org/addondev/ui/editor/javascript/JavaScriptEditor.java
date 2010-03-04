@@ -15,10 +15,17 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
+import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -54,6 +61,8 @@ public class JavaScriptEditor extends TextEditor implements IPropertyChangeListe
 		fSourceViewerConfiguration = new JavaScriptConfiguration();
 		setSourceViewerConfiguration(fSourceViewerConfiguration);
 		AddonDevUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		
+		
 	}
 
 	@Override
@@ -76,6 +85,24 @@ public class JavaScriptEditor extends TextEditor implements IPropertyChangeListe
 		// TODO Auto-generated method stub
 		super.doSave(progressMonitor);
 
+		getSourceViewer().setRangeIndication(0, 10, true);
+		StyleRange range = new StyleRange();
+		range.start = 0;
+		range.length = 4;
+		Display  display = getSite().getShell().getDisplay();
+		org.eclipse.swt.graphics.Color blue = display.getSystemColor(SWT.COLOR_BLUE);
+        org.eclipse.swt.graphics.Color red = display.getSystemColor(SWT.COLOR_RED);
+
+		//range.foreground = blue;
+		range.background = red;
+		//range.fontStyle = SWT.BOLD;
+		getSourceViewer().getTextWidget().setStyleRange(range);
+		
+		IAnnotationModel am = getSourceViewer().getAnnotationModel();
+		Annotation an = new Annotation("type", false, "text");
+		Position position = new Position(1);
+		am.addAnnotation(new ProjectionAnnotation(), position);
+		
 		// JavaScriptValidate.parse(this);
 		doValidate();
 

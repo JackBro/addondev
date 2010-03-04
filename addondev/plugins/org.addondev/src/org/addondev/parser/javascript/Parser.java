@@ -15,11 +15,12 @@ public class Parser {
 	
 	private void setJsDoc(JsNode node, String jsDoc)
 	{
-		if(fJsDoc.length() > 0)
+		if(fJsDoc != null && fJsDoc.length() > 0)
 		{
 			node.setfJsDoc(jsDoc);
-			fJsDoc = "";
+			
 		}
+		fJsDoc = "";
 	}
 	
 	private JsNode findNode(String image)
@@ -524,7 +525,9 @@ public class Parser {
 			//block(parent);
 			//String ll = lex.value();
 			//frame.pop();
-			//thisNodeStack.pop();			
+			//thisNodeStack.pop();	
+			//TODO
+			
 			break;
 		case TokenType.NEW:
 			getToken();
@@ -554,7 +557,11 @@ public class Parser {
 		case TokenType.SYMBOL:
 			getToken();
 			if(token == '('){
+				String symm = lex.value();
 				functionCall(parent);
+				//node = new JsNode(parent, "var", sym, lex.offset());
+				//functionCall(node);
+				//parent.addChild(node);
 		    }
 			else
 			{
@@ -575,6 +582,7 @@ public class Parser {
 			getToken();  // skip '.'
 			sym = lex.value();
 				
+			node = node.getChild(sym);
 			getToken();  // skip symbol
 			if(token == '(')
 			{
@@ -607,32 +615,43 @@ public class Parser {
 					}
 					else
 					{
-						JsNode anode = node.getChild(sym);
-						if(anode != null)
-						{
-							type = anode.getType();
-							if("interfaces".equals(type))
-							{
-								String param = null;
-							    if(token != ')'){
-							    	getToken();
-							    	while(token != ')'){
-							    		getToken();  // skip ','
-							    	}
-							    	param = lex.value();
-							    }
-							    if(param != null)
-							    {
-							    	//node = NodeManager.getInstance().getGlobalNode(param);
-							    	//if(node == null) node = findNode(param);
-							    	node = findNode(param);
-							    }
-							}
-							else
-							{
-								
-							}
-						}
+						//JsNode anode = node.getChild(sym);
+						node = null;
+						break;
+						//node = node.getChild(sym);
+						
+						
+//				    	while(token != ')'){
+//				    		getToken();  // skip ','
+//				    	}
+//				    	getToken(); 
+//						if(anode != null)
+//						{
+//							int i=0;
+//							type = anode.getType();
+//							if("interfaces".equals(type))
+//							{
+//								String param = null;
+//							    if(token != ')'){
+//							    	getToken();
+//							    	while(token != ')'){
+//							    		getToken();  // skip ','
+//							    	}
+//							    	param = lex.value();
+//							    }
+//							    if(param != null)
+//							    {
+//							    	//node = NodeManager.getInstance().getGlobalNode(param);
+//							    	//if(node == null) node = findNode(param);
+//							    	node = findNode(param);
+//							    }
+//							}
+//							else
+//							{
+//								//
+//								
+//							}
+//						}
 					}
 				}
 //				else
@@ -651,41 +670,61 @@ public class Parser {
 					
 				}
 				
-				if(node != null)
-				{
-					JsNode anode = node.getChild(sym);
-					if(anode == null)
-					{
-						String type = node.getType();
-						if(type != null)
-						{
-							node = getNodeByType(type);
-						}
-						else
-						{
-							JsNode valnode = new JsNode(node, "var", sym, lex.offset());
-							node.addChild(valnode);
-							node =valnode;							
-						}
-					}
-					else
-					{
-						String type = anode.getType();
-						if(type != null)
-						{
-							node = getNodeByType(type);
-						}
-						else
-						{
-							node =anode;
-							//JsNode valnode = new JsNode(parent, "var", sym, lex.offset());
-							//node =anode;
-						}
-					}
-				}				
+//				if(node != null)
+//				{
+//					JsNode anode = node.getChild(sym);
+//					if(anode == null)
+//					{
+//						String type = node.getType();
+//						if(type != null)
+//						{
+//							node = getNodeByType(type);
+//						}
+//						else
+//						{
+//							JsNode valnode = new JsNode(node, "var", sym, lex.offset());
+//							node.addChild(valnode);
+//							node =valnode;							
+//						}
+//					}
+//					else
+//					{
+//						String type = anode.getType();
+//						if(type != null)
+//						{
+//							node = getNodeByType(type);
+//						}
+//						else
+//						{
+//							node =anode;
+//							//JsNode valnode = new JsNode(parent, "var", sym, lex.offset());
+//							//node =anode;
+//						}
+//					}
+//				}				
 			}
 		}
 
+		if(node != null && node.getType() != null)
+		{
+			String type = node.getType();
+			if("interfaces".equals(type))
+			{
+				String param = null;
+			    if(token != ')'){
+			    	//getToken();
+			    	while(token != ')'){
+			    		getToken();  // skip ','
+			    	}
+			    	param = lex.value();
+			    }
+			    if(param != null)
+			    {
+			    	node = findNode(param);
+			    }
+			}
+		}
+		
 		return node;
 	}
 

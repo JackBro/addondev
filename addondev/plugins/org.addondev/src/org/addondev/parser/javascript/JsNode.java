@@ -15,7 +15,7 @@ public class JsNode {
 	private HashMap<String, JsNode> fSymbalTable; 
 
 	private String id;
-	private 
+	//private 
 	private String image;
 	private int fOffset;
 	private int endoffset;
@@ -202,7 +202,11 @@ public class JsNode {
 				 }
 			 }
 			 fType = key;
-		}	
-		return key;
+		}
+//		else if(fType != null)
+//		{
+//			
+//		}
+		return fType;
 	}
 }

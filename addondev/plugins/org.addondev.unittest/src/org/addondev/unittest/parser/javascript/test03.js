@@ -107,29 +107,48 @@
 //
 //}
 
-var m="100";
+//var m="100";
 
 //var MyObject = function(){};
 var SMyObject = //.prototype = 
-{
-	/**
-	 * 
-	 * @type objaect
-	 * 
-	 */
-	message3: null,
-    
-    /**
-     * 
-     * @type interfaces
-     * 
-     */
+{    
     hello3: function (arg0, arg1){
-    	//arg0 = 100;
-    	//var aa=0;
+		arg0=1;
+		garg=100;
     }
 };
-
+var sm = SMyObject.hello3(arg0, arg1);
 //var tmp = new MyObject();
 
 var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+//
+//var fftest = domplate(a0 ,
+//		{
+////		    tag:
+////		        DIV({onclick: "$onClick"},
+////		            FOR("group", "$groups",
+////		                DIV({class: "breakpointBlock breakpointBlock-$group.name"},
+////		                    H1({class: "breakpointHeader groupHeader"},
+////		                        "$group.title"
+////		                    ),
+////		                    FOR("bp", "$group.breakpoints",
+////		                        DIV({class: "breakpointRow"},
+////		                            DIV({class: "breakpointBlockHead"},
+////		                                INPUT({class: "breakpointCheckbox", type: "checkbox",
+////		                                    _checked: "$bp.checked"}),
+////		                                SPAN({class: "breakpointName"}, "$bp.name"),
+////		                                TAG(FirebugReps.SourceLink.tag, {object: "$bp|getSourceLink"}),
+////		                                IMG({class: "closeButton", src: "blank.gif"})
+////		                            ),
+////		                            DIV({class: "breakpointCode"}, "$bp.sourceLine")
+////		                        )
+////		                    )
+////		                )
+////		            )
+////		        ),
+//	tag:"",
+//		    getSourceLink: function(bp)
+//		    {
+//		      var test0 =0;
+//		    }
+//		});
