@@ -1,3 +1,51 @@
+"C:\Program Files\Java\jdk1.6.0_16\bin\javadoc"  -doclet MyDoclet -classpath "C:\Program Files\Java\jdk1.6.0_16\lib\tools.jar"  MyClass.java
+"C:\Program Files\Java\jdk1.6.0_16\bin\javac" -classpath "C:\Program Files\Java\jdk1.6.0_16\lib\tools.jar" MyDoclet.java
+
+http://d.hatena.ne.jp/torutk/20061112/p2
+http://www.devx.com/Java/Article/38719/1954
+http://relation.to/Bloggers/TestingJavaDoclets?showCommentForm=true
+http://d.hatena.ne.jp/a-san/?of=10
+
+
+package org.jsjava;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
+public class JsJava {
+
+	/**
+	 * @param args
+	 * @throws ClassNotFoundException 
+	 */
+	public static void main(String[] args) throws ClassNotFoundException {
+		// TODO Auto-generated method stub
+		Class cls = Class.forName("org.mozilla.interfaces.nsIIOService");
+	      // メソッドの分析
+	      Method[] methList = cls.getMethods();
+	      for (int i=0;i<methList.length;i++) {
+	        Method m = methList[i];
+	        // 修飾子を表示
+	        System.out.print(Modifier.toString(m.getModifiers()));
+	        // 戻り値の型を表示
+	        System.out.print(" " + m.getReturnType().getName());
+	        // メソッド名を表示
+	        System.out.print(" " + m.getName());
+	        // 引数の型を表示
+	        Class[] mparamList = m.getParameterTypes();
+	        System.out.print("(");
+	        for (int j=0;j<mparamList.length;j++) {
+	          System.out.print(" " + mparamList[j].getName());
+	        }
+	        System.out.println(");");
+	      }
+	      System.exit(0);
+	}
+
+}
+
+
 java -jar js.jar  test.js
 
 *** src/org/mozilla/javascript/Node.java	Sun Mar 22 14:32:24 2009
