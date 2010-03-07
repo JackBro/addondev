@@ -1,3 +1,6 @@
+http://d.hatena.ne.jp/hhelibex/20100125/1264437921
+http://simple.sourceforge.net/home.php
+
 "C:\Program Files\Java\jdk1.6.0_16\bin\javadoc"  -doclet MyDoclet -classpath "C:\Program Files\Java\jdk1.6.0_16\lib\tools.jar"  MyClass.java
 "C:\Program Files\Java\jdk1.6.0_16\bin\javac" -classpath "C:\Program Files\Java\jdk1.6.0_16\lib\tools.jar" MyDoclet.java
 
