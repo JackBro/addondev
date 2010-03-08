@@ -46,25 +46,30 @@ public class RefJava {
 					{
 						try {
 							Class[] classes = cls.getInterfaces();
-							for (Class class1 : classes) {
-								fldname = fld.getName();
-								//if(!fldname.startsWith("org.mozilla.interfaces."))
-								//{
-									fldname =  class1.getName() + "." + fldname;
-								//}
-								if(map.containsKey(fldname))
-								{
-									jsdocelm = map.get(fldname);
-									break;
-								}
-							}
+//							for (Class class1 : classes) {
+//								fldname = fld.getName();
+//								//if(!fldname.startsWith("org.mozilla.interfaces."))
+//								//{
+//									fldname =  class1.getName() + "." + fldname;
+//								//}
+//								if(map.containsKey(fldname))
+//								{
+//									jsdocelm = map.get(fldname);
+//									break;
+//								}
+//							}
+							jsdocelm = getElement(classes, map, fld.getName());
 						} catch (SecurityException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
-					jsdocelm.setReturntype(returntype);
-					classdata.addElement(jsdocelm);
+
+					if(jsdocelm != null)
+					{
+						jsdocelm.setReturntype(returntype);
+						classdata.addElement(jsdocelm);
+					}
 				}
 
 				// メソッドの分析
@@ -77,18 +82,19 @@ public class RefJava {
 					{
 						try {
 							Class[] classes = cls.getInterfaces();
-							for (Class class1 : classes) {
-								String mthname = m.getName();
-								//if(!fldname.startsWith("org.mozilla.interfaces."))
-								//{
-								mthname =  class1.getName() + "." + mthname;
-								//}
-								if(map.containsKey(mthname))
-								{
-									jsdocelm = map.get(mthname);
-									break;
-								}
-							}
+//							for (Class class1 : classes) {
+//								String mthname = m.getName();
+//								//if(!fldname.startsWith("org.mozilla.interfaces."))
+//								//{
+//								mthname =  class1.getName() + "." + mthname;
+//								//}
+//								if(map.containsKey(mthname))
+//								{
+//									jsdocelm = map.get(mthname);
+//									break;
+//								}
+//							}
+							jsdocelm = getElement(classes, map, m.getName());
 						} catch (SecurityException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -116,9 +122,26 @@ public class RefJava {
 		return data;
 	}
 	
+	private JsElement getElement(Class[] classes, Map<String, JsElement> map, String name)
+	{
+		for (Class class1 : classes) {
+			String pname =  class1.getName() + "." + name;
+			//}
+			if(map.containsKey(pname))
+			{
+				JsElement jsdocelm = map.get(pname);
+				return jsdocelm;
+			}
+			return getElement(class1.getInterfaces(), map, name);
+		}
+		
+		return null;
+	}
+	
 	private String getType(Class type)
 	{
-		if(type.getName().equals("java.lang.String"))
+		if(type.getName().equals("java.lang.String")
+				|| type.getName().equals("char"))
 		{
 			return "String";
 		}
