@@ -1,6 +1,10 @@
 package org.addondev.tools.jsjava;
 
+import java.util.ArrayList;
+
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 @Root
@@ -8,10 +12,23 @@ public class JsElement {
 	
 	@Element(data=true)
 	private String jsDoc;
-	@Element
+	@Attribute
 	private String name;
-	@Element
-	private String type;
+	@Attribute
+	private String nodetype;
+	@Attribute
+	private String returntype;	
+	
+	public String getReturntype() {
+		return returntype;
+	}
+
+	public void setReturntype(String returntype) {
+		this.returntype = returntype;
+	}
+
+	@ElementList
+	private ArrayList<String> params;
 	
 	public String getJsDoc() {
 		return jsDoc;
@@ -29,16 +46,65 @@ public class JsElement {
 		this.name = name;
 	}
 
-	public String getType() {
-		return type;
+	public String getNodeType() {
+		return nodetype;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setNodeType(String nodetype) {
+		this.nodetype = nodetype;
+	}
+
+	public ArrayList<String> getParams() {
+		return params;
+	}
+
+	public void setParams(ArrayList<String> params) {
+		this.params = params;
 	}
 
 	public JsElement() {
+		// TODO Auto-generated constructor stub
 		super();
+		params = new ArrayList<String>();
+	}
+	
+	public JsElement(String name, String nodetype, String jsdoc, ArrayList<String> params, String returntype) {
+		super();
+		this.name = name;
+		this.jsDoc = jsdoc;
+		this.nodetype = nodetype;
+		this.params = params;
+		this.returntype = returntype;
+		// TODO Auto-generated constructor stub
+	}
+	
+	public JsElement(String name, String nodetype, String jsdoc, ArrayList<String> params) {
+		super();
+		this.name = name;
+		this.jsDoc = jsdoc;
+		this.nodetype = nodetype;
+		this.params = params;
+		this.returntype = "";
+		// TODO Auto-generated constructor stub
+	}
+	
+	public JsElement(String name, String nodetype, String jsdoc, String returntype) {
+		super();
+		this.name = name;
+		this.jsDoc = jsdoc;
+		this.nodetype = nodetype;
+		params = new ArrayList<String>();
+		this.returntype = returntype;
+		// TODO Auto-generated constructor stub
+	}
+	
+	public JsElement(String name, String nodetype, String jsdoc) {
+		super();
+		this.name = name;
+		this.jsDoc = jsdoc;
+		this.nodetype = nodetype;
+		params = new ArrayList<String>();
+		this.returntype = "";
 		// TODO Auto-generated constructor stub
 	}
 }

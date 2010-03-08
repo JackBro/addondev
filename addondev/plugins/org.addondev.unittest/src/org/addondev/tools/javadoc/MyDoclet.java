@@ -1,24 +1,28 @@
 package org.addondev.tools.javadoc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.addondev.tools.jsjava.JsElement;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.Doc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.Parameter;
 import com.sun.javadoc.RootDoc;
 import com.sun.javadoc.Tag;
 
 public class MyDoclet {
 	
-	private HashMap<String, String> map;// = new HashMap<String, String>();
+	private HashMap<String, JsElement> map;// = new HashMap<String, String>();
 	private String fPackage;
 	
-	public HashMap<String, String> getMap() {
+	public HashMap<String, JsElement> getMap() {
 		return map;
 	}
 
-	public void setMap(HashMap<String, String> map) {
+	public void setMap(HashMap<String, JsElement> map) {
 		this.map = map;
 	}
 
@@ -42,19 +46,26 @@ public class MyDoclet {
 
 	private void listClass(ClassDoc classDoc) {
 
-		showDoc(classDoc);
-		map.put(fPackage + classDoc.name(), classDoc.getRawCommentText()); 
+		//showDoc(classDoc);
+		map.put(fPackage + "." + classDoc.name(), new JsElement(classDoc.name(), "class", classDoc.getRawCommentText())); 
 		
 		FieldDoc[] fields = classDoc.fields();
 		for (int i = 0; i < fields.length; i++) {
-			map.put(fPackage + fields[i].name(), fields[i].getRawCommentText()); 
-			showDoc(fields[i]);
+			map.put(fPackage + "." + classDoc.name() + "." + fields[i].name(), new JsElement(fields[i].name(), "property", fields[i].getRawCommentText())); 
+			//showDoc(fields[i]);
 		}
 
 		MethodDoc[] methods = classDoc.methods();
 		for (int i = 0; i < methods.length; i++) {
-			map.put(fPackage + methods[i].name(), methods[i].getRawCommentText()); 
-			showDoc(methods[i]);
+			
+			Parameter[] params = methods[i].parameters();
+			ArrayList<String> parammlist = new ArrayList<String>();
+			for (Parameter parameter : params) {
+				parammlist.add(parameter.name());
+				//System.out.println("parameter name = [" + parameter.name() + "]");
+			}
+			map.put(fPackage + "." + classDoc.name() + "." + methods[i].name(), new JsElement(methods[i].name(), "method", methods[i].getRawCommentText(), parammlist)); 
+			//showDoc(methods[i]);
 		}
 	}
 

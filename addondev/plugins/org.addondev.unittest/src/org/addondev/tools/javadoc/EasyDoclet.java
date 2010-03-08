@@ -34,7 +34,7 @@ public class EasyDoclet {
 	}
 
 	
-    final private Logger log = Logger.getLogger(EasyDoclet.class.getName());
+    //final private Logger log = Logger.getLogger(EasyDoclet.class.getName());
 
     final private File sourceDirectory;
     final private String[] packageNames;
@@ -58,21 +58,21 @@ public class EasyDoclet {
         Options compOpts = Options.instance(context);
 
         if (getSourceDirectory().exists()) {
-            log.fine("Using source path: " + getSourceDirectory().getAbsolutePath());
+            //log.fine("Using source path: " + getSourceDirectory().getAbsolutePath());
             compOpts.put("-sourcepath", getSourceDirectory().getAbsolutePath());
         } else {
-            log.info("Ignoring non-existant source path, check your source directory argument");
+            //log.info("Ignoring non-existant source path, check your source directory argument");
         }
 
         ListBuffer<String> javaNames = new ListBuffer<String>();
         for (File fileName : fileNames) {
-            log.fine("Adding file to documentation path: " + fileName.getAbsolutePath());
+            //log.fine("Adding file to documentation path: " + fileName.getAbsolutePath());
             javaNames.append(fileName.getPath());
         }
 
         ListBuffer<String> subPackages = new ListBuffer<String>();
         for (String packageName : packageNames) {
-            log.fine("Adding sub-packages to documentation path: " + packageName);
+            //log.fine("Adding sub-packages to documentation path: " + packageName);
             subPackages.append(packageName);
         }
 
@@ -137,8 +137,8 @@ public class EasyDoclet {
 
         public void write(char[] chars, int offset, int length) throws IOException {
             String s = new String(Arrays.copyOf(chars, length));
-            if (!s.equals("\n"))
-                log.log(level, s);
+            //if (!s.equals("\n"))
+            //    log.log(level, s);
         }
 
         public void flush() throws IOException {}

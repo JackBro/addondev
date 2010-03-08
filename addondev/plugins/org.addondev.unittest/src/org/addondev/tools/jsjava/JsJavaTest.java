@@ -1,10 +1,15 @@
 package org.addondev.tools.jsjava;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.addondev.tools.javadoc.EasyDoclet;
+import org.addondev.tools.javadoc.MyDoclet;
+import org.addondev.tools.javadoc.RefJava;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+
+import com.sun.javadoc.RootDoc;
 
 public class JsJavaTest {
 
@@ -13,37 +18,36 @@ public class JsJavaTest {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
-		ArrayList<JsElement> elms = new ArrayList<JsElement>();
 		
-		JsElement elm = new JsElement();
-		elm.setName("name1");
-		elm.setJsDoc("/* 1 */");
-		elm.setType("m1");
-		elms.add(elm);
+		String docpath = "D:/data/src/PDE/xpcom/docsrc";
+		String datapath = "D:/data/src/PDE/xpcom/datasrc";
 		
-		JsElement elm2 = new JsElement();
-		elm2.setName("name1");
-		elm2.setJsDoc("/* 2 */");
-		elm2.setType("m2");
-		elms.add(elm2);
+		HashMap<String, JsElement> map = new HashMap<String, JsElement>();
+		String path = docpath;
+		File dir = new File(path);
+	    File[] files = dir.listFiles();
+		for (File file : files) {
+			EasyDoclet doclet = new EasyDoclet(dir, file);
+			RootDoc doc = doclet.getRootDoc();
+			MyDoclet md = new MyDoclet("org.mozilla.interfaces");
+			md.setMap(map);
+			md.list(doc);
+		}
 		
-		JsData textData = new JsData();
-		textData.setName("func");
-		textData.setElements(elms);
-		
-		ArrayList<JsData> datas = new ArrayList<JsData>();
-		datas.add(textData);
+		RefJava m = new RefJava();
+		JsData data = m.makeXML(datapath, map);
 		
 		Serializer serializer = new Persister();
-		File result = new File("text.xml");
+		File result = new File("tmp/text.xml");
 		System.out.println("      " + result);
 		try {
-			serializer.write(textData, result);
+			serializer.write(data, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.exit(0);
 	}
 
 }
