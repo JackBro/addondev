@@ -3,7 +3,8 @@ package org.addondev.tools.javadoc;
 import java.io.File;
 import java.util.HashMap;
 
-import org.addondev.tools.jsjava.JsElement;
+import org.addondev.parser.javascript.serialize.JsElement;
+
 
 import com.sun.javadoc.RootDoc;
 

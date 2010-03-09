@@ -6,9 +6,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.addondev.tools.jsjava.JsClass;
-import org.addondev.tools.jsjava.JsData;
-import org.addondev.tools.jsjava.JsElement;
+import org.addondev.parser.javascript.serialize.JsClass;
+import org.addondev.parser.javascript.serialize.JsData;
+import org.addondev.parser.javascript.serialize.JsElement;
 
 public class RefJava {
 

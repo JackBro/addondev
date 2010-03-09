@@ -10,7 +10,7 @@ import org.simpleframework.xml.Root;
 @Root
 public class JsElement {
 	
-	@Element(data=true)
+	@Element(data=true, required=false)
 	private String jsDoc;
 	@Attribute
 	private String name;

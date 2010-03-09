@@ -3,7 +3,8 @@ package org.addondev.tools.javadoc;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.addondev.tools.jsjava.JsElement;
+import org.addondev.parser.javascript.EnumNode;
+import org.addondev.parser.javascript.serialize.JsElement;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.Doc;
@@ -47,11 +48,12 @@ public class MyDoclet {
 	private void listClass(ClassDoc classDoc) {
 
 		//showDoc(classDoc);
-		map.put(fPackage + "." + classDoc.name(), new JsElement(classDoc.name(), "class", classDoc.getRawCommentText())); 
+		map.put(fPackage + "." + classDoc.name(), new JsElement(classDoc.name(), EnumNode.OBJECT.name(), classDoc.getRawCommentText())); 
 		
 		FieldDoc[] fields = classDoc.fields();
 		for (int i = 0; i < fields.length; i++) {
-			map.put(fPackage + "." + classDoc.name() + "." + fields[i].name(), new JsElement(fields[i].name(), "property", fields[i].getRawCommentText())); 
+			//String nnn = fields[i].getRawCommentText();
+			map.put(fPackage + "." + classDoc.name() + "." + fields[i].name(), new JsElement(fields[i].name(), EnumNode.VALUE_PROP.name(), fields[i].getRawCommentText())); 
 			//showDoc(fields[i]);
 		}
 
@@ -64,7 +66,7 @@ public class MyDoclet {
 				parammlist.add(parameter.name());
 				//System.out.println("parameter name = [" + parameter.name() + "]");
 			}
-			map.put(fPackage + "." + classDoc.name() + "." + methods[i].name(), new JsElement(methods[i].name(), "method", methods[i].getRawCommentText(), parammlist)); 
+			map.put(fPackage + "." + classDoc.name() + "." + methods[i].name(), new JsElement(methods[i].name(), EnumNode.FUNCTION_PROP.name(), methods[i].getRawCommentText(), parammlist)); 
 			//showDoc(methods[i]);
 		}
 	}

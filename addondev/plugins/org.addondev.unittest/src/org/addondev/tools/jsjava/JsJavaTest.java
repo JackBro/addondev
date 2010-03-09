@@ -3,6 +3,8 @@ package org.addondev.tools.jsjava;
 import java.io.File;
 import java.util.HashMap;
 
+import org.addondev.parser.javascript.serialize.JsData;
+import org.addondev.parser.javascript.serialize.JsElement;
 import org.addondev.tools.javadoc.EasyDoclet;
 import org.addondev.tools.javadoc.MyDoclet;
 import org.addondev.tools.javadoc.RefJava;
