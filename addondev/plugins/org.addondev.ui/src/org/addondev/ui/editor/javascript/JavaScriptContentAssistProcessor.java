@@ -9,7 +9,6 @@ import java.util.Stack;
 
 import org.addondev.core.AddonDevPlugin;
 import org.addondev.parser.javascript.JsNode;
-import org.addondev.parser.javascript.JsNodeHelper;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
@@ -70,14 +69,14 @@ public class JavaScriptContentAssistProcessor implements
 				}
 			}
 			//ArrayList<JsNode> chnodes = scope.getNode().getChild("t").getChildNode();//getChildNode();
-			ArrayList<JsNode> chnodes =tnode.getChildNode();//getChildNode();
+			JsNode[] chnodes =tnode.getChildNodes();//getChildNode();
 			for (JsNode node : chnodes) {
 				result.add(
 						new CompletionProposal(
-								node.getImage(), 
+								node.getName(), 
 								offset, 
 								0,
-								node.getImage().length())
+								node.getName().length())
 //						new CompletionProposal(
 //								node.getImage(), 
 //								offset, 

@@ -1,4 +1,4 @@
-package org.addondev.tools.jsjava;
+package org.addondev.parser.javascript.serialize;
 
 import java.util.ArrayList;
 

@@ -46,18 +46,6 @@ public class RefJava {
 					{
 						try {
 							Class[] classes = cls.getInterfaces();
-//							for (Class class1 : classes) {
-//								fldname = fld.getName();
-//								//if(!fldname.startsWith("org.mozilla.interfaces."))
-//								//{
-//									fldname =  class1.getName() + "." + fldname;
-//								//}
-//								if(map.containsKey(fldname))
-//								{
-//									jsdocelm = map.get(fldname);
-//									break;
-//								}
-//							}
 							jsdocelm = getElement(classes, map, fld.getName());
 						} catch (SecurityException e) {
 							// TODO Auto-generated catch block
@@ -82,18 +70,6 @@ public class RefJava {
 					{
 						try {
 							Class[] classes = cls.getInterfaces();
-//							for (Class class1 : classes) {
-//								String mthname = m.getName();
-//								//if(!fldname.startsWith("org.mozilla.interfaces."))
-//								//{
-//								mthname =  class1.getName() + "." + mthname;
-//								//}
-//								if(map.containsKey(mthname))
-//								{
-//									jsdocelm = map.get(mthname);
-//									break;
-//								}
-//							}
 							jsdocelm = getElement(classes, map, m.getName());
 						} catch (SecurityException e) {
 							// TODO Auto-generated catch block
@@ -107,9 +83,7 @@ public class RefJava {
 						classdata.addElement(jsdocelm);
 					}
 				}
-				
 				classlist.add(classdata);
-				
 			}
 			
 			data.setClasses(classlist);

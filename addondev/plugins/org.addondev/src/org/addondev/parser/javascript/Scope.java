@@ -33,15 +33,16 @@ public class Scope {
 	}
 	public JsNode getNode(String image) {
 		//return map.get(image);
-		ArrayList<JsNode> nodes = node.getChildNode();
-		if(nodes == null) return null;
-		for (JsNode jsnode : nodes) {
-			String key = jsnode.getImage();
-			if(key.equals(image))
-				return jsnode;
-		}
+//		ArrayList<JsNode> nodes = node.getChildNode();
+//		if(nodes == null) return null;
+//		for (JsNode jsnode : nodes) {
+//			String key = jsnode.getName();
+//			if(key.equals(image))
+//				return jsnode;
+//		}
+//		return null;
 		
-		return null;
+		return node.getChild(image);
 	}
 //	public void setNode(JsNode node) {
 //		this.node = node;

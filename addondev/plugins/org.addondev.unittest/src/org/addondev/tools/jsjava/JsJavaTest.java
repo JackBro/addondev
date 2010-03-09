@@ -19,8 +19,10 @@ public class JsJavaTest {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		String docpath = "D:/data/src/PDE/xpcom/docsrc";
-		String datapath = "D:/data/src/PDE/xpcom/docsrc";
+		//String docpath = "D:/data/src/PDE/xpcom/docsrc";
+		//String datapath = "D:/data/src/PDE/xpcom/docsrc";
+		String docpath = args[0];
+		String datapath = args[0];
 		
 		HashMap<String, JsElement> map = new HashMap<String, JsElement>();
 		String path = docpath;

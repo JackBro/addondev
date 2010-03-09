@@ -22,7 +22,7 @@ public class JavaScriptLabelProvider extends LabelProvider {
 //			return n.getImage();
 //		}
 		JsNode node = (JsNode)element;
-		return node.getImage();
+		return node.getName();
 		
 		//return super.getText(element);
 	}

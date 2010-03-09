@@ -1,9 +1,11 @@
 package org.addondev.parser.javascript;
 
 public enum EnumNode {
-	
+	ROOT,
+	OBJECT,
+	VALUE,
 	PARAM,
 	FUNCTION,	
-	PROPERTY,
-	METHOD
+	VALUE_PROP,
+	FUNCTION_PROP
 }

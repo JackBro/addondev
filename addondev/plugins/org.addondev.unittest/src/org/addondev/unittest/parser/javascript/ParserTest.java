@@ -12,9 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.addondev.parser.javascript.JsNode;
-import org.addondev.parser.javascript.JsNodeHelper;
 import org.addondev.parser.javascript.Lexer;
-import org.addondev.parser.javascript.NodeManager;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
