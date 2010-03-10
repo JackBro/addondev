@@ -7,7 +7,7 @@ import org.addondev.parser.javascript.serialize.JsData;
 import org.addondev.parser.javascript.serialize.JsElement;
 import org.addondev.tools.javadoc.EasyDoclet;
 import org.addondev.tools.javadoc.MyDoclet;
-import org.addondev.tools.javadoc.RefJava;
+import org.addondev.tools.javadoc.ReflectJava;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -38,7 +38,7 @@ public class JsJavaTest {
 			md.list(doc);
 		}
 		
-		RefJava m = new RefJava();
+		ReflectJava m = new ReflectJava();
 		JsData data = m.makeXML(datapath, map);
 		
 		Serializer serializer = new Persister();

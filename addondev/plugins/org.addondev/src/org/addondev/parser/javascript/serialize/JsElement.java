@@ -16,8 +16,10 @@ public class JsElement {
 	private String name;
 	@Attribute
 	private String nodetype;
-	@Attribute
+	@Attribute(required=false)
 	private String returntype;	
+	@ElementList(empty=true, required=false)
+	private ArrayList<JsElement> params;
 	
 	public String getReturntype() {
 		return returntype;
@@ -27,9 +29,6 @@ public class JsElement {
 		this.returntype = returntype;
 	}
 
-	@ElementList
-	private ArrayList<String> params;
-	
 	public String getJsDoc() {
 		return jsDoc;
 	}
@@ -54,21 +53,21 @@ public class JsElement {
 		this.nodetype = nodetype;
 	}
 
-	public ArrayList<String> getParams() {
+	public ArrayList<JsElement> getParams() {
 		return params;
 	}
 
-	public void setParams(ArrayList<String> params) {
+	public void setParams(ArrayList<JsElement> params) {
 		this.params = params;
 	}
 
 	public JsElement() {
 		// TODO Auto-generated constructor stub
 		super();
-		params = new ArrayList<String>();
+		//params = new ArrayList<JsElement>();
 	}
 	
-	public JsElement(String name, String nodetype, String jsdoc, ArrayList<String> params, String returntype) {
+	public JsElement(String name, String nodetype, String jsdoc, ArrayList<JsElement> params, String returntype) {
 		super();
 		this.name = name;
 		this.jsDoc = jsdoc;
@@ -78,7 +77,7 @@ public class JsElement {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public JsElement(String name, String nodetype, String jsdoc, ArrayList<String> params) {
+	public JsElement(String name, String nodetype, String jsdoc, ArrayList<JsElement> params) {
 		super();
 		this.name = name;
 		this.jsDoc = jsdoc;
@@ -93,7 +92,7 @@ public class JsElement {
 		this.name = name;
 		this.jsDoc = jsdoc;
 		this.nodetype = nodetype;
-		params = new ArrayList<String>();
+		//params = new ArrayList<JsElement>();
 		this.returntype = returntype;
 		// TODO Auto-generated constructor stub
 	}
@@ -103,7 +102,7 @@ public class JsElement {
 		this.name = name;
 		this.jsDoc = jsdoc;
 		this.nodetype = nodetype;
-		params = new ArrayList<String>();
+		//params = new ArrayList<JsElement>();
 		this.returntype = "";
 		// TODO Auto-generated constructor stub
 	}

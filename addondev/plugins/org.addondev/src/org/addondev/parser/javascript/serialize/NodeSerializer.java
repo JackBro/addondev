@@ -37,23 +37,23 @@ public class NodeSerializer {
 			ArrayList<JsElement> elements = jsClass.getElements();
 			for (JsElement element : elements) {
 				EnumNode nodetype = getNodeType(element);
-				JsNode chNode = new JsNode(classNode, nodetype, element.getName(), 0);
+				JsNode chNode = new JsNode(classNode, nodetype, element.getName(), element.getReturntype(), 0);
 				classNode.addChildNode(chNode);
-				if(element.getParams().size() > 0)
+				if(element.getParams() != null)
 				{
-					ArrayList<String> params = element.getParams();
-					for (String param : params) {
-						JsNode paramNode = new JsNode(chNode, EnumNode.PARAM, param, 0);
+					ArrayList<JsElement> params = element.getParams();
+					for (JsElement param : params) {
+						JsNode paramNode = new JsNode(chNode, EnumNode.PARAM, param.getName(), param.getReturntype(), 0);
 						chNode.addChildNode(paramNode);
 					}
 				}
 			}
 		}
 		
-		String name = "xpcom";
-		ScopeStack fScopeStack = new ScopeStack();
-		fScopeStack.pushScope(new Scope(0, 1, root));
-		ScopeManager.instance().setScopeStack(name, fScopeStack);
+//		String name = "xpcom";
+//		ScopeStack fScopeStack = new ScopeStack();
+//		fScopeStack.pushScope(new Scope(0, 1, root));
+//		ScopeManager.instance().setScopeStack(name, fScopeStack);
 		
 		return root;
 	}

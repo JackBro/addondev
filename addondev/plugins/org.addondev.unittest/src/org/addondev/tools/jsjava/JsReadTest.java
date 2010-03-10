@@ -9,10 +9,11 @@ import org.simpleframework.xml.core.Persister;
 
 public class JsReadTest {
 	public static void main(String[] args) {
-		String filename = "D:\\data\\src\\PDE\\workrepository\\plugins\\addondev\\plugins\\org.addondev.unittest\\tmp\\text.xml";
-		
+		//String filename = "D:\\data\\src\\PDE\\workrepository\\plugins\\addondev\\plugins\\org.addondev.unittest\\tmp\\text.xml";
+		String filename = args[0];
 		JsNode root = NodeSerializer.read(filename);
 		root.dump("");
+		System.exit(0);
 		
 //		Serializer serializer = new Persister();
 //		try {

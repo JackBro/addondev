@@ -61,9 +61,11 @@ public class MyDoclet {
 		for (int i = 0; i < methods.length; i++) {
 			
 			Parameter[] params = methods[i].parameters();
-			ArrayList<String> parammlist = new ArrayList<String>();
+			ArrayList<JsElement> parammlist = new ArrayList<JsElement>();
 			for (Parameter parameter : params) {
-				parammlist.add(parameter.name());
+				//parammlist.add(parameter.name());
+				//String mm = parameter.name();
+				parammlist.add(new JsElement(parameter.name(), EnumNode.VALUE.name(), null, getReturnType(parameter.typeName())));
 				//System.out.println("parameter name = [" + parameter.name() + "]");
 			}
 			map.put(fPackage + "." + classDoc.name() + "." + methods[i].name(), new JsElement(methods[i].name(), EnumNode.FUNCTION_PROP.name(), methods[i].getRawCommentText(), parammlist)); 
@@ -86,5 +88,40 @@ public class MyDoclet {
 
 	private void showTag(Tag tag) {
 		System.out.println(tag);
+	}
+	
+	private String getReturnType(String typename)
+	{
+		if(typename.equals("java.lang.String")
+				|| typename.equals("char"))
+		{
+			return "String";
+		}
+		else if(typename.equals("int") 
+				|| typename.equals("long")
+				|| typename.equals("double")
+				|| typename.equals("float")
+		)
+		{
+			return "Number";
+		}
+		else if(typename.equals("void"))
+		{
+			return null;
+		}
+		else if(typename.equals("boolean"))
+		{
+			return "Boolen";
+		}
+		else if(typename.startsWith("org.mozilla.interfaces."))
+		{
+			int index = typename.lastIndexOf(".");
+			String n = typename.substring(index+1);
+			return n;
+		}
+		else
+		{
+			return typename;
+		}
 	}
 }

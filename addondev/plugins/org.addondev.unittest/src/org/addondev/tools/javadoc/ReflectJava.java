@@ -10,7 +10,7 @@ import org.addondev.parser.javascript.serialize.JsClass;
 import org.addondev.parser.javascript.serialize.JsData;
 import org.addondev.parser.javascript.serialize.JsElement;
 
-public class RefJava {
+public class ReflectJava {
 
 	@SuppressWarnings("unchecked")
 	public JsData makeXML(String path, Map<String, JsElement> map) {
@@ -29,14 +29,14 @@ public class RefJava {
 				JsClass classdata = new JsClass(fname);
 				
 				cls = Class.forName("org.mozilla.interfaces." + fname);// "org.mozilla.interfaces.nsIIOService");
-				//cls = Class.forName("org.mozilla.interfaces.nsISupportsChar");
 				
+				//Fields
 				Field[] fieldList = cls.getFields();
 				for (int i = 0; i < fieldList.length; i++) {
 					Field fld = fieldList[i];
 
 					String fldname = fld.getName();
-					String returntype = getType(fld.getType());
+					String returntype = getReturnType(fld.getType());
 					if(!fldname.startsWith("org.mozilla.interfaces."))
 					{
 						fldname = "org.mozilla.interfaces." + fname + "." + fldname;
@@ -60,7 +60,7 @@ public class RefJava {
 					}
 				}
 
-				// メソッドの分析
+				// Methods
 				Method[] methList = cls.getMethods();
 				for (int i = 0; i < methList.length; i++) {
 					Method m = methList[i];
@@ -78,7 +78,7 @@ public class RefJava {
 					}
 					if(jsdocelm != null)
 					{
-						String returntype = getType(m.getReturnType());
+						String returntype = getReturnType(m.getReturnType());
 						jsdocelm.setReturntype(returntype);
 						classdata.addElement(jsdocelm);
 					}
@@ -112,7 +112,7 @@ public class RefJava {
 		return null;
 	}
 	
-	private String getType(Class type)
+	private String getReturnType(Class type)
 	{
 		if(type.getName().equals("java.lang.String")
 				|| type.getName().equals("char"))
@@ -126,6 +126,14 @@ public class RefJava {
 		)
 		{
 			return "Number";
+		}
+		else if(type.getName().equals("void"))
+		{
+			return null;
+		}
+		else if(type.getName().equals("boolean"))
+		{
+			return "Boolen";
 		}
 		else if(type.getName().startsWith("org.mozilla.interfaces."))
 		{

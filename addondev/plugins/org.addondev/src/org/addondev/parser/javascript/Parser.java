@@ -523,7 +523,7 @@ public class Parser {
 			} else {
 				getToken(); // skip symbol
 				if (token == '(') {
-					String type = tnode.getType();
+					String type = tnode.getReturnType();
 					if (type != null) {
 						if ("interfaces".equals(type)) {
 							String param = null;
@@ -561,8 +561,8 @@ public class Parser {
 			}
 		}
 
-		if (node != null && node.getType() != null) {
-			String type = node.getType();
+		if (node != null && node.getReturnType() != null) {
+			String type = node.getReturnType();
 			if ("interfaces".equals(type)) {
 				String param = null;
 				if (token != ')') {
