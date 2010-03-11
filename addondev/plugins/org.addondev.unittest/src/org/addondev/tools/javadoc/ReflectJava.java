@@ -60,20 +60,23 @@ public class ReflectJava {
 
 					if(jsdocelm != null)
 					{
-						if(propmap.containsKey(fname))
+						if(propmap.containsKey(fld.getName()))
 						{
-							String jspropname = propmap.get(fname).getJsname();
-							String jstype =  propmap.get(fname).getType();
+							String jspropname = propmap.get(fld.getName()).getJsname();
+							String jstype =  propmap.get(fld.getName()).getType();
 							jsdocelm.setName(jspropname);
 							jsdocelm.setNodeType(jstype);
+							
+							jsdocelm.setReturntype(returntype);
+							classdata.addElement(jsdocelm);
 						}		
 						else
 						{
-							throw new IllegalArgumentException("Fields : not find key : " + fname);
+							//throw new IllegalArgumentException("Fields : not find key : " + fname);
 						}
 						
-						jsdocelm.setReturntype(returntype);
-						classdata.addElement(jsdocelm);
+//						jsdocelm.setReturntype(returntype);
+//						classdata.addElement(jsdocelm);
 					}
 				}
 
@@ -95,21 +98,25 @@ public class ReflectJava {
 					}
 					if(jsdocelm != null)
 					{
-						if(propmap.containsKey(fname))
+						if(propmap.containsKey(m.getName()))
 						{
-							String jspropname = propmap.get(fname).getJsname();
-							String jstype =  propmap.get(fname).getType();
+							String jspropname = propmap.get(m.getName()).getJsname();
+							String jstype =  propmap.get(m.getName()).getType();
 							jsdocelm.setName(jspropname);
 							jsdocelm.setNodeType(jstype);
+							
+							String returntype = getReturnType(m.getReturnType());
+							jsdocelm.setReturntype(returntype);
+							classdata.addElement(jsdocelm);							
 						}	
 						else
 						{
-							throw new IllegalArgumentException("Methods : not find key : " + fname);
+							//throw new IllegalArgumentException("Methods : not find key : " + fname);
 						}
 						
-						String returntype = getReturnType(m.getReturnType());
-						jsdocelm.setReturntype(returntype);
-						classdata.addElement(jsdocelm);
+//						String returntype = getReturnType(m.getReturnType());
+//						jsdocelm.setReturntype(returntype);
+//						classdata.addElement(jsdocelm);
 					}
 				}
 				classlist.add(classdata);
