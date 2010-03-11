@@ -4,20 +4,22 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.addondev.parser.javascript.serialize.JsClass;
 import org.addondev.parser.javascript.serialize.JsData;
 import org.addondev.parser.javascript.serialize.JsElement;
 
+import sun.tools.tree.NullExpression;
+
 public class ReflectJava {
 
 	@SuppressWarnings("unchecked")
-	public JsData makeXML(String path, Map<String, JsElement> map) {
+	public JsData makeXML(String path, Map<String, JsElement> map, HashMap<String, HashMap<String, Java2JS>> jjsmap) {
 		// TODO Auto-generated method stub
 		ArrayList<JsClass> classlist = new ArrayList<JsClass>();
 		JsData data = new JsData();
-		
 		Class cls;
 		try {
 			File dir = new File(path);
@@ -25,6 +27,8 @@ public class ReflectJava {
 			for (File file : files) {
 				String fname = file.getName();
 				fname = fname.substring(0, fname.lastIndexOf("."));
+				
+				HashMap<String, Java2JS> propmap = jjsmap.get(fname);
 				
 				JsClass classdata = new JsClass(fname);
 				
@@ -36,6 +40,7 @@ public class ReflectJava {
 					Field fld = fieldList[i];
 
 					String fldname = fld.getName();
+					
 					String returntype = getReturnType(fld.getType());
 					if(!fldname.startsWith("org.mozilla.interfaces."))
 					{
@@ -55,6 +60,18 @@ public class ReflectJava {
 
 					if(jsdocelm != null)
 					{
+						if(propmap.containsKey(fname))
+						{
+							String jspropname = propmap.get(fname).getJsname();
+							String jstype =  propmap.get(fname).getType();
+							jsdocelm.setName(jspropname);
+							jsdocelm.setNodeType(jstype);
+						}		
+						else
+						{
+							throw new IllegalArgumentException("Fields : not find key : " + fname);
+						}
+						
 						jsdocelm.setReturntype(returntype);
 						classdata.addElement(jsdocelm);
 					}
@@ -78,6 +95,18 @@ public class ReflectJava {
 					}
 					if(jsdocelm != null)
 					{
+						if(propmap.containsKey(fname))
+						{
+							String jspropname = propmap.get(fname).getJsname();
+							String jstype =  propmap.get(fname).getType();
+							jsdocelm.setName(jspropname);
+							jsdocelm.setNodeType(jstype);
+						}	
+						else
+						{
+							throw new IllegalArgumentException("Methods : not find key : " + fname);
+						}
+						
 						String returntype = getReturnType(m.getReturnType());
 						jsdocelm.setReturntype(returntype);
 						classdata.addElement(jsdocelm);
