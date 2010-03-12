@@ -109,8 +109,8 @@
 
 //var m="100";
 
-//var MyObject = function(){};
-var SMyObject = //.prototype = 
+var MyObject = function(){};
+MyObject.prototype = 
 {    
     hello3: function (arg0, arg1){
 		arg0=1;
@@ -119,7 +119,7 @@ var SMyObject = //.prototype =
 };
 //
 //var sm = SMyObject.hello3(arg0, arg1);
-//var tmp = new MyObject();
+var tmp = new MyObject();
 
 var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 //

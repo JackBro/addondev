@@ -460,11 +460,13 @@ public class Parser {
 			JsNode tnode = findNode(obj);
 			JsNode prototypenode = tnode == null ? null : tnode.getChild("prototype");
 			if (prototypenode != null) {
-				if(prototypenode.getChild(sym)!=null)
-				{
-					node = new JsNode(null, prototypenode.getChild(sym).getNodeType(), sym, 0);
-					cloneChildNode(prototypenode, node);
-				}
+//				if(prototypenode.getChild(sym)!=null)
+//				{
+//					node = new JsNode(null, prototypenode.getChild(sym).getNodeType(), sym, 0);
+//					cloneChildNode(prototypenode, node);
+//				}
+				//node = new JsNode(null, EnumNode.OBJECT, "", 0);
+				cloneChildNode(prototypenode, parent);
 			}
 			break;
 		case TokenType.ARRAY:

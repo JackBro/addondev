@@ -47,13 +47,13 @@ public class MyDoclet {
 
 	private void listClass(ClassDoc classDoc) {
 
-		//showDoc(classDoc);
-		map.put(fPackage + "." + classDoc.name(), new JsElement(classDoc.name(), EnumNode.OBJECT.name(), classDoc.getRawCommentText())); 
+		//showDoc(classDoc)
+		map.put(fPackage + "." + classDoc.name(), new JsElement(classDoc.name(), EnumNode.OBJECT.name(), getDoc(classDoc.getRawCommentText()))); 
 		
 		FieldDoc[] fields = classDoc.fields();
 		for (int i = 0; i < fields.length; i++) {
 			//String nnn = fields[i].getRawCommentText();
-			map.put(fPackage + "." + classDoc.name() + "." + fields[i].name(), new JsElement(fields[i].name(), EnumNode.VALUE_PROP.name(), fields[i].getRawCommentText())); 
+			map.put(fPackage + "." + classDoc.name() + "." + fields[i].name(), new JsElement(fields[i].name(), EnumNode.VALUE_PROP.name(), getDoc(fields[i].getRawCommentText()))); 
 			//showDoc(fields[i]);
 		}
 
@@ -68,7 +68,7 @@ public class MyDoclet {
 				parammlist.add(new JsElement(parameter.name(), EnumNode.VALUE.name(), null, getReturnType(parameter.typeName())));
 				//System.out.println("parameter name = [" + parameter.name() + "]");
 			}
-			map.put(fPackage + "." + classDoc.name() + "." + methods[i].name(), new JsElement(methods[i].name(), EnumNode.FUNCTION_PROP.name(), methods[i].getRawCommentText(), parammlist)); 
+			map.put(fPackage + "." + classDoc.name() + "." + methods[i].name(), new JsElement(methods[i].name(), EnumNode.FUNCTION_PROP.name(), getDoc(methods[i].getRawCommentText()), parammlist)); 
 			//showDoc(methods[i]);
 		}
 	}
@@ -88,6 +88,19 @@ public class MyDoclet {
 
 	private void showTag(Tag tag) {
 		System.out.println(tag);
+	}
+	
+	private String getDoc(String rawtext)
+	{
+		String doc = rawtext;
+		if(doc == null) return doc;
+		
+		if(doc.contains("\\\\u"))
+		{
+			doc = doc.replaceAll("\\\\u", "\\\\\\\\u");
+		}
+		
+		return doc;
 	}
 	
 	private String getReturnType(String typename)

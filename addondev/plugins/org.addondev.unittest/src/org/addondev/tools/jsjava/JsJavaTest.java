@@ -28,7 +28,7 @@ public class JsJavaTest {
 		
 		if(args.length < 2) 
 		{
-			System.out.println("arg1=datapath, arg2=jjsmap file path");
+			System.out.println("arg1=java file dir path, arg2=jjs file path");
 			return;
 		}
 		//String docpath = "D:/data/src/PDE/xpcom/docsrc";
@@ -45,19 +45,21 @@ public class JsJavaTest {
 	        br = new BufferedReader(in);
 	        String line;
 	        while ((line = br.readLine()) != null) {
-	            System.out.println(line);
+	            //System.out.println(line);
 	            String[] lines = line.split("\\s");
-	            String idlname = lines[0].trim();
-	            String type = lines[1].trim();
-	            String javaprpname = lines[2].trim();
-	            String jspropname = lines[3].trim();
-	            
-	            if(!jjsmap.containsKey(idlname))
+	            if(lines.length == 4)
 	            {
-	            	jjsmap.put(idlname, new HashMap<String, Java2JS>());
-	            }     
-	            jjsmap.get(idlname).put(javaprpname, new Java2JS(type, jspropname));
-	            
+		            String idlname = lines[0].trim();
+		            String type = lines[1].trim();
+		            String javaprpname = lines[2].trim();
+		            String jspropname = lines[3].trim();
+		            
+		            if(!jjsmap.containsKey(idlname))
+		            {
+		            	jjsmap.put(idlname, new HashMap<String, Java2JS>());
+		            }     
+		            jjsmap.get(idlname).put(javaprpname, new Java2JS(type, jspropname));
+	            }
 	        }
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -82,9 +84,6 @@ public class JsJavaTest {
 			}			
 		}
 
-
-		
-		
 		HashMap<String, JsElement> map = new HashMap<String, JsElement>();
 		String path = docpath;
 		File dir = new File(path);

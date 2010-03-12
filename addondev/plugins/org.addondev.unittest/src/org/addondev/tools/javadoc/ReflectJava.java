@@ -60,23 +60,23 @@ public class ReflectJava {
 
 					if(jsdocelm != null)
 					{
-						if(propmap.containsKey(fld.getName()))
+						if(propmap != null && propmap.containsKey(fld.getName()))
 						{
 							String jspropname = propmap.get(fld.getName()).getJsname();
 							String jstype =  propmap.get(fld.getName()).getType();
 							jsdocelm.setName(jspropname);
 							jsdocelm.setNodeType(jstype);
 							
-							jsdocelm.setReturntype(returntype);
-							classdata.addElement(jsdocelm);
+							//jsdocelm.setReturntype(returntype);
+							//classdata.addElement(jsdocelm);
 						}		
 						else
 						{
 							//throw new IllegalArgumentException("Fields : not find key : " + fname);
 						}
 						
-//						jsdocelm.setReturntype(returntype);
-//						classdata.addElement(jsdocelm);
+						jsdocelm.setReturntype(returntype);
+						classdata.addElement(jsdocelm);
 					}
 				}
 
@@ -86,11 +86,19 @@ public class ReflectJava {
 					Method m = methList[i];
 
 					JsElement jsdocelm = map.get(m.getDeclaringClass().getName() + "." + m.getName());
+					if(propmap == null)
+					{
+						String dname = m.getDeclaringClass().getName();
+						String nlname = dname.substring(dname.lastIndexOf(".")+1);
+						propmap = jjsmap.get(nlname);						
+					}
+
 					if(jsdocelm == null)
 					{
 						try {
 							Class[] classes = cls.getInterfaces();
 							jsdocelm = getElement(classes, map, m.getName());
+							//propmap = jjsmap.get(jsdocelm.getName());
 						} catch (SecurityException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
