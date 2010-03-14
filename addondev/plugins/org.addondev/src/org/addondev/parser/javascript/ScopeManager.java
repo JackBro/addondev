@@ -5,10 +5,7 @@ import java.util.HashMap;
 
 public class ScopeManager {
 	
-	private static ScopeManager instance;
-
-	///private static Scope scope;
-	
+	private static ScopeManager instance;	
 	private HashMap<String, ScopeStack> fScopeStackMap;
 
 	

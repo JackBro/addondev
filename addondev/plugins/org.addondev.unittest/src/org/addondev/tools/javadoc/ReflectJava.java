@@ -11,8 +11,6 @@ import org.addondev.parser.javascript.serialize.JsClass;
 import org.addondev.parser.javascript.serialize.JsData;
 import org.addondev.parser.javascript.serialize.JsElement;
 
-import sun.tools.tree.NullExpression;
-
 public class ReflectJava {
 
 	@SuppressWarnings("unchecked")

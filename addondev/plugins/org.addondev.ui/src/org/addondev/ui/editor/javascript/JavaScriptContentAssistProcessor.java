@@ -1,20 +1,15 @@
 package org.addondev.ui.editor.javascript;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 
-import org.addondev.core.AddonDevPlugin;
 import org.addondev.parser.javascript.JsNode;
-import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
 import org.addondev.ui.template.JavaScriptTemplateCompletionProcessor;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -25,7 +20,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 public class JavaScriptContentAssistProcessor implements
 		IContentAssistProcessor {
@@ -76,7 +70,12 @@ public class JavaScriptContentAssistProcessor implements
 								node.getName(), 
 								offset, 
 								0,
-								node.getName().length())
+								node.getName().length(),
+								null,
+								node.getName(), 
+								null,
+								node.getfJsDoc()
+						)
 //						new CompletionProposal(
 //								node.getImage(), 
 //								offset, 

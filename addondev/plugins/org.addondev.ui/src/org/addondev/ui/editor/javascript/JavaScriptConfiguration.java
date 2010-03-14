@@ -92,6 +92,8 @@ public class JavaScriptConfiguration extends PropertyChangeSourceViewerConfigura
 		assistant.setContentAssistProcessor(javaProcessor, IDocument.DEFAULT_CONTENT_TYPE);
 		assistant.install(sourceViewer);
 		
+		assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+		
 		return assistant;
 	}
 
