@@ -1,8 +1,5 @@
 package org.addondev.parser.javascript;
 
-import java.util.ArrayList;
-//import java.util.HashMap;
-
 public class Scope {
 	private int startOffset;
 	private int endOffset;

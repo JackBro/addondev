@@ -146,11 +146,16 @@ public class ChromeURLMap {
 			
 			HashMap<String, String> map = fContentMap.get(key1);
 			String uri = map.get("uri");
-			IPath path = fBasePath.append(uri);
-			if(file.getFullPath().toPortableString().indexOf(path.toPortableString()) == 0)
+			//IPath path = fBasePath.append(uri);
+			//String dd = file.getFullPath().toPortableString();
+			//String dds =path.toPortableString();
+			//if(file.getFullPath().toPortableString().indexOf(path.toPortableString()) == 0)
+			if(file.getFullPath().toPortableString().contains(uri))
 			{
-				chromeurl = "chrome://" + 
-				file.getFullPath().toPortableString().replaceFirst(path.toPortableString(), key1 + "/content/");
+				//chromeurl = "chrome:/" + 
+				//file.getFullPath().toPortableString().replaceFirst(path.toPortableString(), key1 + "/content/");
+			chromeurl = "chrome:/" + 
+				file.getFullPath().toPortableString().replaceFirst(uri, "content/");
 				break;
 				
 			}

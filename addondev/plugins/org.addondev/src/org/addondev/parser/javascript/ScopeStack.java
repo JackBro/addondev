@@ -1,10 +1,12 @@
 package org.addondev.parser.javascript;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class ScopeStack {
 	private ArrayList<Scope> fScopeStack;
-	private int stackindex;
+	private Stack<Scope> fScapeStack;
+	//private int stackindex;
 	
 	public ArrayList<Scope> getScopeList()
 	{
@@ -14,31 +16,38 @@ public class ScopeStack {
 	public ScopeStack()
 	{
 		fScopeStack = new ArrayList<Scope>();
-		stackindex = -1;
+		fScapeStack = new Stack<Scope>();
+		//stackindex = -1;
 	}
 	
 	public Scope getScope(int index)
 	{
-		return fScopeStack.get(index);
+		
+		//return fScopeStack.get(index);
+		return fScapeStack.get(index);
 	}
 	
 	public Scope getCurrntScope()
 	{
-		return fScopeStack.get(stackindex);
+		//return fScopeStack.get(stackindex);
+		return fScapeStack.peek();
 	}
 	
 	public void pushScope(Scope scope)
 	{
 		fScopeStack.add(scope);
 		//stackindex = fScopeStack.size()-1;
-		stackindex++;
+		//stackindex++;
+		
+		fScapeStack.push(scope);
 	}
 	
 	public Scope popScope()
 	{
-		//fScopeStack.remove(stackindex);
-		Scope scope = getCurrntScope();
-		stackindex--;
-		return scope;
+		//Scope scope = getCurrntScope();
+		//stackindex--;
+		//return scope;
+		
+		return fScapeStack.pop();
 	}
 }

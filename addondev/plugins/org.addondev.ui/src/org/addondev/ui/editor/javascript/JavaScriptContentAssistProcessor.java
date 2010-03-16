@@ -9,7 +9,9 @@ import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
+import org.addondev.ui.XULJsMap;
 import org.addondev.ui.template.JavaScriptTemplateCompletionProcessor;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -17,6 +19,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -28,6 +31,9 @@ public class JavaScriptContentAssistProcessor implements
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
 		
+
+		
+		
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		
 		IWorkbench workbench = PlatformUI.getWorkbench();
@@ -35,14 +41,28 @@ public class JavaScriptContentAssistProcessor implements
 		IEditorPart editor = window.getActivePage().getActiveEditor();
 		if (editor instanceof JavaScriptEditor) {
 			JavaScriptEditor jsEditor = (JavaScriptEditor) editor;
+			
+			
+			//
+			XULJsMap xulmap = new XULJsMap();
+			if(jsEditor.getEditorInput() instanceof IFileEditorInput)
+			{
+				IFile file = ((IFileEditorInput)jsEditor.getEditorInput()).getFile();
+				List<String> jslist = xulmap.getList(file);
+				for (String js : jslist) {
+					System.out.println("jslist = " + js);
+				}	
+			}
+			
+			
+			
 			String src = jsEditor.getDocument().get();
-			//			
+		
 			Parser parser = new Parser("test");
 			parser.parse(src);
 			Scope scope;
 			if(offset == src.length())
 			{
-				//offset = 0;
 				scope = ScopeManager.instance().getScope("test", 0);
 			}
 			else
@@ -87,45 +107,12 @@ public class JavaScriptContentAssistProcessor implements
 								node.getName(), 
 								null,
 								node.getfJsDoc()
-						)
-//						new CompletionProposal(
-//								node.getImage(), 
-//								offset, 
-//								0,
-//								node.getImage().length(),
-//								null,
-//								"node.getfJsDoc()",
-//								null,
-//								"node.getfJsDoc()")				
+						)			
 				);
 			}
-//
-//			String t = getAssistTarget(src, offset);
-//			System.out.println("Target = " + t);
 		}
-
-
-//		
-//		
-//		JsNode node2 = parser.root.getNodeFromOffset(offset);
-//		JsNode node = JsNodeHelper.findChildNode(node2, t);
-//		
-////		JsNode valuenode = node.getValueNode();
-////		List<CompletionProposal> result = new ArrayList<CompletionProposal>();
-////		for (int i = 0; i < valuenode.getChildrenNum(); i++) {
-////			result.add(
-////			        new CompletionProposal(
-////			        		valuenode.getChild(i).getImage(),
-////			          offset,
-////			          0,
-////			          valuenode.getChild(i).getImage().length()));			
-////		}
-////
-////	    ICompletionProposal[] proposals =
-////	        new ICompletionProposal[result.size()];
-////	      result.toArray(proposals);
-////	      return proposals;
-		addTemplateCompletionProposal(viewer, offset, result);
+		
+		//addTemplateCompletionProposal(viewer, offset, result);
 		
 		return result.toArray(new ICompletionProposal[result.size()]);
 	}

@@ -234,10 +234,10 @@ public class Parser {
 					if (token == TokenType.EOS) {
 						break;
 					}
-					// if(token != TokenType.SYMBOL)
-					// {
-					// break;
-					// }
+					if(token != TokenType.SYMBOL)
+					{
+						break;
+					}
 					String val = lex.value();
 					JsNode m = node.getChild(val);
 					if (m == null) {
@@ -293,27 +293,27 @@ public class Parser {
 
 			getToken(); // skip ),
 			if (token == '{') {			
-				//fScopeStack.pushScope(new Scope(lex.offset(), node));
-				Scope sScope = new Scope(lex.offset(), node);
-				fScopeStack.pushScope(sScope);
+				fScopeStack.pushScope(new Scope(lex.offset(), node));
+				//Scope sScope = new Scope(lex.offset(), node);
+				//fScopeStack.pushScope(sScope);
 				block(node);
-				fScopeStack.popScope();
-				//Scope scope = fScopeStack.popScope();
-				//scope.setEnd(lex.offset());
-				sScope.setEnd(lex.offset());
+				//fScopeStack.popScope();
+				Scope scope = fScopeStack.popScope();
+				scope.setEnd(lex.offset());
+				//sScope.setEnd(lex.offset());
 			}
 		} else {
 			getToken(); // skip ),
 			if (token == '{') {
 				
-				//fScopeStack.pushScope(new Scope(lex.offset(), node));
-				Scope sScope = new Scope(lex.offset(), node);
-				fScopeStack.pushScope(sScope);
+				fScopeStack.pushScope(new Scope(lex.offset(), node));
+				//Scope sScope = new Scope(lex.offset(), node);
+				//fScopeStack.pushScope(sScope);
 				block(node);
-				fScopeStack.popScope();
-				//Scope scope = fScopeStack.popScope();
-				//scope.setEnd(lex.offset());
-				sScope.setEnd(lex.offset());
+				//fScopeStack.popScope();
+				Scope scope = fScopeStack.popScope();
+				scope.setEnd(lex.offset());
+				//sScope.setEnd(lex.offset());
 			}
 		}
 	}

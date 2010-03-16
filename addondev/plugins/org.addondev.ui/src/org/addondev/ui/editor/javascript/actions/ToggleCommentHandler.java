@@ -34,7 +34,7 @@ public class ToggleCommentHandler extends AbstractHandler {
 		
 		int res = 0;
 		try {
-			res = check(document, offset-1);
+			res = check(document, offset>0?offset-1:0);
 		} catch (BadLocationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
