@@ -112,14 +112,14 @@ public class ParserTest {
 //			//JsNode node = parser.root;
 //			//node.dump("");
 //		}
-//		{
-//			String dataxml = "D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.unittest/tmp/text.xml";
-//			JsNode root = NodeSerializer.read(dataxml);
-//			String name = "xpcomxml";
-//			ScopeStack fScopeStack = new ScopeStack();
-//			fScopeStack.pushScope(new Scope(0, 1, root));
-//			ScopeManager.instance().setScopeStack(name, fScopeStack);
-//		}
+		{
+			String dataxml = "D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.unittest/tmp/text.xml";
+			JsNode root = NodeSerializer.read(dataxml);
+			String name = "xpcomxml";
+			ScopeStack fScopeStack = new ScopeStack();
+			fScopeStack.pushScope(new Scope(0, 1, root));
+			ScopeManager.instance().setScopeStack(name, fScopeStack);
+		}
 		{
 			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));		
 			Parser parser = new Parser("xpcom.js");

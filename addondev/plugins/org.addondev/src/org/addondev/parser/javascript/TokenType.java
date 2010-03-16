@@ -19,8 +19,13 @@ public class TokenType {
 	public static final int WHILE = 270;
 	public static final int FUNCTION = 271; // 'fun'
 	public static final int VAR = 272; // 'def'
-	public static final int CONST = 273; // 'const'	
+	public static final int CONST = 273; // 'const'
 	public static final int JSDOC = 274; //	
 	public static final int NEW = 275; //
-	//public static final int LET = 276; //
+
+	public static final int TRY = 276; //
+	public static final int CATCH = 277; //
+	public static final int FINALLY = 278; //
+
+	public static final int LET = 279; //
 }

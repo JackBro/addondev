@@ -14,7 +14,7 @@ public class ScopeStack {
 	public ScopeStack()
 	{
 		fScopeStack = new ArrayList<Scope>();
-		stackindex = 0;
+		stackindex = -1;
 	}
 	
 	public Scope getScope(int index)
@@ -30,7 +30,8 @@ public class ScopeStack {
 	public void pushScope(Scope scope)
 	{
 		fScopeStack.add(scope);
-		stackindex = fScopeStack.size()-1;
+		//stackindex = fScopeStack.size()-1;
+		stackindex++;
 	}
 	
 	public Scope popScope()

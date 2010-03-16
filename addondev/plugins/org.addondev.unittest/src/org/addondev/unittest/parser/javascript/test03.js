@@ -108,20 +108,63 @@
 //}
 
 //var m="100";
-
-var MyObject = function(){};
-MyObject.prototype = 
-{    
-    hello3: function (arg0, arg1){
-		arg0=1;
-		garg=100;
-    }
-};
+//const Cc = Components.classes;
+//const Ci = Components.interfaces;
 //
-//var sm = SMyObject.hello3(arg0, arg1);
-var tmp = new MyObject();
-
+//
+//var MyObject = function(){};
+//MyObject.prototype = 
+//{    
+//    hello3: function (arg0, arg1){
+//		arg0=1;
+//		garg=100;
+//    }
+//};
+////
+////var sm = SMyObject.hello3(arg0, arg1);
+//var tmp = new MyObject();
+//
 var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+
+
+//var items = [];
+////var ns = elem.items;
+////for(var i=0; i < ns.length; i++)
+////{
+////	items.push({title:ns[i].title, url:ns[i].url, itemClicked:ns[i].itemClicked});
+////}
+//for(i=0; i < items.length; i++)
+//{
+//	Application.console.log("items[i].title = " + items[i].title);
+//}
+//
+//for(i=0; i < items.length; i++)
+//{
+//	Application.console.log("items[i].title = " + items[i].title);
+//	elem.addItem(items[i].title, items[i].url, $.stackpanel.itemClick, items[i].itemClicked);
+//}
+
+(function(){
+var MyObject = 
+{
+	message3: null,  
+	hello3: function (arg0, arg1){
+		//arg0=100;
+		this.h= "10";
+	},
+	tt: function()
+	{
+		
+	},
+	unload: function()
+	{
+	}
+}
+
+//var t = MyObject;
+
+
+})();
 //
 //var fftest = domplate(a0 ,
 //		{

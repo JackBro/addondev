@@ -51,19 +51,41 @@ public class ScopeManager {
 			ArrayList<Scope> scopes = stack.getScopeList();
 			if(offset == 0) return scopes.get(0);
 			
+			Scope minscope = null;
+			int spminlen = -1;
+			int splen;
 			for (Scope scope : scopes) {
-				if(scope.getStart() == scope.getEnd()) continue;
-				
-				if(offset >= scope.getStart() && offset<=scope.getEnd())
-				{
-					tmp = scope;
-				}
-				else
-				{
-					return tmp;
+				if(offset >= scope.getStart() && offset<=scope.getEnd()){
+					splen = scope.getEnd() - scope.getStart(); 
+					if(spminlen < 0){
+						spminlen = splen;
+						minscope = scope;
+					}
+					else if(spminlen > splen){
+						spminlen = splen;
+						minscope = scope;
+					}
 				}
 			}
-			return tmp;
+			
+			return minscope;
+			
+//			for (Scope scope : scopes) {
+//				if(scope.getStart() == scope.getEnd()) continue;
+//				
+//				if(offset >= scope.getStart() && offset<=scope.getEnd())
+//				{
+//					tmp = scope;
+//				}
+//				else
+//				{
+//					if(offset >= scope.getStart() && offset<=scope.getEnd())
+//						return scope;
+//					else
+//						tmp = scope;
+//				}
+//			}
+//			return tmp;
 		}
 
 		return null;

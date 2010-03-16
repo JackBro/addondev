@@ -53,13 +53,25 @@ public class JavaScriptContentAssistProcessor implements
 			String t = getAssistTarget(src, offset);
 			//new Parser("tmp").p;
 			JsNode tnode = scope.getNode();
+//			if("this".equals(t))
+//			{
+//				tnode = tnode.getParent();
+//			}
+			
 			
 			if(t.length() > 0)
 			{
 				String[] ts = t.split("\\.");
-				
+
 				for (String string : ts) {
+					if("this".equals(string))
+					{
+						tnode = tnode.getParent();
+					}
+					else
+					{
 					tnode = tnode.getChild(string);
+					}
 				}
 			}
 			//ArrayList<JsNode> chnodes = scope.getNode().getChild("t").getChildNode();//getChildNode();

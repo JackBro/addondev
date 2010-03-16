@@ -24,11 +24,11 @@ public class Lexer {
 		//reserved.put("true", new Integer(TokenType.TRUE));
 		//reserved.put("false", new Integer(TokenType.FALSE));
 		
+		reserved.put("try", new Integer(TokenType.TRY));
+		reserved.put("catch", new Integer(TokenType.CATCH));
+		reserved.put("finally", new Integer(TokenType.FINALLY));
 		
-		//reserved.put("try", new Integer(TokenType.TRY));
-		//reserved.put("catch", new Integer(TokenType.CATCH));
-		//reserved.put("finally", new Integer(TokenType.FINALLY));
-		
+		reserved.put("let", new Integer(TokenType.LET));
 	}
 
 	public Lexer(String src) {
@@ -60,7 +60,7 @@ public class Lexer {
 	    case ']':
 	    case '\\':
 	    case '?':
-	    case '$':
+	    //case '$':
 	    case '#':
 	    case '!':
 	    case '*':
