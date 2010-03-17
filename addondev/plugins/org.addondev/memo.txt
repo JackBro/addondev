@@ -362,3 +362,60 @@ range.detach();
 	<iframe id="content" src="about:blank" flex="1"/>
 </window>
 
+//to debugger
+cmd=load&filename=[filename]
+cmd=resume
+cmd=stepover
+cmd=stepinto
+cmd=stepout
+cmd=setbreakpoint&filename=[filename]&line=[line]
+cmd=getstackframes
+cmd=getvalues&stackframedepth=depth&name=[name]
+cmd=getexp&exp=[exp]
+
+
+
+
+//form debugger
+cmd=suspend
+data=
+<xml>
+<stackframe depth="[depth]" filename="[filename]" functionname="[functionname]" line="[line]"/>
+.
+.
+.
+</xml>
+
+
+cmd=exp
+data=
+<xml>
+<var name="[name]" type="[type]" value="[value]" hasChildren=[true/false]"/>
+</xml>
+
+cmd=values
+data=
+<xml>
+<var name="[name]" type="[type]" value="[value]" hasChildren="[true/false]"/>
+.
+.
+.
+</xml>
+
+cmd=error
+data=
+<xml>
+<error filename="[filename]" line="[line]" msg="[errorMessage]"/>
+.
+.
+.
+</xml>
+
+cmd=log
+data=
+<xml>
+<log msg="[errorMessage]"/>
+.
+.
+.
+</xml>

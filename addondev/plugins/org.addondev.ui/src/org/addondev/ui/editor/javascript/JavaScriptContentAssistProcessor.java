@@ -87,8 +87,10 @@ public class JavaScriptContentAssistProcessor implements
 				{
 					tnode = tnode.getParent();
 				}
-				
-				tnode = tnode.getChild(tsf);
+				else
+				{
+					tnode = tnode.getChild(tsf);
+				}
 				
 				if(tnode == null)
 				{		

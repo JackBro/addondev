@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 import org.addondev.debug.ui.model.AddonDevDebugModelPresentation;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -80,15 +81,20 @@ public class AddonDevLineBreakpoint extends LineBreakpoint {
 //    	 return m;
 //    }
 	
-	public IPath getFullPath()
+//	public IPath getFullPath()
+//	{
+//		//IPath /helloworld-0.0.6/chrome/content/helloworld/helloWorld.js
+//		//IPath pth = getMarker().getResource().getFullPath();
+//		return getMarker().getResource().getFullPath();
+//		
+//		//String path = getMarker().getResource().getFullPath().toOSString();
+//		//String path = getMarker().getResource().getLocationURI().getPath();	
+//		//return path;
+//	}
+	
+	public IFile getFile()
 	{
-		//IPath /helloworld-0.0.6/chrome/content/helloworld/helloWorld.js
-		//IPath pth = getMarker().getResource().getFullPath();
-		return getMarker().getResource().getFullPath();
-		
-		//String path = getMarker().getResource().getFullPath().toOSString();
-		//String path = getMarker().getResource().getLocationURI().getPath();	
-		//return path;
+		return (IFile)getMarker().getResource();
 	}
 	
 	public IPath getLocation()

@@ -95,13 +95,17 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 			{
 				ChromeURLMap map = new ChromeURLMap();
 				try {
-					map.readManifest(file.getLocation());
+					//map.readManifest(file.getLocation());
+					map.readManifest(file);
     				fChromeURL.put(name, map);
     				
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					map = null;
+					//map = null;
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				return map;
 			}

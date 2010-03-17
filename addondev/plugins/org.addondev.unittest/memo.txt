@@ -1,4 +1,6 @@
-﻿//const Cc = Components.classes;
+﻿http://jsonic.sourceforge.jp/
+
+//const Cc = Components.classes;
 //const Ci = Components.interfaces;
 
 (function(){

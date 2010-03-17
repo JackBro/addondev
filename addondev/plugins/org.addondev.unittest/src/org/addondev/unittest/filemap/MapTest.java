@@ -36,32 +36,22 @@ public class MapTest {
 		//IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
 		//boolean pe = project.exists();
 		ChromeURLMap cm = new ChromeURLMap();	
-		try {
-			//URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");
-			//URL url = new URL("file:///D:/data/src/PDE/work/org.addondev.unittest/stacklink/");
-			//project.getFile(ChromeURLMap.MANIFEST_FILENAME).
-			//cm.readManifest(project.getFile(ChromeURLMap.MANIFEST_FILENAME));
-			String bpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink"; 
-			String filepath = "stacklink/chrome.manifest"; 
-			cm.readManifest(basepath.append(filepath));
-			
-			//String pp = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
-			assertEquals("file:///" + bpath + "/chrome/content/stacklink.js", cm.convertChrome2Local("chrome://stacklink/content/stacklink.js"));
-			assertEquals("file:///" + bpath + "/skin/classic/preference.css", cm.convertChrome2Local("chrome://stacklink/skin/preference.css"));
-			
-			//cm.setLocale("en-US");
-			assertEquals("file:///" + bpath + "/locale/en-US/stacklink.dtd", cm.convertChrome2Local("chrome://stacklink/locale/stacklink.dtd"));
-			//cm.setLocale("ja-JP");
-			assertEquals("file:///" + bpath + "/locale/ja-JP/stacklink.dtd", cm.convertChrome2Local("chrome://stacklink/locale/stacklink.dtd"));
-			
-			String dd = cm.convertLocal2Chrome(new Path(bpath).append("/chrome/content/stacklink.js"));
-			assertEquals("chrome://stacklink/content/stacklink.js", cm.convertLocal2Chrome(new Path(bpath).append("/chrome/content/stacklink.js")));
-			assertEquals("chrome://stacklink/content/tmp/tmp.js", cm.convertLocal2Chrome(new Path(bpath).append("chrome/content/tmp/tmp.js")));
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");
+		//URL url = new URL("file:///D:/data/src/PDE/work/org.addondev.unittest/stacklink/");
+		//project.getFile(ChromeURLMap.MANIFEST_FILENAME).
+		//cm.readManifest(project.getFile(ChromeURLMap.MANIFEST_FILENAME));
+		String bpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink"; 
+		String filepath = "stacklink/chrome.manifest"; 
+		//cm.readManifest(basepath.append(filepath));
+		
+		//String pp = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
+		assertEquals("file:///" + bpath + "/chrome/content/stacklink.js", cm.convertChrome2Local("chrome://stacklink/content/stacklink.js"));
+		assertEquals("file:///" + bpath + "/skin/classic/preference.css", cm.convertChrome2Local("chrome://stacklink/skin/preference.css"));
+		
+		//cm.setLocale("en-US");
+		assertEquals("file:///" + bpath + "/locale/en-US/stacklink.dtd", cm.convertChrome2Local("chrome://stacklink/locale/stacklink.dtd"));
+		//cm.setLocale("ja-JP");
+		assertEquals("file:///" + bpath + "/locale/ja-JP/stacklink.dtd", cm.convertChrome2Local("chrome://stacklink/locale/stacklink.dtd"));
 	}
 	
 	@Test

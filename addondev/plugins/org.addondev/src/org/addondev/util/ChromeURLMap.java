@@ -91,48 +91,48 @@ public class ChromeURLMap {
 	}
 	
 
-	public void readManifest(IPath manifestfullpath) throws FileNotFoundException {
-		// TODO Auto-generated method stub
-		//fBasePath = file.getLocation().removeLastSegments(1);
-		fLocaleList.clear();
-		
-		fBasePath = manifestfullpath.removeLastSegments(1);
-		
-		FileInputStream fin = new FileInputStream(manifestfullpath.toFile());
-		
-		InputStreamReader inputreader = null;
-		BufferedReader bufferreader = null;
-		try {
-			inputreader = new InputStreamReader(fin, "UTF-8");
-			bufferreader = new BufferedReader(inputreader);
-			String line = null;
-			while((line = bufferreader.readLine()) != null)
-			{
-				if(line.length() > 0)
-				{
-					makeContentMap(line);
-					makeSkinMap(line);
-					makeLocaleMap(line);
-				}
-			}			
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		finally
-		{
-			try {
-				if(inputreader != null ) inputreader.close();
-				if(bufferreader != null ) bufferreader.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+//	public void readManifest(IPath manifestfullpath) throws FileNotFoundException {
+//		// TODO Auto-generated method stub
+//		//fBasePath = file.getLocation().removeLastSegments(1);
+//		fLocaleList.clear();
+//		
+//		fBasePath = manifestfullpath.removeLastSegments(1);
+//		
+//		FileInputStream fin = new FileInputStream(manifestfullpath.toFile());
+//		
+//		InputStreamReader inputreader = null;
+//		BufferedReader bufferreader = null;
+//		try {
+//			inputreader = new InputStreamReader(fin, "UTF-8");
+//			bufferreader = new BufferedReader(inputreader);
+//			String line = null;
+//			while((line = bufferreader.readLine()) != null)
+//			{
+//				if(line.length() > 0)
+//				{
+//					makeContentMap(line);
+//					makeSkinMap(line);
+//					makeLocaleMap(line);
+//				}
+//			}			
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
+//		finally
+//		{
+//			try {
+//				if(inputreader != null ) inputreader.close();
+//				if(bufferreader != null ) bufferreader.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	
 	// /stacklink/chrome/content/tmp/stacklink.js //file
 	// /stacklink/chrome/content/stacklink.js
@@ -163,24 +163,24 @@ public class ChromeURLMap {
 		return chromeurl;
 	}
 	
-	public String convertLocal2Chrome(IPath fullpath)
-	{
-		String chromeurl = null;
-		for(String key1 : fContentMap.keySet()) {
-			
-			HashMap<String, String> map = fContentMap.get(key1);
-			String uri = map.get("uri");
-			IPath path = fBasePath.append(uri);
-			if(fullpath.toPortableString().indexOf(path.toPortableString()) == 0)
-			{
-				chromeurl = "chrome://" + 
-				fullpath.toPortableString().replaceFirst(path.toPortableString(), key1 + "/content/");
-				break;
-				
-			}
-		}
-		return chromeurl;
-	}
+//	public String convertLocal2Chrome(IPath fullpath)
+//	{
+//		String chromeurl = null;
+//		for(String key1 : fContentMap.keySet()) {
+//			
+//			HashMap<String, String> map = fContentMap.get(key1);
+//			String uri = map.get("uri");
+//			IPath path = fBasePath.append(uri);
+//			if(fullpath.toPortableString().indexOf(path.toPortableString()) == 0)
+//			{
+//				chromeurl = "chrome://" + 
+//				fullpath.toPortableString().replaceFirst(path.toPortableString(), key1 + "/content/");
+//				break;
+//				
+//			}
+//		}
+//		return chromeurl;
+//	}
 	
 	public String convertChrome2Local(String path, String prefix)
 	{
