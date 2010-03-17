@@ -1,5 +1,7 @@
 package org.addondev.parser.javascript;
 
+import java.util.HashMap;
+
 public class Parser {
 	private Lexer lex;
 	private int token;
@@ -24,6 +26,11 @@ public class Parser {
 		if (node == null) {
 			node = fScopeStack.getScope(0).getNode(image); // global this
 		}
+		
+		if (node == null) {
+			node = fScopeStack.getScope(image).getNode(image); // all this
+		}
+		
 		if (node == null) {
 			node = ScopeManager.instance().getGlobalNode(image); // global other
 		}
@@ -59,13 +66,14 @@ public class Parser {
 	}
 
 	private void assignChildNode(JsNode srcNode, JsNode distNode) {		
-		JsNode[] srcChildNodes = srcNode.getChildNodes();
-		for (JsNode node : srcChildNodes) {
-			if(!distNode.hasChildNode(node.getName()))
-			{
-				distNode.addChildNode(node);
-			}
-		}
+//		JsNode[] srcChildNodes = srcNode.getChildNodes();
+//		for (JsNode node : srcChildNodes) {
+//			if(!distNode.hasChildNode(node.getName()))
+//			{
+//				distNode.addChildNode(node);
+//			}
+//		}
+		distNode.setSymbalTable(srcNode.getSymbalTable());
 	}
 
 	private void advanceToken(char c) throws EOSException {
@@ -204,8 +212,6 @@ public class Parser {
 				getToken(); // skip '='
 				JsNode res = factor(node);
 				if (res != null) {
-					// JsNodeHelper.assignNode(node.getChildNode(),
-					// res.getChildNode());
 					assignChildNode(res, node);
 				}
 			} else if (token == '.') {
@@ -217,7 +223,6 @@ public class Parser {
 				} else {
 					node = findNode(sym);
 				}
-				// JsNode node = findNode(sym);
 
 				if (node == null) {
 					node = new JsNode(root, EnumNode.VALUE, sym, lex.offset());
@@ -254,16 +259,17 @@ public class Parser {
 					getToken(); // skip '='
 					JsNode res = factor(node);
 					if (res != null) {
-						// JsNodeHelper.assignNode(node.getChildNode(),
-						// res.getChildNode());
 						assignChildNode(res, node);
 					}
-					// getToken();
 				} else if (token == '(') {
 					// factor(node);
 					functionCall(node);
 					//getToken(); // skip (
 					//if (token != ')') {
+				}
+				else
+				{
+					getToken(); // skip
 				}
 			}
 			break;
@@ -429,7 +435,6 @@ public class Parser {
 		case TokenType.SYMBOL:
 			getToken();
 			if (token == '(') {
-				String symm = lex.value();
 				functionCall(parent);
 			} else if(token == '[') {
 				advanceToken(']');

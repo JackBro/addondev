@@ -4,50 +4,50 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class ScopeStack {
-	private ArrayList<Scope> fScopeStack;
-	private Stack<Scope> fScapeStack;
-	//private int stackindex;
+	private ArrayList<Scope> fScopeList;
+	private Stack<Scope> fScopeStack;
 	
 	public ArrayList<Scope> getScopeList()
 	{
-		return fScopeStack;
+		return fScopeList;
 	}
 	
 	public ScopeStack()
 	{
-		fScopeStack = new ArrayList<Scope>();
-		fScapeStack = new Stack<Scope>();
-		//stackindex = -1;
+		fScopeList = new ArrayList<Scope>();
+		fScopeStack = new Stack<Scope>();
 	}
 	
 	public Scope getScope(int index)
 	{
-		
-		//return fScopeStack.get(index);
-		return fScapeStack.get(index);
+		return fScopeStack.get(index);
 	}
 	
 	public Scope getCurrntScope()
 	{
-		//return fScopeStack.get(stackindex);
-		return fScapeStack.peek();
+		return fScopeStack.peek();
 	}
 	
 	public void pushScope(Scope scope)
 	{
-		fScopeStack.add(scope);
-		//stackindex = fScopeStack.size()-1;
-		//stackindex++;
-		
-		fScapeStack.push(scope);
+		fScopeList.add(scope);	
+		fScopeStack.push(scope);
 	}
 	
 	public Scope popScope()
+	{	
+		return fScopeStack.pop();
+	}
+	
+	public Scope getScope(String name)
 	{
-		//Scope scope = getCurrntScope();
-		//stackindex--;
-		//return scope;
+		for (Scope scope : fScopeList) {
+			if(scope.getNode(name) != null)
+			{
+				return scope;
+			}
+		}
 		
-		return fScapeStack.pop();
+		return fScopeList.get(0);
 	}
 }

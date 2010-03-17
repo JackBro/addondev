@@ -28,7 +28,7 @@ public class Scope {
 	public JsNode getNode() {
 		return node;
 	}
-	public JsNode getNode(String image) {
+	public JsNode getNode(String name) {
 		//return map.get(image);
 //		ArrayList<JsNode> nodes = node.getChildNode();
 //		if(nodes == null) return null;
@@ -39,7 +39,7 @@ public class Scope {
 //		}
 //		return null;
 		
-		return node.getChild(image);
+		return node.getChild(name);
 	}
 //	public void setNode(JsNode node) {
 //		this.node = node;

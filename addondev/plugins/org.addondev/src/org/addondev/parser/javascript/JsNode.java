@@ -126,6 +126,17 @@ public class JsNode {
 		return fSymbalTable.values().toArray(new JsNode[fSymbalTable.size()]);
 	}
 	
+	public HashMap<String, JsNode> getSymbalTable()
+	{
+		return fSymbalTable;
+	}
+	
+	public void setSymbalTable(HashMap<String, JsNode> table)
+	{
+		fSymbalTable.clear();
+		fSymbalTable = table;
+	}
+	
 	public void setReturnType(String type)
 	{
 		fReturnType = type;

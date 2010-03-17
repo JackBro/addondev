@@ -46,7 +46,6 @@ public class ScopeManager {
 	{
 		if(fScopeStackMap.containsKey(name))
 		{
-			Scope tmp = null;
 			ScopeStack stack =  fScopeStackMap.get(name);
 			ArrayList<Scope> scopes = stack.getScopeList();
 			if(offset == 0) return scopes.get(0);
@@ -69,25 +68,14 @@ public class ScopeManager {
 			}
 			
 			return minscope;
-			
-//			for (Scope scope : scopes) {
-//				if(scope.getStart() == scope.getEnd()) continue;
-//				
-//				if(offset >= scope.getStart() && offset<=scope.getEnd())
-//				{
-//					tmp = scope;
-//				}
-//				else
-//				{
-//					if(offset >= scope.getStart() && offset<=scope.getEnd())
-//						return scope;
-//					else
-//						tmp = scope;
-//				}
-//			}
-//			return tmp;
 		}
 
 		return null;
+	}
+	
+	public Scope getScope(String name, String nodename)
+	{
+		ScopeStack stack =  fScopeStackMap.get(name);
+		return stack.getScope(nodename);
 	}
 }

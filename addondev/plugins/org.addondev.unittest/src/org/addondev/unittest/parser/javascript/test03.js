@@ -124,7 +124,7 @@
 ////var sm = SMyObject.hello3(arg0, arg1);
 //var tmp = new MyObject();
 //
-var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+//var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 
 
 //var items = [];
@@ -144,24 +144,42 @@ var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Compo
 //	elem.addItem(items[i].title, items[i].url, $.stackpanel.itemClick, items[i].itemClicked);
 //}
 
+var stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6 = {};
 (function(){
+	var $ = stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6;
+	
 var MyObject = 
 {
-	message3: null,  
+	//message3: null,  
 	hello3: function (arg0, arg1){
 		//arg0=100;
-		this.h= "10";
-	},
-	tt: function()
-	{
+		//this.h= "10";
 		
-	},
-	unload: function()
-	{
+		var lh = $.util;
+		$.
+		
 	}
+//	,
+//	tt: function()
+//	{
+//		
+//	},
+//	unload: function()
+//	{
+//	}
 }
 
+
 //var t = MyObject;
+$.util =
+{
+    //regfilename:/([^\/]*)$/,  
+	loadCurrentTab:function(e)
+	{
+		//loadURI(e.url);
+		//$.util.changeClickedElement(e.element);
+	}
+};
 
 
 })();

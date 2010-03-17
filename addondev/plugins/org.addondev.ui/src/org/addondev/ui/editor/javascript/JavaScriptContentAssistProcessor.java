@@ -43,16 +43,16 @@ public class JavaScriptContentAssistProcessor implements
 			JavaScriptEditor jsEditor = (JavaScriptEditor) editor;
 			
 			
-			//
-			XULJsMap xulmap = new XULJsMap();
-			if(jsEditor.getEditorInput() instanceof IFileEditorInput)
-			{
-				IFile file = ((IFileEditorInput)jsEditor.getEditorInput()).getFile();
-				List<String> jslist = xulmap.getList(file);
-				for (String js : jslist) {
-					System.out.println("jslist = " + js);
-				}	
-			}
+//			//
+//			XULJsMap xulmap = new XULJsMap();
+//			if(jsEditor.getEditorInput() instanceof IFileEditorInput)
+//			{
+//				IFile file = ((IFileEditorInput)jsEditor.getEditorInput()).getFile();
+//				List<String> jslist = xulmap.getList(file);
+//				for (String js : jslist) {
+//					System.out.println("jslist = " + js);
+//				}	
+//			}
 			
 			
 			
@@ -82,17 +82,38 @@ public class JavaScriptContentAssistProcessor implements
 			if(t.length() > 0)
 			{
 				String[] ts = t.split("\\.");
-
-				for (String string : ts) {
-					if("this".equals(string))
-					{
-						tnode = tnode.getParent();
-					}
-					else
-					{
-					tnode = tnode.getChild(string);
+				String tsf = ts[0];
+				if("this".equals(tsf))
+				{
+					tnode = tnode.getParent();
+				}
+				
+				tnode = tnode.getChild(tsf);
+				
+				if(tnode == null)
+				{		
+					tnode = ScopeManager.instance().getScope("test",tsf).getNode(tsf);
+				}
+				
+				if(ts.length > 1)
+				{
+					for (int i = 1; i < ts.length; i++) {
+						if(tnode == null) break;
+						
+						tnode = tnode.getChild(ts[i]);
 					}
 				}
+				
+//				for (String string : ts) {
+//					if("this".equals(string))
+//					{
+//						tnode = tnode.getParent();
+//					}
+//					else
+//					{
+//						tnode = tnode.getChild(string);
+//					}
+//				}
 			}
 			//ArrayList<JsNode> chnodes = scope.getNode().getChild("t").getChildNode();//getChildNode();
 			JsNode[] chnodes =tnode.getChildNodes();//getChildNode();
