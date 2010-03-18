@@ -1,6 +1,8 @@
 package org.addondev.debug.core.model;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -38,14 +40,115 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILineBreakpoint;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.xml.sax.SAXException;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+
 
 public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget, ILaunchListener, IDebugEventSetListener {
+	
+	class DebugHttpHandler implements HttpHandler
+	{
 
+		@Override
+		public void handle(HttpExchange exchange) {
+			// TODO Auto-generated method stub
+			String query = exchange.getRequestURI().getQuery();        	
+			StringBuilder data = new StringBuilder();
+            InputStream in = exchange.getRequestBody(); 
+            byte buff[] = new byte[1024];
+            int len;
+            try {
+				while((len = in.read(buff)) != -1) {
+					//out.write(buff, 0, len);
+					data.append(new String(buff));
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			finally
+			{
+				try {
+					in.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			StringBuilder sb = new StringBuilder();
+            //sb.append("<html></html>");
+            sb.append("");
+
+            byte[] response = sb.toString().getBytes();
+            OutputStream output = null;
+            try {
+				exchange.sendResponseHeaders(200, response.length);
+	            output = exchange.getResponseBody();
+	            output.write(response);
+
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}finally{
+	            if(output != null) 
+	            {
+	            	try {
+						output.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            }
+			}
+            
+			JsonData jsondata = JsonUtil.getJsonData(data.toString());
+			if(jsondata == null) return;
+
+			if("suspend".equals(jsondata.getCmd()))
+			{
+				breakpointHit(jsondata);
+			}
+			
+            if(query !=null)
+            {
+            	String[] params = query.split("&");
+            	if(params.length > 0)
+            	{
+                	String cmd =  params[0].split("=")[1];
+                	if(cmd.equals("suspend"))
+                	{
+                		try {
+							breakpointHit(cmd, data.toString());
+						} catch (DebugException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                	}
+                	else if(cmd.equals("ready"))
+                	{
+                		startDebug();
+                	}
+                	else if("closebrowser".equals(cmd))
+                	{
+                		setCloseBrowser(true);
+                	}
+                	else if(cmd.equals("error"))
+                	{
+                		int i=0;
+                		i++;
+                	}
+            	}
+            }			
+		}
+	}
+	
 	private ILaunch fLaunch;
 	private ILaunchConfiguration fConfiguration;
 	private IPreferenceStore fStore;
@@ -89,7 +192,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	
 	public void startPrcess(int eclispport, int chromebugport, String[] commandline) throws CoreException, IOException
 	{
-		SimpleServer.getInstance().start(this, eclispport);
+		SimpleServer.getInstance().start(new DebugHttpHandler(), eclispport);
 		
 		//IPreferenceStore store = AddonDevPlugin.getDefault().getPreferenceStore();
 		
@@ -603,19 +706,33 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		}		
 	}
 
-	public void breakpointHit(String event, String data) throws DebugException{
+//	public void breakpointHit(String event, String data) throws DebugException{
+//		childVariablesDataCash.clear();
+//		
+//		AddonDevStackFrame[] stackframes = null;
+//		try {
+//			stackframes = XMLUtils.stackFramesFromXML(this, data);
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
+//		
+//		fThread.setStackFrames(stackframes);
+//		fThread.suspend();
+//	}
+	
+	public void breakpointHit(JsonData jsondata){
 		childVariablesDataCash.clear();
 		
-		AddonDevStackFrame[] stackframes = null;
 		try {
-			stackframes = XMLUtils.stackFramesFromXML(this, data);
-		} catch (CoreException e) {
+			IStackFrame[] stackframes stackframes = JsonUtil.getStackFrames(this, jsondata);
+			fThread.setStackFrames(stackframes);
+			fThread.suspend();
+		} catch (DebugException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		
-		fThread.setStackFrames(stackframes);
-		fThread.suspend();
+		}
+	
 	}
 
 	

@@ -31,7 +31,8 @@ public class AddonDevStackFrame extends PlatformObject implements IStackFrame {
 	private boolean fUpToDate;
 	
 	public AddonDevStackFrame(IThread thread, 
-			AddonDevDebugTarget target, 
+			//AddonDevDebugTarget target, 
+			IDebugTarget target, 
 			String depth, 
 			String url, 
 			String filename, 
@@ -39,7 +40,7 @@ public class AddonDevStackFrame extends PlatformObject implements IStackFrame {
 			String line,
 			String fn) {
 		// TODO Auto-generated constructor stub
-		this.target = target;
+		this.target = (AddonDevDebugTarget) target;
 		fThread = (AddonDevThread)thread;
 		fdepth = depth;
 		fURL = url;

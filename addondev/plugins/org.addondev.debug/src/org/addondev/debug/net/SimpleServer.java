@@ -20,15 +20,15 @@ public class SimpleServer {
 
 	private static SimpleServer fInstance = null;
 	private int fPort;
-	private AddonDevDebugTarget fTarget;
+	//private AddonDevDebugTarget fTarget;
 	
 	public int getPort() {
 		return fPort;
 	}
 
-	public AddonDevDebugTarget getDebugTarget() {
-		return fTarget;
-	}
+//	public AddonDevDebugTarget getDebugTarget() {
+//		return fTarget;
+//	}
 
 	private HttpServer server;
 	public boolean working;
@@ -48,14 +48,25 @@ public class SimpleServer {
 		return fInstance;
 	}
 	
+//	@SuppressWarnings("restriction")
+//	public void start(IDebugTarget debugtarget, int port) throws IOException
+//	{	
+//		fTarget = (AddonDevDebugTarget) debugtarget;
+//		fPort = port;
+//		
+//		server = HttpServer.create(new InetSocketAddress(port), 0);
+//        server.createContext("/", new HelloHttpHandler(fTarget));
+//        server.start();
+//        working = true;
+//	}
+	
 	@SuppressWarnings("restriction")
-	public void start(IDebugTarget debugtarget, int port) throws IOException
+	public void start(HttpHandler handler, int port) throws IOException
 	{	
-		fTarget = (AddonDevDebugTarget) debugtarget;
 		fPort = port;
 		
 		server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.createContext("/", new HelloHttpHandler(fTarget));
+        server.createContext("/", handler);
         server.start();
         working = true;
 	}
@@ -66,74 +77,103 @@ public class SimpleServer {
 		working = false;
 	}
 	
-    private static class HelloHttpHandler implements HttpHandler {
-    	
-    	private AddonDevDebugTarget fTarget;
-    	
-    	public HelloHttpHandler(AddonDevDebugTarget debugTarget)
-    	{
-    		fTarget = debugTarget;
-    	}
-    	
-        public void handle(HttpExchange exchange) throws IOException {
-        	
-        	String query = exchange.getRequestURI().getQuery();        	
-        	///InputStream inputsm = exchange.getRequestBody();
-        	//byte[] buf = new byte[1024];
-        	StringBuffer data = new StringBuffer();
-            // String data = "";
-            InputStream in = exchange.getRequestBody(); 
-            //ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte buff[] = new byte[1024];
-            int len;
-            while((len = in.read(buff)) != -1) {
-            	//out.write(buff, 0, len);
-            	data.append(new String(buff));
-            }
-            in.close();
-
-            //out.close();
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("<html></html>");
-
-            byte[] response = sb.toString().getBytes();
-            exchange.sendResponseHeaders(200, response.length);
-            OutputStream output = exchange.getResponseBody();
-            output.write(response);
-            output.close();
-            //exchange.close();
-            
-            if(query !=null)
-            {
-            	String[] params = query.split("&");
-            	if(params.length > 0)
-            	{
-                	String cmd =  params[0].split("=")[1];
-                	if(cmd.equals("suspend"))
-                	{
-                		try {
-							fTarget.breakpointHit(cmd, data.toString());
-						} catch (DebugException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-                	}
-                	else if(cmd.equals("ready"))
-                	{
-                		fTarget.startDebug();
-                	}
-                	else if("closebrowser".equals(cmd))
-                	{
-                		fTarget.setCloseBrowser(true);
-                	}
-                	else if(cmd.equals("error"))
-                	{
-                		int i=0;
-                		i++;
-                	}
-            	}
-            }
-        }           
-    }
+//    private static class HelloHttpHandler implements HttpHandler {
+//    	
+//    	//private AddonDevDebugTarget fTarget;
+//    	
+////    	public HelloHttpHandler(AddonDevDebugTarget debugTarget)
+////    	{
+////    		fTarget = debugTarget;
+////    	}
+//    	
+//        public void handle(HttpExchange exchange) {
+//        	
+//        	String query = exchange.getRequestURI().getQuery();        	
+//        	///InputStream inputsm = exchange.getRequestBody();
+//        	//byte[] buf = new byte[1024];
+//        	StringBuffer data = new StringBuffer();
+//            // String data = "";
+//            InputStream in = exchange.getRequestBody(); 
+//            //ByteArrayOutputStream out = new ByteArrayOutputStream();
+//            byte buff[] = new byte[1024];
+//            int len;
+//            try {
+//				while((len = in.read(buff)) != -1) {
+//					//out.write(buff, 0, len);
+//					data.append(new String(buff));
+//				}
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			finally
+//			{
+//				try {
+//					in.close();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//
+//            StringBuilder sb = new StringBuilder();
+//            //sb.append("<html></html>");
+//            sb.append("");
+//
+//            byte[] response = sb.toString().getBytes();
+//            OutputStream output = null;
+//            try {
+//				exchange.sendResponseHeaders(200, response.length);
+//	            output = exchange.getResponseBody();
+//	            output.write(response);
+//
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}finally{
+//	            if(output != null) 
+//	            {
+//	            	try {
+//						output.close();
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//	            }
+//			}
+//
+//            //exchange.close();
+//            
+//            if(query !=null)
+//            {
+//            	String[] params = query.split("&");
+//            	if(params.length > 0)
+//            	{
+//                	String cmd =  params[0].split("=")[1];
+//                	if(cmd.equals("suspend"))
+//                	{
+//                		try {
+//							fTarget.breakpointHit(cmd, data.toString());
+//						} catch (DebugException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//                	}
+//                	else if(cmd.equals("ready"))
+//                	{
+//                		fTarget.startDebug();
+//                	}
+//                	else if("closebrowser".equals(cmd))
+//                	{
+//                		fTarget.setCloseBrowser(true);
+//                	}
+//                	else if(cmd.equals("error"))
+//                	{
+//                		int i=0;
+//                		i++;
+//                	}
+//            	}
+//            }
+//        }           
+//    }
 }

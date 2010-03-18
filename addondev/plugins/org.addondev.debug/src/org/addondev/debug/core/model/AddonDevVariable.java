@@ -1,6 +1,5 @@
 package org.addondev.debug.core.model;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;

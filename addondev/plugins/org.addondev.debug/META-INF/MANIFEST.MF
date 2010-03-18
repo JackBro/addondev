@@ -16,3 +16,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.ui.part
 Export-Package: org.addondev.debug.net
+Bundle-ClassPath: lib/jsonic/jsonic-1.1.3.jar,
+ .
