@@ -12,7 +12,8 @@ public class AddonDevVariable extends PlatformObject implements IVariable {
 	private String fName;
 	private String ftype;
 	//private JSStackFrame fFrame;
-	private AddonDevDebugTarget target;
+	//private AddonDevDebugTarget target;
+	private IDebugTarget target;
 	private AddonDevValue fvalue;
 	
 	/**
@@ -22,7 +23,8 @@ public class AddonDevVariable extends PlatformObject implements IVariable {
 	 * @param frame owning stack frame
 	 * @param name variable name
 	 */
-	public AddonDevVariable(AddonDevDebugTarget target, String stackframeid, String parent, String name, String type, String value, boolean hasChildren) {
+	//public AddonDevVariable(AddonDevDebugTarget target, String stackframeid, String parent, String name, String type, String value, boolean hasChildren) {
+	public AddonDevVariable(IDebugTarget target, String stackframeid, String parent, String name, String type, String value, boolean hasChildren) {
 		//super((JSDebugTarget) frame.getDebugTarget());
 		this.target = target;
 		//fFrame = frame;

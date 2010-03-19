@@ -44,6 +44,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.StringConverter;
 import org.xml.sax.SAXException;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -58,7 +59,8 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		@Override
 		public void handle(HttpExchange exchange) {
 			// TODO Auto-generated method stub
-			String query = exchange.getRequestURI().getQuery();        	
+//			String query = exchange.getRequestURI().getQuery();     
+			
 			StringBuilder data = new StringBuilder();
             InputStream in = exchange.getRequestBody(); 
             byte buff[] = new byte[1024];
@@ -111,41 +113,55 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 			JsonData jsondata = JsonUtil.getJsonData(data.toString());
 			if(jsondata == null) return;
 
-			if("suspend".equals(jsondata.getCmd()))
+			String cmd = jsondata.getCmd();
+			if("suspend".equals(cmd))
 			{
 				breakpointHit(jsondata);
 			}
+        	else if("ready".equals(cmd))
+        	{
+        		startDebug();
+        	}
+        	else if("closebrowser".equals(cmd))
+        	{
+        		setCloseBrowser(true);
+        	}
+        	else if("error".equals(cmd))
+        	{
+        		int i=0;
+        		i++;
+        	}
 			
-            if(query !=null)
-            {
-            	String[] params = query.split("&");
-            	if(params.length > 0)
-            	{
-                	String cmd =  params[0].split("=")[1];
-                	if(cmd.equals("suspend"))
-                	{
-                		try {
-							breakpointHit(cmd, data.toString());
-						} catch (DebugException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-                	}
-                	else if(cmd.equals("ready"))
-                	{
-                		startDebug();
-                	}
-                	else if("closebrowser".equals(cmd))
-                	{
-                		setCloseBrowser(true);
-                	}
-                	else if(cmd.equals("error"))
-                	{
-                		int i=0;
-                		i++;
-                	}
-            	}
-            }			
+//            if(query !=null)
+//            {
+//            	String[] params = query.split("&");
+//            	if(params.length > 0)
+//            	{
+//                	String cmd =  params[0].split("=")[1];
+//                	if(cmd.equals("suspend"))
+//                	{
+//                		try {
+//							breakpointHit(cmd, data.toString());
+//						} catch (DebugException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//                	}
+//                	else if(cmd.equals("ready"))
+//                	{
+//                		startDebug();
+//                	}
+//                	else if("closebrowser".equals(cmd))
+//                	{
+//                		setCloseBrowser(true);
+//                	}
+//                	else if(cmd.equals("error"))
+//                	{
+//                		int i=0;
+//                		i++;
+//                	}
+//            	}
+//            }			
 		}
 	}
 	
@@ -725,14 +741,14 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		childVariablesDataCash.clear();
 		
 		try {
-			IStackFrame[] stackframes stackframes = JsonUtil.getStackFrames(this, jsondata);
-			fThread.setStackFrames(stackframes);
+			//IStackFrame[] stackframes = JsonUtil.getStackFrames(this, jsondata);
+			List<IStackFrame> stackframes = JsonUtil.getStackFrames(this, jsondata);
+			fThread.setStackFrames(stackframes.toArray(new IStackFrame[stackframes.size()]));
 			fThread.suspend();
 		} catch (DebugException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
 	}
 
 	
@@ -869,79 +885,123 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		return variables.get(0);
 	}
 		
-	public ArrayList<IVariable> getVariables(String stackFramedepth, String parent, String name) {
-		ArrayList<IVariable> variables = null;
-		String xmldata = "";
+	//public ArrayList<IVariable> getVariables(String stackFramedepth, String parent, String name) {
+	public List<IVariable> getVariables(String stackFramedepth, String parent, String name) {
+		List<IVariable> variables = null;
+		String json = "";
 		String path = "";
 		
+		if(parent != null){
+			path = parent + "." + name;
+		} else {
+			//parent = name;
+			path = name;
+		}
+		
+		if(path == null) path = "";
+		
 		try {
-			if(parent != null)
-				path = parent + "." + name;
-			else
-			{
-				//parent = name;
-				path = name;
-			}
-			
-			if(path == null) path = "";
-			
-			xmldata =  SendRequest.getValues(stackFramedepth, path);
+			//xmldata =  SendRequest.getValues(stackFramedepth, path);
+			json =  SendRequest.getValues(stackFramedepth, path);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			//return null;
 		}
 		try {
-			variables = XMLUtils.variablesFromXML(this, stackFramedepth, xmldata, parent);
+			//variables = XMLUtils.variablesFromXML(this, stackFramedepth, xmldata, parent);
+			JsonData jsondata = JsonUtil.getJsonData(json);
+			variables = JsonUtil.getVariables(this, jsondata, stackFramedepth, parent);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+			variables = new ArrayList<IVariable>();
+		}
+		
 		return variables;
 	}
 	
 	private HashMap<String, String> childVariablesDataCash = new HashMap<String, String>();
 	
-	protected ArrayList<IVariable> getChildVariables(String stackFramedepth, String parent, String name) {
-		ArrayList<IVariable> variables = null;
-		String xmldata = "";
+	protected List<IVariable> getChildVariables(String stackFramedepth, String parent, String name) {
+		List<IVariable> variables = null;
+		String json = "";
 		String path = "";
+		
+		if(parent != null)
+			path = parent + "." + name;
+		else
+		{
+			parent = name;
+			path = name;
+		}
+		
+		if(path == null) path = "";
+		
 		try {
-			if(parent != null)
-				path = parent + "." + name;
-			else
-			{
-				parent = name;
-				path = name;
-			}
-			
-			if(path == null) path = "";
-			
 			if(childVariablesDataCash.containsKey(path))
 			{
-				xmldata = childVariablesDataCash.get(path);
+				json = childVariablesDataCash.get(path);
 			}
 			else
 			{
-				xmldata =  SendRequest.getValues(stackFramedepth, path);
-				//VariablesXML = xmldata;
-				childVariablesDataCash.put(path, xmldata);
-				//fstateChange = false;
+				json =  SendRequest.getValues(stackFramedepth, path);
+				childVariablesDataCash.put(path, json);
 			}
-			
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
-			variables = XMLUtils.variablesFromXML(this, stackFramedepth, xmldata, parent);
+			JsonData jsondata = JsonUtil.getJsonData(json);
+			variables = JsonUtil.getVariables(this, jsondata, stackFramedepth, parent);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			variables = new ArrayList<IVariable>();
 		}	
 		return variables;
 	}	
+//	protected ArrayList<IVariable> getChildVariables(String stackFramedepth, String parent, String name) {
+//		ArrayList<IVariable> variables = null;
+//		String xmldata = "";
+//		String path = "";
+//		try {
+//			if(parent != null)
+//				path = parent + "." + name;
+//			else
+//			{
+//				parent = name;
+//				path = name;
+//			}
+//			
+//			if(path == null) path = "";
+//			
+//			if(childVariablesDataCash.containsKey(path))
+//			{
+//				xmldata = childVariablesDataCash.get(path);
+//			}
+//			else
+//			{
+//				xmldata =  SendRequest.getValues(stackFramedepth, path);
+//				//VariablesXML = xmldata;
+//				childVariablesDataCash.put(path, xmldata);
+//				//fstateChange = false;
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		try {
+//			variables = XMLUtils.variablesFromXML(this, stackFramedepth, xmldata, parent);
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
+//		return variables;
+//	}	
+	
+	
 	
 	public void EventInit()
 	{
@@ -1013,6 +1073,49 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		ArrayList<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
 		breakpoints.add(breakpoint);
 		return getBreakPoint(breakpoints);
+	}
+	
+	private List<IBreakpoint> getEnableBreakPoints(List<IBreakpoint> breakpoints)
+	{
+		for (IBreakpoint breakpoint : breakpoints) {
+			if (breakpoint instanceof AddonDevLineBreakpoint) {
+				
+			}
+		}
+	}
+	
+	private String convertBreakPoints2Json(List<IBreakpoint> breakpoints){
+		String xml = "";
+		ArrayList<Map<String, String>> propertylist = new ArrayList<Map<String,String>>();
+		
+		for (IBreakpoint breakpoint : breakpoints) {
+			if (breakpoint instanceof AddonDevLineBreakpoint) {
+				
+				AddonDevLineBreakpoint addonbreakpoint = (AddonDevLineBreakpoint)breakpoint;
+				IProject project = addonbreakpoint.getProject();
+				ChromeURLMap chromeurlmap = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+				String chromeurl = chromeurlmap.convertLocal2Chrome(addonbreakpoint.getFile());
+				int line;
+				try {
+					line = addonbreakpoint.getLineNumber();
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					continue;
+				}
+				
+				HashMap<String, String> prop = new HashMap<String, String>();
+				prop.put("filename", chromeurl);
+				prop.put("line", StringConverter.asString(line));
+				
+				propertylist.add(prop);
+				//xml += String.format("<breakpoint filename=\"%s\" line=\"%s\"/>",  path, line);
+			}			
+		}
+		JsonData json = new JsonData();
+		json.setPropertylist(propertylist);
+		xml = "<xml>" +xml + "</xml>";
+		return xml;		
 	}
 	
 	private String getBreakPoint(List<IBreakpoint> breakpoints)

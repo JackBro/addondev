@@ -2,6 +2,7 @@ package org.addondev.parser.javascript;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ScopeManager {
 	
@@ -31,11 +32,11 @@ public class ScopeManager {
 		fScopeStackMap.put(name, scopestack);		
 	}
 	
-	public JsNode getGlobalNode(String image)
+	public JsNode getGlobalNode(String name)
 	{
 		JsNode node = null;
 		for(ScopeStack n : fScopeStackMap.values()) {
-			node = n.getScope(0).getNode(image);
+			node = n.getScope(0).getNode(name);
 			if(node != null)
 				break;
 		}
@@ -73,9 +74,27 @@ public class ScopeManager {
 		return null;
 	}
 	
-	public Scope getScope(String name, String nodename)
+//	public Scope getScope(String name, String nodename)
+//	{
+//		ScopeStack stack =  fScopeStackMap.get(name);
+//		return stack.getScope(nodename);
+//	}
+	
+	public List<Scope> getUpScopes(String srcname, Scope targetscope)
 	{
-		ScopeStack stack =  fScopeStackMap.get(name);
-		return stack.getScope(nodename);
+		ArrayList<Scope> scopes = new ArrayList<Scope>();
+		ScopeStack stack =  fScopeStackMap.get(srcname);
+
+		for (Scope scope : stack.getScopeList()) {
+			if((scope.getStart() < targetscope.getStart()) 
+					&& scope.getEnd() > targetscope.getEnd())
+			{
+				scopes.add(scope);
+			}
+		}
+	
+		//return fScopeList.get(0);
+		return scopes;
 	}
+
 }

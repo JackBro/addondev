@@ -20,19 +20,21 @@ public class Parser {
 		fJsDoc = "";
 	}
 
-	private JsNode findNode(String image) {
+	private JsNode findNode(String name) {
 		JsNode node = null;
-		node = fScopeStack.getCurrntScope().getNode(image); // current
+		node = fScopeStack.getCurrntScope().getNode(name); // current
+//		if (node == null) {
+//			node = fScopeStack.getScope(0).getNode(name); // global this
+//		}
+		
 		if (node == null) {
-			node = fScopeStack.getScope(0).getNode(image); // global this
+			//node = fScopeStack.getScope(name).getNode(name); // all this
+			Scope scope = fScopeStack.getUpScope(fScopeStack.getCurrntScope(), name);
+			node = scope.getNode(name);
 		}
 		
 		if (node == null) {
-			node = fScopeStack.getScope(image).getNode(image); // all this
-		}
-		
-		if (node == null) {
-			node = ScopeManager.instance().getGlobalNode(image); // global other
+			node = ScopeManager.instance().getGlobalNode(name); // global other
 		}
 		return node;
 	}

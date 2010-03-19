@@ -2,6 +2,7 @@ package org.addondev.debug.core.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -26,7 +27,7 @@ public class AddonDevStackFrame extends PlatformObject implements IStackFrame {
 	private int line;
 	private String fFn;
 	private String fdepth;
-	private ArrayList<IVariable> fVariables;
+	private List<IVariable> fVariables;
 	private AddonDevDebugTarget target;
 	private boolean fUpToDate;
 	

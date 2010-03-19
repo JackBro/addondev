@@ -168,20 +168,6 @@ public class XMLUtils {
 				}	
 				locals.add(new AddonDevVariable(target, stackFrameDepth, parent, name, type, value, hasChildren));
 			}
-//			else if(qName.equals("var"))
-//			{
-//                String name = attributes.getValue("name");
-//                String type = attributes.getValue("type");
-//                boolean hasChildren =  Boolean.parseBoolean(attributes.getValue("hasChildren"));
-//                String value = null;
-//				try {
-//					value = URLDecoder.decode( attributes.getValue("value"), "UTF-8");
-//				} catch (UnsupportedEncodingException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}	
-//				locals.add(new JSVariable(target, stackFrameDepth, parent, name, type, value, hasChildren));				
-//			}
 		}
 	}
 	static public ArrayList<IVariable> variablesFromXML(AddonDevDebugTarget target, String stackFrameID, String payload, String parent) throws CoreException {
@@ -207,8 +193,6 @@ public class XMLUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//return (JSVariable[]) info.locals.toArray(new JSVariable[0]);
-		//return info.locals.toArray(new AddonVariable[0]);
 		return info.locals;
 	}
 	

@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 public class SendRequest {
@@ -78,19 +80,16 @@ public class SendRequest {
 	
 	public static String resume() throws IOException
 	{
-		//String req = String.format("resume");
 		return RequestData("resume");
 	}
 	
 	public static String stepInto() throws IOException
 	{
-		//String req = String.format("stepinto");
 		return RequestData("stepinto");
 	}
 	
 	public static String stepOver() throws IOException
 	{
-		//String req = String.format("stepover");
 		return RequestData("stepover");
 	}
 	
@@ -199,6 +198,85 @@ public class SendRequest {
 //        in.close();
 			
 		if(http!=null)  http.disconnect();
+		
+		return res.toString();
+	}
+	
+	private static String Post(String data) throws IOException 
+	{			
+		URL url1 = null;
+		HttpURLConnection http = null;
+		try {
+			url1 = new URL("http://localhost:" + fDebuggerPort);
+			http = (HttpURLConnection)url1.openConnection();
+			http.setRequestMethod("POST");
+			http.setDoInput(true);
+			http.setDoOutput(true); 			
+			http.connect();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		
+		
+		BufferedOutputStream os = null;
+		OutputStreamWriter osw = null;
+		try {
+			os = new BufferedOutputStream(http.getOutputStream());
+			osw = new OutputStreamWriter(os, "UTF-8");
+			osw.write(data);
+			osw.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		} finally{
+			try {
+				if(osw != null) osw.close();
+				if(os != null) os.close();	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		StringBuffer res = new StringBuffer();
+		
+        InputStream in=null;
+        BufferedReader sockin=null;
+		try {
+			in = http.getInputStream();
+	        sockin = new BufferedReader(new InputStreamReader(in));
+	        String str;
+	        while ((str = sockin.readLine()) != null) {
+	            //System.out.println(str);
+	        	//res += str;
+	        	res.append(str);
+	          }	        
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		finally{
+			try {
+				if(sockin != null) sockin.close();
+				if(in != null) in.close();	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		if(http!=null) 
+		{		
+			http.disconnect();	
+		}
 		
 		return res.toString();
 	}

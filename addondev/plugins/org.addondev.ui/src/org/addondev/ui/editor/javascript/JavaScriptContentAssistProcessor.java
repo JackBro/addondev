@@ -78,6 +78,7 @@ public class JavaScriptContentAssistProcessor implements
 //				tnode = tnode.getParent();
 //			}
 			
+			ArrayList<Scope> scopes = new ArrayList<Scope>();
 			
 			if(t.length() > 0)
 			{
@@ -94,7 +95,7 @@ public class JavaScriptContentAssistProcessor implements
 				
 				if(tnode == null)
 				{		
-					tnode = ScopeManager.instance().getScope("test",tsf).getNode(tsf);
+					//tnode = ScopeManager.instance().getScope("test",tsf).getNode(tsf);
 				}
 				
 				if(ts.length > 1)
@@ -105,34 +106,45 @@ public class JavaScriptContentAssistProcessor implements
 						tnode = tnode.getChild(ts[i]);
 					}
 				}
-				
-//				for (String string : ts) {
-//					if("this".equals(string))
-//					{
-//						tnode = tnode.getParent();
-//					}
-//					else
-//					{
-//						tnode = tnode.getChild(string);
-//					}
-//				}
 			}
-			//ArrayList<JsNode> chnodes = scope.getNode().getChild("t").getChildNode();//getChildNode();
-			JsNode[] chnodes =tnode.getChildNodes();//getChildNode();
-			for (JsNode node : chnodes) {
-				result.add(
-						new CompletionProposal(
-								node.getName(), 
-								offset, 
-								0,
-								node.getName().length(),
-								null,
-								node.getName(), 
-								null,
-								node.getfJsDoc()
-						)			
-				);
+			else
+			{
+				scopes.add(scope);
+				scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
 			}
+			
+			for (Scope scope2 : scopes) {
+				JsNode[] chnodes = scope2.getNode().getChildNodes();
+				for (JsNode node : chnodes) {
+					result.add(
+							new CompletionProposal(
+									node.getName(), 
+									offset, 
+									0,
+									node.getName().length(),
+									null,
+									node.getName(), 
+									null,
+									node.getfJsDoc()
+							)			
+					);
+				}
+			}
+//			JsNode[] chnodes =tnode.getChildNodes();//getChildNode();
+//			for (JsNode node : chnodes) {
+//				result.add(
+//						new CompletionProposal(
+//								node.getName(), 
+//								offset, 
+//								0,
+//								node.getName().length(),
+//								null,
+//								node.getName(), 
+//								null,
+//								node.getfJsDoc()
+//						)			
+//				);
+//			}
 		}
 		
 		//addTemplateCompletionProposal(viewer, offset, result);
