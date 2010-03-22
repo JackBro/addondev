@@ -31,7 +31,7 @@ public class AddonDevThread extends PlatformObject implements IThread {
 		// TODO Auto-generated method stub
 		if (fBreakpoints == null) {
 			//return new IBreakpoint[0];
-			return new AddonDevLineBreakpoint[0];
+			return new AddonDevBreakpoint[0];
 		}
 		return fBreakpoints;
 	}

@@ -1,6 +1,6 @@
 package org.addondev.debug.ui.actions;
 
-import org.addondev.debug.core.model.AddonDevLineBreakpoint;
+import org.addondev.debug.core.model.AddonDevBreakpoint;
 import org.addondev.debug.ui.model.AddonDevDebugModelPresentation;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -59,9 +59,9 @@ public class AddonDevBreakpointPropertiesRulerAction extends Action implements I
 		IResource resource = BreakpointRulerAction.getResourceForDebugMarkers(fEditor);
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(AddonDevDebugModelPresentation.DEBUG_MODEL_ID);
 		for (IBreakpoint ibreakpoint : breakpoints) {
-			if(ibreakpoint instanceof AddonDevLineBreakpoint)
+			if(ibreakpoint instanceof AddonDevBreakpoint)
 			{
-				AddonDevLineBreakpoint breakpoint = (AddonDevLineBreakpoint)ibreakpoint;
+				AddonDevBreakpoint breakpoint = (AddonDevBreakpoint)ibreakpoint;
 				if(breakpoint.getLocation().equals(resource.getLocation()))	
 				{
 					int bline = -1;

@@ -9,21 +9,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+
+import net.arnx.jsonic.JSONException;
+
+import org.addondev.debug.core.model.JsonData;
+import org.addondev.debug.core.model.JsonUtil;
+import org.eclipse.debug.core.model.IBreakpoint;
 
 public class SendRequest {
 	private static String fDebuggerPort;
-	
-	
-	
-//	public static void setBreakPoint(String filename, int line) throws IOException
-//	{	
-//		String encStr = URLEncoder.encode("file://" + filename , "UTF-8"); 
-//		//String encStr = URLEncoder.encode(filename , "UTF-8"); 
-//		String cmd = "cmd=setbreakpoint&filename="+encStr + "&line=" + String.valueOf(line);
-//		RequestData(cmd);
-//	}
 	
 	public static int getDebuggerPort() {
 		return Integer.parseInt(fDebuggerPort);
@@ -35,16 +32,30 @@ public class SendRequest {
 
 	public static void setBreakPoint(String data) throws IOException
 	{	
-		//String cmd = "setbreakpoint";
 		RequestData("setbreakpoint", data);
 		//RequestData("setbreakpoint");
 	}
 	
+	public static void setBreakPoint(List<IBreakpoint> breakpoints) throws IOException, JSONException
+	{	
+		JsonData json = JsonUtil.getJsonData(breakpoints);
+		json.setCmd("setbreakpoint");
+		String data = JsonUtil.getJsonText(json);
+		post(data);
+	}
+	
 	public static void removeBreakPoint(String data) throws IOException
 	{	
-		//String cmd = "setbreakpoint";
 		RequestData("removebreakpoint", data);
-		//RequestData("setbreakpoint");
+		//post(data);
+	}
+	
+	public static void removeBreakPoint(List<IBreakpoint> breakpoints) throws IOException, JSONException
+	{	
+		JsonData json = JsonUtil.getJsonData(breakpoints);
+		json.setCmd("removebreakpoint");
+		String data = JsonUtil.getJsonText(json);
+		post(data);
 	}
 	
 //	public static void load(String filename) throws IOException
@@ -54,14 +65,30 @@ public class SendRequest {
 //		String cmd = "cmd=load&filename=" + encStr;
 //		RequestData(cmd);
 //	}
-	public static String terminate() throws IOException
+//	public static String terminate() throws IOException
+//	{
+//		return RequestData("terminate");
+//	}
+	
+	public static String terminate() throws IOException, JSONException
 	{
-		return RequestData("terminate");
+		JsonData json = new JsonData();
+		json.setCmd("terminate");
+		String data = JsonUtil.getJsonText(json);
+		return post(data);
 	}
 	
 	public static String closeBrowser() throws IOException
 	{
 		return RequestData("closebrowser");
+	}
+	
+	public static String closeWindow() throws IOException, JSONException
+	{
+		JsonData json = new JsonData();
+		json.setCmd("closebrowser");
+		String data = JsonUtil.getJsonText(json);
+		return post(data);
 	}
 	
 	public static void open(String args) throws IOException
@@ -72,41 +99,80 @@ public class SendRequest {
 		RequestData(cmd);
 	}
 	
+	public static void open() throws IOException, JSONException
+	{
+		//String cmd = "open";
+		//RequestData(cmd);
+		JsonData json = new JsonData();
+		json.setCmd("open");
+		String data = JsonUtil.getJsonText(json);
+		post(data);
+	}
+	
 	public static void reload() throws IOException
 	{
 		String cmd = "reload";
 		RequestData(cmd);
 	}
 	
-	public static String resume() throws IOException
+	public static String resume() throws IOException, JSONException
 	{
-		return RequestData("resume");
+		//return RequestData("resume");
+		JsonData json = new JsonData();
+		json.setCmd("resume");
+		String data = JsonUtil.getJsonText(json);
+		return post(data);	
 	}
 	
-	public static String stepInto() throws IOException
+	public static String stepInto() throws IOException, JSONException
 	{
-		return RequestData("stepinto");
+		JsonData json = new JsonData();
+		json.setCmd("stepinto");
+		String data = JsonUtil.getJsonText(json);
+		return post(data);	
+		//return RequestData("stepinto");
 	}
 	
-	public static String stepOver() throws IOException
+	public static String stepOver() throws IOException, JSONException
 	{
-		return RequestData("stepover");
+		JsonData json = new JsonData();
+		json.setCmd("stepover");
+		String data = JsonUtil.getJsonText(json);
+		return post(data);	
+		//return RequestData("stepover");
 	}
 	
-	public static String getValues(String stackframedepth, String name) throws IOException{		
-		//String req;
-//		if(name != null)
-//			req = String.format("cmd=getvalues&stackframedepth=%s&name=%s", stackframedepth, name);
-//		else
-//			req = String.format("cmd=getvalues&stackframedepth=%s", stackframedepth);
+	public static String getValues(String stackframedepth, String name) throws IOException, JSONException
+	{		
+		JsonData json = new JsonData();
+		json.setCmd("getvalues");
 		
-		String data = String.format("<xml><stackframe depth=\"%s\" valuename=\"%s\"/></xml>", stackframedepth, name);
-		return RequestData("getvalues", data);
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("depth", stackframedepth);
+		map.put("valuename", name);
+		json.SetProperty(map);
+		
+		String data = JsonUtil.getJsonText(json);
+		return post(data);	
+		
+//		String data = String.format("<xml><stackframe depth=\"%s\" valuename=\"%s\"/></xml>", stackframedepth, name);
+//		return RequestData("getvalues", data);
 	}
 	
 	public static String getValue(String stackframedepth, String name) throws IOException{				
-		String data = String.format("<xml><stackframe depth=\"%s\" valuename=\"%s\"/></xml>", stackframedepth, name);
-		return RequestData("getvalue", data);
+//		String data = String.format("<xml><stackframe depth=\"%s\" valuename=\"%s\"/></xml>", stackframedepth, name);
+//		return RequestData("getvalue", data);
+		
+		JsonData json = new JsonData();
+		json.setCmd("getvalue");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("depth", stackframedepth);
+		map.put("valuename", name);
+		json.SetProperty(map);
+		
+		String data = JsonUtil.getJsonText(json);
+		return post(data);	
 	}
 	
 	private static String RequestData(String command) throws IOException
@@ -202,7 +268,7 @@ public class SendRequest {
 		return res.toString();
 	}
 	
-	private static String Post(String data) throws IOException 
+	private static String post(String data) throws IOException 
 	{			
 		URL url1 = null;
 		HttpURLConnection http = null;

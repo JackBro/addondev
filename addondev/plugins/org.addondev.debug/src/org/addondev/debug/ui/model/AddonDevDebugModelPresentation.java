@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.addondev.debug.core.AddonDevDebugPlugin;
 import org.addondev.debug.core.model.AddonDevDebugTarget;
-import org.addondev.debug.core.model.AddonDevLineBreakpoint;
+import org.addondev.debug.core.model.AddonDevBreakpoint;
 import org.addondev.debug.core.model.AddonDevStackFrame;
 import org.addondev.debug.core.model.AddonDevThread;
 import org.eclipse.core.resources.IFile;
@@ -47,9 +47,9 @@ public class AddonDevDebugModelPresentation  implements IDebugModelPresentation 
 	public Image getImage(Object element) {
 		// TODO Auto-generated method stub
 		//return null;
-		 if (element instanceof AddonDevLineBreakpoint) {
+		 if (element instanceof AddonDevBreakpoint) {
 			 
-			 AddonDevLineBreakpoint breakpoint = (AddonDevLineBreakpoint)element;
+			 AddonDevBreakpoint breakpoint = (AddonDevBreakpoint)element;
 			 try {
 				if(breakpoint.isEnabled())
 				 { 
@@ -75,9 +75,9 @@ public class AddonDevDebugModelPresentation  implements IDebugModelPresentation 
 	public String getText(Object element) {
 		// TODO Auto-generated method stub
 		//return null;
-        if (element instanceof AddonDevLineBreakpoint) {
-        	AddonDevLineBreakpoint jsBreakpoint = (AddonDevLineBreakpoint) element;
-            IMarker marker = ((AddonDevLineBreakpoint) element).getMarker();
+        if (element instanceof AddonDevBreakpoint) {
+        	AddonDevBreakpoint jsBreakpoint = (AddonDevBreakpoint) element;
+            IMarker marker = ((AddonDevBreakpoint) element).getMarker();
             try {
                 Map attrs = marker.getAttributes();
                 //attrs.

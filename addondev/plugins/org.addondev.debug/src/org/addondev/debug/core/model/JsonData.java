@@ -1,13 +1,13 @@
 package org.addondev.debug.core.model;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JsonData {
 	private String cmd;
-	private String name;
+	//private String name;
 	private List<Map<String, String>> propertylist;
 	
 	public String getCmd() {
@@ -18,13 +18,13 @@ public class JsonData {
 		this.cmd = cmd;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+//	public String getName() {
+//		return name;
+//	}
+//
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
 	public List<Map<String, String>> getPropertylist() {
 		return propertylist;
@@ -36,4 +36,14 @@ public class JsonData {
 	}
 
 	public JsonData(){}
+	
+	public void SetProperty(Map<String, String> map)
+	{		
+		if(propertylist == null)
+		{
+			propertylist = new ArrayList<Map<String,String>>();
+		}
+		
+		propertylist.add(map);
+	}
 }

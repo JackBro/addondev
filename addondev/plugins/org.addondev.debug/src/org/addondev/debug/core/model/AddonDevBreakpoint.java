@@ -16,16 +16,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.LineBreakpoint;
 
-public class AddonDevLineBreakpoint extends LineBreakpoint {
+public class AddonDevBreakpoint extends LineBreakpoint {
 
 	//static public final String ADDON_BREAK_MARKER = "jp.addondev.debug.addonStopBreakpointMarker";
 	static public final String BREAKPOINT_MARKER = "org.addondev.debug.marktype.linebreakpoint";//"org.addondev.debug.markertype.linebreakpoint";
 	static public final String BREAKPOINT_ID = "org.addondev.debug.linebreakpoint";
 	
-	public AddonDevLineBreakpoint()
+	public AddonDevBreakpoint()
 	{
 	}
-	public AddonDevLineBreakpoint(final IResource resource, final int lineNumber) throws CoreException {
+	public AddonDevBreakpoint(final IResource resource, final int lineNumber) throws CoreException {
 		 final Map<String, Object> map = new HashMap<String, Object>();
 		 
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {

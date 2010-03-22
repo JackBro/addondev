@@ -3,24 +3,22 @@ package org.addondev.debug.core.model;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.addondev.core.AddonDevPlugin;
+import net.arnx.jsonic.JSONException;
+
 import org.addondev.debug.net.SendRequest;
 import org.addondev.debug.net.SimpleServer;
 import org.addondev.debug.ui.model.AddonDevDebugModelPresentation;
 import org.addondev.debug.util.XMLUtils;
-import org.addondev.util.ChromeURLMap;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -37,14 +35,12 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchListener;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.ILineBreakpoint;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.StringConverter;
 import org.xml.sax.SAXException;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -130,43 +126,12 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
         	{
         		int i=0;
         		i++;
-        	}
-			
-//            if(query !=null)
-//            {
-//            	String[] params = query.split("&");
-//            	if(params.length > 0)
-//            	{
-//                	String cmd =  params[0].split("=")[1];
-//                	if(cmd.equals("suspend"))
-//                	{
-//                		try {
-//							breakpointHit(cmd, data.toString());
-//						} catch (DebugException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//                	}
-//                	else if(cmd.equals("ready"))
-//                	{
-//                		startDebug();
-//                	}
-//                	else if("closebrowser".equals(cmd))
-//                	{
-//                		setCloseBrowser(true);
-//                	}
-//                	else if(cmd.equals("error"))
-//                	{
-//                		int i=0;
-//                		i++;
-//                	}
-//            	}
-//            }			
+        	}			
 		}
 	}
 	
 	private ILaunch fLaunch;
-	private ILaunchConfiguration fConfiguration;
+	//private ILaunchConfiguration fConfiguration;
 	private IPreferenceStore fStore;
 	
 	// program name
@@ -184,7 +149,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	//private AddonDevUtil fAddonDevUtil;
 	//private List<IProject> fDebugProjects;
 
-	private ArrayList<IBreakpoint> fBreakpointList = new ArrayList<IBreakpoint>();
+	private ArrayList<IBreakpoint> fAddBreakpointList = new ArrayList<IBreakpoint>();
 	private ArrayList<IBreakpoint> fRemoveBreakpointList = new ArrayList<IBreakpoint>();
 	
 	public boolean isCloseBrowser() {
@@ -198,7 +163,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	public AddonDevDebugTarget(ILaunchConfiguration configuration, ILaunch launch)
 	{
 		// TODO Auto-generated constructor stub
-		fConfiguration = configuration;
+		//fConfiguration = configuration;
 		fLaunch = launch;	
 		//fStore = AddonDevPlugin.getDefault().getPreferenceStore();	
 
@@ -210,14 +175,8 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	{
 		SimpleServer.getInstance().start(new DebugHttpHandler(), eclispport);
 		
-		//IPreferenceStore store = AddonDevPlugin.getDefault().getPreferenceStore();
-		
-		//int eclispport = store.getInt(PrefConst.ECLIPSE_PORT);
 		SendRequest.setDebuggerPort(chromebugport); //store.getString(PrefConst.DEBUGGER_PORT);
-		//AddonDevPlugin.startServer(this, eclispport);
 
-		
-		//String[] commandLine = commandline.toArray(new String[commandline.size()]);
 		Process process = DebugPlugin.exec(commandline, null);
 		fProcess = DebugPlugin.newProcess(fLaunch, process, commandline[0]);
 		
@@ -237,59 +196,36 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	
 	public void startDebug()
 	{
-//		String xml = "";
-//		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(AddonDevLineBreakpoint.BREAKPOINT_ID);
-//		for (int i = 0; i < breakpoints.length; i++) {
-//			IBreakpoint breakpoint = breakpoints[i];
-//			//if (supportsBreakpoint(breakpoint)) {
-//				if (breakpoint instanceof ILineBreakpoint) {
-//					IProject project = ((AddonDevLineBreakpoint)breakpoint).getProject();
-//					String path = fAddonDevUtil.convertChrome(project, ((AddonDevLineBreakpoint)breakpoint).getPath().toPortableString());
-//					int line = 0;
-//
-//					try {
-//						path = URLEncoder.encode(path, "UTF-8");
-//						line = ((AddonDevLineBreakpoint)breakpoint).getLineNumber();
-//					} catch (UnsupportedEncodingException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (CoreException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}	
-//
-//					xml += String.format("<breakpoint filename=\"%s\" line=\"%s\"/>",  path, line);
-//				}
-//			//}
-//		}	
-//		
-//		xml = "<xml>" +xml + "</xml>";
-		//fBreakpointList.clear();
 		
-		String xml = getBreakPoint(fBreakpointList);
-		try {
-			SendRequest.setBreakPoint(xml);
+		//String xml = getBreakPoint(fBreakpointList);
+		try {			
+			//SendRequest.setBreakPoint(xml);
+			List<IBreakpoint> list = Arrays.asList(getBreakPoints());
+			SendRequest.setBreakPoint(list);
+			
+			SendRequest.open();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		try {
-			SendRequest.open("");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			SendRequest.open("");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		this.fCloseBrowser = false;
 	}
 	
 	public void restart() throws Exception
 	{
 		started();		
-		EventInit();
+		//EventInit();
 		fThread.setStackFrames(null);
 		SendRequest.reload();
 	}
+
 	
 	@Override
 	public String getName() throws DebugException {
@@ -322,22 +258,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	@Override
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		// TODO Auto-generated method stub
-		//if (breakpoint.getModelIdentifier().equals("org.eclipse.debug.core.breakpointMarker")){ //IJSConstants.ID_JS_DEBUG_MODEL)) {
-		if (breakpoint.getModelIdentifier().equals(AddonDevLineBreakpoint.BREAKPOINT_ID)) {
-			return true;
-//			try {
-//				String program = getLaunch().getLaunchConfiguration().getAttribute(IJSConstants.ATTR_JS_PROGRAM, (String)null);
-//				if (program != null) {
-//					IMarker marker = breakpoint.getMarker();
-//					if (marker != null) {
-//						IPath p = new Path(program);
-//						return marker.getResource().getFullPath().equals(p);
-//					}
-//				}
-//			} catch (CoreException e) {
-//			}			
-		}
-		return false;
+		return breakpoint.getModelIdentifier().equals(AddonDevBreakpoint.BREAKPOINT_ID);
 	}
 
 	@Override
@@ -364,7 +285,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 
 	@Override
 	public void terminate() {
-		if(this.fCloseBrowser)
+		if(fCloseBrowser)
 		{	
 			
 			// TODO Auto-generated method stub
@@ -396,10 +317,11 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 			try {
 				
 				fCloseBrowser = true;
-				fBreakpointList.clear();
+				fAddBreakpointList.clear();
 				fRemoveBreakpointList.clear();
 				
-				SendRequest.closeBrowser();
+				//SendRequest.closeBrowser();
+				SendRequest.closeWindow();
 				//fThread.fireTerminateEvent();
 				
 				//fireTerminateEvent();
@@ -441,183 +363,183 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	public void resume() throws DebugException {
 		// TODO Auto-generated method stub
 		
-//		fBreakpointList.removeAll(fRemoveBreakpointList);
-//		String xml = getBreakPoint(fBreakpointList);
-//		try {
-//			SendRequest.setBreakPoint(xml);
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//		
-//		String removexml = getBreakPoint(fBreakpointList);
-//		try {
-//			SendRequest.removeBreakPoint(removexml);
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
 		fSuspended = false;
 		//fireResumeEvent(DebugEvent.STEP_OVER);
-		
+
+			//resumed(DebugEvent.RESUME);
+			//installDeferredBreakpoints();
+			//String data = getBreakPoint(fBreakpointList);
+		try {
+			
+			if(fAddBreakpointList.size()>0) SendRequest.setBreakPoint(fAddBreakpointList);
+			if(fRemoveBreakpointList.size()>0) SendRequest.removeBreakPoint(fRemoveBreakpointList);
+			
+			//SendRequest.setBreakPoint(data);		
+			//SendRequest.open("");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			fAddBreakpointList.clear();
+			fRemoveBreakpointList.clear();			
+		}
+
 		if(fCloseBrowser)
 		{
-			fBreakpointList.clear();
-			fRemoveBreakpointList.clear();
-			
-			//resumed(DebugEvent.RESUME);
-			installDeferredBreakpoints();
-			String data = getBreakPoint(fBreakpointList);
 			try {
-				SendRequest.setBreakPoint(data);
-				SendRequest.open("");
-			} catch (IOException e) {
+				//SendRequest.open("");
+				SendRequest.open();
+			}catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();				
+			} 
 		}
 		else
 		{
-			//resumed(DebugEvent.RESUME);
-			//for (IThread thread : fThreads) {
-			//	thread.resume();
-			//}
 			try {
 				SendRequest.resume();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();				
+			} 
 		}
 	}
 	
 	@Override
 	public synchronized void suspend() throws DebugException {
 		// TODO Auto-generated method stub
-		int i=0;
-		i++;
 		fSuspended = true;
 		suspended(DebugEvent.BREAKPOINT);
 	}
 
 	
+//	@Override
+//	public void breakpointAdded(IBreakpoint breakpoint) {
+//		// TODO Auto-generated method stub
+//		//if (breakpoint.getModelIdentifier().equals("org.eclipse.debug.core.breakpointMarker")){ //IJSConstants.ID_JS_DEBUG_MODEL)) {
+//		//if (breakpoint.getModelIdentifier().equals(IJSConstants.ID_JS_DEBUG_MODEL)) {
+//		if(!(breakpoint instanceof AddonDevBreakpoint)) return;
+//		
+//		if (fSuspended) {
+//			try {
+//				if (breakpoint.isEnabled()) {
+//					if(!fBreakpointList.contains(breakpoint))
+//					{
+//						fBreakpointList.add(breakpoint);
+//					}
+//				}
+//			} catch (CoreException e) {
+//			}			
+//		}
+//		else
+//		{
+//			try {
+//				if (breakpoint.isEnabled()) {
+//					if(!fBreakpointList.contains(breakpoint))
+//					{
+//						fBreakpointList.add(breakpoint);
+//						String data = getBreakPoint(breakpoint);
+//						SendRequest.setBreakPoint(data);
+//					}
+//				}
+//			} catch (CoreException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}			
+//		}
+//	}
+	
 	@Override
 	public void breakpointAdded(IBreakpoint breakpoint) {
-		// TODO Auto-generated method stub
 		//if (breakpoint.getModelIdentifier().equals("org.eclipse.debug.core.breakpointMarker")){ //IJSConstants.ID_JS_DEBUG_MODEL)) {
 		//if (breakpoint.getModelIdentifier().equals(IJSConstants.ID_JS_DEBUG_MODEL)) {
-		if(!(breakpoint instanceof AddonDevLineBreakpoint)) return;
-		
-		if (fSuspended) {
-			try {
-				if (breakpoint.isEnabled()) {
-					if(!fBreakpointList.contains(breakpoint))
-					{
-						fBreakpointList.add(breakpoint);
-					}
-				}
-			} catch (CoreException e) {
-			}			
-		}
-		else
-		{
-			try {
-				if (breakpoint.isEnabled()) {
-					if(!fBreakpointList.contains(breakpoint))
-					{
-						fBreakpointList.add(breakpoint);
-						String data = getBreakPoint(breakpoint);
-						SendRequest.setBreakPoint(data);
-					}
-				}
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
+		if (supportsBreakpoint(breakpoint)) 
+		{		
+			if(!fAddBreakpointList.contains(breakpoint))
+			{
+				fAddBreakpointList.add(breakpoint);
+			}		
 		}
 	}
-
+	
 	@Override
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
-		// TODO Auto-generated method stub
 		if (supportsBreakpoint(breakpoint)) {
 
 			try {
 				if (breakpoint.isEnabled()) {
 					breakpointAdded(breakpoint);
 				} else {
-					breakpointRemoved(breakpoint, null);
+					if(fAddBreakpointList.contains(breakpoint)){
+						fAddBreakpointList.remove(breakpoint);
+					}else{
+						fRemoveBreakpointList.add(breakpoint);
+					}
 				}
 			} catch (CoreException e) {
 			}
 		}
 	}
-
+	
 	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
-		// TODO Auto-generated method stub
-		if (!(breakpoint instanceof AddonDevLineBreakpoint )) return;
-		
-		if (fSuspended) 
-		{
-			//IMarker marker =breakpoint.getMarker();
-			//JSLineBreakpoint jb = (JSLineBreakpoint)breakpoint;
-			if(fBreakpointList.contains(breakpoint))
-			{
-				fBreakpointList.remove(breakpoint);
-			}
-			else
-			{
+		if (supportsBreakpoint(breakpoint)) {
+			if(!fRemoveBreakpointList.contains(breakpoint)){
 				fRemoveBreakpointList.add(breakpoint);
 			}
-//			String xml = "";
-//
-//			IProject project = ((JSLineBreakpoint)breakpoint).getProject();
-//			String path = fAddonDevUtil.convertChrome(project, ((JSLineBreakpoint)breakpoint).getPath().toPortableString());
-//			int line = 0;
-//
-//			try {
-//				path = URLEncoder.encode(path, "UTF-8");
-//				line = ((JSLineBreakpoint)breakpoint).getLineNumber();
-//			} catch (UnsupportedEncodingException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (CoreException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}	
-//			xml += String.format("<breakpoint filename=\"%s\" line=\"%s\"/>",  path, line);
-//			xml = "<xml>" +xml + "</xml>";
-//			
-//			try {
-//				SendRequest.removeBreakPoint(xml);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-		}
-		else
-		{
-			if(fBreakpointList.contains(breakpoint))
-			{
-				fBreakpointList.remove(breakpoint);
-				String data = getBreakPoint(breakpoint);
-				try {
-					SendRequest.removeBreakPoint(data);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			else
-			{
-				fRemoveBreakpointList.add(breakpoint);
-			}			
 		}
 	}
+	
+//	@Override
+//	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
+//		// TODO Auto-generated method stub
+//		if (!(breakpoint instanceof AddonDevBreakpoint )) return;
+//		
+//		if (fSuspended) 
+//		{
+//			//IMarker marker =breakpoint.getMarker();
+//			//JSLineBreakpoint jb = (JSLineBreakpoint)breakpoint;
+//			if(fBreakpointList.contains(breakpoint))
+//			{
+//				fBreakpointList.remove(breakpoint);
+//			}
+//			else
+//			{
+//				fRemoveBreakpointList.add(breakpoint);
+//			}
+//		}
+//		else
+//		{
+//			if(fBreakpointList.contains(breakpoint))
+//			{
+//				fBreakpointList.remove(breakpoint);
+//				String data = getBreakPoint(breakpoint);
+//				try {
+//					SendRequest.removeBreakPoint(data);
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//			else
+//			{
+//				fRemoveBreakpointList.add(breakpoint);
+//			}			
+//		}
+//	}
 
 	@Override
 	public boolean canDisconnect() {
@@ -668,7 +590,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	public void started() {
 		fThread.fireCreationEvent();
 		//fireCreationEvent();
-		installDeferredBreakpoints();
+		//installDeferredBreakpoints();
 		//resumed(DebugEvent.RESUME);
 		//fireResumeEvent(DebugEvent.RESUME);
 //		try {
@@ -691,15 +613,15 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		//DebugPlugin.getDefault ().fireDebugEventSet (new DebugEvent[] { ev });
 	}	
 	
-	private void installDeferredBreakpoints() {
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints();
-		for (IBreakpoint iBreakpoint : breakpoints) {
-			if(iBreakpoint instanceof AddonDevLineBreakpoint)
-			{
-				breakpointAdded(iBreakpoint);
-			}
-		}
-	}
+//	private void installDeferredBreakpoints() {
+//		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints();
+//		for (IBreakpoint iBreakpoint : breakpoints) {
+//			if(iBreakpoint instanceof AddonDevBreakpoint)
+//			{
+//				breakpointAdded(iBreakpoint);
+//			}
+//		}
+//	}
 	
 	protected void stepOver() throws DebugException {
 		fSuspended = false;
@@ -797,90 +719,35 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		 //PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 		 //JavaScriptDebugPlugin.getDefault().getWorkbench().
 	 }
-	
-//    protected void fireEvent(DebugEvent event) {
-//        DebugPlugin manager= DebugPlugin.getDefault();
-//        if (manager != null) {
-//            manager.fireDebugEventSet(new DebugEvent[]{event});
-//        }
-//    }
-//	
-	//private boolean bb = false;
-//	/**
-//	 * Returns the current stack frames in the target.
-//	 * 
-//	 * @return the current stack frames in the target
-//	 * @throws DebugException if unable to perform the request
-//	 */
-//	protected IStackFrame[] getStackFrames() throws DebugException {
-//
-////		try {
-////			String reqdata = SendRequest.RequestData("stack");
-////			IStackFrame[] theFrames = new IStackFrame[frames.length];
-////			for (int i = 0; i < frames.length; i++) {
-////				String data = frames[i];
-////				theFrames[frames.length - i - 1] = new JSStackFrame(fThread, data, i);
-////			}
-////			return theFrames;
-////		} catch (IOException e) {
-////			
-////		}
-//		
-//		//
-//		//try {
-//			//String framesData = SendRequest.RequestData("stack");
-////			String framesData = "tmp";
-////			bb = true;
-////			if (framesData != null && bb) {
-////			//if (framesData != null) {
-////				IStackFrame[] theFrames = new IStackFrame[1];
-////				for (int i = 0; i < theFrames.length; i++) {
-////					String data = JSTestData.TESTDATA ;//"C:/workspace/src/PDE/eclipsePDE/runtime-EclipseApplication/test0/test.js|9|main|m|n";
-////					theFrames[theFrames.length - i - 1] = new JSStackFrame(fThread, data, i, this);
-////				}	
-////				return theFrames;
-////			}
-//			
-//			IStackFrame[] theFrames = new JSStackFrame[]{new JSStackFrame(fThread, JSTestData.TESTDATA, 0, this)};
-//			return theFrames;
-//			
-////		} catch (IOException e) {
-////			// TODO Auto-generated catch block
-////			e.printStackTrace();
-////		}
-//		
-//		//return new IStackFrame[0];
-//	}
-
 	 
 	 public IVariable getVariable(String stackFramedepth, String parent, String name) {
-		ArrayList<IVariable> variables = null;
-		String xmldata = "";
+		List<IVariable> variables = null;
+		String json = "";
+		JsonData jsondata = null;
 		String path = "";
+		if(parent != null)
+			path = parent + "." + name;
+		else
+		{
+			//parent = name;
+			path = name;
+		}
+		
+		if(path == null) path = "";
 		
 		try {
-			if(parent != null)
-				path = parent + "." + name;
-			else
-			{
-				//parent = name;
-				path = name;
-			}
-			
-			if(path == null) path = "";
-			
-			xmldata =  SendRequest.getValue(stackFramedepth, path);
+			json =  SendRequest.getValue(stackFramedepth, path);
+			jsondata = JsonUtil.getJsonData(json);
+			variables = JsonUtil.getVariables(this, jsondata, stackFramedepth, parent);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			//return null;
-		}
-		try {
-			variables = XMLUtils.variablesFromXML(this, stackFramedepth, xmldata, parent);
-		} catch (CoreException e) {
+		} catch (DebugException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		if(variables == null) return null; 
 		return variables.get(0);
 	}
@@ -903,6 +770,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 		try {
 			//xmldata =  SendRequest.getValues(stackFramedepth, path);
 			json =  SendRequest.getValues(stackFramedepth, path);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1003,10 +871,10 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	
 	
 	
-	public void EventInit()
-	{
-
-	}
+//	public void EventInit()
+//	{
+//
+//	}
 	
 	 public Object getAdapter(Class adapter) {
 		 
@@ -1068,86 +936,80 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
         }
 	}
 	
-	private String getBreakPoint(IBreakpoint breakpoint)
+//	private String getBreakPoint(IBreakpoint breakpoint)
+//	{
+//		ArrayList<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
+//		breakpoints.add(breakpoint);
+//		return getBreakPoint(breakpoints);
+//	}
+	
+	private IBreakpoint[] getBreakPoints()
 	{
-		ArrayList<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>();
-		breakpoints.add(breakpoint);
-		return getBreakPoint(breakpoints);
+		return DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(AddonDevBreakpoint.BREAKPOINT_ID);
 	}
 	
-	private List<IBreakpoint> getEnableBreakPoints(List<IBreakpoint> breakpoints)
-	{
-		for (IBreakpoint breakpoint : breakpoints) {
-			if (breakpoint instanceof AddonDevLineBreakpoint) {
-				
-			}
-		}
-	}
+//	private JsonData convertBreakPoints2Json(List<IBreakpoint> breakpoints){
+//
+//		ArrayList<Map<String, String>> propertylist = new ArrayList<Map<String,String>>();
+//		
+//		for (IBreakpoint breakpoint : breakpoints) {
+//			if (breakpoint instanceof AddonDevBreakpoint) {
+//				
+//				AddonDevBreakpoint addonbreakpoint = (AddonDevBreakpoint)breakpoint;
+//				IProject project = addonbreakpoint.getProject();
+//				ChromeURLMap chromeurlmap = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+//				String chromeurl = chromeurlmap.convertLocal2Chrome(addonbreakpoint.getFile());
+//				int line;
+//				try {
+//					line = addonbreakpoint.getLineNumber();
+//				} catch (CoreException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//					continue;
+//				}
+//				
+//				HashMap<String, String> prop = new HashMap<String, String>();
+//				prop.put("filename", chromeurl);
+//				prop.put("line", StringConverter.asString(line));
+//				
+//				propertylist.add(prop);
+//			}			
+//		}
+//		JsonData json = new JsonData();
+//		json.setPropertylist(propertylist);
+//		return json;		
+//	}
 	
-	private String convertBreakPoints2Json(List<IBreakpoint> breakpoints){
-		String xml = "";
-		ArrayList<Map<String, String>> propertylist = new ArrayList<Map<String,String>>();
-		
-		for (IBreakpoint breakpoint : breakpoints) {
-			if (breakpoint instanceof AddonDevLineBreakpoint) {
-				
-				AddonDevLineBreakpoint addonbreakpoint = (AddonDevLineBreakpoint)breakpoint;
-				IProject project = addonbreakpoint.getProject();
-				ChromeURLMap chromeurlmap = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
-				String chromeurl = chromeurlmap.convertLocal2Chrome(addonbreakpoint.getFile());
-				int line;
-				try {
-					line = addonbreakpoint.getLineNumber();
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					continue;
-				}
-				
-				HashMap<String, String> prop = new HashMap<String, String>();
-				prop.put("filename", chromeurl);
-				prop.put("line", StringConverter.asString(line));
-				
-				propertylist.add(prop);
-				//xml += String.format("<breakpoint filename=\"%s\" line=\"%s\"/>",  path, line);
-			}			
-		}
-		JsonData json = new JsonData();
-		json.setPropertylist(propertylist);
-		xml = "<xml>" +xml + "</xml>";
-		return xml;		
-	}
-	
-	private String getBreakPoint(List<IBreakpoint> breakpoints)
-	{
-		String xml = "";
-		for (IBreakpoint breakpoint : breakpoints) {
-			if (breakpoint instanceof ILineBreakpoint) {
-				AddonDevLineBreakpoint addonbreakpoint = (AddonDevLineBreakpoint)breakpoint;
-				IProject project = addonbreakpoint.getProject();
-				//String path = fAddonDevUtil.convertChrome(project, ((AddonDevLineBreakpoint)breakpoint).getPath().toPortableString());
-				ChromeURLMap chromeurlmap = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
-				//String path = chromeurlmap.convertLocal2Chrome(addonbreakpoint.getLocation());
-				String path = chromeurlmap.convertLocal2Chrome(addonbreakpoint.getFile());
-				int line = 0;
-
-				try {
-					path = URLEncoder.encode(path, "UTF-8");
-					line = addonbreakpoint.getLineNumber();
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-
-				xml += String.format("<breakpoint filename=\"%s\" line=\"%s\"/>",  path, line);
-			}			
-		}
-		xml = "<xml>" +xml + "</xml>";
-		return xml;
-	}
+//	private String getBreakPoint(List<IBreakpoint> breakpoints)
+//	{
+//		String xml = "";
+//		for (IBreakpoint breakpoint : breakpoints) {
+//			if (breakpoint instanceof ILineBreakpoint) {
+//				AddonDevBreakpoint addonbreakpoint = (AddonDevBreakpoint)breakpoint;
+//				IProject project = addonbreakpoint.getProject();
+//				//String path = fAddonDevUtil.convertChrome(project, ((AddonDevLineBreakpoint)breakpoint).getPath().toPortableString());
+//				ChromeURLMap chromeurlmap = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+//				//String path = chromeurlmap.convertLocal2Chrome(addonbreakpoint.getLocation());
+//				String path = chromeurlmap.convertLocal2Chrome(addonbreakpoint.getFile());
+//				int line = 0;
+//
+//				try {
+//					path = URLEncoder.encode(path, "UTF-8");
+//					line = addonbreakpoint.getLineNumber();
+//				} catch (UnsupportedEncodingException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (CoreException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}	
+//
+//				xml += String.format("<breakpoint filename=\"%s\" line=\"%s\"/>",  path, line);
+//			}			
+//		}
+//		xml = "<xml>" +xml + "</xml>";
+//		return xml;
+//	}
 
 	@Override
 	public void handleDebugEvents(DebugEvent[] events) {

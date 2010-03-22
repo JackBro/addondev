@@ -1,14 +1,21 @@
 package org.addondev.debug.core.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.addondev.core.AddonDevPlugin;
+import org.addondev.util.ChromeURLMap;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.jface.resource.StringConverter;
 
 
 import net.arnx.jsonic.JSON;
@@ -34,21 +41,14 @@ public class JsonUtil {
 			data = JSON.decode(json, JsonData.class);
 		}catch (JSONException e) {
 			// TODO: handle exception
-			//throw e;
+			throw e;
 		}
 		return data;
 	}
 	
-	public String getJsonText(JsonData json)
+	public static String getJsonText(JsonData json)
 	{
-		String text  = null;
-		try
-		{
-			text  = JSON.encode(json);
-		}catch (JSONException e) {
-			// TODO: handle exception
-			//throw e;
-		}
+		String text  = JSON.encode(json);
 		return text;
 	}
 	
@@ -109,4 +109,35 @@ public class JsonUtil {
 		return variables;		
 	}
 
+	public static JsonData getJsonData(List<IBreakpoint> breakpoints)
+	{
+		ArrayList<Map<String, String>> propertylist = new ArrayList<Map<String,String>>();
+		
+		for (IBreakpoint breakpoint : breakpoints) {
+			if (breakpoint instanceof AddonDevBreakpoint) {
+				
+				AddonDevBreakpoint addonbreakpoint = (AddonDevBreakpoint)breakpoint;
+				IProject project = addonbreakpoint.getProject();
+				ChromeURLMap chromeurlmap = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+				String chromeurl = chromeurlmap.convertLocal2Chrome(addonbreakpoint.getFile());
+				int line;
+				try {
+					line = addonbreakpoint.getLineNumber();
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					continue;
+				}
+				
+				HashMap<String, String> prop = new HashMap<String, String>();
+				prop.put("filename", chromeurl);
+				prop.put("line", StringConverter.asString(line));
+				
+				propertylist.add(prop);
+			}			
+		}
+		JsonData json = new JsonData();
+		json.setPropertylist(propertylist);
+		return json;		
+	}
 }

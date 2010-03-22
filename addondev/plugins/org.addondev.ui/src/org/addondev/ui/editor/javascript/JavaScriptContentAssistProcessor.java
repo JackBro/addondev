@@ -78,7 +78,7 @@ public class JavaScriptContentAssistProcessor implements
 //				tnode = tnode.getParent();
 //			}
 			
-			ArrayList<Scope> scopes = new ArrayList<Scope>();
+			ArrayList<JsNode> nodes = new ArrayList<JsNode>();
 			
 			if(t.length() > 0)
 			{
@@ -109,6 +109,7 @@ public class JavaScriptContentAssistProcessor implements
 			}
 			else
 			{
+				ArrayList<Scope> scopes = new ArrayList<Scope>();
 				scopes.add(scope);
 				scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
 			}

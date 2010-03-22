@@ -24,7 +24,7 @@
    <extension
          point="org.eclipse.debug.core.breakpoints">
       <breakpoint
-            class="org.addondev.debug.core.model.AddonDevLineBreakpoint"
+            class="org.addondev.debug.core.model.AddonDevBreakpoint"
             id="org.addondev.debug.linebreakpoint"
             markerType="org.addondev.debug.marktype.linebreakpoint">
       </breakpoint>
@@ -174,7 +174,7 @@
             class="org.addondev.debug.ui.propertypages.AddonDevBreakPointPropertyPage"
             id="org.addondev.debug.ui.propertypages.AddonDevBreakPointPropertyPage"
             name="breakpoint"
-            objectClass="org.addondev.debug.core.model.AddonDevLineBreakpoint">
+            objectClass="org.addondev.debug.core.model.AddonDevBreakpoint">
       </page>
    </extension>
 

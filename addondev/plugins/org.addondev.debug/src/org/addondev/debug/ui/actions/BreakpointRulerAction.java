@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import org.addondev.debug.core.model.AddonDevLineBreakpoint;
+import org.addondev.debug.core.model.AddonDevBreakpoint;
 import org.addondev.debug.ui.model.AddonDevDebugModelPresentation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -134,9 +134,9 @@ public class BreakpointRulerAction extends Action {
 		
         IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
             public void run(IProgressMonitor monitor) throws CoreException {
-                IMarker marker = resource.createMarker(AddonDevLineBreakpoint.BREAKPOINT_MARKER);
+                IMarker marker = resource.createMarker(AddonDevBreakpoint.BREAKPOINT_MARKER);
                 marker.setAttributes(map);
-                AddonDevLineBreakpoint br = new AddonDevLineBreakpoint();
+                AddonDevBreakpoint br = new AddonDevBreakpoint();
                 br.setMarker(marker);
                 IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
                 breakpointManager.addBreakpoint(br);
