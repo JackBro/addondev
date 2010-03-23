@@ -80,10 +80,15 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 				}
 			}
 
-			StringBuilder sb = new StringBuilder();
+			//StringBuilder sb = new StringBuilder();
             //sb.append("<html></html>");
-            sb.append("");
-
+            //sb.append("accept");
+			//JsonData writejsondata = new JsonData();
+			//writejsondata.setCmd("accept");
+			//StringBuilder sb = new StringBuilder(JsonUtil.getJsonText(writejsondata));
+			
+			StringBuilder sb = new StringBuilder("<accept/>");
+			
             byte[] response = sb.toString().getBytes();
             OutputStream output = null;
             try {

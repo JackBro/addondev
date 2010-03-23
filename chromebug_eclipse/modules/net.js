@@ -127,9 +127,9 @@ HttpServerListener.prototype = {
 		
 		//Application.console.log("onDataAvailable  methods[1] : " + methods[1]);
 		
-		var queryStrings = methods[1].match(/^(\/\?)(.*)/);
-		var queryString;
-		if(queryStrings) queryString = queryStrings[2];
+//		var queryStrings = methods[1].match(/^(\/\?)(.*)/);
+//		var queryString;
+//		if(queryStrings) queryString = queryStrings[2];
 		
 		//Application.console.log("onDataAvailable queryStrings : " +queryStrings);
 		
@@ -137,17 +137,22 @@ HttpServerListener.prototype = {
 		{
 			var postdata = datas[1]; 
 			//if(this._data.match("(<\/xml>)$")){
-			if(this._data.match(/<\/xml>/)){
-				//log("server post data : " + methods[1] + " : " + postdata);
-				let responseBody = server.pathHandler(queryString, postdata);
+//			if(this._data.match(/<\/xml>/)){
+//				//log("server post data : " + methods[1] + " : " + postdata);
+//				let responseBody = server.pathHandler(queryString, postdata);
+//				//log("server responseBody : " + responseBody);
+//				//Application.console.log("server post data : " + methods[1] + " : " + postdata);
+//				this.sendResponse(responseBody);
+//			}
+
+				let responseBody = server.pathHandler(postdata);
 				//log("server responseBody : " + responseBody);
 				//Application.console.log("server post data : " + methods[1] + " : " + postdata);
 				this.sendResponse(responseBody);
-			}
 		}
 		else
 		{
-			let responseBody = server.pathHandler(queryString, postdata);
+			let responseBody = server.pathHandler(postdata);
 			//Application.console.log("server get : " + methods[1]);
 			this.sendResponse(responseBody);
 		}

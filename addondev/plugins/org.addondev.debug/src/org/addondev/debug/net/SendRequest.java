@@ -30,10 +30,12 @@ public class SendRequest {
 		SendRequest.fDebuggerPort = String.valueOf(port);
 	}
 
-	public static void setBreakPoint(String data) throws IOException
+	public static void setBreakPoint(JsonData json) throws IOException
 	{	
-		RequestData("setbreakpoint", data);
-		//RequestData("setbreakpoint");
+		//RequestData("setbreakpoint", data);
+		json.setCmd("setbreakpoint");
+		String data = JsonUtil.getJsonText(json);
+		post(data);
 	}
 	
 	public static void setBreakPoint(List<IBreakpoint> breakpoints) throws IOException, JSONException
@@ -48,6 +50,13 @@ public class SendRequest {
 	{	
 		RequestData("removebreakpoint", data);
 		//post(data);
+	}
+	
+	public static void removeBreakPoint(JsonData json) throws IOException
+	{	
+		json.setCmd("removebreakpoint");
+		String data = JsonUtil.getJsonText(json);
+		post(data);
 	}
 	
 	public static void removeBreakPoint(List<IBreakpoint> breakpoints) throws IOException, JSONException

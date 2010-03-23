@@ -38,7 +38,7 @@ public class JsonUtil {
 		JsonData data = null;
 		try
 		{
-			data = JSON.decode(json, JsonData.class);
+			data = JSON.decode(json.trim(), JsonData.class);
 		}catch (JSONException e) {
 			// TODO: handle exception
 			throw e;

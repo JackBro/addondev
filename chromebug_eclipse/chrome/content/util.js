@@ -76,14 +76,18 @@ Firebug.chromebug_eclipse.util = {
 							|| (valueType == "string" && value.length > Firebug.stringCropLength));
 	},
 	
-	getLocalsXML : function(frame){
+	getLocals : function(frame){
      	//var localsxml = this.Stringformat("<file name=\"{0}\" function=\"{1}\" line=\"{2}\"/>", encodeURIComponent(frame.script.fileName), frame.script.functionName, frame.line);
-    	var localsxml = "";
+    	//var localsxml = "";
     	var name = "";
     	var value =null;
         var valueType = null;
         var hasCh = null;    	
     	
+        let json = {};
+		json.cmd = "getvalues";
+		json.propertylist = [];
+        
     	if (frame && frame.isValid)
         {
         	name = "this";
@@ -91,7 +95,15 @@ Firebug.chromebug_eclipse.util = {
             if(value == null) value = "null";
             valueType = typeof(value);
             hasCh = this.hasChildren(value); 	
-        	localsxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", name, valueType, encodeURIComponent(value), hasCh);
+//        	localsxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", 
+//        			name, valueType, encodeURIComponent(value), hasCh);
+        	
+		 	let property = {};
+		 	property["name"] = name;
+		 	property["type"] = valueType;
+		 	property["value"] = value;
+		 	property["hasChildren"] = hasCh + "";
+		 	json.propertylist.push(property);
  
         	//name = "scopeChain";
             //value = this.generateScopeChain(frame.scope);
@@ -130,10 +142,19 @@ Firebug.chromebug_eclipse.util = {
             
             valueType = typeof(value);
             hasCh = this.hasChildren(value);
-            localsxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", name, valueType, encodeURIComponent(value), hasCh);
-            //localsxml += "<value valuename=\"" + name + "\" type=\""+ valueType + "\" value=\"" + value + "\" hasChildren=\"" +hasCh+ "\"/>";
+//            localsxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", 
+//            		name, valueType, encodeURIComponent(value), hasCh);
+            
+		 	let property = {};
+		 	property["name"] = name;
+		 	property["type"] = valueType;
+		 	property["value"] = value;
+		 	property["hasChildren"] = hasCh + "";
+		 	json.propertylist.push(property);
+            
         }
-        return "<xml> " + localsxml + " </xml>"; 			
+        //return "<xml> " + localsxml + " </xml>";
+        return json;
 	},
 	
 	getvalues : function (parent, names, level)
@@ -191,13 +212,13 @@ Firebug.chromebug_eclipse.util = {
 		}
 	},
 	
-	getValuesXML : function(frame, namepath){  
-		var valuesxml = "";
+	getValues : function(frame, namepath){  
+		//var valuesxml = "";
 		var names = [];
 		
 		if(namepath=="")
 		{	
-			return this.getLocalsXML(frame);
+			return this.getLocals(frame);
 		}
 		else
 		{
@@ -229,10 +250,10 @@ Firebug.chromebug_eclipse.util = {
 	        	values = this.getvalues(frame.scope, names, 0);  	
 	        	Application.console.log("getvaluesXML names[0] != this namepath = " + namepath + " : values = " + values );
 
-				for(key in value)
-				{
-					Application.console.log("###value key = " + key + " : " + value[key]);
-				} 
+//				for(key in value)
+//				{
+//					Application.console.log("###value key = " + key + " : " + value[key]);
+//				} 
 	  		}
 	        //alert("getValuesXML values = " + values);
 	       
@@ -241,6 +262,10 @@ Firebug.chromebug_eclipse.util = {
         	else
             	var insecureObject = values;
             	
+			
+	        let json = {};
+			json.cmd = "getvalues";
+			json.propertylist = [];   
             for (var name in insecureObject)
             {
             	if (this.ignoreVars[name] == 1)
@@ -264,7 +289,15 @@ Firebug.chromebug_eclipse.util = {
             		{
             			var valueType = typeof(value);
             			var hasCh = this.hasChildren(value);
-            			valuesxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", name, valueType, encodeURIComponent(value), hasCh); 
+//            			valuesxml += this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", 
+//            					name, valueType, encodeURIComponent(value), hasCh); 
+            			
+            		 	let property = {};
+            		 	property["name"] = name;
+            		 	property["type"] = valueType;
+            		 	property["value"] = value;
+            		 	property["hasChildren"] = hasCh + "";
+            		 	json.propertylist.push(property);
             		}
             	}
             	catch (exc2)
@@ -275,17 +308,18 @@ Firebug.chromebug_eclipse.util = {
             	
             }
             //Application.console.log("getvaluesXML namepath = " + namepath + " : valuesxml = " + valuesxml);
-	        return "<xml> " + valuesxml + " </xml>"; 	
+	        //return "<xml> " + valuesxml + " </xml>"; 	
+            return json;
 		}
 	},
 	
-	getValueXML : function(frame, namepath)
+	getValue : function(frame, namepath)
 	{
 		var names = [];
 		
 		if(namepath=="")
 		{	
-			return this.getLocalsXML(frame);
+			return this.getLocals(frame);
 		}
 		else
 		{
@@ -324,19 +358,34 @@ Firebug.chromebug_eclipse.util = {
 			var valueType = typeof(value);
 			var hasCh = this.hasChildren(value);
 			
-			var valuesxml= this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", 
-					namepath, valueType, encodeURIComponent(value), hasCh);			
-            
-            //Application.console.log("getvalueXML namepath = " + namepath + " : valuesxml = " + valuesxml);
-	        return "<xml> " + valuesxml + " </xml>"; 	
+//			var valuesxml= this.Stringformat("<value name=\"{0}\" type=\"{1}\" value=\"{2}\" hasChildren=\"{3}\" />", 
+//					namepath, valueType, encodeURIComponent(value), hasCh);			
+//            //Application.console.log("getvalueXML namepath = " + namepath + " : valuesxml = " + valuesxml);
+//	        return "<xml> " + valuesxml + " </xml>"; 	
+			
+	        let json = {};
+			json.cmd = "getvalue";
+			json.propertylist = [];        
+		 	let property = {};
+		 	property["name"] = namepath;
+		 	property["type"] = valueType;
+		 	property["value"] = value;
+		 	property["hasChildren"] = hasCh + "";
+		 	json.propertylist.push(property);
+		 	
+		 	return json;
 		}		
 	},
 	
-	getStackFramesXML : function(){
-		var stackframesxml = "";
+	getStackFrames : function(){
+		//var stackframesxml = "";
 		//Application.console.log("getStackFramesXML this.currentStackTrace = " + this.currentStackTrace);
+		let json = {};
+		json.cmd = "getstackframes";
+		json.propertylist = [];
+		
 		for(var i=0; i<this.currentStackTrace.frames.length; i++)
-		 {	
+		{	
 		 	var stackframe = this.currentStackTrace.frames[i];
 //		 	for(var key in stackframe)
 //		 	{
@@ -374,17 +423,26 @@ Firebug.chromebug_eclipse.util = {
 		 	//var functionname = FBL.getFunctionName(stackframe.script, stackframe.context, stackframe);
 		 	var functionname = stackframe.script.functionName;
 		 	
-		 	stackframesxml += this.Stringformat("<stackframe depth=\"{0}\" url=\"{1}\" filename=\"{2}\" functionname=\"{3}\" line=\"{4}\" fn=\"{5}\" />", 
-		 			i, 
-		 			encodeURIComponent(stackframe.href), 
-		 			encodeURIComponent(path), 
-		 			functionname, 
-		 			//stackframe.lineNo,
-		 			stackframe.line,
-		 			encodeURIComponent(fn));
+//		 	stackframesxml += this.Stringformat("<stackframe depth=\"{0}\" url=\"{1}\" filename=\"{2}\" functionname=\"{3}\" line=\"{4}\" fn=\"{5}\" />", 
+//		 			i, 
+//		 			encodeURIComponent(stackframe.href), 
+//		 			encodeURIComponent(path), 
+//		 			functionname, 
+//		 			//stackframe.lineNo,
+//		 			stackframe.line,
+//		 			encodeURIComponent(fn));
+		 	let property = {};
+		 	property["depth"] = i + "";
+		 	property["url"] = stackframe.href;
+		 	property["filename"] = path;
+		 	property["functionname"] = functionname;
+		 	property["line"] = stackframe.line + "";
+		 	property["fn"] = fn;
+		 	json.propertylist.push(property);
 
 		 }
-		 return "<xml> " + stackframesxml + " </xml>";	 
+		 //return "<xml> " + stackframesxml + " </xml>";	
+		return json;
 	},
 	
 	generateScopeChain: function (scope)

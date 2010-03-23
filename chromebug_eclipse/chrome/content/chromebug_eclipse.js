@@ -46,8 +46,18 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		}
 		this.net = {};
 		this.util = {};
+
 		Components.utils.import("resource://ec_modules/net.js", this.net);
 		Components.utils.import("resource://ec_modules/xmlutil.js", this.util);
+		
+		//Components.utils.import("resource://gre/modules/JSON.jsm", this.util);
+		if (typeof(JSON) == "undefined") {
+			  Components.utils.import("resource://gre/modules/JSON.jsm");
+			  JSON.parse = JSON.fromString;
+			  JSON.stringify = JSON.toString;
+		}
+		//this.util.JSON = JSON;
+		
 		
 		this.startServer();
 	},
@@ -163,7 +173,11 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			try
 			{
 				//alert("ready");
-				ecclient.send("ready");
+				//ecclient.send("ready");
+		        let json = {};
+				json.cmd = "ready";
+				json.propertylist = [];
+				ecclient.send(json);
 			}catch(ex)
 			{
 				Application.console.log("client error : " + ex);
@@ -204,50 +218,63 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		}
     	try
     	{
-    		var postdata = Firebug.chromebug_eclipse.util.getStackFramesXML();
+    		//var postdata = Firebug.chromebug_eclipse.util.getStackFramesXML();
+    		var postdata = Firebug.chromebug_eclipse.util.getStackFrames();
 		}catch (ex) {
 			// TODO: handle exception
 			Application.console.log("ce getStackFramesXML ex = " + ex);
 		}
 
-        ecclient.send("suspend", postdata);
+		Application.console.log("onStop = " + postdata);
+        //ecclient.send("suspend", postdata);
+		postdata.cmd = "suspend";
+		ecclient.send(postdata);
     },
     
-	pathHandler:function(queryString, postdata) 
+	pathHandler:function(postdata) 
 	{
 
     	//Application.console.log("queryString = " + queryString);
-	  var params={};
-	  if (queryString) {
-		  var qs = queryString;
-		  var qsa=qs.split('&');
-		  for(var i=0; i<qsa.length; i++) {
-			  var pair=qsa[i].split('=');
-			  if (pair[0]) {
-				  params[pair[0]]=decodeURIComponent(pair[1]);
-			  }
-		  }
-	  }
-	  else
-	  {
-	  	//return "accept";
-	  }
+//	  var params={};
+//	  if (queryString) {
+//		  var qs = queryString;
+//		  var qsa=qs.split('&');
+//		  for(var i=0; i<qsa.length; i++) {
+//			  var pair=qsa[i].split('=');
+//			  if (pair[0]) {
+//				  params[pair[0]]=decodeURIComponent(pair[1]);
+//			  }
+//		  }
+//	  }
+//	  else
+//	  {
+//	  	//return "accept";
+//	  }
 
-	  var body = "accept";
-	  var cmd = params.cmd;
-	  var result;
+    	 Application.console.log("pathHandler postdata = " + postdata);
+	  //var body = "accept";
+	  var body = null;
+	  //var cmd = params.cmd;
+	  //var result;
+//	  if(postdata == "accept")
+//	  {
+//	  }
+//	  else
+//	  {
+		  var result = JSON.parse(postdata);
+		  var cmd = result.cmd;
+//	  }
 	  var file, line;
-	  //Application.console.log("cmd = " + cmd);
+	 
 	  switch(cmd) 
 	  {
 	  	case "setbreakpoint":
 	  		//alert("setbreakpoint postdata = " + postdata);
-	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
-	  		
-	  		for(i=0;i<result.length; i++)
+	  		//result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
+	  		for(i=0;i<result.propertylist.length; i++)
 	  		{
-	  			file = decodeURIComponent(result[i]["filename"]);
-	  			line = parseInt(result[i]["line"]);
+	  			file = result.propertylist[i]["filename"];
+	  			line = parseInt(result.propertylist[i]["line"]);
 	  			Application.console.log("setbreakpoint file=" + file + " : " + "line = "+ line);
 		  		if(file in Firebug.chromebug_eclipse.util.sourceFileMap)
 		  		{
@@ -262,22 +289,43 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 			  		}
 			  		else
 			  		{
-
 			  			Firebug.chromebug_eclipse.util.breakpointMap[file] = new Array();
 			  			Firebug.chromebug_eclipse.util.breakpointMap[file].push(line);
-			  			
-			  			//LOG("setbreakpoint file=" + file + "\n" + "line = "+ line);
 			  		}
-		  		}
+		  		}	  			
 	  		}
+//	  		for(i=0;i<result.length; i++)
+//	  		{
+//	  			file = decodeURIComponent(result[i]["filename"]);
+//	  			line = parseInt(result[i]["line"]);
+//	  			Application.console.log("setbreakpoint file=" + file + " : " + "line = "+ line);
+//		  		if(file in Firebug.chromebug_eclipse.util.sourceFileMap)
+//		  		{
+//		  			var s = Firebug.chromebug_eclipse.util.sourceFileMap[file];
+//		  			Firebug.Debugger.fbs.setBreakpoint(s, line, null, Firebug.Debugger);
+//		  		}
+//		  		else
+//		  		{		  		
+//			  		if(file in Firebug.chromebug_eclipse.util.breakpointMap)
+//			  		{
+//			  			Firebug.chromebug_eclipse.util.breakpointMap[file].push(line);
+//			  		}
+//			  		else
+//			  		{
+//
+//			  			Firebug.chromebug_eclipse.util.breakpointMap[file] = new Array();
+//			  			Firebug.chromebug_eclipse.util.breakpointMap[file].push(line);
+//			  			
+//			  			//LOG("setbreakpoint file=" + file + "\n" + "line = "+ line);
+//			  		}
+//		  		}
+//	  		}
 	    	break;
 	    case "removebreakpoint":
-	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
-	  		
-	  		for(i=0;i<result.length; i++)
+	  		for(i=0;i<result.propertylist.length; i++)
 	  		{
-	  			file = decodeURIComponent(result[i]["filename"]);
-	  			line = parseInt(result[i]["line"]);
+	  			file = result.propertylist[i]["filename"];
+	  			line = parseInt(result.propertylist[i]["line"]);
 	  			
 	  			if(file in Firebug.chromebug_eclipse.util.breakpointMap)
 	  			{
@@ -292,15 +340,35 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  			}
 	  			
 	  			Firebug.Debugger.fbs.clearBreakpoint(file, line);
-	  		}	    	
+	  		}
+	    	
+//	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);	
+//	  		for(i=0;i<result.length; i++)
+//	  		{
+//	  			file = decodeURIComponent(result[i]["filename"]);
+//	  			line = parseInt(result[i]["line"]);
+//	  			
+//	  			if(file in Firebug.chromebug_eclipse.util.breakpointMap)
+//	  			{
+//	  				if(line in Firebug.chromebug_eclipse.util.breakpointMap[file])
+//	  				{
+//	  					let index = Firebug.chromebug_eclipse.util.breakpointMap[file].indexOf(line);
+//	  					if(index != -1)
+//	  					{
+//	  						Firebug.chromebug_eclipse.util.breakpointMap[file].splice(index,1);
+//	  					}
+//	  				}
+//	  			}
+//	  			
+//	  			Firebug.Debugger.fbs.clearBreakpoint(file, line);
+//	  		}	    	
 	    	break;
 	    case "setbreakpointcondition":
-	    	result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
-	  		for(i=0;i<result.length; i++)
+	  		for(i=0;i<result.propertylist.length; i++)
 	  		{
-	  			file = decodeURIComponent(result[i]["filename"]);
-	  			line = parseInt(result[i]["line"]);
-	  			var condition = decodeURIComponent(result[i]["condition"]);
+	  			file = result.propertylist[i]["filename"];
+	  			line = parseInt(result.propertylist[i]["line"]);
+	  			var condition = result.propertylist[i]["condition"];
 	  			Application.console.log("setbreakpointcondition file=" + file + " : " + "line = "+ line);
 		  		if(file in Firebug.chromebug_eclipse.util.sourceFileMap)
 		  		{
@@ -308,10 +376,24 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		  			Firebug.Debugger.fbs.setBreakpointCondition(s, line, condition, Firebug.Debugger);
 		  		}
 	  		}
+	    	
+//	    	result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
+//	  		for(i=0;i<result.length; i++)
+//	  		{
+//	  			file = decodeURIComponent(result[i]["filename"]);
+//	  			line = parseInt(result[i]["line"]);
+//	  			var condition = decodeURIComponent(result[i]["condition"]);
+//	  			Application.console.log("setbreakpointcondition file=" + file + " : " + "line = "+ line);
+//		  		if(file in Firebug.chromebug_eclipse.util.sourceFileMap)
+//		  		{
+//		  			var s = Firebug.chromebug_eclipse.util.sourceFileMap[file];
+//		  			Firebug.Debugger.fbs.setBreakpointCondition(s, line, condition, Firebug.Debugger);
+//		  		}
+//	  		}
 	    	break;
-	  	case "load":
-	  		loadURI(params.file);
-	  		break;
+//	  	case "load":
+//	  		loadURI(params.file);
+//	  		break;
 	  	case "open":
 	  		window.open().home();
 	  		//loadURI(params.file);
@@ -348,12 +430,10 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  	case "getvalues": 
 	  		//Application.console.log("getvalues postdata = " + postdata);
 	  		//alert("getvalues postdata = " + postdata);
-	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
-	  		//Application.console.log("getvalues result.length = " + result.length);
-	  		if(result.length ==1)
+	  		if(result.propertylist.length ==1)
 	  		{
-	  			var depth = parseInt(result[0]["depth"]);
-	  			var valuename = result[0]["valuename"];
+	  			var depth = parseInt(result.propertylist[0]["depth"]);
+	  			var valuename = result.propertylist[0]["valuename"];
 	  			var frame = Firebug.chromebug_eclipse.util.currnetFrame;
 	  			
 	  			//Application.console.log("getvalues depth = " + depth);
@@ -365,23 +445,48 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		  		{
 		  			frame = frame.callingFrame;
 		  		}
-		  		body = Firebug.chromebug_eclipse.util.getValuesXML(frame, valuename);	
+		  		body = Firebug.chromebug_eclipse.util.getValues(frame, valuename);	
 		  		//Application.console.log("getvalues body = " + body);
 	  		}
 	  		else
 	  		{
 	  			Application.console.log("getvalues result.length = 0");
 	  		}
+	  		
+//	  		//Application.console.log("getvalues postdata = " + postdata);
+//	  		//alert("getvalues postdata = " + postdata);
+//	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
+//	  		//Application.console.log("getvalues result.length = " + result.length);
+//	  		if(result.length ==1)
+//	  		{
+//	  			var depth = parseInt(result[0]["depth"]);
+//	  			var valuename = result[0]["valuename"];
+//	  			var frame = Firebug.chromebug_eclipse.util.currnetFrame;
+//	  			
+//	  			//Application.console.log("getvalues depth = " + depth);
+//	  			//Application.console.log("getvalues valuename = " + valuename);
+//	  			//Application.console.log("getvalues frame = " + frame);
+//	  			//if(valuename == 'this') depth++;
+//	  		
+//		  		for (let i = 0; i<depth; i++)
+//		  		{
+//		  			frame = frame.callingFrame;
+//		  		}
+//		  		body = Firebug.chromebug_eclipse.util.getValuesXML(frame, valuename);	
+//		  		//Application.console.log("getvalues body = " + body);
+//	  		}
+//	  		else
+//	  		{
+//	  			Application.console.log("getvalues result.length = 0");
+//	  		}
 	  		break;
-	  	case "getvalue": 
+	  	case "getvalue":
 	  		Application.console.log("getvalue postdata = " + postdata);
 	  		//alert("getvalues postdata = " + postdata);
-	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
-	  		//Application.console.log("getvalues result.length = " + result.length);
-	  		if(result.length ==1)
+	  		if(result.propertylist.length ==1)
 	  		{
-	  			var depth = parseInt(result[0]["depth"]);
-	  			var valuename = result[0]["valuename"];
+	  			var depth = parseInt(result.propertylist[0]["depth"]);
+	  			var valuename = result.propertylist[0]["valuename"];
 	  			var frame = Firebug.chromebug_eclipse.util.currnetFrame;
 	  			
 	  			//Application.console.log("getvalues depth = " + depth);
@@ -393,13 +498,40 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		  		{
 		  			frame = frame.callingFrame;
 		  		}
-		  		body = Firebug.chromebug_eclipse.util.getValueXML(frame, valuename);	
+		  		body = Firebug.chromebug_eclipse.util.getValue(frame, valuename);	
 		  		Application.console.log("getvalue body = " + body);
 	  		}
 	  		else
 	  		{
 	  			Application.console.log("getvalue result.length = 0");
 	  		}
+	  		
+//	  		Application.console.log("getvalue postdata = " + postdata);
+//	  		//alert("getvalues postdata = " + postdata);
+//	  		result = Firebug.chromebug_eclipseModle.util.XML2Obj.parseFromString(postdata);
+//	  		//Application.console.log("getvalues result.length = " + result.length);
+//	  		if(result.length ==1)
+//	  		{
+//	  			var depth = parseInt(result[0]["depth"]);
+//	  			var valuename = result[0]["valuename"];
+//	  			var frame = Firebug.chromebug_eclipse.util.currnetFrame;
+//	  			
+//	  			//Application.console.log("getvalues depth = " + depth);
+//	  			//Application.console.log("getvalues valuename = " + valuename);
+//	  			//Application.console.log("getvalues frame = " + frame);
+//	  			//if(valuename == 'this') depth++;
+//	  			
+//		  		for (let i = 0; i<depth; i++)
+//		  		{
+//		  			frame = frame.callingFrame;
+//		  		}
+//		  		body = Firebug.chromebug_eclipse.util.getValueXML(frame, valuename);	
+//		  		Application.console.log("getvalue body = " + body);
+//	  		}
+//	  		else
+//	  		{
+//	  			Application.console.log("getvalue result.length = 0");
+//	  		}
 	  		break;
 	  	case "terminate":
 	  		Application.console.log("terminate");
@@ -409,17 +541,32 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  		Application.console.log("default");
 	  		break;
 	  }  
-	  return body;	
+	  
+	  if(body == null)
+	  {
+        let json = {};
+		json.cmd = "accept";
+//		json.propertylist = [];        
+//	 	let prop = {};
+//	 	json.propertylist.push(prop); 
+	  }
+	  
+	  let data = JSON.stringify(body);
+	  
+	  return data;	
 	}
 });
 
 var ecclient = {
 	port:null,
-	send:function(command, data)
+	
+	send:function(data)
 	{
 		try
 		{
-			var url = "http://localhost:" + this.port+ "/?cmd=" + command;
+			
+			//var url = "http://localhost:" + this.port+ "/?cmd=" + command;
+			var url = "http://localhost:" + this.port;
 			
 			//var url = "http://localhost:8084/?cmd=" + command;
 	        var request = new XMLHttpRequest();
@@ -439,9 +586,15 @@ var ecclient = {
 //			request.send(data);
 			
 	        if(!data || data == undefined) data = "debuggeraccept";
+	        
+	        //let postdata = Firebug.chromebug_eclipse.util.JSON.stringify(data);
+	        let postdata = JSON.stringify(data);
+	        
+	        Application.console.log("ecclient.send postdata= " + postdata);
+	        
 			request.open('POST', url, false);
 			//request.setRequestHeader("content-type","text/xml");
-			request.send(data);
+			request.send(postdata);
 		    if(request.status == 200) {
 		    	//LOG('request.responseText = ' + request.responseText);
 		    }
@@ -491,7 +644,11 @@ window.addEventListener('unload', function() {
 	}
 	else if(!targets.hasMoreElements() && chromebugui)
 	{
-		ecclient.send("closebrowser");
+		//ecclient.send("closebrowser");
+        let json = {};
+		json.cmd = "closebrowser";
+		json.propertylist = [];
+		ecclient.send(json);
 	}
 
 }, false);

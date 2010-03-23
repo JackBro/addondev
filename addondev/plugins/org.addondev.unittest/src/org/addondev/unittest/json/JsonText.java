@@ -10,33 +10,39 @@ import net.arnx.jsonic.JSONException;
 
 public class JsonText {
 
-	static class Test
-	{
-		private String name;
-		//private LinkedHashMap<String, String> map;
-		private List<Map<String, String>> maplist;
+	static class JsonData {
+		private String cmd;
+		//private String name;
+		private List<Map<String, String>> propertylist;
 		
-		public String getName() {
-			return name;
+		public String getCmd() {
+			return cmd;
 		}
 
-		public void setName(String name) {
-			this.name = name;
+		public void setCmd(String cmd) {
+			this.cmd = cmd;
 		}
 
-		public List<Map<String, String>> getMaplist() {
-			return maplist;
+		public List<Map<String, String>> getPropertylist() {
+			return propertylist;
 		}
 
-		public void setMaplist(List<Map<String, String>> maplist) {
-			this.maplist = maplist;
+		public void setPropertylist(
+				List<Map<String, String>> propertylist) {
+			this.propertylist = propertylist;
 		}
 
-		public Test()
-		{
+		public JsonData(){}
+		
+		public void SetProperty(Map<String, String> map)
+		{		
+			if(propertylist == null)
+			{
+				propertylist = new ArrayList<Map<String,String>>();
+			}
 			
+			propertylist.add(map);
 		}
-		
 	}
 	
 	/**
@@ -44,8 +50,8 @@ public class JsonText {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Test test = new Test();
-		test.setName("test1");
+		JsonData test = new JsonData();
+		//test.setName("test1");
 		LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>();
 		map1.put("1key1", "1val1");
 		map1.put("1key2", "1val2");
@@ -58,7 +64,7 @@ public class JsonText {
 		maplist.add(map1);
 		maplist.add(map2);
 		
-		test.setMaplist(maplist);
+		test.setPropertylist(maplist);
 		
 		String text = JSON.encode(test);
 		System.out.println(text);
@@ -67,7 +73,7 @@ public class JsonText {
 //		try
 //		{		
 		String jdata = "{\"";
-		Test hoge = JSON.decode(jdata, Test.class);
+		JsonData hoge = JSON.decode(jdata, JsonData.class);
 //		}catch (JSONException e) {
 //			// TODO: handle exception
 //			System.out.println(e);

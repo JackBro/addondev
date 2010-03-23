@@ -1,6 +1,7 @@
 package org.addondev.ui.editor.javascript;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -70,7 +71,7 @@ public class JavaScriptContentAssistProcessor implements
 				scope = ScopeManager.instance().getScope("test", offset);
 			}
 
-			String t = getAssistTarget(src, offset);
+			String text = getAssistTarget(src, offset);
 			//new Parser("tmp").p;
 			JsNode tnode = scope.getNode();
 //			if("this".equals(t))
@@ -78,33 +79,55 @@ public class JavaScriptContentAssistProcessor implements
 //				tnode = tnode.getParent();
 //			}
 			
-			ArrayList<JsNode> nodes = new ArrayList<JsNode>();
+			ArrayList<JsNode> compnodes = new ArrayList<JsNode>();
 			
-			if(t.length() > 0)
+			if(text.length() > 0)
 			{
-				String[] ts = t.split("\\.");
-				String tsf = ts[0];
-				if("this".equals(tsf))
+				if(text.contains("."))
 				{
-					tnode = tnode.getParent();
+					String[] ts = text.split("\\.");
+					String tsf = ts[0];
+					if("this".equals(tsf))
+					{
+						tnode = tnode.getParent();
+					}
+					else
+					{
+						tnode = tnode.getChild(tsf);
+					}
+					
+					
+					if(ts.length > 1)
+					{
+						int len = text.endsWith(".")?ts.length:ts.length-1;
+						for (int i = 1; i < len; i++) {
+							if(tnode == null) break;
+							
+							tnode = tnode.getChild(ts[i]);
+						}
+						if(text.endsWith("."))
+						{
+							compnodes.addAll(Arrays.asList(tnode.getChildNodes()));
+						}
+						else
+						{
+							for (JsNode node : tnode.getChildNodes()) {
+								if(node.getName().startsWith(ts[ts.length]))
+								{
+									compnodes.add(node);
+								}
+							}
+						}
+					}
 				}
 				else
 				{
-					tnode = tnode.getChild(tsf);
-				}
-				
-				if(tnode == null)
-				{		
-					//tnode = ScopeManager.instance().getScope("test",tsf).getNode(tsf);
-				}
-				
-				if(ts.length > 1)
-				{
-					for (int i = 1; i < ts.length; i++) {
-						if(tnode == null) break;
-						
-						tnode = tnode.getChild(ts[i]);
-					}
+					for (JsNode node : tnode.getChildNodes()) {
+						if(node.getName().startsWith(text))
+						{
+							compnodes.add(node);
+						}
+					}					
 				}
 			}
 			else
@@ -112,11 +135,13 @@ public class JavaScriptContentAssistProcessor implements
 				ArrayList<Scope> scopes = new ArrayList<Scope>();
 				scopes.add(scope);
 				scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+				for (Scope scope2 : scopes) {
+					compnodes.addAll(Arrays.asList(scope2.getNode().getChildNodes()));
+				}
 			}
 			
-			for (Scope scope2 : scopes) {
-				JsNode[] chnodes = scope2.getNode().getChildNodes();
-				for (JsNode node : chnodes) {
+				//JsNode[] chnodes = scope2.getNode().getChildNodes();
+				for (JsNode node : compnodes) {
 					result.add(
 							new CompletionProposal(
 									node.getName(), 
@@ -130,7 +155,6 @@ public class JavaScriptContentAssistProcessor implements
 							)			
 					);
 				}
-			}
 //			JsNode[] chnodes =tnode.getChildNodes();//getChildNode();
 //			for (JsNode node : chnodes) {
 //				result.add(
