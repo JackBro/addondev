@@ -51,40 +51,23 @@ public class ParserTest {
 	}
 	
 	@Test
-	public void testParser00() {
+	public void testParser00() throws IOException {
 
-		Lexer lex = null;
-		try {
-			lex = new Lexer(getSource(ParserTest.class.getResourceAsStream("test00.js")));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // スキャナを作成。
-		Parser parser = new Parser("test00.js"); // パーサーを作成。
-		parser.parse(lex);
+		String src = getSource(ParserTest.class.getResourceAsStream("test00.js"));
+		
+		Parser parser = new Parser("test00.js");
+		parser.parse(src);
 		JsNode node = parser.root;
 		node.dump("");
-		
-//		int offset = 183;
-//		//String t = getAssistTarget(src, offset);
-//		
-//		//JsNode node = JsNodeHelper.findChildNode(parser.root, t);
-//		JsNode node2 = parser.root.getNodeFromOffset(offset);
-//		//JsNode offsetnode = JsNodeHelper.findChildNode(node2, "f");
-//		
-//		System.out.println(node2.getId() + " : " + node2.getImage());
-//		
-//		node2.dump("");
 	}
 	
 	@Test
 	public void testParser01() throws IOException {
 		
-		Lexer lex = null;
-		String src = getSource(ParserTest.class.getResourceAsStream("test00.js"));
-		lex = new Lexer(src);
-		Parser parser = new Parser("test00.js"); // パーサーを作成。
-		parser.parse(lex);
+		String src = getSource(ParserTest.class.getResourceAsStream("test01.js"));
+		
+		Parser parser = new Parser("test01.js");
+		parser.parse(src);
 		JsNode node = parser.root;
 		node.dump("");
 	}

@@ -151,22 +151,26 @@ var stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6 = {};
 var MyObject = 
 {
 	//message3: null,  
+	unload: function()
+	{
+	},
+	
 	hello3: function (arg0, arg1){
 		//arg0=100;
 		//this.h= "10";
 		
 		var lh = $.util;
 		$.
+		//aa = 100;
+		//$.util.test={};
+	}
+	,
+	tt: function()
+	{
 		
 	}
-//	,
-//	tt: function()
-//	{
-//		
-//	},
-//	unload: function()
-//	{
-//	}
+//  ,
+
 }
 
 

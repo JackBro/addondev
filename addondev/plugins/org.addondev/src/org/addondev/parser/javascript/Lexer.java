@@ -292,4 +292,9 @@ public class Lexer {
 		offset = reader.offset();
 		return offset;
 	}
+	
+	public void un(int c)
+	{
+		reader.unread(c);
+	}
 }

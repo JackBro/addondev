@@ -243,6 +243,7 @@ public class Parser {
 					}
 					if(token != TokenType.SYMBOL)
 					{
+						lex.un(token);
 						break;
 					}
 					String val = lex.value();
@@ -253,8 +254,11 @@ public class Parser {
 						node = cnode;
 					} else {
 						node = m;
-					}
+					}					
+					
 					getToken(); // .
+					
+
 				}
 
 				if (token == '=') {
@@ -271,7 +275,7 @@ public class Parser {
 				}
 				else
 				{
-					getToken(); // skip
+					//getToken(); // skip
 				}
 			}
 			break;

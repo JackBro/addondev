@@ -62,6 +62,7 @@ public class Scope {
 		this.startOffset = startOffset;
 		this.node = node;
 		
+		this.endOffset = Integer.MAX_VALUE;
 		//map = new HashMap<String, JsNode>();
 	}
 	

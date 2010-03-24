@@ -96,6 +96,25 @@ public class JavaScriptContentAssistProcessor implements
 						tnode = tnode.getChild(tsf);
 					}
 					
+					if(tnode == null)
+					{
+						//scope = ScopeManager.instance().getUpScopes("test", scope);
+						
+						ArrayList<Scope> scopes = new ArrayList<Scope>();
+						//scopes.add(scope);
+						scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+						for (Scope scope2 : scopes) {
+							if(scope2.getNode(tsf) != null)
+							{
+								//compnodes.addAll(Arrays.asList(scope2.getNode(tsf).getChildNodes()));
+								tnode = scope2.getNode(tsf);
+								break;
+							}
+						}
+				
+					}
+					//else
+					//{
 					
 					if(ts.length > 1)
 					{
@@ -119,6 +138,11 @@ public class JavaScriptContentAssistProcessor implements
 							}
 						}
 					}
+					else if(ts.length == 1)
+					{
+						compnodes.addAll(Arrays.asList(tnode.getChildNodes()));
+					}
+					//}
 				}
 				else
 				{
@@ -242,10 +266,10 @@ public class JavaScriptContentAssistProcessor implements
 		}
 		//System.out.println("buf = " + buf.reverse());	
 		String text = buf.reverse().toString();
-		if(text.endsWith("."))
-		{
-			text = text.substring(0, text.length()-1);
-		}
+//		if(text.endsWith("."))
+//		{
+//			text = text.substring(0, text.length()-1);
+//		}
 		return text;
 	}
 

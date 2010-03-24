@@ -56,7 +56,7 @@ public class ScopeStack {
 	{
 		for (Scope scope : fScopeList) {
 			if((scope.getStart() < currentscope.getStart()) 
-					&& scope.getEnd() > currentscope.getEnd())
+					&& scope.getEnd() >= currentscope.getEnd())
 			{
 				if(scope.getNode(name) != null)
 				{

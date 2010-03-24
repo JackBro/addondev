@@ -1,17 +1,35 @@
 
-function test(){};
-test.hh = function(){};
+//var stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6 = {};
+//var $ = stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6;
+	
+var MyObject = 
+{
+//	hello3: function (arg0, arg1){
+//		
+//	},
+	
+	_unload: function()
+	{
+		if(!this.isItemAppended)
+		{
 
-function test2(){};
-test2 = {
-	n:null,
-	hh2:function(){
-		
+		}
+		else
+		{
+			//this._addItems(this.tmpitems);
+		}
+//		return 0;	
+	}
+	,
+	_tt: function()
+	{
+//		if(e.target == 'close')
+//		{
+//		}
+////		else if(e.target == 'item')
+////		{	
+////			var key = $.util.getKey(e.event);			
+////		}	
 	}
 }
-
-var m = test;
-var n= test2;
-//m.hh=function(){};
-//var n= m.length;
 
