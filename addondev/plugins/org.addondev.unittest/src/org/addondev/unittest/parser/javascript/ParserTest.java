@@ -128,6 +128,17 @@ public class ParserTest {
 		JsNode node = parser.root;
 		node.dump("");
 		}
+//		{
+//			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
+//			Parser parser = new Parser("test03.js");
+//			parser.parse(src);
+//			//JsNode node = parser.parse(src);
+//			//node.dump("");
+//			//Scope scope = ScopeManager.instance().getScope("test03.js", 0);
+//			//JsNode node = scope.getNode().getChild("t");
+//			JsNode node = parser.root;
+//			node.dump("");
+//		}
 	}
 
 	@Test

@@ -14,8 +14,8 @@ public class Lexer {
 
 	static { // 予約語を登録
 
-		//reserved.put("if", new Integer(TokenType.IF));
-		//reserved.put("else", new Integer(TokenType.ELSE));
+		reserved.put("if", new Integer(TokenType.IF));
+		reserved.put("else", new Integer(TokenType.ELSE));
 		//reserved.put("while", new Integer(TokenType.WHILE)); // while
 		reserved.put("function", new Integer(TokenType.FUNCTION));
 		reserved.put("var", new Integer(TokenType.VAR));

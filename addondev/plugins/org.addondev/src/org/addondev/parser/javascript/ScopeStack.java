@@ -24,6 +24,12 @@ public class ScopeStack {
 		return fScopeStack.get(index);
 	}
 	
+	public void clear()
+	{
+		fScopeList.clear();
+		fScopeStack.clear();
+	}
+	
 	public Scope getCurrntScope()
 	{
 		return fScopeStack.peek();

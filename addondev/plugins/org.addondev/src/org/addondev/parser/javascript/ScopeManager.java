@@ -27,6 +27,7 @@ public class ScopeManager {
 	{
 		if(fScopeStackMap.containsKey(name))
 		{
+			//fScopeStackMap.get(name).clear();
 			fScopeStackMap.remove(name);
 		}	
 		fScopeStackMap.put(name, scopestack);		
@@ -87,7 +88,7 @@ public class ScopeManager {
 
 		for (Scope scope : stack.getScopeList()) {
 			if((scope.getStart() < targetscope.getStart()) 
-					&& scope.getEnd() > targetscope.getEnd())
+					&& scope.getEnd() >= targetscope.getEnd())
 			{
 				scopes.add(scope);
 			}

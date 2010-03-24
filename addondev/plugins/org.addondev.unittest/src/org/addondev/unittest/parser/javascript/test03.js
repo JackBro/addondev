@@ -156,13 +156,21 @@ var MyObject =
 	},
 	
 	hello3: function (arg0, arg1){
-		//arg0=100;
-		//this.h= "10";
-		
-		var lh = $.util;
-		$.
-		//aa = 100;
-		//$.util.test={};
+		if(!this.isItemAppended + i())
+		{
+			return 0;	
+		}
+		else
+		{
+		}
+//		else if(OK)
+//		{
+//			this._addItems(this.tmpitems);
+//		}
+//		else if(NG)
+//		{
+//			var hh=0;
+//		}
 	}
 	,
 	tt: function()
@@ -173,17 +181,18 @@ var MyObject =
 
 }
 
+var t = MyObject;
 
-//var t = MyObject;
-$.util =
-{
-    //regfilename:/([^\/]*)$/,  
-	loadCurrentTab:function(e)
-	{
-		//loadURI(e.url);
-		//$.util.changeClickedElement(e.element);
-	}
-};
+
+//$.util =
+//{
+//    //regfilename:/([^\/]*)$/,  
+//	loadCurrentTab:function(e)
+//	{
+//		//loadURI(e.url);
+//		//$.util.changeClickedElement(e.element);
+//	}
+//};
 
 
 })();

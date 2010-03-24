@@ -2,7 +2,7 @@ package org.addondev.parser.javascript;
 
 public class TokenType {
 	public static final int EOS = -1; // 文の終わりを表す。
-	public static final int ARRAY = 91;
+
 	public static final int INT = 257;
 	public static final int SYMBOL = 258;
 	public static final int STRING = 259; // トークンが文字列であることを表す定数
@@ -28,4 +28,5 @@ public class TokenType {
 	public static final int FINALLY = 278; //
 
 	public static final int LET = 279; //
+	public static final int ARRAY = 280;
 }

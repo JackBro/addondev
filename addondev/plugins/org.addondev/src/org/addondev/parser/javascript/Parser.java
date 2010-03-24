@@ -1,7 +1,5 @@
 package org.addondev.parser.javascript;
 
-import java.util.HashMap;
-
 public class Parser {
 	private Lexer lex;
 	private int token;
@@ -10,7 +8,8 @@ public class Parser {
 
 	public JsNode root;
 
-	private ScopeStack fScopeStack = new ScopeStack();
+	//private ScopeStack fScopeStack = new ScopeStack();
+	private ScopeStack fScopeStack;
 
 	private void setJsDoc(JsNode node, String jsDoc) {
 		if (fJsDoc != null && fJsDoc.length() > 0) {
@@ -128,6 +127,7 @@ public class Parser {
 		root = new JsNode(null, EnumNode.ROOT, "root", src.length());
 		try {
 			lex = new Lexer(src);
+			fScopeStack = new ScopeStack(); //todo
 			fScopeStack.pushScope(scope);
 			while (token != TokenType.EOS) {
 				stmt(root);
@@ -143,6 +143,7 @@ public class Parser {
 	private JsNode program() throws EOSException {
 		root = new JsNode(null, EnumNode.ROOT, "root", 0);
 		// thisNodeStack.push(root); //global
+		fScopeStack = new ScopeStack(); //todo
 		fScopeStack.pushScope(new Scope(0, endoff, root));
 		int offset = lex.offset();
 		// frame.push();
@@ -192,6 +193,12 @@ public class Parser {
 			advanceToken('{');
 			block(parent);
 			//getToken(); //skip }
+			break;
+		case TokenType.IF:
+			if_stmt(parent);
+			break;
+		case TokenType.ELSE:
+			elseif_stmt(parent);
 			break;
 		case TokenType.SYMBOL:
 			getToken();
@@ -287,6 +294,81 @@ public class Parser {
 		}
 	}
 
+	private void elseif_stmt(JsNode parent) throws EOSException {
+		// TODO Auto-generated method stub
+		getToken();  // skip 'else'
+		
+		if(token == TokenType.IF){
+			getToken();  // skip 'if'
+			
+			if(token == '{')
+			{
+				block(parent);
+				//getToken(); 
+			}
+			else
+			{
+				stmt(parent);
+			}			
+		}
+		//getToken(); 
+		
+		if(token == TokenType.ELSE){
+			getToken();  // skip 'else'
+			if(token == '{')
+			{
+				block(parent);
+				//getToken(); 
+			}
+//			else if(token == TokenType.IF)
+//			{
+//				
+//			}
+			else
+			{
+				stmt(parent);
+			}		
+		}		
+	}
+
+	private void if_stmt(JsNode node) throws EOSException {
+		// TODO Auto-generated method stub
+		getToken();  // skip 'if'
+		
+		getToken(); // skip '('
+		factor(node);
+		getToken(); // skip ')'
+		
+		if(token == '{')
+		{
+			block(node);
+			//getToken(); 
+		}
+		else
+		{
+			stmt(node);
+		}
+		
+		//getToken(); 
+		
+		if(token == TokenType.ELSE){
+			getToken();  // skip 'else'
+			if(token == '{')
+			{
+				block(node);
+				//getToken(); 
+			}
+//			else if(token == TokenType.IF)
+//			{
+//				
+//			}
+			else
+			{
+				stmt(node);
+			}		
+		}
+	}
+
 	private void functionCall(JsNode node) throws EOSException {
 		JsNode code = null;
 
@@ -311,7 +393,7 @@ public class Parser {
 				block(node);
 				//fScopeStack.popScope();
 				Scope scope = fScopeStack.popScope();
-				scope.setEnd(lex.offset());
+				scope.setEnd(lex.offset()-1);
 				//sScope.setEnd(lex.offset());
 			}
 		} else {
@@ -324,7 +406,7 @@ public class Parser {
 				block(node);
 				//fScopeStack.popScope();
 				Scope scope = fScopeStack.popScope();
-				scope.setEnd(lex.offset());
+				scope.setEnd(lex.offset()-1);
 				//sScope.setEnd(lex.offset());
 			}
 		}
@@ -346,7 +428,7 @@ public class Parser {
 		} else if (token == '(') // anonymous
 		{
 			int offset = lex.offset();
-			code = new JsNode(parent, EnumNode.ANONYMOUS_FUNCTION, "anonymous", offset);
+			code = new JsNode(parent, EnumNode.ANONYMOUS_FUNCTION, "anonymous" + offset, offset);
 			parent.addChildNode(code);
 			
 			//getToken();
@@ -359,12 +441,19 @@ public class Parser {
 
 	private void block(JsNode parent) throws EOSException {
 		// TODO Auto-generated method stub
-		getToken();
+		getToken(); //skip {
 		while (token != '}' && token != TokenType.EOS) {
 			stmt(parent);
-			getToken();
+			if(token == '}') 
+			{
+				getToken(); //skip }
+				return;
+			}
+			if(token < 256)
+				getToken();
 		}
-		// getToken(); //skip }
+		getToken(); //skip }
+		//if(token == '}') getToken(); //skip }
 	}
 
 	private void def(JsNode parent) throws EOSException {
@@ -552,7 +641,7 @@ public class Parser {
 
 	private void objectExpr(JsNode parent) throws EOSException {
 		// fScopeStack.pushScope(new Scope(lex.offset(), parent));
-		// getToken();
+		getToken(); //skip {
 		while (token != '}') {
 			if (token == TokenType.EOS) {
 				break;
@@ -577,8 +666,12 @@ public class Parser {
 					parent.addChildNode(node);
 					advanceToken('(');
 					functionCall(node);
-					advanceToken('}');
-					getToken();
+					//advanceToken('}');
+					//getToken();
+//					if (token == '}' )
+//					{
+//						getToken();
+//					}
 				} else if (token == '{') {
 					JsNode node = new JsNode(parent, EnumNode.OBJECT, sym, lex.offset());
 					parent.addChildNode(node);
@@ -586,12 +679,20 @@ public class Parser {
 				}
 				break;
 			}
+			
+			if (token == '}' && token != TokenType.EOS) {
+				//getToken();
+				//return;
+//				// parent.setEndoffset(lex.offset()-1);
+//				// getToken();
+			}			
 		}
-		if (token != '}' && token != TokenType.EOS) {
-			getToken();
-			// parent.setEndoffset(lex.offset()-1);
-			// getToken();
-		}
+//		if (token != '}' && token != TokenType.EOS) {
+//			getToken();
+//			// parent.setEndoffset(lex.offset()-1);
+//			// getToken();
+//		}
+		getToken(); //skip }
 		parent.setEndoffset(lex.offset() - 1);
 		// Scope scope = fScopeStack.popScope();
 		// scope.setEnd(lex.offset());
