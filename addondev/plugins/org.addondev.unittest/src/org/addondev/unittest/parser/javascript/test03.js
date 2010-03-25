@@ -172,6 +172,8 @@ var MyObject =
 //		{
 //			var hh=0;
 //		}
+		
+		t
 	}
 	,
 	tt: function()

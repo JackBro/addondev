@@ -31,11 +31,8 @@ public class JavaScriptContentAssistProcessor implements
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
-		
 
 		
-		
-		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
@@ -72,12 +69,7 @@ public class JavaScriptContentAssistProcessor implements
 			}
 
 			String text = getAssistTarget(src, offset);
-			//new Parser("tmp").p;
 			JsNode tnode = scope.getNode();
-//			if("this".equals(t))
-//			{
-//				tnode = tnode.getParent();
-//			}
 			
 			ArrayList<JsNode> compnodes = new ArrayList<JsNode>();
 			
@@ -111,10 +103,7 @@ public class JavaScriptContentAssistProcessor implements
 								break;
 							}
 						}
-				
 					}
-					//else
-					//{
 					
 					if(ts.length > 1)
 					{
@@ -146,12 +135,17 @@ public class JavaScriptContentAssistProcessor implements
 				}
 				else
 				{
-					for (JsNode node : tnode.getChildNodes()) {
-						if(node.getName().startsWith(text))
-						{
-							compnodes.add(node);
-						}
-					}					
+					ArrayList<Scope> scopes = new ArrayList<Scope>();
+					scopes.add(scope);
+					scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+					for (Scope scope2 : scopes) {
+						for (JsNode node : scope2.getNode().getChildNodes()) {
+							if(node.getName().startsWith(text))
+							{
+								compnodes.add(node);
+							}
+						}						
+					}
 				}
 			}
 			else
@@ -164,6 +158,8 @@ public class JavaScriptContentAssistProcessor implements
 				}
 			}
 			
+			
+			List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 				//JsNode[] chnodes = scope2.getNode().getChildNodes();
 				for (JsNode node : compnodes) {
 					result.add(
@@ -194,11 +190,12 @@ public class JavaScriptContentAssistProcessor implements
 //						)			
 //				);
 //			}
+				return result.toArray(new ICompletionProposal[result.size()]);
 		}
 		
 		//addTemplateCompletionProposal(viewer, offset, result);
 		
-		return result.toArray(new ICompletionProposal[result.size()]);
+		return null;
 	}
 
 	@Override
