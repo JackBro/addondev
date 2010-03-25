@@ -8,8 +8,7 @@ public class Parser {
 
 	public JsNode root;
 
-	//private ScopeStack fScopeStack = new ScopeStack();
-	private ScopeStack fScopeStack;
+	private ScopeStack fScopeStack = new ScopeStack();
 
 	private void setJsDoc(JsNode node, String jsDoc) {
 		if (fJsDoc != null && fJsDoc.length() > 0) {
@@ -66,14 +65,7 @@ public class Parser {
 		}
 	}
 
-	private void assignChildNode(JsNode srcNode, JsNode distNode) {		
-//		JsNode[] srcChildNodes = srcNode.getChildNodes();
-//		for (JsNode node : srcChildNodes) {
-//			if(!distNode.hasChildNode(node.getName()))
-//			{
-//				distNode.addChildNode(node);
-//			}
-//		}
+	private void assignChildNode(JsNode srcNode, JsNode distNode) {
 		distNode.setSymbalTable(srcNode.getSymbalTable());
 	}
 
@@ -127,11 +119,10 @@ public class Parser {
 		root = new JsNode(null, EnumNode.ROOT, "root", src.length());
 		try {
 			lex = new Lexer(src);
-			fScopeStack = new ScopeStack(); //todo
 			fScopeStack.pushScope(scope);
 			while (token != TokenType.EOS) {
 				stmt(root);
-				getToken();
+				//getToken();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -142,14 +133,11 @@ public class Parser {
 
 	private JsNode program() throws EOSException {
 		root = new JsNode(null, EnumNode.ROOT, "root", 0);
-		// thisNodeStack.push(root); //global
-		fScopeStack = new ScopeStack(); //todo
 		fScopeStack.pushScope(new Scope(0, endoff, root));
 		int offset = lex.offset();
-		// frame.push();
 		while (token != TokenType.EOS) {
 			stmt(root);
-			getToken();
+			//getToken();
 
 			if (offset == lex.offset() && token != TokenType.EOS)
 				break;
@@ -250,7 +238,7 @@ public class Parser {
 					}
 					if(token != TokenType.SYMBOL)
 					{
-						lex.un(token);
+						//lex.un(token);
 						break;
 					}
 					String val = lex.value();
@@ -264,8 +252,6 @@ public class Parser {
 					}					
 					
 					getToken(); // .
-					
-
 				}
 
 				if (token == '=') {
@@ -290,7 +276,7 @@ public class Parser {
 			block(parent);
 			break;
 		default:
-			// getToken();
+			getToken();
 		}
 	}
 
@@ -304,7 +290,6 @@ public class Parser {
 			if(token == '{')
 			{
 				block(parent);
-				//getToken(); 
 			}
 			else
 			{
@@ -317,13 +302,8 @@ public class Parser {
 			getToken();  // skip 'else'
 			if(token == '{')
 			{
-				block(parent);
-				//getToken(); 
+				block(parent); 
 			}
-//			else if(token == TokenType.IF)
-//			{
-//				
-//			}
 			else
 			{
 				stmt(parent);
@@ -356,12 +336,7 @@ public class Parser {
 			if(token == '{')
 			{
 				block(node);
-				//getToken(); 
 			}
-//			else if(token == TokenType.IF)
-//			{
-//				
-//			}
 			else
 			{
 				stmt(node);
@@ -444,22 +419,21 @@ public class Parser {
 		getToken(); //skip {
 		while (token != '}' && token != TokenType.EOS) {
 			stmt(parent);
-			if(token == '}') 
-			{
-				getToken(); //skip }
-				return;
-			}
-			if(token < 256)
-				getToken();
+//			if(token == '}') 
+//			{
+//				//getToken(); //skip }
+//				//return;
+//				break;
+//			}
 		}
 		getToken(); //skip }
-		//if(token == '}') getToken(); //skip }
 	}
 
 	private void def(JsNode parent) throws EOSException {
 		getToken(); // skip 'var'
 		if (token != TokenType.SYMBOL) {
 			// throw new Exception("文法エラーです。");
+			//return;
 		}
 		String sym = lex.value();
 		JsNode node = new JsNode(parent, EnumNode.VALUE, sym, lex.offset());
@@ -474,7 +448,6 @@ public class Parser {
 				// res.getChildNode());
 				assignChildNode(res, node);
 			}
-			// getToken(); //test 100226
 		}
 	}
 
@@ -640,7 +613,7 @@ public class Parser {
 	}
 
 	private void objectExpr(JsNode parent) throws EOSException {
-		// fScopeStack.pushScope(new Scope(lex.offset(), parent));
+
 		getToken(); //skip {
 		while (token != '}') {
 			if (token == TokenType.EOS) {
@@ -668,23 +641,12 @@ public class Parser {
 					functionCall(node);
 					//advanceToken('}');
 					//getToken();
-//					if (token == '}' )
-//					{
-//						getToken();
-//					}
 				} else if (token == '{') {
 					JsNode node = new JsNode(parent, EnumNode.OBJECT, sym, lex.offset());
 					parent.addChildNode(node);
 					objectExpr(node);
 				}
 				break;
-			}
-			
-			if (token == '}' && token != TokenType.EOS) {
-				//getToken();
-				//return;
-//				// parent.setEndoffset(lex.offset()-1);
-//				// getToken();
 			}			
 		}
 //		if (token != '}' && token != TokenType.EOS) {

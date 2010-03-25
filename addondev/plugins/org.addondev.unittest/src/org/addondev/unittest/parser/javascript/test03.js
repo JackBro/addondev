@@ -158,6 +158,7 @@ var MyObject =
 	hello3: function (arg0, arg1){
 		if(!this.isItemAppended + i())
 		{
+			
 			return 0;	
 		}
 		else
@@ -184,15 +185,15 @@ var MyObject =
 var t = MyObject;
 
 
-//$.util =
-//{
-//    //regfilename:/([^\/]*)$/,  
-//	loadCurrentTab:function(e)
-//	{
-//		//loadURI(e.url);
-//		//$.util.changeClickedElement(e.element);
-//	}
-//};
+$.util =
+{
+    //regfilename:/([^\/]*)$/,  
+	loadCurrentTab:function(e)
+	{
+		//loadURI(e.url);
+		//$.util.changeClickedElement(e.element);
+	}
+};
 
 
 })();

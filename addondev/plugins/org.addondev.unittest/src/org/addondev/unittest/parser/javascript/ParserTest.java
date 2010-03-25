@@ -111,34 +111,19 @@ public class ParserTest {
 //			//node.dump("");
 //		}
 		{
-		//Lexer lex = null;
-		String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
-		//lex = new Lexer(src);
-		//Parser parser = new Parser("test03.js"); // パーサーを作成。
-		//parser.parse(lex);
-		//JsNode node = parser.root;
-		//node.dump("");
-		
-		Parser parser = new Parser("test03.js");
-		parser.parse(src);
-		//JsNode node = parser.parse(src);
-		//node.dump("");
-		//Scope scope = ScopeManager.instance().getScope("test03.js", 0);
-		//JsNode node = scope.getNode().getChild("t");
-		JsNode node = parser.root;
-		node.dump("");
+			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));	
+			Parser parser = new Parser("test03.js");
+			parser.parse(src);
+			JsNode node = parser.root;
+			node.dump("");
 		}
-//		{
-//			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
-//			Parser parser = new Parser("test03.js");
-//			parser.parse(src);
-//			//JsNode node = parser.parse(src);
-//			//node.dump("");
-//			//Scope scope = ScopeManager.instance().getScope("test03.js", 0);
-//			//JsNode node = scope.getNode().getChild("t");
-//			JsNode node = parser.root;
-//			node.dump("");
-//		}
+		{
+			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
+			Parser parser = new Parser("test03.js");
+			parser.parse(src);
+			JsNode node = parser.root;
+			node.dump("");
+		}
 	}
 
 	@Test

@@ -75,12 +75,6 @@ public class ScopeManager {
 		return null;
 	}
 	
-//	public Scope getScope(String name, String nodename)
-//	{
-//		ScopeStack stack =  fScopeStackMap.get(name);
-//		return stack.getScope(nodename);
-//	}
-	
 	public List<Scope> getUpScopes(String srcname, Scope targetscope)
 	{
 		ArrayList<Scope> scopes = new ArrayList<Scope>();
@@ -93,9 +87,6 @@ public class ScopeManager {
 				scopes.add(scope);
 			}
 		}
-	
-		//return fScopeList.get(0);
 		return scopes;
 	}
-
 }
