@@ -191,7 +191,6 @@ public class Parser {
 		case TokenType.SYMBOL:
 			getToken();
 			if (token == '=') {
-				// getToken(); //skep =
 				String sym = lex.value();
 				JsNode node = null;
 				if ("this".equals(sym) && parent.getNodeType() == EnumNode.FUNCTION_PROP) {
@@ -265,10 +264,6 @@ public class Parser {
 					functionCall(node);
 					//getToken(); // skip (
 					//if (token != ')') {
-				}
-				else
-				{
-					//getToken(); // skip
 				}
 			}
 			break;

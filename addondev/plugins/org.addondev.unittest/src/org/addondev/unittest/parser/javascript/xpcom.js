@@ -21,6 +21,7 @@ function Components(){};
 */ 	
 Components.classes = function(){};
 
+
 /**
  * @type    interfaces
  * @memberOf   Components
@@ -34,28 +35,14 @@ Components.classes.createInstance = function(){};
 Components.classes.getService = function(){};
 
 
-////function nsILocalFile(){};
-//var nsILocalFile = {
-//	/**
-//	 * 
-//	 */
-//	initWithPath : function(filePath){};
-//	
-//	//nsILocalFile aFile
-//	/**
-//	 * 
-//	 */
-//	initWithFile : function(aFile){};
-//};
-//
-//var nsIFile = {
-//		append : function(node){};
-//		
-//		/**
-//		 * 
-//		 * @return String
-//		 * 
-//		 */
-//		getPath : function(){};
-//};
+
+Components.utils = function(){};
+
+//Components.utils.import("resource://gre/modules/JSON.jsm");
+/**
+ * @type    import
+ * @memberOf   Components
+*/
+Components.utils.import = function(){};
+
 
