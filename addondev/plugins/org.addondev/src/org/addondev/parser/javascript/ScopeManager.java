@@ -6,19 +6,19 @@ import java.util.List;
 
 public class ScopeManager {
 	
-	private static ScopeManager instance;	
+	//private static ScopeManager instance;	
 	private HashMap<String, ScopeStack> fScopeStackMap;
 
 	
-	public static ScopeManager instance()
-	{
-		if(instance == null)
-			instance = new ScopeManager();
-		
-		return instance;
-	}	
+//	public static ScopeManager instance()
+//	{
+//		if(instance == null)
+//			instance = new ScopeManager();
+//		
+//		return instance;
+//	}	
 	
-	private ScopeManager()
+	public ScopeManager()
 	{
 		fScopeStackMap = new HashMap<String, ScopeStack>();
 	}

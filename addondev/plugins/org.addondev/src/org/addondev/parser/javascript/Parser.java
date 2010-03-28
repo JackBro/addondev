@@ -9,6 +9,7 @@ public class Parser {
 	public JsNode root;
 
 	private ScopeStack fScopeStack = new ScopeStack();
+	private ScopeManager fScopeManager;
 
 	private void setJsDoc(JsNode node, String jsDoc) {
 		if (fJsDoc != null && fJsDoc.length() > 0) {
@@ -86,8 +87,9 @@ public class Parser {
 		}
 	}
 
-	public Parser(String name) {
+	public Parser(String name, ScopeManager scopemanager) {
 		fName = name;
+		fScopeManager = scopemanager;
 	}
 
 	public JsNode parse(Lexer lexer) {
