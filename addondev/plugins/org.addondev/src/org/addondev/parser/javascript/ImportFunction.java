@@ -2,7 +2,7 @@ package org.addondev.parser.javascript;
 
 import java.util.List;
 
-public class ImportFunction implements IXPcomFunction {
+public class ImportFunction implements IFunction {
 	
 /**
  * @param args[0] module path
@@ -10,7 +10,7 @@ public class ImportFunction implements IXPcomFunction {
  * 
  */
 	@Override
-	public JsNode Run(List<JsNode> args) {
+	public JsNode Run(ScopeManager scopemanager, List<JsNode> args) {
 		// TODO Auto-generated method stub
 		if(args.size() == 2)
 		{

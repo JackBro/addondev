@@ -10,9 +10,11 @@ import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
-import org.addondev.ui.XULJsMap;
+import org.addondev.parser.javascript.util.JavaScriptParserManager;
+import org.addondev.parser.javascript.util.XULJsMap;
 import org.addondev.ui.template.JavaScriptTemplateCompletionProcessor;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -32,8 +34,6 @@ public class JavaScriptContentAssistProcessor implements
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
 
-		
-		
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		IEditorPart editor = window.getActivePage().getActiveEditor();
@@ -53,19 +53,28 @@ public class JavaScriptContentAssistProcessor implements
 //			}
 			
 			
-			
+			if(jsEditor.getEditorInput() instanceof IFileEditorInput)
+			{
+				IFile file = ((IFileEditorInput)jsEditor.getEditorInput()).getFile();
+				IProject project = file.getProject();
+
 			String src = jsEditor.getDocument().get();
 		
-			Parser parser = new Parser("test");
-			parser.parse(src);
+			JavaScriptParserManager.instance().parse(project, file, src);
+			String path = file.getFullPath().toPortableString();
+			//Parser parser = new Parser("test");
+			//parser.parse(src);
+			ScopeManager scopemanager = JavaScriptParserManager.instance().getScopeManager(project);
 			Scope scope;
 			if(offset == src.length())
 			{
-				scope = ScopeManager.instance().getScope("test", 0);
+				//scope = ScopeManager.instance().getScope("test", 0);
+				scope = scopemanager.getScope(path, 0);
 			}
 			else
 			{
-				scope = ScopeManager.instance().getScope("test", offset);
+				//scope = ScopeManager.instance().getScope("test", offset);
+				scope = scopemanager.getScope(path, offset);
 			}
 
 			String text = getAssistTarget(src, offset);
@@ -94,7 +103,8 @@ public class JavaScriptContentAssistProcessor implements
 						
 						ArrayList<Scope> scopes = new ArrayList<Scope>();
 						//scopes.add(scope);
-						scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+						//scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+						scopes.addAll(scopemanager.getUpScopes(path, scope));
 						for (Scope scope2 : scopes) {
 							if(scope2.getNode(tsf) != null)
 							{
@@ -137,7 +147,8 @@ public class JavaScriptContentAssistProcessor implements
 				{
 					ArrayList<Scope> scopes = new ArrayList<Scope>();
 					scopes.add(scope);
-					scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+					//scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+					scopes.addAll(scopemanager.getUpScopes(path, scope));
 					for (Scope scope2 : scopes) {
 						for (JsNode node : scope2.getNode().getChildNodes()) {
 							if(node.getName().startsWith(text))
@@ -152,7 +163,8 @@ public class JavaScriptContentAssistProcessor implements
 			{
 				ArrayList<Scope> scopes = new ArrayList<Scope>();
 				scopes.add(scope);
-				scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+				//scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
+				scopes.addAll(scopemanager.getUpScopes(path, scope));
 				for (Scope scope2 : scopes) {
 					compnodes.addAll(Arrays.asList(scope2.getNode().getChildNodes()));
 				}
@@ -191,6 +203,7 @@ public class JavaScriptContentAssistProcessor implements
 //				);
 //			}
 				return result.toArray(new ICompletionProposal[result.size()]);
+			}
 		}
 		
 		//addTemplateCompletionProposal(viewer, offset, result);

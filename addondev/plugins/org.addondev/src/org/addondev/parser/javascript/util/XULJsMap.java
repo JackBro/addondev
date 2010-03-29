@@ -1,8 +1,7 @@
-package org.addondev.ui;
+package org.addondev.parser.javascript.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 
 public class XULJsMap {
 	//<script type="application/x-javascript;version=1.8" src="chrome://stacklink/content/stacklink.js" />
@@ -112,6 +110,11 @@ public class XULJsMap {
 		
 	}
 	
+	/**
+	 * 
+	 * @param file js file
+	 * @return js files(xul)
+	 */
 	public List<String> getList(IFile file)
 	{
 		IProject project = file.getProject();

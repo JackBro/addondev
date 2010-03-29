@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.addondev.core.AddonDevPlugin;
 import org.addondev.parser.dtd.DTDMap;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
 import org.addondev.util.Locale;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
@@ -33,7 +35,7 @@ public class MapTest {
 	@Test
 	public void ChromeURLMapTest() {
 		//IProject[] s = AddonDevPlugin.getWorkspace().getRoot().getProjects();
-		//IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
+		IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
 		//boolean pe = project.exists();
 		ChromeURLMap cm = new ChromeURLMap();	
 		//URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");

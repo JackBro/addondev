@@ -4,8 +4,11 @@ Bundle-Name: Unittest
 Bundle-SymbolicName: org.addondev.unittest;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
- src/
-Bundle-Activator: org.eclipse.jface.action.Action
+ src/,
+ lib/jsonic-1.1.3.jar,
+ lib/MozillaInterfaces.jar,
+ lib/simple-xml-2.3.3.jar
+Bundle-Activator: org.addondev.unittest.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.5.0",

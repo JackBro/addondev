@@ -13,6 +13,7 @@ Export-Package: org.addondev.builder,
  org.addondev.parser.dtd,
  org.addondev.parser.javascript,
  org.addondev.parser.javascript.serialize,
+ org.addondev.parser.javascript.util,
  org.addondev.preferences,
  org.addondev.util
 Require-Bundle: org.eclipse.equinox.preferences,

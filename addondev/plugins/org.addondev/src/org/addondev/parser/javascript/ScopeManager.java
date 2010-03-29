@@ -6,10 +6,14 @@ import java.util.List;
 
 public class ScopeManager {
 	
+	private List<String> fJsList;
 	//private static ScopeManager instance;	
 	private HashMap<String, ScopeStack> fScopeStackMap;
 
-	
+	public void setJsLis(List<String> jslist)
+	{
+		fJsList = jslist;
+	}
 //	public static ScopeManager instance()
 //	{
 //		if(instance == null)
@@ -33,13 +37,27 @@ public class ScopeManager {
 		fScopeStackMap.put(name, scopestack);		
 	}
 	
+//	public JsNode getGlobalNode(String name)
+//	{
+//		JsNode node = null;
+//		for(ScopeStack n : fScopeStackMap.values()) {
+//			node = n.getScope(0).getNode(name);
+//			if(node != null)
+//				break;
+//		}
+//		return node;		
+//	}
+	
 	public JsNode getGlobalNode(String name)
 	{
 		JsNode node = null;
-		for(ScopeStack n : fScopeStackMap.values()) {
-			node = n.getScope(0).getNode(name);
-			if(node != null)
-				break;
+		for(String key : fScopeStackMap.keySet()) {
+			if(fJsList.contains(key))
+			{
+				node = fScopeStackMap.get(key).getScope(0).getNode(name);
+				if(node != null)
+					break;
+			}
 		}
 		return node;		
 	}

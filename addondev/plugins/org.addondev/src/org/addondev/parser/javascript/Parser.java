@@ -33,7 +33,8 @@ public class Parser {
 		}
 		
 		if (node == null) {
-			node = ScopeManager.instance().getGlobalNode(name); // global other
+			//node = ScopeManager.instance().getGlobalNode(name); // global other
+			node = fScopeManager.getGlobalNode(name); // global other
 		}
 		return node;
 	}
@@ -129,7 +130,8 @@ public class Parser {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ScopeManager.instance().setScopeStack(fName, fScopeStack);
+		//ScopeManager.instance().setScopeStack(fName, fScopeStack);
+		fScopeManager.setScopeStack(fName, fScopeStack);
 		return root;
 	}
 
@@ -147,7 +149,8 @@ public class Parser {
 
 			offset = lex.offset();
 		}
-		ScopeManager.instance().setScopeStack(fName, fScopeStack);
+		//ScopeManager.instance().setScopeStack(fName, fScopeStack);
+		fScopeManager.setScopeStack(fName, fScopeStack);
 
 		return root;
 	}
