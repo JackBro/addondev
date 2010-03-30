@@ -87,28 +87,31 @@ public class JavaScriptEditor extends TextEditor implements IPropertyChangeListe
 //		getSourceViewer().getTextWidget().setStyleRange(range);
 		//IDocumentProvider documentProvider= getDocumentProvider();
 		//IAnnotationModel annotationModel= documentProvider.getAnnotationModel(getEditorInput());
-		IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
-		String msg = "";
-		try {
-			msg = getDocument().get(0, 10);
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Annotation an = new Annotation("org.addondev.ui.specification1", false, msg);
-
-		//an.
-		//AnnotationRulerColumn ran = new AnnotationRulerColumn(3);
-		//ran.toDocumentLineNumber(2);
-		Position position = new Position(0,10);
-		//am.addAnnotation(new ProjectionAnnotation(), position);
-		//annotationModel.addAnnotation(an, position);
 		
 		
-		Annotation an2 = new Annotation("org.addondev.ui.specification1", false, "msg");
-		Position position2 = new Position(32,5);
-		//am.addAnnotation(new ProjectionAnnotation(), position);
-		annotationModel.addAnnotation(an2, position2);
+		
+//		IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+//		String msg = "";
+//		try {
+//			msg = getDocument().get(0, 10);
+//		} catch (BadLocationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		Annotation an = new Annotation("org.addondev.ui.specification1", false, msg);
+//
+//		//an.
+//		//AnnotationRulerColumn ran = new AnnotationRulerColumn(3);
+//		//ran.toDocumentLineNumber(2);
+//		Position position = new Position(0,10);
+//		//am.addAnnotation(new ProjectionAnnotation(), position);
+//		//annotationModel.addAnnotation(an, position);
+//		
+//		
+//		Annotation an2 = new Annotation("org.addondev.ui.specification1", false, "msg");
+//		Position position2 = new Position(32,5);
+//		//am.addAnnotation(new ProjectionAnnotation(), position);
+//		annotationModel.addAnnotation(an2, position2);
 		//annotationModel.addAnnotation(new ProjectionAnnotation(), position);
 		
 		// JavaScriptValidate.parse(this);

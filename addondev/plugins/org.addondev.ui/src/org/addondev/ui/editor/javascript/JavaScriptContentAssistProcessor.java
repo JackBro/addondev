@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Stack;
 
 
+import org.addondev.core.AddonDevPlugin;
 import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
@@ -13,6 +14,7 @@ import org.addondev.parser.javascript.ScopeManager;
 import org.addondev.parser.javascript.util.JavaScriptParserManager;
 import org.addondev.parser.javascript.util.XULJsMap;
 import org.addondev.ui.template.JavaScriptTemplateCompletionProcessor;
+import org.addondev.util.ChromeURLMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.ITextViewer;
@@ -33,7 +35,7 @@ public class JavaScriptContentAssistProcessor implements
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
-
+		
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		IEditorPart editor = window.getActivePage().getActiveEditor();
@@ -61,7 +63,11 @@ public class JavaScriptContentAssistProcessor implements
 			String src = jsEditor.getDocument().get();
 		
 			JavaScriptParserManager.instance().parse(project, file, src);
-			String path = file.getFullPath().toPortableString();
+			
+			ChromeURLMap p = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+			String path = p.convertLocal2Chrome(file);
+			
+			//String path = file.getFullPath().toPortableString();
 			//Parser parser = new Parser("test");
 			//parser.parse(src);
 			ScopeManager scopemanager = JavaScriptParserManager.instance().getScopeManager(project);

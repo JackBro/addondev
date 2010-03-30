@@ -1,5 +1,7 @@
 package org.addondev.parser.javascript.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import org.addondev.core.AddonDevPlugin;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.ScopeManager;
 import org.addondev.util.ChromeURLMap;
+import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.IEditorInput;
@@ -52,18 +55,39 @@ public class JavaScriptParserManager {
 	
 	public void parse(IProject project, IFile file, String src)
 	{
+		ChromeURLMap p = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+		String path = p.convertLocal2Chrome(file);
+		//String path = file.getFullPath().toPortableString();
 		List<String> jslist = fXULJsMap.getList(file);
-		//ChromeURLMap p = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
-		//String path = p.convertLocal2Chrome(file);
-		String path = file.getFullPath().toPortableString();
+		jslist.remove(path);
+		
+		HashMap<String, String> filemap = new HashMap<String, String>();
+		for (String js : jslist) {
+			String location = p.convertChrome2Local(js);
+			//IFile lfile = project.getFile(location);
+			filemap.put(js, location);
+			
+			ScopeManager sm = getScopeManager(project);
+			sm.setJsLis(jslist);
+			sm.setMap(filemap);
+			try {
+				String text = FileUtil.getContent(new File(location));
+				Parser parser = new Parser(js, sm);
+				parser.parse(text);	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}		
 		
 		ScopeManager sm = getScopeManager(project);
 		sm.setJsLis(jslist);
+		sm.setMap(filemap);
 		Parser parser = new Parser(path, sm);
 		parser.parse(src);			
 	}
 	
-	public void getNodes()
+	public void getNodes(String text)
 	{
 		
 	}

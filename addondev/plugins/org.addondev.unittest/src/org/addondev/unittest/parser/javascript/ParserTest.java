@@ -11,6 +11,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.addondev.core.AddonDevPlugin;
 import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Parser;
@@ -18,6 +19,15 @@ import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
 import org.addondev.parser.javascript.ScopeStack;
 import org.addondev.parser.javascript.serialize.NodeSerializer;
+import org.addondev.parser.javascript.util.JavaScriptParserManager;
+import org.addondev.util.FileUtil;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -245,24 +255,31 @@ public class ParserTest {
 		return offset;
 	}
 
-//	@Test
-//	public void testNode() throws IOException {
-//
-//		String src = getSource(ParserTest.class.getResourceAsStream("system.js"));
-//		Lexer lex = new Lexer(src);
-//		Parser parser = new Parser("system.js"); // パーサーを作成。
-//		parser.parse(lex);
-//		JsNode node = parser.root;
-//		//NodeManager.getInstance().SetNode("system", node);
-//		node.dump("");
-//		
-//		src = getSource(ParserTest.class.getResourceAsStream("test00.js"));
-//		lex = new Lexer(src);
-//		parser = new Parser("test00.js"); // パーサーを作成。
-//		parser.parse(lex);
-//		//NodeManager.getInstance().SetNode("test00", parser.root);
-//		parser.root.dump("");
-//	}
+	@Test
+	public void testNode() throws IOException, CoreException {
+		
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject[] pps = root.getProjects();
+		IProject pro = root.getProject("stacklink");
+		boolean ppd = pro.exists();
+		IFile ppfile = pro.getFile("chrome.manifest");
+		boolean ppdd =  ppfile.exists();
+		
+		IPath pp = AddonDevPlugin.getWorkspace().getRoot().getLocation();
+		IProject[] s = AddonDevPlugin.getWorkspace().getRoot().getProjects();
+		IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
+		boolean pd = project.exists();
+		IFile file = project.getFile("stacklink/chrome/content/test2.js");
+		IFile file2 = project.getFile("chrome.manifest");
+		boolean dd =  file2.exists();
+		String text = FileUtil.getContent(file2.getContents());
+		
+		JavaScriptParserManager.instance().parse(project, file, text);
+		String path = file.getFullPath().toPortableString();
+		ScopeManager scopemanager = JavaScriptParserManager.instance().getScopeManager(project);
+		Scope scope = scopemanager.getScope(path, 0);
+		JsNode tnode = scope.getNode();
+	}
 	
 
 }

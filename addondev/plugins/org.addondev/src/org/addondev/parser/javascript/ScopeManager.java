@@ -1,18 +1,33 @@
 package org.addondev.parser.javascript;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.addondev.core.AddonDevPlugin;
+import org.addondev.util.ChromeURLMap;
+import org.addondev.util.FileUtil;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 
 public class ScopeManager {
 	
 	private List<String> fJsList;
+	private Map<String, String> fJsLocationMap;
 	//private static ScopeManager instance;	
 	private HashMap<String, ScopeStack> fScopeStackMap;
 
 	public void setJsLis(List<String> jslist)
 	{
 		fJsList = jslist;
+	}
+	
+	public void setMap(Map<String, String> map)
+	{
+		fJsLocationMap = map;
 	}
 //	public static ScopeManager instance()
 //	{
@@ -51,12 +66,26 @@ public class ScopeManager {
 	public JsNode getGlobalNode(String name)
 	{
 		JsNode node = null;
+
 		for(String key : fScopeStackMap.keySet()) {
 			if(fJsList.contains(key))
 			{
-				node = fScopeStackMap.get(key).getScope(0).getNode(name);
-				if(node != null)
-					break;
+				if(fScopeStackMap.containsKey(key))
+				{
+					node = fScopeStackMap.get(key).getScope(0).getNode(name);
+					if(node != null)
+						break;
+				}
+				else
+				{
+					
+				}
+			}
+			
+			else
+			{
+
+
 			}
 		}
 		return node;		

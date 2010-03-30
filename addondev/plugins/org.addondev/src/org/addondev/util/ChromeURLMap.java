@@ -31,6 +31,7 @@ public class ChromeURLMap {
 	//private String fLocale;
 	private Locale fLocale;
 	private IPath fBasePath;
+	private IPath fLocationBasePath;
 	
 	private ArrayList<Locale> fLocaleList = new ArrayList<Locale>();
 	
@@ -78,7 +79,8 @@ public class ChromeURLMap {
 		IFile file = manifest;
 		//fBasePath = file.getLocation().removeLastSegments(1);
 		fBasePath = file.getFullPath().removeLastSegments(1);
-		
+		fLocationBasePath = file.getLocation().removeLastSegments(1);
+			
 		InputStreamReader in = new InputStreamReader(file.getContents(), "UTF-8");
 		BufferedReader reader = new BufferedReader(in);
 		String line = null;
@@ -186,6 +188,7 @@ public class ChromeURLMap {
 	{
 		prefix = prefix==null?"":prefix;
 		String localpath = null;
+		//String abbasepath = fBasePath.toFile().getAbsolutePath();// makeAbsolute().toPortableString();
 		Matcher m = chrome_content_pattern.matcher(path);
 		if (m.find()) {
 			String name = m.group(1);
@@ -193,7 +196,7 @@ public class ChromeURLMap {
 			if(fContentMap.containsKey(name) && fContentMap.get(name).containsKey("uri"))
 			{
 				String uri = fContentMap.get(name).get("uri");
-				localpath = prefix + fBasePath.append(uri).append(file).toPortableString();
+				localpath = prefix + fLocationBasePath.append(uri).append(file).toPortableString();
 				return localpath;				
 			}
 		}
@@ -206,7 +209,7 @@ public class ChromeURLMap {
 			{
 				String uri = fSkinMap.get(name).get("uri");
 				//localpath = uri + file;
-				localpath = prefix + fBasePath.append(uri).append(file).toPortableString();
+				localpath = prefix + fLocationBasePath.append(uri).append(file).toPortableString();
 				return localpath;
 			}
 		}
@@ -219,7 +222,7 @@ public class ChromeURLMap {
 			{
 				String uri = fLocaleMap.get(name).get(fLocale.getName());
 				//localpath = uri + file;
-				localpath = prefix + fBasePath.append(uri).append(file).toPortableString();
+				localpath = prefix + fLocationBasePath.append(uri).append(file).toPortableString();
 				return localpath;
 			}
 		}
