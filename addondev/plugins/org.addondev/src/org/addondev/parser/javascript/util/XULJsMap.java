@@ -23,6 +23,8 @@ public class XULJsMap {
 	private static Pattern fScriptPattern = Pattern.compile("<script\\s+type\\s*=\\s*\"([^\"]+)\"\\s+src\\s*=\"([^\"]+)\"\\s*\\/>", Pattern.MULTILINE);
 	private Map<IProject, List<Map<String, List<String>>>> fXULJsMap;
 	
+	private static String[] fEmpty = new String[0];
+	
 	public XULJsMap()
 	{
 		fXULJsMap = new HashMap<IProject, List<Map<String,List<String>>>>();
@@ -115,7 +117,8 @@ public class XULJsMap {
 	 * @param file js file
 	 * @return js files(xul)
 	 */
-	public List<String> getList(IFile file)
+	//public List<String> getList(IFile file)
+	public String[] getList(IFile file)
 	{
 		IProject project = file.getProject();
 		try {
@@ -143,11 +146,11 @@ public class XULJsMap {
 					List<String> jslist = xulmap.get(key);
 					if(jslist.contains(chromeurl))
 					{
-						return jslist;
+						return jslist.toArray(new String[jslist.size()]);
 					}
 				}
 			}
 		}
-		return null;
+		return fEmpty;
 	}
 }

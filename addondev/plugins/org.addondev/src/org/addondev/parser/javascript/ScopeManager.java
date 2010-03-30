@@ -25,6 +25,11 @@ public class ScopeManager {
 		fJsList = jslist;
 	}
 	
+	public List<String> getJsLis()
+	{
+		return fJsList;
+	}
+	
 	public void setMap(Map<String, String> map)
 	{
 		fJsLocationMap = map;
@@ -89,6 +94,19 @@ public class ScopeManager {
 			}
 		}
 		return node;		
+	}
+	
+	public List<Scope> getGlobalScopes()
+	{
+		ArrayList<Scope> scopelist = new ArrayList<Scope>();
+
+		for(String key : fScopeStackMap.keySet()) {
+			if(fJsList.contains(key))
+			{
+				scopelist.add(fScopeStackMap.get(key).getScope(0));
+			}
+		}
+		return scopelist;		
 	}
 	
 	public Scope getScope(String name, int offset)

@@ -111,6 +111,9 @@ public class JavaScriptContentAssistProcessor implements
 						//scopes.add(scope);
 						//scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
 						scopes.addAll(scopemanager.getUpScopes(path, scope));
+						
+						scopes.addAll(scopemanager.getGlobalScopes());
+						
 						for (Scope scope2 : scopes) {
 							if(scope2.getNode(tsf) != null)
 							{
@@ -151,10 +154,15 @@ public class JavaScriptContentAssistProcessor implements
 				}
 				else
 				{
+					List<String> jlist = scopemanager.getJsLis();
+					
 					ArrayList<Scope> scopes = new ArrayList<Scope>();
 					scopes.add(scope);
 					//scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
 					scopes.addAll(scopemanager.getUpScopes(path, scope));
+					
+					scopes.addAll(scopemanager.getGlobalScopes());
+					
 					for (Scope scope2 : scopes) {
 						for (JsNode node : scope2.getNode().getChildNodes()) {
 							if(node.getName().startsWith(text))
@@ -171,6 +179,9 @@ public class JavaScriptContentAssistProcessor implements
 				scopes.add(scope);
 				//scopes.addAll(ScopeManager.instance().getUpScopes("test", scope));
 				scopes.addAll(scopemanager.getUpScopes(path, scope));
+				
+				scopes.addAll(scopemanager.getGlobalScopes());
+				
 				for (Scope scope2 : scopes) {
 					compnodes.addAll(Arrays.asList(scope2.getNode().getChildNodes()));
 				}

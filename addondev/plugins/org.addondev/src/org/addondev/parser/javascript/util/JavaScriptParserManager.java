@@ -2,6 +2,8 @@ package org.addondev.parser.javascript.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +60,8 @@ public class JavaScriptParserManager {
 		ChromeURLMap p = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
 		String path = p.convertLocal2Chrome(file);
 		//String path = file.getFullPath().toPortableString();
-		List<String> jslist = fXULJsMap.getList(file);
+		String[] jss = fXULJsMap.getList(file);
+		List<String> jslist =new ArrayList<String>(Arrays.asList(jss));
 		jslist.remove(path);
 		
 		HashMap<String, String> filemap = new HashMap<String, String>();
@@ -69,7 +72,7 @@ public class JavaScriptParserManager {
 			
 			ScopeManager sm = getScopeManager(project);
 			sm.setJsLis(jslist);
-			sm.setMap(filemap);
+			//sm.setMap(filemap);
 			try {
 				String text = FileUtil.getContent(new File(location));
 				Parser parser = new Parser(js, sm);
@@ -82,7 +85,7 @@ public class JavaScriptParserManager {
 		
 		ScopeManager sm = getScopeManager(project);
 		sm.setJsLis(jslist);
-		sm.setMap(filemap);
+		//sm.setMap(filemap);
 		Parser parser = new Parser(path, sm);
 		parser.parse(src);			
 	}
