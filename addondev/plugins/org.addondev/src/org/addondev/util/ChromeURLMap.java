@@ -1,11 +1,8 @@
 package org.addondev.util;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +18,7 @@ public class ChromeURLMap {
 	public static String MANIFEST_FILENAME = "chrome.manifest";
 	
 	private static Pattern contentpattern = Pattern.compile("^\\s*content\\s+([^\\s]+)\\s+([^\\s]+)");
+	private static Pattern resourcepattern = Pattern.compile("^\\s*resource\\s+([^\\s]+)\\s+([^\\s]+)");
 	private static Pattern skinepattern   = Pattern.compile("^\\s*skin\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
 	private static Pattern localepattern  = Pattern.compile("^\\s*locale\\s+([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)");
 	

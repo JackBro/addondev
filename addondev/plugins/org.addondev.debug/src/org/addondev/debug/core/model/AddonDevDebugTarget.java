@@ -685,38 +685,38 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 //	</xml>
 	 public void setErrorMarker(String data)
 	 {
-		 try {
-			List<Map<String, String>> maplist = XMLUtils.getDataFromXML(data);
-			
-		//AddonDevPlugin
-			Iterator<Map<String, String>> miter = maplist.iterator();
-			while(miter.hasNext())
-			{
-				Map<String, String> map = miter.next();
-				String filename = map.get("filename");
-				int line = Integer.parseInt(map.get("line"));
-				String msg = map.get("msg");
-				IPath path = new Path(filename);
-				IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				IMarker marker = resource.createMarker(IMarker.PROBLEM);
-				marker.setAttribute(IMarker.LINE_NUMBER, line);
-				marker.setAttribute(IMarker.LOCATION, path.toString());
-				marker.setAttribute(IMarker.MESSAGE, msg);
-			}
-						
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		 try {
+//			List<Map<String, String>> maplist = XMLUtils.getDataFromXML(data);
+//			
+//		//AddonDevPlugin
+//			Iterator<Map<String, String>> miter = maplist.iterator();
+//			while(miter.hasNext())
+//			{
+//				Map<String, String> map = miter.next();
+//				String filename = map.get("filename");
+//				int line = Integer.parseInt(map.get("line"));
+//				String msg = map.get("msg");
+//				IPath path = new Path(filename);
+//				IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+//				IMarker marker = resource.createMarker(IMarker.PROBLEM);
+//				marker.setAttribute(IMarker.LINE_NUMBER, line);
+//				marker.setAttribute(IMarker.LOCATION, path.toString());
+//				marker.setAttribute(IMarker.MESSAGE, msg);
+//			}
+//						
+//		} catch (ParserConfigurationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (SAXException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (CoreException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	 }
 	 
 	 public void deleteErrorMarker()

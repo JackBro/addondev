@@ -39,11 +39,6 @@ public class JavaScriptParserManager {
 		
 	}
 	
-	public void getGlobalScope()
-	{
-		
-	}
-	
 	public ScopeManager getScopeManager(IProject project)
 	{
 		if(!projectscope.containsKey(project))
@@ -88,10 +83,5 @@ public class JavaScriptParserManager {
 		//sm.setMap(filemap);
 		Parser parser = new Parser(path, sm);
 		parser.parse(src);			
-	}
-	
-	public void getNodes(String text)
-	{
-		
 	}
 }

@@ -1,22 +1,14 @@
 package org.addondev.parser.javascript;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.addondev.core.AddonDevPlugin;
-import org.addondev.util.ChromeURLMap;
-import org.addondev.util.FileUtil;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 
 public class ScopeManager {
 	
 	private List<String> fJsList;
-	private Map<String, String> fJsLocationMap;
+	//private Map<String, String> fJsLocationMap;
 	//private static ScopeManager instance;	
 	private HashMap<String, ScopeStack> fScopeStackMap;
 
@@ -30,10 +22,10 @@ public class ScopeManager {
 		return fJsList;
 	}
 	
-	public void setMap(Map<String, String> map)
-	{
-		fJsLocationMap = map;
-	}
+//	public void setMap(Map<String, String> map)
+//	{
+//		fJsLocationMap = map;
+//	}
 //	public static ScopeManager instance()
 //	{
 //		if(instance == null)
