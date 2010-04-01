@@ -114,17 +114,30 @@
 //
 //var MyObject = function(){};
 //MyObject.prototype = 
-//{    
-//    hello3: function (arg0, arg1){
-//		arg0=1;
-//		garg=100;
-//    }
-//};
+var MyObject =
+{    
+	/**
+	 * 
+	 * @type    Array
+	 * 
+	 */
+	ret:function()
+	{
+	}
+	,
+    hello3 : function (arg0, arg1){
+		arg0=1;
+		garg=100;
+    }
+};
+
+var num = MyObject.ret().pop();
+
 ////
 ////var sm = SMyObject.hello3(arg0, arg1);
 //var tmp = new MyObject();
 //
-var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+//var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 
 
 //var items = [];

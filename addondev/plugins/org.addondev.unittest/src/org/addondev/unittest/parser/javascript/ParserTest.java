@@ -103,15 +103,15 @@ public class ParserTest {
 	
 	@Test
 	public void testParser03() throws IOException {
-		
+		ScopeManager sm = new ScopeManager();
 
-//		{
-//			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));		
-//			Parser parser = new Parser("system.js");
-//			parser.parse(src);	
-//			//JsNode node = parser.root;
-//			//node.dump("");
-//		}
+		{
+			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
+			Parser parser = new Parser("system.js", sm);
+			parser.parse(src);
+			//JsNode node = parser.root;
+			//node.dump("");
+		}
 //		{
 //			String dataxml = "D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.unittest/tmp/text.xml";
 //			JsNode root = NodeSerializer.read(dataxml);
@@ -121,24 +121,25 @@ public class ParserTest {
 //			ScopeManager.instance().setScopeStack(name, fScopeStack);
 //		}
 		
-		ScopeManager sm = new ScopeManager();
 		
-		{
-//			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));		
-//			Parser parser = new Parser("xpcom.js");
+		
+//		{
+////			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));		
+////			Parser parser = new Parser("xpcom.js");
+////			parser.parse(src);
+//			
+//			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));
+//			
+//			Parser parser = new Parser("xpcom.js", sm);
 //			parser.parse(src);
-			
-			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));
-			
-			Parser parser = new Parser("xpcom.js", sm);
-			parser.parse(src);
-			JsNode node = parser.root;
-			node.dump("");
-		}
+//			//JsNode node = parser.root;
+//			//node.dump("");
+//		}
 
 		{
 			ArrayList<String> jslist = new ArrayList<String>();
-			jslist.add("xpcom.js");
+			jslist.add("system.js");
+			//jslist.add("xpcom.js");
 			sm.setJsLis(jslist);
 			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
 			//ScopeManager sm = new ScopeManager();

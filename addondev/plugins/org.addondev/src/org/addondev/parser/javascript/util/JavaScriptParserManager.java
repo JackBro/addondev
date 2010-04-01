@@ -17,8 +17,6 @@ import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
 
 public class JavaScriptParserManager {
 	

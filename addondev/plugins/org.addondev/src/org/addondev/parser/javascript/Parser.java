@@ -491,6 +491,8 @@ public class Parser {
 				//node = new JsNode(null, EnumNode.OBJECT, "", 0);
 				cloneChildNode(prototypenode, parent);
 			}
+			advanceToken(')');
+			getToken(); // skip ')'
 			break;
 		case TokenType.ARRAY:
 			node = getNodeByType("Array");
@@ -562,18 +564,41 @@ public class Parser {
 				if (token == '(') {
 					String type = tnode.getReturnType();
 					if (type != null) {
+						
 						if ("interfaces".equals(type)) {
-							String param = null;
-							if (token != ')') {
-								getToken();
-								while (token != ')') {
-									getToken(); // skip ','
-								}
-								param = lex.value();
-								node = findNode(param);
+							
+							Map<String, IFunction> funcmap = JavaScriptParserManager.instance().getFunctions();
+							if(funcmap.containsKey(type))
+							{
+								ArrayList<JsNode> args = new ArrayList<JsNode>();
+								
+								if (token != ')') {
+									JsNode argnode = factor(null);
+									if(argnode != null) args.add(argnode);
+									while (token != ')') {
+										getToken(); // skip ','
+										argnode = factor(null);
+										if(argnode != null) args.add(argnode);
+									}
+								}				
+								IFunction func = funcmap.get(type);
+								node = func.Run(fScopeManager, fName, args);
+								getToken(); // skip ')'
 							}
+//							String param = null;
+//							if (token != ')') {
+//								getToken();
+//								while (token != ')') {
+//									getToken(); // skip ','
+//								}
+//								param = lex.value();
+//								node = findNode(param);
+//							}
+							
 						} else {
 							node = getNodeByType(type);
+							advanceToken(')');
+							getToken(); // skip ')'
 						}
 					} else {
 						JsNode ttnode = new JsNode(tnode, EnumNode.VALUE, sym, lex.offset());
@@ -614,7 +639,7 @@ public class Parser {
 				}				
 				
 				IFunction func = funcmap.get(type);
-				node = func.Run(fScopeManager, args);
+				node = func.Run(fScopeManager, fName, args);
 			}
 //			if ("interfaces".equals(type)) {
 //				String param = null;
@@ -642,14 +667,17 @@ public class Parser {
 			}
 
 			String sym = lex.value();
-			getToken();
+			//getToken();
 			switch (token) {
 			case TokenType.JSDOC:
 				fJsDoc = lex.value();
-				break;
-
-			case ':':
 				getToken();
+				break;
+			case TokenType.SYMBOL:
+			//case ':':
+				getToken();
+				if(token == ':') 
+					getToken();
 				if (token == TokenType.SYMBOL || token == TokenType.STRING) {
 					JsNode node = new JsNode(parent, EnumNode.VALUE_PROP, sym, lex.offset());
 					setJsDoc(node, fJsDoc);
@@ -667,8 +695,15 @@ public class Parser {
 					parent.addChildNode(node);
 					objectExpr(node);
 				}
+				
 				break;
-			}			
+				
+			default:
+				getToken();
+				break;
+			}
+		
+			//getToken();
 		}
 //		if (token != '}' && token != TokenType.EOS) {
 //			getToken();

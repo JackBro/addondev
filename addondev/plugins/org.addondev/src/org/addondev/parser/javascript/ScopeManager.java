@@ -39,6 +39,17 @@ public class ScopeManager {
 		fScopeStackMap = new HashMap<String, ScopeStack>();
 	}
 	
+	public Scope getCurrentScope(String name)
+	{
+		if(fScopeStackMap.containsKey(name))
+		{
+			ScopeStack stack =  fScopeStackMap.get(name);
+			return stack.getCurrntScope();
+		}
+		
+		return null;
+	}
+	
 	public void setScopeStack(String name, ScopeStack scopestack)
 	{
 		if(fScopeStackMap.containsKey(name))
@@ -60,7 +71,7 @@ public class ScopeManager {
 //		return node;		
 //	}
 	
-	public JsNode getGlobalNode(String name)
+	public JsNode getGlobalNode(String symbole)
 	{
 		JsNode node = null;
 
@@ -69,7 +80,7 @@ public class ScopeManager {
 			{
 				if(fScopeStackMap.containsKey(key))
 				{
-					node = fScopeStackMap.get(key).getScope(0).getNode(name);
+					node = fScopeStackMap.get(key).getScope(0).getNode(symbole);
 					if(node != null)
 						break;
 				}
@@ -132,10 +143,10 @@ public class ScopeManager {
 		return null;
 	}
 	
-	public List<Scope> getUpScopes(String srcname, Scope targetscope)
+	public List<Scope> getUpScopes(String name, Scope targetscope)
 	{
 		ArrayList<Scope> scopes = new ArrayList<Scope>();
-		ScopeStack stack =  fScopeStackMap.get(srcname);
+		ScopeStack stack =  fScopeStackMap.get(name);
 
 		for (Scope scope : stack.getScopeList()) {
 			if((scope.getStart() < targetscope.getStart()) 

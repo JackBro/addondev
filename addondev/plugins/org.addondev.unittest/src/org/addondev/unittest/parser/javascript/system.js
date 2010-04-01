@@ -14,7 +14,7 @@ String.prototype = new Object();
  * @type    Number
  * @memberOf   String
 */ 
-String.prototype.length;
+String.prototype.length=1;
 
 ///**
 // * function charAt
