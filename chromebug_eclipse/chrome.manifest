@@ -1,9 +1,9 @@
 content chromebug_eclipse chrome/content/ xpcnativewrappers=no
 #content chromebug_eclipse chrome/content/
 
-overlay chrome://firebug/content/firebugOverlay.xul         chrome://chromebug_eclipse/content/chromebug_eclipse.xul
+#overlay chrome://firebug/content/firebugOverlay.xul         chrome://chromebug_eclipse/content/chromebug_eclipse.xul
 #overlay chrome://browser/content/browser.xul         chrome://chromeeclipse/content/debugmonkey/debugmonkey.xul
-#overlay chrome://chromebug/content/chromebug.xul chrome://chromebug_eclipse/content/chromebug_eclipse.xul
+overlay chrome://chromebug/content/chromebug.xul chrome://chromebug_eclipse/content/chromebug_eclipse.xul
 #overlay chrome://chromebug/content/ChromeBugMenuOverlay.xul chrome://chromebug_eclipse/content/chromebug_eclipse.xul
 
 resource ec_modules modules/

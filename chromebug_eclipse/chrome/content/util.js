@@ -494,6 +494,13 @@ Firebug.chromebug_eclipse.util = {
     
     getFilePathFromURL : function(aURI) 
     {
+    	
+   		if (aURI.indexOf('file://') == 0) 
+		{
+   			Application.console.log("file:// getFilePathFromURL aURI = " + aURI);
+			return aURI;
+		}
+    	
     	try {	
     		var chromeurl;
     		
@@ -528,8 +535,8 @@ Firebug.chromebug_eclipse.util = {
     		if (chromeurl.indexOf('jar:file://') == 0) 
     		{
     			return chromeurl;
-    		}
-    	
+    		}   		
+    		
     		//var file = Components.classes["@mozilla.org/file/local;1"]
     		//                              .createInstance(Components.interfaces.nsILocalFile);
     		//         file.initWithPath(aURI.spec);

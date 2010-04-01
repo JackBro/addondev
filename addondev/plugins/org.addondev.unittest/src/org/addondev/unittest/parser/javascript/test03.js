@@ -124,7 +124,7 @@
 ////var sm = SMyObject.hello3(arg0, arg1);
 //var tmp = new MyObject();
 //
-//var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+var aFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 
 
 //var items = [];
@@ -144,61 +144,61 @@
 //	elem.addItem(items[i].title, items[i].url, $.stackpanel.itemClick, items[i].itemClicked);
 //}
 
-var stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6 = {};
-(function(){
-	var $ = stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6;
-	
-var MyObject = 
-{
-	//message3: null,  
-	unload: function()
-	{
-	},
-	
-	hello3: function (arg0, arg1){
-		if(!this.isItemAppended + i())
-		{
-			
-			return 0;	
-		}
-		else
-		{
-		}
-//		else if(OK)
+//var stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6 = {};
+//(function(){
+//	var $ = stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6;
+//	
+//var MyObject = 
+//{
+//	//message3: null,  
+//	unload: function()
+//	{
+//	},
+//	
+//	hello3: function (arg0, arg1){
+//		if(!this.isItemAppended + i())
 //		{
-//			this._addItems(this.tmpitems);
+//			
+//			return 0;	
 //		}
-//		else if(NG)
+//		else
 //		{
-//			var hh=0;
 //		}
-		
-		t
-	}
-	,
-	tt: function()
-	{
-		
-	}
-//  ,
-
-}
-
-var t = MyObject;
-
-
-$.util =
-{
-    //regfilename:/([^\/]*)$/,  
-	loadCurrentTab:function(e)
-	{
-		//loadURI(e.url);
-		//$.util.changeClickedElement(e.element);
-	}
-};
-
-
-})();
+////		else if(OK)
+////		{
+////			this._addItems(this.tmpitems);
+////		}
+////		else if(NG)
+////		{
+////			var hh=0;
+////		}
+//		
+//		t
+//	}
+//	,
+//	tt: function()
+//	{
+//		
+//	}
+////  ,
+//
+//}
+//
+//var t = MyObject;
+//
+//
+//$.util =
+//{
+//    //regfilename:/([^\/]*)$/,  
+//	loadCurrentTab:function(e)
+//	{
+//		//loadURI(e.url);
+//		//$.util.changeClickedElement(e.element);
+//	}
+//};
+//
+//
+//})();
 //
 //var fftest = domplate(a0 ,
 //		{

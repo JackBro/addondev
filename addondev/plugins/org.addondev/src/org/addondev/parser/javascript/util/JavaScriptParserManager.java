@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.addondev.core.AddonDevPlugin;
+import org.addondev.parser.javascript.IFunction;
+import org.addondev.parser.javascript.InterfaceFunction;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.ScopeManager;
 import org.addondev.util.ChromeURLMap;
@@ -26,6 +28,13 @@ public class JavaScriptParserManager {
 	private Map<String, ScopeManager> globalscope;
 	private XULJsMap fXULJsMap = new XULJsMap();
 	
+	private Map<String, IFunction> functions = new HashMap<String, IFunction>();
+	
+	
+	public Map<String, IFunction> getFunctions() {
+		return functions;
+	}
+
 	public static JavaScriptParserManager instance()
 	{
 		if(instance == null)
@@ -36,6 +45,7 @@ public class JavaScriptParserManager {
 	
 	private JavaScriptParserManager()
 	{
+		functions.put("interfaces", new InterfaceFunction());
 		
 	}
 	

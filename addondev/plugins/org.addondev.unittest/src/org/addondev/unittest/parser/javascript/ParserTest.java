@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -119,18 +120,28 @@ public class ParserTest {
 //			fScopeStack.pushScope(new Scope(0, 1, root));
 //			ScopeManager.instance().setScopeStack(name, fScopeStack);
 //		}
-//		{
+		
+		ScopeManager sm = new ScopeManager();
+		
+		{
 //			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));		
 //			Parser parser = new Parser("xpcom.js");
-//			parser.parse(src);		
-//			//JsNode node = parser.root;
-//			//node.dump("");
-//		}
+//			parser.parse(src);
+			
+			String src = getSource(ParserTest.class.getResourceAsStream("xpcom.js"));
+			
+			Parser parser = new Parser("xpcom.js", sm);
+			parser.parse(src);
+			JsNode node = parser.root;
+			node.dump("");
+		}
 
 		{
+			ArrayList<String> jslist = new ArrayList<String>();
+			jslist.add("xpcom.js");
+			sm.setJsLis(jslist);
 			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
-			//Parser parser = new Parser("test03.js");
-			ScopeManager sm = new ScopeManager();
+			//ScopeManager sm = new ScopeManager();
 			Parser parser = new Parser("test03.js", sm);
 			parser.parse(src);
 			JsNode node = parser.root;

@@ -24,7 +24,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class DebugPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
 	
-	private class IntegerVerifyListener implements VerifyListener
+	private static class IntegerVerifyListener implements VerifyListener
 	{
 		@Override
 		public void verifyText(VerifyEvent e) {

@@ -159,7 +159,7 @@ public class SendRequest {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("depth", stackframedepth);
 		map.put("valuename", name);
-		json.SetProperty(map);
+		json.setProperty(map);
 		
 		String data = JsonUtil.getJsonText(json);
 		return post(data);	
@@ -178,7 +178,7 @@ public class SendRequest {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("depth", stackframedepth);
 		map.put("valuename", name);
-		json.SetProperty(map);
+		json.setProperty(map);
 		
 		String data = JsonUtil.getJsonText(json);
 		return post(data);	

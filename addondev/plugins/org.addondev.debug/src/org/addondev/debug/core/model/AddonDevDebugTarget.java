@@ -137,7 +137,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	
 	private ILaunch fLaunch;
 	//private ILaunchConfiguration fConfiguration;
-	private IPreferenceStore fStore;
+	//private IPreferenceStore fStore;
 	
 	// program name
 	private String fName;
@@ -555,8 +555,7 @@ public class AddonDevDebugTarget extends PlatformObject implements IDebugTarget,
 	@Override
 	public void disconnect() throws DebugException {
 		// TODO Auto-generated method stub
-		int i=0;
-		i++;
+
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package org.addondev.debug.core.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public class JsonData {
 
 	public JsonData(){}
 	
-	public void SetProperty(Map<String, String> map)
+	public void setProperty(Map<String, String> map)
 	{		
 		if(propertylist == null)
 		{

@@ -1,5 +1,10 @@
 package org.addondev.parser.javascript;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import org.addondev.parser.javascript.util.JavaScriptParserManager;
+
 public class Parser {
 	private Lexer lex;
 	private int token;
@@ -169,7 +174,7 @@ public class Parser {
 			break;
 		case TokenType.JSDOC:
 			fJsDoc = lex.value();
-			// getToken();
+			getToken();
 			break;
 		case TokenType.FUNCTION:
 			// frame.push();
@@ -595,18 +600,34 @@ public class Parser {
 
 		if (node != null && node.getReturnType() != null) {
 			String type = node.getReturnType();
-			if ("interfaces".equals(type)) {
-				String param = null;
+			Map<String, IFunction> funcmap = JavaScriptParserManager.instance().getFunctions();
+			if(funcmap.containsKey(type))
+			{
+				ArrayList<JsNode> args = new ArrayList<JsNode>();
+				
 				if (token != ')') {
+					args.add(factor(null));
 					while (token != ')') {
 						getToken(); // skip ','
+						args.add(factor(null));
 					}
-					param = lex.value();
-				}
-				if (param != null) {
-					node = findNode(param);
-				}
+				}				
+				
+				IFunction func = funcmap.get(type);
+				node = func.Run(fScopeManager, args);
 			}
+//			if ("interfaces".equals(type)) {
+//				String param = null;
+//				if (token != ')') {
+//					while (token != ')') {
+//						getToken(); // skip ','
+//					}
+//					param = lex.value();
+//				}
+//				if (param != null) {
+//					node = findNode(param);
+//				}
+//			}
 		}
 
 		return node;

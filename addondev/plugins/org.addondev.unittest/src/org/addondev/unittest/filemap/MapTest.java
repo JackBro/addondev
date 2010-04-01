@@ -14,6 +14,7 @@ import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
 import org.addondev.util.Locale;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
@@ -33,18 +34,19 @@ public class MapTest {
 	}
 
 	@Test
-	public void ChromeURLMapTest() {
+	public void ChromeURLMapTest() throws CoreException, IOException {
 		//IProject[] s = AddonDevPlugin.getWorkspace().getRoot().getProjects();
-		IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
+		//IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
 		//boolean pe = project.exists();
 		ChromeURLMap cm = new ChromeURLMap();	
 		//URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");
 		//URL url = new URL("file:///D:/data/src/PDE/work/org.addondev.unittest/stacklink/");
 		//project.getFile(ChromeURLMap.MANIFEST_FILENAME).
 		//cm.readManifest(project.getFile(ChromeURLMap.MANIFEST_FILENAME));
-		String bpath = "D:/data/src/PDE/work/org.addondev.unittest/stacklink"; 
+		
+		String bpath = "D:/data/src/PDE/work/"; 
 		String filepath = "stacklink/chrome.manifest"; 
-		//cm.readManifest(basepath.append(filepath));
+		cm.readManifest(new File(bpath + filepath));
 		
 		//String pp = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
 		assertEquals("file:///" + bpath + "/chrome/content/stacklink.js", cm.convertChrome2Local("chrome://stacklink/content/stacklink.js"));

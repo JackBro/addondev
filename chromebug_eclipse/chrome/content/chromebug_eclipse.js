@@ -2,8 +2,8 @@
 //chromebug-1.5.0a2.xpi
 //firebug-1.4.2-fx.xpi
 
-FBL.ns(function chromebug() { with (FBL) {
-
+//FBL.ns(function chromebug() { with (FBL) {
+FBL.ns(function() { with (FBL) {
 
 Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 {
@@ -32,18 +32,40 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		
 		Firebug.ActivableModule.initialize.apply(this, arguments);
 		//Firebug.Debugger.fbs.countContext(true); 
-		Firebug.Debugger.addListener(this); 
+		//Firebug.Debugger.addListener(this); 
+		//Firebug.Debugger.addListener(Firebug.chromebug_eclipseModle.DebuggerListener); 
+		//Firebug.Debugger.setDefaultState(Firebug.chromebug_eclipseModle.DebuggerListener);
 		//Firebug.Chromebug.Debugger.addListener(this); 
 		
+		Application.console.log("Firebug.Chromebug = " + Firebug.Chromebug);
+//		for(var name in Firebug.Chromebug)
+//		{
+//			try{
+//				Application.console.log("name = " + name +" : " + Firebug.Chromebug[name]); 
+//			}catch(exc){
+//				en += "name = " + name +" ERROR";
+//			}
+//		}
 		if(Firebug.Chromebug)
-		{
+		{		
 			var sss = Firebug.Chromebug.onStop;
-			
 			Firebug.Chromebug.onStop = function(context, frame, type, rv)
 			{
 				sss(context, frame, type, rv);
-			};
+				Firebug.chromebug_eclipseModle.onStop(context, frame, type, rv);
+			};	
 		}
+
+//		if(Firebug.Chromebug)
+//		{
+//			var sss = Firebug.Chromebug.onStop;
+//			
+//			Firebug.Chromebug.onStop = function(context, frame, type, rv)
+//			{
+//				sss(context, frame, type, rv);
+//				//this.onStop(context, frame, type, rv);
+//			};
+//		}
 		this.net = {};
 		this.util = {};
 
@@ -71,10 +93,9 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		//this.server.stop();
 		server.stop();
     },
- 
     resetBreakpoints: function(sourceFile, lastLineNumber)
     {
-    	//Application.console.log("resetBreakpoints sourceFile.href = " + sourceFile.href);
+//    	Application.console.log("resetBreakpoints sourceFile.href = " + sourceFile.href);
 //    	if(sourceFile.href.indexOf("browser/content/browser.xul/event/seq/") > 0)
 //    	{
 //    		var val2 = sourceFile.outerScript;
@@ -116,6 +137,47 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
     		}
     	}
     },
+    
+    onStop: function(context, frame, type, rv)
+    {
+    	//Firebug.Debugger.resume(FirebugContext);
+    	//var line = 28;
+    	//FBL.fbs.clearBreakpoint(href, line);
+    	//FBL.fbs.disableBreakpoint(href, line);
+    	Application.console.log("frame.script.functionName = " + frame.script.functionName);
+    	Application.console.log("onStop frame.href = " +frame.href);
+    	//if(frame.href.indexOf('file:/')==0)
+    	//{
+//		for(var key in context.sourceCache.cache)
+//		{
+//			Application.console.log("sourceCache key = " + key);
+//		}
+		//Application.console.log("context.sourceCache.cache ckey = " + context.sourceCache.cache[ckey]);
+    	//Application.console.log("frame.args = " +frame.args);
+    	Firebug.chromebug_eclipse.util.currnetFrame = frame;
+    	try
+    	{
+    		//Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);
+    		Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getCorrectedStackTrace(frame, context);
+    	}catch (e) {
+			// TODO: handle exception
+    		Application.console.log("ce getStackTrace e = " + e);
+		}
+    	try
+    	{
+    		//var postdata = Firebug.chromebug_eclipse.util.getStackFramesXML();
+    		var postdata = Firebug.chromebug_eclipse.util.getStackFrames();
+		}catch (ex) {
+			// TODO: handle exception
+			Application.console.log("ce getStackFramesXML ex = " + ex);
+		}
+
+		Application.console.log("onStop = " + postdata);
+        //ecclient.send("suspend", postdata);
+		postdata.cmd = "suspend";
+		ecclient.send(postdata);
+    },
+    
     terminate : function()
     {
     	Application.console.log("chrome_eclipse terminate");
@@ -190,46 +252,6 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 		//var path = Firebug.chromebug_eclipse.util.getFilePathFromURL("chrome://hello/content/hello.js");
 		//Application.console.log("chrome://hello/content/hello.js -> " + path);
 	},
-    
-    onStop: function(context, frame, type, rv)
-    {
-    	//Firebug.Debugger.resume(FirebugContext);
-    	//var line = 28;
-    	//FBL.fbs.clearBreakpoint(href, line);
-    	//FBL.fbs.disableBreakpoint(href, line);
-    	//Application.console.log("frame.script.functionName = " + frame.script.functionName);
-    	//Application.console.log("onStop frame.href = " +frame.href);
-    	//if(frame.href.indexOf('file:/')==0)
-    	//{
-//		for(var key in context.sourceCache.cache)
-//		{
-//			Application.console.log("sourceCache key = " + key);
-//		}
-		//Application.console.log("context.sourceCache.cache ckey = " + context.sourceCache.cache[ckey]);
-    	//Application.console.log("frame.args = " +frame.args);
-    	Firebug.chromebug_eclipse.util.currnetFrame = frame;
-    	try
-    	{
-    		//Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getStackTrace(frame, context);
-    		Firebug.chromebug_eclipse.util.currentStackTrace = FBL.getCorrectedStackTrace(frame, context);
-    	}catch (e) {
-			// TODO: handle exception
-    		Application.console.log("ce getStackTrace e = " + e);
-		}
-    	try
-    	{
-    		//var postdata = Firebug.chromebug_eclipse.util.getStackFramesXML();
-    		var postdata = Firebug.chromebug_eclipse.util.getStackFrames();
-		}catch (ex) {
-			// TODO: handle exception
-			Application.console.log("ce getStackFramesXML ex = " + ex);
-		}
-
-		Application.console.log("onStop = " + postdata);
-        //ecclient.send("suspend", postdata);
-		postdata.cmd = "suspend";
-		ecclient.send(postdata);
-    },
     
 	pathHandler:function(postdata) 
 	{
@@ -555,6 +577,7 @@ Firebug.chromebug_eclipseModle =extend(Firebug.Module,
 	  
 	  return data;	
 	}
+//}
 });
 
 var ecclient = {
@@ -622,8 +645,6 @@ ChromeDebuggerPanel.prototype = extend(Firebug.Panel,
     }
 }); 
 
-Firebug.registerModule(Firebug.chromebug_eclipseModle); 
-Firebug.registerPanel(ChromeDebuggerPanel); 
 
 //window.addEventListener('load', function() { 
 //	 
@@ -652,6 +673,10 @@ window.addEventListener('unload', function() {
 	}
 
 }, false);
+
+
+Firebug.registerModule(Firebug.chromebug_eclipseModle); 
+//Firebug.registerPanel(ChromeDebuggerPanel); 
 
 }});
 
