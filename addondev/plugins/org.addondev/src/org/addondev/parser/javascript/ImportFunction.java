@@ -15,7 +15,6 @@ public class ImportFunction implements IFunction {
 		if(args.size() == 1)
 		{
 			Scope currnetscope = scopemanager.getCurrentScope(name);
-			//JsNode currntnode = args.get(0);
 			String resourcefile = args.get(0).getName();
 			
 		}

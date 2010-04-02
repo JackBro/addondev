@@ -12,11 +12,19 @@ public class ScopeManager {
 	//private static ScopeManager instance;	
 	private HashMap<String, ScopeStack> fScopeStackMap;
 
+	/**
+	 * 
+	 * @param jslist chromeURL
+	 */
 	public void setJsLis(List<String> jslist)
 	{
 		fJsList = jslist;
 	}
 	
+	/**
+	 * 
+	 * @return chromeURL list
+	 */
 	public List<String> getJsLis()
 	{
 		return fJsList;

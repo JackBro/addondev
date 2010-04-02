@@ -114,24 +114,37 @@
 //
 //var MyObject = function(){};
 //MyObject.prototype = 
+//var util =
+//{
+//	loadCurrentTab:function(e)
+//	{
+//
+//	}
+//};
+
 var MyObject =
 {    
-	/**
-	 * 
-	 * @type    Array
-	 * 
-	 */
-	ret:function()
-	{
-	}
-	,
+//	/**
+//	 * 
+//	 * @type    Array
+//	 * 
+//	 */
+//	ret:function()
+//	{
+//	}
+
     hello3 : function (arg0, arg1){
 		arg0=1;
 		garg=100;
-    }
+    },
+	_unload: function()
+	{
+		//MyObject.
+    	//util.
+	}
 };
 
-var num = MyObject.ret().pop();
+//var num = MyObject.ret().pop();
 
 ////
 ////var sm = SMyObject.hello3(arg0, arg1);

@@ -146,7 +146,11 @@ public class ChromeURLMap {
 				String lpath = file.getFullPath().removeFirstSegments(1).toPortableString();
 				//chromeurl = "chrome:/" + 
 				//	file.getFullPath().toPortableString().replaceFirst(uri, "content/");
-				chromeurl = "chrome://" + packagename + lpath.replaceFirst(uri, "content/");
+				
+				//chromeurl = "chrome://" + packagename + lpath.replaceFirst(uri, "content/");
+				
+				IPath cpath = new Path(packagename).append(lpath.replaceFirst(uri, "content/"));
+				chromeurl = "chrome://" + cpath.toPortableString();
 				return chromeurl;
 				
 			}
@@ -167,7 +171,7 @@ public class ChromeURLMap {
 				//if(file.getFullPath().segment(1).equals(anObject))
 				{
 					String lpath = file.getFullPath().removeFirstSegments(1).toPortableString();
-					chromeurl = "resource:/" + lpath.replaceFirst(uri, packagename);
+					chromeurl = "resource://" + lpath.replaceFirst(uri, packagename);
 					return chromeurl;
 					
 				}
