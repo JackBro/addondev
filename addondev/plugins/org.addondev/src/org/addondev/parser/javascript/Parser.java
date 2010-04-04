@@ -271,6 +271,7 @@ public class Parser {
 					}
 				} else if (token == '(') {
 					// factor(node);
+					node.setNodeType(EnumNode.FUNCTION);
 					functionCall(node);
 					// getToken(); // skip (
 					// if (token != ')') {
@@ -334,18 +335,20 @@ public class Parser {
 
 	private void functionCall(JsNode node) throws EOSException {
 		//JsNode code = null;
-
+		
 		getToken(); // skip (
 		if (token != ')') {
 
-			factor(node);
+			//factor(node);
+			factor(node, EnumNode.PARAM);
 
 			while (token != ')') {
 				if (token == TokenType.EOS) {
 					break;
 				}
 				getToken(); // skip ,
-				factor(node);
+				//factor(node);
+				factor(node, EnumNode.PARAM);
 			}
 
 			getToken(); // skip ),
@@ -429,9 +432,16 @@ public class Parser {
 	}
 
 	private JsNode factor(JsNode parent) throws EOSException {
+		return factor(parent, EnumNode.VALUE);
+	}
+	
+	private JsNode factor(JsNode parent, EnumNode nodetype) throws EOSException {
 		JsNode node = null;
 		String sym = lex.value();
 		switch (token) {
+//		case TokenType.JSDOC:
+//			jsDoc_stmt();
+//			break;
 		case '/':
 			lex.jsRex();
 			// getToken();
@@ -442,9 +452,23 @@ public class Parser {
 			objectExpr(parent);
 			break;
 		case TokenType.FUNCTION:
-			advanceToken('(');
-			setJsDoc(parent, fJsDoc);
-			functionCall(parent);
+			if(nodetype == EnumNode.PARAM)
+			{
+				advanceToken('(');
+				int offset = lex.offset();
+				JsNode code = new JsNode(parent, EnumNode.ANONYMOUS_FUNCTION, "anonymous"
+						+ offset, offset);	
+				parent.addChildNode(code);
+				
+				setJsDoc(parent, fJsDoc);
+				functionCall(code);
+			}
+			else
+			{
+				advanceToken('(');
+				setJsDoc(parent, fJsDoc);
+				functionCall(parent);
+			}
 			break;
 		case TokenType.NEW:
 			getToken();
@@ -480,7 +504,14 @@ public class Parser {
 		case TokenType.SYMBOL:
 			getToken();
 			if (token == '(') {
-				functionCall(parent);
+				if(nodetype == EnumNode.PARAM)
+				{
+					//factor(parent);
+				}
+				else
+				{
+					functionCall(parent);
+				}
 			} else if (token == '[') {
 				advanceToken(']');
 				getToken(); // skip ']'

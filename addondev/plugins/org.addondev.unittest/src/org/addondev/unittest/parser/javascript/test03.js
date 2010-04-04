@@ -122,27 +122,39 @@
 //	}
 //};
 
-var MyObject =
-{    
-//	/**
-//	 * 
-//	 * @type    Array
-//	 * 
-//	 */
-//	ret:function()
+//var MyObject =
+//{    
+////	/**
+////	 * 
+////	 * @type    Array
+////	 * 
+////	 */
+////	ret:function()
+////	{
+////	}
+//
+//    hello3 : function (arg0, arg1){
+//		arg0=1;
+//		garg=100;
+//    },
+//	_unload: function()
 //	{
+//		//MyObject.
+//    	//util.
 //	}
+//};
 
-    hello3 : function (arg0, arg1){
-		arg0=1;
-		garg=100;
-    },
-	_unload: function()
-	{
-		//MyObject.
-    	//util.
-	}
-};
+//var contextMenu = document.getElementById("contentAreaContextMenu");
+//contextMenu.addEventListener("popupshowing", function(event) {
+//  //gContextMenu.showItem("my-hoge-menuitem", gContextMenu.onImage);
+//}, false);
+
+contextMenu.addEventListener("popupshowing", pop(event), false);
+
+function pop(event)
+{
+	
+}
 
 //var num = MyObject.ret().pop();
 
