@@ -66,6 +66,19 @@ public class Parser {
 
 		return node;
 	}
+	
+	private void setNodeByType(String type, JsNode node) {
+		JsNode gnode = findNode(type);
+		if(gnode == null) return;
+		
+		JsNode chNode = findChildNode(gnode, "prototype");
+		if (chNode != null) {
+			cloneChildNode(chNode, node);
+		} else {
+			//node = gnode;
+			assignChildNode(gnode, node);
+		}
+	}
 
 	private void cloneChildNode(JsNode srcNode, JsNode distNode) {
 		JsNode[] srcChildNodes = srcNode.getChildNodes();
@@ -377,6 +390,7 @@ public class Parser {
 			String sym = lex.value();
 			int offset = lex.offset();
 			code = new JsNode(parent, EnumNode.FUNCTION, sym, offset);
+			setJsDoc(code, fJsDoc);
 			parent.addChildNode(code);
 			getToken();
 			advanceToken('(');
@@ -504,14 +518,14 @@ public class Parser {
 		case TokenType.SYMBOL:
 			getToken();
 			if (token == '(') {
-				if(nodetype == EnumNode.PARAM)
-				{
-					//factor(parent);
-				}
-				else
-				{
+//				if(nodetype == EnumNode.PARAM)
+//				{
+//					//factor(parent);
+//				}
+//				else
+//				{
 					functionCall(parent);
-				}
+//				}
 			} else if (token == '[') {
 				advanceToken(']');
 				getToken(); // skip ']'
@@ -535,6 +549,12 @@ public class Parser {
 
 					node = new JsNode(parent, EnumNode.VALUE, sym, lex.offset());
 					parent.addChildNode(node);
+					if(nodetype == EnumNode.PARAM)
+					{
+						String paramtype = parent.getParamType(sym);
+						node.setReturnType(paramtype);
+						if(paramtype != null)setNodeByType(paramtype, node);
+					}
 				}
 			}
 			break;
@@ -597,7 +617,9 @@ public class Parser {
 							IFunction func = funcmap.get(type);
 							node = func.Run(fScopeManager, fName, args);
 							getToken(); // skip ')'
+							
 						} else {
+							
 							node = getNodeByType(type);
 							advanceToken(')');
 							getToken(); // skip ')'
@@ -643,6 +665,10 @@ public class Parser {
 
 				IFunction func = funcmap.get(type);
 				node = func.Run(fScopeManager, fName, args);
+			}
+			else
+			{
+				//node = getNodeByType(type);		
 			}
 			// if ("interfaces".equals(type)) {
 			// String param = null;

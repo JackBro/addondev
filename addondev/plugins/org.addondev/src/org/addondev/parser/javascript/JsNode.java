@@ -18,6 +18,7 @@ public class JsNode {
 	private int fOffset;
 	private int fEndOffset;
 
+	private JsDocParser fJsDocParser;
 	private String fJsDoc;	
 	private String fReturnType;	
 	
@@ -144,24 +145,45 @@ public class JsNode {
 	public String getReturnType()
 	{
 		//String key = null;
-		if(fJsDoc != null && fReturnType == null)
+		if(fReturnType != null) return fReturnType;
+		
+		if(fJsDocParser == null)
 		{
-			JsDocParser p = new JsDocParser();
-			fReturnType = p.getType(fJsDoc);		
-//			Matcher m = fJsDocTypePattern.matcher(fJsDoc);
-//			 if (m.find()) {
-//				 key = m.group(1);
-//			 }
-//			 else
-//			 {
-//				 m = fJsDocReturnPattern.matcher(fJsDoc);
-//				 if (m.find()) {
-//					 key = m.group(1);
-//				 }
-//			 }
-//			 fReturnType = key;
+			fJsDocParser = new JsDocParser();
+			fJsDocParser.parse(fJsDoc);
+			fReturnType = fJsDocParser.getType();
 		}
 		
 		return fReturnType;
+//		if(fJsDoc != null && fReturnType == null)
+//		{
+//			JsDocParser p = new JsDocParser();
+//			fReturnType = p.getType(fJsDoc);		
+////			Matcher m = fJsDocTypePattern.matcher(fJsDoc);
+////			 if (m.find()) {
+////				 key = m.group(1);
+////			 }
+////			 else
+////			 {
+////				 m = fJsDocReturnPattern.matcher(fJsDoc);
+////				 if (m.find()) {
+////					 key = m.group(1);
+////				 }
+////			 }
+////			 fReturnType = key;
+//		}
+//		
+//		return fReturnType;
+	}
+	
+	public String getParamType(String paramname)
+	{
+		if(fJsDocParser == null)
+		{
+			fJsDocParser = new JsDocParser();
+			fJsDocParser.parse(fJsDoc);
+		}
+		
+		return fJsDocParser.getParamType(paramname);		
 	}
 }

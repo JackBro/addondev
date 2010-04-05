@@ -122,39 +122,54 @@
 //	}
 //};
 
-//var MyObject =
-//{    
-////	/**
-////	 * 
-////	 * @type    Array
-////	 * 
-////	 */
-////	ret:function()
-////	{
-////	}
-//
-//    hello3 : function (arg0, arg1){
-//		arg0=1;
-//		garg=100;
-//    },
-//	_unload: function()
-//	{
-//		//MyObject.
-//    	//util.
-//	}
-//};
 
 //var contextMenu = document.getElementById("contentAreaContextMenu");
 //contextMenu.addEventListener("popupshowing", function(event) {
 //  //gContextMenu.showItem("my-hoge-menuitem", gContextMenu.onImage);
 //}, false);
 
-contextMenu.addEventListener("popupshowing", pop(event), false);
 
-function pop(event)
-{
-	
-}
+
+//function pop(event)
+//{
+//	
+//}
+
+var MyObject =
+{    
+//	/**
+//	 * 
+//	 * @type    Array
+//	 * 
+//	 */
+	ret:function()
+	{
+		contextMenu.addEventListener("popupshowing", MyObject._unload(event));
+	}
+
+//    hello3 : function (arg0, arg1){
+//		arg0=1;
+//		garg=100;
+//    },
+	_unload: function(event)
+	{
+		//MyObject.
+    	//util.
+		
+	}
+};
+
+
+///**
+// * 
+// * @param {String} e1
+// * @param {Number} e2
+// * @return
+// */
+//function test(e1, e2)
+//{
+//	
+//}
 
 //var num = MyObject.ret().pop();
 
