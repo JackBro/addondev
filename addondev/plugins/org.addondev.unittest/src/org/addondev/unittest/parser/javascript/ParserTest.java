@@ -103,9 +103,12 @@ public class ParserTest {
 	
 	@Test
 	public void testParser03() throws IOException {
+		
+		ArrayList<String> jslist = new ArrayList<String>();
 		ScopeManager sm = new ScopeManager();
 
 		{
+			jslist.add("system.js");
 			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
 			Parser parser = new Parser("system.js", sm);
 			parser.parse(src);
@@ -137,8 +140,15 @@ public class ParserTest {
 //		}
 
 		{
-			ArrayList<String> jslist = new ArrayList<String>();
-			jslist.add("system.js");
+			jslist.add("firefox.js");
+			String src = getSource(ParserTest.class.getResourceAsStream("firefox.js"));					
+			Parser parser = new Parser("firefox.js", sm);
+			parser.parse(src);
+			JsNode node = parser.root;
+			node.dump("");
+		}
+		{
+
 			//jslist.add("xpcom.js");
 			sm.setJsLis(jslist);
 			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));

@@ -43,7 +43,9 @@ public class NodeSerializer {
 				{
 					ArrayList<JsElement> params = element.getParams();
 					for (JsElement param : params) {
-						JsNode paramNode = new JsNode(chNode, EnumNode.PARAM, param.getName(), param.getReturntype(), 0);
+						//JsNode paramNode = new JsNode(chNode, EnumNode.PARAM, param.getName(), param.getReturntype(), 0);
+						JsNode paramNode = new JsNode(chNode, EnumNode.VALUE, param.getName(), param.getReturntype(), 0);
+						paramNode.setParam(true);
 						chNode.addChildNode(paramNode);
 					}
 				}
@@ -73,10 +75,10 @@ public class NodeSerializer {
 		{
 			nodetype = EnumNode.OBJECT;
 		}
-		else if(element.getNodeType().equals(EnumNode.PARAM.name()))
-		{
-			nodetype = EnumNode.PARAM;
-		}
+//		else if(element.getNodeType().equals(EnumNode.PARAM.name()))
+//		{
+//			nodetype = EnumNode.PARAM;
+//		}
 		else if(element.getNodeType().equals(EnumNode.VALUE.name()))
 		{
 			nodetype = EnumNode.VALUE;

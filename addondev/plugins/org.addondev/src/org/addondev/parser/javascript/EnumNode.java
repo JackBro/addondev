@@ -4,7 +4,7 @@ public enum EnumNode {
 	ROOT,
 	OBJECT,
 	VALUE,
-	PARAM,
+	//PARAM,
 	ANONYMOUS_FUNCTION,
 	FUNCTION,	
 	VALUE_PROP,

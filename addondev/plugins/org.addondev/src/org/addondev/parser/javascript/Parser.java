@@ -353,7 +353,7 @@ public class Parser {
 		if (token != ')') {
 
 			//factor(node);
-			factor(node, EnumNode.PARAM);
+			factor(node, true);
 
 			while (token != ')') {
 				if (token == TokenType.EOS) {
@@ -361,7 +361,7 @@ public class Parser {
 				}
 				getToken(); // skip ,
 				//factor(node);
-				factor(node, EnumNode.PARAM);
+				factor(node, true);
 			}
 
 			getToken(); // skip ),
@@ -446,10 +446,10 @@ public class Parser {
 	}
 
 	private JsNode factor(JsNode parent) throws EOSException {
-		return factor(parent, EnumNode.VALUE);
+		return factor(parent, false);
 	}
 	
-	private JsNode factor(JsNode parent, EnumNode nodetype) throws EOSException {
+	private JsNode factor(JsNode parent, Boolean isparam) throws EOSException {
 		JsNode node = null;
 		String sym = lex.value();
 		switch (token) {
@@ -466,7 +466,7 @@ public class Parser {
 			objectExpr(parent);
 			break;
 		case TokenType.FUNCTION:
-			if(nodetype == EnumNode.PARAM)
+			if(isparam)
 			{
 				advanceToken('(');
 				int offset = lex.offset();
@@ -532,10 +532,6 @@ public class Parser {
 
 				node = findNode(sym);
 				if (node == null) {
-					// JsNode valnode = new JsNode(parent, EnumNode.VALUE, sym,
-					// lex.offset());
-					// parent.addChildNode(valnode);
-
 					node = new JsNode(parent, EnumNode.VALUE, sym, lex.offset());
 					parent.addChildNode(node);
 				}
@@ -549,13 +545,14 @@ public class Parser {
 
 					node = new JsNode(parent, EnumNode.VALUE, sym, lex.offset());
 					parent.addChildNode(node);
-					if(nodetype == EnumNode.PARAM)
+					if(isparam)
 					{
 						String paramtype = parent.getParamType(sym);
 						node.setReturnType(paramtype);
 						if(paramtype != null)setNodeByType(paramtype, node);
 					}
 				}
+				node.setParam(isparam);
 			}
 			break;
 		default:
@@ -707,7 +704,7 @@ public class Parser {
 				if (token == ':')
 					getToken();
 				
-				if (token == TokenType.SYMBOL || token == TokenType.STRING) {
+				if (token == TokenType.SYMBOL || token == TokenType.STRING || token == TokenType.INT) {
 					JsNode node = new JsNode(parent, EnumNode.VALUE_PROP, sym,
 							lex.offset());
 					setJsDoc(node, fJsDoc);

@@ -1,4 +1,37 @@
-﻿http://mpc-hc.sourceforge.net/
+﻿		var res="";
+		var lobj = gBrowser.selectedBrowser;
+		var pval = [];
+		var fval = [];
+    for(var key in lobj)
+		{
+			try{
+					//Application.console.log("gBrowser.mCurrentBrowser key:"+ key + " = " + typeof(gBrowser.mCurrentBrowser[key]));
+					if(typeof(lobj[key]) == "function"){
+						var func = lobj[key]+"";
+						func = func.replace(key, '');
+						var argsindex = func.indexOf(")");
+						func = func.substring(0, argsindex+1);
+						//res += "\t" + key + ":" + func + "{}," + "\n";
+						fval.push("\t" + key + ":" + func + "{}," + "\n");
+					}else{
+						//res += "\t" + key + ":" + lobj[key] + "," + "\n";
+						pval.push("\t" + key + ":" + lobj[key] + "," + "\n");
+					}
+			}catch(exc){
+				//res += "name = " + name +" ERROR" + "\n"; 
+			}
+		}
+		pval.sort();
+		fval.sort();
+		for(var k in pval){
+			res+=pval[k];
+		}
+		for(var k in fval){
+			res+=fval[k];
+		}
+		Application.console.log("res = "+ res);
+
+http://mpc-hc.sourceforge.net/
 
 http://monoist.atmarkit.co.jp/fembedded/articles/filesys/02/filesys_02a.html
 http://sourceforge.net/projects/wakasi-eclipse/

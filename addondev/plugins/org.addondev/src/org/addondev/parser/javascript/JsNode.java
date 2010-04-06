@@ -1,8 +1,6 @@
 package org.addondev.parser.javascript;
 
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class JsNode {
@@ -13,6 +11,7 @@ public class JsNode {
 	private HashMap<String, JsNode> fSymbalTable; 
 
 	private EnumNode fNodeType;
+	private boolean isParam;
 	
 	private String fName;
 	private int fOffset;
@@ -23,6 +22,14 @@ public class JsNode {
 	private String fReturnType;	
 	
 	
+	public boolean isParam() {
+		return isParam;
+	}
+
+	public void setParam(boolean isParam) {
+		this.isParam = isParam;
+	}
+
 	public int getEndoffset() {
 		return fEndOffset;
 	}
@@ -53,6 +60,7 @@ public class JsNode {
 		this.fOffset = offset;	
 		this.fNodeType = nodetype;
 		this.fReturnType = null;
+		this.isParam = false;
 		
 		fSymbalTable = new HashMap<String, JsNode>();
 	}
@@ -64,6 +72,7 @@ public class JsNode {
 		this.fOffset = offset;
 		this.fNodeType = nodetype;
 		this.fReturnType = returntype;
+		this.isParam = false;
 		
 		fSymbalTable = new HashMap<String, JsNode>();
 	}
