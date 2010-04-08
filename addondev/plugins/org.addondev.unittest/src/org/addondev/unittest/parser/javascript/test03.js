@@ -144,7 +144,7 @@ var MyObject =
 //	 */
 	ret:function()
 	{
-		contextMenu.addEventListener("popupshowing", MyObject._unload(event));
+		//contextMenu.addEventListener("popupshowing", MyObject._unload(event));
 	}
 
 //    hello3 : function (arg0, arg1){
@@ -159,6 +159,16 @@ var MyObject =
 	}
 };
 
+var MyObject2 =
+{
+	load: function(){}
+}
+
+var nn = new MyObject();
+//nn.len = 0;
+nn.addval = function(){};
+
+nn = new MyObject2();
 
 ///**
 // * 

@@ -106,14 +106,25 @@ public class ReflectJava {
 					{
 						if(propmap.containsKey(m.getName()))
 						{
-							String jspropname = propmap.get(m.getName()).getJsname();
-							String jstype =  propmap.get(m.getName()).getType();
-							jsdocelm.setName(jspropname);
-							jsdocelm.setNodeType(jstype);
-							
+//							String jspropname = propmap.get(m.getName()).getJsname();
+//							String jstype =  propmap.get(m.getName()).getType();
+//							jsdocelm.setName(jspropname);
+//							jsdocelm.setNodeType(jstype);
+//							
+//							String returntype = getReturnType(m.getReturnType());
+//							jsdocelm.setReturntype(returntype);
+//							classdata.addElement(jsdocelm);	
 							String returntype = getReturnType(m.getReturnType());
-							jsdocelm.setReturntype(returntype);
-							classdata.addElement(jsdocelm);							
+							if(returntype != null)
+							{
+								String jspropname = propmap.get(m.getName()).getJsname();
+								String jstype =  propmap.get(m.getName()).getType();
+								jsdocelm.setName(jspropname);
+								jsdocelm.setNodeType(jstype);
+								
+								jsdocelm.setReturntype(returntype);
+								classdata.addElement(jsdocelm);									
+							}
 						}	
 						else
 						{

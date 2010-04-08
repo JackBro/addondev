@@ -102,7 +102,7 @@ public class JsJavaTest {
 		JsData data = m.makeXML(datapath, map, jjsmap);
 		
 		Serializer serializer = new Persister();
-		File result = new File("tmp/text.xml");
+		File result = new File("D:/data/src/PDE/xulrunner/text.xml");
 		System.out.println("      " + result);
 		try {
 			serializer.write(data, result);

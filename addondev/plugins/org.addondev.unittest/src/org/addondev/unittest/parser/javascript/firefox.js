@@ -41,7 +41,7 @@ var gBrowser = {
 	tooltip:null, 
 	tooltipText:null, 
 	top:null, 
-	width:0,
+	width:null,
 	
 	//DOM 要素からの継承
 	attributes :null, 
@@ -81,14 +81,14 @@ var gBrowser = {
 	 *  tabbrowser 内の browser 要素のリストを保持します。 
 	 * 	型: browser 要素のノードリスト 
 	 */
-	browsers;,
+	browsers;null,
 
 	/**
 	 *	@type Boolean
 	 *   型: 論理型 
 	 *   セッション履歴で前のページに移動できるとき、このプロパティは true になり、Back ボタンが有効になります。このプロパティは読み取り専用です。 
 	 */
-	canGoBack:,
+	canGoBack:true,
 
 	/**
 	 *	@type Boolean
@@ -96,111 +96,113 @@ var gBrowser = {
 	    セッション履歴で次のページに移動できるとき、このプロパティは true になり、Forward ボタンが有効になります。
 	    このプロパティは読み取り専用です。 
 	 */
-	canGoForward:,
+	canGoForward:true,
 
 	/**
 	    型: document 
 	    この読み取り専用のプロパティは要素内の document オブジェクトを含みます。 
 	 */
-	contentDocument:,
+	contentDocument:null,
 
 	/**
+	 * @type String 
 	    型: 文字列型 
 	    この読み取り専用のプロパティは browser 内の document オブジェクトの title を含みます。 
 	 */
-	contentTitle:,
+	contentTitle:null,
 
 	/**
 	    型: nsIContentViewerEdit 
 	    この読み取り専用のプロパティは、document 上のクリップボード操作を扱う nsIContentViewerEdit を含みます。 
 	 */
-	contentViewerEdit:,
+	contentViewerEdit:null,
 
 	/**
 	    型: nsIContentViewerEdit 
 	    この読み取り専用のプロパティは、document 上のクリップボード操作を扱う nsIContentViewerEdit を含みます。 
 	 */
-	contentViewerFile:,
+	contentViewerFile:null,
 	
 	/**
 	    型: window
 	    この読み取り専用のプロパティは要素内の window オブジェクトを含みます。
 	 */
-	contentWindow:,
+	contentWindow:null,
 
 	/**
 	    型: nsIURI 
 	    この読み取り専用のプロパティは現在読み込まれている URL を含みます。URL を変更するには loadURI() メソッドを使用してください。
 	 */
-	currentURI:,
+	currentURI:null,
  
 	/**
 	    型: nsIDocShell 
 	    この読み取り専用のプロパティは document の nsIDocShell オブジェクトを含みます。
 	 */
-	docShell:,
+	docShell:null,
  
 	/**
 	    型: nsIDocumentCharsetInfo 
 	    この読み取り専用のプロパティは document の nsIDocumentCharsetInfo オブジェクトを含みます。このオブジェクトは document の表示に使用される文字セットを扱うために使用します。
 	 */
-	documentCharsetInfo:,
+	documentCharsetInfo:null,
  
 	/**
+	 * @type String
 	    型: ホームページ URL の文字列 
 	    このプロパティはユーザのホームページ設定の値を保持します。 
 	 */
-	homePage:,
+	homePage:null,
 
 	/**
 	    型: nsIMarkupDocumentViewer 
 	    この読み取り専用のプロパティは、document を描画する nsIMarkupDocumentViewer を含みます。 
 	 */
-	markupDocumentViewer:,
+	markupDocumentViewer:null,
 
 	/**
 	    型: nsISecureBrowserUI 
 	    この読み取り専用のプロパティは、読み込まれた document のセキュリティレベルを決定するオブジェクトを含みます。 
 	 */
-	securityUI:,
+	securityUI:null,
 
 	/**
 	    型: browser 要素 
 	    この読み取り専用のプロパティは、現在表示されている browser 要素を返します。 
 	 */
-	selectedBrowser:,
+	selectedBrowser:null,
 
 	/**
 	    型: tab 要素 
 	    現在選択されたタブへの参照。これは常に tabs 要素内の tab 要素の一つになります。現在選択されたタブを変更するには、このプロパティに値を割り当ててください。 
 
 	 */
-	selectedTab:,
+	selectedTab:null,
 	
 	/**
 	    型: nsISHistory 
 	    この読み取り専用のプロパティは、セッション履歴を保持する nsISHistory オブジェクトを含みます。
 	 */
-	sessionHistory:,
+	sessionHistory:null,
  
 	/**
 	    型: tabs 要素 
 	    tab を含む tabs 要素を返します。 
 	 */
-	tabContainer:,
+	tabContainer:null,
 
 	/**
 	    型: nsIWebBrowserFind 
 	    この読み取り専用のプロパティは、document 内のテキストの検索に使用することができる nsIWebBrowserFind オブジェクトを含みます。 
 	 */
-	webBrowserFind:,
+	webBrowserFind:null,
 
 	
 	/**
 	    型: nsIWebNavigation 
 	    この読み取り専用のプロパティは document の nsIWebNavigation オブジェクトを含みます。このメソッドのほとんどは、goBack() や goForward() のように要素自身から直接呼び出せます。また、reloadWithFlags() および loadURIWithFlags() によって使用される読み込み定数を含みます。 
 	 */
-	webNavigation:,
+	webNavigation:null,
  
 	
 	/**
@@ -208,53 +210,65 @@ var gBrowser = {
 	 *   型: nsIWebProgress 
 	 *   この読み取り専用のプロパティは、document 読み込みの進捗を監視する nsIWebProgress オブジェクトを含みます。 
 	 */
-	webProgress:,
+	webProgress:null,
 
 	
 	//メソッド
 	//XUL 要素からの継承
-	blur:function(), 
-	click:function(), 
-	doCommand:function(), 
-	focus:function(), 
-	getElementsByAttribute:function(),
-	getElementsByAttributeNS:function(),
+	blur:function(){}, 
+	click:function(){}, 
+	doCommand:function(){}, 
+	focus:function(){}, 
+	
+	/**
+	 * 
+	 * var elems=document.getElementsByAttribute("checked","true");
+	 * 戻り値の型: DOM NodeList
+	 * 
+	 */
+	getElementsByAttribute:function(attrib, value){},
+	
+	/**
+	 * 
+	 * Return type: DOM NodeList
+	 */
+	getElementsByAttributeNS:function(ns, attrib, value){},
 	
 	//DOM 要素からの継承
-	addEventListener:null, 
-	appendChild:null, 
-	compareDocumentPosition:null, 
-	dispatchEvent:null, 
-	getAttribute:null, 
-	getAttributeNode:null, 
-	getAttributeNodeNS:null, 
-	getAttributeNS:null, 
-	getElementsByTagName:null, 
-	getElementsByTagNameNS:null, 
-	getFeature:null, 
-	getUserData:null, 
-	hasAttribute:null, 
-	hasAttributeNS:null, 
-	hasAttributes:null, 
-	hasChildNodes:null, 
-	insertBefore:null, 
-	isEqualNode:null, 
-	isSameNode:null, 
-	isSupported:null, 
-	lookupNamespaceURI:null, 
-	lookupPrefix,
-	normalize:null, 
-	removeAttribute:null, 
-	removeAttributeNode:null, 
-	removeAttributeNS:null, 
-	removeChild:null, 
-	removeEventListener:null, 
-	replaceChild:null, 
-	setAttribute:null, 
-	setAttributeNode:null, 
-	setAttributeNodeNS:null, 
-	setAttributeNS:null, 
-	setUserData:null, 
+	addEventListener:function(type, listener, useCapture){}, 
+	appendChild:function(appendedNode){}, 
+	compareDocumentPosition:function(){}, 
+	dispatchEvent:function(){}, 
+	getAttribute:function(){}, 
+	getAttributeNode:function(){}, 
+	getAttributeNodeNS:function(){}, 
+	getAttributeNS:function(){}, 
+	getElementsByTagName:function(){}, 
+	getElementsByTagNameNS:function(){}, 
+	getFeature:function(){}, 
+	getUserData:function(){}, 
+	hasAttribute:function(){}, 
+	hasAttributeNS:function(){}, 
+	hasAttributes:function(){}, 
+	hasChildNodes:function(){}, 
+	insertBefore:function(){}, 
+	isEqualNode:function(){}, 
+	isSameNode:function(){}, 
+	isSupported:function(){}, 
+	lookupNamespaceURI:function(){}, 
+	lookupPrefix:function(){},
+	normalize:function(){}, 
+	removeAttribute:function(){}, 
+	removeAttributeNode:function(){}, 
+	removeAttributeNS:function(){}, 
+	removeChild:function(){}, 
+	removeEventListener:function(){}, 
+	replaceChild:function(){}, 
+	setAttribute:function(){}, 
+	setAttributeNode:function(){}, 
+	setAttributeNodeNS:function(){}, 
+	setAttributeNS:function(){}, 
+	setUserData:function(){}, 
 	
 	
 	/**

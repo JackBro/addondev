@@ -107,14 +107,14 @@ public class ParserTest {
 		ArrayList<String> jslist = new ArrayList<String>();
 		ScopeManager sm = new ScopeManager();
 
-		{
-			jslist.add("system.js");
-			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
-			Parser parser = new Parser("system.js", sm);
-			parser.parse(src);
-			//JsNode node = parser.root;
-			//node.dump("");
-		}
+//		{
+//			jslist.add("system.js");
+//			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
+//			Parser parser = new Parser("system.js", sm);
+//			parser.parse(src);
+//			//JsNode node = parser.root;
+//			//node.dump("");
+//		}
 //		{
 //			String dataxml = "D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.unittest/tmp/text.xml";
 //			JsNode root = NodeSerializer.read(dataxml);
@@ -139,14 +139,14 @@ public class ParserTest {
 //			//node.dump("");
 //		}
 
-		{
-			jslist.add("firefox.js");
-			String src = getSource(ParserTest.class.getResourceAsStream("firefox.js"));					
-			Parser parser = new Parser("firefox.js", sm);
-			parser.parse(src);
-			JsNode node = parser.root;
-			node.dump("");
-		}
+//		{
+//			jslist.add("firefox.js");
+//			String src = getSource(ParserTest.class.getResourceAsStream("firefox.js"));					
+//			Parser parser = new Parser("firefox.js", sm);
+//			parser.parse(src);
+//			JsNode node = parser.root;
+//			node.dump("");
+//		}
 		{
 
 			//jslist.add("xpcom.js");

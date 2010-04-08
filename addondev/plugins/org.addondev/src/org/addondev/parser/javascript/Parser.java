@@ -84,6 +84,7 @@ public class Parser {
 
 	private void cloneChildNode(JsNode srcNode, JsNode distNode) {
 		JsNode[] srcChildNodes = srcNode.getChildNodes();
+		distNode.getSymbalTable().clear();
 		for (JsNode node : srcChildNodes) {
 			distNode.addChildNode(node.getClone(distNode));
 		}
@@ -506,6 +507,8 @@ public class Parser {
 				// }
 				// node = new JsNode(null, EnumNode.OBJECT, "", 0);
 				cloneChildNode(prototypenode, parent);
+			}else{
+				cloneChildNode(tnode, parent);
 			}
 			advanceToken(')');
 			getToken(); // skip ')'

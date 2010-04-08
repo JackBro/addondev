@@ -1,4 +1,10 @@
-﻿http://jsonic.sourceforge.jp/
+﻿package org.mozilla.interfaces;
+
+public interface nsIBase extends nsIDOMXULElement, nsIDOMNSElement, nsIDOM3Node {
+
+}
+
+http://jsonic.sourceforge.jp/
 
 //const Cc = Components.classes;
 //const Ci = Components.interfaces;
