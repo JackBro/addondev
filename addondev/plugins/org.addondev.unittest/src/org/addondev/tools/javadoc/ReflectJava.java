@@ -78,7 +78,7 @@ public class ReflectJava {
 					}
 				}
 
-				// Methods
+				// Methods				
 				Method[] methList = cls.getMethods();
 				for (int i = 0; i < methList.length; i++) {
 					Method m = methList[i];
@@ -117,7 +117,14 @@ public class ReflectJava {
 						}	
 						else
 						{
-							//throw new IllegalArgumentException("Methods : not find key : " + fname);
+							String jspropname = jsdocelm.getName();
+							String jstype = jsdocelm.getNodeType();
+							jsdocelm.setName(jspropname);
+							jsdocelm.setNodeType(jstype);
+							
+							//String returntype = getReturnType(jsdocelm.getReturntype());
+							//jsdocelm.setReturntype(returntype);
+							classdata.addElement(jsdocelm);	
 						}
 						
 //						String returntype = getReturnType(m.getReturnType());
@@ -186,6 +193,41 @@ public class ReflectJava {
 		else
 		{
 			return type.getName();
+		}
+	}
+	
+	private String getReturnType(String type)
+	{
+		if(type.equals("java.lang.String")
+				|| type.equals("char"))
+		{
+			return "String";
+		}
+		else if(type.equals("int") 
+				|| type.equals("long")
+				|| type.equals("double")
+				|| type.equals("float")
+		)
+		{
+			return "Number";
+		}
+		else if(type.equals("void"))
+		{
+			return null;
+		}
+		else if(type.equals("boolean"))
+		{
+			return "Boolen";
+		}
+		else if(type.startsWith("org.mozilla.interfaces."))
+		{
+			int index = type.lastIndexOf(".");
+			String n = type.substring(index+1);
+			return n;
+		}
+		else
+		{
+			return type;
 		}
 	}
 

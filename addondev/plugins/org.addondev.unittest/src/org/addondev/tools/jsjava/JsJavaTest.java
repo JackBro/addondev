@@ -20,6 +20,8 @@ import com.sun.javadoc.RootDoc;
 
 public class JsJavaTest {
 	
+	//nsIGlobalHistory.java, nsISupports.java, nsIFind.java
+	
 	/**
 	 * @param args
 	 */

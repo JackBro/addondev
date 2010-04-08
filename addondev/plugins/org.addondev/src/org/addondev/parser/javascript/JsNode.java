@@ -105,7 +105,8 @@ public class JsNode {
 	
 	public void addChildNode(JsNode node)
 	{
-		fSymbalTable.put(node.getName(), node);
+		if(!fSymbalTable.containsKey(node))
+			fSymbalTable.put(node.getName(), node);
 	}
 	
 	public JsNode getParent()

@@ -1,623 +1,464 @@
 var document = 
 {	
-	ATTRIBUTE_NODE:2,
-	CDATA_SECTION_NODE:4,
-	COMMENT_NODE:8,
-	DOCUMENT_FRAGMENT_NODE:11,
-	DOCUMENT_NODE:9,
-	DOCUMENT_POSITION_CONTAINED_BY:16,
-	DOCUMENT_POSITION_CONTAINS:8,
-	DOCUMENT_POSITION_DISCONNECTED:1,
-	DOCUMENT_POSITION_FOLLOWING:4,
-	DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC:32,
-	DOCUMENT_POSITION_PRECEDING:2,
-	DOCUMENT_TYPE_NODE:10,
-	ELEMENT_NODE:1,
-	ENTITY_NODE:6,
-	ENTITY_REFERENCE_NODE:5,
-	NOTATION_NODE:12,
-	PROCESSING_INSTRUCTION_NODE:7,
-	TEXT_NODE:3,
-	activeElement:[object HTMLInputElement],
-	attributes:null,
-	baseURI:,
-	characterSet:UTF-8,
-	childNodes:[object NodeList],
-	commandDispatcher:[object XULCommandDispatcher],
-	contentType:application/vnd.mozilla.xul+xml,
-	defaultView:[object ChromeWindow],
-	dir:ltr,
-	doctype:null,
-	documentElement:[object XULElement],
-	documentURI:chrome://browser/content/browser.xul,
-	firstChild:[object XMLStylesheetProcessingInstruction],
-	height:718,
-	implementation:[object DOMImplementation],
-	inputEncoding:UTF-8,
-	lastChild:[object XULElement],
-	lastModified:04/07/2010 17:08:26,
-	lastStyleSheetSet:null,
-	localName:null,
-	namespaceURI:null,
-	nextSibling:null,
-	nodeName:#document,
-	nodeType:9,
-	nodeValue:null,
-	ownerDocument:null,
-	parentNode:null,
-	popupNode:null,
-	popupRangeOffset:0,
-	popupRangeParent:null,
-	preferredStyleSheetSet:,
-	prefix:null,
-	previousSibling:null,
-	readyState:complete,
-	referrer:,
-	selectedStyleSheetSet:,
-	strictErrorChecking:true,
-	styleSheetSets:[object DOMStringList],
-	styleSheets:[object StyleSheetList],
-	textContent:null,
-	title:Mozilla Firefox,
-	tooltipNode:null,
-	width:719,
-	xmlEncoding:null,
-	xmlStandalone:false,
-	xmlVersion:1.0,
-	addBinding:function (){},
-	addBroadcastListenerFor:function (){},
-	addEventListener:function (){},
-	adoptNode:function (){},
-	appendChild:function (){},
-	cloneNode:function (){},
-	compareDocumentPosition:function (){},
-	createAttribute:function (){},
-	createAttributeNS:function (){},
-	createCDATASection:function (){},
-	createComment:function (){},
-	createDocumentFragment:function (){},
-	createElement:function (){},
-	createElementNS:function (){},
-	createEntityReference:function (){},
-	createEvent:function (){},
-	createExpression:function (){},
-	createNSResolver:function (){},
-	createNodeIterator:function (){},
-	createProcessingInstruction:function (){},
-	createRange:function (){},
-	createTextNode:function (){},
-	createTreeWalker:function (){},
-	dispatchEvent:function (){},
-	elementFromPoint:function (){},
-	enableStyleSheetsForSet:function (){},
-	evaluate:function (){},
-	getAnonymousElementByAttribute:function (){},
-	getAnonymousNodes:function (){},
-	getBindingParent:function (){},
-	getBoxObjectFor:function (){},
-	getElementById:function (){},
-	getElementsByAttribute:function (){},
-	getElementsByAttributeNS:function (){},
-	getElementsByClassName:function (){},
-	getElementsByTagName:function (){},
-	getElementsByTagNameNS:function (){},
-	getFeature:function (){},
-	getUserData:function (){},
-	hasAttributes:function (){},
-	hasChildNodes:function (){},
-	hasFocus:function (){},
-	importNode:function (){},
-	insertBefore:function (){},
-	isDefaultNamespace:function (){},
-	isEqualNode:function (){},
-	isSameNode:function (){},
-	isSupported:function (){},
-	loadBindingDocument:function (){},
-	loadOverlay:function (){},
-	lookupNamespaceURI:function (){},
-	lookupPrefix:function (){},
-	normalize:function (){},
-	normalizeDocument:function (){},
-	persist:function (){},
-	querySelector:function (){},
-	querySelectorAll:function (){},
-	removeBinding:function (){},
-	removeBroadcastListenerFor:function (){},
-	removeChild:function (){},
-	removeEventListener:function (){},
-	renameNode:function (){},
-	replaceChild:function (){},
-	setUserData:function (){},
-}
 
-var browser =
-{
-	ATTRIBUTE_NODE:2,
-	CDATA_SECTION_NODE:4,
-	COMMENT_NODE:8,
-	DOCUMENT_FRAGMENT_NODE:11,
-	DOCUMENT_NODE:9,
-	DOCUMENT_POSITION_CONTAINED_BY:16,
-	DOCUMENT_POSITION_CONTAINS:8,
-	DOCUMENT_POSITION_DISCONNECTED:1,
-	DOCUMENT_POSITION_FOLLOWING:4,
-	DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC:32,
-	DOCUMENT_POSITION_PRECEDING:2,
-	DOCUMENT_TYPE_NODE:10,
-	ELEMENT_NODE:1,
-	ENTITY_NODE:6,
-	ENTITY_REFERENCE_NODE:5,
-	NOTATION_NODE:12,
-	PROCESSING_INSTRUCTION_NODE:7,
-	TEXT_NODE:3,
-	_AUTOSCROLL_SNAP:10,
-	_AUTOSCROLL_SPEED:3,
-	_autoScrollNeedsCleanup:false,
-	_autoScrollPopup:null,
-	_autoScrollTimer:null,
-	_contentWindow:[object XPCNativeWrapper [object Window]],
-	_docShell:[xpconnect wrapped (nsISupports, nsIDocShell, nsIInterfaceRequestor, nsIWebNavigation, nsIWebProgress, nsIDocShellHistory, nsIDocumentLoader, nsIRequestObserver)],
-	_fastFind:[xpconnect wrapped nsITypeAheadFind],
-	_mStrBundle:null,
-	_screenX:null,
-	_screenY:null,
-	_scrollingView:null,
-	_startX:null,
-	_startY:null,
-	_userTypedValue:null,
-	_webBrowserFind:null,
-	_webNavigation:[xpconnect wrapped (nsISupports, nsIDocShell, nsIInterfaceRequestor, nsIWebNavigation, nsIWebProgress, nsIDocShellHistory, nsIDocumentLoader, nsIRequestObserver)],
-	accessibleType:1,
-	align:,
-	allowEvents:false,
-	attributes:[object NamedNodeMap],
-	autoscrollEnabled:true,
-	baseURI:chrome://browser/content/browser.xul,
-	boxObject:[object BoxObject],
-	builder:null,
-	canGoBack:false,
-	canGoForward:false,
-	childElementCount:0,
-	childNodes:[object NodeList],
-	children:[object HTMLCollection],
-	chrome:[object Object],
-	classList:,
-	className:,
-	clientHeight:301,
-	clientLeft:0,
-	clientTop:0,
-	clientWidth:799,
-	collapsed:false,
-	contentDocument:[object XPCNativeWrapper [object HTMLDocument]],
-	contentPrincipal:[object XPCNativeWrapper [xpconnect wrapped (nsISupports, nsIPrincipal, nsISerializable)]],
-	contentTitle:Mozilla Firefox スタートページ,
-	contentViewerEdit:[xpconnect wrapped (nsISupports, nsIContentViewer, nsIMarkupDocumentViewer, nsIContentViewerEdit)],
-	contentViewerFile:[xpconnect wrapped (nsISupports, nsIContentViewer, nsIMarkupDocumentViewer, nsIContentViewerEdit, nsIContentViewerFile)],
-	contentWindow:[object XPCNativeWrapper [object Window]],
-	contextMenu:contentAreaContextMenu,
-	controllers:[object XULControllers],
-	currentURI:[xpconnect wrapped nsIURI],
-	database:null,
-	datasources:,
-	dir:,
-	docShell:[xpconnect wrapped (nsISupports, nsIDocShell, nsIInterfaceRequestor, nsIWebNavigation, nsIWebProgress, nsIDocShellHistory, nsIDocumentLoader, nsIRequestObserver)],
-	documentCharsetInfo:[xpconnect wrapped nsIDocumentCharsetInfo],
-	engines:null,
-	fastFind:[xpconnect wrapped nsITypeAheadFind],
-	feeds:null,
-	firstChild:null,
-	firstElementChild:null,
-	flex:1,
-	flexGroup:,
-	frameListener:[object Object],
-	height:,
-	hidden:false,
-	homePage:http://www.mozilla.org/,
-	id:,
-	isShowingMessage:false,
-	isSystemPage:undefined,
-	lastChild:null,
-	lastElementChild:null,
-	lastURI:[xpconnect wrapped nsIURI],
-	left:,
-	localName:browser,
-	mAtomService:[xpconnect wrapped nsIAtomService],
-	mDestroyed:false,
-	mDragDropHandler:[xpconnect wrapped nsIDragDropHandler],
-	mFormFillAttached:true,
-	mIconURL:http://www.google.co.jp/favicon.ico,
-	mPrefs:[xpconnect wrapped nsIPrefBranch],
-	mStrBundle:[xpconnect wrapped nsIStringBundle],
-	markupDocumentViewer:[xpconnect wrapped (nsISupports, nsIContentViewer, nsIMarkupDocumentViewer)],
-	maxHeight:,
-	maxWidth:,
-	menu:,
-	minHeight:,
-	minWidth:,
-	missingPlugins:null,
-	namespaceURI:http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul,
-	nextElementSibling:null,
-	nextSibling:null,
-	nodeName:xul:browser,
-	nodeType:1,
-	nodeValue:null,
-	observes:,
-	ordinal:,
-	orient:,
-	ownerDocument:[object XULDocument],
-	pack:,
-	pageReport:null,
-	parentNode:[object XULElement],
-	persist:,
-	preferences:[xpconnect wrapped (nsISupports, nsIPrefBranch2, nsIPrefService, nsIPrefBranch)],
-	prefix:xul,
-	previousElementSibling:null,
-	previousSibling:null,
-	ref:,
-	resource:null,
-	scrollHeight:301,
-	scrollLeft:0,
-	scrollTop:0,
-	scrollWidth:799,
-	securityUI:[xpconnect wrapped (nsISupports, nsISecureBrowserUI, nsISSLStatusProvider)],
-	sessionHistory:[xpconnect wrapped nsISHistory],
-	showFirebug:true,
-	statusText:,
-	style:[object CSSStyleDeclaration],
-	tagName:xul:browser,
-	textContent:,
-	tooltip:aHTMLTooltip,
-	tooltipText:,
-	top:,
-	userTypedClear:0,
-	userTypedValue:null,
-	webBrowserFind:[xpconnect wrapped nsIWebBrowserFind],
-	webNavigation:[xpconnect wrapped (nsISupports, nsIDocShell, nsIInterfaceRequestor, nsIWebNavigation, nsIWebProgress, nsIDocShellHistory, nsIDocumentLoader, nsIRequestObserver)],
-	webProgress:[xpconnect wrapped (nsISupports, nsIDocShell, nsIInterfaceRequestor, nsIWebNavigation, nsIWebProgress, nsIDocShellHistory, nsIDocumentLoader, nsIRequestObserver)],
-	width:,
-	_accelerate:function (curr, start){},
-	_createAutoScrollPopup:function (){},
-	_roundToZero:function (num){},
-	addEventListener:function (){},
-	addProgressListener:function (aListener){},
-	appendChild:function (){},
-	attachFormFill:function (){},
-	autoScrollLoop:function (){},
-	blur:function (){},
-	click:function (){},
-	cloneNode:function (){},
-	compareDocumentPosition:function (){},
-	destroy:function (){},
-	detachFormFill:function (){},
-	dispatchEvent:function (){},
-	doCommand:function (){},
-	findChildShell:function (aDocShell, aSoughtURI){},
-	focus:function (){},
-	getAttribute:function (){},
-	getAttributeNS:function (){},
-	getAttributeNode:function (){},
-	getAttributeNodeNS:function (){},
-	getBoundingClientRect:function (){},
-	getClientRects:function (){},
-	getElementsByAttribute:function (){},
-	getElementsByAttributeNS:function (){},
-	getElementsByClassName:function (){},
-	getElementsByTagName:function (){},
-	getElementsByTagNameNS:function (){},
-	getFeature:function (){},
-	getTabBrowser:function (){},
-	getUserData:function (){},
-	goBack:function (){},
-	goForward:function (){},
-	goHome:function (){},
-	gotoIndex:function (aIndex){},
-	handleEvent:function (aEvent){},
-	hasAttribute:function (){},
-	hasAttributeNS:function (){},
-	hasAttributes:function (){},
-	hasChildNodes:function (){},
-	insertBefore:function (){},
-	isAutoscrollBlocker:function (node){},
-	isDefaultNamespace:function (){},
-	isEqualNode:function (){},
-	isSameNode:function (){},
-	isSupported:function (){},
-	loadURI:function (aURI, aReferrerURI, aCharset){},
-	loadURIWithFlags:function (aURI, aFlags, aReferrerURI, aCharset, aPostData){},
-	lookupNamespaceURI:function (){},
-	lookupPrefix:function (){},
-	mozMatchesSelector:function (){},
-	normalize:function (){},
-	observe:function (aSubject, aTopic, aState){},
-	onPageHide:function (aEvent){},
-	onPageShow:function (aEvent){},
-	onPopupBlocked:function (evt){},
-	querySelector:function (){},
-	querySelectorAll:function (){},
-	reload:function (){},
-	reloadWithFlags:function (aFlags){},
-	removeAttribute:function (){},
-	removeAttributeNS:function (){},
-	removeAttributeNode:function (){},
-	removeChild:function (){},
-	removeEventListener:function (){},
-	removeProgressListener:function (aListener){},
-	replaceChild:function (){},
-	setAttribute:function (){},
-	setAttributeNS:function (){},
-	setAttributeNode:function (){},
-	setAttributeNodeNS:function (){},
-	setUserData:function (){},
-	startScroll:function (event){},
-	stop:function (){},
-	stopScroll:function (){},
-	swapDocShells:function (aOtherBrowser){},
-	updatePageReport:function (){}
-}
+};
 
-var gBrowser =
-{
-	ATTRIBUTE_NODE:2,
-	CDATA_SECTION_NODE:4,
-	COMMENT_NODE:8,
-	DOCUMENT_FRAGMENT_NODE:11,
-	DOCUMENT_NODE:9,
-	DOCUMENT_POSITION_CONTAINED_BY:16,
-	DOCUMENT_POSITION_CONTAINS:8,
-	DOCUMENT_POSITION_DISCONNECTED:1,
-	DOCUMENT_POSITION_FOLLOWING:4,
-	DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC:32,
-	DOCUMENT_POSITION_PRECEDING:2,
-	DOCUMENT_TYPE_NODE:10,
-	ELEMENT_NODE:1,
-	ENTITY_NODE:6,
-	ENTITY_REFERENCE_NODE:5,
-	NOTATION_NODE:12,
-	PROCESSING_INSTRUCTION_NODE:7,
-	TEXT_NODE:3,
-	_autoScrollPopup:[object XULElement],
-	_blockDblClick:false,
-	_browsers:[object XULElement],
-	_fastFind:[xpconnect wrapped nsITypeAheadFind],
-	_keyEventHandler:[object Object],
-	_lastRelatedTab:null,
-	_previewMode:false,
-	_removingTabs:,
-	_supportedLinkDropTypes:"", //text/x-moz-url,text/uri-list,text/plain,application/x-moz-file,
-	_windowIsClosing:false,
-	align:null,
-	allowEvents:false,
-	arrowKeysShouldWrap:false,
-	attributes:[object NamedNodeMap],
-	baseURI:chrome://browser/content/browser.xul,
-	boxObject:[object BoxObject],
-	browsers:[object XULElement],
-	builder:null,
-	canGoBack:false,
-	canGoForward:false,
-	childElementCount:1,
-	childNodes:[object NodeList],
-	children:[object HTMLCollection],
-	classList:null,
-	className:null,
-	clientHeight:330,
-	clientLeft:0,
-	clientTop:0,
-	clientWidth:799,
-	collapsed:false,
-	contentDocument:[object XPCNativeWrapper [object HTMLDocument]],
-	contentPrincipal:[object XPCNativeWrapper [xpconnect wrapped (nsISupports, nsIPrincipal, nsISerializable)]],
-	contentTitle:"",//Mozilla Firefox スタートページ,
-	contentViewerEdit:[xpconnect wrapped (nsISupports, nsIContentViewer, nsIMarkupDocumentViewer, nsIContentViewerEdit)],
-	contentViewerFile:[xpconnect wrapped (nsISupports, nsIContentViewer, nsIMarkupDocumentViewer, nsIContentViewerEdit, nsIContentViewerFile)],
-	contentWindow:[object XPCNativeWrapper [object Window]],
-	contextMenu:,
-	controllers:[object XULControllers],
-	currentURI:[xpconnect wrapped nsIURI],
-	database:null,
-	datasources:null,
-	dir:null,
-	docShell:[xpconnect wrapped (nsISupports, nsIDocShell, nsIInterfaceRequestor, nsIWebNavigation, nsIWebProgress, nsIDocShellHistory, nsIRequestObserver, nsIDocumentLoader)],
-	documentCharsetInfo:[xpconnect wrapped nsIDocumentCharsetInfo],
-	fastFind:[xpconnect wrapped nsITypeAheadFind],
-	firstChild:[object XULElement],
-	firstElementChild:[object XULElement],
-	flex:1,
-	flexGroup:null,
-	height:0,
-	hidden:false,
-	homePage:http://www.mozilla.org/,
-	id:content,
-	lastChild:[object XULElement],
-	lastElementChild:[object XULElement],
-	left:0,
-	localName:tabbrowser,
-	mAddProgressListenerWasCalled:true,
-	mContextTab:null,
-	mCurrentBrowser:[object XULElement],
-	mCurrentTab:[object XULElement],
-	mDragOverDelay:350,
-	mDragTime:0,
-	mFaviconService:[xpconnect wrapped nsIFaviconService],
-	mIsBusy:false,
-	mPanelContainer:[object XULElement],
-	mPrefs:[xpconnect wrapped nsIPrefBranch],
-	mProgressListeners:[object Object],[object Object],[object Object],
-	mStringBundle:[object XULElement],
-	mStrip:[object XULElement],
-	mTabBox:[object XULElement],
-	mTabContainer:[object XULElement],
-	mTabDropIndicatorBar:[object XULElement],
-	mTabFilters:[xpconnect wrapped nsIWebProgress],
-	mTabListeners:[object Object],
-	mTabbedMode:true,
-	mTabs:[object NodeList],
-	mTabsProgressListeners:[object Object],
-	mURIFixup:[xpconnect wrapped nsIURIFixup],
-	mUndoCloseTabMenuItem:[object XULElement],
-	markupDocumentViewer:[xpconnect wrapped (nsISupports, nsIContentViewer, nsIMarkupDocumentViewer)],
-	maxHeight:0,
-	maxWidth:0,
-	menu:null,
-	minHeight:0,
-	minWidth:0,
-	namespaceURI:"", //http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul,
-	nextElementSibling:[object XULElement],
-	nextSibling:[object XULElement],
-	nodeName:tabbrowser,
-	nodeType:1,
-	nodeValue:null,
-	observes:null,
-	ordinal:null,
-	orient:null,
-	ownerDocument:[object XULDocument],
-	pack:null,
-	pageReport:null,
-	parentNode:[object XULElement],
-	persist:null,
-	prefix:null,
-	previousElementSibling:null,
-	previousSibling:null,
-	ref:null,
-	resource:[xpconnect wrapped nsIRDFResource],
-	scrollHeight:330,
-	scrollLeft:0,
-	scrollTop:0,
-	scrollWidth:799,
-	securityUI:[xpconnect wrapped (nsISupports, nsISecureBrowserUI, nsISSLStatusProvider)],
-	selectedBrowser:[object XULElement],
-	selectedTab:[object XULElement],
-	sessionHistory:[xpconnect wrapped nsISHistory],
-	statusText:,
-	style:[object CSSStyleDeclaration],
-	tabContainer:[object XULElement],
-	tagName:tabbrowser,
-	textContent:"",
-	tooltip:"",
-	tooltipText:"",
-	top:0,
-	userTypedClear:0,
-	userTypedValue:null,
-	webBrowserFind:[xpconnect wrapped nsIWebBrowserFind],
-	webNavigation:[xpconnect wrapped (nsISupports, nsIDocShell, nsIInterfaceRequestor, nsIWebNavigation, nsIWebProgress, nsIDocShellHistory, nsIRequestObserver, nsIDocumentLoader)],
-	webProgress:[xpconnect wrapped (nsISupports, nsIDocShell, nsIInterfaceRequestor, nsIWebNavigation, nsIWebProgress, nsIDocShellHistory, nsIRequestObserver, nsIDocumentLoader)],
+
+var gBrowser = {
+
+	//プロパティ
+	//XUL 要素からの継承
+	align:null, 
+	allowEvents:null, 
+	boxObject:null, 
+	builder:null, 
+	className:null, 
+	collapsed:null, 
+	contextMenu:null, 
+	controllers:null, 
+	database:null, 
+	datasources:null, 
+	dir:null, 
+	flex:null, 
+	height:null, 
+	hidden:null, 
+	id:null, 
+	left:null, 
+	maxHeight:null, 
+	maxWidth:null, 
+	menu:null, 
+	minHeight:null, 
+	minWidth:null, 
+	observes:null, 
+	ordinal:null, 
+	orient:null, 
+	pack:null, 
+	persist:null, 
+	ref:null, 
+	resource:null, 
+	statusText:null, 
+	style:null, 
+	tooltip:null, 
+	tooltipText:null, 
+	top:null, 
 	width:0,
 	
-	_beginRemoveTab:function (aTab, aTabWillBeMoved, aCloseWindowWithLastTab, aCloseWindowFastpath){},
-	_blurTab:function (aTab){},
-	_endRemoveTab:function (args){},
-	_onDragEnd:function (aEvent){},
-	_onDragLeave:function (aEvent){},
-	_onDragOver:function (aEvent){},
-	_onDragStart:function (aEvent){},
-	_onDrop:function (aEvent){},
-	_setEffectAllowedForDataTransfer:function (aEvent){},
-	addEventListener:function (){},
-	addProgressListener:function (aListener, aMask){},
-	addTab:function (aURI, aReferrerURI, aCharset, aPostData, aOwner, aAllowThirdPartyFixup){},
-	addTabsProgressListener:function (aListener){},
-	appendChild:function (){},
-	attachFormFill:function (){},
-	blur:function (){},
-	click:function (){},
-	cloneNode:function (){},
-	compareDocumentPosition:function (){},
-	createTooltip:function (event){},
-	detachFormFill:function (){},
-	dispatchEvent:function (){},
-	doCommand:function (){},
-	dragDropSecurityCheck:function (aEvent, aDragSession, aUri){},
-	duplicateTab:function (aTab){},
-	enterTabbedMode:function (){},
-	focus:function (){},
-	getAttribute:function (){},
-	getAttributeNS:function (){},
-	getAttributeNode:function (){},
-	getAttributeNodeNS:function (){},
-	getBoundingClientRect:function (){},
-	getBrowserAtIndex:function (aIndex){},
-	getBrowserForDocument:function (aDocument){},
-	getBrowserForTab:function (aTab){},
-	getBrowserIndexForDocument:function (aDocument){},
-	getClientRects:function (){},
-	getElementsByAttribute:function (){},
-	getElementsByAttributeNS:function (){},
-	getElementsByClassName:function (){},
-	getElementsByTagName:function (){},
-	getElementsByTagNameNS:function (){},
-	getFeature:function (){},
-	getNewIndex:function (aEvent){},
-	getNotificationBox:function (aBrowser){},
-	getStripVisibility:function (){},
-	getUserData:function (){},
-	goBack:function (){},
-	goForward:function (){},
-	goHome:function (){},
-	gotoIndex:function (aIndex){},
-	hasAttribute:function (){},
-	hasAttributeNS:function (){},
-	hasAttributes:function (){},
-	hasChildNodes:function (){},
-	insertBefore:function (){},
-	isDefaultNamespace:function (){},
-	isEqualNode:function (){},
-	isFailedIcon:function (aURI){},
-	isSameNode:function (){},
-	isSupported:function (){},
-	loadOneTab:function (aURI, aReferrerURI, aCharset, aPostData, aLoadInBackground, aAllowThirdPartyFixup){},
-	loadTabs:function (aURIs, aLoadInBackground, aReplace){},
-	loadURI:function (aURI, aReferrerURI, aCharset){},
-	loadURIWithFlags:function (aURI, aFlags, aReferrerURI, aCharset, aPostData){},
-	lookupNamespaceURI:function (){},
-	lookupPrefix:function (){},
-	mTabProgressListener:function (aTab, aBrowser, aStartsBlank){},
-	moveTabBackward:function (){},
-	moveTabForward:function (){},
-	moveTabOver:function (aEvent){},
-	moveTabTo:function (aTab, aIndex){},
-	moveTabToEnd:function (){},
-	moveTabToStart:function (){},
-	mozMatchesSelector:function (){},
-	normalize:function (){},
-	onTabBarDblClick:function (aEvent){},
-	onTabClick:function (event){},
-	onTitleChanged:function (evt){},
-	previewTab:function (aTab, aCallback){},
-	querySelector:function (){},
-	querySelectorAll:function (){},
-	reload:function (){},
-	reloadAllTabs:function (){},
-	reloadTab:function (aTab){},
-	reloadWithFlags:function (aFlags){},
-	removeAllTabsBut:function (aTab){},
-	removeAttribute:function (){},
-	removeAttributeNS:function (){},
-	removeAttributeNode:function (){},
-	removeChild:function (){},
-	removeCurrentTab:function (){},
-	removeEventListener:function (){},
-	removeProgressListener:function (aListener){},
-	removeTab:function (aTab){},
-	removeTabsProgressListener:function (aListener){},
-	replaceChild:function (){},
-	replaceTabWithWindow:function (aTab){},
-	selectTabAtIndex:function (aIndex, aEvent){},
-	setAttribute:function (){},
-	setAttributeNS:function (){},
-	setAttributeNode:function (){},
-	setAttributeNodeNS:function (){},
-	setIcon:function (aTab, aURI){},
-	setStripVisibilityTo:function (aShow){},
-	setTabTitle:function (aTab){},
-	setTabTitleLoading:function (aTab){},
-	setUserData:function (){},
-	shouldLoadFavIcon:function (aURI){},
-	stop:function (){},
-	swapBrowsersAndCloseOther:function (aOurTab, aOtherTab){},
-	updateCurrentBrowser:function (aForceUpdate){},
-	updateIcon:function (aTab){},
-	updatePopupMenu:function (aPopupMenu){},
-	updateTitlebar:function (){},
-	useDefaultIcon:function (aTab){},
-	warnAboutClosingTabs:function (aAll){}
-}
+	//DOM 要素からの継承
+	attributes :null, 
+	baseURI :null, 
+	childElementCount :null, 
+	childNodes :null, 
+	children :null, 
+	clientHeight :null, 
+	clientLeft :null, 
+	clientTop :null, 
+	clientWidth :null, 
+	firstChild :null, 
+	firstElementChild :null, 
+	lastChild :null, 
+	lastElementChild :null, 
+	localName :null, 
+	namespaceURI :null, 
+	nextElementSibling :null, 
+	nextSibling :null, 
+	nodeName :null, 
+	nodeType :null, 
+	nodeValue :null, 
+	ownerDocument :null, 
+	parentNode :null, 
+	prefix :null, 
+	previousElementSibling :null, 
+	previousSibling :null, 
+	scrollHeight :null, 
+	scrollLeft :null, 
+	scrollTop :null, 
+	scrollWidth :null, 
+	tagName :null, 
+	textContent:null,
+	
+	/**
+	 *	
+	 *  tabbrowser 内の browser 要素のリストを保持します。 
+	 * 	型: browser 要素のノードリスト 
+	 */
+	browsers;,
+
+	/**
+	 *	@type Boolean
+	 *   型: 論理型 
+	 *   セッション履歴で前のページに移動できるとき、このプロパティは true になり、Back ボタンが有効になります。このプロパティは読み取り専用です。 
+	 */
+	canGoBack:,
+
+	/**
+	 *	@type Boolean
+	    型: 論理型 
+	    セッション履歴で次のページに移動できるとき、このプロパティは true になり、Forward ボタンが有効になります。
+	    このプロパティは読み取り専用です。 
+	 */
+	canGoForward:,
+
+	/**
+	    型: document 
+	    この読み取り専用のプロパティは要素内の document オブジェクトを含みます。 
+	 */
+	contentDocument:,
+
+	/**
+	    型: 文字列型 
+	    この読み取り専用のプロパティは browser 内の document オブジェクトの title を含みます。 
+	 */
+	contentTitle:,
+
+	/**
+	    型: nsIContentViewerEdit 
+	    この読み取り専用のプロパティは、document 上のクリップボード操作を扱う nsIContentViewerEdit を含みます。 
+	 */
+	contentViewerEdit:,
+
+	/**
+	    型: nsIContentViewerEdit 
+	    この読み取り専用のプロパティは、document 上のクリップボード操作を扱う nsIContentViewerEdit を含みます。 
+	 */
+	contentViewerFile:,
+	
+	/**
+	    型: window
+	    この読み取り専用のプロパティは要素内の window オブジェクトを含みます。
+	 */
+	contentWindow:,
+
+	/**
+	    型: nsIURI 
+	    この読み取り専用のプロパティは現在読み込まれている URL を含みます。URL を変更するには loadURI() メソッドを使用してください。
+	 */
+	currentURI:,
+ 
+	/**
+	    型: nsIDocShell 
+	    この読み取り専用のプロパティは document の nsIDocShell オブジェクトを含みます。
+	 */
+	docShell:,
+ 
+	/**
+	    型: nsIDocumentCharsetInfo 
+	    この読み取り専用のプロパティは document の nsIDocumentCharsetInfo オブジェクトを含みます。このオブジェクトは document の表示に使用される文字セットを扱うために使用します。
+	 */
+	documentCharsetInfo:,
+ 
+	/**
+	    型: ホームページ URL の文字列 
+	    このプロパティはユーザのホームページ設定の値を保持します。 
+	 */
+	homePage:,
+
+	/**
+	    型: nsIMarkupDocumentViewer 
+	    この読み取り専用のプロパティは、document を描画する nsIMarkupDocumentViewer を含みます。 
+	 */
+	markupDocumentViewer:,
+
+	/**
+	    型: nsISecureBrowserUI 
+	    この読み取り専用のプロパティは、読み込まれた document のセキュリティレベルを決定するオブジェクトを含みます。 
+	 */
+	securityUI:,
+
+	/**
+	    型: browser 要素 
+	    この読み取り専用のプロパティは、現在表示されている browser 要素を返します。 
+	 */
+	selectedBrowser:,
+
+	/**
+	    型: tab 要素 
+	    現在選択されたタブへの参照。これは常に tabs 要素内の tab 要素の一つになります。現在選択されたタブを変更するには、このプロパティに値を割り当ててください。 
+
+	 */
+	selectedTab:,
+	
+	/**
+	    型: nsISHistory 
+	    この読み取り専用のプロパティは、セッション履歴を保持する nsISHistory オブジェクトを含みます。
+	 */
+	sessionHistory:,
+ 
+	/**
+	    型: tabs 要素 
+	    tab を含む tabs 要素を返します。 
+	 */
+	tabContainer:,
+
+	/**
+	    型: nsIWebBrowserFind 
+	    この読み取り専用のプロパティは、document 内のテキストの検索に使用することができる nsIWebBrowserFind オブジェクトを含みます。 
+	 */
+	webBrowserFind:,
+
+	
+	/**
+	    型: nsIWebNavigation 
+	    この読み取り専用のプロパティは document の nsIWebNavigation オブジェクトを含みます。このメソッドのほとんどは、goBack() や goForward() のように要素自身から直接呼び出せます。また、reloadWithFlags() および loadURIWithFlags() によって使用される読み込み定数を含みます。 
+	 */
+	webNavigation:,
+ 
+	
+	/**
+	 * 
+	 *   型: nsIWebProgress 
+	 *   この読み取り専用のプロパティは、document 読み込みの進捗を監視する nsIWebProgress オブジェクトを含みます。 
+	 */
+	webProgress:,
+
+	
+	//メソッド
+	//XUL 要素からの継承
+	blur:function(), 
+	click:function(), 
+	doCommand:function(), 
+	focus:function(), 
+	getElementsByAttribute:function(),
+	getElementsByAttributeNS:function(),
+	
+	//DOM 要素からの継承
+	addEventListener:null, 
+	appendChild:null, 
+	compareDocumentPosition:null, 
+	dispatchEvent:null, 
+	getAttribute:null, 
+	getAttributeNode:null, 
+	getAttributeNodeNS:null, 
+	getAttributeNS:null, 
+	getElementsByTagName:null, 
+	getElementsByTagNameNS:null, 
+	getFeature:null, 
+	getUserData:null, 
+	hasAttribute:null, 
+	hasAttributeNS:null, 
+	hasAttributes:null, 
+	hasChildNodes:null, 
+	insertBefore:null, 
+	isEqualNode:null, 
+	isSameNode:null, 
+	isSupported:null, 
+	lookupNamespaceURI:null, 
+	lookupPrefix,
+	normalize:null, 
+	removeAttribute:null, 
+	removeAttributeNode:null, 
+	removeAttributeNS:null, 
+	removeChild:null, 
+	removeEventListener:null, 
+	replaceChild:null, 
+	setAttribute:null, 
+	setAttributeNode:null, 
+	setAttributeNodeNS:null, 
+	setAttributeNS:null, 
+	setUserData:null, 
+	
+	
+	/**
+	 *   戻り値の型: 戻り値なし 
+	 *   読み込まれた document を監視する進捗リスナーを browser に追加します。進捗リスナーは nsIWebProgressListener インタフェースを実装しなければなりません。
+	 * 
+	 * 	
+	 */
+	addProgressListener:function( listener ){},
+ 
+	
+	/**
+	 *   戻り値の型: tab 要素 
+	 *   指定した URL のページを読み込む新しいタブを開きます。残りの引数は任意です。必要に応じてタブバーが表示されます。 
+	 *   例は Code snippets:Tabbed browser をご覧ください。 
+	 *   文字列から postData を準備するには Preprocessing POST Data をご覧ください。
+	 */
+	addTab:function( URL, referrerURI, charset, postData, owner, allowThirdPartyFixup ){},
+ 
+	
+	/**
+	    戻り値の型: 戻り値なし 
+	    Firefox では使用不可 
+	    いくつかの新しいタブを既存のタブの次に追加します。
+	    引数は、タブに読み込む各ドキュメントオブジェクトの配列です。
+	    オブジェクトはスクリプトで定義され、読み込むページの URL のURI プロパティを含みます。
+	    referrerURI プロパティは、リファラページを設定するために任意で使用されます。
+	 */
+	appendGroup:function( group ){},
+ 
+	/**
+	    型: browser 要素 
+	    指定した tab index の位置の browser を返します。 
+	 */
+	getBrowserAtIndex:function( index ){},
+
+	/**
+	    戻り値の型: 整数型 
+	    指定した document の browser の index を返します。
+	 */
+	getBrowserIndexForDocument:function( document ){},
+ 
+	/**
+	    型: browser 要素 
+	    指定した document の browser を返します。 
+	 */
+	getBrowserForDocument:function( document ){},
+
+	/**
+	    型: browser 要素 
+	    指定した tab 要素の browser を返します。 
+	 */
+	getBrowserForTab:function( tab ){},
+
+	/**
+	    型: notificationbox 要素 
+	    指定した browser 要素の notificationbox を返します。
+	 */
+	getNotificationBox:function( browser ){},
+ 
+	/**
+	    戻り値の型: 戻り値なし 
+	    履歴内のページを一つ戻ります。 
+	 */
+	goBack:function(){},
+
+	/**
+	    Firefox では使用不可 
+	    戻り値の型: 戻り値なし 
+	    前のタブグループへ戻ります。 
+	 */
+	goBackGroup:function(){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    履歴内のページを一つ進みます。
+	 */
+	goForward:function(){},
+ 
+	/**
+	    Firefox では使用不可 
+	    戻り値の型: 戻り値なし 
+	    次のタブグループへ進みます。 
+	 */
+	goForwardGroup:function(){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    ユーザのホームページを browser に読み込みます。 
+	 */
+	goHome:function(){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    与えられた index を持つ履歴内のページへ移動します。先へ進むには正の整数、前へ戻るには負の整数を使用します。 
+	 */
+	gotoIndex:function( index ){},
+
+	/**
+	    Not in Firefox 
+	    戻り値の型: 最初の tab 
+	    ページのグループを複数のタブに読み込みます。これらは browser.tabs.loadGroup 設定の状態によって、それぞれ追加、または置き換えられます。引数は、タブに読み込む各ドキュメントオブジェクトの配列です。オブジェクトはスクリプトで定義され、読み込むページの URL の URI プロパティを含みます。referrerURI プロパティは、リファラページを設定するために任意で使用されます。この関数は最初に読み込まれたタブへの参照を返します。 
+
+	 */
+	loadGroup:function( group ){},
+	
+	/**
+	    戻り値の型: tab 要素 
+	    指定した URL のページを読み込む新しいタブを開きます。残りの引数は任意です。このメソッドは addTab と同じ動作をしますが、loadInBackground 引数で新しいタブを前面と背面のどちらに開くかを選ぶことができます。また、owner タブは自動的に指定されるため、owner 引数はありません。 
+
+	 */
+	loadOneTab:function( URL, referrerURI, charset, postData, loadInBackground, allowThirdPartyFixup ){},
+	
+	/**
+	    戻り値の型: 戻り値なし 
+	    uris 配列で指定された URI のセットをタブに読み込みます。loadInBackground が true の場合、これらのタブは背面に読み込まれます。replace が true の場合、タブを追加する代わりに、現在表示されているタブが指定した URI に置き換えられます。 
+
+	 */
+	loadTabs:function( uris, loadInBackground, replace ){},
+	
+	/**
+	    戻り値の型: 戻り値なし 
+	    与えられた referrer と charset で URL を document に読み込みます。 
+	 */
+	loadURI:function( uri, referrer, charset ){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    引数に指定した読み込みフラグ(flags) および与えられたリファラ(referrer)、文字セット(charset)、POST データで URL を document に読み込みます。reloadWithFlags() メソッドで許可されたフラグに加え、次のフラグも有効です。 
+	
+	    * LOAD_FLAGS_IS_REFRESH: このフラグは、meta タグの refresh や redirect によって URL が読み込まれたときに使用されます。
+	    * LOAD_FLAGS_IS_LINK: このフラグは、ユーザがリンクをクリックして URL が読み込まれたときに使用されます。これに応じて HTTP Referer ヘッダが設定されます。
+	    * LOAD_FLAGS_BYPASS_HISTORY: URL をセッション履歴に追加しません。
+	    * LOAD_FLAGS_REPLACE_HISTORY: セッション履歴内の現在の URL を新しいものと置き換えます。このフラグはリダイレクトに使用されます。
+	
+	(referrer および postData 引数の詳細は nsIWebNavigation.loadURI() をご覧ください。)
+	 */
+	loadURIWithFlags:function( uri, flags, referrer, charset, postData ){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    browser 内の document を再度読み込みます。  
+	 */
+	reload:function(){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    すべてのタブのコンテンツを再度読み込みます。
+	 */
+	reloadAllTabs:function(){},
+ 
+	/**
+	    戻り値の型: 戻り値なし 
+	    指定したタブのコンテンツを再度読み込みます。 
+	 */
+	reloadTab:function( tab ){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    browser 内の document を与えられた読み込みフラグ(flags) で再度読み込みます。下記のフラグが使用されます。これらはすべて webNavigation プロパティ (または nsIWebNavigation インタフェース) の定数です。記号( | ) を使用してフラグを組み合わせることができます。 
+	
+	    * LOAD_FLAGS_NONE: 特別なフラグなし。document は普通に読み込まれます。
+	    * LOAD_FLAGS_BYPASS_CACHE: ページを再度読み込みます。ページがキャッシュ内にあっても無視されます。このフラグは reload ボタンが Shift キーを押しながら押下されたときに使用されます。
+	    * LOAD_FLAGS_BYPASS_PROXY: プロクシサーバを無視してページを再度読み込みます。
+	    * LOAD_FLAGS_CHARSET_CHANGE: このフラグは、文字セットが変更されたため document を再度読み込む必要がある場合に使用されます。
+	 */
+	reloadWithFlags:function( flags ){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    指定したタブを除くすべてのタブパネルを削除します。一つのタブページのみが表示されている場合、このメソッドは何もしません。 
+	 */
+	removeAllTabsBut:function( tabElement ){},
+
+	/**
+	    戻り値の型: tab 要素 
+	    現在表示されているタブページを削除します。一つのタブのみが表示されている場合、このメソッドは何もしません。
+	 */
+	removeCurrentTab:function(){},
+ 
+	/**
+	    戻り値の型: 戻り値なし 
+	    進捗リスナーを browser から削除します。 
+	 */
+	removeProgressListener:function( listener ){},
+
+	/**
+	    戻り値の型: 戻り値なし 
+	    与えられた tab 要素に対応する特定のタブ化されたページを削除します。タブが 1 つしか表示されていない場合、このメソッドは何もしません。必要に応じて、タブが 1 つしかない場合はタブバーが折り畳まれます。 
+
+	 */
+	removeTab:function( tabElement ){},
+	
+	/**
+	    Firefox では使用不可 
+	    戻り値の型: セッション履歴オブジェクトの配列 
+	    既存のタブを新しいセットで置き換えます。置き換え前のタブのほうが多い場合は、余りのタブは削除されません。先に既存のタブを削除して完全に置き換えるには removeTab() メソッドを使用してください。引数は読み込む各ドキュメントオブジェクトの配列です。オブジェクトはスクリプトで定義され、読み込むページの URL の URI プロパティを含みます。referrerURI プロパティは、リファラページを設定するために任意で使用されます。このメソッドは、削除されたタブのセッション履歴オブジェクトの配列を返します。 
+ 
+	 */
+	replaceGroup:function( group ){},
+	
+	/**
+	    戻り値の型: 戻り値なし 
+	    中止ボタンの押下と同じです。このメソッドは現在の document の読み込みを中止します。 
+	 */
+	stop:function(){}
+};

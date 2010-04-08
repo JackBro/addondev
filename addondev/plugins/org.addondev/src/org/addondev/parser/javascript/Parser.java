@@ -12,6 +12,8 @@ public class Parser {
 	private String fJsDoc;
 
 	public JsNode root;
+	private static JsNode fTrueNode = new JsNode(null, EnumNode.VALUE, "true", -1);
+	private static JsNode fFalseNode = new JsNode(null, EnumNode.VALUE, "false", -1);
 
 	private ScopeStack fScopeStack = new ScopeStack();
 	private ScopeManager fScopeManager;
@@ -91,6 +93,12 @@ public class Parser {
 		distNode.setSymbalTable(srcNode.getSymbalTable());
 	}
 
+	private JsNode createNode(JsNode parent, EnumNode nodetype, String symbol, int offset)
+	{
+		JsNode node = new JsNode(parent, EnumNode.VALUE, symbol, lex.offset());
+		return node;
+	}
+	
 	private void advanceToken(char c) throws EOSException {
 		while (token != c) {
 			if (token == TokenType.EOS) {
