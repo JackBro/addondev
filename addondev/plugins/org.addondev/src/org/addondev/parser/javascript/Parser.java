@@ -546,6 +546,7 @@ public class Parser {
 					node = new JsNode(parent, EnumNode.VALUE, sym, lex.offset());
 					parent.addChildNode(node);
 				}
+				
 
 			} else {
 				node = findNode(sym);

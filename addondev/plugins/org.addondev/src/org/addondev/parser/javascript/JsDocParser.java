@@ -13,6 +13,8 @@ public class JsDocParser {
 	//@param {paramType} paramName paramDescription 
 	private static Pattern fParamPattern = Pattern.compile("@param\\s+\\{(.*)\\}\\s+(.*)\\s+(.*)\n");
 
+	//@type  String[] 
+	
 	//private boolean isParsed=false;
 	private String fType = null;
 	private Map<String, List<String>> fParam;
