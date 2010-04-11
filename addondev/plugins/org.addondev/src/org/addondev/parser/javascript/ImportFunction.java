@@ -10,18 +10,18 @@ public class ImportFunction implements IFunction {
  * 
  */
 	@Override
-	public JsNode Run(ScopeManager scopemanager, String name, List<JsNode> args) {
+	public Node Run(ScopeManager scopemanager, String name, List<Node> args) {
 		// TODO Auto-generated method stub
 		if(args.size() == 1)
 		{
 			Scope currnetscope = scopemanager.getCurrentScope(name);
-			String resourcefile = args.get(0).getName();
+			String resourcefile = args.get(0).getSymbol();
 			
 		}
 		else if(args.size() == 2)
 		{
-			String resourcefile = args.get(0).getName();	
-			JsNode node = args.get(1);
+			String resourcefile = args.get(0).getSymbol();	
+			Node node = args.get(1);
 		}
 		else
 		{

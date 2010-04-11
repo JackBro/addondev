@@ -4,7 +4,8 @@ public class Scope {
 	private int startOffset;
 	private int endOffset;
 	private String fType;
-	private JsNode node;
+	//private JsNode node;
+	private Node node;
 	//private HashMap<String, JsNode> map;
 	
 	public String getType() {
@@ -25,62 +26,40 @@ public class Scope {
 	public void setEnd(int end) {
 		this.endOffset = end;
 	}
-	public JsNode getNode() {
+//	public JsNode getNode() {
+//		return node;
+//	}
+	public Node getNode() {
 		return node;
 	}
-	public JsNode getNode(String name) {
-		//return map.get(image);
-//		ArrayList<JsNode> nodes = node.getChildNode();
-//		if(nodes == null) return null;
-//		for (JsNode jsnode : nodes) {
-//			String key = jsnode.getName();
-//			if(key.equals(image))
-//				return jsnode;
-//		}
-//		return null;
-		
-		return node.getChild(name);
+	public Node getNode(String symbol) {
+		return node.getChild(symbol);
 	}
-//	public void setNode(JsNode node) {
-//		this.node = node;
-//		JsNode[] nodes = node.getChildren();
-//		for (JsNode jsnode : nodes) {
-//			String key = jsnode.getImage();
-//			map.put(key, jsnode);
-//		}
-//	}
-	public Scope(int startOffset, int endOffset, JsNode node) {
+	public Scope(int startOffset, int endOffset, Node node) {
 		super();
 		this.startOffset = startOffset;
 		this.endOffset = endOffset;
 		this.node = node;
-		
-		//map = new HashMap<String, JsNode>();
 	}
-	public Scope(int startOffset, JsNode node) {
+	public Scope(int startOffset, Node node) {
 		super();
 		this.startOffset = startOffset;
 		this.node = node;
 		
 		this.endOffset = Integer.MAX_VALUE;
-		//map = new HashMap<String, JsNode>();
 	}
 	
-	public Scope(int startOffset, int endOffset, JsNode node, String type) {
+	public Scope(int startOffset, int endOffset, Node node, String type) {
 		super();
 		this.startOffset = startOffset;
 		this.endOffset = endOffset;
 		this.node = node;
 		this.fType = type;
-		
-		//map = new HashMap<String, JsNode>();
 	}
-	public Scope(int startOffset, JsNode node, String type) {
+	public Scope(int startOffset, Node node, String type) {
 		super();
 		this.startOffset = startOffset;
 		this.node = node;
 		this.fType = type;
-		
-		//map = new HashMap<String, JsNode>();
 	}
 }

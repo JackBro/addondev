@@ -5,29 +5,29 @@ import java.util.Map;
 
 import org.addondev.parser.javascript.util.JavaScriptParserManager;
 
-public class Parser {
+public class TestParser {
 	private Lexer lex;
 	private int token;
 	private String fName;
 	private String fJsDoc;
 
-	public JsNode root;
+	public Node root;
 	//private static JsNode fTrueNode = new JsNode(null, EnumNode.VALUE, "true", -1);
 	//private static JsNode fFalseNode = new JsNode(null, EnumNode.VALUE, "false", -1);
 
 	private ScopeStack fScopeStack = new ScopeStack();
 	private ScopeManager fScopeManager;
 
-	private void setJsDoc(JsNode node, String jsDoc) {
+	private void setJsDoc(Node node, String jsDoc) {
 		if (fJsDoc != null && fJsDoc.length() > 0) {
-			node.setfJsDoc(jsDoc);
+			node.setJsDoc(jsDoc);
 		}
 		fJsDoc = "";
 	}
 
-	private JsNode findNode(String name) {
-		JsNode node = null;
-		node = fScopeStack.getCurrntScope().getNode(name); // current
+	private Node findNode(String symbol) {
+		Node node = null;
+		node = fScopeStack.getCurrntScope().getNode(symbol); // current
 		// if (node == null) {
 		// node = fScopeStack.getScope(0).getNode(name); // global this
 		// }
@@ -35,64 +35,75 @@ public class Parser {
 		if (node == null) {
 			// node = fScopeStack.getScope(name).getNode(name); // all this
 			Scope scope = fScopeStack.getUpScope(fScopeStack.getCurrntScope(),
-					name);
-			node = scope.getNode(name);
+					symbol);
+			node = scope.getNode(symbol);
 		}
 
 		if (node == null) {
 			// node = ScopeManager.instance().getGlobalNode(name); // global
 			// other
-			node = fScopeManager.getGlobalNode(name); // global other
+			node = fScopeManager.getGlobalNode(symbol); // global other
 		}
 		return node;
 	}
 
-	private JsNode findChildNode(JsNode node, String image) {
+	private Node findChildNode(Node node, String image) {
 		if (node == null)
 			return null;
 
 		return node.getChild(image);
 	}
 
-	private JsNode getNodeByType(String type) {
-		JsNode node = null;
-		JsNode gnode = findNode(type);
+	private Node getNodeByType(String type) {
+		Node node = null;
 		
-		JsNode chNode = findChildNode(gnode, "prototype");
+		Node gnode = findNode(type);
+		
+		Node chNode = findChildNode(gnode, "prototype");
 		if (chNode != null) {
-			node = new JsNode(null, EnumNode.VALUE_PROP, lex.value(), 0);
-			cloneChildNode(chNode, node);
+			node = new ValNode(null, EnumNode.VALUE_PROP, lex.value(), 0);
+			//cloneChildNode(chNode, node);
+			chNode.assignChildNode(node);
 		} else {
+//			if(type.contains("[]"))
+//			{
+//				node = new ArrayNode(null, EnumNode.VALUE, lex.value(), -1);
+//			}
+//			else{
+//				node = gnode;
+//			}
 			node = gnode;
 		}
 
 		return node;
 	}
 	
-	private void setNodeByType(String type, JsNode node) {
-		JsNode gnode = findNode(type);
+	private void setNodeByType(String type, Node node) {
+		Node gnode = findNode(type);
 		if(gnode == null) return;
 		
-		JsNode chNode = findChildNode(gnode, "prototype");
+		Node chNode = findChildNode(gnode, "prototype");
 		if (chNode != null) {
-			cloneChildNode(chNode, node);
+			//cloneChildNode(chNode, node);
+			chNode.assignChildNode(node);
 		} else {
 			//node = gnode;
-			assignChildNode(gnode, node);
+			//assignChildNode(gnode, node);
+			gnode.assignChildNode(node);
 		}
 	}
 
-	private void cloneChildNode(JsNode srcNode, JsNode distNode) {
-		JsNode[] srcChildNodes = srcNode.getChildNodes();
-		distNode.getSymbalTable().clear();
-		for (JsNode node : srcChildNodes) {
-			distNode.addChildNode(node.getClone(distNode));
-		}
-	}
-
-	private void assignChildNode(JsNode srcNode, JsNode distNode) {
-		distNode.setSymbalTable(srcNode.getSymbalTable());
-	}
+//	private void cloneChildNode(JsNode srcNode, JsNode distNode) {
+//		JsNode[] srcChildNodes = srcNode.getChildNodes();
+//		distNode.getSymbalTable().clear();
+//		for (JsNode node : srcChildNodes) {
+//			distNode.addChildNode(node.getClone(distNode));
+//		}
+//	}
+//
+//	private void assignChildNode(JsNode srcNode, JsNode distNode) {
+//		distNode.setSymbalTable(srcNode.getSymbalTable());
+//	}
 
 	private JsNode createNode(JsNode parent, EnumNode nodetype, String symbol, int offset)
 	{
@@ -117,13 +128,13 @@ public class Parser {
 		}
 	}
 
-	public Parser(String name, ScopeManager scopemanager) {
+	public TestParser(String name, ScopeManager scopemanager) {
 		fName = name;
 		fScopeManager = scopemanager;
 	}
 
-	public JsNode parse(Lexer lexer) {
-		JsNode code = null;
+	public Node parse(Lexer lexer) {
+		Node code = null;
 		lex = lexer;
 		try {
 			code = program();
@@ -135,9 +146,9 @@ public class Parser {
 
 	int endoff;
 
-	public JsNode parse(String src) {
+	public Node parse(String src) {
 		endoff = src.length();
-		JsNode code = null;
+		Node code = null;
 		try {
 			lex = new Lexer(src);
 			code = program();
@@ -147,8 +158,8 @@ public class Parser {
 		return code;
 	}
 
-	public JsNode parse(String src, Scope scope) {
-		root = new JsNode(null, EnumNode.ROOT, "root", src.length());
+	public Node parse(String src, Scope scope) {
+		root = new ValNode(null, EnumNode.ROOT, "root", src.length());
 		try {
 			lex = new Lexer(src);
 			fScopeStack.pushScope(scope);
@@ -164,8 +175,8 @@ public class Parser {
 		return root;
 	}
 
-	private JsNode program() throws EOSException {
-		root = new JsNode(null, EnumNode.ROOT, "root", 0);
+	private Node program() throws EOSException {
+		root = new ValNode(null, EnumNode.ROOT, "root", 0);
 		//fScopeStack.pushScope(new Scope(0, endoff, root));
 		fScopeStack.pushScope(new Scope(0, root));
 		int offset = lex.offset();
@@ -185,7 +196,7 @@ public class Parser {
 		return root;
 	}
 
-	private void stmt(JsNode parent) throws EOSException {
+	private void stmt(Node parent) throws EOSException {
 		switch (token) {
 		case '/':
 			// int i = 0;
@@ -222,7 +233,7 @@ public class Parser {
 			getToken();
 			if (token == '=') {
 				String sym = lex.value();
-				JsNode node = null;
+				Node node = null;
 				if ("this".equals(sym)
 						&& parent.getNodeType() == EnumNode.FUNCTION_PROP) {
 					node = parent.getParent();
@@ -232,18 +243,19 @@ public class Parser {
 				}
 
 				if (node == null) {
-					node = new JsNode(root, EnumNode.VALUE, sym, lex.offset());
+					node = new ValNode(root, EnumNode.VALUE, sym, lex.offset());
 					root.addChildNode(node);
 				}
 
 				getToken(); // skip '='
-				JsNode res = factor(node);
+				Node res = factor(node);
 				if (res != null) {
-					assignChildNode(res, node);
+					//assignChildNode(res, node);
+					res.assignChildNode(node);
 				}
 			} else if (token == '.') {
 				String sym = lex.value();
-				JsNode node = null;
+				Node node = null;
 				if ("this".equals(sym)
 						&& parent.getNodeType() == EnumNode.FUNCTION_PROP) {
 					node = parent.getParent();
@@ -253,7 +265,7 @@ public class Parser {
 				}
 
 				if (node == null) {
-					node = new JsNode(root, EnumNode.VALUE, sym, lex.offset());
+					node = new ValNode(root, EnumNode.VALUE, sym, lex.offset());
 					root.addChildNode(node);
 				}
 
@@ -272,9 +284,9 @@ public class Parser {
 						break;
 					}
 					String val = lex.value();
-					JsNode m = node.getChild(val);
+					Node m = node.getChild(val);
 					if (m == null) {
-						JsNode cnode = new JsNode(node, EnumNode.VALUE, val,
+						Node cnode = new ValNode(node, EnumNode.VALUE, val,
 								lex.offset());
 						node.addChildNode(cnode);
 						node = cnode;
@@ -287,9 +299,10 @@ public class Parser {
 
 				if (token == '=') {
 					getToken(); // skip '='
-					JsNode res = factor(node);
+					Node res = factor(node);
 					if (res != null) {
-						assignChildNode(res, node);
+						//assignChildNode(res, node);
+						res.assignChildNode(node);
 					}
 				} else if (token == '(') {
 					// factor(node);
@@ -308,7 +321,7 @@ public class Parser {
 		}
 	}
 
-	private void elseif_stmt(JsNode parent) throws EOSException {
+	private void elseif_stmt(Node parent) throws EOSException {
 		getToken(); // skip 'else'
 
 		if (token == TokenType.IF) {
@@ -331,7 +344,7 @@ public class Parser {
 		}
 	}
 
-	private void if_stmt(JsNode node) throws EOSException {
+	private void if_stmt(Node node) throws EOSException {
 		getToken(); // skip 'if'
 
 		getToken(); // skip '('
@@ -355,7 +368,7 @@ public class Parser {
 		}
 	}
 
-	private void functionCall(JsNode node) throws EOSException {
+	private void functionCall(Node node) throws EOSException {
 		//JsNode code = null;
 		
 		getToken(); // skip (
@@ -391,14 +404,14 @@ public class Parser {
 		}
 	}
 
-	private void fun(JsNode parent) throws EOSException {
-		JsNode code = null;
+	private void fun(Node parent) throws EOSException {
+		Node code = null;
 		getToken(); // skip function
 		// char ch = (char)token;
 		if (token == TokenType.SYMBOL) {
 			String sym = lex.value();
 			int offset = lex.offset();
-			code = new JsNode(parent, EnumNode.FUNCTION, sym, offset);
+			code = new FunctionNode(parent, EnumNode.FUNCTION, sym, offset);
 			setJsDoc(code, fJsDoc);
 			parent.addChildNode(code);
 			getToken();
@@ -407,7 +420,7 @@ public class Parser {
 		} else if (token == '(') // anonymous
 		{
 			int offset = lex.offset();
-			code = new JsNode(parent, EnumNode.ANONYMOUS_FUNCTION, "anonymous"
+			code = new FunctionNode(parent, EnumNode.ANONYMOUS_FUNCTION, "anonymous"
 					+ offset, offset);
 			parent.addChildNode(code);
 
@@ -417,7 +430,7 @@ public class Parser {
 		}
 	}
 
-	private void block(JsNode parent) throws EOSException {
+	private void block(Node parent) throws EOSException {
 		// TODO Auto-generated method stub
 		getToken(); // skip {
 		while (token != '}' && token != TokenType.EOS) {
@@ -432,34 +445,37 @@ public class Parser {
 		getToken(); // skip }
 	}
 
-	private void def(JsNode parent) throws EOSException {
+	private void def(Node parent) throws EOSException {
 		getToken(); // skip 'var'
 		if (token != TokenType.SYMBOL) {
 			// throw new Exception("文法エラーです。");
 			// return;
 		}
 		String sym = lex.value();
-		JsNode node = new JsNode(parent, EnumNode.VALUE, sym, lex.offset());
+		Node node = new ValNode(parent, EnumNode.VALUE, sym, lex.offset());
 		parent.addChildNode(node);
 
 		getToken(); // skip symbol
 		if (token == '=') {
 			getToken(); // skip =
-			JsNode res = factor(node);
+			Node res = factor(node);
 			if (res != null) {
 				// JsNodeHelper.assignNode(node.getChildNode(),
 				// res.getChildNode());
-				assignChildNode(res, node);
+				//assignChildNode(res, node);
+				res.assignChildNode(node);
+				node.setJsDoc(res.getJsDoc());
+				//node.setReturnType(res.getReturnType());
 			}
 		}
 	}
 
-	private JsNode factor(JsNode parent) throws EOSException {
+	private Node factor(Node parent) throws EOSException {
 		return factor(parent, false);
 	}
 	
-	private JsNode factor(JsNode parent, Boolean isparam) throws EOSException {
-		JsNode node = null;
+	private Node factor(Node parent, Boolean isparam) throws EOSException {
+		Node node = null;
 		String sym = lex.value();
 		switch (token) {
 //		case TokenType.JSDOC:
@@ -470,7 +486,7 @@ public class Parser {
 			// getToken();
 			break;
 		case '{':
-			parent.setOffset(lex.offset());
+			parent.setStartOffset(lex.offset());
 			parent.setNodeType(EnumNode.OBJECT);
 			objectExpr(parent);
 			break;
@@ -479,7 +495,7 @@ public class Parser {
 			{
 				advanceToken('(');
 				int offset = lex.offset();
-				JsNode code = new JsNode(parent, EnumNode.ANONYMOUS_FUNCTION, "anonymous"
+				Node code = new FunctionNode(parent, EnumNode.ANONYMOUS_FUNCTION, "anonymous"
 						+ offset, offset);	
 				parent.addChildNode(code);
 				
@@ -496,8 +512,8 @@ public class Parser {
 		case TokenType.NEW:
 			getToken();
 			String obj = lex.value();
-			JsNode tnode = findNode(obj);
-			JsNode prototypenode = tnode == null ? null : tnode.getChild("prototype");
+			Node tnode = findNode(obj);
+			Node prototypenode = tnode == null ? null : tnode.getChild("prototype");
 			if (prototypenode != null) {
 				// if(prototypenode.getChild(sym)!=null)
 				// {
@@ -506,9 +522,11 @@ public class Parser {
 				// cloneChildNode(prototypenode, node);
 				// }
 				// node = new JsNode(null, EnumNode.OBJECT, "", 0);
-				cloneChildNode(prototypenode, parent);
+				//cloneChildNode(prototypenode, parent);
+				prototypenode.cloneChildNode(parent);
 			}else{
-				cloneChildNode(tnode, parent);
+				//cloneChildNode(tnode, parent);
+				tnode.cloneChildNode(parent);
 			}
 			advanceToken(')');
 			getToken(); // skip ')'
@@ -543,11 +561,15 @@ public class Parser {
 
 				node = findNode(sym);
 				if (node == null) {
-					node = new JsNode(parent, EnumNode.VALUE, sym, lex.offset());
+					//node = new ValNode(parent, EnumNode.VALUE, sym, lex.offset());
+					node = new ArrayNode(parent, EnumNode.VALUE, sym, lex.offset());
+					((ArrayNode)node).setArray(false);
 					parent.addChildNode(node);
 				}
-				
-
+				else{
+					if(node instanceof ArrayNode)
+						((ArrayNode)node).setArray(false);
+				}
 			} else {
 				node = findNode(sym);
 				if (node == null) {
@@ -555,14 +577,25 @@ public class Parser {
 					// lex.offset());
 					// parent.addChildNode(valnode);
 
-					node = new JsNode(parent, EnumNode.VALUE, sym, lex.offset());
+					node = new ValNode(parent, EnumNode.VALUE, sym, lex.offset());
 					parent.addChildNode(node);
 					if(isparam)
 					{
-						String paramtype = parent.getParamType(sym);
-						node.setReturnType(paramtype);
-						if(paramtype != null)setNodeByType(paramtype, node);
+//						String paramtype = parent.getParamType(sym);
+//						node.setReturnType(paramtype);
+//						if(paramtype != null)setNodeByType(paramtype, node);
+						if(parent instanceof FunctionNode)
+						{
+							String paramtype = ((FunctionNode)parent).getParamType(sym);
+							node.setReturnType(paramtype);
+							if(paramtype != null)setNodeByType(paramtype, node);							
+						}
 					}
+				}
+				else
+				{
+					if(node instanceof ArrayNode)
+						((ArrayNode)node).setArray(true);					
 				}
 				node.setParam(isparam);
 			}
@@ -574,10 +607,10 @@ public class Parser {
 		while (token == '.') {
 			getToken(); // skip '.'
 			sym = lex.value();
-			JsNode tnode = node.getChild(sym);
+			Node tnode = node.getChild(sym);
 
 			if (tnode == null) {
-				tnode = new JsNode(node, EnumNode.VALUE, sym, lex.offset());
+				tnode = new ValNode(node, EnumNode.VALUE, sym, lex.offset());
 				node.addChildNode(tnode);
 				node = tnode;
 				getToken(); // skip symbol
@@ -590,6 +623,10 @@ public class Parser {
 				} else if (token == '[') {
 					advanceToken(']');
 					getToken(); // skip ']'
+					
+					//if(tnode instanceof ArrayNode)
+					//	((ArrayNode)tnode).setArray(false);					
+					
 				}
 			} else {
 				getToken(); // skip symbol
@@ -610,10 +647,10 @@ public class Parser {
 						Map<String, IFunction> funcmap = JavaScriptParserManager
 								.instance().getFunctions();
 						if (funcmap.containsKey(type)) {
-							ArrayList<JsNode> args = new ArrayList<JsNode>();
+							ArrayList<Node> args = new ArrayList<Node>();
 
 							if (token != ')') {
-								JsNode argnode = factor(null);
+								Node argnode = factor(null);
 								if (argnode != null)
 									args.add(argnode);
 								while (token != ')') {
@@ -628,13 +665,24 @@ public class Parser {
 							getToken(); // skip ')'
 							
 						} else {
-							
-							node = getNodeByType(type);
+							if(type.contains("[]"))
+							{
+								Node arraynode = getNodeByType("Array");
+								if(arraynode !=null){
+								node = new ArrayNode(null, EnumNode.VALUE, lex.value(), -1);
+								node.setReturnType(type);
+								arraynode.assignChildNode(node);
+								}
+							}
+							else{
+								node = getNodeByType(type);
+							}
+							//node = getNodeByType(type);
 							advanceToken(')');
 							getToken(); // skip ')'
 						}
 					} else {
-						JsNode ttnode = new JsNode(tnode, EnumNode.VALUE, sym,
+						Node ttnode = new ValNode(tnode, EnumNode.VALUE, sym,
 								lex.offset());
 						node.addChildNode(ttnode);
 						node = ttnode;
@@ -651,6 +699,14 @@ public class Parser {
 					if (token == '[') {
 						advanceToken(']');
 						getToken(); // skip ']'
+						
+						if(tnode instanceof ArrayNode)
+							((ArrayNode)tnode).setArray(false);	
+					}
+					else
+					{
+						if(tnode instanceof ArrayNode)
+							((ArrayNode)tnode).setArray(true);	
 					}
 					node = tnode;
 				}
@@ -662,7 +718,7 @@ public class Parser {
 			Map<String, IFunction> funcmap = JavaScriptParserManager.instance()
 					.getFunctions();
 			if (funcmap.containsKey(type)) {
-				ArrayList<JsNode> args = new ArrayList<JsNode>();
+				ArrayList<Node> args = new ArrayList<Node>();
 
 				if (token != ')') {
 					args.add(factor(null));
@@ -675,28 +731,42 @@ public class Parser {
 				IFunction func = funcmap.get(type);
 				node = func.Run(fScopeManager, fName, args);
 			}
+			else if (token == '[') {
+				advanceToken(']');
+				getToken(); // skip ']'
+				
+				if(node instanceof ArrayNode){
+					ArrayNode arraynode = (ArrayNode)node;	
+					arraynode.setArray(false);
+					if(!arraynode.hasChildNode()){
+						String valtype = arraynode.getReturnType();
+						Node valnode = getNodeByType(valtype);
+						if(valnode != null){
+							valnode.assignChildNode(node);
+						}
+					}
+					//Node arraynode = getNodeByType("Array");
+					//node = new ArrayNode(null, EnumNode.VALUE, lex.value(), -1);
+					//node.setReturnType(type);
+					//arraynode.assignChildNode(node);				
+				}
+			}
 			else
 			{
-				//node = getNodeByType(type);		
+				if(!node.hasChildNode()){
+					//String valtype = arraynode.getReturnType();
+					Node valnode = getNodeByType(type);
+					if(valnode != null){
+						valnode.assignChildNode(node);
+					}	
+				}
 			}
-			// if ("interfaces".equals(type)) {
-			// String param = null;
-			// if (token != ')') {
-			// while (token != ')') {
-			// getToken(); // skip ','
-			// }
-			// param = lex.value();
-			// }
-			// if (param != null) {
-			// node = findNode(param);
-			// }
-			// }
 		}
 
 		return node;
 	}
 
-	private void objectExpr(JsNode parent) throws EOSException {
+	private void objectExpr(Node parent) throws EOSException {
 
 		getToken(); // skip {
 		while (token != '}') {
@@ -717,12 +787,12 @@ public class Parser {
 					getToken();
 				
 				if (token == TokenType.SYMBOL || token == TokenType.STRING || token == TokenType.INT) {
-					JsNode node = new JsNode(parent, EnumNode.VALUE_PROP, sym,
+					Node node = new ValNode(parent, EnumNode.VALUE_PROP, sym,
 							lex.offset());
 					setJsDoc(node, fJsDoc);
 					parent.addChildNode(node);
 				} else if (token == TokenType.FUNCTION) {
-					JsNode node = new JsNode(parent, EnumNode.FUNCTION_PROP,
+					Node node = new FunctionNode(parent, EnumNode.FUNCTION_PROP,
 							sym, lex.offset());
 					setJsDoc(node, fJsDoc);
 					parent.addChildNode(node);
@@ -731,7 +801,7 @@ public class Parser {
 					// advanceToken('}');
 					// getToken();
 				} else if (token == '{') {
-					JsNode node = new JsNode(parent, EnumNode.OBJECT, sym, lex
+					Node node = new ValNode(parent, EnumNode.OBJECT, sym, lex
 							.offset());
 					parent.addChildNode(node);
 					objectExpr(node);
@@ -750,16 +820,11 @@ public class Parser {
 		// // getToken();
 		// }
 		getToken(); // skip }
-		parent.setEndoffset(lex.offset() - 1);
+		parent.setEndOffset(lex.offset() - 1);
 	}
 
 	private void jsDoc_stmt() {
 		fJsDoc = lex.value();
 		getToken();
 	}
-	
-//	private boolean is()
-//	{
-//		
-//	}
 }

@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JsDocParser {
-	private static Pattern fTypePattern = Pattern.compile("@type\\s+(\\w+)\n");
+	private static Pattern fTypePattern = Pattern.compile("@type\\s+(.*[^\\s])\\s*\n");
 	
 	//@param {paramType} paramName paramDescription 
 	private static Pattern fParamPattern = Pattern.compile("@param\\s+\\{(.*)\\}\\s+(.*)\\s+(.*)\n");

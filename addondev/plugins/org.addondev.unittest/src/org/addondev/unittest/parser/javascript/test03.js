@@ -137,11 +137,18 @@
 
 var MyObject =
 {    
-//	/**
-//	 * 
-//	 * @type    Array
-//	 * 
-//	 */
+	/**
+	 * 
+	 * @type String
+	 * 
+	 */
+	msg:"",
+	
+	/**
+	 * 
+	 * @type String[]
+	 * 
+	 */
 	ret:function()
 	{
 		//contextMenu.addEventListener("popupshowing", MyObject._unload(event));
@@ -158,17 +165,19 @@ var MyObject =
 		
 	}
 };
+var nn =  MyObject.ret();
+var sn =  MyObject.msg;
 
-var MyObject2 =
-{
-	load: function(){}
-}
-
-var nn = new MyObject();
-//nn.len = 0;
-nn.addval = function(){};
-
-nn = new MyObject2();
+//var MyObject2 =
+//{
+//	load: function(){}
+//}
+//
+//var nn = new MyObject();
+////nn.len = 0;
+//nn.addval = function(){};
+//
+//nn = new MyObject2();
 
 ///**
 // * 

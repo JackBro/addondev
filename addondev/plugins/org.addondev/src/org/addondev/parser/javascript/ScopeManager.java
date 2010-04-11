@@ -79,11 +79,11 @@ public class ScopeManager {
 //		return node;		
 //	}
 	
-	public JsNode getGlobalNode(String symbole)
+	public Node getGlobalNode(String symbole)
 	{
 		if(fJsList == null) return null;
 		
-		JsNode node = null;
+		Node node = null;
 
 		for(String key : fScopeStackMap.keySet()) {
 			if(fJsList.contains(key))

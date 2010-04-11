@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 
 public class JsNode {
-	//private static Pattern fJsDocTypePattern = Pattern.compile("@type\\s+(\\w+)");
-	//private static Pattern fJsDocReturnPattern = Pattern.compile("@returns\\s+\\{\\s*(.*)\\s*\\}");
 	
 	private JsNode parent;
 	private HashMap<String, JsNode> fSymbalTable; 
@@ -20,7 +18,6 @@ public class JsNode {
 	private JsDocParser fJsDocParser;
 	private String fJsDoc;	
 	private String fReturnType;	
-	
 	
 	public boolean isParam() {
 		return isParam;
@@ -154,7 +151,6 @@ public class JsNode {
 	}
 	public String getReturnType()
 	{
-		//String key = null;
 		if(fReturnType != null) return fReturnType;
 		
 		if(fJsDocParser == null)
@@ -165,25 +161,6 @@ public class JsNode {
 		}
 		
 		return fReturnType;
-//		if(fJsDoc != null && fReturnType == null)
-//		{
-//			JsDocParser p = new JsDocParser();
-//			fReturnType = p.getType(fJsDoc);		
-////			Matcher m = fJsDocTypePattern.matcher(fJsDoc);
-////			 if (m.find()) {
-////				 key = m.group(1);
-////			 }
-////			 else
-////			 {
-////				 m = fJsDocReturnPattern.matcher(fJsDoc);
-////				 if (m.find()) {
-////					 key = m.group(1);
-////				 }
-////			 }
-////			 fReturnType = key;
-//		}
-//		
-//		return fReturnType;
 	}
 	
 	public String getParamType(String paramname)

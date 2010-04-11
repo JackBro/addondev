@@ -13,12 +13,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.addondev.core.AddonDevPlugin;
-import org.addondev.parser.javascript.JsNode;
+//import org.addondev.parser.javascript.JsNode;
 import org.addondev.parser.javascript.Lexer;
+import org.addondev.parser.javascript.Node;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
 import org.addondev.parser.javascript.ScopeStack;
+import org.addondev.parser.javascript.TestParser;
 import org.addondev.parser.javascript.serialize.NodeSerializer;
 import org.addondev.parser.javascript.util.JavaScriptParserManager;
 import org.addondev.util.FileUtil;
@@ -68,9 +70,10 @@ public class ParserTest {
 		
 		//Parser parser = new Parser("test00.js");
 		ScopeManager sm = new ScopeManager();
-		Parser parser = new Parser("test00.js", sm);
+		//Parser parser = new Parser("test00.js", sm);
+		TestParser parser = new TestParser("test00.js", sm);
 		parser.parse(src);
-		JsNode node = parser.root;
+		Node node = parser.root;
 		node.dump("");
 	}
 	
@@ -81,9 +84,10 @@ public class ParserTest {
 		
 		//Parser parser = new Parser("test01.js");
 		ScopeManager sm = new ScopeManager();
-		Parser parser = new Parser("test01.js", sm);
+		//Parser parser = new Parser("test01.js", sm);
+		TestParser parser = new TestParser("test01.js", sm);
 		parser.parse(src);
-		JsNode node = parser.root;
+		Node node = parser.root;
 		node.dump("");
 	}
 	
@@ -95,9 +99,10 @@ public class ParserTest {
 		lex = new Lexer(src);
 		//Parser parser = new Parser("test02.js");
 		ScopeManager sm = new ScopeManager();
-		Parser parser = new Parser("test02.js", sm);
+		//Parser parser = new Parser("test02.js", sm);
+		TestParser parser = new TestParser("test02.js", sm);
 		parser.parse(lex);
-		JsNode node = parser.root;
+		Node node = parser.root;
 		node.dump("");
 	}
 	
@@ -107,14 +112,15 @@ public class ParserTest {
 		ArrayList<String> jslist = new ArrayList<String>();
 		ScopeManager sm = new ScopeManager();
 
-//		{
-//			jslist.add("system.js");
-//			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
-//			Parser parser = new Parser("system.js", sm);
-//			parser.parse(src);
-//			//JsNode node = parser.root;
-//			//node.dump("");
-//		}
+		{
+			jslist.add("system.js");
+			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
+			//Parser parser = new Parser("system.js", sm);
+			TestParser parser = new TestParser("system.js", sm);
+			parser.parse(src);
+			//JsNode node = parser.root;
+			//node.dump("");
+		}
 //		{
 //			String dataxml = "D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.unittest/tmp/text.xml";
 //			JsNode root = NodeSerializer.read(dataxml);
@@ -153,9 +159,10 @@ public class ParserTest {
 			sm.setJsLis(jslist);
 			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
 			//ScopeManager sm = new ScopeManager();
-			Parser parser = new Parser("test03.js", sm);
+			//Parser parser = new Parser("test03.js", sm);
+			TestParser parser = new TestParser("test03.js", sm);
 			parser.parse(src);
-			JsNode node = parser.root;
+			Node node = parser.root;
 			node.dump("");
 		}
 	}
@@ -168,9 +175,10 @@ public class ParserTest {
 		lex = new Lexer(src);
 		//Parser parser = new Parser("test04.js"); // パーサーを作成。
 		ScopeManager sm = new ScopeManager();
-		Parser parser = new Parser("test04.js", sm);
+		//Parser parser = new Parser("test04.js", sm);
+		TestParser parser = new TestParser("test04.js", sm);
 		parser.parse(lex);
-		JsNode node = parser.root;
+		Node node = parser.root;
 		node.dump("");
 	}
 	
@@ -300,7 +308,7 @@ public class ParserTest {
 		String path = file.getFullPath().toPortableString();
 		ScopeManager scopemanager = JavaScriptParserManager.instance().getScopeManager(project);
 		Scope scope = scopemanager.getScope(path, 0);
-		JsNode tnode = scope.getNode();
+		Node tnode = scope.getNode();
 	}
 	
 

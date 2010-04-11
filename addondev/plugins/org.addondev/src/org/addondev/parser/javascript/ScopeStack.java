@@ -6,7 +6,7 @@ import java.util.Stack;
 public class ScopeStack {
 	private ArrayList<Scope> fScopeList;
 	private Stack<Scope> fScopeStack;
-	private static Scope fEmptyScope = new Scope(-1, new JsNode(null, EnumNode.VALUE, "", -1));
+	private static Scope fEmptyScope = new Scope(-1, new ValNode(null, EnumNode.VALUE, "", -1));
 	
 	public ArrayList<Scope> getScopeList()
 	{
