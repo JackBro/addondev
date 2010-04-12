@@ -162,13 +162,14 @@ var MyObject =
 	{
 		//MyObject.
     	//util.
+		//var fn = this.msg;
 		
 	}
 };
 var nn =  MyObject.ret();
-var sn =  MyObject.msg;
+//var sn =  MyObject.msg;
 
-var ar = [];
+//var ar = [];
 
 //var MyObject2 =
 //{

@@ -112,15 +112,15 @@ public class ParserTest {
 		ArrayList<String> jslist = new ArrayList<String>();
 		ScopeManager sm = new ScopeManager();
 
-		{
-			jslist.add("system.js");
-			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
-			//Parser parser = new Parser("system.js", sm);
-			Parser parser = new Parser("system.js", sm);
-			parser.parse(src);
-			//JsNode node = parser.root;
-			//node.dump("");
-		}
+//		{
+//			jslist.add("system.js");
+//			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
+//			//Parser parser = new Parser("system.js", sm);
+//			Parser parser = new Parser("system.js", sm);
+//			parser.parse(src);
+//			Node node = parser.root;
+//			node.dump("");
+//		}
 //		{
 //			String dataxml = "D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.unittest/tmp/text.xml";
 //			JsNode root = NodeSerializer.read(dataxml);

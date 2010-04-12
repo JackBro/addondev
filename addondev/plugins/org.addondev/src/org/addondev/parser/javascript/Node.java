@@ -108,7 +108,7 @@ public abstract class Node {
 //			distNode.addChildNode(node.getClone(distNode));
 //		}
 		Node[] srcChildNodes = getChildNodes();
-		distNode.clearSymTable();
+		//distNode.clearSymTable();
 		for (Node node : srcChildNodes) {
 			distNode.addChildNode(node.clone(distNode));
 		}

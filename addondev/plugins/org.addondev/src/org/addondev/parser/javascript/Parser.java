@@ -230,88 +230,98 @@ public class Parser {
 			elseif_stmt(parent);
 			break;
 		case TokenType.SYMBOL:
-			getToken();
+			
+			//getToken(); // skip '='
+			Node node = factor(parent);
+
 			if (token == '=') {
-				String sym = lex.value();
-				Node node = null;
-				if ("this".equals(sym)
-						&& parent.getNodeType() == EnumNode.FUNCTION_PROP) {
-					node = parent.getParent();
-
-				} else {
-					node = findNode(sym);
-				}
-
-				if (node == null) {
-					node = new ValNode(root, EnumNode.VALUE, sym, lex.offset());
-					root.addChildNode(node);
-				}
-
 				getToken(); // skip '='
 				Node res = factor(node);
 				if (res != null) {
-					//assignChildNode(res, node);
 					res.assignChildNode(node);
 				}
-			} else if (token == '.') {
-				String sym = lex.value();
-				Node node = null;
-				if ("this".equals(sym)
-						&& parent.getNodeType() == EnumNode.FUNCTION_PROP) {
-					node = parent.getParent();
+			} 
+//			else if (token == '(') {
+//				node.setNodeType(EnumNode.FUNCTION);
+//				functionCall(node);
+//			}
 
-				} else {
-					node = findNode(sym);
-				}
-
-				if (node == null) {
-					node = new ValNode(root, EnumNode.VALUE, sym, lex.offset());
-					root.addChildNode(node);
-				}
-
-				// getToken(); // skip .
-				while (token == '.') {
-					if (token == TokenType.EOS) {
-						break;
-					}
-					getToken(); // .
-
-					if (token == TokenType.EOS) {
-						break;
-					}
-					if (token != TokenType.SYMBOL) {
-						// lex.un(token);
-						break;
-					}
-					String val = lex.value();
-					Node m = node.getChild(val);
-					if (m == null) {
-						Node cnode = new ValNode(node, EnumNode.VALUE, val,
-								lex.offset());
-						node.addChildNode(cnode);
-						node = cnode;
-					} else {
-						node = m;
-					}
-
-					getToken(); // .
-				}
-
-				if (token == '=') {
-					getToken(); // skip '='
-					Node res = factor(node);
-					if (res != null) {
-						//assignChildNode(res, node);
-						res.assignChildNode(node);
-					}
-				} else if (token == '(') {
-					// factor(node);
-					node.setNodeType(EnumNode.FUNCTION);
-					functionCall(node);
-					// getToken(); // skip (
-					// if (token != ')') {
-				}
-			}
+//			getToken();
+//			if (token == '=') {
+//				String sym = lex.value();
+//				Node node = null;
+//				if ("this".equals(sym)
+//						&& parent.getNodeType() == EnumNode.FUNCTION_PROP) {
+//					node = parent.getParent();
+//
+//				} else {
+//					node = findNode(sym);
+//				}
+//
+//				if (node == null) {
+//					node = new ValNode(root, EnumNode.VALUE, sym, lex.offset());
+//					root.addChildNode(node);
+//				}
+//
+//				getToken(); // skip '='
+//				Node res = factor(node);
+//				if (res != null) {
+//					res.assignChildNode(node);
+//				}
+//
+//			} else if (token == '.') {
+//				String sym = lex.value();
+//				Node node = null;
+//				if ("this".equals(sym)
+//						&& parent.getNodeType() == EnumNode.FUNCTION_PROP) {
+//					node = parent.getParent();
+//
+//				} else {
+//					node = findNode(sym);
+//				}
+//
+//				if (node == null) {
+//					node = new ValNode(root, EnumNode.VALUE, sym, lex.offset());
+//					root.addChildNode(node);
+//				}
+//
+//				while (token == '.') {
+//					if (token == TokenType.EOS) {
+//						break;
+//					}
+//					getToken(); // .
+//
+//					if (token == TokenType.EOS) {
+//						break;
+//					}
+//					if (token != TokenType.SYMBOL) {
+//						break;
+//					}
+//					String val = lex.value();
+//					Node m = node.getChild(val);
+//					if (m == null) {
+//						Node cnode = new ValNode(node, EnumNode.VALUE, val,
+//								lex.offset());
+//						node.addChildNode(cnode);
+//						node = cnode;
+//					} else {
+//						node = m;
+//					}
+//
+//					getToken(); // .
+//				}
+//				
+//				if (token == '=') {
+//					getToken(); // skip '='
+//					Node res = factor(node);
+//					if (res != null) {
+//						res.assignChildNode(node);
+//					}
+//				} else if (token == '(') {
+//					node.setNodeType(EnumNode.FUNCTION);
+//					functionCall(node);
+//				}
+//			}
 			break;
 		case '{':
 			block(parent);
@@ -570,7 +580,10 @@ public class Parser {
 					if(node instanceof ArrayNode)
 						((ArrayNode)node).setArray(false);
 				}
-			} else {
+			}else if("this".equals(sym) && parent.getNodeType() == EnumNode.FUNCTION_PROP){ 
+				node = parent.getParent();
+				
+			}else {
 				node = findNode(sym);
 				if (node == null) {
 					// JsNode valnode = new JsNode(parent, EnumNode.VALUE, sym,
@@ -672,6 +685,10 @@ public class Parser {
 								node = new ArrayNode(null, EnumNode.VALUE, lex.value(), -1);
 								node.setReturnType(type);
 								arraynode.assignChildNode(node);
+								}
+								else
+								{
+									node = null;
 								}
 							}
 							else{
