@@ -2,7 +2,7 @@ package org.addondev.tools.jsjava;
 
 import java.util.ArrayList;
 
-import org.addondev.parser.javascript.JsNode;
+import org.addondev.parser.javascript.Node;
 import org.addondev.parser.javascript.serialize.NodeSerializer;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -11,7 +11,7 @@ public class JsReadTest {
 	public static void main(String[] args) {
 		//String filename = "D:\\data\\src\\PDE\\workrepository\\plugins\\addondev\\plugins\\org.addondev.unittest\\tmp\\text.xml";
 		String filename = args[0];
-		JsNode root = NodeSerializer.read(filename);
+		Node root = NodeSerializer.read(filename);
 		root.dump("");
 		System.exit(0);
 		

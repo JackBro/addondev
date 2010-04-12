@@ -168,6 +168,8 @@ var MyObject =
 var nn =  MyObject.ret();
 var sn =  MyObject.msg;
 
+var ar = [];
+
 //var MyObject2 =
 //{
 //	load: function(){}

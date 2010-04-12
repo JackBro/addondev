@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import org.addondev.parser.javascript.JsNode;
+import org.addondev.parser.javascript.Node;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -21,7 +21,7 @@ public class JavaScriptContentProvider implements ITreeContentProvider {
 		//JavaScriptNode n = (JavaScriptNode)parentElement;
 		//return n.getChildren();
 		
-		JsNode n = (JsNode)parentElement;
+		Node n = (Node)parentElement;
 		//return n.getChildNode();
 		//return n.getChildNode().toArray(new JsNode[n.getChildNode().size()]);
 		return n.getChildNodes();
@@ -32,7 +32,7 @@ public class JavaScriptContentProvider implements ITreeContentProvider {
 		// TODO Auto-generated method stub
 		//return null;
 		//return ((File)element).getParentFile();
-		return ((JsNode)element).getParent();
+		return ((Node)element).getParent();
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class JavaScriptContentProvider implements ITreeContentProvider {
 		//JavaScriptNode n = (JavaScriptNode)element;
 		//return n.getChildrenNum() == 0 ? false:true;
 		
-		JsNode n = (JsNode)element;
+		Node n = (Node)element;
 		//return n.getChildrenNum() == 0 ? false:true;
 		return n.hasChildNode();
 	}
@@ -56,7 +56,7 @@ public class JavaScriptContentProvider implements ITreeContentProvider {
 		//JavaScriptNode node = (JavaScriptNode)inputElement;
 		//return node.getChildren();
 		
-		JsNode node = (JsNode)inputElement;
+		Node node = (Node)inputElement;
 		//return node.getChildren();
 		//return node.getChildNode().toArray(new JsNode[node.getChildNode().size()]);
 		return node.getChildNodes();

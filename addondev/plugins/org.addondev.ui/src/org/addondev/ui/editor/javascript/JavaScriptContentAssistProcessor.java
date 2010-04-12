@@ -7,7 +7,7 @@ import java.util.Stack;
 
 
 import org.addondev.core.AddonDevPlugin;
-import org.addondev.parser.javascript.JsNode;
+import org.addondev.parser.javascript.Node;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
@@ -84,9 +84,9 @@ public class JavaScriptContentAssistProcessor implements
 			}
 
 			String text = getAssistTarget(src, offset);
-			JsNode tnode = scope.getNode();
+			Node tnode = scope.getNode();
 			
-			ArrayList<JsNode> compnodes = new ArrayList<JsNode>();
+			ArrayList<Node> compnodes = new ArrayList<Node>();
 			
 			if(text.length() > 0)
 			{
@@ -138,8 +138,8 @@ public class JavaScriptContentAssistProcessor implements
 						}
 						else
 						{
-							for (JsNode node : tnode.getChildNodes()) {
-								if(node.getName().startsWith(ts[ts.length]))
+							for (Node node : tnode.getChildNodes()) {
+								if(node.getSymbol().startsWith(ts[ts.length]))
 								{
 									compnodes.add(node);
 								}
@@ -164,8 +164,8 @@ public class JavaScriptContentAssistProcessor implements
 					scopes.addAll(scopemanager.getGlobalScopes());
 					
 					for (Scope scope2 : scopes) {
-						for (JsNode node : scope2.getNode().getChildNodes()) {
-							if(node.getName().startsWith(text))
+						for (Node node : scope2.getNode().getChildNodes()) {
+							if(node.getSymbol().startsWith(text))
 							{
 								compnodes.add(node);
 							}
@@ -190,17 +190,17 @@ public class JavaScriptContentAssistProcessor implements
 			
 			List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 				//JsNode[] chnodes = scope2.getNode().getChildNodes();
-				for (JsNode node : compnodes) {
+				for (Node node : compnodes) {
 					result.add(
 							new CompletionProposal(
-									node.getName(), 
+									node.getSymbol(), 
 									offset, 
 									0,
-									node.getName().length(),
+									node.getSymbol().length(),
 									null,
-									node.getName(), 
+									node.getSymbol(), 
 									null,
-									node.getfJsDoc()
+									node.getJsDoc()
 							)			
 					);
 				}

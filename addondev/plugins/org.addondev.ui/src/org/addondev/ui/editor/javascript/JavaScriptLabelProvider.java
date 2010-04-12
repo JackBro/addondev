@@ -3,7 +3,7 @@ package org.addondev.ui.editor.javascript;
 //import jp.addondev.parser.javascript.SimpleNode;
 
 
-import org.addondev.parser.javascript.JsNode;
+import org.addondev.parser.javascript.Node;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -21,8 +21,8 @@ public class JavaScriptLabelProvider extends LabelProvider {
 //			//return ((SimpleNode)n.jjtGetChild(0)).getImage();
 //			return n.getImage();
 //		}
-		JsNode node = (JsNode)element;
-		return node.getName();
+		Node node = (Node)element;
+		return node.getSymbol();
 		
 		//return super.getText(element);
 	}

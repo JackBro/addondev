@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 
 
-import org.addondev.parser.javascript.JsNode;
+import org.addondev.parser.javascript.Node;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Parser;
 import org.eclipse.jface.text.IDocument;
@@ -47,9 +47,9 @@ public class JavaScriptOutlinePage extends ContentOutlinePage {
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 				//JavaScriptNode jsnode = (JavaScriptNode)sel.getFirstElement();
 				//int offset = jsnode.getOffset();
-				JsNode node = (JsNode)sel.getFirstElement();
+				Node node = (Node)sel.getFirstElement();
 				
-				int offset = node.getOffset();
+				int offset = node.getStartOffset();
 				if(offset<0)
 				{		
 				}

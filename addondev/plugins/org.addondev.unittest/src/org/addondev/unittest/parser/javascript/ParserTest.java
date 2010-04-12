@@ -20,7 +20,7 @@ import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.Scope;
 import org.addondev.parser.javascript.ScopeManager;
 import org.addondev.parser.javascript.ScopeStack;
-import org.addondev.parser.javascript.TestParser;
+import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.serialize.NodeSerializer;
 import org.addondev.parser.javascript.util.JavaScriptParserManager;
 import org.addondev.util.FileUtil;
@@ -71,7 +71,7 @@ public class ParserTest {
 		//Parser parser = new Parser("test00.js");
 		ScopeManager sm = new ScopeManager();
 		//Parser parser = new Parser("test00.js", sm);
-		TestParser parser = new TestParser("test00.js", sm);
+		Parser parser = new Parser("test00.js", sm);
 		parser.parse(src);
 		Node node = parser.root;
 		node.dump("");
@@ -85,7 +85,7 @@ public class ParserTest {
 		//Parser parser = new Parser("test01.js");
 		ScopeManager sm = new ScopeManager();
 		//Parser parser = new Parser("test01.js", sm);
-		TestParser parser = new TestParser("test01.js", sm);
+		Parser parser = new Parser("test01.js", sm);
 		parser.parse(src);
 		Node node = parser.root;
 		node.dump("");
@@ -100,7 +100,7 @@ public class ParserTest {
 		//Parser parser = new Parser("test02.js");
 		ScopeManager sm = new ScopeManager();
 		//Parser parser = new Parser("test02.js", sm);
-		TestParser parser = new TestParser("test02.js", sm);
+		Parser parser = new Parser("test02.js", sm);
 		parser.parse(lex);
 		Node node = parser.root;
 		node.dump("");
@@ -116,7 +116,7 @@ public class ParserTest {
 			jslist.add("system.js");
 			String src = getSource(ParserTest.class.getResourceAsStream("system.js"));					
 			//Parser parser = new Parser("system.js", sm);
-			TestParser parser = new TestParser("system.js", sm);
+			Parser parser = new Parser("system.js", sm);
 			parser.parse(src);
 			//JsNode node = parser.root;
 			//node.dump("");
@@ -160,7 +160,7 @@ public class ParserTest {
 			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
 			//ScopeManager sm = new ScopeManager();
 			//Parser parser = new Parser("test03.js", sm);
-			TestParser parser = new TestParser("test03.js", sm);
+			Parser parser = new Parser("test03.js", sm);
 			parser.parse(src);
 			Node node = parser.root;
 			node.dump("");
@@ -176,7 +176,7 @@ public class ParserTest {
 		//Parser parser = new Parser("test04.js"); // パーサーを作成。
 		ScopeManager sm = new ScopeManager();
 		//Parser parser = new Parser("test04.js", sm);
-		TestParser parser = new TestParser("test04.js", sm);
+		Parser parser = new Parser("test04.js", sm);
 		parser.parse(lex);
 		Node node = parser.root;
 		node.dump("");
