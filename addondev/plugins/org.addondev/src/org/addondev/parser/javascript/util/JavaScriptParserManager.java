@@ -15,7 +15,6 @@ import org.addondev.parser.javascript.ImportFunction;
 import org.addondev.parser.javascript.InterfaceFunction;
 import org.addondev.parser.javascript.Parser;
 import org.addondev.parser.javascript.ScopeManager;
-import org.addondev.ui.AddonDevUIPlugin;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
 import org.eclipse.core.resources.IFile;
