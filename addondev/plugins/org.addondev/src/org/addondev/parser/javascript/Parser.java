@@ -682,12 +682,11 @@ public class Parser {
 							{
 								Node arraynode = getNodeByType("Array");
 								if(arraynode !=null){
-								node = new ArrayNode(null, EnumNode.VALUE, lex.value(), -1);
-								node.setReturnType(type);
-								arraynode.assignChildNode(node);
+									node = new ArrayNode(null, EnumNode.VALUE, lex.value(), -1);
+									node.setReturnType(type);
+									arraynode.assignChildNode(node);
 								}
-								else
-								{
+								else{
 									node = null;
 								}
 							}
