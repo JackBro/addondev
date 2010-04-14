@@ -79,7 +79,7 @@ public class ScopeManager {
 //		return node;		
 //	}
 	
-	public Node getGlobalNode(String symbole)
+	public Node getGlobalNode(String symbol)
 	{
 		if(fJsList == null) return null;
 		
@@ -90,7 +90,7 @@ public class ScopeManager {
 			{
 				if(fScopeStackMap.containsKey(key))
 				{
-					node = fScopeStackMap.get(key).getScope(0).getNode(symbole);
+					node = fScopeStackMap.get(key).getScope(0).getNode(symbol);
 					if(node != null)
 						break;
 				}

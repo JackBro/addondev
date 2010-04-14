@@ -8,12 +8,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.addondev.core.AddonDevPlugin;
 //import org.addondev.parser.javascript.JsNode;
+import org.addondev.parser.javascript.IFunction;
+import org.addondev.parser.javascript.ImportFunction;
+import org.addondev.parser.javascript.InterfaceFunction;
 import org.addondev.parser.javascript.Lexer;
 import org.addondev.parser.javascript.Node;
 import org.addondev.parser.javascript.Parser;
@@ -34,6 +41,7 @@ import org.eclipse.core.runtime.IPath;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.osgi.framework.Bundle;
 
 
 public class ParserTest {
@@ -101,13 +109,32 @@ public class ParserTest {
 		ScopeManager sm = new ScopeManager();
 		//Parser parser = new Parser("test02.js", sm);
 		Parser parser = new Parser("test02.js", sm);
-		parser.parse(lex);
+		parser.parse(src);
 		Node node = parser.root;
 		node.dump("");
 	}
 	
 	@Test
 	public void testParser03() throws IOException {
+		
+		HashMap<String, IFunction> functions = new HashMap<String, IFunction>();
+		functions.put("interfaces", new InterfaceFunction());
+		functions.put("import", new ImportFunction());
+		
+		ScopeManager globalsm = new ScopeManager();
+		List<String> glist = Arrays.asList("system.js");
+		for (String string : glist) {
+			try {
+				//input = bundle.getEntry("lib/javascript/" + string).openStream();
+				String src = getSource(ParserTest.class.getResourceAsStream(string));		
+				Parser parser = new Parser(string, globalsm);
+				parser.parse(src);		
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		globalsm.setJsLis(glist);
 		
 		ArrayList<String> jslist = new ArrayList<String>();
 		ScopeManager sm = new ScopeManager();
@@ -154,13 +181,14 @@ public class ParserTest {
 //			node.dump("");
 //		}
 		{
-
+			//JavaScriptParserManager.instance().init();
 			//jslist.add("xpcom.js");
 			sm.setJsLis(jslist);
 			String src = getSource(ParserTest.class.getResourceAsStream("test03.js"));
 			//ScopeManager sm = new ScopeManager();
 			//Parser parser = new Parser("test03.js", sm);
-			Parser parser = new Parser("test03.js", sm);
+			//Parser parser = new Parser("test03.js", sm);
+			Parser parser = new Parser("test03.js", sm, globalsm, functions);
 			parser.parse(src);
 			Node node = parser.root;
 			node.dump("");
@@ -177,7 +205,7 @@ public class ParserTest {
 		ScopeManager sm = new ScopeManager();
 		//Parser parser = new Parser("test04.js", sm);
 		Parser parser = new Parser("test04.js", sm);
-		parser.parse(lex);
+		parser.parse(src);
 		Node node = parser.root;
 		node.dump("");
 	}

@@ -3,7 +3,7 @@ package org.addondev.parser.javascript;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.addondev.parser.javascript.util.JavaScriptParserManager;
+//import org.addondev.parser.javascript.util.JavaScriptParserManager;
 
 public class Parser {
 	private Lexer lex;
@@ -17,6 +17,8 @@ public class Parser {
 
 	private ScopeStack fScopeStack = new ScopeStack();
 	private ScopeManager fScopeManager;
+	private ScopeManager fGlobaelScopeManager;
+	private Map<String, IFunction> fFunctions;
 
 	private void setJsDoc(Node node, String jsDoc) {
 		if (fJsDoc != null && fJsDoc.length() > 0) {
@@ -44,6 +46,12 @@ public class Parser {
 			// other
 			node = fScopeManager.getGlobalNode(symbol); // global other
 		}
+		
+		if (node == null && fGlobaelScopeManager != null) {
+			//ScopeManager gsm = JavaScriptParserManager.instance().getGlobalScopeManager();
+			node = fGlobaelScopeManager.getGlobalNode(symbol);
+		}
+		
 		return node;
 	}
 
@@ -131,70 +139,104 @@ public class Parser {
 	public Parser(String name, ScopeManager scopemanager) {
 		fName = name;
 		fScopeManager = scopemanager;
+		fGlobaelScopeManager = null;
+		fFunctions = null;
+	}
+	
+	public Parser(String name, ScopeManager scopemanager, ScopeManager globalscopemanager, Map<String, IFunction> functions) {
+		fName = name;
+		fScopeManager = scopemanager;
+		fGlobaelScopeManager = globalscopemanager;
+		fFunctions = functions;
 	}
 
-	public Node parse(Lexer lexer) {
-		Node code = null;
-		lex = lexer;
-		try {
-			code = program();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return code;
-	}
+//	public Node parse(Lexer lexer) {
+//		Node code = null;
+//		lex = lexer;
+//		try {
+//			code = program();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return code;
+//	}
 
-	int endoff;
+	//int endoff;
 
 	public Node parse(String src) {
-		endoff = src.length();
-		Node code = null;
+		// Node code = null;
+		// try {
+		// lex = new Lexer(src);
+		// code = program();
+		//			
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// return code;
 		try {
+			root = new ValNode(null, EnumNode.ROOT, "root", 0);
+			fScopeStack.pushScope(new Scope(0, root));
+			
+			int endoff = src.length();
 			lex = new Lexer(src);
-			code = program();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return code;
-	}
-
-	public Node parse(String src, Scope scope) {
-		root = new ValNode(null, EnumNode.ROOT, "root", src.length());
-		try {
-			lex = new Lexer(src);
-			fScopeStack.pushScope(scope);
+			
+			int offset = lex.offset();
 			while (token != TokenType.EOS) {
 				stmt(root);
-				// getToken();
+
+				if (offset == lex.offset() && token != TokenType.EOS)
+					// break;
+					throw new EOSException();
+
+				offset = lex.offset();
 			}
-		} catch (Exception e) {
+			fScopeStack.getScope(0).setEnd(endoff);
+			fScopeManager.setScopeStack(fName, fScopeStack);
+
+		} catch (EOSException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// ScopeManager.instance().setScopeStack(fName, fScopeStack);
-		fScopeManager.setScopeStack(fName, fScopeStack);
 		return root;
 	}
 
-	private Node program() throws EOSException {
-		root = new ValNode(null, EnumNode.ROOT, "root", 0);
-		//fScopeStack.pushScope(new Scope(0, endoff, root));
-		fScopeStack.pushScope(new Scope(0, root));
-		int offset = lex.offset();
-		while (token != TokenType.EOS) {
-			stmt(root);
-			// getToken();
+//	public Node parse(String src, Scope scope) {
+//		//int endoff = src.length();
+//		root = new ValNode(null, EnumNode.ROOT, "root", src.length());
+//		try {
+//			lex = new Lexer(src);
+//			fScopeStack.pushScope(scope);
+//			while (token != TokenType.EOS) {
+//				stmt(root);
+//				// getToken();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		// ScopeManager.instance().setScopeStack(fName, fScopeStack);
+//		fScopeManager.setScopeStack(fName, fScopeStack);
+//		return root;
+//	}
 
-			if (offset == lex.offset() && token != TokenType.EOS)
-			//	break;
-			 throw new EOSException();
-
-			offset = lex.offset();
-		}
-		fScopeStack.getScope(0).setEnd(endoff);
-		fScopeManager.setScopeStack(fName, fScopeStack);
-
-		return root;
-	}
+//	private Node program() throws EOSException {
+//		root = new ValNode(null, EnumNode.ROOT, "root", 0);
+//		fScopeStack.pushScope(new Scope(0, root));
+//		int offset = lex.offset();
+//		while (token != TokenType.EOS) {
+//			stmt(root);
+//			// getToken();
+//
+//			if (offset == lex.offset() && token != TokenType.EOS)
+//			//	break;
+//			 throw new EOSException();
+//
+//			offset = lex.offset();
+//		}
+//		fScopeStack.getScope(0).setEnd(endoff);
+//		fScopeManager.setScopeStack(fName, fScopeStack);
+//
+//		return root;
+//	}
 
 	private void stmt(Node parent) throws EOSException {
 		switch (token) {
@@ -657,9 +699,9 @@ public class Parser {
 						// param = lex.value();
 						// node = findNode(param);
 						// }
-						Map<String, IFunction> funcmap = JavaScriptParserManager
-								.instance().getFunctions();
-						if (funcmap.containsKey(type)) {
+						//Map<String, IFunction> funcmap = JavaScriptParserManager.instance().getFunctions();
+						//if (funcmap.containsKey(type)) {
+						if (fFunctions != null && fFunctions.containsKey(type)) {
 							ArrayList<Node> args = new ArrayList<Node>();
 
 							if (token != ')') {
@@ -673,7 +715,7 @@ public class Parser {
 										args.add(argnode);
 								}
 							}
-							IFunction func = funcmap.get(type);
+							IFunction func = fFunctions.get(type);
 							node = func.Run(fScopeManager, fName, args);
 							getToken(); // skip ')'
 							
@@ -731,9 +773,10 @@ public class Parser {
 
 		if (node != null && node.getReturnType() != null) {
 			String type = node.getReturnType();
-			Map<String, IFunction> funcmap = JavaScriptParserManager.instance()
-					.getFunctions();
-			if (funcmap.containsKey(type)) {
+			//Map<String, IFunction> funcmap = JavaScriptParserManager.instance()
+			//		.getFunctions();
+			//if (funcmap.containsKey(type)) {
+			if (fFunctions != null && fFunctions.containsKey(type)) {
 				ArrayList<Node> args = new ArrayList<Node>();
 
 				if (token != ')') {
@@ -744,7 +787,7 @@ public class Parser {
 					}
 				}
 
-				IFunction func = funcmap.get(type);
+				IFunction func = fFunctions.get(type);
 				node = func.Run(fScopeManager, fName, args);
 			}
 			else if (token == '[') {

@@ -27,9 +27,10 @@ public class JavaScriptParserManager {
 	
 	private Map<IProject, ScopeManager> projectscope = new HashMap<IProject, ScopeManager>();;
 	private Map<String, ScopeManager> globalscope;
+	private ScopeManager globalsm;
 	private XULJsMap fXULJsMap = new XULJsMap();
 	
-	private Map<String, IFunction> functions = new HashMap<String, IFunction>();
+	private Map<String, IFunction> functions;// = new HashMap<String, IFunction>();
 	
 	
 	public Map<String, IFunction> getFunctions() {
@@ -46,19 +47,54 @@ public class JavaScriptParserManager {
 	
 	private JavaScriptParserManager()
 	{
+//		functions.put("interfaces", new InterfaceFunction());
+//		functions.put("import", new ImportFunction());
+//		
+//		globalsm = new ScopeManager();
+//		Bundle bundle = AddonDevPlugin.getDefault().getBundle();
+//		List<String> list = Arrays.asList("system.js");
+//		for (String string : list) {
+//			InputStream input;
+//			try {
+//				input = bundle.getEntry("lib/javascript/" + string).openStream();
+//				String src = FileUtil.getContent(input);
+//				Parser parser = new Parser(string, globalsm);
+//				parser.parse(src);		
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+		init();
+	}
+	
+	public void init(){
+		
+		if(functions != null) return;
+		functions = new HashMap<String, IFunction>();
 		functions.put("interfaces", new InterfaceFunction());
 		functions.put("import", new ImportFunction());
 		
-		ScopeManager globalsm = new ScopeManager();
+		globalsm = new ScopeManager();
 		Bundle bundle = AddonDevPlugin.getDefault().getBundle();
 		List<String> list = Arrays.asList("system.js");
-		//jslist.add("system.js");
 		for (String string : list) {
-			InputStream input = bundle.getEntry("lib/javascript/" + string).openStream();
-			String src = FileUtil.getContent(input);
-			Parser parser = new Parser(string, globalsm);
-			parser.parse(src);		
+			InputStream input;
+			try {
+				input = bundle.getEntry("lib/javascript/" + string).openStream();
+				String src = FileUtil.getContent(input);
+				Parser parser = new Parser(string, globalsm);
+				parser.parse(src);		
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		globalsm.setJsLis(list);
+	}
+	
+	public ScopeManager getGlobalScopeManager(){
+		return globalsm;
 	}
 	
 	public ScopeManager getScopeManager(IProject project)
