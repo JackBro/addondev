@@ -72,6 +72,13 @@ public class Parser {
 			node = new ValNode(null, EnumNode.VALUE_PROP, lex.value(), 0);
 			//cloneChildNode(chNode, node);
 			chNode.assignChildNode(node);
+			
+//			Node[] nodes = gnode.getChildNodes();
+//			for (Node node2 : nodes) {
+//				if(!node2.getSymbol().equals("prototype"))
+//					node.addChildNode(node2);			
+//			}
+
 		} else {
 //			if(type.contains("[]"))
 //			{

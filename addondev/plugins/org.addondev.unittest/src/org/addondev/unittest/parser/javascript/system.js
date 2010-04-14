@@ -36,6 +36,11 @@ String.prototype.length;
 function Number(){};
 Number.prototype = new Object();
 
+/*
+ * @type Number;
+ */
+Number.MAX_VALUE;
+
 //function Number(){};
 //
 //
@@ -66,3 +71,25 @@ Array.prototype.pop = function(){};
 //
 //function document(){};
 //document.createElement = function(args){};
+
+var Math = function(){};
+
+/**
+ * @type Number
+ */
+Math.abs = function(x){};
+
+/**
+ * @type Number
+ */
+Math.sin = function(x){};
+
+/**
+ * @type Number
+ */
+Math.cos = function(x){};
+
+/**
+ * @type Number
+ */
+Math.tan = function(x){};
