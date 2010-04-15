@@ -135,40 +135,40 @@
 //	
 //}
 
-//var MyObject =
-//{    
-//	/**
-//	 * 
-//	 * @type String
-//	 * 
-//	 */
-//	msg:"",
-//	
-//	/**
-//	 * 
-//	 * @type String[]
-//	 * 
-//	 */
-//	ret:function()
-//	{
-//		//contextMenu.addEventListener("popupshowing", MyObject._unload(event));
-//	}
-//
-////    hello3 : function (arg0, arg1){
-////		arg0=1;
-////		garg=100;
-////    },
-//	_unload: function(event)
-//	{
-//		//MyObject.
-//    	//util.
-//		//var fn = this.msg;
-//		
-//	}
-//};
-//var nn =  MyObject.ret();
-////var sn =  MyObject.msg;
-//var m = Math.sin();
+var MyObject =
+{    
+	/**
+	 * 
+	 * @type String
+	 * 
+	 */
+	msg:"",
+	
+	/**
+	 * 
+	 * @type String[]
+	 * 
+	 */
+	ret:function()
+	{
+		//contextMenu.addEventListener("popupshowing", MyObject._unload(event));
+	}
+
+//    hello3 : function (arg0, arg1){
+//		arg0=1;
+//		garg=100;
+//    },
+	_unload: function(event)
+	{
+		//MyObject.
+    	//util.
+		//var fn = this.msg;
+		
+	}
+};
+var nn =  MyObject.ret();
+//var sn =  MyObject.msg;
+var m = Math.sin();
 var t=0;
 //var ar = [];
 
