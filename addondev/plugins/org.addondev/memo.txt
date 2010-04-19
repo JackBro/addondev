@@ -1,4 +1,8 @@
-﻿http://blog.asial.co.jp/414
+﻿http://www.inf.ed.ac.uk/teaching/courses/ip/
+http://www.cs.technion.ac.il/~stommy/gef_page.htm
+http://sourceforge.jp/projects/nimbus-ide/releases/
+
+http://blog.asial.co.jp/414
 http://www13.plala.or.jp/observe/index.html#gef
 http://www.ibm.com/developerworks/jp/opensource/library/os-eclipse-gef11/
 http://webcache.googleusercontent.com/search?q=cache:PmKPos0WkSUJ:d.hatena.ne.jp/chaosophy/20090706/1246949007+GEF+eclipse&cd=53&hl=ja&ct=clnk&gl=jp&lr=lang_ja&client=firefox-a
