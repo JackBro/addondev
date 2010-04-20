@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+   <p/><p><b>このプラグイン・プロジェクトの操作に関するヒント</b></p><li>新しいプラグインについては、「<img href="pageImage"/><a href="OverviewPage">概説</a>」へ進みます。</li><li>ワークベンチの別のインスタンスを起動することによって、このプラグインの contribution をテストできます。「<b>実行</b>」メニューで、「<b>次を実行</b>」をクリックし、選択可能な項目から「<img href="runTimeWorkbenchImage"/><a href="action.run">ランタイム・ワークベンチ</a>」を選択します。</li><li>「<a href="action.newExtension">新規拡張ウィザード</a>」を使用すると、拡張を追加して、このプラグインに機能を追加できます。</li><li>プラグイン・プロジェクトには、デバッグ可能な Java コードが含まれています。Java クラスにブレークポイントを置きます。「<b>実行</b>」メニューで、「<b>次をデバッグ</b>」をクリックし、選択可能な項目から「<img href="runTimeWorkbenchImage"/><a href="action.debug">ランタイム・ワークベンチ</a>」を選択します。</li>
+</form>

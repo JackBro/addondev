@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="gef.example.helloworld"
+   name="Helloworld プラグイン"
+   version="1.0.0"
+   provider-name=""
+   class="gef.example.helloworld.HelloworldPlugin">
+
+   <runtime>
+      <library name="helloworld.jar"/>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.gef"/>
+   </requires>
+
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Hello World Editor"
+            default="true"
+            icon="example.gif"
+            filenames="hello.world"
+            contributorClass="gef.example.helloworld.MyContributor"
+            class="gef.example.helloworld.HelloWorldEditor"
+            id="gef.example.helloworld.editor1">
+      </editor>
+   </extension>
+
+</plugin>
