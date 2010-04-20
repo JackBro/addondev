@@ -1,18 +1,14 @@
 package gef.example.helloworld.editparts;
 
-import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
 import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
-import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.VBoxModel;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -20,19 +16,16 @@ import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPolicy;
 
-public class VBoxEditPart extends EditPartWithListener {
-	//Layer figure;
+public class HBoxEditPart extends EditPartWithListener {
+
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
-		Figure dd = new Figure();
-		Layer figure = new Layer();
+		figure = new Layer();
 		LineBorder lb = new LineBorder();
-		lb.setColor(ColorConstants.red);
+		lb.setColor(ColorConstants.blue);
 		lb.setWidth(3);
 		figure.setBorder(lb);
 //		//figure.setPreferredSize(300, 100);
@@ -47,7 +40,7 @@ public class VBoxEditPart extends EditPartWithListener {
 //		
 //		return figure;
 		Label label = new Label();
-		//label.setText("model.getText()");
+		label.setText("HBox");
 
 		// 外枠とマージンの設定
 		label.setBorder(
@@ -60,34 +53,20 @@ public class VBoxEditPart extends EditPartWithListener {
 		
 		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
-		tl.setVertical(true);
+		tl.setVertical(false);
 		tl.setStretchMinorAxis(true);
 		//fl.setStretchMinorAxis(true);
 		//fl.setHorizontal(false);
 		figure.setLayoutManager(tl);
-		
-		
 		figure.add(label);
-		//figure.setConstraint(label, new Rectangle(2, 2, -1, -1));
 		
 		return figure;
-	}
-
-	@Override
-	protected void registerVisuals() {
-		// TODO Auto-generated method stub
-		super.registerVisuals();
-		//getModelChildren().get(getModelChildren().size()-1);
-//		Label label = new Label();
-//		label.setText("model.getText()");
-//		figure.add(label);
 	}
 
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new VBoxLayoutEditPolicy());
-		//installEditPolicy(EditPolicy.COMPONENT_ROLE,new MyComponentEditPolicy());
 	}
 
 	@Override
@@ -106,7 +85,7 @@ public class VBoxEditPart extends EditPartWithListener {
 	}
 	
 	protected List getModelChildren() {
-		return ((VBoxModel) getModel()).getChildren();
+		return ((HBoxModel) getModel()).getChildren();
 	}
 
 }

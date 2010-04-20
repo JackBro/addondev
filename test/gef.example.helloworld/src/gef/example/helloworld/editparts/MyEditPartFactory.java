@@ -1,6 +1,7 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.model.ContentsModel;
+import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.HelloModel;
 import gef.example.helloworld.model.VBoxModel;
 
@@ -21,6 +22,8 @@ public class MyEditPartFactory implements EditPartFactory {
 //		else 
 		if(model instanceof VBoxModel)
 			part = new VBoxEditPart();
+		else if(model instanceof HBoxModel)
+			part = new HBoxEditPart();
 		else if (model instanceof HelloModel)
 			part = new HelloEditPart();
 

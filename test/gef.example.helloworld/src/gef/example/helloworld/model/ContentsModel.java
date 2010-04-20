@@ -14,7 +14,7 @@ public class ContentsModel extends AbstractModel {
 		children.add(child); // 子モデルを追加
 		// EditPartへの通知
 		//firePropertyChange(P_CHILDREN, null, null);
-		firePropertyChange(P_CHILDREN, null, child);
+		firePropertyChange(P_CHILDREN, null, null);
 	}
 
 	public List getChildren() {

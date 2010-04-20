@@ -2,6 +2,7 @@ package gef.example.helloworld;
 
 import gef.example.helloworld.editparts.MyEditPartFactory;
 import gef.example.helloworld.model.ContentsModel;
+import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.HelloModel;
 import gef.example.helloworld.model.VBoxModel;
 
@@ -151,6 +152,16 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 			descriptor, // パレットに表示する16X16のイメージ
 			descriptor);// パレットに表示する24X24のイメージ
 		drawer.add(creationVBoxEntry);
+		
+		// 'モデルの作成'ツールの作成と追加
+		CreationToolEntry creationHBoxEntry =
+		  new CreationToolEntry(
+			"HBoxの作成", // パレットに表示される文字列
+			"モデル作成", // ツールチップ
+			new SimpleFactory(HBoxModel.class), // モデルを作成するファクトリ
+			descriptor, // パレットに表示する16X16のイメージ
+			descriptor);// パレットに表示する24X24のイメージ
+		drawer.add(creationHBoxEntry);
 
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);
