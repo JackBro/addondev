@@ -62,8 +62,8 @@ public class VBoxEditPart extends EditPartWithListener {
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(true);
 		tl.setStretchMinorAxis(true);
-		//fl.setStretchMinorAxis(true);
-		//fl.setHorizontal(false);
+		fl.setStretchMinorAxis(true);
+		fl.setHorizontal(false);
 		figure.setLayoutManager(tl);
 		
 		
