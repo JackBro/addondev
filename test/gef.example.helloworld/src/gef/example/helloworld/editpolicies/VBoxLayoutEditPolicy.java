@@ -1,7 +1,10 @@
 package gef.example.helloworld.editpolicies;
 
 import gef.example.helloworld.model.AbstractModel;
+import gef.example.helloworld.model.ContentsModel;
+import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.commands.AddCommand;
 import gef.example.helloworld.model.commands.CreateCommand;
 import gef.example.helloworld.model.commands.MoveChildCommand;
 
@@ -21,8 +24,9 @@ public class VBoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	protected Command createAddCommand(EditPart child, EditPart after) {
 		// TODO Auto-generated method stub
 		//getHost()
-		
-		return null;
+		ElementModel model = (ElementModel) child.getModel();
+		ElementModel afterModel = (ElementModel) after.getModel();
+		return new AddCommand((ContentsModel)getHost().getModel(), model, afterModel);
 	}
 
 	@Override
@@ -46,16 +50,9 @@ public class VBoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		// TODO Auto-generated method stub
-		CreateCommand command = new CreateCommand();
-		// 作成するモデルのサイズと位置(制約)を取得
-		//Rectangle constraint = (Rectangle) getConstraintFor(request);
-		// 新規作成するモデルの取得
-		AbstractModel model = (AbstractModel) request.getNewObject();
-		// 制約の設定
-		//model.setConstraint(constraint);
-
-		command.setContentsModel(getHost().getModel());
-		command.setHelloModel(model);
+		ContentsModel cm = (ContentsModel)getHost().getModel();
+		ElementModel model = (ElementModel) request.getNewObject();		
+		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model);		
 		return command;
 	}
 

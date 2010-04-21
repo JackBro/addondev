@@ -2,7 +2,7 @@ package gef.example.helloworld.model;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 
-public class HelloModel extends AbstractModel {
+public class HelloModel extends ElementModel {
 	// 変更の種類を識別するための文字列
 	public static final String P_CONSTRAINT = "_constraint";
 

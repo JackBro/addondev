@@ -23,7 +23,7 @@ public class HBoxEditPart extends EditPartWithListener {
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
-		figure = new Layer();
+		Layer figure = new Layer();
 		LineBorder lb = new LineBorder();
 		lb.setColor(ColorConstants.blue);
 		lb.setWidth(3);
@@ -54,7 +54,7 @@ public class HBoxEditPart extends EditPartWithListener {
 		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(false);
-		tl.setStretchMinorAxis(true);
+		//tl.setStretchMinorAxis(true);
 		//fl.setStretchMinorAxis(true);
 		//fl.setHorizontal(false);
 		figure.setLayoutManager(tl);

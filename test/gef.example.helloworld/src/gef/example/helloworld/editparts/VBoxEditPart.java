@@ -29,7 +29,7 @@ public class VBoxEditPart extends EditPartWithListener {
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
-		Figure dd = new Figure();
+		//Figure dd = new Figure();
 		Layer figure = new Layer();
 		LineBorder lb = new LineBorder();
 		lb.setColor(ColorConstants.red);
@@ -61,8 +61,8 @@ public class VBoxEditPart extends EditPartWithListener {
 		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(true);
-		tl.setStretchMinorAxis(true);
-		fl.setStretchMinorAxis(true);
+		//tl.setStretchMinorAxis(true);
+		//fl.setStretchMinorAxis(true);
 		fl.setHorizontal(false);
 		figure.setLayoutManager(tl);
 		
