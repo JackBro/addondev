@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -23,7 +24,8 @@ public class HBoxEditPart extends EditPartWithListener {
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
-		Layer figure = new Layer();
+		Figure figure = new Figure();
+		//Layer figure = new Layer();
 		LineBorder lb = new LineBorder();
 		lb.setColor(ColorConstants.blue);
 		lb.setWidth(3);
@@ -80,6 +82,7 @@ public class HBoxEditPart extends EditPartWithListener {
 			//Object obj = evt.getNewValue();
 			//figure.add((Label) obj);
 			//refreshVisuals(); // ビューを更新する
+			
 			refreshChildren();
 		}
 	}

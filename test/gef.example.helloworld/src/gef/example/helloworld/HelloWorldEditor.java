@@ -49,13 +49,13 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 //		child3.setConstraint(new Rectangle(10, 80, 80, 50));
 //		parent.addChild(child3);
 
-		//VBoxModel parent = new VBoxModel();
-		HBoxModel parent = new HBoxModel();
+		VBoxModel parent = new VBoxModel();
+		//HBoxModel parent = new HBoxModel();
 		HelloModel child1 = new HelloModel();
 		child1.setParent(parent);
 		// 制約の設定
 		child1.setConstraint(new Rectangle(0, 0, -1, -1));
-		parent.addChild(child1);		
+		//parent.addChild(child1);		
 		
 		viewer.setContents(parent);
 

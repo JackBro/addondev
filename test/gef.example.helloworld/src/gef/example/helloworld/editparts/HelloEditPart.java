@@ -34,6 +34,9 @@ public class HelloEditPart extends EditPartWithListener {
 		label.setBackgroundColor(ColorConstants.orange);
 		// 背景色を不透明に
 		label.setOpaque(true);
+		
+		label.setSize(-1, -1);
+		
 		return label;
 	}
 

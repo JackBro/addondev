@@ -14,6 +14,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
+import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Layer;
@@ -29,8 +30,8 @@ public class VBoxEditPart extends EditPartWithListener {
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
-		//Figure dd = new Figure();
-		Layer figure = new Layer();
+		Figure figure = new Figure();
+		//Layer figure = new Layer();
 		LineBorder lb = new LineBorder();
 		lb.setColor(ColorConstants.red);
 		lb.setWidth(3);
@@ -58,30 +59,38 @@ public class VBoxEditPart extends EditPartWithListener {
 		// 背景色を不透明に
 		label.setOpaque(false);
 		
+		
+		Insets padding = new Insets(5, 5, 5, 5);
+		MarginBorder marginBorder = new MarginBorder(padding);
+//		label.setBorder(marginBorder);
+		GridLayout gl = new GridLayout();
+		
+		
 		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(true);
-		//tl.setStretchMinorAxis(true);
+		//tl.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
+		tl.setStretchMinorAxis(false);
 		//fl.setStretchMinorAxis(true);
 		fl.setHorizontal(false);
 		figure.setLayoutManager(tl);
-		
-		
+		figure.setBorder(marginBorder);
+
 		figure.add(label);
 		//figure.setConstraint(label, new Rectangle(2, 2, -1, -1));
 		
 		return figure;
 	}
 
-	@Override
-	protected void registerVisuals() {
-		// TODO Auto-generated method stub
-		super.registerVisuals();
-		//getModelChildren().get(getModelChildren().size()-1);
-//		Label label = new Label();
-//		label.setText("model.getText()");
-//		figure.add(label);
-	}
+//	@Override
+//	protected void registerVisuals() {
+//		// TODO Auto-generated method stub
+//		super.registerVisuals();
+//		//getModelChildren().get(getModelChildren().size()-1);
+////		Label label = new Label();
+////		label.setText("model.getText()");
+////		figure.add(label);
+//	}
 
 	@Override
 	protected void createEditPolicies() {
