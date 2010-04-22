@@ -21,6 +21,8 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.SimpleFactory;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IWorkbenchPart;
 
 public class HelloWorldEditor extends GraphicalEditorWithPalette {
 
@@ -170,6 +172,16 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		root.add(drawer);
 
 		return root;
+	}
+
+	@Override
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		// TODO Auto-generated method stub
+		   // getActivePage()がnullの場合は無視する
+	    if (part.getSite().getWorkbenchWindow().getActivePage() == null)
+	      return;
+
+		super.selectionChanged(part, selection);
 	}
 
 }
