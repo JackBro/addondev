@@ -24,15 +24,15 @@ public class HelloModel extends ElementModel {
 		// テキストの変更をEditPartに通知する
 		firePropertyChange(P_TEXT, null, text); // ②
 	}
-	public Rectangle getConstraint() {
-		return constraint;
-	}
-
-	public void setConstraint(Rectangle rect) {
-		constraint = rect;
-		// 変更の通知
-		firePropertyChange(P_CONSTRAINT, null, constraint);
-	}
+//	public Rectangle getConstraint() {
+//		return constraint;
+//	}
+//
+//	public void setConstraint(Rectangle rect) {
+//		constraint = rect;
+//		// 変更の通知
+//		firePropertyChange(P_CONSTRAINT, null, constraint);
+//	}
 	
 	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {

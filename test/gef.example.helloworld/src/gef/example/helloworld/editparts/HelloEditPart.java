@@ -2,29 +2,34 @@ package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
 import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.VBoxModel;
 
 import java.beans.PropertyChangeEvent;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 
 public class HelloEditPart extends EditPartWithListener {
-
+	Figure rf;
+	Label label;
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
 		HelloModel model = (HelloModel) getModel();
 
-		Label label = new Label();
+		label = new Label();
 		label.setText(model.getText());
 
 		// 外枠とマージンの設定
@@ -37,8 +42,22 @@ public class HelloEditPart extends EditPartWithListener {
 		label.setOpaque(true);
 		
 		//label.setSize(150, 50);
+		//label.setPreferredSize(150, 30);
 		
-		return label;
+		rf=new Figure();
+		rf.setBorder(
+				new CompoundBorder(new LineBorder(), new MarginBorder(3)));		
+		rf.setSize(100,30);
+		rf.setPreferredSize(100,30);
+		//rf.setFill(true);
+		ToolbarLayout tl = new ToolbarLayout();
+		tl.setVertical(true);
+		tl.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
+		tl.setStretchMinorAxis(false);
+		rf.setLayoutManager(tl);
+		rf.add(label);
+		
+		return rf;
 	}
 
 	/* (非 Javadoc)
@@ -76,17 +95,22 @@ public class HelloEditPart extends EditPartWithListener {
 			refreshVisuals(); // ビューを更新する
 	    else if (evt.getPropertyName().equals(HelloModel.P_TEXT)) {
 	        // モデルのテキストが変更されたのでビューに表示するテキストを更新
-	        Label label = (Label) getFigure();
-	        label.setText((String) evt.getNewValue());
+	        //Label label = (Label) getFigure();
+	        //label.setText((String) evt.getNewValue());
 	        //ToolbarLayout tl = new ToolbarLayout();
 	        //tl.setStretchMinorAxis(false);
-	        Rectangle rg = label.getBounds();
-	        rg.width += 30; 
+	        //Rectangle rg = label.getBounds();
+	        //rg.width += 30; 
 //	        label.setBounds(rg);
 //	        refreshVisuals(); // ビューを更新する
-	        label.setSize( 300, rg.height);
-	        refreshVisuals();
-	        getFigure().setBounds(rg);
+	        //label.setSize( 300, rg.height);
+	        //refreshVisuals();
+	        
+	        rf.setSize(300, 30);
+	        rf.setPreferredSize(300,30);
+	        //((EditPartWithListener)getParent()).propertyChange(new PropertyChangeEvent(this, VBoxModel.P_CHILDREN, null, null));
+	        //rf.repaint();
+	        //getFigure().setBounds(rg);
 	        //label.setSize(label.getSize().width+20 , label.getSize().height);
 	    }
 	}

@@ -29,7 +29,8 @@ public class HBoxEditPart extends EditPartWithListener {
 		LineBorder lb = new LineBorder();
 		lb.setColor(ColorConstants.blue);
 		lb.setWidth(3);
-		figure.setBorder(lb);
+		figure.setBorder(new LineBorder(ColorConstants.lightGray));
+		//figure.setOpaque(true);
 //		//figure.setPreferredSize(300, 100);
 //		figure.setBackgroundColor(ColorConstants.blue);
 //
@@ -56,7 +57,7 @@ public class HBoxEditPart extends EditPartWithListener {
 		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(false);
-		//tl.setStretchMinorAxis(true);
+		//tl.setStretchMinorAxis(false);
 		//fl.setStretchMinorAxis(true);
 		//fl.setHorizontal(false);
 		figure.setLayoutManager(tl);

@@ -15,7 +15,7 @@ public class ChangeConstraintCommand extends Command {
 	 */
 	public void execute() {
 		// モデルの制約を変更する
-		helloModel.setConstraint(constraint);
+		//helloModel.setConstraint(constraint);
 	}
 
 	public void setConstraint(Rectangle rect) {
@@ -25,14 +25,14 @@ public class ChangeConstraintCommand extends Command {
 	public void setModel(Object model) {
 		helloModel = (HelloModel) model;
 		// 変更前の情報を記録
-		oldConstraint = helloModel.getConstraint();
+		//oldConstraint = helloModel.getConstraint();
 	}
 
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.commands.Command#undo()
 	 */
 	public void undo() {
-		helloModel.setConstraint(oldConstraint);
+		//helloModel.setConstraint(oldConstraint);
 	}
 
 }

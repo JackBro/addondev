@@ -56,7 +56,7 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		HelloModel child1 = new HelloModel();
 		child1.setParent(parent);
 		// 制約の設定
-		child1.setConstraint(new Rectangle(0, 0, -1, -1));
+		//child1.setConstraint(new Rectangle(0, 0, -1, -1));
 		//parent.addChild(child1);		
 		
 		viewer.setContents(parent);

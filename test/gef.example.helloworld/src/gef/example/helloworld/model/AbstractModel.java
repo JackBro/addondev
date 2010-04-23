@@ -2,12 +2,15 @@ package gef.example.helloworld.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 abstract public class AbstractModel implements IPropertySource  {
 
+	private Map<String, ModelProperty> fPropertyMap = new HashMap<String, ModelProperty>();;
 	// リスナのリスト
 	private PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 

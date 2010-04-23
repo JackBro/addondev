@@ -20,6 +20,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -35,7 +36,7 @@ public class VBoxEditPart extends EditPartWithListener {
 		LineBorder lb = new LineBorder();
 		lb.setColor(ColorConstants.red);
 		lb.setWidth(3);
-		figure.setBorder(lb);
+		figure.setBorder(new LineBorder(ColorConstants.lightGray));
 //		//figure.setPreferredSize(300, 100);
 //		figure.setBackgroundColor(ColorConstants.blue);
 //
@@ -48,7 +49,7 @@ public class VBoxEditPart extends EditPartWithListener {
 //		
 //		return figure;
 		Label label = new Label();
-		//label.setText("model.getText()");
+		label.setText("model.getText()");
 
 		// 外枠とマージンの設定
 		label.setBorder(
@@ -70,13 +71,18 @@ public class VBoxEditPart extends EditPartWithListener {
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(true);
 		//tl.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
-		tl.setStretchMinorAxis(false);
+		tl.setStretchMinorAxis(true);
 		//fl.setStretchMinorAxis(true);
 		fl.setHorizontal(false);
+		fl.setStretchMinorAxis(false);
+		
 		figure.setLayoutManager(tl);
-		figure.setBorder(marginBorder);
+		//figure.setBorder(marginBorder);
 
-		figure.add(label);
+		RectangleFigure rf=new RectangleFigure();
+		rf.setSize(40,40);
+		//figure.add(rf);
+		//figure.add(label);
 		//figure.setConstraint(label, new Rectangle(2, 2, -1, -1));
 		
 		return figure;
