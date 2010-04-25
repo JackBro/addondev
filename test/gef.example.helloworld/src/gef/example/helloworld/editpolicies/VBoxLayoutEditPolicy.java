@@ -14,11 +14,19 @@ import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 
 public class VBoxLayoutEditPolicy extends FlowLayoutEditPolicy {
+
+	@Override
+	public Command getCommand(Request request) {
+		// TODO Auto-generated method stub
+		// System.out.println(request.getType());
+		return super.getCommand(request);
+	}
 
 	@Override
 	protected Command createAddCommand(EditPart child, EditPart after) {

@@ -4,7 +4,9 @@ import gef.example.helloworld.editparts.MyEditPartFactory;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.RootModel;
 import gef.example.helloworld.model.VBoxModel;
+import gef.example.helloworld.model.WindowModel;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +23,8 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.SimpleFactory;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -28,6 +32,15 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 
 	public HelloWorldEditor() {
 		setEditDomain(new DefaultEditDomain(this));
+		addPartPropertyListener(new IPropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+				// TODO Auto-generated method stub
+				 System.out.println(event.getProperty());
+				
+			}
+		});
 	}
 
 	/* (非 Javadoc)
@@ -51,10 +64,13 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 //		child3.setConstraint(new Rectangle(10, 80, 80, 50));
 //		parent.addChild(child3);
 
-		VBoxModel parent = new VBoxModel();
+		RootModel parent = new RootModel();
+		//VBoxModel parent = new VBoxModel();
 		//HBoxModel parent = new HBoxModel();
-		HelloModel child1 = new HelloModel();
-		child1.setParent(parent);
+		//HelloModel child1 = new HelloModel();
+		//child1.setParent(parent);
+		WindowModel child1 = new WindowModel();
+		parent.addChild(child1);
 		// 制約の設定
 		//child1.setConstraint(new Rectangle(0, 0, -1, -1));
 		//parent.addChild(child1);		

@@ -10,7 +10,8 @@ import org.eclipse.ui.views.properties.IPropertySource;
 
 abstract public class AbstractModel implements IPropertySource  {
 
-	private Map<String, ModelProperty> fPropertyMap = new HashMap<String, ModelProperty>();;
+	private Map<String, ModelProperty> fPropertyMap = new HashMap<String, ModelProperty>();
+	private Map<String, Object> fPttributeMap = new HashMap<String, Object>();;
 	// リスナのリスト
 	private PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
@@ -66,6 +67,10 @@ abstract public class AbstractModel implements IPropertySource  {
 	@Override
 	public void setPropertyValue(Object id, Object value) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	protected void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
 		
 	}
 }

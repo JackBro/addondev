@@ -49,7 +49,7 @@ public class VBoxEditPart extends EditPartWithListener {
 //		
 //		return figure;
 		Label label = new Label();
-		label.setText("model.getText()");
+		label.setText("VBox");
 
 		// 外枠とマージンの設定
 		label.setBorder(
@@ -82,7 +82,7 @@ public class VBoxEditPart extends EditPartWithListener {
 		RectangleFigure rf=new RectangleFigure();
 		rf.setSize(40,40);
 		//figure.add(rf);
-		//figure.add(label);
+		figure.add(label);
 		//figure.setConstraint(label, new Rectangle(2, 2, -1, -1));
 		
 		return figure;

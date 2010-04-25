@@ -1,12 +1,13 @@
 package gef.example.helloworld.model.commands;
 
+import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.HelloModel;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
 
 public class ChangeConstraintCommand extends Command {
-	private HelloModel helloModel; // このコマンドによって変更されるモデル
+	private ElementModel model; // このコマンドによって変更されるモデル
 	private Rectangle constraint; // 変更する制約
 	private Rectangle oldConstraint; // 以前の制約
 
@@ -15,7 +16,7 @@ public class ChangeConstraintCommand extends Command {
 	 */
 	public void execute() {
 		// モデルの制約を変更する
-		//helloModel.setConstraint(constraint);
+		model.setConstraint(constraint);
 	}
 
 	public void setConstraint(Rectangle rect) {
@@ -23,7 +24,7 @@ public class ChangeConstraintCommand extends Command {
 	}
 
 	public void setModel(Object model) {
-		helloModel = (HelloModel) model;
+		this.model = (ElementModel) model;
 		// 変更前の情報を記録
 		//oldConstraint = helloModel.getConstraint();
 	}
