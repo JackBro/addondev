@@ -14,7 +14,8 @@ public abstract class ElementModel extends AbstractModel {
 	//public static final String ATTR_FLEX_CHANGE = "attr_flex_change";
 	public static final String ATTR_FLEX = "flex";
 	
-	protected int flex;
+	//protected int flex=0;
+	protected String flex="0";
 	
 	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
 	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();
@@ -82,7 +83,7 @@ public abstract class ElementModel extends AbstractModel {
 	private Rectangle constraint;
 
 	public ElementModel(){
-		AddProperty(ATTR_FLEX, new TextPropertyDescriptor(ATTR_FLEX, ATTR_FLEX), 0);
+		AddProperty(ATTR_FLEX, new TextPropertyDescriptor(ATTR_FLEX, ATTR_FLEX), flex);
 	}
 	
 	public ContentsModel getParent() {
@@ -98,6 +99,4 @@ public abstract class ElementModel extends AbstractModel {
 		constraint = rectangle;
 		firePropertyChange("resize", null, rectangle);
 	}
-	
-	
 }

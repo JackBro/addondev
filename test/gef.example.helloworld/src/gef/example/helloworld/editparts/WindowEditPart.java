@@ -25,8 +25,8 @@ public class WindowEditPart extends EditPartWithListener {
 		Figure figure = new Figure();
 		figure.setBackgroundColor(ColorConstants.lightGray);
 		figure.setOpaque(true);
-		figure.setPreferredSize(200,200);
-		figure.setSize(200, 200);
+		figure.setPreferredSize(400,200);
+		figure.setSize(400, 200);
 		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setStretchMinorAxis(true);

@@ -20,4 +20,6 @@ abstract public class EditPartWithListener
 		// モデルから削除
 		 ((AbstractModel) getModel()).removePropertyChangeListener(this);
 	}
+	
+	public void resizeChildren(){};
 }

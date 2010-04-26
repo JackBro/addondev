@@ -1,6 +1,7 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
+import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.VBoxModel;
 
@@ -17,6 +18,7 @@ import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPolicy;
 
 public class HBoxEditPart extends EditPartWithListener {
@@ -85,11 +87,44 @@ public class HBoxEditPart extends EditPartWithListener {
 			//refreshVisuals(); // ビューを更新する
 			
 			refreshChildren();
+			
+			
 		}
 	}
 	
 	protected List getModelChildren() {
 		return ((HBoxModel) getModel()).getChildren();
+	}
+
+	@Override
+	public void resizeChildren() {
+		// TODO Auto-generated method stub
+		super.resizeChildren();
+		
+		int w = getFigure().getSize().width;
+		int sumflex=0;
+		int sumzerofilexw=0;
+		
+		List children = getChildren();
+		for (Object object : children) {
+			ElementModel elem = (ElementModel)((EditPartWithListener)object).getModel();
+			int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
+			sumflex += flex;
+			if(flex==0){
+				IFigure figuer = ((EditPartWithListener)object).getFigure();
+				sumzerofilexw += figuer.getSize().width;
+			}
+		}
+		w -= sumzerofilexw;
+		for (Object object : children) {
+			ElementModel elem = (ElementModel)((EditPartWithListener)object).getModel();
+			int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
+			if(flex>0){
+				int newwidth = flex/sumflex*w;
+				IFigure figuer = ((EditPartWithListener)object).getFigure();
+				figuer.setPreferredSize(new Dimension(newwidth, figuer.getSize().height));
+			}
+		}
 	}
 
 }

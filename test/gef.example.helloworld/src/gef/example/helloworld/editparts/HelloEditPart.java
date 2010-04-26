@@ -1,6 +1,7 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
+import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.HelloModel;
 import gef.example.helloworld.model.VBoxModel;
 
@@ -17,8 +18,10 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 public class HelloEditPart extends EditPartWithListener {
 	Figure rf;
@@ -47,8 +50,8 @@ public class HelloEditPart extends EditPartWithListener {
 		rf=new Figure();
 		rf.setBorder(
 				new CompoundBorder(new LineBorder(), new MarginBorder(3)));		
-		rf.setSize(100,30);
-		rf.setPreferredSize(100,30);
+		//rf.setSize(label.getPreferredSize());
+		//rf.setPreferredSize(label.getPreferredSize());	
 		//rf.setFill(true);
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(true);
@@ -56,7 +59,7 @@ public class HelloEditPart extends EditPartWithListener {
 		tl.setStretchMinorAxis(false);
 		rf.setLayoutManager(tl);
 		rf.add(label);
-		
+
 		return rf;
 	}
 
@@ -96,7 +99,7 @@ public class HelloEditPart extends EditPartWithListener {
 	    else if (evt.getPropertyName().equals(HelloModel.P_TEXT)) {
 	        // モデルのテキストが変更されたのでビューに表示するテキストを更新
 	        //Label label = (Label) getFigure();
-	        //label.setText((String) evt.getNewValue());
+	        label.setText((String) evt.getNewValue());
 	        //ToolbarLayout tl = new ToolbarLayout();
 	        //tl.setStretchMinorAxis(false);
 	        //Rectangle rg = label.getBounds();
@@ -106,12 +109,20 @@ public class HelloEditPart extends EditPartWithListener {
 	        //label.setSize( 300, rg.height);
 	        //refreshVisuals();
 	        
-	        rf.setSize(300, 30);
-	        rf.setPreferredSize(300,30);
+	    	//AbstractGraphicalEditPart ep = (AbstractGraphicalEditPart)getParent();
+
+	        
+	        //rf.setSize(label.getSize());
+	        //rf.setPreferredSize(label.getSize());
+
 	        //((EditPartWithListener)getParent()).propertyChange(new PropertyChangeEvent(this, VBoxModel.P_CHILDREN, null, null));
 	        //rf.repaint();
 	        //getFigure().setBounds(rg);
 	        //label.setSize(label.getSize().width+20 , label.getSize().height);
+	    }
+	    else if (evt.getPropertyName().equals(ElementModel.ATTR_FLEX)) {
+	    	EditPartWithListener ep = (EditPartWithListener)getParent();
+	    	ep.resizeChildren();
 	    }
 	}
 
