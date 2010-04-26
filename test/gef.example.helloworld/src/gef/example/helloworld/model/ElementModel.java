@@ -1,11 +1,90 @@
 package gef.example.helloworld.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 public abstract class ElementModel extends AbstractModel {
+	
+	//public static final String ATTR_FLEX_CHANGE = "attr_flex_change";
+	public static final String ATTR_FLEX = "flex";
+	
+	protected int flex;
+	
+	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
+	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();
+	protected void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
+		
+		fPropertyMap.put(id, new ModelProperty(id, propertyDescriptor));
+		fAttributeMap.put(id, obj);
+		
+	}
+	
+//	public void setFlex(int flex) {
+//		this.flex = flex;
+//		firePropertyChange(ATTR_FLEX_CHANGE, null, flex);
+//	}
+//	public int getFlex() {
+//		return flex;
+//	}	
+	
+	@Override
+	public IPropertyDescriptor[] getPropertyDescriptors() {
+		// TODO Auto-generated method stub
+		List<IPropertyDescriptor> propertydescriptors = new ArrayList<IPropertyDescriptor>();
+		for (ModelProperty val : fPropertyMap.values()) {
+			String name = val.getName();
+			IPropertyDescriptor prop = val.getPropertyDescriptor();
+			propertydescriptors.add(prop);
+		}
+		return propertydescriptors.toArray(new IPropertyDescriptor[propertydescriptors.size()]);
+		//return super.getPropertyDescriptors();
+	}
+
+	@Override
+	public Object getPropertyValue(Object id) {
+		// TODO Auto-generated method stub
+		//return super.getPropertyValue(id);
+		return fAttributeMap.get(id);
+	}
+
+	@Override
+	public boolean isPropertySet(Object id) {
+		// TODO Auto-generated method stub
+		//return super.isPropertySet(id);
+		return fPropertyMap.containsKey(id);
+	}
+
+	@Override
+	public void resetPropertyValue(Object id) {
+		// TODO Auto-generated method stub
+		super.resetPropertyValue(id);
+		fPropertyMap.remove(id);
+		fAttributeMap.remove(id);
+	}
+
+	@Override
+	public void setPropertyValue(Object id, Object value) {
+		// TODO Auto-generated method stub
+		super.setPropertyValue(id, value);
+		fAttributeMap.put(id, value);
+		firePropertyChange(id.toString(), null, value);
+	}
+
+
+
 	private ContentsModel parent;
 	private Rectangle constraint;
 
+	public ElementModel(){
+		AddProperty(ATTR_FLEX, new TextPropertyDescriptor(ATTR_FLEX, ATTR_FLEX), 0);
+	}
+	
 	public ContentsModel getParent() {
 		return parent;
 	}
@@ -19,5 +98,6 @@ public abstract class ElementModel extends AbstractModel {
 		constraint = rectangle;
 		firePropertyChange("resize", null, rectangle);
 	}
+	
 	
 }

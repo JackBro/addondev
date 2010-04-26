@@ -34,36 +34,44 @@ public class HelloModel extends ElementModel {
 //		firePropertyChange(P_CONSTRAINT, null, constraint);
 //	}
 	
-	@Override
-	public IPropertyDescriptor[] getPropertyDescriptors() {
-	    IPropertyDescriptor[] descriptors =
-	        new IPropertyDescriptor[] {
-	           new TextPropertyDescriptor(P_TEXT, "あいさつ")};
-	      return descriptors;
-	}
-
-	@Override
-	public Object getPropertyValue(Object id) {
-	    if (id.equals(P_TEXT)) {
-	        // プロパティ・ビューに表示するデータを返す
-	        return text;
-	      }
-	      return null;
-	}
-
-	@Override
-	public boolean isPropertySet(Object id) {
-	    if (id.equals(P_TEXT))
-	        return true;
-	      else
-	        return false;
-	}
-
-	@Override
-	public void setPropertyValue(Object id, Object value) {
-	    if (id.equals(P_TEXT)) {
-	        // テキストを変更する
-	        setText((String) value);
-	      }
-	}
+	public HelloModel() {
+		super();
+		// TODO Auto-generated constructor stub
+		AddProperty(P_TEXT, new TextPropertyDescriptor(P_TEXT, "あいさつ"), text);
+	}	
+	
+//	@Override
+//	public IPropertyDescriptor[] getPropertyDescriptors() {
+//	    IPropertyDescriptor[] descriptors =
+//	        new IPropertyDescriptor[] {
+//	           new TextPropertyDescriptor(P_TEXT, "あいさつ")};
+//	      return descriptors;
+//	}
+//
+//
+//
+//	@Override
+//	public Object getPropertyValue(Object id) {
+//	    if (id.equals(P_TEXT)) {
+//	        // プロパティ・ビューに表示するデータを返す
+//	        return text;
+//	      }
+//	      return null;
+//	}
+//
+//	@Override
+//	public boolean isPropertySet(Object id) {
+//	    if (id.equals(P_TEXT))
+//	        return true;
+//	      else
+//	        return false;
+//	}
+//
+//	@Override
+//	public void setPropertyValue(Object id, Object value) {
+//	    if (id.equals(P_TEXT)) {
+//	        // テキストを変更する
+//	        setText((String) value);
+//	      }
+//	}
 }

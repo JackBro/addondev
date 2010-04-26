@@ -13,5 +13,21 @@ public class ModelProperty {
 		this.fName = name;
 		this.fPropertyDescriptor = propertyDescriptor;
 	}
+
+	public String getName() {
+		return fName;
+	}
+
+	public void setName(String fName) {
+		this.fName = fName;
+	}
+
+	public IPropertyDescriptor getPropertyDescriptor() {
+		return fPropertyDescriptor;
+	}
+
+	public void setPropertyDescriptor(IPropertyDescriptor fPropertyDescriptor) {
+		this.fPropertyDescriptor = fPropertyDescriptor;
+	}
 	
 }

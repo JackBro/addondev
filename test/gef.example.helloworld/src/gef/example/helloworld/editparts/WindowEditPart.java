@@ -29,7 +29,7 @@ public class WindowEditPart extends EditPartWithListener {
 		figure.setSize(200, 200);
 		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
-		tl.setStretchMinorAxis(false);
+		tl.setStretchMinorAxis(true);
 		tl.setVertical(true);
 		tl.setSpacing(5);
 		figure.setLayoutManager(tl);
