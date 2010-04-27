@@ -2,6 +2,7 @@ package gef.example.helloworld;
 
 import gef.example.helloworld.editparts.MyEditPartFactory;
 import gef.example.helloworld.model.ContentsModel;
+import gef.example.helloworld.model.GridModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.HelloModel;
 import gef.example.helloworld.model.RootModel;
@@ -182,6 +183,15 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 			descriptor, // パレットに表示する16X16のイメージ
 			descriptor);// パレットに表示する24X24のイメージ
 		drawer.add(creationHBoxEntry);
+		
+		CreationToolEntry creationGridEntry =
+			  new CreationToolEntry(
+				"Gridの作成", // パレットに表示される文字列
+				"モデル作成", // ツールチップ
+				new SimpleFactory(GridModel.class), // モデルを作成するファクトリ
+				descriptor, // パレットに表示する16X16のイメージ
+				descriptor);// パレットに表示する24X24のイメージ
+			drawer.add(creationGridEntry);
 
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);

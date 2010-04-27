@@ -1,10 +1,9 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
+import gef.example.helloworld.figure.LabelFigure;
 import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.HelloModel;
-import gef.example.helloworld.model.VBoxModel;
-
 import java.beans.PropertyChangeEvent;
 
 import org.eclipse.draw2d.ColorConstants;
@@ -12,55 +11,53 @@ import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 public class HelloEditPart extends EditPartWithListener {
-	Figure rf;
-	Label label;
+	//Figure rf;
+	//Label label;
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
 		HelloModel model = (HelloModel) getModel();
 
-		label = new Label();
+//		label = new Label();
+//		label.setText(model.getText());
+//
+//		// 外枠とマージンの設定
+//		label.setBorder(
+//			new CompoundBorder(new LineBorder(), new MarginBorder(3)));
+//
+//		// 背景色をオレンジに
+//		label.setBackgroundColor(ColorConstants.orange);
+//		// 背景色を不透明に
+//		label.setOpaque(true);
+//		
+//		//label.setSize(150, 50);
+//		//label.setPreferredSize(150, 30);
+//		
+//		rf=new Figure();
+//		rf.setBorder(
+//				new CompoundBorder(new LineBorder(), new MarginBorder(3)));		
+//		//rf.setSize(label.getPreferredSize());
+//		//rf.setPreferredSize(label.getPreferredSize());	
+//		//rf.setFill(true);
+//		ToolbarLayout tl = new ToolbarLayout();
+//		tl.setVertical(true);
+//		tl.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
+//		tl.setStretchMinorAxis(false);
+//		rf.setLayoutManager(tl);
+//		rf.add(label);
+//
+//		return rf;
+		LabelFigure label = new LabelFigure();
 		label.setText(model.getText());
-
-		// 外枠とマージンの設定
-		label.setBorder(
-			new CompoundBorder(new LineBorder(), new MarginBorder(3)));
-
-		// 背景色をオレンジに
-		label.setBackgroundColor(ColorConstants.orange);
-		// 背景色を不透明に
-		label.setOpaque(true);
 		
-		//label.setSize(150, 50);
-		//label.setPreferredSize(150, 30);
-		
-		rf=new Figure();
-		rf.setBorder(
-				new CompoundBorder(new LineBorder(), new MarginBorder(3)));		
-		//rf.setSize(label.getPreferredSize());
-		//rf.setPreferredSize(label.getPreferredSize());	
-		//rf.setFill(true);
-		ToolbarLayout tl = new ToolbarLayout();
-		tl.setVertical(true);
-		tl.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
-		tl.setStretchMinorAxis(false);
-		rf.setLayoutManager(tl);
-		rf.add(label);
-
-		return rf;
+		return label;
 	}
 
 	/* (非 Javadoc)
@@ -98,7 +95,7 @@ public class HelloEditPart extends EditPartWithListener {
 			refreshVisuals(); // ビューを更新する
 	    else if (evt.getPropertyName().equals(HelloModel.P_TEXT)) {
 	        // モデルのテキストが変更されたのでビューに表示するテキストを更新
-	        //Label label = (Label) getFigure();
+	    	LabelFigure label = (LabelFigure) getFigure();
 	        label.setText((String) evt.getNewValue());
 	        //ToolbarLayout tl = new ToolbarLayout();
 	        //tl.setStretchMinorAxis(false);

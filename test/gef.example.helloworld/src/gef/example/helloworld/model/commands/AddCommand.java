@@ -32,7 +32,7 @@ public class AddCommand extends Command {
 	public void execute() {
 		// TODO Auto-generated method stub
 		//model.setConstraint(rectangle);
-		//oldRoot.removeChild(model);
+		oldroot.removeChild(model);
 		if (addIndex > 0) {
 			root.addChild(addIndex, model);
 		} else {

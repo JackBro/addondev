@@ -32,8 +32,9 @@ public class VBoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	protected Command createAddCommand(EditPart child, EditPart after) {
 		// TODO Auto-generated method stub
 		//getHost()
+		ContentsModel cc = (ContentsModel)getHost().getModel();
 		ElementModel model = (ElementModel) child.getModel();
-		ElementModel afterModel = (ElementModel) after.getModel();
+		ElementModel afterModel = after==null?null:(ElementModel) after.getModel();
 		return new AddCommand((ContentsModel)getHost().getModel(), model, afterModel);
 	}
 

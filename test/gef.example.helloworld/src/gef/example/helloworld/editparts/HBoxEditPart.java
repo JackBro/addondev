@@ -1,6 +1,8 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
+import gef.example.helloworld.figure.ElementFigure;
+import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.VBoxModel;
@@ -12,6 +14,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Layer;
@@ -23,15 +26,17 @@ import org.eclipse.gef.EditPolicy;
 
 public class HBoxEditPart extends EditPartWithListener {
 
+	private Figure dummy;
 	@Override
 	protected IFigure createFigure() {
-		// TODO Auto-generated method stub
+
+		
 		Figure figure = new Figure();
 		//Layer figure = new Layer();
 		LineBorder lb = new LineBorder();
 		lb.setColor(ColorConstants.blue);
 		lb.setWidth(3);
-		figure.setBorder(new LineBorder(ColorConstants.lightGray));
+		figure.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
 		//figure.setOpaque(true);
 //		//figure.setPreferredSize(300, 100);
 //		figure.setBackgroundColor(ColorConstants.blue);
@@ -45,7 +50,7 @@ public class HBoxEditPart extends EditPartWithListener {
 //		
 //		return figure;
 		Label label = new Label();
-		label.setText("HBox");
+		label.setText("H");
 
 		// 外枠とマージンの設定
 		label.setBorder(
@@ -62,8 +67,12 @@ public class HBoxEditPart extends EditPartWithListener {
 		//tl.setStretchMinorAxis(false);
 		//fl.setStretchMinorAxis(true);
 		//fl.setHorizontal(false);
+		//figure.setSize(10, 20);
 		figure.setLayoutManager(tl);
-		figure.add(label);
+		
+		dummy  = new Figure();
+		dummy.setPreferredSize(10, 20);		
+		figure.add(dummy);
 		
 		return figure;
 	}
@@ -79,6 +88,16 @@ public class HBoxEditPart extends EditPartWithListener {
 		// TODO Auto-generated method stub
 		if (evt.getPropertyName().equals(VBoxModel.P_CHILDREN))
 		{
+			ContentsModel elm = (ContentsModel)getModel();
+			//if(children != null)
+			if(elm.getChildren().size() == 0){
+				getFigure().add(dummy);
+			}else if(getFigure().getChildren().size() > 0){
+				int i = getFigure().getChildren().size();
+				IFigure ff = getFigure();
+				getFigure().getChildren().remove(dummy);
+				//getFigure().remove(dummy);
+			}
 //			Label label = new Label();
 //			label.setText("model.getText()");
 //			figure.add(label);
@@ -102,8 +121,8 @@ public class HBoxEditPart extends EditPartWithListener {
 		super.resizeChildren();
 		
 		int w = getFigure().getSize().width;
-		int sumflex=0;
-		int sumzerofilexw=0;
+		double sumflex=0;
+		double sumzerofilexw=0;
 		
 		List children = getChildren();
 		for (Object object : children) {
@@ -111,7 +130,9 @@ public class HBoxEditPart extends EditPartWithListener {
 			int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
 			sumflex += flex;
 			if(flex==0){
-				IFigure figuer = ((EditPartWithListener)object).getFigure();
+				ElementFigure figuer = (ElementFigure)((EditPartWithListener)object).getFigure();
+				//figuer.setSize(figuer.getDefaultWidth(), figuer.getDefaultHeight());
+				figuer.setPreferredSize(figuer.getDefaultWidth(), figuer.getDefaultHeight());
 				sumzerofilexw += figuer.getSize().width;
 			}
 		}
@@ -120,7 +141,7 @@ public class HBoxEditPart extends EditPartWithListener {
 			ElementModel elem = (ElementModel)((EditPartWithListener)object).getModel();
 			int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
 			if(flex>0){
-				int newwidth = flex/sumflex*w;
+				int newwidth = (int) (flex/sumflex*w);
 				IFigure figuer = ((EditPartWithListener)object).getFigure();
 				figuer.setPreferredSize(new Dimension(newwidth, figuer.getSize().height));
 			}
