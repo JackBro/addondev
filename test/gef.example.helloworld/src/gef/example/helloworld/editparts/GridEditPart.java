@@ -7,6 +7,7 @@ import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.GridModel;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
@@ -26,6 +27,7 @@ import org.eclipse.gef.requests.CreateRequest;
 
 public class GridEditPart extends EditPartWithListener {
 
+	List<IFigure> dummys = new ArrayList<IFigure>();
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
