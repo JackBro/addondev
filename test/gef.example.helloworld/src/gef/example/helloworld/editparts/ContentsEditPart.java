@@ -61,7 +61,8 @@ public class ContentsEditPart extends EditPartWithListener {
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(ContentsModel.P_CHILDREN)) {
+		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN)
+				|| evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN)) {
 			// 子モデルの構造が変化したので子EditPartの構造も更新する
 			refreshChildren();
 		}

@@ -1,6 +1,7 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
+import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.VBoxModel;
 import gef.example.helloworld.model.WindowModel;
@@ -45,7 +46,8 @@ public class WindowEditPart extends EditPartWithListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(WindowModel.P_CHILDREN))
+		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN)
+				|| evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN))
 		{		
 			refreshChildren();
 		}

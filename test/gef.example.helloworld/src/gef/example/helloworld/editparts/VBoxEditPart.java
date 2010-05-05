@@ -27,7 +27,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPolicy;
 
 public class VBoxEditPart extends EditPartWithListener {
-	//Layer figure;
+	private Figure dummy;
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
@@ -82,7 +82,10 @@ public class VBoxEditPart extends EditPartWithListener {
 		RectangleFigure rf=new RectangleFigure();
 		rf.setSize(40,40);
 		//figure.add(rf);
-		figure.add(label);
+		
+		dummy  = new Figure();
+		dummy.setPreferredSize(10, 20);	
+		figure.add(dummy);
 		//figure.setConstraint(label, new Rectangle(2, 2, -1, -1));
 		
 		return figure;
@@ -108,14 +111,24 @@ public class VBoxEditPart extends EditPartWithListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
-		if (evt.getPropertyName().equals(VBoxModel.P_CHILDREN))
+		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN))
 		{
-//			Label label = new Label();
-//			label.setText("model.getText()");
-//			figure.add(label);
-			//Object obj = evt.getNewValue();
-			//figure.add((Label) obj);
-			//refreshVisuals(); // ビューを更新する
+			ContentsModel elm = (ContentsModel)getModel();
+			if(getFigure().getChildren().size() > 0){
+				int i = getFigure().getChildren().size();
+				IFigure ff = getFigure();
+				getFigure().getChildren().remove(dummy);
+				
+			}
+			refreshChildren();
+			
+		}else if(evt.getPropertyName().equals(VBoxModel.P_REMOVE_CHILDREN)){
+						
+			ContentsModel elm = (ContentsModel)getModel();
+			if(elm.getChildren().size() == 0){
+				getFigure().add(dummy);
+				
+			}	
 			refreshChildren();
 		}
 	}

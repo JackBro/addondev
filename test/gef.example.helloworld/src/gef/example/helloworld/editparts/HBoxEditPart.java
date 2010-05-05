@@ -22,6 +22,7 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.gef.EditPolicy;
 
 public class HBoxEditPart extends EditPartWithListener {
@@ -63,7 +64,12 @@ public class HBoxEditPart extends EditPartWithListener {
 		
 		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
+		tl.setSpacing(10);
 		tl.setVertical(false);
+		
+		Insets padding = new Insets(5, 5, 5, 5);
+		MarginBorder marginBorder = new MarginBorder(padding);
+		figure.setBorder(marginBorder);
 		//tl.setStretchMinorAxis(false);
 		//fl.setStretchMinorAxis(true);
 		//fl.setHorizontal(false);
@@ -86,28 +92,29 @@ public class HBoxEditPart extends EditPartWithListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
-		if (evt.getPropertyName().equals(VBoxModel.P_CHILDREN))
+		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN))
 		{
 			ContentsModel elm = (ContentsModel)getModel();
-			//if(children != null)
-			if(elm.getChildren().size() == 0){
-				getFigure().add(dummy);
-			}else if(getFigure().getChildren().size() > 0){
+			if(getFigure().getChildren().size() > 0){
 				int i = getFigure().getChildren().size();
 				IFigure ff = getFigure();
 				getFigure().getChildren().remove(dummy);
-				//getFigure().remove(dummy);
+				
 			}
-//			Label label = new Label();
-//			label.setText("model.getText()");
-//			figure.add(label);
-			//Object obj = evt.getNewValue();
-			//figure.add((Label) obj);
-			//refreshVisuals(); // ビューを更新する
-			
 			refreshChildren();
+		}else if(evt.getPropertyName().equals(VBoxModel.P_REMOVE_CHILDREN)){
 			
 			
+			ContentsModel elm = (ContentsModel)getModel();
+			if(elm.getChildren().size() == 0){
+				getFigure().add(dummy);
+				
+			}			
+			refreshChildren();
+		}else if(evt.getPropertyName().equals(VBoxModel.ATTR_FLEX)){
+			//resizeWidth();
+	    	EditPartWithListener ep = (EditPartWithListener)getParent();
+	    	ep.resizeWidth();
 		}
 	}
 	

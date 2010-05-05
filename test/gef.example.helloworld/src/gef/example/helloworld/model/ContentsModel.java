@@ -5,8 +5,9 @@ import java.util.List;
 
 public class ContentsModel extends ElementModel {
 	// 子モデルの追加又は削除によって構造が変化したことを示す文字列
-	public static final String P_CHILDREN = "_children";
-	public static final String P_ADD_CHILDREN = "_addchildren";
+	//public static final String P_CHILDREN = "_children";
+	public static final String P_ADD_CHILDREN = "_add_children";
+	public static final String P_REMOVE_CHILDREN = "_remove_children";
 
 	protected List children = new ArrayList(); // 子モデルのリスト
 
@@ -14,14 +15,14 @@ public class ContentsModel extends ElementModel {
 		children.add(child); // 子モデルを追加
 		// EditPartへの通知
 		//firePropertyChange(P_CHILDREN, null, null);
-		firePropertyChange(P_CHILDREN, null, null);
+		firePropertyChange(P_ADD_CHILDREN, null, null);
 	}
 	
 	public void addChild(int index, Object child) {
 		children.add(index, child);
 		// EditPartへの通知
 		//firePropertyChange(P_CHILDREN, null, null);
-		firePropertyChange(P_CHILDREN, null, null);
+		firePropertyChange(P_ADD_CHILDREN, null, null);
 	}
 
 	public List getChildren() {
@@ -32,7 +33,7 @@ public class ContentsModel extends ElementModel {
 		// 子モデルの削除
 		children.remove(child);
 		// EditPartへの通知
-		firePropertyChange(P_CHILDREN, null, null);
+		firePropertyChange(P_REMOVE_CHILDREN, null, null);
 	}
 	
 	public int getChildIndex(Object child) {

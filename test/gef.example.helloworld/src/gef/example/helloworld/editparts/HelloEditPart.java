@@ -17,43 +17,12 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPolicy;
 
 public class HelloEditPart extends EditPartWithListener {
-	//Figure rf;
-	//Label label;
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
 		HelloModel model = (HelloModel) getModel();
 
-//		label = new Label();
-//		label.setText(model.getText());
-//
-//		// 外枠とマージンの設定
-//		label.setBorder(
-//			new CompoundBorder(new LineBorder(), new MarginBorder(3)));
-//
-//		// 背景色をオレンジに
-//		label.setBackgroundColor(ColorConstants.orange);
-//		// 背景色を不透明に
-//		label.setOpaque(true);
-//		
-//		//label.setSize(150, 50);
-//		//label.setPreferredSize(150, 30);
-//		
-//		rf=new Figure();
-//		rf.setBorder(
-//				new CompoundBorder(new LineBorder(), new MarginBorder(3)));		
-//		//rf.setSize(label.getPreferredSize());
-//		//rf.setPreferredSize(label.getPreferredSize());	
-//		//rf.setFill(true);
-//		ToolbarLayout tl = new ToolbarLayout();
-//		tl.setVertical(true);
-//		tl.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
-//		tl.setStretchMinorAxis(false);
-//		rf.setLayoutManager(tl);
-//		rf.add(label);
-//
-//		return rf;
 		LabelFigure label = new LabelFigure();
 		label.setText(model.getText());
 		
@@ -129,4 +98,12 @@ public class HelloEditPart extends EditPartWithListener {
 		super.refreshVisuals();
 
 	}
+
+	@Override
+	public void resizeWidth() {
+		// TODO Auto-generated method stub
+		super.resizeWidth();
+	}
+	
+	
 }

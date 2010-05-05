@@ -1,12 +1,16 @@
 package gef.example.helloworld.model;
 
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
+import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 
 public class GridModel extends ContentsModel {
+	
+	public static final String COLUMS_FLEX = "columnsflex";
+	protected String columnsflex="0,1";
 	
 	public GridModel() {
 		super();
 		// TODO Auto-generated constructor stub
-		//AddProperty(P_TEXT, new TextPropertyDescriptor(P_TEXT, "あいさつ"), text);
+		AddProperty(COLUMS_FLEX, new TextPropertyDescriptor(COLUMS_FLEX, "columnsflex"), columnsflex);
 	}
 }

@@ -99,4 +99,9 @@ public abstract class ElementModel extends AbstractModel {
 		constraint = rectangle;
 		firePropertyChange("resize", null, rectangle);
 	}
+	
+	public void setPreSize(int w, int h){
+		
+	}
+
 }

@@ -44,7 +44,8 @@ public class RootEditPart extends EditPartWithListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
-		if (evt.getPropertyName().equals(ContentsModel.P_CHILDREN)) {
+		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN)
+				|| evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN)) {
 			// 子モデルの構造が変化したので子EditPartの構造も更新する
 			refreshChildren();
 		}
