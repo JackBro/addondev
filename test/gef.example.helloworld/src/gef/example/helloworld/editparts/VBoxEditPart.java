@@ -3,7 +3,7 @@ package gef.example.helloworld.editparts;
 import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
 import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.LabelModel;
 import gef.example.helloworld.model.VBoxModel;
 
 import java.beans.PropertyChangeEvent;

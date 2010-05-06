@@ -13,4 +13,10 @@ public class GridModel extends ContentsModel {
 		// TODO Auto-generated constructor stub
 		AddProperty(COLUMS_FLEX, new TextPropertyDescriptor(COLUMS_FLEX, "columnsflex"), columnsflex);
 	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "grid";
+	}
 }

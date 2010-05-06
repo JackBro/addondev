@@ -1,7 +1,7 @@
 package gef.example.helloworld.model.commands;
 
 import gef.example.helloworld.model.ElementModel;
-import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.LabelModel;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;

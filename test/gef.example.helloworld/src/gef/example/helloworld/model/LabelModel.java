@@ -4,10 +4,10 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
-public class HelloModel extends ElementModel {
+public class LabelModel extends ElementModel {
 	// 変更の種類を識別するための文字列
 	public static final String P_CONSTRAINT = "_constraint";
-	public static final String P_TEXT = "_text";
+	public static final String P_TEXT = "value";
 
 	private String text = "Hello World";
 	private Rectangle constraint; // 制約
@@ -19,11 +19,11 @@ public class HelloModel extends ElementModel {
 	// public void setText(String text) {
 	// this.text = text;
 	// }
-	public void setText(String text) {
-		this.text = text;
-		// テキストの変更をEditPartに通知する
-		firePropertyChange(P_TEXT, null, text); // ②
-	}
+//	public void setText(String text) {
+//		this.text = text;
+//		// テキストの変更をEditPartに通知する
+//		firePropertyChange(P_TEXT, null, text); // ②
+//	}
 //	public Rectangle getConstraint() {
 //		return constraint;
 //	}
@@ -34,11 +34,17 @@ public class HelloModel extends ElementModel {
 //		firePropertyChange(P_CONSTRAINT, null, constraint);
 //	}
 	
-	public HelloModel() {
+	public LabelModel() {
 		super();
 		// TODO Auto-generated constructor stub
 		AddProperty(P_TEXT, new TextPropertyDescriptor(P_TEXT, "あいさつ"), text);
-	}	
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "label";
+	}
 	
 //	@Override
 //	public IPropertyDescriptor[] getPropertyDescriptors() {

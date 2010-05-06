@@ -3,7 +3,7 @@ package gef.example.helloworld.model.commands;
 import gef.example.helloworld.model.AbstractModel;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.ElementModel;
-import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.LabelModel;
 import gef.example.helloworld.model.VBoxModel;
 
 import org.eclipse.gef.commands.Command;

@@ -2,7 +2,7 @@ package gef.example.helloworld.editpolicies;
 
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.ElementModel;
-import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.LabelModel;
 import gef.example.helloworld.model.commands.ChangeConstraintCommand;
 import gef.example.helloworld.model.commands.CreateCommand;
 

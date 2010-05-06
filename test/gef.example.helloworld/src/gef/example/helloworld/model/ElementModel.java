@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 public abstract class ElementModel extends AbstractModel {
+	
+	protected List<ElementModel> children = new ArrayList<ElementModel>(); 
 	
 	//public static final String ATTR_FLEX_CHANGE = "attr_flex_change";
 	public static final String ATTR_FLEX = "flex";
@@ -100,8 +103,43 @@ public abstract class ElementModel extends AbstractModel {
 		firePropertyChange("resize", null, rectangle);
 	}
 	
+	public List getChildren() {
+		return children; // 子モデルを返す
+	}
+	
 	public void setPreSize(int w, int h){
 		
+	}
+	
+	public abstract String getName();
+	public String getAttributes(){
+		StringBuilder buf= new StringBuilder();
+		for (Entry<Object, Object> attr : fAttributeMap.entrySet()) {
+			String id = attr.getKey().toString();
+			String value = attr.getValue().toString();
+			buf.append(String.format(" %s=\"%s\" ", id, value));
+		}	
+		return buf.toString();
+	}
+	public String toXML(){
+		StringBuilder buf= new StringBuilder();
+		buf.append("<");
+		buf.append(getName());
+		buf.append(getAttributes());
+		if(children.size() > 0){
+			buf.append(">");
+			buf.append("\n");
+			for (ElementModel element : children) {
+				buf.append(element.toXML());
+			}
+			buf.append("</");
+			buf.append(getName());
+			buf.append(">");
+		}else{
+			buf.append("/>");
+		}
+		buf.append("\n");
+		return buf.toString();
 	}
 
 }

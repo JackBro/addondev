@@ -3,7 +3,7 @@ package gef.example.helloworld.editparts;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.GridModel;
 import gef.example.helloworld.model.HBoxModel;
-import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.LabelModel;
 import gef.example.helloworld.model.RootModel;
 import gef.example.helloworld.model.VBoxModel;
 import gef.example.helloworld.model.WindowModel;
@@ -27,8 +27,8 @@ public class MyEditPartFactory implements EditPartFactory {
 			part = new VBoxEditPart();
 		else if(model instanceof HBoxModel)
 			part = new HBoxEditPart();
-		else if(model instanceof HelloModel)
-			part = new HelloEditPart();
+		else if(model instanceof LabelModel)
+			part = new LabelEditPart();
 		else if(model instanceof GridModel)
 			part = new GridEditPart();		
 		else if(model instanceof WindowModel)

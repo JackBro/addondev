@@ -138,7 +138,7 @@ public class GridEditPart extends EditPartWithListener {
 			for (int i = 0; i < columns; i++) {
 				int index = j*rows+i;
 				ElementModel elm = (ElementModel)cheldern.get(index);
-				elm.setPreSize(w, h)
+				//elm.setPreSize(w, h)
 			}
 		}		
 	}

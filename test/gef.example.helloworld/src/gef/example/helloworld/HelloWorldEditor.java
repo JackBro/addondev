@@ -1,10 +1,13 @@
 package gef.example.helloworld;
 
+import java.util.EventObject;
+
 import gef.example.helloworld.editparts.MyEditPartFactory;
 import gef.example.helloworld.model.ContentsModel;
+import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.GridModel;
 import gef.example.helloworld.model.HBoxModel;
-import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.LabelModel;
 import gef.example.helloworld.model.RootModel;
 import gef.example.helloworld.model.VBoxModel;
 import gef.example.helloworld.model.WindowModel;
@@ -27,11 +30,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class HelloWorldEditor extends GraphicalEditorWithPalette {
 
 	public HelloWorldEditor() {
+
 		setEditDomain(new DefaultEditDomain(this));
 		addPartPropertyListener(new IPropertyChangeListener() {
 			
@@ -84,7 +89,11 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 	 * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor monitor) {
-
+		
+		RootModel parent = (RootModel) getGraphicalViewer().getContents().getModel();
+		ElementModel model =  (ElementModel) parent.getChildren().get(0);
+		String mm = model.toXML();
+		getCommandStack().markSaveLocation();
 	}
 
 	/* (非 Javadoc)
@@ -105,7 +114,16 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 	 * @see org.eclipse.ui.part.EditorPart#isDirty()
 	 */
 	public boolean isDirty() {
-		return false;
+		//return false;
+		return getCommandStack().isDirty();
+	}
+
+	@Override
+	public void commandStackChanged(EventObject event) {
+		// TODO Auto-generated method stub
+		firePropertyChange(IEditorPart.PROP_DIRTY);
+		
+		super.commandStackChanged(event);
 	}
 
 	/* (非 Javadoc)
@@ -159,7 +177,7 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		  new CreationToolEntry(
 			"HelloModelの作成", // パレットに表示される文字列
 			"モデル作成", // ツールチップ
-			new SimpleFactory(HelloModel.class), // モデルを作成するファクトリ
+			new SimpleFactory(LabelModel.class), // モデルを作成するファクトリ
 			descriptor, // パレットに表示する16X16のイメージ
 			descriptor);// パレットに表示する24X24のイメージ
 		drawer.add(creationEntry);

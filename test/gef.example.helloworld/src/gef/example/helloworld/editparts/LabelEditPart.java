@@ -3,7 +3,7 @@ package gef.example.helloworld.editparts;
 import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
 import gef.example.helloworld.figure.LabelFigure;
 import gef.example.helloworld.model.ElementModel;
-import gef.example.helloworld.model.HelloModel;
+import gef.example.helloworld.model.LabelModel;
 import java.beans.PropertyChangeEvent;
 
 import org.eclipse.draw2d.ColorConstants;
@@ -16,12 +16,12 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPolicy;
 
-public class HelloEditPart extends EditPartWithListener {
+public class LabelEditPart extends EditPartWithListener {
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
-		HelloModel model = (HelloModel) getModel();
+		LabelModel model = (LabelModel) getModel();
 
 		LabelFigure label = new LabelFigure();
 		label.setText(model.getText());
@@ -60,9 +60,9 @@ public class HelloEditPart extends EditPartWithListener {
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		// 変更の型がモデルの位置情報の変更を示すものかどうか
-		if (evt.getPropertyName().equals(HelloModel.P_CONSTRAINT))
+		if (evt.getPropertyName().equals(LabelModel.P_CONSTRAINT))
 			refreshVisuals(); // ビューを更新する
-	    else if (evt.getPropertyName().equals(HelloModel.P_TEXT)) {
+	    else if (evt.getPropertyName().equals(LabelModel.P_TEXT)) {
 	        // モデルのテキストが変更されたのでビューに表示するテキストを更新
 	    	LabelFigure label = (LabelFigure) getFigure();
 	        label.setText((String) evt.getNewValue());

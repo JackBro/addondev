@@ -3,13 +3,13 @@ package gef.example.helloworld.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentsModel extends ElementModel {
+public abstract class ContentsModel extends ElementModel {
 	// 子モデルの追加又は削除によって構造が変化したことを示す文字列
 	//public static final String P_CHILDREN = "_children";
 	public static final String P_ADD_CHILDREN = "_add_children";
 	public static final String P_REMOVE_CHILDREN = "_remove_children";
 
-	protected List children = new ArrayList(); // 子モデルのリスト
+	//protected List children = new ArrayList(); // 子モデルのリスト
 
 	public void addChild(ElementModel child) {
 		children.add(child); // 子モデルを追加
@@ -18,16 +18,21 @@ public class ContentsModel extends ElementModel {
 		firePropertyChange(P_ADD_CHILDREN, null, null);
 	}
 	
-	public void addChild(int index, Object child) {
+	public ContentsModel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public void addChild(int index, ElementModel child) {
 		children.add(index, child);
 		// EditPartへの通知
 		//firePropertyChange(P_CHILDREN, null, null);
 		firePropertyChange(P_ADD_CHILDREN, null, null);
 	}
 
-	public List getChildren() {
-		return children; // 子モデルを返す
-	}
+//	public List getChildren() {
+//		return children; // 子モデルを返す
+//	}
 
 	public void removeChild(Object child) {
 		// 子モデルの削除
@@ -46,5 +51,4 @@ public class ContentsModel extends ElementModel {
 		}
 		return index;
 	}
-
 }

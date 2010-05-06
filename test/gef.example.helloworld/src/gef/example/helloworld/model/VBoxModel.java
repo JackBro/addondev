@@ -6,6 +6,12 @@ import java.util.List;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 public class VBoxModel extends ContentsModel {
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "vbox";
+	}
 //	public static final String P_CHILDREN = "_children";
 //	public static final String P_ADD_CHILDREN = "_addchildren";
 //	private List children = new ArrayList(); // 子モデルのリスト
