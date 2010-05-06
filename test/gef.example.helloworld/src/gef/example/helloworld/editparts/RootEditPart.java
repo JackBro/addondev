@@ -50,7 +50,7 @@ public class RootEditPart extends EditPartWithListener {
 			refreshChildren();
 		}
 	}
-	protected List getModelChildren() {
-		return ((RootModel) getModel()).getChildren();
-	}
+//	protected List getModelChildren() {
+//		return ((RootModel) getModel()).getChildren();
+//	}
 }

@@ -117,10 +117,6 @@ public class HBoxEditPart extends EditPartWithListener {
 	    	ep.resizeWidth();
 		}
 	}
-	
-	protected List getModelChildren() {
-		return ((HBoxModel) getModel()).getChildren();
-	}
 
 	@Override
 	public void resizeChildren() {

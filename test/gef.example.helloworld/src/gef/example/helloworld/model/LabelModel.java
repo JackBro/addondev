@@ -1,7 +1,5 @@
 package gef.example.helloworld.model;
 
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 public class LabelModel extends ElementModel {
@@ -10,7 +8,7 @@ public class LabelModel extends ElementModel {
 	public static final String P_TEXT = "value";
 
 	private String text = "Hello World";
-	private Rectangle constraint; // 制約
+	//private Rectangle constraint; // 制約
 
 	public String getText() {
 		return text;

@@ -2,6 +2,7 @@ package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.MyXYLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
+import gef.example.helloworld.figure.BoxFigure;
 import gef.example.helloworld.figure.ElementFigure;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.ElementModel;
@@ -22,6 +23,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
@@ -48,7 +50,7 @@ public class GridEditPart extends EditPartWithListener {
 		GridLayout gl = new GridLayout();
 		gl.numColumns = 2;
 		//FreeformLayer fig = new FreeformLayer();
-		Figure fig = new Figure();
+		ElementFigure fig = new BoxFigure();
 		fig.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
 		fig.setLayoutManager(gl);
 		for (IFigure dummy : dummys) {
@@ -83,37 +85,44 @@ public class GridEditPart extends EditPartWithListener {
 			}
 			refreshChildren();
 		} else if (evt.getPropertyName().equals(GridModel.COLUMS_FLEX)) {
-//	    	//EditPartWithListener ep = (EditPartWithListener)getParent();
-//	    	//ep.resizeChildren();
-//			ArrayList<Integer> columlist = new ArrayList<Integer>(); 
-//			GridModel elem = (GridModel)getModel();
-//			String cflexs = elem.getPropertyValue(GridModel.COLUMS_FLEX).toString();
-//			String[] cs = cflexs.split(",");
-//			for (String string : cs) {
-//				int flex = Integer.parseInt(string.trim());
-//				columlist.add(flex);
-//			}
-//			
-//			int pwidth = getFigure().getPreferredSize().width;
-//			
-//			
-//			List cheldern = getChildren();
-//			int columns = 2;
-//			int rows = cheldern.size()/columns;
-//			
-//			for (int j = 0; j < rows; j++) {
-//				for (int i = 0; i < columns; i++) {
-//					int index = j*rows+i;
-//					ElementModel elm = (ElementModel)cheldern.get(index);
-//					elm.setPreSize(w, h)
-//				}
-//			}
+	    	//EditPartWithListener ep = (EditPartWithListener)getParent();
+	    	//ep.resizeChildren();
+			ArrayList<Integer> columlist = new ArrayList<Integer>(); 
+			GridModel elem = (GridModel)getModel();
+			String cflexs = elem.getPropertyValue(GridModel.COLUMS_FLEX).toString();
+			String[] cs = cflexs.split(",");
+			for (String string : cs) {
+				int flex = Integer.parseInt(string.trim());
+				columlist.add(flex);
+			}
+			
+			int pwidth = getFigure().getPreferredSize().width;
+			int ph = getFigure().getPreferredSize().height;
+			
+			
+			List cheldern = getChildren();			
+			
+			List<Integer> cwidths =  getResizedWidth(cheldern, 2, columlist);	
+			
+			int columns = 2;
+			int rows = cheldern.size()/columns;
+			
+			for (int j = 0; j < rows; j++) {
+				for (int i = 0; i < columns; i++) {
+					int index = j*rows+i;
+					//ElementModel elm = (ElementModel)((EditPartWithListener)cheldern.get(index)).getModel();
+					//ElementModel elm = (ElementModel)cheldern.get(index);
+					//elm.setPreSize(cwidths.get(i), ph);
+					ElementFigure figuer = (ElementFigure) ((EditPartWithListener)cheldern.get(index)).getFigure();
+					figuer.setPreferredSize(new Dimension(cwidths.get(i), figuer.getDefaultHeight()));
+				}
+			}
 	    }
 	}
 	
-	protected List getModelChildren() {
-		return ((GridModel) getModel()).getChildren();
-	}
+//	protected List getModelChildren() {
+//		return ((GridModel) getModel()).getChildren();
+//	}
 	
 	public void resizeColumns(){
     	//EditPartWithListener ep = (EditPartWithListener)getParent();
@@ -130,7 +139,11 @@ public class GridEditPart extends EditPartWithListener {
 		int pwidth = getFigure().getPreferredSize().width;
 		
 		
+		
+		
 		List cheldern = getChildren();
+	
+
 		int columns = 2;
 		int rows = cheldern.size()/columns;
 		
@@ -143,7 +156,7 @@ public class GridEditPart extends EditPartWithListener {
 		}		
 	}
 	
-	public List<Integer> getResizedWidth(List children, List<Integer> flexs){
+	public List<Integer> getResizedWidth(List children, int columnsize, List<Integer> flexs){
 		
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		
@@ -152,7 +165,7 @@ public class GridEditPart extends EditPartWithListener {
 		double sumzerofilexw=0;
 		
 		//List children = getChildren();
-		for (int i = 0; i < children.size(); i++) {
+		for (int i = 0; i < columnsize; i++) {
 			Object object = children.get(i);
 			ElementModel elem = (ElementModel)((EditPartWithListener)object).getModel();
 			//int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
@@ -167,16 +180,20 @@ public class GridEditPart extends EditPartWithListener {
 
 		w -= sumzerofilexw;
 		//for (Object object : children) {
-		for (int i = 0; i < children.size(); i++) {
+		for (int i = 0; i < columnsize; i++) {
 			Object object = children.get(i);
 			ElementModel elem = (ElementModel)((EditPartWithListener)object).getModel();
 			//int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
 			int flex = flexs.get(i);
+			
 			if(flex>0){
 				int newwidth = (int) (flex/sumflex*w);
-				IFigure figuer = ((EditPartWithListener)object).getFigure();
+				
 				res.add(newwidth);
 				//figuer.setPreferredSize(new Dimension(newwidth, figuer.getSize().height));
+			}else{
+				ElementFigure figuer = (ElementFigure) ((EditPartWithListener)object).getFigure();
+				res.add(figuer.getDefaultWidth());
 			}
 		}
 		

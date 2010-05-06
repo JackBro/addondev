@@ -2,7 +2,9 @@ package gef.example.helloworld.model;
 
 import java.util.List;
 
-public class HBoxModel extends ContentsModel {
+import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
+
+public class HBoxModel extends BoxModel {
 
 	@Override
 	public String getName() {
@@ -10,4 +12,12 @@ public class HBoxModel extends ContentsModel {
 		return "hbox";
 	}
 
+	@Override
+	public void installModelProperty() {
+		// TODO Auto-generated method stub
+		super.installModelProperty();
+		AddProperty(ATTR_ORIENT, 
+				new ComboBoxPropertyDescriptor(ATTR_ORIENT, ATTR_ORIENT, new String[] { "horizontal"}),
+				"horizontal");
+	}
 }

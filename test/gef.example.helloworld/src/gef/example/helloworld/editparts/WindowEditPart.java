@@ -28,7 +28,7 @@ public class WindowEditPart extends EditPartWithListener {
 		figure.setOpaque(true);
 		figure.setPreferredSize(400,200);
 		figure.setSize(400, 200);
-		FlowLayout fl = new FlowLayout();
+		//FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setStretchMinorAxis(true);
 		tl.setVertical(true);
@@ -57,14 +57,18 @@ public class WindowEditPart extends EditPartWithListener {
 			IFigure figure = getFigure();
 			//Rectangle rewrect = figure.getBounds()
 			//figure.setBounds(rect);
-			figure.setSize(figure.getBounds().width+rect.width, figure.getBounds().height+rect.height);
+			//figure.setSize(figure.getBounds().width+rect.width, figure.getBounds().height+rect.height);
 
-			figure.setPreferredSize(new Dimension(figure.getBounds().width, figure.getBounds().height));
+			//figure.setPreferredSize(new Dimension(figure.getBounds().width, figure.getBounds().height));
+			int w = figure.getPreferredSize().width +rect.width;
+			int h = figure.getPreferredSize().height+rect.height;
+			figure.setPreferredSize(new Dimension(w, h));
 			refreshVisuals(); 
+			//refreshChildren();
 		}
 	}
 	
-	protected List getModelChildren() {
-		return ((WindowModel) getModel()).getChildren();
-	}
+//	protected List getModelChildren() {
+//		return ((WindowModel) getModel()).getChildren();
+//	}
 }

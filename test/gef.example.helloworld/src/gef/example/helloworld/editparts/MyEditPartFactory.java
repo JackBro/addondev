@@ -1,6 +1,7 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.model.ContentsModel;
+import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.GridModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.LabelModel;
@@ -24,9 +25,9 @@ public class MyEditPartFactory implements EditPartFactory {
 //			part = new ContentsEditPart();
 //		else 
 		if(model instanceof VBoxModel)
-			part = new VBoxEditPart();
+			part = new BoxEditPart();
 		else if(model instanceof HBoxModel)
-			part = new HBoxEditPart();
+			part = new BoxEditPart();
 		else if(model instanceof LabelModel)
 			part = new LabelEditPart();
 		else if(model instanceof GridModel)
@@ -36,6 +37,7 @@ public class MyEditPartFactory implements EditPartFactory {
 		else if(model instanceof RootModel)
 			part = new RootEditPart();
 
+		((ElementModel)model).installModelProperty();
 		part.setModel(model); // モデルをEditPartに設定する
 		return part;
 	}

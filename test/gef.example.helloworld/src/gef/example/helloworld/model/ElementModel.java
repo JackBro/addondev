@@ -86,6 +86,10 @@ public abstract class ElementModel extends AbstractModel {
 	private Rectangle constraint;
 
 	public ElementModel(){
+		
+	}
+	
+	public void installModelProperty(){
 		AddProperty(ATTR_FLEX, new TextPropertyDescriptor(ATTR_FLEX, ATTR_FLEX), flex);
 	}
 	

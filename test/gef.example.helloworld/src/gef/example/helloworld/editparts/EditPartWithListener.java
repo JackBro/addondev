@@ -3,6 +3,7 @@ package gef.example.helloworld.editparts;
 import gef.example.helloworld.figure.ElementFigure;
 import gef.example.helloworld.model.AbstractModel;
 import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.HBoxModel;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -26,6 +27,10 @@ abstract public class EditPartWithListener
 		super.deactivate();
 		// モデルから削除
 		 ((AbstractModel) getModel()).removePropertyChangeListener(this);
+	}
+	
+	protected List getModelChildren() {
+		return ((ElementModel) getModel()).getChildren();
 	}
 	
 	public void resizeChildren(){}
