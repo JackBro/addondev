@@ -6,6 +6,11 @@ import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
 
 public class HBoxModel extends BoxModel {
 
+	public HBoxModel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub

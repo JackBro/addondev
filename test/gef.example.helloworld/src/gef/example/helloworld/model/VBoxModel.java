@@ -4,6 +4,11 @@ import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
 
 public class VBoxModel extends BoxModel {
 
+	public VBoxModel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub

@@ -35,6 +35,13 @@ public class LabelModel extends ElementModel {
 	public LabelModel() {
 		super();
 		// TODO Auto-generated constructor stub
+		
+	}
+	
+	@Override
+	public void installModelProperty() {
+		// TODO Auto-generated method stub
+		super.installModelProperty();
 		AddProperty(P_TEXT, new TextPropertyDescriptor(P_TEXT, "あいさつ"), text);
 	}
 

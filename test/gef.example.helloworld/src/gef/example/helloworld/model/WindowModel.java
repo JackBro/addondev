@@ -11,8 +11,6 @@ public class WindowModel extends ContentsModel {
 	public WindowModel() {
 		super();
 		// TODO Auto-generated constructor stub
-		AddProperty(ATTR_XMLNS, new TextPropertyDescriptor(ATTR_XMLNS, ATTR_XMLNS), "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-		AddProperty(ATTR_TITLE, new TextPropertyDescriptor(ATTR_TITLE, ATTR_TITLE), getName());
 	}
 
 	@Override
@@ -21,5 +19,11 @@ public class WindowModel extends ContentsModel {
 		return "window";
 	}
 
-	
+	@Override
+	public void installModelProperty() {
+		// TODO Auto-generated method stub
+		super.installModelProperty();
+		AddProperty(ATTR_XMLNS, new TextPropertyDescriptor(ATTR_XMLNS, ATTR_XMLNS), "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+		AddProperty(ATTR_TITLE, new TextPropertyDescriptor(ATTR_TITLE, ATTR_TITLE), getName());
+	}	
 }

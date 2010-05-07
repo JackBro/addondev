@@ -1,5 +1,8 @@
 package gef.example.helloworld;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.EventObject;
 
 import gef.example.helloworld.editparts.MyEditPartFactory;
@@ -11,8 +14,11 @@ import gef.example.helloworld.model.LabelModel;
 import gef.example.helloworld.model.RootModel;
 import gef.example.helloworld.model.VBoxModel;
 import gef.example.helloworld.model.WindowModel;
+import gef.example.helloworld.parser.XULLoader;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DefaultEditDomain;
@@ -30,23 +36,18 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class HelloWorldEditor extends GraphicalEditorWithPalette {
-
+	
+	private RootModel root;
+	
 	public HelloWorldEditor() {
 
 		setEditDomain(new DefaultEditDomain(this));
-		addPartPropertyListener(new IPropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent event) {
-				// TODO Auto-generated method stub
-				 System.out.println(event.getProperty());
-				
-			}
-		});
 	}
 
 	/* (非 Javadoc)
@@ -54,37 +55,27 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 	 */
 	protected void initializeGraphicalViewer() {
 		GraphicalViewer viewer = getGraphicalViewer();
-		// 最上位のモデルの設定
-//		ContentsModel parent = new ContentsModel();
-//
-//		HelloModel child1 = new HelloModel();
-//		// 制約の設定
-//		child1.setConstraint(new Rectangle(0, 0, -1, -1));
-//		parent.addChild(child1);
-//
-//		HelloModel child2 = new HelloModel();
-//		child2.setConstraint(new Rectangle(30, 30, -1, -1));
-//		parent.addChild(child2);
-//
-//		HelloModel child3 = new HelloModel();
-//		child3.setConstraint(new Rectangle(10, 80, 80, 50));
-//		parent.addChild(child3);
-
-		RootModel parent = new RootModel();
-		//VBoxModel parent = new VBoxModel();
-		//HBoxModel parent = new HBoxModel();
-		//HelloModel child1 = new HelloModel();
-		//child1.setParent(parent);
-		WindowModel child1 = new WindowModel();
-		parent.addChild(child1);
-		// 制約の設定
-		//child1.setConstraint(new Rectangle(0, 0, -1, -1));
-		//parent.addChild(child1);		
+		RootModel root = new RootModel();
+		//WindowModel child1 = new WindowModel();
+		//root.addChild(child1);
+		viewer.setContents(root);
 		
-		viewer.setContents(parent);
+		IEditorInput input = getEditorInput();
+		if (input instanceof IFileEditorInput) {
+			IFile file = ((IFileEditorInput) input).getFile();
 
+			try {
+				XULLoader.loadXUL(file.getContents(), root);
+				if(root.getChildren().size()>0){
+					viewer.setContents(root.getChildren().get(0));
+				}
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
-
+	
 	/* (非 Javadoc)
 	 * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */

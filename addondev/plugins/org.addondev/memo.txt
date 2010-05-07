@@ -1,4 +1,11 @@
-﻿http://www.inf.ed.ac.uk/teaching/courses/ip/
+﻿<window title="window"  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"  flex="0" >
+<hbox orient="horizontal"  flex="0" >
+<label value="Hello World"  flex="0" />
+<label value="Hello World"  flex="0" />
+</hbox>
+</window>
+
+http://www.inf.ed.ac.uk/teaching/courses/ip/
 http://www.cs.technion.ac.il/~stommy/gef_page.htm
 http://sourceforge.jp/projects/nimbus-ide/releases/
 
