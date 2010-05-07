@@ -13,7 +13,7 @@ public abstract class AbstractXULParser {
 	public ElementModel parse(Element e){
 		ElementModel model = createModel();
 		
-		parseAttribute(model, );
+		//parseAttribute(model, );
 		parseChildren(model, e);
 		
 		return model;

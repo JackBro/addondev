@@ -29,7 +29,7 @@ public class RootEditPart extends EditPartWithListener {
 		//figure.setLayoutManager(new XYLayout());
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setStretchMinorAxis(false);
-		figure.setLayoutManager(tl);
+		figure.setLayoutManager(new org.eclipse.draw2d.FlowLayout());
 		
 		return figure;
 	}
