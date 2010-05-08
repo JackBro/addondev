@@ -37,7 +37,7 @@ public class MyEditPartFactory implements EditPartFactory {
 		else if(model instanceof RootModel)
 			part = new RootEditPart();
 
-		((ElementModel)model).installModelProperty();
+		//((ElementModel)model).installModelProperty();
 		part.setModel(model); // モデルをEditPartに設定する
 		return part;
 	}

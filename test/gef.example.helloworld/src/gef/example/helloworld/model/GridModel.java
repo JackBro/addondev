@@ -19,4 +19,6 @@ public class GridModel extends ContentsModel {
 		super.installModelProperty();
 		AddProperty(COLUMS_FLEX, new TextPropertyDescriptor(COLUMS_FLEX, "columnsflex"), columnsflex);
 	}
+	
+	
 }

@@ -11,7 +11,7 @@ public class LabelModel extends ElementModel {
 	//private Rectangle constraint; // 制約
 
 	public String getText() {
-		return text;
+		return getPropertyValue(P_TEXT).toString();
 	}
 
 	// public void setText(String text) {
@@ -42,7 +42,7 @@ public class LabelModel extends ElementModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddProperty(P_TEXT, new TextPropertyDescriptor(P_TEXT, "あいさつ"), text);
+		AddProperty(P_TEXT, new TextPropertyDescriptor(P_TEXT, "あいさつ"), "Hello World");
 	}
 
 	@Override
@@ -50,39 +50,4 @@ public class LabelModel extends ElementModel {
 		// TODO Auto-generated method stub
 		return "label";
 	}
-	
-//	@Override
-//	public IPropertyDescriptor[] getPropertyDescriptors() {
-//	    IPropertyDescriptor[] descriptors =
-//	        new IPropertyDescriptor[] {
-//	           new TextPropertyDescriptor(P_TEXT, "あいさつ")};
-//	      return descriptors;
-//	}
-//
-//
-//
-//	@Override
-//	public Object getPropertyValue(Object id) {
-//	    if (id.equals(P_TEXT)) {
-//	        // プロパティ・ビューに表示するデータを返す
-//	        return text;
-//	      }
-//	      return null;
-//	}
-//
-//	@Override
-//	public boolean isPropertySet(Object id) {
-//	    if (id.equals(P_TEXT))
-//	        return true;
-//	      else
-//	        return false;
-//	}
-//
-//	@Override
-//	public void setPropertyValue(Object id, Object value) {
-//	    if (id.equals(P_TEXT)) {
-//	        // テキストを変更する
-//	        setText((String) value);
-//	      }
-//	}
 }

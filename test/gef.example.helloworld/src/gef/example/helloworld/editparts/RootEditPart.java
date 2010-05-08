@@ -49,8 +49,5 @@ public class RootEditPart extends EditPartWithListener {
 			// 子モデルの構造が変化したので子EditPartの構造も更新する
 			refreshChildren();
 		}
-	}
-//	protected List getModelChildren() {
-//		return ((RootModel) getModel()).getChildren();
-//	}
+	}	
 }

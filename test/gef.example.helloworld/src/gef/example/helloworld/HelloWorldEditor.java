@@ -67,8 +67,10 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 			try {
 				XULLoader.loadXUL(file.getContents(), root);
 				if(root.getChildren().size()>0){
-					viewer.setContents(root.getChildren().get(0));
+					//viewer.setContents(root.getChildren().get(0));
+					viewer.setContents(root);
 				}
+				//getGraphicalViewer().getRootEditPart().getContents().refresh();
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

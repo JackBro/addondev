@@ -86,7 +86,7 @@ public abstract class ElementModel extends AbstractModel {
 	private Rectangle constraint;
 
 	public ElementModel(){
-		
+		installModelProperty();
 	}
 	
 	public void installModelProperty(){

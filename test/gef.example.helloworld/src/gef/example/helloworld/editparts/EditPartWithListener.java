@@ -5,6 +5,7 @@ import gef.example.helloworld.model.AbstractModel;
 import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.HBoxModel;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,10 @@ abstract public class EditPartWithListener
 		super.deactivate();
 		// モデルから削除
 		 ((AbstractModel) getModel()).removePropertyChangeListener(this);
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		refresh();
 	}
 	
 	protected List getModelChildren() {

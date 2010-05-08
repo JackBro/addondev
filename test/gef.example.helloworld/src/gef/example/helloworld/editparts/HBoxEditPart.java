@@ -1,6 +1,7 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
+import gef.example.helloworld.figure.BoxFigure;
 import gef.example.helloworld.figure.ElementFigure;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.ElementModel;
@@ -32,12 +33,15 @@ public class HBoxEditPart extends EditPartWithListener {
 	protected IFigure createFigure() {
 
 		
-		Figure figure = new Figure();
-		//Layer figure = new Layer();
-		LineBorder lb = new LineBorder();
-		lb.setColor(ColorConstants.blue);
-		lb.setWidth(3);
-		figure.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
+//		Figure figure = new Figure();
+//		//Layer figure = new Layer();
+//		LineBorder lb = new LineBorder();
+//		lb.setColor(ColorConstants.blue);
+//		lb.setWidth(3);
+//		figure.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
+		
+		BoxFigure figure = new BoxFigure();
+		
 		//figure.setOpaque(true);
 //		//figure.setPreferredSize(300, 100);
 //		figure.setBackgroundColor(ColorConstants.blue);
@@ -50,31 +54,21 @@ public class HBoxEditPart extends EditPartWithListener {
 //		figure.setLayoutManager(fl);
 //		
 //		return figure;
-		Label label = new Label();
-		label.setText("H");
-
-		// 外枠とマージンの設定
-		label.setBorder(
-			new CompoundBorder(new LineBorder(), new MarginBorder(3)));
-
-		// 背景色をオレンジに
-		label.setBackgroundColor(ColorConstants.orange);
-		// 背景色を不透明に
-		label.setOpaque(false);
-		
-		FlowLayout fl = new FlowLayout();
 		ToolbarLayout tl = new ToolbarLayout();
-		tl.setSpacing(10);
+		tl.setSpacing(5);
 		tl.setVertical(false);
 		
-		Insets padding = new Insets(5, 5, 5, 5);
-		MarginBorder marginBorder = new MarginBorder(padding);
-		figure.setBorder(marginBorder);
+//		Insets padding = new Insets(5, 5, 5, 5);
+//		MarginBorder marginBorder = new MarginBorder(padding);
+//		figure.setBorder(marginBorder);
 		//tl.setStretchMinorAxis(false);
 		//fl.setStretchMinorAxis(true);
 		//fl.setHorizontal(false);
 		//figure.setSize(10, 20);
 		figure.setLayoutManager(tl);
+		//figure.setToolTip(new Label("getModel().toString()"));
+		//figure.setToolTip(f)
+
 		
 		dummy  = new Figure();
 		dummy.setPreferredSize(10, 20);		

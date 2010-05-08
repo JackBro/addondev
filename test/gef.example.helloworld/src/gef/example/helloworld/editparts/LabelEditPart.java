@@ -96,7 +96,9 @@ public class LabelEditPart extends EditPartWithListener {
 	protected void refreshVisuals() {
 		// TODO Auto-generated method stub
 		super.refreshVisuals();
-
+    	LabelFigure label = (LabelFigure) getFigure();
+    	LabelModel model = (LabelModel) getModel();
+    	label.setText(model.getText());
 	}
 
 	@Override

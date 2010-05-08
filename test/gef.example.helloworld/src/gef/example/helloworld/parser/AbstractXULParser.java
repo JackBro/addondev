@@ -1,6 +1,8 @@
 package gef.example.helloworld.parser;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -12,8 +14,9 @@ public abstract class AbstractXULParser {
 	
 	public ElementModel parse(Element e){
 		ElementModel model = createModel();
+		//model.installModelProperty();
 		
-		//parseAttribute(model, );
+		parseAttribute(model, e);
 		parseChildren(model, e);
 		
 		return model;
@@ -21,7 +24,13 @@ public abstract class AbstractXULParser {
 	
 	private void parseAttribute(ElementModel model, Element e) {
 		// TODO Auto-generated method stub
-		
+		NamedNodeMap attrs = e.getAttributes();
+		for (int i = 0; i < attrs.getLength(); i++) {
+			Attr attr = (Attr) attrs.item(i);
+			String id = attr.getName();
+			String value = attr.getValue();
+			model.setPropertyValue(id, value);
+		}
 	}
 	
 	protected void parseChildren(ElementModel model, Element e){

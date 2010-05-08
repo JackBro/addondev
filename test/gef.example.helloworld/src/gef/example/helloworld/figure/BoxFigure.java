@@ -11,11 +11,12 @@ public class BoxFigure extends ElementFigure {
 	public BoxFigure() {
 		super();
 		// TODO Auto-generated constructor stub
-		setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
+		setBorder(new LineBorder(ColorConstants.black,2, Graphics.LINE_DOT));
 
 		Insets padding = new Insets(5, 5, 5, 5);
 		MarginBorder marginBorder = new MarginBorder(padding);
-		setBorder(marginBorder);
+		//setBorder(marginBorder);
+		
 	}
 
 	@Override
