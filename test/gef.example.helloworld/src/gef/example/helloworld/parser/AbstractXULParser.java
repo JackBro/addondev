@@ -1,5 +1,8 @@
 package gef.example.helloworld.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -45,5 +48,20 @@ public abstract class AbstractXULParser {
 	
 	protected void parseChildElement(ElementModel model, Element e){
 		XULLoader.parseElement(model, e);
+	}
+	
+	protected Map<String, String> getAttribute(Element e){
+		
+		Map<String, String> map = new HashMap<String, String>();
+		
+		NamedNodeMap attrs = e.getAttributes();
+		for (int i = 0; i < attrs.getLength(); i++) {
+			Attr attr = (Attr) attrs.item(i);
+			String name = attr.getName();
+			String value = attr.getValue();
+			map.put(name, value);
+		}
+		
+		return map;
 	}
 }

@@ -1,5 +1,7 @@
 package gef.example.helloworld.model;
 
+import gef.example.helloworld.viewers.ListPropertyDescriptor;
+
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 public class LabelModel extends ElementModel {
@@ -13,24 +15,6 @@ public class LabelModel extends ElementModel {
 	public String getText() {
 		return getPropertyValue(P_TEXT).toString();
 	}
-
-	// public void setText(String text) {
-	// this.text = text;
-	// }
-//	public void setText(String text) {
-//		this.text = text;
-//		// テキストの変更をEditPartに通知する
-//		firePropertyChange(P_TEXT, null, text); // ②
-//	}
-//	public Rectangle getConstraint() {
-//		return constraint;
-//	}
-//
-//	public void setConstraint(Rectangle rect) {
-//		constraint = rect;
-//		// 変更の通知
-//		firePropertyChange(P_CONSTRAINT, null, constraint);
-//	}
 	
 	public LabelModel() {
 		super();
@@ -43,6 +27,7 @@ public class LabelModel extends ElementModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 		AddProperty(P_TEXT, new TextPropertyDescriptor(P_TEXT, "あいさつ"), "Hello World");
+		//AddProperty("P_TEXT", new ListPropertyDescriptor("P_TEXT", "あいさつ"), "Hello World");
 	}
 
 	@Override

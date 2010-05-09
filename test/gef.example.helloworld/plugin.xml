@@ -19,13 +19,14 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            name="Hello World Editor"
-            default="true"
-            icon="example.gif"
-            filenames="hello.world"
-            contributorClass="gef.example.helloworld.MyContributor"
             class="gef.example.helloworld.HelloWorldEditor"
-            id="gef.example.helloworld.editor1">
+            contributorClass="gef.example.helloworld.MyContributor"
+            default="true"
+            extensions="world"
+            filenames="hello.world"
+            icon="example.gif"
+            id="gef.example.helloworld.editor1"
+            name="Hello World Editor">
       </editor>
    </extension>
 

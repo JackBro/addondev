@@ -84,18 +84,18 @@ public class GridEditPart extends EditPartWithListener {
 				getFigure().add(dummys.get(1));
 			}
 			refreshChildren();
-		} else if (evt.getPropertyName().equals(GridModel.COLUMS_FLEX)) {
+		} else if (evt.getPropertyName().equals(GridModel.ATTR_COLUMS)) {
 	    	//EditPartWithListener ep = (EditPartWithListener)getParent();
 	    	//ep.resizeChildren();
-			ArrayList<Integer> columlist = new ArrayList<Integer>(); 
+//			ArrayList<Integer> columlist = new ArrayList<Integer>(); 
 			GridModel elem = (GridModel)getModel();
-			String cflexs = elem.getPropertyValue(GridModel.COLUMS_FLEX).toString();
-			String[] cs = cflexs.split(",");
-			for (String string : cs) {
-				int flex = Integer.parseInt(string.trim());
-				columlist.add(flex);
-			}
-			
+//			String cflexs = elem.getPropertyValue(GridModel.COLUMS_FLEX).toString();
+//			String[] cs = cflexs.split(",");
+//			for (String string : cs) {
+//				int flex = Integer.parseInt(string.trim());
+//				columlist.add(flex);
+//			}
+			List<Integer> columlist = elem.getColumnFlex();
 			int pwidth = getFigure().getPreferredSize().width;
 			int ph = getFigure().getPreferredSize().height;
 			
@@ -124,37 +124,37 @@ public class GridEditPart extends EditPartWithListener {
 //		return ((GridModel) getModel()).getChildren();
 //	}
 	
-	public void resizeColumns(){
-    	//EditPartWithListener ep = (EditPartWithListener)getParent();
-    	//ep.resizeChildren();
-		ArrayList<Integer> columlist = new ArrayList<Integer>(); 
-		GridModel elem = (GridModel)getModel();
-		String cflexs = elem.getPropertyValue(GridModel.COLUMS_FLEX).toString();
-		String[] cs = cflexs.split(",");
-		for (String string : cs) {
-			int flex = Integer.parseInt(string.trim());
-			columlist.add(flex);
-		}
-		
-		int pwidth = getFigure().getPreferredSize().width;
-		
-		
-		
-		
-		List cheldern = getChildren();
-	
-
-		int columns = 2;
-		int rows = cheldern.size()/columns;
-		
-		for (int j = 0; j < rows; j++) {
-			for (int i = 0; i < columns; i++) {
-				int index = j*rows+i;
-				ElementModel elm = (ElementModel)cheldern.get(index);
-				//elm.setPreSize(w, h)
-			}
-		}		
-	}
+//	public void resizeColumns(){
+//    	//EditPartWithListener ep = (EditPartWithListener)getParent();
+//    	//ep.resizeChildren();
+//		ArrayList<Integer> columlist = new ArrayList<Integer>(); 
+//		GridModel elem = (GridModel)getModel();
+//		String cflexs = elem.getPropertyValue(GridModel.COLUMS_FLEX).toString();
+//		String[] cs = cflexs.split(",");
+//		for (String string : cs) {
+//			int flex = Integer.parseInt(string.trim());
+//			columlist.add(flex);
+//		}
+//		
+//		int pwidth = getFigure().getPreferredSize().width;
+//		
+//		
+//		
+//		
+//		List cheldern = getChildren();
+//	
+//
+//		int columns = 2;
+//		int rows = cheldern.size()/columns;
+//		
+//		for (int j = 0; j < rows; j++) {
+//			for (int i = 0; i < columns; i++) {
+//				int index = j*rows+i;
+//				ElementModel elm = (ElementModel)cheldern.get(index);
+//				//elm.setPreSize(w, h)
+//			}
+//		}		
+//	}
 	
 	public List<Integer> getResizedWidth(List children, int columnsize, List<Integer> flexs){
 		

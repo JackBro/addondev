@@ -27,15 +27,7 @@ public abstract class ElementModel extends AbstractModel {
 		fPropertyMap.put(id, new ModelProperty(id, propertyDescriptor));
 		fAttributeMap.put(id, obj);
 		
-	}
-	
-//	public void setFlex(int flex) {
-//		this.flex = flex;
-//		firePropertyChange(ATTR_FLEX_CHANGE, null, flex);
-//	}
-//	public int getFlex() {
-//		return flex;
-//	}	
+	}	
 	
 	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
@@ -79,8 +71,6 @@ public abstract class ElementModel extends AbstractModel {
 		fAttributeMap.put(id, value);
 		firePropertyChange(id.toString(), null, value);
 	}
-
-
 
 	private ContentsModel parent;
 	private Rectangle constraint;

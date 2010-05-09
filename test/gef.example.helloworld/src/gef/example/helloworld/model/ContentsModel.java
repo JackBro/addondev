@@ -41,6 +41,13 @@ public abstract class ContentsModel extends ElementModel {
 		firePropertyChange(P_REMOVE_CHILDREN, null, null);
 	}
 	
+	public void removeAllChild() {
+		// 子モデルの削除
+		children.clear();
+		// EditPartへの通知
+		//firePropertyChange(P_REMOVE_CHILDREN, null, null);
+	}
+	
 	public int getChildIndex(Object child) {
 		int index = -1;
 		for (Object model : children) {
