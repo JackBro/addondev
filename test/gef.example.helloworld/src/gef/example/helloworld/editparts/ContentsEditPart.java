@@ -1,7 +1,7 @@
 package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.MyXYLayoutEditPolicy;
-import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
+import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.model.ContentsModel;
 
 import java.beans.PropertyChangeEvent;
@@ -47,7 +47,7 @@ public class ContentsEditPart extends EditPartWithListener {
 	 */
 	protected void createEditPolicies() {
 		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new MyXYLayoutEditPolicy());
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new VBoxLayoutEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
 	}
 
 	/* (非 Javadoc)

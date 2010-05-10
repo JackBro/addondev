@@ -1,10 +1,10 @@
 package gef.example.helloworld.model;
 
-public class RadioModel extends ElementModel {
+public class RadioGroupModel extends BoxModel {
 
 	@Override
 	public String getName() {
-		return "radio";
+		return "radiogroup";
 	}
 
 }

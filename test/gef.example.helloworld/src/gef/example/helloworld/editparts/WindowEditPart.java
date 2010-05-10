@@ -1,6 +1,6 @@
 package gef.example.helloworld.editparts;
 
-import gef.example.helloworld.editpolicies.VBoxLayoutEditPolicy;
+import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.VBoxModel;
@@ -41,7 +41,7 @@ public class WindowEditPart extends EditPartWithListener {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new VBoxLayoutEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
 	}
 
 	@Override
