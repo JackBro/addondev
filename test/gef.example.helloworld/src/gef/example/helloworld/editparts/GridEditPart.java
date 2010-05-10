@@ -38,23 +38,25 @@ public class GridEditPart extends EditPartWithListener {
 		// TODO Auto-generated method stub
 		//Label label = new Label("cBox");
 		//label.setText("VBox");
-		for(int i=0; i<2; i++){
-			Label label = new Label("cBox");
-			label.setBorder(
-			new CompoundBorder(new LineBorder(), new MarginBorder(1)));
-			dummys.add(label);
-		}
-		//dummys.add(new Label("cBox"));
-		//dummys.add(new Label("cBox"));
+		GridModel model = (GridModel)getModel();
 		
+		ElementFigure fig = new BoxFigure();
 		GridLayout gl = new GridLayout();
 		gl.numColumns = 2;
-		//FreeformLayer fig = new FreeformLayer();
-		ElementFigure fig = new BoxFigure();
 		fig.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
 		fig.setLayoutManager(gl);
-		for (IFigure dummy : dummys) {
-			fig.add(dummy);
+		
+		if(model.getChildren().size()==0){	
+			for(int i=0; i<2; i++){
+				Label label = new Label("cBox");
+				label.setBorder(
+				new CompoundBorder(new LineBorder(), new MarginBorder(1)));
+				dummys.add(label);
+			}
+	
+			for (IFigure dummy : dummys) {
+				fig.add(dummy);
+			}
 		}
 		return fig;
 	}

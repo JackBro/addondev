@@ -5,6 +5,7 @@ import gef.example.helloworld.figure.BoxFigure;
 import gef.example.helloworld.figure.ElementFigure;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.GridModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.VBoxModel;
 
@@ -31,55 +32,27 @@ public class HBoxEditPart extends EditPartWithListener {
 	private Figure dummy;
 	@Override
 	protected IFigure createFigure() {
-
-		
-//		Figure figure = new Figure();
-//		//Layer figure = new Layer();
-//		LineBorder lb = new LineBorder();
-//		lb.setColor(ColorConstants.blue);
-//		lb.setWidth(3);
 //		figure.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
-		
+		ElementModel model = (ElementModel)getModel();
+
 		BoxFigure figure = new BoxFigure();
 		
-		//figure.setOpaque(true);
-//		//figure.setPreferredSize(300, 100);
-//		figure.setBackgroundColor(ColorConstants.blue);
-//
-//		
-//		//figure.setOpaque(opaque)
-//		FlowLayout fl = new FlowLayout();
-//		fl.setStretchMinorAxis(true);
-//		fl.setHorizontal(true);
-//		figure.setLayoutManager(fl);
-//		
-//		return figure;
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setSpacing(5);
 		tl.setVertical(false);
-		
-//		Insets padding = new Insets(5, 5, 5, 5);
-//		MarginBorder marginBorder = new MarginBorder(padding);
-//		figure.setBorder(marginBorder);
-		//tl.setStretchMinorAxis(false);
-		//fl.setStretchMinorAxis(true);
-		//fl.setHorizontal(false);
-		//figure.setSize(10, 20);
 		figure.setLayoutManager(tl);
-		//figure.setToolTip(new Label("getModel().toString()"));
-		//figure.setToolTip(f)
 
-		
-		dummy  = new Figure();
-		dummy.setPreferredSize(10, 20);		
-		figure.add(dummy);
+		if(model.getChildren().size() == 0){
+			dummy  = new Figure();
+			dummy.setPreferredSize(10, 20);		
+			figure.add(dummy);
+		}
 		
 		return figure;
 	}
 
 	@Override
 	protected void createEditPolicies() {
-		// TODO Auto-generated method stub
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new VBoxLayoutEditPolicy());
 	}
 
@@ -90,8 +63,6 @@ public class HBoxEditPart extends EditPartWithListener {
 		{
 			ContentsModel elm = (ContentsModel)getModel();
 			if(getFigure().getChildren().size() > 0){
-				int i = getFigure().getChildren().size();
-				IFigure ff = getFigure();
 				getFigure().getChildren().remove(dummy);
 				
 			}

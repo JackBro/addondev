@@ -13,11 +13,18 @@ import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.GridModel;
 
 public class GridParser extends AbstractXULParser {
-
+	
 	@Override
 	protected ElementModel createModel() {
 		// TODO Auto-generated method stub
 		return new GridModel();
+	}
+
+	@Override
+	protected void parseChildren(ElementModel model, Element e) {
+		// TODO Auto-generated method stub
+		//super.parseChildren(model, e);
+		parseChildElement(model, e);
 	}
 
 	@Override
@@ -36,8 +43,16 @@ public class GridParser extends AbstractXULParser {
 					Node node = columnnodelist.item(j);
 					//Map<String, String> map = new HashMap<String, String>();
 					//map.put("flex", "0");
-					Map<String, String> map = getAttribute((Element)node);
-					list.add(map);					
+					if (node instanceof Element) {
+						Map<String, String> map = getAttribute((Element)node);
+						if(map.isEmpty()){
+							Map<String, String> defaultmap = new HashMap<String, String>();
+							defaultmap.put("flex", "");
+							list.add(defaultmap);
+						}else{
+							list.add(map);
+						}
+					}
 				}
 				model.setPropertyValue(GridModel.ATTR_COLUMS, list);
 				
@@ -45,7 +60,15 @@ public class GridParser extends AbstractXULParser {
 				NodeList rownodelist = childNode.getChildNodes();
 				for (int j = 0; j < rownodelist.getLength(); j++) {
 					Node node = rownodelist.item(j);
-					XULLoader.parseElement(model, (Element)node);
+					if (node instanceof Element) {
+						NodeList nodelist = node.getChildNodes();
+						for (int n = 0; n < nodelist.getLength(); n++) {
+							Node rowchildnode = nodelist.item(n);
+							if (rowchildnode instanceof Element) {
+								XULLoader.parseElement(model, (Element)rowchildnode);
+							}
+						}
+					}
 				}
 			}
 		}

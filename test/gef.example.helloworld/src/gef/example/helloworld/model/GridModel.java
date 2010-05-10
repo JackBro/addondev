@@ -35,15 +35,18 @@ public class GridModel extends ContentsModel {
 		// TODO Auto-generated method stub
 		StringBuilder buf= new StringBuilder();
 		
+		buf.append("<grid>\n");
+		
 		List children = getChildren();
 		List<Map<String, String>> list = getColumns();
 		int columns = list.size();
-		int rows = children.size()/columns;
+		//int rows =  children.size()/columns;
+		int rows = children.size()%columns==0?children.size()/columns:children.size()/columns+1;
 		
 		buf.append("<columns>\n");
 		for (Map<String, String> map : list) {
 			//buf.append("<column " + map.get("flex") + " >\n");
-			buf.append(String.format("<column %s=\"%s\" >\n", "flex", map.get("flex")));
+			buf.append(String.format("<column %s=\"%s\" />\n", "flex", map.get("flex")));
 		}
 		buf.append("</columns>\n");
 		
@@ -52,13 +55,16 @@ public class GridModel extends ContentsModel {
 			buf.append("<row>\n");
 			for (int i = 0; i < columns; i++) {
 				int index = j*rows+i;
-				ElementModel model = (ElementModel)children.get(index);
-				buf.append(model.toXML());
+				if(children.size()>index){
+					ElementModel model = (ElementModel)children.get(index);
+					buf.append(model.toXML());
+				}
 			}
 			buf.append("</row>\n");
 		}
 		buf.append("</rows>\n");
 	
+		buf.append("</grid>\n");
 		return buf.toString();
 		
 	}

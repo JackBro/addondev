@@ -14,11 +14,9 @@ public abstract class ElementModel extends AbstractModel {
 	
 	protected List<ElementModel> children = new ArrayList<ElementModel>(); 
 	
-	//public static final String ATTR_FLEX_CHANGE = "attr_flex_change";
 	public static final String ATTR_FLEX = "flex";
-	
-	//protected int flex=0;
-	protected String flex="0";
+	public static final String ATTR_ID = "id";
+	//protected String flex="0";
 	
 	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
 	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();
@@ -28,6 +26,11 @@ public abstract class ElementModel extends AbstractModel {
 		fAttributeMap.put(id, obj);
 		
 	}	
+	
+	public void installModelProperty(){
+		AddProperty(ATTR_FLEX, new TextPropertyDescriptor(ATTR_FLEX, ATTR_FLEX), "");
+		AddProperty(ATTR_ID, new TextPropertyDescriptor(ATTR_ID, ATTR_ID), "");
+	}
 	
 	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
@@ -73,15 +76,11 @@ public abstract class ElementModel extends AbstractModel {
 	}
 
 	private ContentsModel parent;
-	private Rectangle constraint;
 
 	public ElementModel(){
 		installModelProperty();
 	}
-	
-	public void installModelProperty(){
-		AddProperty(ATTR_FLEX, new TextPropertyDescriptor(ATTR_FLEX, ATTR_FLEX), flex);
-	}
+
 	
 	public ContentsModel getParent() {
 		return parent;
@@ -93,7 +92,6 @@ public abstract class ElementModel extends AbstractModel {
 	
 	public void setConstraint(Rectangle rectangle)
 	{
-		constraint = rectangle;
 		firePropertyChange("resize", null, rectangle);
 	}
 	
@@ -111,7 +109,9 @@ public abstract class ElementModel extends AbstractModel {
 		for (Entry<Object, Object> attr : fAttributeMap.entrySet()) {
 			String id = attr.getKey().toString();
 			String value = attr.getValue().toString();
-			buf.append(String.format(" %s=\"%s\" ", id, value));
+			if(value !=null && value.length()>0){
+				buf.append(String.format(" %s=\"%s\" ", id, value));
+			}
 		}	
 		return buf.toString();
 	}

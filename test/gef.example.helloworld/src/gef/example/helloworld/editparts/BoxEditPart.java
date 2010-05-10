@@ -25,16 +25,22 @@ public class BoxEditPart extends EditPartWithListener {
 	private Figure dummy;
 	@Override
 	protected IFigure createFigure() {
+		
+		ElementModel model = (ElementModel)getModel();
+		
 		ElementFigure figure = new BoxFigure();
 		
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setSpacing(5);	
 		tl.setVertical(isVertical());
+		tl.setStretchMinorAxis(false);
 		figure.setLayoutManager(tl);
 		
-		dummy  = new Figure();
-		dummy.setPreferredSize(10, 20);		
-		figure.add(dummy);
+		if(model.getChildren().size() == 0){
+			dummy  = new Figure();
+			dummy.setPreferredSize(10, 20);		
+			figure.add(dummy);
+		}
 		
 		return figure;
 	}

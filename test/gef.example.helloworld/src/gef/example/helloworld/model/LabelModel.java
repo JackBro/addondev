@@ -1,7 +1,5 @@
 package gef.example.helloworld.model;
 
-import gef.example.helloworld.viewers.ListPropertyDescriptor;
-
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 public class LabelModel extends ElementModel {
