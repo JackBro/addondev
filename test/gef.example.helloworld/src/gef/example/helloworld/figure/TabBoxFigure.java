@@ -16,14 +16,17 @@ public class TabBoxFigure extends Figure {
 	     this.canvas = new Figure();
 	     this.canvas.setLayoutManager(new StackLayout());
 	     this.canvas.setPreferredSize(150, 100);
+	     
 	     this.tabs = new Figure();
 	     this.tabs.setPreferredSize(50, 20);
 	     this.tabs.setBackgroundColor(ColorConstants.green);
 	     this.tabs.setOpaque(true);
+	     
 	     ToolbarLayout layout = new ToolbarLayout();
 	     layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
 	     layout.setVertical(false);
 	     //layout.setStretchMinorAxis(false);
+	     
 	     this.tabs.setLayoutManager(layout);
 	     add(this.canvas,BorderLayout.CENTER);
 	     add(this.tabs,BorderLayout.TOP);

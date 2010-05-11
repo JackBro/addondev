@@ -43,18 +43,20 @@ public class TabBoxEditPart extends EditPartWithListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
-//		if(evt.getPropertyName().equals(TabBoxModel.ATTR_TABS)){
-//			EditPartWithListener edit = new TabPanelEditPart();
-//			edit.setModel(new TabPanelModel());
-//			int s = getChildren().size();
-//			int ms = getModelChildren().size();
-//			//activateChilds(edit);
-//			int ss = this.buttonMap.size();
-//			addChild(edit, ss);
-//
-//			//addChildVisual(edit, ss);
-//			//addChild(child, index)
-//		}
+		if(evt.getPropertyName().equals(TabBoxModel.ATTR_TABS)){
+			//EditPartWithListener edit = new TabPanelEditPart();
+			//edit.setModel(new TabPanelModel());
+			//int s = getChildren().size();
+			//int ms = getModelChildren().size();
+			//activateChilds(edit);
+			//int ss = this.buttonMap.size();
+			//addChild(edit, ss);
+			TabBoxModel model =  (TabBoxModel)getModel();
+			model.addChild(new TabPanelModel());
+
+			//addChildVisual(edit, ss);
+			//addChild(child, index)
+		}
 	}
 
 	@Override
