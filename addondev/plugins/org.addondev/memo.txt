@@ -1,4 +1,8 @@
-﻿<window title="window"  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"  flex="0" >
+﻿http://www.eclipse.org/forums/index.php?t=msg&goto=240189&
+http://webcache.googleusercontent.com/search?q=cache:r0JJatwMuL0J:www.eclipsezone.com/eclipse/forums/m92191038.html+gef+TabFigure&cd=4&hl=ja&ct=clnk&gl=jp&client=firefox-a
+http://dev.eclipse.org/newslists/news.eclipse.tools.gef/msg19303.html
+
+<window title="window"  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"  flex="0" >
 <hbox orient="horizontal"  flex="0" >
 <label value="Hello World"  flex="0" />
 <label value="Hello World"  flex="0" />

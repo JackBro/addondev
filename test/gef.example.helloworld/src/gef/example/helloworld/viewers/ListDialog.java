@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -16,18 +17,22 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
-
 public class ListDialog extends Dialog {
 
 	private TableViewer viewer;
+	private Button fAddButton, fDeleteButton;
 	private List<Map<String, String>> value;
 	
 	public void setValue(List<Map<String, String>> value) {
@@ -46,54 +51,78 @@ public class ListDialog extends Dialog {
 	
 	protected ListDialog(Shell parentShell) {
 		super(parentShell);
-		setShellStyle(getShellStyle() | SWT.RESIZE);
+		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX );
+		//setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 
+//	@Override
+//	protected boolean isResizable() {
+//		// TODO Auto-generated method stub
+//		return true;
+//	}
+
+	@Override
+	protected int getShellStyle() {
+		// TODO Auto-generated method stub
+		return super.getShellStyle()|SWT.RESIZE|SWT.MAX; //super.getShellStyle();
+	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		// TODO Auto-generated method stub
-		//return super.createDialogArea(parent);
+		//return super.createDialogArea(parent);		
 		Composite composite = (Composite)super.createDialogArea(parent);
+		//composite.setLayout(new FillLayout(SWT.VERTICAL));
+
+		GridLayout layout= new GridLayout();
+		layout.numColumns= 2;
+		//layout.marginWidth= 0;
+		//layout.marginHeight= 0;
+		//composite.setLayout(layout);
+		
+		GridData gd= new GridData();
+		gd.grabExcessVerticalSpace = true;
+		gd.grabExcessHorizontalSpace = true;
+		gd.verticalAlignment= GridData.FILL_VERTICAL;
+		gd.horizontalAlignment= GridData.FILL_HORIZONTAL;
+		//composite.setLayoutData(gd);
+		
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		composite.setLayout(new GridLayout(2, false));
+		
 		viewer = new TableViewer(composite, SWT.FULL_SELECTION);
 		Table table = viewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		//int c = value.get(0).size();
 		List<String> properties = new ArrayList<String>();
-		List<CellEditor> cells = new ArrayList<CellEditor>();
-		
-//		String[] properties = new String[]{ // ①
-//		        "text",
-//		        "check",
-//		        "color",
-//		        "combo"
-//		    };
-//		
+		List<CellEditor> cells = new ArrayList<CellEditor>();	
 
 		
 		Map<String, String> map = value.get(0);
 		for (String key : map.keySet()) {
 			TableColumn column = new TableColumn(table, SWT.NULL);
 			column.setText(key);
-			column.setWidth(50);
+			column.setWidth(100);
 			properties.add(key);
 			cells.add(new TextCellEditor(viewer.getTable()));
 		}
 		
 		viewer.setColumnProperties(properties.toArray(new String[properties.size()])); 
-//		CellEditor[] editors = new CellEditor[] {
-//				 new TextCellEditor(viewer.getTable()),
-//				 new TextCellEditor(viewer.getTable()),
-//				 new TextCellEditor(viewer.getTable()) };
-//		viewer.setCellEditors(editors);
 		viewer.setCellEditors(cells.toArray(new CellEditor[cells.size()]));
-		 viewer.setCellModifier(new ListCellModifier());
+		viewer.setCellModifier(new ListCellModifier());
 		
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLableProvider());
 		viewer.setInput(value);
+		
+		fAddButton = new Button(composite, SWT.NONE);
+		fAddButton.setText("Add");
+		
+		fDeleteButton = new Button(composite, SWT.NONE);
+		fDeleteButton.setText("Delete");
+		
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 //	    // 各カラムの幅を計算する
 //	    TableColumn[] columns = table.getColumns();
@@ -105,6 +134,19 @@ public class ListDialog extends Dialog {
 		return composite;
 	}
 	
+//	@Override
+//	protected void createButtonsForButtonBar(Composite parent) {
+//		// TODO Auto-generated method stub
+//		GridLayout layout= (GridLayout) parent.getLayout();
+//		layout.numColumns++;
+//		layout.makeColumnsEqualWidth= false;
+//		Label label= new Label(parent, SWT.NONE);
+//		GridData data= new GridData();
+//		data.widthHint= layout.horizontalSpacing;
+//		label.setLayoutData(data);
+//		super.createButtonsForButtonBar(parent);
+//	}
+
 	class ViewLableProvider extends LabelProvider implements ITableLabelProvider {
 
 		@Override
@@ -179,7 +221,6 @@ public class ListDialog extends Dialog {
 				viewer.refresh();
 			}
 			//Map<String, String> map = (Map<String, String>)element;
-
 		}
 	}
 }

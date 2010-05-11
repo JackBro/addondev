@@ -33,9 +33,7 @@ public class LabelEditPart extends EditPartWithListener {
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */
 	protected void createEditPolicies() {
-		installEditPolicy(
-			EditPolicy.COMPONENT_ROLE,
-			new MyComponentEditPolicy());
+		installEditPolicy( EditPolicy.COMPONENT_ROLE, new MyComponentEditPolicy());
 	}
 
 //	/* (非 Javadoc)

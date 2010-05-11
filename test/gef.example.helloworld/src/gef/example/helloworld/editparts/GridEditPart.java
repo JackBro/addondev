@@ -30,6 +30,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 
+
 public class GridEditPart extends EditPartWithListener {
 
 	List<IFigure> dummys = new ArrayList<IFigure>();
