@@ -1,5 +1,6 @@
 package gef.example.helloworld.model;
 
+import gef.example.helloworld.viewers.ListProperty;
 import gef.example.helloworld.viewers.ListPropertyDescriptor;
 
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ public class GridModel extends ContentsModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddProperty(ATTR_COLUMS, new ListPropertyDescriptor(ATTR_COLUMS, ATTR_COLUMS), getDeafult());
+		//AddProperty(ATTR_COLUMS, new ListPropertyDescriptor(ATTR_COLUMS, ATTR_COLUMS), getDeafult());
+		AddListProperty(ATTR_COLUMS, ATTR_COLUMS, ColumnModel.class, getDeafult());
 		//AddProperty(COLUMS_FLEX, new TextPropertyDescriptor(COLUMS_FLEX, "columnsflex"), columnsflex);
 	}
 
@@ -79,9 +81,10 @@ public class GridModel extends ContentsModel {
 		return list;
 	}
 	
-	protected List getColumns(){
+	public List getColumns(){
 		Object obj = getPropertyValue(ATTR_COLUMS);
-		return (List)getPropertyValue(ATTR_COLUMS);
+		List list = ((ListProperty)getPropertyValue(ATTR_COLUMS)).getValues();
+		return list;
 	}
 	
 	public List<Integer> getColumnFlex(){
@@ -90,7 +93,12 @@ public class GridModel extends ContentsModel {
 		for (Object obj : list) {
 			ColumnModel column = (ColumnModel)obj;
 			//int flex = Integer.parseInt(map.get("flex"));
-			int flex = Integer.parseInt(column.getPropertyValue(ATTR_FLEX).toString());
+			int flex = 0;
+			try{
+				flex = Integer.parseInt(column.getPropertyValue(ATTR_FLEX).toString());
+			}catch(NumberFormatException e){
+				
+			}
 			flexlist.add(flex);
 		}
 		return flexlist;

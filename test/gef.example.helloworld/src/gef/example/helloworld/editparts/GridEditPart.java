@@ -36,14 +36,11 @@ public class GridEditPart extends EditPartWithListener {
 	List<IFigure> dummys = new ArrayList<IFigure>();
 	@Override
 	protected IFigure createFigure() {
-		// TODO Auto-generated method stub
-		//Label label = new Label("cBox");
-		//label.setText("VBox");
 		GridModel model = (GridModel)getModel();
 		
 		ElementFigure fig = new BoxFigure();
 		GridLayout gl = new GridLayout();
-		gl.numColumns = 2;
+		gl.numColumns = model.getColumns().size();
 		fig.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
 		fig.setLayoutManager(gl);
 		
@@ -88,26 +85,15 @@ public class GridEditPart extends EditPartWithListener {
 			}
 			refreshChildren();
 		} else if (evt.getPropertyName().equals(GridModel.ATTR_COLUMS)) {
-	    	//EditPartWithListener ep = (EditPartWithListener)getParent();
-	    	//ep.resizeChildren();
-//			ArrayList<Integer> columlist = new ArrayList<Integer>(); 
 			GridModel elem = (GridModel)getModel();
-//			String cflexs = elem.getPropertyValue(GridModel.COLUMS_FLEX).toString();
-//			String[] cs = cflexs.split(",");
-//			for (String string : cs) {
-//				int flex = Integer.parseInt(string.trim());
-//				columlist.add(flex);
-//			}
+			int columns = elem.getColumns().size();
 			List<Integer> columlist = elem.getColumnFlex();
-			int pwidth = getFigure().getPreferredSize().width;
-			int ph = getFigure().getPreferredSize().height;
-			
 			
 			List cheldern = getChildren();			
+			if(cheldern.size() == 0) return;
 			
-			List<Integer> cwidths =  getResizedWidth(cheldern, 2, columlist);	
+			List<Integer> cwidths =  getResizedWidth(cheldern, columns, columlist);	
 			
-			int columns = 2;
 			int rows = cheldern.size()/columns;
 			
 			for (int j = 0; j < rows; j++) {
@@ -122,10 +108,6 @@ public class GridEditPart extends EditPartWithListener {
 			}
 	    }
 	}
-	
-//	protected List getModelChildren() {
-//		return ((GridModel) getModel()).getChildren();
-//	}
 	
 //	public void resizeColumns(){
 //    	//EditPartWithListener ep = (EditPartWithListener)getParent();
@@ -166,7 +148,7 @@ public class GridEditPart extends EditPartWithListener {
 		int w = getFigure().getSize().width;
 		double sumflex=0;
 		double sumzerofilexw=0;
-		
+		if(columnsize > children.size()) columnsize = children.size();
 		//List children = getChildren();
 		for (int i = 0; i < columnsize; i++) {
 			Object object = children.get(i);

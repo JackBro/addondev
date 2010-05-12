@@ -30,22 +30,14 @@ public class ListCellEditor extends DialogCellEditor {
 		// TODO Auto-generated method stub
         ListDialog dialog = new ListDialog(cellEditorWindow.getShell());
         Object value = getValue(); 
-        if (value != null) {
-        	List list = (List)value;
-        	Class ll = list.getClass().getGenericInterfaces()[0].getClass();
-        	Class cl = list.getClass();
-    		Class cl4 = cl.getComponentType();
-    		Class cl2 = cl.getClass();
-    		Class<?> type =  list.getClass().getComponentType();
-    		Class cl3 = list.getClass();
-    		Type[] ii = cl.getGenericInterfaces();
-    		TypeVariable[] oo = cl.getTypeParameters();
-        	//dialog.setValue((List<Map<String, String>>) value);
-        	dialog.setValue(list.toArray(new Object[list.size()]));
-        	dialog.setValue(list);
+        if (value != null && (value instanceof ListProperty)) {
+        	ListProperty property = ((ListProperty)value).cp();
+        	///dialog.setValue(property.getClass(), property.getValues());
+        	dialog.setValue(property);
 		}
         int ret = dialog.open();
         if (ret == IDialogConstants.OK_ID) {
+        	Object oo = dialog.getValue();
         	return dialog.getValue();
         }
         else{

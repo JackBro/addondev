@@ -1,44 +1,29 @@
 package gef.example.helloworld.viewers;
 
 import gef.example.helloworld.model.ElementModel;
-import gef.example.helloworld.model.LabelModel;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 
@@ -47,37 +32,25 @@ public class ListDialog extends Dialog {
 	private TableViewer viewer;
 	private PropertySheetPage fPropertySheetPage;
 	private Button fAddButton, fDeleteButton;
-	private List<Map<String, String>> value;
-	private Object[] fObjects;
+	//private List<Map<String, String>> value;
+	//private Object[] fObjects;
+	private Class fClass;
 	private List fValues;
+	private ListProperty fListproperty;
 	
-	public void setValue(Object[] objects) {
-		fObjects = objects;
-		Class<?> type =  fObjects.getClass().getComponentType();
-		int i=0;
-	}
-	
-	public void setValue(List<Class> objects) {
-		fValues = objects;
-		Class cl = fValues.getClass();
-		Class cl4 = cl.getComponentType();
-		Class cl2 = cl.getClass();
-		Class<?> type =  fValues.getClass().getComponentType();
-		Class cl3 = objects.getClass();
-		int i=0;
+	public void setValue(ListProperty listproperty) {
+		fListproperty = listproperty;
+		fClass = fListproperty.getClass();
+		fValues = fListproperty.getValues();
 	}
 
-	public List<Map<String, String>> getValue() {
-		return value;
+	public Object getValue() {
+		return fListproperty;
 	}
 	
-	private Object getModel(){
-		if(fObjects == null) return null;
-		//if(fObjects.length == 0) return null;
+	private Object getInstance(){
 		try {
-			Class cl = fObjects[0].getClass();
-			Object element = cl.newInstance();
-			//viewer.add(element);
+			Object element = fClass.newInstance();
 			return element;
 		} catch (InstantiationException e1) {
 			// TODO Auto-generated catch block
@@ -149,7 +122,7 @@ public class ListDialog extends Dialog {
 		
 		viewer.setContentProvider(new ArrayContentProvider());
 		viewer.setLabelProvider(new ViewLableProvider());
-		viewer.setInput(fObjects);
+		viewer.setInput(fValues);
 		
 		fPropertySheetPage = new PropertySheetPage();
 		fPropertySheetPage.createControl(composite);
@@ -198,19 +171,8 @@ public class ListDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
-				Object element =  getModel();
+				Object element = getInstance();
 				viewer.add(element);
-//				try {
-//					Class cl = getValueClass();
-//					Object element = cl.newInstance();
-//					viewer.add(element);
-//				} catch (InstantiationException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} catch (IllegalAccessException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
 			}
 			
 			@Override
@@ -253,56 +215,56 @@ public class ListDialog extends Dialog {
 		
 	}
 
-	class ViewContentProvider implements IStructuredContentProvider{
-
-		@Override
-		public Object[] getElements(Object inputElement) {
-			// TODO Auto-generated method stub
-			return value.toArray(new Map[value.size()]);
-		}
-
-		@Override
-		public void dispose() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			// TODO Auto-generated method stub
-			
-		}
-	}
-	
-	public class ListCellModifier implements ICellModifier {
-
-		@Override
-		public boolean canModify(Object element, String property) {
-			// TODO Auto-generated method stub
-			return true;
-		}
-
-		@Override
-		public Object getValue(Object element, String property) {
-			// TODO Auto-generated method stub
-			
-			Map<String, String> map = (Map<String, String>)element;
-			if (map.containsKey(property)){
-				return map.get(property);
-			}
-			return null;
-		}
-
-		@Override
-		public void modify(Object element, String property, Object value) {
-			// TODO Auto-generated method stub
-			if(element instanceof TableItem){
-				Map<String, String> map = (Map<String, String>)((TableItem)element).getData();
-				map.put(property, (String) value);
-				viewer.update(element, null);	
-				viewer.refresh();
-			}
-			//Map<String, String> map = (Map<String, String>)element;
-		}
-	}
+//	class ViewContentProvider implements IStructuredContentProvider{
+//
+//		@Override
+//		public Object[] getElements(Object inputElement) {
+//			// TODO Auto-generated method stub
+//			return value.toArray(new Map[value.size()]);
+//		}
+//
+//		@Override
+//		public void dispose() {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//
+//		@Override
+//		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//	}
+//	
+//	public class ListCellModifier implements ICellModifier {
+//
+//		@Override
+//		public boolean canModify(Object element, String property) {
+//			// TODO Auto-generated method stub
+//			return true;
+//		}
+//
+//		@Override
+//		public Object getValue(Object element, String property) {
+//			// TODO Auto-generated method stub
+//			
+//			Map<String, String> map = (Map<String, String>)element;
+//			if (map.containsKey(property)){
+//				return map.get(property);
+//			}
+//			return null;
+//		}
+//
+//		@Override
+//		public void modify(Object element, String property, Object value) {
+//			// TODO Auto-generated method stub
+//			if(element instanceof TableItem){
+//				Map<String, String> map = (Map<String, String>)((TableItem)element).getData();
+//				map.put(property, (String) value);
+//				viewer.update(element, null);	
+//				viewer.refresh();
+//			}
+//			//Map<String, String> map = (Map<String, String>)element;
+//		}
+//	}
 }

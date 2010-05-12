@@ -1,5 +1,8 @@
 package gef.example.helloworld.model;
 
+import gef.example.helloworld.viewers.ListProperty;
+import gef.example.helloworld.viewers.ListPropertyDescriptor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +23,50 @@ public abstract class ElementModel extends AbstractModel {
 	
 	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
 	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();
+	
 	protected void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
 		
 		fPropertyMap.put(id, new ModelProperty(id, propertyDescriptor));
 		fAttributeMap.put(id, obj);
 		
 	}	
+	
+	public void AddTextProperty(String id, String displayname, Object obj){
+		
+		AddProperty(id, new TextPropertyDescriptor(id, displayname), obj);	
+	}
+	
+	public void AddListProperty(String id, String displayname, Class listclass, List obj){
+		
+		AddProperty(id, new ListPropertyDescriptor(id, displayname), new ListProperty(listclass, obj));	
+	}	
+	
+	public ElementModel cp(){
+		ElementModel model= null;
+		try {
+			model = this.getClass().newInstance();
+			for (Object id : fPropertyMap.keySet()) {
+				ModelProperty prop = fPropertyMap.get(id);
+				
+				IPropertyDescriptor propdescriptor = prop.getPropertyDescriptor();
+				if(propdescriptor instanceof TextPropertyDescriptor){
+					Object obj = fAttributeMap.get(id);
+					model.AddTextProperty((String) id, propdescriptor.getDisplayName(), obj);
+				}else if(propdescriptor instanceof ListPropertyDescriptor){
+					//ListProperty listprop = (ListProperty)fAttributeMap.get(id);
+					//model.AddListProperty((String) id, propdescriptor.getDisplayName(), 
+					//		listprop.getListClass(), listprop.getValues());
+				}
+			}
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return model;
+	}
 	
 	public void installModelProperty(){
 		AddProperty(ATTR_FLEX, new TextPropertyDescriptor(ATTR_FLEX, ATTR_FLEX), "");
