@@ -1,20 +1,19 @@
 package gef.example.helloworld.model.commands;
 
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.LabelModel;
-
+import gef.example.helloworld.model.ElementModel;
 import org.eclipse.gef.commands.Command;
 
 public class DeleteCommand extends Command {
 	private ContentsModel contentsModel;
-	private LabelModel helloModel;
+	private ElementModel elementModel;
 
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
 	public void execute() {
 		// モデルを削除する
-		contentsModel.removeChild(helloModel);
+		contentsModel.removeChild(elementModel);
 	}
 
 	public void setContentsModel(Object model) {
@@ -22,7 +21,7 @@ public class DeleteCommand extends Command {
 	}
 
 	public void setHelloModel(Object model) {
-		helloModel = (LabelModel) model;
+		elementModel = (ElementModel) model;
 	}
 
 	/* (非 Javadoc)
@@ -30,7 +29,7 @@ public class DeleteCommand extends Command {
 	 */
 	public void undo() {
 		// もう一度追加しなおす
-		contentsModel.addChild(helloModel);
+		contentsModel.addChild(elementModel);
 	}
 
 }

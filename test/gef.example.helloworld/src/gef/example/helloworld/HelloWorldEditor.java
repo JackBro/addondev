@@ -226,7 +226,7 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		addCreationToolEntry(drawer, RadioModel.class, "Radioの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, RadioGroupModel.class, "RadioGroupの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, TabPanelModel.class, "TabPanelの作成", "モデル作成", descriptor);
+		//addCreationToolEntry(drawer, TabPanelModel.class, "TabPanelの作成", "モデル作成", descriptor);
 
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);

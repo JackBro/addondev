@@ -32,21 +32,24 @@ public class GridModel extends ContentsModel {
 
 	@Override
 	public String toXML() {
-		// TODO Auto-generated method stub
 		StringBuilder buf= new StringBuilder();
 		
 		buf.append("<grid>\n");
 		
 		List children = getChildren();
-		List<Map<String, String>> list = getColumns();
+		List<ColumnModel> list = getColumns();
 		int columns = list.size();
 		//int rows =  children.size()/columns;
 		int rows = children.size()%columns==0?children.size()/columns:children.size()/columns+1;
 		
 		buf.append("<columns>\n");
-		for (Map<String, String> map : list) {
+		//for (Map<String, String> map : list) {
+		for (Object obj : list) {
+			ColumnModel column = (ColumnModel)obj;
 			//buf.append("<column " + map.get("flex") + " >\n");
-			buf.append(String.format("<column %s=\"%s\" />\n", "flex", map.get("flex")));
+			//buf.append(String.format("<column %s=\"%s\" />\n", "flex", map.get("flex")));
+			buf.append(column.getAttributes());
+			buf.append("\n");
 		}
 		buf.append("</columns>\n");
 		
@@ -69,31 +72,27 @@ public class GridModel extends ContentsModel {
 		
 	}
 	
-	protected List<Map<String, String>> getDeafult(){
-		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
-		for (int i = 0; i < defaultcolumn; i++) {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("flex", "0");
-			list.add(map);
-		}
-		
+	protected List<ColumnModel> getDeafult(){
+		List<ColumnModel> list = new ArrayList();
+		list.add(new ColumnModel());
+		list.add(new ColumnModel());
 		return list;
 	}
 	
-	protected List<Map<String, String>> getColumns(){
+	protected List getColumns(){
 		Object obj = getPropertyValue(ATTR_COLUMS);
-		return (List<Map<String, String>>)getPropertyValue(ATTR_COLUMS);
+		return (List)getPropertyValue(ATTR_COLUMS);
 	}
 	
 	public List<Integer> getColumnFlex(){
 		List<Integer> flexlist = new ArrayList<Integer>();
-
-		List<Map<String, String>> list = getColumns();
-		for (Map<String, String> map : list) {
-			int flex = Integer.parseInt(map.get("flex"));
+		List<ColumnModel> list = getColumns();
+		for (Object obj : list) {
+			ColumnModel column = (ColumnModel)obj;
+			//int flex = Integer.parseInt(map.get("flex"));
+			int flex = Integer.parseInt(column.getPropertyValue(ATTR_FLEX).toString());
 			flexlist.add(flex);
 		}
-		
 		return flexlist;
 	}
 }

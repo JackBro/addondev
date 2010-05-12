@@ -1,6 +1,7 @@
 package gef.example.helloworld.figure;
 
 import org.eclipse.draw2d.BorderLayout;
+import org.eclipse.draw2d.ButtonBorder;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -21,6 +22,7 @@ public class TabBoxFigure extends Figure {
 	     this.tabs.setPreferredSize(50, 20);
 	     this.tabs.setBackgroundColor(ColorConstants.green);
 	     this.tabs.setOpaque(true);
+	     
 	     
 	     ToolbarLayout layout = new ToolbarLayout();
 	     layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);

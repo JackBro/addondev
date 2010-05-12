@@ -1,5 +1,8 @@
 package gef.example.helloworld.figure;
 
+import org.eclipse.draw2d.ButtonBorder;
+import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.SimpleRaisedBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 
 public class TabPanelFigure extends BoxFigure {
@@ -7,6 +10,8 @@ public class TabPanelFigure extends BoxFigure {
 	public TabPanelFigure() {
 		super();
 		// TODO Auto-generated constructor stub
+		setBorder(new LineBorder());
+		
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setStretchMinorAxis(false);
 		tl.setVertical(false);

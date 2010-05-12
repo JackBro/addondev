@@ -1,5 +1,7 @@
 package gef.example.helloworld.viewers;
 
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +31,18 @@ public class ListCellEditor extends DialogCellEditor {
         ListDialog dialog = new ListDialog(cellEditorWindow.getShell());
         Object value = getValue(); 
         if (value != null) {
-        	dialog.setValue((List<Map<String, String>>) value);
+        	List list = (List)value;
+        	Class ll = list.getClass().getGenericInterfaces()[0].getClass();
+        	Class cl = list.getClass();
+    		Class cl4 = cl.getComponentType();
+    		Class cl2 = cl.getClass();
+    		Class<?> type =  list.getClass().getComponentType();
+    		Class cl3 = list.getClass();
+    		Type[] ii = cl.getGenericInterfaces();
+    		TypeVariable[] oo = cl.getTypeParameters();
+        	//dialog.setValue((List<Map<String, String>>) value);
+        	dialog.setValue(list.toArray(new Object[list.size()]));
+        	dialog.setValue(list);
 		}
         int ret = dialog.open();
         if (ret == IDialogConstants.OK_ID) {

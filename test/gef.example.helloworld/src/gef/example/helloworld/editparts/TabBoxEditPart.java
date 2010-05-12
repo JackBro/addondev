@@ -11,6 +11,7 @@ import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
 import gef.example.helloworld.editpolicies.TabBoxLayoutEditPolicy;
 import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.figure.TabBoxFigure;
+import gef.example.helloworld.figure.TabPanelLineBorder;
 import gef.example.helloworld.model.TabBoxModel;
 import gef.example.helloworld.model.TabPanelModel;
 
@@ -22,8 +23,12 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
+import org.eclipse.draw2d.SimpleRaisedBorder;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -36,6 +41,10 @@ public class TabBoxEditPart extends EditPartWithListener {
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
+		TabBoxModel model =  (TabBoxModel)getModel();
+		model.addChild(new TabPanelModel());
+		model.addChild(new TabPanelModel());
+		
 		return new TabBoxFigure();
 	}
 
@@ -88,6 +97,9 @@ public class TabBoxEditPart extends EditPartWithListener {
 	protected void addChildVisual(EditPart childEditPart, int index) {
 		// TODO Auto-generated method stub
         IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+        
+        //Rectangle rec = child.getBounds().getTransposed();
+        //rec = rec.setLocation(new Point(rec.x-1, rec.y));
         Object constraint = BorderLayout.CENTER;
         TabBoxFigure figure = getLayout();
         figure.getCanvas().add(child, constraint, index);
@@ -189,9 +201,12 @@ public class TabBoxEditPart extends EditPartWithListener {
             this.childEditPart = childEditPart;
             //TabModel paneModel = pane.getModel();
             setOpaque(true);
+
+            setBorder(new TabPanelLineBorder());
             String message = "panel";
             //this.tabLabel = new Label(message);
             setText(message);
+            //this.setPreferredSize(calculateTextSize().width, calculateTextSize().height+10);
             //setContents(this.tabLabel);
             //addActionListener(this);
             //setBorder(selectedBorder);
@@ -224,11 +239,6 @@ public class TabBoxEditPart extends EditPartWithListener {
             //this.tabLabel.setText(message);
             this.setText(message);
         }
-        
-//        public void setText(String text) {
-//            //this.tabLabel.setText(text);
-//        	this.setText(text);
-//        }
 
 		@Override
 		public void mouseDoubleClicked(MouseEvent me) {
@@ -243,8 +253,8 @@ public class TabBoxEditPart extends EditPartWithListener {
             showEp();
             this.pane.setVisible(true);
             enableOtherButtons();
-            setBackgroundColor(ColorConstants.lightGray);
-            setForegroundColor(ColorConstants.red);
+            setBackgroundColor(ColorConstants.white);
+            setForegroundColor(ColorConstants.black);
             //setBorder(selectedBorder);
             getLayout().repaint();			
 		}
