@@ -4,6 +4,8 @@ import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.MenuItemModel;
 import gef.example.helloworld.model.MenuListModel;
 import gef.example.helloworld.model.MenuPopupModel;
+import gef.example.helloworld.model.PrefPanesModel;
+import gef.example.helloworld.model.PrefpaneModel;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -25,6 +27,7 @@ public class ListCellEditor extends DialogCellEditor {
 	private static Map<Class, Class> map = new HashMap<Class, Class>(); 
 	static {
 		map.put(MenuPopupModel.class, MenuItemModel.class);
+		map.put(PrefPanesModel.class, PrefpaneModel.class);
 	}
 	private Object orgObject;
     public ListCellEditor(Composite parent) {

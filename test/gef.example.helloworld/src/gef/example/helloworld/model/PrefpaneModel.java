@@ -1,15 +1,13 @@
 package gef.example.helloworld.model;
 
-import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-
-public class TabPanelModel extends BoxModel {
+public class PrefpaneModel extends BoxModel {
 
 	public static final String ATTR_LABEL_TEXT = "label";
 	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "tabpanel";
+		return "prefpane";
 	}
 
 	@Override

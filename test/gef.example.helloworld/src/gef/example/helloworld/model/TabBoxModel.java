@@ -20,7 +20,7 @@ public class TabBoxModel extends BoxModel {
 //		AddProperty(ATTR_ORIENT, 
 //				new ComboBoxPropertyDescriptor(ATTR_ORIENT, ATTR_ORIENT, new String[] { "horizontal"}),
 //				"horizontal");
-		AddProperty(ATTR_TABS, new TextPropertyDescriptor(ATTR_TABS, ATTR_TABS), "0");
+		AddTextProperty(ATTR_TABS, ATTR_TABS, "0");
 	}
 
 }

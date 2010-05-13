@@ -16,6 +16,8 @@ public class TabBoxFigure extends Figure {
 	     setLayoutManager(new BorderLayout());
 	     this.canvas = new Figure();
 	     this.canvas.setLayoutManager(new StackLayout());
+	     this.canvas.setBackgroundColor(ColorConstants.lightGray);
+	     this.canvas.setOpaque(true);
 	     this.canvas.setPreferredSize(150, 100);
 	     
 	     this.tabs = new Figure();

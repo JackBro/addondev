@@ -18,6 +18,7 @@ import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.LabelModel;
+import gef.example.helloworld.model.PrefwindowModel;
 import gef.example.helloworld.model.RootModel;
 import gef.example.helloworld.model.VBoxModel;
 import gef.example.helloworld.model.WindowModel;
@@ -28,6 +29,7 @@ public class XULLoader {
 	private static Map<String, AbstractXULParser> parsers = new HashMap<String, AbstractXULParser>();
 	static {
 		parsers.put("window", new DefaultXULParser(WindowModel.class));
+		parsers.put("prefwindow", new DefaultXULParser(PrefwindowModel.class));
 		parsers.put("grid", new GridParser());
 		parsers.put("label", new DefaultXULParser(LabelModel.class));
 		parsers.put("vbox", new DefaultXULParser(VBoxModel.class));

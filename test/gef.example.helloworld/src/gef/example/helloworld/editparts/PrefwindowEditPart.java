@@ -1,50 +1,63 @@
 package gef.example.helloworld.editparts;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import gef.example.helloworld.editparts.TabBoxEditPart.TabButton;
 import gef.example.helloworld.figure.TabBoxFigure;
 import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.figure.TabPanelLineBorder;
 import gef.example.helloworld.model.BoxModel;
+import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.PrefpaneModel;
 import gef.example.helloworld.model.TabBoxModel;
-import gef.example.helloworld.model.TabPanelModel;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
+import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 
-public class TabBoxEditPart extends TabEditPart {
+public class PrefwindowEditPart extends TabEditPart {
 
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
-		BoxModel model =  (BoxModel)getModel();
-		model.addChild(new TabPanelModel());
-		model.addChild(new TabPanelModel());
+		//h=50
+		TabBoxFigure tabbox = (TabBoxFigure)super.createFigure();
+		tabbox.getTabs().setPreferredSize(new Dimension(-1, 50));
+		//tabbox.getCanvas().setBackgroundColor(c)		
 		
-		return super.createFigure();
+		BoxModel model =  (BoxModel)getModel();
+		model.addChild(new PrefpaneModel());
+		model.addChild(new PrefpaneModel());
+		
+		return tabbox;
 	}
-
+	
+	
+	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
+		
 		if(evt.getPropertyName().equals(TabBoxModel.ATTR_TABS)){
 			BoxModel model =  (BoxModel)getModel();
-			model.addChild(new TabPanelModel());
-		}
-	}	
-	
+			model.addChild(new PrefpaneModel());
+		}		
+	}
+
+
+
 	@Override
 	protected Label getNewTab(TabPanelFigure child, EditPart childEditPart) {
 		// TODO Auto-generated method stub
 		return new TabButton(child, childEditPart);
 	}
-	
 	public class TabButton extends Label implements MouseListener {
         private TabPanelFigure pane;
         //private IFigure pane;
@@ -55,10 +68,11 @@ public class TabBoxEditPart extends TabEditPart {
             this.pane = pane;
             this.childEditPart = childEditPart;
             //TabModel paneModel = pane.getModel();
+            //setLabelAlignment(PositionConstants.BOTTOM);
             setOpaque(true);         
-            setBorder(new TabPanelLineBorder());
+            //setBorder(new TabPanelLineBorder());
             
-            ((TabPanelModel)childEditPart.getModel()).addPropertyChangeListener(new PropertyChangeListener() {
+            ((PrefpaneModel)childEditPart.getModel()).addPropertyChangeListener(new PropertyChangeListener() {
 				
 				@Override
 				public void propertyChange(PropertyChangeEvent arg0) {
@@ -67,7 +81,7 @@ public class TabBoxEditPart extends TabEditPart {
 				}
 			});
             
-            String message = ((TabPanelModel)childEditPart.getModel()).getTabLabel();
+            String message = ((PrefpaneModel)childEditPart.getModel()).getTabLabel();
             
             setText(message);
             addMouseListener(this);
@@ -88,7 +102,7 @@ public class TabBoxEditPart extends TabEditPart {
 		@Override
 		public String getText() {
 			// TODO Auto-generated method stub
-        	String message = ((TabPanelModel)childEditPart.getModel()).getTabLabel();
+        	String message = ((PrefpaneModel)childEditPart.getModel()).getTabLabel();
 			return message;
 		}
 
