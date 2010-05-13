@@ -36,9 +36,14 @@ public abstract class ElementModel extends AbstractModel {
 		AddProperty(id, new TextPropertyDescriptor(id, displayname), obj);	
 	}
 	
-	public void AddListProperty(String id, String displayname, Class listclass, List obj){
+//	public void AddListProperty(String id, String displayname, Class listclass, List obj){
+//		
+//		AddProperty(id, new ListPropertyDescriptor(id, displayname), new ListProperty(listclass, obj));	
+//	}	
+	
+	public void AddListProperty(String id, String displayname, ElementModel obj){
 		
-		AddProperty(id, new ListPropertyDescriptor(id, displayname), new ListProperty(listclass, obj));	
+		AddProperty(id, new ListPropertyDescriptor(id, displayname), obj);	
 	}	
 	
 	public ElementModel cp(){
@@ -88,8 +93,6 @@ public abstract class ElementModel extends AbstractModel {
 
 	@Override
 	public Object getPropertyValue(Object id) {
-		// TODO Auto-generated method stub
-		//return super.getPropertyValue(id);
 		return fAttributeMap.get(id);
 	}
 

@@ -6,6 +6,7 @@ import gef.example.helloworld.model.GridModel;
 import gef.example.helloworld.model.GroupBoxModel;
 import gef.example.helloworld.model.HBoxModel;
 import gef.example.helloworld.model.LabelModel;
+import gef.example.helloworld.model.MenuListModel;
 import gef.example.helloworld.model.RadioGroupModel;
 import gef.example.helloworld.model.RadioModel;
 import gef.example.helloworld.model.RootModel;
@@ -45,8 +46,8 @@ public class MyEditPartFactory implements EditPartFactory {
 			part = new RadioGroupEditPart();
 		else if(model instanceof TabBoxModel)
 			part = new TabBoxEditPart();
-		else if(model instanceof TabPanelModel)
-			part = new TabPanelEditPart();
+		else if(model instanceof MenuListModel)
+			part = new MenuListEditPart();
 		
 		part.setModel(model); // モデルをEditPartに設定する
 		return part;

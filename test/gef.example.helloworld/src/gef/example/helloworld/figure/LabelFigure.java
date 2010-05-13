@@ -18,18 +18,13 @@ public class LabelFigure extends ElementFigure {
 	public LabelFigure() {
 		super();
 		label = new Label();
-		//label.setBorder(new CompoundBorder(new LineBorder(), new MarginBorder(3)));
-		// 背景色をオレンジに
 		label.setBackgroundColor(ColorConstants.orange);
-		// 背景色を不透明に
 		label.setOpaque(true);
 		
 		init();
 		
 		setBorder(new CompoundBorder(new LineBorder(), new MarginBorder(3)));
-		// 背景色をオレンジに
-		setBackgroundColor(ColorConstants.orange);
-		// 背景色を不透明に
+		setBackgroundColor(ColorConstants.white);
 		setOpaque(true);
 		
 		ToolbarLayout tl = new ToolbarLayout();

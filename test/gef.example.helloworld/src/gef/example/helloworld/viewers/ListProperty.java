@@ -8,6 +8,7 @@ import java.util.List;
 public class ListProperty {
 	private Class fClass;
 	private List<ElementModel> fValues;
+	private ElementModel fModel;
 	
 	public List getValues() {
 		return fValues;
@@ -25,6 +26,12 @@ public class ListProperty {
 		super();
 		this.fClass = fClass;
 		this.fValues = fValues;
+	}
+	
+	public ListProperty(Class fClass, ElementModel fValues) {
+		super();
+		this.fClass = fClass;
+		this.fModel = fValues;
 	}
 	
 	public ListProperty cp(){

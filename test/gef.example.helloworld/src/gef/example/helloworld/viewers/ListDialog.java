@@ -43,9 +43,18 @@ public class ListDialog extends Dialog {
 		fClass = fListproperty.getClass();
 		fValues = fListproperty.getValues();
 	}
+	
+	public void setValue(Class cl, List values) {
+		//fListproperty = listproperty;
+		fClass = cl;
+		fValues = values;
+	}
 
 	public Object getValue() {
-		return fListproperty;
+		return fValues;
+//		Object o = viewer.getInput();
+//		viewer.getTable().get
+//		return o;
 	}
 	
 	private Object getInstance(){
@@ -173,6 +182,7 @@ public class ListDialog extends Dialog {
 				// TODO Auto-generated method stub
 				Object element = getInstance();
 				viewer.add(element);
+				fValues.add(element);
 			}
 			
 			@Override
@@ -183,6 +193,23 @@ public class ListDialog extends Dialog {
 		
 		fDeleteButton = new Button(buttonComposite, SWT.NONE);
 		fDeleteButton.setText("Delete");
+		fDeleteButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				IStructuredSelection sel = (IStructuredSelection)viewer.getSelection();
+				Object element = sel.getFirstElement();
+				viewer.remove(element);
+				fValues.remove(element);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 //	    // 各カラムの幅を計算する
 //	    TableColumn[] columns = table.getColumns();
