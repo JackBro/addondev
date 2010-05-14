@@ -17,9 +17,7 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPolicy;
 
 public class LabelEditPart extends EditPartWithListener {
-	/* (非 Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-	 */
+
 	protected IFigure createFigure() {
 		LabelModel model = (LabelModel) getModel();
 
@@ -29,38 +27,12 @@ public class LabelEditPart extends EditPartWithListener {
 		return label;
 	}
 
-	/* (非 Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-	 */
 	protected void createEditPolicies() {
 		installEditPolicy( EditPolicy.COMPONENT_ROLE, new MyComponentEditPolicy());
 	}
 
-//	/* (非 Javadoc)
-//	 * @see org.eclipse.gef.editparts.AbstractEditPart#refreshVisuals()
-//	 */
-//	protected void refreshVisuals() {
-//		// 制約の取得
-////		Rectangle constraint = ((HelloModel) getModel()).getConstraint();
-////
-////		// Rectangleオブジェクトを制約としてビューに設定する
-////		// setLayoutConstraintメソッドは親EditPartから呼び出す
-////		((GraphicalEditPart) getParent()).setLayoutConstraint(
-////			this,
-////			getFigure(),
-////			constraint);
-//		
-//		((GraphicalEditPart) getParent()).setLayoutConstraint(
-//	}
-
-	/* (非 Javadoc)
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-	 */
 	public void propertyChange(PropertyChangeEvent evt) {
-		// 変更の型がモデルの位置情報の変更を示すものかどうか
-		if (evt.getPropertyName().equals(LabelModel.P_CONSTRAINT))
-			refreshVisuals(); // ビューを更新する
-	    else if (evt.getPropertyName().equals(LabelModel.P_TEXT)) {
+	    if (evt.getPropertyName().equals(LabelModel.P_TEXT)) {
 	        // モデルのテキストが変更されたのでビューに表示するテキストを更新
 	    	LabelFigure label = (LabelFigure) getFigure();
 	        label.setText((String) evt.getNewValue());
@@ -104,6 +76,4 @@ public class LabelEditPart extends EditPartWithListener {
 		// TODO Auto-generated method stub
 		super.resizeWidth();
 	}
-	
-	
 }

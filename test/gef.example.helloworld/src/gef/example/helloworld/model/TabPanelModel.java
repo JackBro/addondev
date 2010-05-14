@@ -18,7 +18,19 @@ public class TabPanelModel extends BoxModel {
 		super.installModelProperty();
 		AddTextProperty(ATTR_LABEL_TEXT, ATTR_LABEL_TEXT, "OK");
 	}
-
+	
+	@Override
+	public String toXML() {
+		StringBuilder buf= new StringBuilder();
+		buf.append("<tabpanel>");
+		for (Object obj : getChildren()) {
+			buf.append(((ElementModel)obj).toXML());
+			buf.append("\n");
+		}
+		buf.append("</tabpanel>");
+		return buf.toString(); 
+	}
+	
 	public String getTabLabel(){
 		return (String)getPropertyValue(ATTR_LABEL_TEXT);
 	}

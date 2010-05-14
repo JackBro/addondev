@@ -1,14 +1,7 @@
 package gef.example.helloworld.viewers;
 
-import gef.example.helloworld.model.ElementModel;
-import gef.example.helloworld.model.MenuItemModel;
-import gef.example.helloworld.model.MenuListModel;
-import gef.example.helloworld.model.MenuPopupModel;
-import gef.example.helloworld.model.PrefPanesModel;
-import gef.example.helloworld.model.PrefpaneModel;
+import gef.example.helloworld.model.*;
 
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +10,6 @@ import java.util.Map;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -27,9 +18,11 @@ public class ListCellEditor extends DialogCellEditor {
 	private static Map<Class, Class> map = new HashMap<Class, Class>(); 
 	static {
 		map.put(MenuPopupModel.class, MenuItemModel.class);
+		map.put(TabPanelsModel.class, TabPanelModel.class);
 		map.put(PrefPanesModel.class, PrefpaneModel.class);
+		map.put(PreferencesModel.class, PreferenceModel.class);
 	}
-	private Object orgObject;
+	//private Object orgObject;
     public ListCellEditor(Composite parent) {
         this(parent, SWT.NONE);
     }
@@ -53,7 +46,12 @@ public class ListCellEditor extends DialogCellEditor {
         	List childern = elem.getChildren();
         	for (Object obj : childern) {
         		ElementModel child = (ElementModel)obj;
-        		newChildern.add(child.cp());
+        		ElementModel newchile = child.cp();
+        		newChildern.add(newchile);
+        		if(child instanceof ContentsModel){
+        			ContentsModel content = (ContentsModel)child;
+        			((ContentsModel)newchile).setChildren(content.getChildren());
+        		}
 			}
         	dialog.setValue(val, newChildern);
         }
@@ -64,11 +62,16 @@ public class ListCellEditor extends DialogCellEditor {
 //		}
         int ret = dialog.open();
         if (ret == IDialogConstants.OK_ID) {
+        	
         	List list = (List)dialog.getValue();
         	ElementModel elem = (ElementModel)value;
-        	elem.getChildren().clear();
-        	elem.getChildren().addAll(list);
-        	return elem;
+        	
+        	//elem.getChildren().clear();
+        	//elem.getChildren().addAll(list);
+        	//return elem;
+        	
+        	elem.getParent().firePropertyChange(elem.getName(), null, list);
+        	return null;
         	//return dialog.getValue();
         }
         else{

@@ -14,8 +14,8 @@ public class PrefPanesModel extends ElementModel {
 		return "PrefPanes";
 	}
 	
-	public void setDefault(){
-		getChildren().add(new PrefpaneModel());
-		getChildren().add(new PrefpaneModel());
-	}
+//	public void setDefault(){
+//		getChildren().add(new PrefpaneModel());
+//		getChildren().add(new PrefpaneModel());
+//	}
 }

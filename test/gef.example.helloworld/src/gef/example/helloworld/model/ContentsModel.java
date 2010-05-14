@@ -30,9 +30,9 @@ public abstract class ContentsModel extends ElementModel {
 		firePropertyChange(P_ADD_CHILDREN, null, null);
 	}
 
-//	public List getChildren() {
-//		return children; // 子モデルを返す
-//	}
+	public void setChildren(List children) {
+		this.children = children;
+	}
 
 	public void removeChild(Object child) {
 		// 子モデルの削除

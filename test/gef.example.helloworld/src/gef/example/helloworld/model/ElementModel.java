@@ -34,12 +34,7 @@ public abstract class ElementModel extends AbstractModel {
 	public void AddTextProperty(String id, String displayname, Object obj){
 		
 		AddProperty(id, new TextPropertyDescriptor(id, displayname), obj);	
-	}
-	
-//	public void AddListProperty(String id, String displayname, Class listclass, List obj){
-//		
-//		AddProperty(id, new ListPropertyDescriptor(id, displayname), new ListProperty(listclass, obj));	
-//	}	
+	}	
 	
 	public void AddListProperty(String id, String displayname, ElementModel obj){
 		
@@ -153,8 +148,10 @@ public abstract class ElementModel extends AbstractModel {
 		for (Entry<Object, Object> attr : fAttributeMap.entrySet()) {
 			String id = attr.getKey().toString();
 			String value = attr.getValue().toString();
-			if(value !=null && value.length()>0){
-				buf.append(String.format(" %s=\"%s\" ", id, value));
+			if(fPropertyMap.get(attr.getKey()).getPropertyDescriptor() instanceof TextPropertyDescriptor){
+				if(value !=null && value.length()>0){
+					buf.append(String.format(" %s=\"%s\" ", id, value));
+				}
 			}
 		}	
 		return buf.toString();

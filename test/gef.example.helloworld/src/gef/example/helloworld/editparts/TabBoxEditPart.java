@@ -4,11 +4,14 @@ import gef.example.helloworld.figure.TabBoxFigure;
 import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.figure.TabPanelLineBorder;
 import gef.example.helloworld.model.BoxModel;
+import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.TabBoxModel;
 import gef.example.helloworld.model.TabPanelModel;
+import gef.example.helloworld.model.TabPanelsModel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
@@ -22,9 +25,9 @@ public class TabBoxEditPart extends TabEditPart {
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
-		BoxModel model =  (BoxModel)getModel();
-		model.addChild(new TabPanelModel());
-		model.addChild(new TabPanelModel());
+		//BoxModel model =  (BoxModel)getModel();
+		//model.addChild(new TabPanelModel());
+		//model.addChild(new TabPanelModel());
 		
 		return super.createFigure();
 	}
@@ -35,7 +38,25 @@ public class TabBoxEditPart extends TabEditPart {
 		super.propertyChange(evt);
 		if(evt.getPropertyName().equals(TabBoxModel.ATTR_TABS)){
 			BoxModel model =  (BoxModel)getModel();
-			model.addChild(new TabPanelModel());
+			//model.addChild(new TabPanelModel());
+		}else if(evt.getPropertyName().equals("tabpanels")){
+			BoxModel model =  (BoxModel)getModel();
+			TabPanelsModel tabpanels = (TabPanelsModel)model.getPropertyValue(TabBoxModel.ATTR_TABS);
+			List list = (List)evt.getNewValue();
+			while(tabpanels.getChildren().size() > 0){
+				tabpanels.getChildren().remove(0);
+			}
+			
+			for (Object object : list) {
+				tabpanels.getChildren().add(object);
+			}
+			
+			model.removeAllChild();
+			for (Object object : list) {
+				model.addChild((ElementModel) object);
+			}
+			
+			
 		}
 	}	
 	

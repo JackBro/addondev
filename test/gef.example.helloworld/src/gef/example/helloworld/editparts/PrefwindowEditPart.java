@@ -32,8 +32,8 @@ public class PrefwindowEditPart extends TabEditPart {
 		//tabbox.getCanvas().setBackgroundColor(c)		
 		
 		BoxModel model =  (BoxModel)getModel();
-		model.addChild(new PrefpaneModel());
-		model.addChild(new PrefpaneModel());
+		//model.addChild(new PrefpaneModel());
+		//model.addChild(new PrefpaneModel());
 		
 		return tabbox;
 	}
@@ -45,13 +45,12 @@ public class PrefwindowEditPart extends TabEditPart {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
 		
-		if(evt.getPropertyName().equals(TabBoxModel.ATTR_TABS)){
+		if(evt.getPropertyName().equals(PrefpaneModel.ATTR_preference)){
 			BoxModel model =  (BoxModel)getModel();
-			model.addChild(new PrefpaneModel());
+			//evt.getNewValue()
+			//model.addChild(new PrefpaneModel());
 		}		
 	}
-
-
 
 	@Override
 	protected Label getNewTab(TabPanelFigure child, EditPart childEditPart) {
