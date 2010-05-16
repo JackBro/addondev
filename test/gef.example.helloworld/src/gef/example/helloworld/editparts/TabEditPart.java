@@ -12,6 +12,7 @@ import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.figure.TabBoxFigure;
 import gef.example.helloworld.figure.TabPanelLineBorder;
 import gef.example.helloworld.model.BoxModel;
+import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.TabBoxModel;
 import gef.example.helloworld.model.TabPanelModel;
 
@@ -44,9 +45,23 @@ public abstract class TabEditPart extends EditPartWithListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
-//		if(evt.getPropertyName().equals(TabBoxModel.ATTR_TABS)){
+		
+//		if(evt.getPropertyName().equals("tabs")){
 //			BoxModel model =  (BoxModel)getModel();
-//			model.addChild(new TabPanelModel());
+//			ElementModel tabpanels = (ElementModel)model.getPropertyValue(TabBoxModel.ATTR_TABS);
+//			List list = (List)evt.getNewValue();
+//			while(tabpanels.getChildren().size() > 0){
+//				tabpanels.getChildren().remove(0);
+//			}
+//			
+//			for (Object object : list) {
+//				tabpanels.getChildren().add(object);
+//			}
+//			
+//			model.removeAllChild();
+//			for (Object object : list) {
+//				model.addChild((ElementModel) object);
+//			}
 //		}
 	}
 

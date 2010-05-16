@@ -18,6 +18,6 @@ public class PrefwindowModel extends BoxModel {
 		PrefPanesModel prefpanes = new PrefPanesModel();
 		prefpanes.setParent(this);
 		//prefpanes.setDefault();
-		AddListProperty(ATTR_TABS, ATTR_TABS, prefpanes);
+		AddListProperty("prefnanes", "prefnanes", prefpanes);
 	}
 }

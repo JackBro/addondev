@@ -3,7 +3,7 @@ package gef.example.helloworld.model;
 public class PrefpaneModel extends BoxModel {
 
 	public static final String ATTR_LABEL_TEXT = "label";
-	public static final String ATTR_preference = "preference";
+	public static final String ATTR_preference = "tabs";
 	
 	@Override
 	public String getName() {
@@ -18,7 +18,7 @@ public class PrefpaneModel extends BoxModel {
 		AddTextProperty(ATTR_LABEL_TEXT, ATTR_LABEL_TEXT, "OK");
 		PreferencesModel prefs = new PreferencesModel();
 		prefs.setParent(getParent());
-		AddListProperty(ATTR_preference, ATTR_preference, prefs);
+		AddListProperty(prefs.getName(), prefs.getName(), prefs);
 	}
 
 	public String getTabLabel(){

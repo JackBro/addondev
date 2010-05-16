@@ -2,22 +2,18 @@ package gef.example.helloworld.editparts;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
-import gef.example.helloworld.editparts.TabBoxEditPart.TabButton;
 import gef.example.helloworld.figure.TabBoxFigure;
 import gef.example.helloworld.figure.TabPanelFigure;
-import gef.example.helloworld.figure.TabPanelLineBorder;
 import gef.example.helloworld.model.BoxModel;
 import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.PrefpaneModel;
-import gef.example.helloworld.model.TabBoxModel;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
-import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 
@@ -31,7 +27,7 @@ public class PrefwindowEditPart extends TabEditPart {
 		tabbox.getTabs().setPreferredSize(new Dimension(-1, 50));
 		//tabbox.getCanvas().setBackgroundColor(c)		
 		
-		BoxModel model =  (BoxModel)getModel();
+		//BoxModel model =  (BoxModel)getModel();
 		//model.addChild(new PrefpaneModel());
 		//model.addChild(new PrefpaneModel());
 		
@@ -45,10 +41,23 @@ public class PrefwindowEditPart extends TabEditPart {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
 		
-		if(evt.getPropertyName().equals(PrefpaneModel.ATTR_preference)){
+		if(evt.getPropertyName().equals("prefnanes")){
 			BoxModel model =  (BoxModel)getModel();
-			//evt.getNewValue()
-			//model.addChild(new PrefpaneModel());
+			ElementModel tabs = (ElementModel)model.getPropertyValue("prefnanes");
+			List list = (List)evt.getNewValue();
+			while(tabs.getChildren().size() > 0){
+				tabs.getChildren().remove(0);
+			}
+			
+			for (Object object : list) {
+				tabs.getChildren().add(object);
+			}
+			
+			model.removeAllChild();
+			for (Object object : list) {
+				model.addChild((ElementModel) object);
+			}
+			//refreshTabs();
 		}		
 	}
 

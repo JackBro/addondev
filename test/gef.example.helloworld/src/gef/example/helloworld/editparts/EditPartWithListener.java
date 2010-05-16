@@ -1,5 +1,6 @@
 package gef.example.helloworld.editparts;
 
+import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
 import gef.example.helloworld.figure.ElementFigure;
 import gef.example.helloworld.model.AbstractModel;
 import gef.example.helloworld.model.ElementModel;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 abstract public class EditPartWithListener
@@ -33,7 +35,20 @@ abstract public class EditPartWithListener
 	public void propertyChange(PropertyChangeEvent evt) {
 		refresh();
 	}
-	
+
+	@Override
+	protected void createEditPolicies() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void installEditPolicy(Object key, EditPolicy editPolicy) {
+		// TODO Auto-generated method stub
+		super.installEditPolicy(key, editPolicy);
+		//installEditPolicy( EditPolicy.COMPONENT_ROLE, new MyComponentEditPolicy());
+	}
+
 	protected List getModelChildren() {
 		return ((ElementModel) getModel()).getChildren();
 	}

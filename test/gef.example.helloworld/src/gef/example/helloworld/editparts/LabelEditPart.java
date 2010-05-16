@@ -27,12 +27,8 @@ public class LabelEditPart extends EditPartWithListener {
 		return label;
 	}
 
-	protected void createEditPolicies() {
-		installEditPolicy( EditPolicy.COMPONENT_ROLE, new MyComponentEditPolicy());
-	}
-
 	public void propertyChange(PropertyChangeEvent evt) {
-	    if (evt.getPropertyName().equals(LabelModel.P_TEXT)) {
+	    if (evt.getPropertyName().equals(LabelModel.VALUE)) {
 	        // モデルのテキストが変更されたのでビューに表示するテキストを更新
 	    	LabelFigure label = (LabelFigure) getFigure();
 	        label.setText((String) evt.getNewValue());

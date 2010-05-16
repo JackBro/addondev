@@ -3,19 +3,7 @@ package gef.example.helloworld;
 import java.util.EventObject;
 
 import gef.example.helloworld.editparts.MyEditPartFactory;
-import gef.example.helloworld.model.ElementModel;
-import gef.example.helloworld.model.GridModel;
-import gef.example.helloworld.model.GroupBoxModel;
-import gef.example.helloworld.model.HBoxModel;
-import gef.example.helloworld.model.LabelModel;
-import gef.example.helloworld.model.MenuListModel;
-import gef.example.helloworld.model.RadioGroupModel;
-import gef.example.helloworld.model.RadioModel;
-import gef.example.helloworld.model.RootModel;
-import gef.example.helloworld.model.TabPanelModel;
-import gef.example.helloworld.model.TabBoxModel;
-import gef.example.helloworld.model.VBoxModel;
-import gef.example.helloworld.model.WindowModel;
+import gef.example.helloworld.model.*;
 import gef.example.helloworld.parser.XULLoader;
 
 import org.eclipse.core.resources.IFile;
@@ -228,6 +216,8 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		addCreationToolEntry(drawer, RadioGroupModel.class, "RadioGroupの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, MenuListModel.class, "MenuListの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成", "モデル作成", descriptor);
 
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);

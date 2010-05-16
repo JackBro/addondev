@@ -36,12 +36,10 @@ public class TabBoxEditPart extends TabEditPart {
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
-		if(evt.getPropertyName().equals(TabBoxModel.ATTR_TABS)){
+		
+		if(evt.getPropertyName().equals("tabpanels")){
 			BoxModel model =  (BoxModel)getModel();
-			//model.addChild(new TabPanelModel());
-		}else if(evt.getPropertyName().equals("tabpanels")){
-			BoxModel model =  (BoxModel)getModel();
-			TabPanelsModel tabpanels = (TabPanelsModel)model.getPropertyValue(TabBoxModel.ATTR_TABS);
+			ElementModel tabpanels = (ElementModel)model.getPropertyValue("tabpanels");
 			List list = (List)evt.getNewValue();
 			while(tabpanels.getChildren().size() > 0){
 				tabpanels.getChildren().remove(0);
@@ -55,8 +53,6 @@ public class TabBoxEditPart extends TabEditPart {
 			for (Object object : list) {
 				model.addChild((ElementModel) object);
 			}
-			
-			
 		}
 	}	
 	

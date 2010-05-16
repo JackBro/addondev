@@ -23,7 +23,7 @@ public class TabBoxModel extends BoxModel {
 		//AddTextProperty(ATTR_TABS, ATTR_TABS, "0");
 		TabPanelsModel model = new TabPanelsModel();
 		model.setParent(this);
-		AddListProperty(ATTR_TABS, ATTR_TABS, model);
+		AddListProperty(model.getName(), model.getName(), model);
 	}
 
 	@Override

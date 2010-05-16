@@ -24,7 +24,7 @@ public class LabelFigure extends ElementFigure {
 		init();
 		
 		setBorder(new CompoundBorder(new LineBorder(), new MarginBorder(3)));
-		setBackgroundColor(ColorConstants.white);
+		setBackgroundColor(ColorConstants.orange);
 		setOpaque(true);
 		
 		ToolbarLayout tl = new ToolbarLayout();
