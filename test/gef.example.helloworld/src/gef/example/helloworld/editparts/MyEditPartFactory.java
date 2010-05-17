@@ -1,17 +1,37 @@
 package gef.example.helloworld.editparts;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import gef.example.helloworld.model.*;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 
 public class MyEditPartFactory implements EditPartFactory {
-
+	
+	private static Map<Class, Class> editpartMap = new HashMap<Class, Class>();
+	static{
+		editpartMap.put(TextBoxModel.class, TextBoxEditPart.class);
+		editpartMap.put(WindowModel.class, WindowEditPart.class);
+	}
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart, java.lang.Object)
 	 */
 	public EditPart createEditPart(EditPart context, Object model) {
 		EditPart part = null;
+		
+		if(editpartMap.containsKey(model.getClass())){
+			try {
+				part = (EditPart) editpartMap.get(model.getClass()).newInstance();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		if(model instanceof TextBoxModel)
 			part = new TextBoxEditPart();	
@@ -43,6 +63,10 @@ public class MyEditPartFactory implements EditPartFactory {
 			part = new PrefwindowEditPart();
 		else if(model instanceof PrefpaneModel)
 			part = new TabPanelEditPart();
+		else if(model instanceof XULPartModel)
+			part = new XULPartEditPart();
+		else if(model instanceof XULRootModel)
+			part = new XULRootEditPart();
 		
 		part.setModel(model); // モデルをEditPartに設定する
 		return part;

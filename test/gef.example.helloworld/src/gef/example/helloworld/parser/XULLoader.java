@@ -56,7 +56,7 @@ public class XULLoader {
 		return null;
 	}
 	
-	public static ElementModel loadXUL(InputStream in, RootModel root){
+	public static ElementModel loadXUL(InputStream in, ContentsModel root){
 	//public static ElementModel loadXUL(IFile file, RootModel root){
 		try {
 			//String parseStr = getContent(file.getContents());

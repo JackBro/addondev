@@ -4,6 +4,7 @@ import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.ButtonBorder;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.ToolbarLayout;
@@ -13,6 +14,7 @@ public class TabBoxFigure extends Figure {
 	  private Figure tabs;
 
 	  public TabBoxFigure() {
+		  
 	     setLayoutManager(new BorderLayout());
 	     this.canvas = new Figure();
 	     this.canvas.setLayoutManager(new StackLayout());

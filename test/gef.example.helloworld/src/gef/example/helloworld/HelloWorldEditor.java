@@ -46,19 +46,29 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		GraphicalViewer viewer = getGraphicalViewer();
 		RootModel root = new RootModel();
 		// viewer.setContents(root);
+		
+		XULRootModel xulroot = new XULRootModel();
+		
+
+		root.addChild(new XULPartModel());
+		root.addChild(xulroot);
+		
+		//xulroot.addChild(new WindowModel());
+		
+		viewer.setContents(root);
 
 		IEditorInput input = getEditorInput();
 		if (input instanceof IFileEditorInput) {
 			IFile file = ((IFileEditorInput) input).getFile();
 			// root.removeAllChild();
 			try {
-				XULLoader.loadXUL(file.getContents(), root);
-				if (root.getChildren().size() > 0) {
+				XULLoader.loadXUL(file.getContents(), xulroot);
+				if (xulroot.getChildren().size() > 0) {
 					// viewer.setContents(root.getChildren().get(0));
 					viewer.setContents(root);
 				} else {
 					WindowModel child1 = new WindowModel();
-					root.addChild(child1);
+					xulroot.addChild(child1);
 					viewer.setContents(root);
 				}
 				// getGraphicalViewer().getRootEditPart().getContents().refresh();
