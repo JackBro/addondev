@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 public abstract class ElementModel extends AbstractModel {
@@ -32,6 +33,10 @@ public abstract class ElementModel extends AbstractModel {
 		fAttributeMap.put(id, obj);
 		
 	}	
+	
+	public void AddObjProperty(String id, String displayname, Object obj){
+		AddProperty(id, new PropertyDescriptor(id, displayname), obj);	
+	}
 	
 	public void AddTextProperty(String id, String displayname, Object obj){
 		
@@ -69,6 +74,10 @@ public abstract class ElementModel extends AbstractModel {
 					//model.AddListProperty((String) id, propdescriptor.getDisplayName(), 
 					//		listprop.getListClass(), listprop.getValues());
 				}
+			}
+			for (Object obj : children) {
+				ElementModel child = (ElementModel)obj;
+				model.getChildren().add(child.cp())
 			}
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
@@ -175,12 +184,15 @@ public abstract class ElementModel extends AbstractModel {
 	public String getListPropertysXML(){
 		StringBuilder buf= new StringBuilder();
 		for (ModelProperty val : fPropertyMap.values()) {
-			if(val.getPropertyDescriptor() instanceof ListPropertyDescriptor){
-				ListPropertyDescriptor listprop = (ListPropertyDescriptor)val.getPropertyDescriptor();
-				ElementModel model = (ElementModel)getPropertyValue(listprop.getId());
-				buf.append(model.toXML());
-				buf.append("\n");
-			}
+//			if(val.getPropertyDescriptor() instanceof ListPropertyDescriptor){
+//				ListPropertyDescriptor listprop = (ListPropertyDescriptor)val.getPropertyDescriptor();
+//				List<ElementModel> models = (List)getPropertyValue(listprop.getId());
+//				for (ElementModel elementModel : models) {
+//					
+//				}
+//				buf.append(model.toXML());
+//				buf.append("\n");
+//			}
 		}	
 		return buf.toString();
 	}
@@ -216,19 +228,20 @@ public abstract class ElementModel extends AbstractModel {
 			buf.append(getAttributes());
 		}
 	
-		String listprop = getListPropertysXML();
-		if(children.size() > 0 || listprop.length()>0 || (models!=null && models.size()>0)){
+		//String listprop = getListPropertysXML();
+		//if(children.size() > 0 || listprop.length()>0 || (models!=null && models.size()>0)){
+		if(children.size() > 0){
 			if(getName() != null){
 			buf.append(">");
 			buf.append("\n");
 			}
 			
-			if(models !=null){
-				for (Object object : models) {
-					ElementModel model = (ElementModel)object;
-					buf.append(model.toXML());
-				}
-			}
+//			if(models !=null){
+//				for (Object object : models) {
+//					ElementModel model = (ElementModel)object;
+//					buf.append(model.toXML());
+//				}
+//			}
 			
 			buf.append(getListPropertysXML());
 			for (ElementModel element : children) {

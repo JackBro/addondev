@@ -24,7 +24,7 @@ public class MenuPopupModel extends ElementModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, new ArrayList());
+		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, this);
 	}
 	
 }

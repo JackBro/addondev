@@ -47,7 +47,8 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		
 		//XULRootModel xulroot = new XULRootModel();
 		xulroot = new XULRootModel();
-		xulpart = new XULPartModel();
+		xulpart = new XULPartModel(xulroot);
+		//xulpart.AddObjProperty("root", "", xulroot);
 		
 
 		root.addChild(xulpart);
@@ -86,7 +87,8 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 //		ElementModel model = (ElementModel) parent.getChildren().get(0);	
 //		String mm = model.toXML();
 		ElementModel model = (ElementModel)xulroot.getChildren().get(0);
-		String mm = model.toXML(xulpart.getChildren());
+		//String mm = model.toXML(xulpart.getChildren());
+		String mm = model.toXML();
 		getCommandStack().markSaveLocation();
 	}
 

@@ -86,19 +86,6 @@ public class ListDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		// TODO Auto-generated method stub		
 		Composite composite = (Composite)super.createDialogArea(parent);
-
-		//GridLayout layout= new GridLayout();
-		//layout.numColumns= 2;
-		//layout.marginWidth= 0;
-		//layout.marginHeight= 0;
-		//composite.setLayout(layout);
-		
-		//GridData gd= new GridData();
-		//gd.grabExcessVerticalSpace = true;
-		//gd.grabExcessHorizontalSpace = true;
-		//gd.verticalAlignment= GridData.FILL_VERTICAL;
-		//gd.horizontalAlignment= GridData.FILL_HORIZONTAL;
-		//composite.setLayoutData(gd);
 		
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(3, false));
@@ -107,23 +94,6 @@ public class ListDialog extends Dialog {
 		Table table = viewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		
-//		List<String> properties = new ArrayList<String>();
-//		List<CellEditor> cells = new ArrayList<CellEditor>();	
-//		Map<String, String> map = value.get(0);
-//		for (String key : map.keySet()) {
-//			TableColumn column = new TableColumn(table, SWT.NULL);
-//			column.setText(key);
-//			column.setWidth(100);
-//			properties.add(key);
-//			cells.add(new TextCellEditor(viewer.getTable()));
-//		}
-//		
-//		viewer.setColumnProperties(properties.toArray(new String[properties.size()])); 
-//		viewer.setCellEditors(cells.toArray(new CellEditor[cells.size()]));
-//		viewer.setCellModifier(new ListCellModifier());
-		
-		//viewer.setContentProvider(new ViewContentProvider());
 		
 		TableColumn column = new TableColumn(table, SWT.NULL);
 		column.setText("");
@@ -241,57 +211,4 @@ public class ListDialog extends Dialog {
 		}
 		
 	}
-
-//	class ViewContentProvider implements IStructuredContentProvider{
-//
-//		@Override
-//		public Object[] getElements(Object inputElement) {
-//			// TODO Auto-generated method stub
-//			return value.toArray(new Map[value.size()]);
-//		}
-//
-//		@Override
-//		public void dispose() {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//	}
-//	
-//	public class ListCellModifier implements ICellModifier {
-//
-//		@Override
-//		public boolean canModify(Object element, String property) {
-//			// TODO Auto-generated method stub
-//			return true;
-//		}
-//
-//		@Override
-//		public Object getValue(Object element, String property) {
-//			// TODO Auto-generated method stub
-//			
-//			Map<String, String> map = (Map<String, String>)element;
-//			if (map.containsKey(property)){
-//				return map.get(property);
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		public void modify(Object element, String property, Object value) {
-//			// TODO Auto-generated method stub
-//			if(element instanceof TableItem){
-//				Map<String, String> map = (Map<String, String>)((TableItem)element).getData();
-//				map.put(property, (String) value);
-//				viewer.update(element, null);	
-//				viewer.refresh();
-//			}
-//			//Map<String, String> map = (Map<String, String>)element;
-//		}
-//	}
 }

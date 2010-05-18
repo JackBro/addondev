@@ -39,7 +39,8 @@ public class XULPartEditPart extends EditPartWithListener {
 	@Override
 	protected void addChildVisual(EditPart childEditPart, int index) {
 		// TODO Auto-generated method stub
-		getElementModel().getMain().getChildren().add(childEditPart.getModel());
+		ElementModel model = (ElementModel)getElementModel().getMain().getChildren().get(0); 
+		model.getChildren().add(childEditPart.getModel());
 		super.addChildVisual(childEditPart, index);
 	}
 
@@ -47,7 +48,9 @@ public class XULPartEditPart extends EditPartWithListener {
 	@Override
 	protected void removeChildVisual(EditPart childEditPart) {
 		// TODO Auto-generated method stub
-		getElementModel().getMain().getChildren().remove(childEditPart.getModel());
+		//getElementModel().getMain().getChildren().remove(childEditPart.getModel());
+		ElementModel model = (ElementModel)getElementModel().getMain().getChildren().get(0);
+		model.getChildren().remove(childEditPart.getModel());
 		super.removeChildVisual(childEditPart);
 		
 	}
