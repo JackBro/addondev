@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class OverlayModel extends ContentsModel {
+public class OverlayModel extends WindowModel {
 
 	@Override
 	public String getName() {

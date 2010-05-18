@@ -14,9 +14,9 @@ public class MenuListModel extends ElementModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		MenuPopupModel pupup = new MenuPopupModel();
-		pupup.getChildren().add(new MenuItemModel());
-		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, pupup);
+		MenuPopupModel popup = new MenuPopupModel();
+		popup.getChildren().add(new MenuItemModel());
+		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, popup);
 	}
 
 }

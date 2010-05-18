@@ -2,16 +2,9 @@ package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.HBoxModel;
-import gef.example.helloworld.model.VBoxModel;
-import gef.example.helloworld.model.WindowModel;
-
 import java.beans.PropertyChangeEvent;
-import java.util.List;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;

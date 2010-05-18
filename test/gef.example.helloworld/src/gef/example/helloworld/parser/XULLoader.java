@@ -14,26 +14,20 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.core.resources.IFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
-import gef.example.helloworld.model.HBoxModel;
-import gef.example.helloworld.model.LabelModel;
-import gef.example.helloworld.model.PrefwindowModel;
-import gef.example.helloworld.model.RootModel;
-import gef.example.helloworld.model.VBoxModel;
-import gef.example.helloworld.model.WindowModel;
-import gef.example.helloworld.model.GridModel;
+import gef.example.helloworld.model.*;
 
 public class XULLoader {
 
 	private static Map<String, AbstractXULParser> parsers = new HashMap<String, AbstractXULParser>();
 	static {
 		parsers.put("window", new DefaultXULParser(WindowModel.class));
+		parsers.put("overlay", new DefaultXULParser(OverlayModel.class));
 		parsers.put("prefwindow", new DefaultXULParser(PrefwindowModel.class));
 		parsers.put("grid", new GridParser());
 		parsers.put("label", new DefaultXULParser(LabelModel.class));
 		parsers.put("vbox", new DefaultXULParser(VBoxModel.class));
-		parsers.put("hbox", new DefaultXULParser(HBoxModel.class));	
+		parsers.put("hbox", new DefaultXULParser(HBoxModel.class));
+		parsers.put("statusbar", new DefaultXULParser(StatusbarModel.class));
 	}
 	public static ElementModel parseElement(ElementModel root, Element e) {
 		String elementName = e.getTagName();

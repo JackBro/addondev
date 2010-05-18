@@ -42,13 +42,6 @@ abstract public class EditPartWithListener
 		
 	}
 
-	@Override
-	public void installEditPolicy(Object key, EditPolicy editPolicy) {
-		// TODO Auto-generated method stub
-		super.installEditPolicy(key, editPolicy);
-		//installEditPolicy( EditPolicy.COMPONENT_ROLE, new MyComponentEditPolicy());
-	}
-
 	protected List getModelChildren() {
 		return ((ElementModel) getModel()).getChildren();
 	}

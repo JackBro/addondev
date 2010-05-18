@@ -6,6 +6,7 @@ import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.SimpleRaisedBorder;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -17,6 +18,7 @@ public class OverlayEditPart extends EditPartWithListener {
 		// TODO Auto-generated method stub
 		Figure figure = new Figure();
 		figure.setBackgroundColor(ColorConstants.lightGray);
+		figure.setBorder(new SimpleRaisedBorder());
 		figure.setOpaque(true);
 		figure.setPreferredSize(200, 200);
 		BorderLayout layout=new BorderLayout();

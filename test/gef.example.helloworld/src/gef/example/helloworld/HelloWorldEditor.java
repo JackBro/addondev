@@ -1,6 +1,7 @@
 package gef.example.helloworld;
 
 import java.util.EventObject;
+import java.util.List;
 
 import gef.example.helloworld.editparts.MyEditPartFactory;
 import gef.example.helloworld.model.*;
@@ -31,26 +32,25 @@ import org.eclipse.ui.IWorkbenchPart;
 public class HelloWorldEditor extends GraphicalEditorWithPalette {
 
 	private RootModel root;
+	private XULRootModel xulroot;
+	private XULPartModel xulpart;
 
 	public HelloWorldEditor() {
 
 		setEditDomain(new DefaultEditDomain(this));
 	}
 
-	/*
-	 * (非 Javadoc)
-	 * 
-	 * @see org.eclipse.gef.ui.parts.GraphicalEditor#initializeGraphicalViewer()
-	 */
 	protected void initializeGraphicalViewer() {
 		GraphicalViewer viewer = getGraphicalViewer();
 		RootModel root = new RootModel();
 		// viewer.setContents(root);
 		
-		XULRootModel xulroot = new XULRootModel();
+		//XULRootModel xulroot = new XULRootModel();
+		xulroot = new XULRootModel();
+		xulpart = new XULPartModel();
 		
 
-		root.addChild(new XULPartModel());
+		root.addChild(xulpart);
 		root.addChild(xulroot);
 		
 		//xulroot.addChild(new WindowModel());
@@ -79,46 +79,25 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		}
 	}
 
-	/*
-	 * (非 Javadoc)
-	 * 
-	 * @seeorg.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.
-	 * IProgressMonitor)
-	 */
 	public void doSave(IProgressMonitor monitor) {
 
-		RootModel parent = (RootModel) getGraphicalViewer().getContents()
-				.getModel();
-		ElementModel model = (ElementModel) parent.getChildren().get(0);
-		String mm = model.toXML();
+//		RootModel parent = (RootModel) getGraphicalViewer().getContents()
+//				.getModel();
+//		ElementModel model = (ElementModel) parent.getChildren().get(0);	
+//		String mm = model.toXML();
+		ElementModel model = (ElementModel)xulroot.getChildren().get(0);
+		String mm = model.toXML(xulpart.getChildren());
 		getCommandStack().markSaveLocation();
 	}
 
-	/*
-	 * (非 Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.EditorPart#doSaveAs()
-	 */
 	public void doSaveAs() {
 
 	}
 
-	/*
-	 * (非 Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.part.EditorPart#gotoMarker(org.eclipse.core.resources.
-	 * IMarker)
-	 */
 	public void gotoMarker(IMarker marker) {
 
 	}
 
-	/*
-	 * (非 Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.EditorPart#isDirty()
-	 */
 	public boolean isDirty() {
 		// return false;
 		return getCommandStack().isDirty();
@@ -132,20 +111,10 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		super.commandStackChanged(event);
 	}
 
-	/*
-	 * (非 Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
-	 */
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
 
-	/*
-	 * (非 Javadoc)
-	 * 
-	 * @see org.eclipse.gef.ui.parts.GraphicalEditor#configureGraphicalViewer()
-	 */
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 
@@ -155,11 +124,6 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 
 	}
 
-	/*
-	 * (非 Javadoc)
-	 * 
-	 * @see org.eclipse.gef.ui.parts.GraphicalEditorWithPalette#getPaletteRoot()
-	 */
 	protected PaletteRoot getPaletteRoot() {
 		// パレットのルート
 		PaletteRoot root = new PaletteRoot();
@@ -227,7 +191,8 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, MenuListModel.class, "MenuListの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, MenuPopupBoxModel.class, "MenuPopupBoxの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbarの作成", "モデル作成", descriptor);
 
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);
@@ -253,6 +218,17 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 			return;
 
 		super.selectionChanged(part, selection);
+	}
+
+	@Override
+	public String getTitle() {
+		// TODO Auto-generated method stub
+		IEditorInput input = getEditorInput();
+		if (input instanceof IFileEditorInput) {
+			IFile file = ((IFileEditorInput) input).getFile();
+			return file.getName();
+		}
+		return super.getTitle();
 	}
 
 }

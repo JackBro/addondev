@@ -65,14 +65,15 @@ public class ListCellEditor extends DialogCellEditor {
         	
         	List list = (List)dialog.getValue();
         	ElementModel elem = (ElementModel)value;
-        	
+        	//elem.setChildren(list);
         	//elem.getChildren().clear();
         	//elem.getChildren().addAll(list);
         	//return elem;
-        	
-        	elem.getParent().firePropertyChange(elem.getName(), null, list);
+        	if(elem.getParent() != null){
+        		elem.getParent().firePropertyChange(elem.getName(), null, list);
+        	}
+        	//return list;
         	return null;
-        	//return dialog.getValue();
         }
         else{
         	return null;

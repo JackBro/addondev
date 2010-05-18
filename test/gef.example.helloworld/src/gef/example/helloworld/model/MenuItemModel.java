@@ -3,6 +3,8 @@ package gef.example.helloworld.model;
 public class MenuItemModel extends ElementModel {
 
 	public static final String ATTR_LABEL = "label";
+	public static final String ATTR_ONCOMMAND = "label";
+	//public static final String ATTR_LABEL = "label";
 	
 	@Override
 	public String getName() {
