@@ -27,7 +27,7 @@ public abstract class ElementModel extends AbstractModel {
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_CLASS = "class";
 	public static final String ATTR_INSERTBEFORE = "insertbefore";
-	//protected String flex="0";
+
 	
 	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
 	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();	
