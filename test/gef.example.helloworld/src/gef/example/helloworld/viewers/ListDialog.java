@@ -31,9 +31,7 @@ public class ListDialog extends Dialog {
 
 	private TableViewer viewer;
 	private PropertySheetPage fPropertySheetPage;
-	private Button fAddButton, fDeleteButton;
-	//private List<Map<String, String>> value;
-	//private Object[] fObjects;
+	//private Button fAddButton, fDeleteButton;
 	private Class fClass;
 	private List fValues;
 	private ListProperty fListproperty;
@@ -142,8 +140,21 @@ public class ListDialog extends Dialog {
 		Composite buttonComposite = new Composite(composite, SWT.None);
 		buttonComposite.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false));
 		buttonComposite.setLayout(new GridLayout(1, false));		
+		createButtions(buttonComposite);
+
 		
-		fAddButton = new Button(buttonComposite, SWT.NONE);
+//	    // 各カラムの幅を計算する
+//	    TableColumn[] columns = table.getColumns();
+//	    for(int i = 0; i < columns.length; i++) {
+//	      columns[i].pack();
+//	    }
+
+		
+		return composite;
+	}
+
+	protected void createButtions(Composite parent){
+		Button fAddButton = new Button(parent, SWT.NONE);
 		fAddButton.setText("Add");
 		fAddButton.addSelectionListener(new SelectionListener() {
 			
@@ -161,7 +172,7 @@ public class ListDialog extends Dialog {
 			}
 		});
 		
-		fDeleteButton = new Button(buttonComposite, SWT.NONE);
+		Button fDeleteButton = new Button(parent, SWT.NONE);
 		fDeleteButton.setText("Delete");
 		fDeleteButton.addSelectionListener(new SelectionListener() {
 			
@@ -179,18 +190,9 @@ public class ListDialog extends Dialog {
 				// TODO Auto-generated method stub
 				
 			}
-		});
-		
-//	    // 各カラムの幅を計算する
-//	    TableColumn[] columns = table.getColumns();
-//	    for(int i = 0; i < columns.length; i++) {
-//	      columns[i].pack();
-//	    }
-
-		
-		return composite;
+		});		
 	}
-
+	
 	class ViewLableProvider extends LabelProvider implements ITableLabelProvider {
 
 		@Override
@@ -203,7 +205,6 @@ public class ListDialog extends Dialog {
 		public String getColumnText(Object element, int columnIndex) {
 			// TODO Auto-generated method stub
 			if(element instanceof ElementModel){
-				//Map<String, String> map = (Map<String, String>)element;
 				ElementModel model = (ElementModel)element;
 				return model.getName();
 			}

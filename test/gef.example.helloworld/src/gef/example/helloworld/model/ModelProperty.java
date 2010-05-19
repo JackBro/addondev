@@ -5,6 +5,7 @@ import java.util.Map;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 public class ModelProperty {
+
 	private String fName;
 	private IPropertyDescriptor fPropertyDescriptor;
 	
@@ -29,5 +30,4 @@ public class ModelProperty {
 	public void setPropertyDescriptor(IPropertyDescriptor fPropertyDescriptor) {
 		this.fPropertyDescriptor = fPropertyDescriptor;
 	}
-	
 }

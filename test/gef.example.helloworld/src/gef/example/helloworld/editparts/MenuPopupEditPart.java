@@ -24,14 +24,14 @@ public class MenuPopupEditPart extends EditPartWithListener {
 		return figure;
 	}
 	
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO Auto-generated method stub
-		super.propertyChange(evt);
-		if(evt.getPropertyName().equals(MenuPopupModel.ATTR_MENUPOPUP)){
-			ElementModel model = (ElementModel)getModel();
-			MenuPopupModel popup = (MenuPopupModel)model.getPropertyValue(StatusbarModel.ATTR_MENUPOPUP);
-			popup.setChildren((List)evt.getNewValue());
-		}
-	}
+//	@Override
+//	public void propertyChange(PropertyChangeEvent evt) {
+//		// TODO Auto-generated method stub
+//		super.propertyChange(evt);
+//		if(evt.getPropertyName().equals(MenuBaseModel.CHANGE_MENU)){
+//			ElementModel model = (ElementModel)getModel();
+//			MenuPopupModel popup = (MenuPopupModel)model.getPropertyValue(StatusbarModel.ATTR_MENUPOPUP);
+//			popup.setChildren((List)evt.getNewValue());
+//		}
+//	}
 }

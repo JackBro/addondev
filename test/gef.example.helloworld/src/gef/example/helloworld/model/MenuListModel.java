@@ -1,8 +1,8 @@
 package gef.example.helloworld.model;
 
-public class MenuListModel extends ElementModel {
+public class MenuListModel extends MenuBaseModel {
 
-	public static final String ATTR_MENUPOPUP = "menupopup";
+//	public static final String ATTR_MENUPOPUP = "menupopup";
 	
 	@Override
 	public String getName() {
@@ -10,13 +10,13 @@ public class MenuListModel extends ElementModel {
 		return "menulist";
 	}
 
-	@Override
-	public void installModelProperty() {
-		// TODO Auto-generated method stub
-		super.installModelProperty();
-		MenuPopupModel popup = new MenuPopupModel();
-		popup.getChildren().add(new MenuItemModel());
-		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, popup);
-	}
+//	@Override
+//	public void installModelProperty() {
+//		// TODO Auto-generated method stub
+//		super.installModelProperty();
+//		MenuPopupModel popup = new MenuPopupModel();
+//		popup.getChildren().add(new MenuItemModel());
+//		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, popup);
+//	}
 
 }

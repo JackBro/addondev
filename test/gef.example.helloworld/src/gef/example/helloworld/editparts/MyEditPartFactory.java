@@ -32,7 +32,7 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(OverlayModel.class, OverlayEditPart.class);
 		editpartMap.put(StatusbarModel.class, StatusbarEditPart.class);
 		editpartMap.put(MenuPopupModel.class, MenuPopupEditPart.class);
-		editpartMap.put(MenuPopupBoxModel.class, MenuPopupEditPart.class);
+		//editpartMap.put(MenuPopupBoxModel.class, MenuPopupEditPart.class);
 	}
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart, java.lang.Object)

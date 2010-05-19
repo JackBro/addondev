@@ -193,7 +193,7 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, MenuListModel.class, "MenuListの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, MenuPopupBoxModel.class, "MenuPopupBoxの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbarの作成", "モデル作成", descriptor);
 
 		// 作成した2つのグループをルートに追加

@@ -14,7 +14,11 @@ public class MenuPropertyDescriptor extends PropertyDescriptor {
 	@Override
 	public CellEditor createPropertyEditor(Composite parent) {
 		// TODO Auto-generated method stub
-		return super.createPropertyEditor(parent);
+		MenuCellEditor editor = new MenuCellEditor(parent);
+        if (getValidator() != null) {
+			editor.setValidator(getValidator());
+		}		
+		 return editor;
 	}
 
 }

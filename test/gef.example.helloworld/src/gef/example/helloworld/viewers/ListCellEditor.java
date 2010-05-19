@@ -46,7 +46,7 @@ public class ListCellEditor extends DialogCellEditor {
         	List childern = elem.getChildren();
         	for (Object obj : childern) {
         		ElementModel child = (ElementModel)obj;
-        		ElementModel newchile = child.cp();
+        		ElementModel newchile = child.getCopy();
         		newChildern.add(newchile);
         		if(child instanceof ContentsModel){
         			ContentsModel content = (ContentsModel)child;
@@ -78,11 +78,5 @@ public class ListCellEditor extends DialogCellEditor {
         else{
         	return null;
         }
-	}
-
-	@Override
-	protected void updateContents(Object value) {
-		// TODO Auto-generated method stub
-		super.updateContents(value);
 	}
 }

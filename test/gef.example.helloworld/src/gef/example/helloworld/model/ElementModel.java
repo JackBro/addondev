@@ -2,11 +2,14 @@ package gef.example.helloworld.model;
 
 import gef.example.helloworld.viewers.ListProperty;
 import gef.example.helloworld.viewers.ListPropertyDescriptor;
+import gef.example.helloworld.viewers.MenuPropertyDescriptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -18,6 +21,8 @@ public abstract class ElementModel extends AbstractModel {
 	
 	protected List<ElementModel> children = new ArrayList<ElementModel>(); 
 	
+	public static final String NAME = "name";
+	
 	public static final String ATTR_FLEX = "flex";
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_CLASS = "class";
@@ -25,14 +30,13 @@ public abstract class ElementModel extends AbstractModel {
 	//protected String flex="0";
 	
 	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
-	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();
+	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();	
 	
 	public void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
 		
 		fPropertyMap.put(id, new ModelProperty(id, propertyDescriptor));
-		fAttributeMap.put(id, obj);
-		
-	}	
+		fAttributeMap.put(id, obj);	
+	}
 	
 	public void AddObjProperty(String id, String displayname, Object obj){
 		AddProperty(id, new PropertyDescriptor(id, displayname), obj);	
@@ -41,7 +45,7 @@ public abstract class ElementModel extends AbstractModel {
 	public void AddTextProperty(String id, String displayname, Object obj){
 		
 		AddProperty(id, new TextPropertyDescriptor(id, displayname), obj);	
-	}	
+	}		
 	
 	public void AddListProperty(String id, String displayname, ElementModel obj){
 		
@@ -53,12 +57,18 @@ public abstract class ElementModel extends AbstractModel {
 		AddProperty(id, new ListPropertyDescriptor(id, displayname), obj);	
 	}	
 	
+	public void AddMenuProperty(String id, String displayname, List obj){
+		
+		AddProperty(id, new MenuPropertyDescriptor(id, displayname), obj);	
+	}
+	
 	public void installModelProperty(){
+		AddObjProperty(NAME, NAME, getName());
 		AddTextProperty(ATTR_FLEX, ATTR_FLEX, "");
 		AddTextProperty(ATTR_ID, ATTR_ID, "");
 	}
 	
-	public ElementModel cp(){
+	public ElementModel getCopy(){
 		ElementModel model= null;
 		try {
 			model = this.getClass().newInstance();
@@ -77,7 +87,7 @@ public abstract class ElementModel extends AbstractModel {
 			}
 			for (Object obj : children) {
 				ElementModel child = (ElementModel)obj;
-				model.getChildren().add(child.cp())
+				model.getChildren().add(child.getCopy());
 			}
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
@@ -109,8 +119,6 @@ public abstract class ElementModel extends AbstractModel {
 
 	@Override
 	public boolean isPropertySet(Object id) {
-		// TODO Auto-generated method stub
-		//return super.isPropertySet(id);
 		return fPropertyMap.containsKey(id);
 	}
 
@@ -128,10 +136,6 @@ public abstract class ElementModel extends AbstractModel {
 		super.setPropertyValue(id, value);
 		fAttributeMap.put(id, value);
 		firePropertyChange(id.toString(), null, value);
-	}
-
-	public Boolean isData(){
-		return false;
 	}
 	
 	private ContentsModel parent;
@@ -235,13 +239,6 @@ public abstract class ElementModel extends AbstractModel {
 			buf.append(">");
 			buf.append("\n");
 			}
-			
-//			if(models !=null){
-//				for (Object object : models) {
-//					ElementModel model = (ElementModel)object;
-//					buf.append(model.toXML());
-//				}
-//			}
 			
 			buf.append(getListPropertysXML());
 			for (ElementModel element : children) {

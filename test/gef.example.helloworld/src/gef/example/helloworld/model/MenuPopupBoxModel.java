@@ -1,7 +1,7 @@
 package gef.example.helloworld.model;
 
-public class MenuPopupBoxModel extends ContentsModel {
-	public static final String ATTR_MENUPOPUP = "menupopup";
+public class MenuPopupBoxModel extends MenuBaseModel {
+	//public static final String ATTR_MENUPOPUP = "menupopup";
 	
 	@Override
 	public String getName() {
@@ -12,8 +12,9 @@ public class MenuPopupBoxModel extends ContentsModel {
 	@Override
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
-		MenuPopupModel popup = new MenuPopupModel();
-		popup.setParent(this);
-		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, popup);
+//		MenuPopupModel popup = new MenuPopupModel();
+//		popup.setParent(this);
+//		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, popup);
+		
 	}
 }

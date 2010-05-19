@@ -28,16 +28,15 @@ public class ListProperty {
 		this.fValues = fValues;
 	}
 	
-	public ListProperty(Class fClass, ElementModel fValues) {
-		super();
-		this.fClass = fClass;
-		this.fModel = fValues;
-	}
+//	public ListProperty(ElementModel parent) {
+//		super();
+//		this.fModel = fValues;
+//	}
 	
 	public ListProperty cp(){
 		List<ElementModel> newlist = new ArrayList<ElementModel>();
 		for (ElementModel model : fValues) {
-			newlist.add(model.cp());
+			newlist.add(model.getCopy());
 		}
 		ListProperty newprop = new ListProperty(fClass, newlist);
 		return newprop;
