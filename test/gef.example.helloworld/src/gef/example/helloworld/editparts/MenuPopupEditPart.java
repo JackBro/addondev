@@ -9,7 +9,9 @@ import gef.example.helloworld.model.*;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 public class MenuPopupEditPart extends EditPartWithListener {
 
@@ -22,6 +24,29 @@ public class MenuPopupEditPart extends EditPartWithListener {
 		figure.setPreferredSize(30, 30);
 		
 		return figure;
+	}
+
+	@Override
+	protected void fireSelectionChanged() {
+		// TODO Auto-generated method stub
+		super.fireSelectionChanged();
+		if(!(getParent() instanceof XULPartEditPart))
+		{
+			EditPart part = (EditPart)getRoot().getChildren().get(0);
+			AbstractGraphicalEditPart xulpart = (AbstractGraphicalEditPart)part.getChildren().get(0);
+			int index = ((ElementModel)xulpart.getModel()).getChildren().indexOf(getModel());
+			if(index != -1){
+				//xulpart.setSelected(index);
+				EditPart e = (EditPart) xulpart.getChildren().get(index);
+				if(getSelected() == SELECTED_NONE){
+					e.setSelected(SELECTED_NONE);
+				}else{
+					e.setSelected(SELECTED_PRIMARY);
+				}
+				//int sel = isS)?SELECTED_NONE:SELECTED_PRIMARY;
+				
+			}
+		}
 	}
 	
 //	@Override

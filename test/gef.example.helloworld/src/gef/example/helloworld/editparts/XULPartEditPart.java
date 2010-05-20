@@ -6,7 +6,6 @@ import gef.example.helloworld.model.*;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
-import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -39,8 +38,8 @@ public class XULPartEditPart extends EditPartWithListener {
 	@Override
 	protected void addChildVisual(EditPart childEditPart, int index) {
 		// TODO Auto-generated method stub
-		ElementModel model = (ElementModel)getElementModel().getMain().getChildren().get(0); 
-		model.getChildren().add(childEditPart.getModel());
+		//ElementModel model = (ElementModel)getElementModel().getMain().getChildren().get(0); 
+		//model.getChildren().add(childEditPart.getModel());
 		super.addChildVisual(childEditPart, index);
 	}
 
@@ -49,8 +48,8 @@ public class XULPartEditPart extends EditPartWithListener {
 	protected void removeChildVisual(EditPart childEditPart) {
 		// TODO Auto-generated method stub
 		//getElementModel().getMain().getChildren().remove(childEditPart.getModel());
-		ElementModel model = (ElementModel)getElementModel().getMain().getChildren().get(0);
-		model.getChildren().remove(childEditPart.getModel());
+		//ElementModel model = (ElementModel)getElementModel().getMain().getChildren().get(0);
+		//model.getChildren().remove(childEditPart.getModel());
 		super.removeChildVisual(childEditPart);
 		
 	}

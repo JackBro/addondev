@@ -29,13 +29,17 @@ public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	@Override
 	protected boolean isHorizontal() {
 		// TODO Auto-generated method stub
-        IFigure figure = ((GraphicalEditPart) getHost()).getContentPane();  
-        LayoutManager layout = figure.getLayoutManager();  
-        if (layout instanceof FlowLayout)  
-                return ((FlowLayout) figure.getLayoutManager()).isHorizontal();  
-        if (layout instanceof ToolbarLayout)  
-                return ((ToolbarLayout) figure.getLayoutManager()).isHorizontal();  
-        return false;  
+		EditPart editpart = getHost();
+		if(editpart instanceof GraphicalEditPart){
+	        IFigure figure = ((GraphicalEditPart) editpart).getContentPane();  
+	        LayoutManager layout = figure.getLayoutManager();  
+	        if (layout instanceof FlowLayout)  
+	                return ((FlowLayout) figure.getLayoutManager()).isHorizontal();  
+	        if (layout instanceof ToolbarLayout)  
+	                return ((ToolbarLayout) figure.getLayoutManager()).isHorizontal();  
+          
+		}
+		return false;
 	}
 
 	@Override

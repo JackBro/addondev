@@ -1,71 +1,68 @@
 package gef.example.helloworld.editparts;
 
-import gef.example.helloworld.editpolicies.MyXYLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.model.ContentsModel;
+import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.MenuBaseModel;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
-import org.eclipse.draw2d.FlowLayout;
-import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Layer;
-import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.XYLayout;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-public class ContentsEditPart extends EditPartWithListener {
+public abstract class ContentsEditPart extends EditPartWithListener {
 
-	/* (非 Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-	 */
-	protected IFigure createFigure() {
-		Layer figure = new Layer();
-		//figure.setLayoutManager(new XYLayout());
-		
-//		GridLayout gl = new GridLayout();
-//		gl.numColumns = 1;
-//		gl.horizontalSpacing = 5;
-//		figure.setLayoutManager(gl);
-		
-		ToolbarLayout tl = new ToolbarLayout();
-		//tl.setMatchWidth(true);
-		tl.setStretchMinorAxis(true);
-//		tl.setVertical(false);
-//		tl.setStretchMinorAxis(false);
-//		figure.setLayoutManager(tl);
-		FlowLayout fl = new FlowLayout();
-		fl.setStretchMinorAxis(true);
-		//fl.setHorizontal(false);
-		figure.setLayoutManager(fl);
-		return figure;
-	}
-
-	/* (非 Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-	 */
 	protected void createEditPolicies() {
-		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new MyXYLayoutEditPolicy());
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
 	}
 
-	/* (非 Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
-	 */
-	protected List getModelChildren() {
-		return ((ContentsModel) getModel()).getChildren();
-	}
-
-	/* (非 Javadoc)
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN)
 				|| evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN)) {
-			// 子モデルの構造が変化したので子EditPartの構造も更新する
 			refreshChildren();
 		}
 	}
 
+	@Override
+	protected void addChild(EditPart child, int index) {
+		// TODO Auto-generated method stub
+
+		super.addChild(child, index);
+		//super.addChild(child, index-cnt);
+	}
+
+	int cnt = 0;
+	@Override
+	protected void addChildVisual(EditPart childEditPart, int index) {
+		// TODO Auto-generated method stub
+//		if(childEditPart.getModel() instanceof MenuBaseModel){
+//			EditPart part = (EditPart)getRoot().getChildren().get(0);
+//			AbstractGraphicalEditPart xulpart = (AbstractGraphicalEditPart)part.getChildren().get(0);
+//			//xulpart.getFigure().add(((AbstractGraphicalEditPart)childEditPart).getFigure());
+//			if(((ContentsModel)xulpart.getModel()).getChildIndex(childEditPart.getModel()) == -1)
+//				((ContentsModel)xulpart.getModel()).addChild((ElementModel) childEditPart.getModel());			
+//		}
+		if(childEditPart.getModel() instanceof MenuBaseModel){
+			EditPart part = (EditPart)getRoot().getChildren().get(0);
+			AbstractGraphicalEditPart xulpart = (AbstractGraphicalEditPart)part.getChildren().get(0);
+			xulpart.getFigure().add(((AbstractGraphicalEditPart)childEditPart).getFigure());
+			//((ContentsModel)xulpart.getModel()).addChild((ElementModel) childEditPart.getModel());
+			((AbstractGraphicalEditPart)childEditPart).getFigure().erase();
+			//((AbstractGraphicalEditPart)childEditPart).getFigure().setVisible(false);
+			//((AbstractGraphicalEditPart)childEditPart).getFigure().setEnabled(false);
+			//((AbstractGraphicalEditPart)childEditPart).getFigure().setOpaque(false);
+			//((AbstractGraphicalEditPart)childEditPart).getFigure().setPreferredSize(new Dimension(0,0));
+			cnt++;
+			super.addChildVisual(childEditPart, index);
+		}
+		else{
+			super.addChildVisual(childEditPart, index);
+			//super.addChildVisual(childEditPart, index-cnt);
+		}
+		//super.addChildVisual(childEditPart, index);
+	}
 }

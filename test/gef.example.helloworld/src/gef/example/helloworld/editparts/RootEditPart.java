@@ -19,8 +19,6 @@ public class RootEditPart extends EditPartWithListener {
 		// TODO Auto-generated method stub
 		Layer figure = new Layer();
 		
-		Layer tLayer = new Layer();
-		
 		Figure bFigure = new Figure();
 		bFigure.setBackgroundColor(ColorConstants.darkGray);
 		bFigure.setPreferredSize(100, 50);

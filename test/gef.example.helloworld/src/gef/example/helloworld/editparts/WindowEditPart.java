@@ -11,7 +11,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPolicy;
 
-public class WindowEditPart extends EditPartWithListener {
+public class WindowEditPart extends ContentsEditPart {
 
 	@Override
 	protected IFigure createFigure() {
@@ -31,20 +31,23 @@ public class WindowEditPart extends EditPartWithListener {
 		return figure;
 	}
 
-	@Override
-	protected void createEditPolicies() {
-		// TODO Auto-generated method stub
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
-	}
+//	@Override
+//	protected void createEditPolicies() {
+//		// TODO Auto-generated method stub
+//		installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
+//	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN)
-				|| evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN))
-		{		
-			refreshChildren();
-		}
-		else if(evt.getPropertyName().equals("resize"))
+//		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN)
+//				|| evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN))
+//		{		
+//			refreshChildren();
+//		}
+//		else 
+		super.propertyChange(evt);
+		
+		if(evt.getPropertyName().equals("resize"))
 		{
 			Rectangle rect = (Rectangle)evt.getNewValue();
 			IFigure figure = getFigure();
@@ -60,8 +63,4 @@ public class WindowEditPart extends EditPartWithListener {
 			//refreshChildren();
 		}
 	}
-	
-//	protected List getModelChildren() {
-//		return ((WindowModel) getModel()).getChildren();
-//	}
 }

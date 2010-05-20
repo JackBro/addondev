@@ -4,6 +4,7 @@ import java.util.EventObject;
 import java.util.List;
 
 import gef.example.helloworld.editparts.MyEditPartFactory;
+import gef.example.helloworld.editparts.tree.TreeEditPartFactory;
 import gef.example.helloworld.model.*;
 import gef.example.helloworld.parser.XULLoader;
 
@@ -12,6 +13,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.DefaultEditDomain;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.palette.CreationToolEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
@@ -21,19 +23,53 @@ import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.SelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.SimpleFactory;
+import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
+import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+
 
 public class HelloWorldEditor extends GraphicalEditorWithPalette {
+
+	class MyContentOutlinePage extends ContentOutlinePage {
+
+		public MyContentOutlinePage() {
+			// GEFツリービューワを使用する
+			super(new TreeViewer());
+		}
+
+		@Override
+		public void createControl(Composite parent) {
+			// TODO Auto-generated method stub
+			super.createControl(parent);
+			EditPartViewer viewer = getViewer();
+			GraphicalViewer gviewer = getGraphicalViewer();
+			viewer.setEditDomain(gviewer.getEditDomain());
+			getViewer().setEditPartFactory(new TreeEditPartFactory());
+			//viewer.setContextMenu(new OutlineContextMenuProvider());
+			viewer.setContents(xulroot);
+			getSelectionSynchronizer().addViewer(getViewer());
+		}
+
+		@Override
+		public void dispose() {
+			// TODO Auto-generated method stub
+			getSelectionSynchronizer().removeViewer(getViewer());
+			super.dispose();
+		}
+	}
 
 	private RootModel root;
 	private XULRootModel xulroot;
 	private XULPartModel xulpart;
+	private MyContentOutlinePage outline;
 
 	public HelloWorldEditor() {
 
@@ -44,18 +80,17 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		GraphicalViewer viewer = getGraphicalViewer();
 		RootModel root = new RootModel();
 		// viewer.setContents(root);
-		
-		//XULRootModel xulroot = new XULRootModel();
+
+		// XULRootModel xulroot = new XULRootModel();
 		xulroot = new XULRootModel();
 		xulpart = new XULPartModel(xulroot);
-		//xulpart.AddObjProperty("root", "", xulroot);
-		
+		// xulpart.AddObjProperty("root", "", xulroot);
 
 		root.addChild(xulpart);
 		root.addChild(xulroot);
-		
-		//xulroot.addChild(new WindowModel());
-		
+
+		// xulroot.addChild(new WindowModel());
+
 		viewer.setContents(root);
 
 		IEditorInput input = getEditorInput();
@@ -82,12 +117,12 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 
 	public void doSave(IProgressMonitor monitor) {
 
-//		RootModel parent = (RootModel) getGraphicalViewer().getContents()
-//				.getModel();
-//		ElementModel model = (ElementModel) parent.getChildren().get(0);	
-//		String mm = model.toXML();
-		ElementModel model = (ElementModel)xulroot.getChildren().get(0);
-		//String mm = model.toXML(xulpart.getChildren());
+		// RootModel parent = (RootModel) getGraphicalViewer().getContents()
+		// .getModel();
+		// ElementModel model = (ElementModel) parent.getChildren().get(0);
+		// String mm = model.toXML();
+		ElementModel model = (ElementModel) xulroot.getChildren().get(0);
+		// String mm = model.toXML(xulpart.getChildren());
 		String mm = model.toXML();
 		getCommandStack().markSaveLocation();
 	}
@@ -188,13 +223,20 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 				descriptor);// パレットに表示する24X24のイメージ
 		drawer.add(creationGroupBoxEntry);
 
-		addCreationToolEntry(drawer, RadioModel.class, "Radioの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, RadioGroupModel.class, "RadioGroupの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, MenuListModel.class, "MenuListの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbarの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, RadioModel.class, "Radioの作成", "モデル作成",
+				descriptor);
+		addCreationToolEntry(drawer, RadioGroupModel.class, "RadioGroupの作成",
+				"モデル作成", descriptor);
+		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成",
+				descriptor);
+		addCreationToolEntry(drawer, MenuListModel.class, "MenuListの作成",
+				"モデル作成", descriptor);
+		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成",
+				descriptor);
+		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成",
+				"モデル作成", descriptor);
+		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbarの作成",
+				"モデル作成", descriptor);
 
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);
@@ -203,17 +245,16 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		return root;
 	}
 
-	private void addCreationToolEntry(PaletteDrawer drawer, Class modelClass, String paret, String tooltip,
-			ImageDescriptor descriptor){
-		CreationToolEntry entry = new CreationToolEntry(
-				paret, // パレットに表示される文字列
+	private void addCreationToolEntry(PaletteDrawer drawer, Class modelClass,
+			String paret, String tooltip, ImageDescriptor descriptor) {
+		CreationToolEntry entry = new CreationToolEntry(paret, // パレットに表示される文字列
 				tooltip, // ツールチップ
 				new SimpleFactory(modelClass), // モデルを作成するファクトリ
 				descriptor, // パレットに表示する16X16のイメージ
 				descriptor);// パレットに表示する24X24のイメージ
-		drawer.add(entry);		
+		drawer.add(entry);
 	}
-	
+
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (part.getSite().getWorkbenchWindow().getActivePage() == null)
@@ -231,6 +272,18 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 			return file.getName();
 		}
 		return super.getTitle();
+	}
+
+	@Override
+	public Object getAdapter(Class type) {
+		// TODO Auto-generated method stub
+	    if (type == IContentOutlinePage.class) {
+	    	if(outline ==null){
+	    		outline = new MyContentOutlinePage();
+	    	}
+	        return outline;
+	     }
+		return super.getAdapter(type);
 	}
 
 }
