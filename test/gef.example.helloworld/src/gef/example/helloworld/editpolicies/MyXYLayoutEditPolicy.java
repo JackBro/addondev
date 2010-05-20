@@ -49,10 +49,8 @@ public class MyXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		//Rectangle constraint = (Rectangle) getConstraintFor(request);
 		// 新規作成するモデルの取得
 		ElementModel model = (ElementModel) request.getNewObject();
-		// 制約の設定
-		//model.setConstraint(constraint);
 		
-		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model);
+		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model, -1);
 		//command.setContentsModel(getHost().getModel());
 		//command.setHelloModel(model);
 		return command;

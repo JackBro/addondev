@@ -16,7 +16,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
 public class TreeEditPolicy extends TreeContainerEditPolicy {
-	protected Command createCreateCommand(ElementModel child) {
+	protected Command createCreateCommand(ElementModel child, int index) {
 		
 //		Rectangle rect;
 //		if (r == null) {
@@ -25,7 +25,7 @@ public class TreeEditPolicy extends TreeContainerEditPolicy {
 //		} else {
 //			rect = r;
 //		}
-		CreateCommand cmd = new CreateCommand((ContentsModel) getHost().getModel(), child);
+		CreateCommand cmd = new CreateCommand((ContentsModel) getHost().getModel(), child, index);
 		//cmd.setLocation(rect);
 //		cmd.setParent((ElementModel) getHost().getModel());
 //		cmd.setChild(child);
@@ -48,7 +48,7 @@ public class TreeEditPolicy extends TreeContainerEditPolicy {
 	    		
 	    	}else{
 	    		if (index == -1) index = 0;
-	    		 command.add(createCreateCommand((ElementModel)child.getModel()));
+	    		 command.add(createCreateCommand((ElementModel)child.getModel(), index));
 	    	}
 
 	    	  
@@ -61,7 +61,8 @@ public class TreeEditPolicy extends TreeContainerEditPolicy {
 		// TODO Auto-generated method stub
 		if(getHost().getModel() instanceof ContentsModel){
 			ElementModel model = (ElementModel) request.getNewObject();	
-			CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model);		
+			int index = findIndexOfTreeItemAt(request.getLocation());
+			CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model, index);		
 			return command;
 		}
 		return null;

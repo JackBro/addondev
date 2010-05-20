@@ -32,7 +32,7 @@ public class XULPartEditPart extends EditPartWithListener {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new RootXYLayoutEditPolicy((ContentsModel)getModel()));
+		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new RootXYLayoutEditPolicy((ContentsModel)getModel()));
 	}
 
 	@Override
@@ -52,9 +52,5 @@ public class XULPartEditPart extends EditPartWithListener {
 		//model.getChildren().remove(childEditPart.getModel());
 		super.removeChildVisual(childEditPart);
 		
-	}
-
-	private XULPartModel getElementModel(){
-		return (XULPartModel)getModel();
 	}
 }

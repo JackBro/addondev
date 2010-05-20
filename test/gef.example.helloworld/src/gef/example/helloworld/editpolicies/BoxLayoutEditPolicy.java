@@ -12,6 +12,7 @@ import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
@@ -37,6 +38,8 @@ public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	                return ((FlowLayout) figure.getLayoutManager()).isHorizontal();  
 	        if (layout instanceof ToolbarLayout)  
 	                return ((ToolbarLayout) figure.getLayoutManager()).isHorizontal();  
+	        
+	        return false;
           
 		}
 		return false;
@@ -52,8 +55,11 @@ public class BoxLayoutEditPolicy extends FlowLayoutEditPolicy {
 	protected Command getCreateCommand(CreateRequest request) {
 		// TODO Auto-generated method stub
 		ElementModel model = (ElementModel) request.getNewObject();		
-		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model);		
+		EditPart after = getInsertionReference(request);
+		int index = getHost().getChildren().indexOf(after);
+		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model, index);		
 		return command;
 	}
+
 
 }

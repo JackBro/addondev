@@ -49,7 +49,9 @@ public class RootXYLayoutEditPolicy extends FlowLayoutEditPolicy {
 	protected Command getCreateCommand(CreateRequest request) {
 		// TODO Auto-generated method stub
 		ElementModel model = (ElementModel) request.getNewObject();		
-		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model);		
+		EditPart after = getInsertionReference(request);
+		int index = getHost().getChildren().indexOf(after);
+		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model, index);		
 		return command;
 	}
 	

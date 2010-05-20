@@ -4,6 +4,7 @@ import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.ElementModel;
 import gef.example.helloworld.model.MenuBaseModel;
+import gef.example.helloworld.model.MenuPopupModel;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 public abstract class ContentsEditPart extends EditPartWithListener {
@@ -32,7 +34,7 @@ public abstract class ContentsEditPart extends EditPartWithListener {
 		// TODO Auto-generated method stub
 
 		super.addChild(child, index);
-		//super.addChild(child, index-cnt);
+		//super.addChild(child, index+cnt);
 	}
 
 	int cnt = 0;
@@ -48,20 +50,24 @@ public abstract class ContentsEditPart extends EditPartWithListener {
 //		}
 		if(childEditPart.getModel() instanceof MenuBaseModel){
 			EditPart part = (EditPart)getRoot().getChildren().get(0);
-			AbstractGraphicalEditPart xulpart = (AbstractGraphicalEditPart)part.getChildren().get(0);
-			xulpart.getFigure().add(((AbstractGraphicalEditPart)childEditPart).getFigure());
+			AbstractGraphicalEditPart xulpart = (AbstractGraphicalEditPart)part.getChildren().get(0);			
+			//xulpart.getFigure().add(((AbstractGraphicalEditPart)childEditPart).getFigure());
+			
+			IFigure child = ((GraphicalEditPart)childEditPart).getFigure();
+			xulpart.getFigure().add(child);
 			//((ContentsModel)xulpart.getModel()).addChild((ElementModel) childEditPart.getModel());
-			((AbstractGraphicalEditPart)childEditPart).getFigure().erase();
+			//((ContentsModel)xulpart.getModel()).addChild(new MenuPopupModel());
+			//((AbstractGraphicalEditPart)childEditPart).getFigure().erase();
 			//((AbstractGraphicalEditPart)childEditPart).getFigure().setVisible(false);
 			//((AbstractGraphicalEditPart)childEditPart).getFigure().setEnabled(false);
 			//((AbstractGraphicalEditPart)childEditPart).getFigure().setOpaque(false);
 			//((AbstractGraphicalEditPart)childEditPart).getFigure().setPreferredSize(new Dimension(0,0));
 			cnt++;
-			super.addChildVisual(childEditPart, index);
+			//super.addChildVisual(childEditPart, index);
 		}
 		else{
-			super.addChildVisual(childEditPart, index);
-			//super.addChildVisual(childEditPart, index-cnt);
+			//super.addChildVisual(childEditPart, index);
+			super.addChildVisual(childEditPart, index-cnt);
 		}
 		//super.addChildVisual(childEditPart, index);
 	}
