@@ -12,13 +12,13 @@ import org.eclipse.draw2d.SimpleLoweredBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPolicy;
 
-public class StatusbarEditPart extends EditPartWithListener {
+public class StatusbarEditPart extends ContentsEditPart {
 
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
 		Figure figure = new Figure();
-		figure.setPreferredSize(10, 22);
+		figure.setPreferredSize(-1, 22);
 		figure.setBorder(new SimpleLoweredBorder());
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(false);
@@ -45,5 +45,22 @@ public class StatusbarEditPart extends EditPartWithListener {
 			
 		}
 	}
-	
+	@Override
+	public Figure getBottom() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Figure getMain() {
+		// TODO Auto-generated method stub
+		return (Figure) getFigure();
+	}
+
+
+	@Override
+	public Figure getTop() {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 }

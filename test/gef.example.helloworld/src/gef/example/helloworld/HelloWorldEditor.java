@@ -54,7 +54,7 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 			viewer.setEditDomain(gviewer.getEditDomain());
 			getViewer().setEditPartFactory(new TreeEditPartFactory());
 			//viewer.setContextMenu(new OutlineContextMenuProvider());
-			viewer.setContents(xulroot);
+			viewer.setContents(root);
 			getSelectionSynchronizer().addViewer(getViewer());
 		}
 
@@ -78,7 +78,7 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 
 	protected void initializeGraphicalViewer() {
 		GraphicalViewer viewer = getGraphicalViewer();
-		RootModel root = new RootModel();
+		root = new RootModel();
 		// viewer.setContents(root);
 
 		// XULRootModel xulroot = new XULRootModel();
@@ -86,9 +86,9 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		xulpart = new XULPartModel(xulroot);
 		// xulpart.AddObjProperty("root", "", xulroot);
 
-		root.addChild(xulpart);
-		root.addChild(xulroot);
-
+		//root.addChild(xulpart);
+		//root.addChild(xulroot);
+		//root.addChild(xulpart);
 		// xulroot.addChild(new WindowModel());
 
 		viewer.setContents(root);
@@ -98,13 +98,13 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 			IFile file = ((IFileEditorInput) input).getFile();
 			// root.removeAllChild();
 			try {
-				XULLoader.loadXUL(file.getContents(), xulroot);
-				if (xulroot.getChildren().size() > 0) {
+				XULLoader.loadXUL(file.getContents(), root);
+				if (root.getChildren().size() > 0) {
 					// viewer.setContents(root.getChildren().get(0));
 					viewer.setContents(root);
 				} else {
 					WindowModel child1 = new WindowModel();
-					xulroot.addChild(child1);
+					root.addChild(child1);
 					viewer.setContents(root);
 				}
 				// getGraphicalViewer().getRootEditPart().getContents().refresh();

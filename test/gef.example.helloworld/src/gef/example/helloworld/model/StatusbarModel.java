@@ -13,10 +13,10 @@ public class StatusbarModel extends ContentsModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		MenuPopupModel popup = new MenuPopupModel();
-		popup.setParent(this);
+		//MenuPopupModel popup = new MenuPopupModel();
+		//popup.setParent(this);
 		//popup.getChildren().add(new MenuItemModel());
-		AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, popup);
+		//AddListProperty(ATTR_MENUPOPUP, ATTR_MENUPOPUP, popup);
 		//AddProperty(ATTR_MENUPOPUP, new PropertyDescriptor(ATTR_MENUPOPUP, ATTR_MENUPOPUP), popup);
 	}
 }
