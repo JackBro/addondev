@@ -11,7 +11,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 
-public class OverlayEditPart extends EditPartWithListener {
+public class OverlayEditPart extends AbstractEditPartWithListener {
 
 	@Override
 	protected IFigure createFigure() {

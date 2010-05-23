@@ -2,7 +2,7 @@ package gef.example.helloworld.model.commands;
 
 import gef.example.helloworld.model.AbstractModel;
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 
 import org.eclipse.gef.commands.Command;
 
@@ -10,21 +10,24 @@ public class AddCommand extends Command {
 	
 	protected ContentsModel root;
 	protected ContentsModel oldroot;
-	protected ElementModel model;
+	protected AbstractElementModel model;
 	
 	protected int beforeIndex;
 	protected int addIndex;	
 	
-	public AddCommand(ContentsModel root, ElementModel model, ElementModel afterModel) {
+	public AddCommand(ContentsModel root, AbstractElementModel model, AbstractElementModel afterModel) {
 		super();
 		this.root = root;
 		this.model = model;
 		
 		oldroot = model.getParent();
-		beforeIndex = oldroot.getChildIndex(model);
+		
+		//beforeIndex = oldroot.getChildIndex(model);
+		beforeIndex = oldroot.getChildren().indexOf(model);
 
 		if (afterModel != null) {
-			addIndex = root.getChildIndex(afterModel);
+			//addIndex = root.getChildIndex(afterModel);
+			addIndex = root.getChildren().indexOf(afterModel);
 		}
 	}
 

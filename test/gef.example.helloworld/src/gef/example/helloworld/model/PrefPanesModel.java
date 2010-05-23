@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class PrefPanesModel extends ElementModel {
+public class PrefPanesModel extends AbstractElementModel {
 
 	@Override
 	public String getName() {

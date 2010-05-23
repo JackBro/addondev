@@ -1,6 +1,6 @@
 package gef.example.helloworld.viewers;
 
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.MenuItemModel;
 import gef.example.helloworld.model.MenuModel;
 import gef.example.helloworld.model.MenuPopupModel;
@@ -110,7 +110,7 @@ public class MenuDialog extends Dialog {
 				// TODO Auto-generated method stub
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 				Object element = sel.getFirstElement();
-				if(element instanceof ElementModel){
+				if(element instanceof AbstractElementModel){
 					en.setValues(new Object[]{element});
 				}
 				
@@ -192,9 +192,9 @@ public class MenuDialog extends Dialog {
 		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			// TODO Auto-generated method stub
-			if(element instanceof ElementModel){
+			if(element instanceof AbstractElementModel){
 				//Map<String, String> map = (Map<String, String>)element;
-				ElementModel model = (ElementModel)element;
+				AbstractElementModel model = (AbstractElementModel)element;
 				return model.getName();
 			}
 			return null;

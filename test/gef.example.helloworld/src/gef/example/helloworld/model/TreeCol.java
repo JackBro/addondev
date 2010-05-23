@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class TreeCol extends ElementModel {
+public class TreeCol extends AbstractElementModel {
 
 	
 	@Override

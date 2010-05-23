@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class MenuBaseModel extends ElementModel {
+public class MenuBaseModel extends AbstractDataModel {
 
 	public static final String CHANGE_MENU = "change_menu";
 	

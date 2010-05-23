@@ -1,6 +1,6 @@
 package gef.example.helloworld.editparts;
 
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 
 import org.eclipse.draw2d.GroupBoxBorder;
 import org.eclipse.draw2d.IFigure;
@@ -10,7 +10,7 @@ public class GroupBoxEditPart extends BoxEditPart {
 	@Override
 	protected IFigure createFigure() {
 		// TODO Auto-generated method stub
-		ElementModel model = (ElementModel)getModel();
+		AbstractElementModel model = (AbstractElementModel)getModel();
 		
 		IFigure figure = super.createFigure();
 		GroupBoxBorder border = new GroupBoxBorder();

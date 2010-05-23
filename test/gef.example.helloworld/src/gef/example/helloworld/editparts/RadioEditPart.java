@@ -4,7 +4,7 @@ import gef.example.helloworld.figure.RadioFigure;
 
 import org.eclipse.draw2d.IFigure;
 
-public class RadioEditPart extends EditPartWithListener {
+public class RadioEditPart extends AbstractElementEditPart {
 
 	@Override
 	protected IFigure createFigure() {

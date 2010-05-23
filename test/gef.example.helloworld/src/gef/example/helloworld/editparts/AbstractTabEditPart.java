@@ -12,7 +12,7 @@ import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.figure.TabBoxFigure;
 import gef.example.helloworld.figure.TabPanelLineBorder;
 import gef.example.helloworld.model.BoxModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.TabBoxModel;
 import gef.example.helloworld.model.TabPanelModel;
 
@@ -27,7 +27,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 
-public abstract class TabEditPart extends EditPartWithListener {
+public abstract class AbstractTabEditPart extends AbstractEditPartWithListener {
 
 	private HashMap<IFigure, Label> buttonMap = new HashMap<IFigure, Label>();
 	
@@ -163,94 +163,6 @@ public abstract class TabEditPart extends EditPartWithListener {
             childs.get(i).deactivate();
         }
     }
-    
-//    public List getModelChildren() {
-//        return ((TabPanel)getModel()).getTabs();
-//    }
-    
+
     protected abstract Label getNewTab(TabPanelFigure child, EditPart childEditPart);
-    
-//    public class TabButton extends Label implements MouseListener {
-//        private TabPanelFigure pane;
-//        //private IFigure pane;
-//        private EditPart childEditPart;
-//        //private Label tabLabel;
-//        
-//        public TabButton(TabPanelFigure pane, EditPart childEditPart) {
-//            this.pane = pane;
-//            this.childEditPart = childEditPart;
-//            //TabModel paneModel = pane.getModel();
-//            setOpaque(true);         
-//            setBorder(new TabPanelLineBorder());
-//            
-//            ((TabPanelModel)childEditPart.getModel()).addPropertyChangeListener(new PropertyChangeListener() {
-//				
-//				@Override
-//				public void propertyChange(PropertyChangeEvent arg0) {
-//					// TODO Auto-generated method stub
-//					refreshTabs();
-//				}
-//			});
-//            
-//            String message = ((TabPanelModel)childEditPart.getModel()).getTabLabel();
-//            
-//            setText(message);
-//            addMouseListener(this);
-//
-//            setBackgroundColor(ColorConstants.lightGray);
-//            setForegroundColor(ColorConstants.black);
-//            enableOtherButtons();
-//
-//        }
-//
-//        @Override
-//		public void setText(String s) {
-//			// TODO Auto-generated method stub
-//			super.setText(s);
-//			//((TabPanelModel)childEditPart.getModel()).a
-//		}
-//
-//		@Override
-//		public String getText() {
-//			// TODO Auto-generated method stub
-//        	String message = ((TabPanelModel)childEditPart.getModel()).getTabLabel();
-//			return message;
-//		}
-//
-//		protected void showEp() {
-//            activateChilds(this.childEditPart);
-//        }
-//        
-//        public void update() {
-//            String message = getText();
-//            //this.tabLabel.setText(message);
-//            this.setText(message);
-//        }
-//
-//		@Override
-//		public void mouseDoubleClicked(MouseEvent me) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void mousePressed(MouseEvent me) {
-//			// TODO Auto-generated method stub
-//            hideChilds();
-//            showEp();
-//            this.pane.setVisible(true);
-//            enableOtherButtons();
-//            setBackgroundColor(ColorConstants.white);
-//            setForegroundColor(ColorConstants.black);
-//            //setBorder(selectedBorder);
-//            getLayout().repaint();			
-//		}
-//
-//		@Override
-//		public void mouseReleased(MouseEvent me) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//    }
 }

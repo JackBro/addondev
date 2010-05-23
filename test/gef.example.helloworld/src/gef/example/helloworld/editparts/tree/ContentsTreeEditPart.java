@@ -3,7 +3,7 @@ package gef.example.helloworld.editparts.tree;
 import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.TreeEditPolicy;
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -29,15 +29,15 @@ public class ContentsTreeEditPart extends MyTreeEditPart {
 	@Override
 	protected List getModelChildren() {
 		// TODO Auto-generated method stub
-		return ((ElementModel)getModel()).getChildren();
+		return ((AbstractElementModel)getModel()).getChildren();
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
-		if(evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN))
+		if(evt.getPropertyName().equals(ContentsModel.P_ADD_CHILD))
 		      refreshChildren();
-		if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN))
+		if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILD))
 		      refreshChildren();
 	}
 
@@ -51,7 +51,7 @@ public class ContentsTreeEditPart extends MyTreeEditPart {
 	protected void refreshVisuals() {
 		// TODO Auto-generated method stub
 		//super.refreshVisuals();
-		ElementModel model = (ElementModel) getModel();
+		AbstractElementModel model = (AbstractElementModel) getModel();
 		setWidgetText(model.getName());
 	}
 

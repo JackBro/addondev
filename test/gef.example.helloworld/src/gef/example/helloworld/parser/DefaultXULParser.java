@@ -1,18 +1,18 @@
 package gef.example.helloworld.parser;
 
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 
 public class DefaultXULParser extends AbstractXULParser {
 
-	private Class<? extends ElementModel> modelClass;
+	private Class<? extends AbstractElementModel> modelClass;
 	
-	public DefaultXULParser(Class<? extends ElementModel> modelClass) {
+	public DefaultXULParser(Class<? extends AbstractElementModel> modelClass) {
 		super();
 		this.modelClass = modelClass;
 	}
 
 	@Override
-	protected ElementModel createModel() {
+	protected AbstractElementModel createModel() {
 		// TODO Auto-generated method stub
 		try {
 			return modelClass.newInstance();

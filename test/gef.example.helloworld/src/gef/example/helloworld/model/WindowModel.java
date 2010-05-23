@@ -2,7 +2,7 @@ package gef.example.helloworld.model;
 
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
-public class WindowModel extends ContentsModel {
+public class WindowModel extends BoxModel {
 	
 	public static final String ATTR_XMLNS = "xmlns"; 
 	public static final String ATTR_TITLE = "title";

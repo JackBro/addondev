@@ -9,14 +9,14 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 
 public abstract class AbstractXULParser {
 
-	protected abstract ElementModel createModel();
+	protected abstract AbstractElementModel createModel();
 	
-	public ElementModel parse(Element e){
-		ElementModel model = createModel();
+	public AbstractElementModel parse(Element e){
+		AbstractElementModel model = createModel();
 		//model.installModelProperty();
 		
 		parseAttribute(model, e);
@@ -25,7 +25,7 @@ public abstract class AbstractXULParser {
 		return model;
 	}
 	
-	private void parseAttribute(ElementModel model, Element e) {
+	private void parseAttribute(AbstractElementModel model, Element e) {
 		// TODO Auto-generated method stub
 		NamedNodeMap attrs = e.getAttributes();
 		for (int i = 0; i < attrs.getLength(); i++) {
@@ -36,7 +36,7 @@ public abstract class AbstractXULParser {
 		}
 	}
 	
-	protected void parseChildren(ElementModel model, Element e){
+	protected void parseChildren(AbstractElementModel model, Element e){
 		NodeList children = e.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);
@@ -46,7 +46,7 @@ public abstract class AbstractXULParser {
 		}
 	}
 	
-	protected void parseChildElement(ElementModel model, Element e){
+	protected void parseChildElement(AbstractElementModel model, Element e){
 		XULLoader.parseElement(model, e);
 	}
 	

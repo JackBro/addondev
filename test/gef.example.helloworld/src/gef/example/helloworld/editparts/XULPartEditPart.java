@@ -10,7 +10,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
-public class XULPartEditPart extends EditPartWithListener {
+public class XULPartEditPart extends AbstractEditPartWithListener {
 
 	@Override
 	protected IFigure createFigure() {

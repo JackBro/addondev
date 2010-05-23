@@ -1,15 +1,15 @@
 package gef.example.helloworld.model.commands;
 
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import org.eclipse.gef.commands.Command;
 
 public class CreateCommand extends Command {
 	private ContentsModel contentsModel;
-	private ElementModel childModel;
+	private AbstractElementModel childModel;
 	private int index;
 	
-	public CreateCommand(ContentsModel contentsModel, ElementModel childModel, int index) {
+	public CreateCommand(ContentsModel contentsModel, AbstractElementModel childModel, int index) {
 		//super();
 		this.contentsModel = contentsModel;
 		this.childModel = childModel;

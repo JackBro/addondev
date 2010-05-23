@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class MenuSeparatorModel extends ElementModel {
+public class MenuSeparatorModel extends AbstractElementModel {
 
 	@Override
 	public String getName() {

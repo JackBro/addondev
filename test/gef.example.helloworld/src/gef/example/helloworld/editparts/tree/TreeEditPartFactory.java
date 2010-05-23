@@ -1,7 +1,7 @@
 package gef.example.helloworld.editparts.tree;
 
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -15,7 +15,7 @@ public class TreeEditPartFactory implements EditPartFactory {
 
 	    if (model instanceof ContentsModel)
 		  part = new ContentsTreeEditPart();
-	    else if (model instanceof ElementModel)
+	    else if (model instanceof AbstractElementModel)
 	      part = new ContentsTreeEditPart();
 
 	    if (part != null)

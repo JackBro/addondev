@@ -7,7 +7,7 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.SimpleRaisedBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 
-public class WindowFigure extends ElementFigure {
+public class WindowFigure extends AbstractElementFigure {
 	
 	private Figure center;
 	private Figure top;

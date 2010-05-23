@@ -4,7 +4,7 @@ import gef.example.helloworld.figure.MenuListFigure;
 
 import org.eclipse.draw2d.IFigure;
 
-public class MenuListEditPart extends EditPartWithListener {
+public class MenuListEditPart extends AbstractEditPartWithListener {
 
 	@Override
 	protected IFigure createFigure() {

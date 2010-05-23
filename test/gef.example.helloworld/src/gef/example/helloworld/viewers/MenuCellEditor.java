@@ -1,6 +1,6 @@
 package gef.example.helloworld.viewers;
 
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class MenuCellEditor extends DialogCellEditor {
         if(value != null){
         	List children = (List)value;
         	for (Object elem : children) {
-        		newvalue.add(((ElementModel)elem).getCopy());
+        		newvalue.add(((AbstractElementModel)elem).getCopy());
 			}
         	dialog.setValue(newvalue);
         }

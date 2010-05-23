@@ -2,17 +2,17 @@ package gef.example.helloworld.model;
 
 public class XULPartModel extends ContentsModel {
 
-	private ElementModel main;
+	private AbstractElementModel main;
 	
-	public ElementModel getMain() {
+	public AbstractElementModel getMain() {
 		return main;
 	}
 
-	public void setMain(ElementModel main) {
+	public void setMain(AbstractElementModel main) {
 		this.main = main;
 	}
 
-	public XULPartModel(ElementModel main) {
+	public XULPartModel(AbstractElementModel main) {
 		super();
 		this.main = main;
 	}

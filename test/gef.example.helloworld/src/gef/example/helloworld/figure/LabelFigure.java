@@ -11,7 +11,7 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.swt.graphics.Image;
 
-public class LabelFigure extends ElementFigure {
+public class LabelFigure extends AbstractElementFigure {
 
 	private Label label;
 

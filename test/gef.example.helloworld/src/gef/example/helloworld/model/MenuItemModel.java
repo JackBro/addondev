@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class MenuItemModel extends ElementModel {
+public class MenuItemModel extends AbstractElementModel {
 
 	public static final String ATTR_LABEL = "label";
 	public static final String ATTR_ONCOMMAND = "label";

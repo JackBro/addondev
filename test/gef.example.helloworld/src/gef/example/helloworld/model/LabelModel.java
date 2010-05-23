@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class LabelModel extends ElementModel {
+public class LabelModel extends AbstractElementModel {
 	
 	public static final String VALUE = "value";
 

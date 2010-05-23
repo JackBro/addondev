@@ -9,26 +9,26 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.GridModel;
 
 public class GridParser extends AbstractXULParser {
 	
 	@Override
-	protected ElementModel createModel() {
+	protected AbstractElementModel createModel() {
 		// TODO Auto-generated method stub
 		return new GridModel();
 	}
 
 	@Override
-	protected void parseChildren(ElementModel model, Element e) {
+	protected void parseChildren(AbstractElementModel model, Element e) {
 		// TODO Auto-generated method stub
 		//super.parseChildren(model, e);
 		parseChildElement(model, e);
 	}
 
 	@Override
-	protected void parseChildElement(ElementModel model, Element e) {
+	protected void parseChildElement(AbstractElementModel model, Element e) {
 		// TODO Auto-generated method stub
 		//super.parseChildElement(model, e);
 		NodeList nodeList = e.getChildNodes();

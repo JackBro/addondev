@@ -1,7 +1,7 @@
 package gef.example.helloworld.editpolicies;
 
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.LabelModel;
 import gef.example.helloworld.model.commands.ChangeConstraintCommand;
 import gef.example.helloworld.model.commands.CreateCommand;
@@ -48,7 +48,7 @@ public class MyXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		// 作成するモデルのサイズと位置(制約)を取得
 		//Rectangle constraint = (Rectangle) getConstraintFor(request);
 		// 新規作成するモデルの取得
-		ElementModel model = (ElementModel) request.getNewObject();
+		AbstractElementModel model = (AbstractElementModel) request.getNewObject();
 		
 		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model, -1);
 		//command.setContentsModel(getHost().getModel());

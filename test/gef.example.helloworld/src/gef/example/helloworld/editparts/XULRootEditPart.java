@@ -12,7 +12,7 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPolicy;
 
-public class XULRootEditPart extends EditPartWithListener {
+public class XULRootEditPart extends AbstractEditPartWithListener {
 
 	@Override
 	protected IFigure createFigure() {

@@ -3,9 +3,9 @@ package gef.example.helloworld.editparts;
 import gef.example.helloworld.editpolicies.MyXYLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.figure.BoxFigure;
-import gef.example.helloworld.figure.ElementFigure;
+import gef.example.helloworld.figure.AbstractElementFigure;
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.GridModel;
 
 import java.beans.PropertyChangeEvent;
@@ -31,14 +31,14 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 
 
-public class GridEditPart extends EditPartWithListener {
+public class GridEditPart extends AbstractEditPartWithListener {
 
 	List<IFigure> dummys = new ArrayList<IFigure>();
 	@Override
 	protected IFigure createFigure() {
 		GridModel model = (GridModel)getModel();
 		
-		ElementFigure fig = new BoxFigure();
+		AbstractElementFigure fig = new BoxFigure();
 		GridLayout gl = new GridLayout();
 		gl.numColumns = model.getColumns().size();
 		fig.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
@@ -69,7 +69,7 @@ public class GridEditPart extends EditPartWithListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
-		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN)) {
+		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILD)) {
 			
 			if(((ContentsModel) getModel()).getChildren().size()==1 ){
 				getFigure().remove(dummys.get(0));
@@ -77,7 +77,7 @@ public class GridEditPart extends EditPartWithListener {
 				getFigure().remove(dummys.get(1));
 			}
 			refreshChildren();
-		}else if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN)){
+		}else if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILD)){
 			if(((ContentsModel) getModel()).getChildren().size()==0 ){
 				getFigure().add(dummys.get(0));
 			}else if(((ContentsModel) getModel()).getChildren().size()==1 ){
@@ -102,7 +102,7 @@ public class GridEditPart extends EditPartWithListener {
 					//ElementModel elm = (ElementModel)((EditPartWithListener)cheldern.get(index)).getModel();
 					//ElementModel elm = (ElementModel)cheldern.get(index);
 					//elm.setPreSize(cwidths.get(i), ph);
-					ElementFigure figuer = (ElementFigure) ((EditPartWithListener)cheldern.get(index)).getFigure();
+					AbstractElementFigure figuer = (AbstractElementFigure) ((AbstractEditPartWithListener)cheldern.get(index)).getFigure();
 					figuer.setPreferredSize(new Dimension(cwidths.get(i), figuer.getDefaultHeight()));
 				}
 			}
@@ -152,12 +152,12 @@ public class GridEditPart extends EditPartWithListener {
 		//List children = getChildren();
 		for (int i = 0; i < columnsize; i++) {
 			Object object = children.get(i);
-			ElementModel elem = (ElementModel)((EditPartWithListener)object).getModel();
+			AbstractElementModel elem = (AbstractElementModel)((AbstractEditPartWithListener)object).getModel();
 			//int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
 			int flex = flexs.get(i);
 			sumflex += flex;
 			if(flex==0){
-				ElementFigure figuer = (ElementFigure)((EditPartWithListener)object).getFigure();
+				AbstractElementFigure figuer = (AbstractElementFigure)((AbstractEditPartWithListener)object).getFigure();
 				//figuer.setPreferredSize(figuer.getDefaultWidth(), figuer.getDefaultHeight());
 				sumzerofilexw += figuer.getDefaultWidth();//figuer.getSize().width;
 			}		
@@ -167,7 +167,7 @@ public class GridEditPart extends EditPartWithListener {
 		//for (Object object : children) {
 		for (int i = 0; i < columnsize; i++) {
 			Object object = children.get(i);
-			ElementModel elem = (ElementModel)((EditPartWithListener)object).getModel();
+			AbstractElementModel elem = (AbstractElementModel)((AbstractEditPartWithListener)object).getModel();
 			//int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
 			int flex = flexs.get(i);
 			
@@ -177,7 +177,7 @@ public class GridEditPart extends EditPartWithListener {
 				res.add(newwidth);
 				//figuer.setPreferredSize(new Dimension(newwidth, figuer.getSize().height));
 			}else{
-				ElementFigure figuer = (ElementFigure) ((EditPartWithListener)object).getFigure();
+				AbstractElementFigure figuer = (AbstractElementFigure) ((AbstractEditPartWithListener)object).getFigure();
 				res.add(figuer.getDefaultWidth());
 			}
 		}

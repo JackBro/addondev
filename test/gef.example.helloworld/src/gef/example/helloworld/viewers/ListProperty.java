@@ -1,14 +1,14 @@
 package gef.example.helloworld.viewers;
 
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListProperty {
 	private Class fClass;
-	private List<ElementModel> fValues;
-	private ElementModel fModel;
+	private List<AbstractElementModel> fValues;
+	private AbstractElementModel fModel;
 	
 	public List getValues() {
 		return fValues;
@@ -22,7 +22,7 @@ public class ListProperty {
 		return fClass;
 	}
 
-	public ListProperty(Class fClass, List<ElementModel> fValues) {
+	public ListProperty(Class fClass, List<AbstractElementModel> fValues) {
 		super();
 		this.fClass = fClass;
 		this.fValues = fValues;
@@ -34,8 +34,8 @@ public class ListProperty {
 //	}
 	
 	public ListProperty cp(){
-		List<ElementModel> newlist = new ArrayList<ElementModel>();
-		for (ElementModel model : fValues) {
+		List<AbstractElementModel> newlist = new ArrayList<AbstractElementModel>();
+		for (AbstractElementModel model : fValues) {
 			newlist.add(model.getCopy());
 		}
 		ListProperty newprop = new ListProperty(fClass, newlist);

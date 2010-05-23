@@ -1,15 +1,12 @@
 package gef.example.helloworld.model;
 
-import gef.example.helloworld.viewers.ListProperty;
 import gef.example.helloworld.viewers.ListPropertyDescriptor;
 import gef.example.helloworld.viewers.MenuPropertyDescriptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -17,9 +14,10 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
-public abstract class ElementModel extends AbstractModel {
+public abstract class AbstractElementModel extends AbstractModel {
 	
-	protected List<ElementModel> children = new ArrayList<ElementModel>(); 
+
+	protected List<AbstractElementModel> children = new ArrayList<AbstractElementModel>(); 
 	
 	public static final String NAME = "name";
 	
@@ -32,13 +30,13 @@ public abstract class ElementModel extends AbstractModel {
 	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
 	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();	
 	
-	public void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
+	protected void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
 		
 		fPropertyMap.put(id, new ModelProperty(id, propertyDescriptor));
 		fAttributeMap.put(id, obj);	
 	}
 	
-	public void AddObjProperty(String id, String displayname, Object obj){
+	public void AddConstProperty(String id, String displayname, Object obj){
 		AddProperty(id, new PropertyDescriptor(id, displayname), obj);	
 	}
 	
@@ -47,14 +45,14 @@ public abstract class ElementModel extends AbstractModel {
 		AddProperty(id, new TextPropertyDescriptor(id, displayname), obj);	
 	}		
 	
-	public void AddListProperty(String id, String displayname, ElementModel obj){
+	public void AddListProperty(String id, String displayname, Class _class, AbstractElementModel obj){
 		
-		AddProperty(id, new ListPropertyDescriptor(id, displayname), obj);	
+		AddProperty(id, new ListPropertyDescriptor(id, displayname, _class), obj);	
 	}	
 	
-	public void AddListProperty(String id, String displayname, List obj){
+	public void AddListProperty(String id, String displayname, Class _class, List obj){
 		
-		AddProperty(id, new ListPropertyDescriptor(id, displayname), obj);	
+		AddProperty(id, new ListPropertyDescriptor(id, displayname, _class), obj);	
 	}	
 	
 	public void AddMenuProperty(String id, String displayname, List obj){
@@ -63,13 +61,13 @@ public abstract class ElementModel extends AbstractModel {
 	}
 	
 	public void installModelProperty(){
-		AddObjProperty(NAME, NAME, getName());
+		AddConstProperty(NAME, NAME, getName());
 		AddTextProperty(ATTR_FLEX, ATTR_FLEX, "");
 		AddTextProperty(ATTR_ID, ATTR_ID, "");
 	}
 	
-	public ElementModel getCopy(){
-		ElementModel model= null;
+	public AbstractElementModel getAttrCopy(){
+		AbstractElementModel model= null;
 		try {
 			model = this.getClass().newInstance();
 			for (Object id : fPropertyMap.keySet()) {
@@ -79,14 +77,33 @@ public abstract class ElementModel extends AbstractModel {
 				if(propdescriptor instanceof TextPropertyDescriptor){
 					Object obj = fAttributeMap.get(id);
 					model.AddTextProperty((String) id, propdescriptor.getDisplayName(), obj);
-				}else if(propdescriptor instanceof ListPropertyDescriptor){
-					//ListProperty listprop = (ListProperty)fAttributeMap.get(id);
-					//model.AddListProperty((String) id, propdescriptor.getDisplayName(), 
-					//		listprop.getListClass(), listprop.getValues());
+				}
+			}
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return model;
+	}
+	
+	public AbstractElementModel getCopy(){
+		AbstractElementModel model= null;
+		try {
+			model = this.getClass().newInstance();
+			for (Object id : fPropertyMap.keySet()) {
+				ModelProperty prop = fPropertyMap.get(id);
+				
+				IPropertyDescriptor propdescriptor = prop.getPropertyDescriptor();
+				if(propdescriptor instanceof TextPropertyDescriptor){
+					Object obj = fAttributeMap.get(id);
+					model.AddTextProperty((String) id, propdescriptor.getDisplayName(), obj);
 				}
 			}
 			for (Object obj : children) {
-				ElementModel child = (ElementModel)obj;
+				AbstractElementModel child = (AbstractElementModel)obj;
 				model.getChildren().add(child.getCopy());
 			}
 		} catch (InstantiationException e) {
@@ -101,15 +118,12 @@ public abstract class ElementModel extends AbstractModel {
 	
 	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
-		// TODO Auto-generated method stub
 		List<IPropertyDescriptor> propertydescriptors = new ArrayList<IPropertyDescriptor>();
 		for (ModelProperty val : fPropertyMap.values()) {
-			String name = val.getName();
 			IPropertyDescriptor prop = val.getPropertyDescriptor();
 			propertydescriptors.add(prop);
 		}
 		return propertydescriptors.toArray(new IPropertyDescriptor[propertydescriptors.size()]);
-		//return super.getPropertyDescriptors();
 	}
 
 	@Override
@@ -124,26 +138,25 @@ public abstract class ElementModel extends AbstractModel {
 
 	@Override
 	public void resetPropertyValue(Object id) {
-		// TODO Auto-generated method stub
-		super.resetPropertyValue(id);
 		fPropertyMap.remove(id);
 		fAttributeMap.remove(id);
 	}
 
 	@Override
 	public void setPropertyValue(Object id, Object value) {
-		// TODO Auto-generated method stub
-		super.setPropertyValue(id, value);
 		fAttributeMap.put(id, value);
 		firePropertyChange(id.toString(), null, value);
 	}
-	
-	private ContentsModel parent;
 
-	public ElementModel(){
-		installModelProperty();
+	private ContentsModel parent;
+	public abstract String getName();
+	public boolean isVisible(){
+		return true;
 	}
 
+	public AbstractElementModel(){
+		installModelProperty();
+	}
 	
 	public ContentsModel getParent() {
 		return parent;
@@ -159,18 +172,33 @@ public abstract class ElementModel extends AbstractModel {
 	}
 	
 	public List getChildren() {
-		return children; // 子モデルを返す
+		return children;
 	}
 	
 	public void setChildren(List children) {
 		this.children = children; 
 	}
 	
-	public void setPreSize(int w, int h){
-		
+	public void addChild(AbstractElementModel child){
+		children.add(child); 
 	}
 	
-	public abstract String getName();
+	public void addChild(int index, AbstractElementModel child) {
+		children.add(index, child);
+	}
+	
+	public void removeChild(AbstractElementModel child) {
+		children.remove(child);
+	}
+	
+	public AbstractElementModel removeChild(int index) {
+		return children.remove(index);
+	}
+	
+	public void removeAllChild() {
+		children.clear();
+	}
+	
 	public String getAttributes(){
 		StringBuilder buf= new StringBuilder();
 		for (Entry<Object, Object> attr : fAttributeMap.entrySet()) {
@@ -185,77 +213,34 @@ public abstract class ElementModel extends AbstractModel {
 		}	
 		return buf.toString();
 	}
-	public String getListPropertysXML(){
-		StringBuilder buf= new StringBuilder();
-		for (ModelProperty val : fPropertyMap.values()) {
-//			if(val.getPropertyDescriptor() instanceof ListPropertyDescriptor){
-//				ListPropertyDescriptor listprop = (ListPropertyDescriptor)val.getPropertyDescriptor();
-//				List<ElementModel> models = (List)getPropertyValue(listprop.getId());
-//				for (ElementModel elementModel : models) {
-//					
-//				}
-//				buf.append(model.toXML());
-//				buf.append("\n");
-//			}
-		}	
-		return buf.toString();
-	}
-	public String toXML(){
-		return toXML(null);
-//		StringBuilder buf= new StringBuilder();
-//		buf.append("<");
-//		buf.append(getName());
-//		buf.append(getAttributes());
-//		String listprop = getListPropertysXML();
-//		if(children.size() > 0 || listprop.length()>0){
-//			buf.append(">");
-//			buf.append("\n");
-//			buf.append(getListPropertysXML());
-//			for (ElementModel element : children) {
-//				buf.append(element.toXML());
-//			}
-//			buf.append("</");
-//			buf.append(getName());
-//			buf.append(">");
-//		}else{
-//			buf.append("/>");
-//		}
-//		buf.append("\n");
-//		return buf.toString();
-	}
 	
-	public String toXML(List models){
+	public String toXML(){
 		StringBuilder buf= new StringBuilder();
 		if(getName() != null){
 			buf.append("<");
 			buf.append(getName());
 			buf.append(getAttributes());
 		}
-	
-		//String listprop = getListPropertysXML();
-		//if(children.size() > 0 || listprop.length()>0 || (models!=null && models.size()>0)){
 		if(children.size() > 0){
 			if(getName() != null){
-			buf.append(">");
-			buf.append("\n");
+				buf.append(">");
+				buf.append("\n");
 			}
 			
-			buf.append(getListPropertysXML());
-			for (ElementModel element : children) {
+			for (AbstractElementModel element : children) {
 				buf.append(element.toXML());
 			}
 			if(getName() != null){
-			buf.append("</");
-			buf.append(getName());
-			buf.append(">");
+				buf.append("</");
+				buf.append(getName());
+				buf.append(">");
 			}
 		}else{
 			if(getName() != null){
-			buf.append("/>");
+				buf.append("/>");
 			}
 		}
 		buf.append("\n");
 		return buf.toString();
 	}
-
 }

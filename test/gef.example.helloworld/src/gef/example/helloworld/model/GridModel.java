@@ -10,7 +10,9 @@ public class GridModel extends ContentsModel {
 	//public static final String COLUMS_FLEX = "columnsflex";
 	//protected String columnsflex="0,0";
 	//private static final int defaultcolumn = 2;
-
+	private ColumnsModel columns;
+	private RowsModel rows;
+	
 	@Override
 	public String getName() {
 		return "grid";
@@ -22,9 +24,9 @@ public class GridModel extends ContentsModel {
 		super.installModelProperty();
 		//AddProperty(ATTR_COLUMS, new ListPropertyDescriptor(ATTR_COLUMS, ATTR_COLUMS), getDeafult());
 		//AddListProperty(ATTR_COLUMS, ATTR_COLUMS, ColumnModel.class, getDeafult());
-		ColumnsModel columns = new ColumnsModel();
+		columns = new ColumnsModel();
 		columns.setDefault();
-		AddListProperty(ATTR_COLUMS, ATTR_COLUMS, columns);
+		AddListProperty(ATTR_COLUMS, ATTR_COLUMS, ColumnModel.class, columns.getChildren());
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class GridModel extends ContentsModel {
 			for (int i = 0; i < columns; i++) {
 				int index = j*rows+i;
 				if(children.size()>index){
-					ElementModel model = (ElementModel)children.get(index);
+					AbstractElementModel model = (AbstractElementModel)children.get(index);
 					buf.append(model.toXML());
 				}
 			}
@@ -77,7 +79,8 @@ public class GridModel extends ContentsModel {
 	
 	public List getColumns(){
 		//Object obj = getPropertyValue(ATTR_COLUMS);
-		List list = ((ColumnsModel)getPropertyValue(ATTR_COLUMS)).getChildren();
+		//List list = ((ColumnsModel)getPropertyValue(ATTR_COLUMS)).getChildren();
+		List list = columns.getChildren();
 		return list;
 	}
 	

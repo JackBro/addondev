@@ -2,7 +2,7 @@ package gef.example.helloworld.editparts;
 
 import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
 import gef.example.helloworld.figure.LabelFigure;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.LabelModel;
 import java.beans.PropertyChangeEvent;
 
@@ -16,7 +16,7 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPolicy;
 
-public class LabelEditPart extends EditPartWithListener {
+public class LabelEditPart extends AbstractElementEditPart {
 
 	protected IFigure createFigure() {
 		LabelModel model = (LabelModel) getModel();
@@ -27,6 +27,7 @@ public class LabelEditPart extends EditPartWithListener {
 		return label;
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 	    if (evt.getPropertyName().equals(LabelModel.VALUE)) {
 	        // モデルのテキストが変更されたのでビューに表示するテキストを更新
@@ -52,10 +53,7 @@ public class LabelEditPart extends EditPartWithListener {
 	        //getFigure().setBounds(rg);
 	        //label.setSize(label.getSize().width+20 , label.getSize().height);
 	    }
-	    else if (evt.getPropertyName().equals(ElementModel.ATTR_FLEX)) {
-	    	EditPartWithListener ep = (EditPartWithListener)getParent();
-	    	ep.resizeChildren();
-	    }
+	    super.propertyChange(evt);
 	}
 
 	@Override
@@ -65,11 +63,5 @@ public class LabelEditPart extends EditPartWithListener {
     	LabelFigure label = (LabelFigure) getFigure();
     	LabelModel model = (LabelModel) getModel();
     	label.setText(model.getText());
-	}
-
-	@Override
-	public void resizeWidth() {
-		// TODO Auto-generated method stub
-		super.resizeWidth();
 	}
 }

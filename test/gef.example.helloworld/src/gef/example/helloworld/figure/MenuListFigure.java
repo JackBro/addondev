@@ -8,7 +8,7 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.SimpleLoweredBorder;
 import org.eclipse.draw2d.geometry.Dimension;
 
-public class MenuListFigure extends ElementFigure {
+public class MenuListFigure extends AbstractElementFigure {
 
 	private ArrowButton figure;
 	public MenuListFigure() {

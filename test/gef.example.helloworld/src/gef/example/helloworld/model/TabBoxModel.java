@@ -9,7 +9,6 @@ public class TabBoxModel extends BoxModel {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "tabbox";
 	}
 
@@ -27,11 +26,7 @@ public class TabBoxModel extends BoxModel {
 	}
 
 	@Override
-	public String toXML() {
-		// TODO Auto-generated method stub
-		//return super.toXML();
-		
-		
+	public String toXML() {	
 		StringBuilder buf= new StringBuilder();
 		buf.append("<tabbox>\n");
 		
@@ -39,14 +34,14 @@ public class TabBoxModel extends BoxModel {
 		TabPanelsModel model = (TabPanelsModel)getPropertyValue(ATTR_TABS);
 		for (Object tabpanel : model.getChildren()) {
 			buf.append("<tab");
-			buf.append(((ElementModel)tabpanel).getAttributes());
+			buf.append(((AbstractElementModel)tabpanel).getAttributes());
 			buf.append("/>\n");
 		}
 		buf.append("</tabs>\n");
 		
 		buf.append("<tabpanels>\n");
 		for (Object tabpanel : model.getChildren()) {
-			buf.append(((ElementModel)tabpanel).toXML());
+			buf.append(((AbstractElementModel)tabpanel).toXML());
 			buf.append("\n");
 		}
 		buf.append("</tabpanels>\n");

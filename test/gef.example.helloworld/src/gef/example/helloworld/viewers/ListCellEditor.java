@@ -15,21 +15,31 @@ import org.eclipse.swt.widgets.Control;
 
 public class ListCellEditor extends DialogCellEditor {
 	
-	private static Map<Class, Class> map = new HashMap<Class, Class>(); 
-	static {
-		map.put(MenuPopupModel.class, MenuItemModel.class);
-		map.put(TabPanelsModel.class, TabPanelModel.class);
-		map.put(PrefPanesModel.class, PrefpaneModel.class);
-		map.put(PreferencesModel.class, PreferenceModel.class);
-	}
-	//private Object orgObject;
-    public ListCellEditor(Composite parent) {
+	private Class fClass;
+//	private static Map<Class, Class> map = new HashMap<Class, Class>(); 
+//	static {
+//		map.put(MenuPopupModel.class, MenuItemModel.class);
+//		map.put(TabPanelsModel.class, TabPanelModel.class);
+//		map.put(PrefPanesModel.class, PrefpaneModel.class);
+//		map.put(PreferencesModel.class, PreferenceModel.class);
+//	}
+
+	private ListCellEditor(Composite parent) {
         this(parent, SWT.NONE);
     }
     
-    public ListCellEditor(Composite parent, int style) {
+    private ListCellEditor(Composite parent, int style) {
         super(parent, style);
-        //doSetValue(new RGB(0, 0, 0));
+    }
+    
+    public ListCellEditor(Composite parent, Class _class) {
+        this(parent, SWT.NONE, _class);
+        fClass = _class;
+    }
+    
+    public ListCellEditor(Composite parent, int style, Class _class) {
+        super(parent, style);
+        fClass = _class;
     }
     
 	@Override
@@ -38,22 +48,26 @@ public class ListCellEditor extends DialogCellEditor {
         ListDialog dialog = new ListDialog(cellEditorWindow.getShell());
         Object value = getValue();
         if(value != null){
-        	Class cl = value.getClass();
-        	Class val = map.get(cl);
-        	List newChildern = new ArrayList();
+        	List orgChildren;
+        	if(value instanceof AbstractElementModel){
+        		orgChildren = ((AbstractElementModel)value).getChildren();
+        	}else{
+        		orgChildren = (List)value;
+        	}
+        	List newChildren = new ArrayList();
         	
-        	ElementModel elem = (ElementModel)value;
-        	List childern = elem.getChildren();
-        	for (Object obj : childern) {
-        		ElementModel child = (ElementModel)obj;
-        		ElementModel newchile = child.getCopy();
-        		newChildern.add(newchile);
-        		if(child instanceof ContentsModel){
-        			ContentsModel content = (ContentsModel)child;
-        			((ContentsModel)newchile).setChildren(content.getChildren());
-        		}
+        	//AbstractElementModel elem = (AbstractElementModel)value;
+        	//List childern = elem.getChildren();
+        	for (Object obj : orgChildren) {
+        		AbstractElementModel child = (AbstractElementModel)obj;
+        		AbstractElementModel newchile = child.getCopy();
+        		newChildren.add(newchile);
+//        		if(child instanceof ContentsModel){
+//        			ContentsModel content = (ContentsModel)child;
+//        			((ContentsModel)newchile).setChildren(content.getChildren());
+//        		}
 			}
-        	dialog.setValue(val, newChildern);
+        	dialog.setValue(fClass, newChildren);
         }
 //        if (value != null && (value instanceof ListProperty)) {
 //        	ListProperty property = ((ListProperty)value).cp();
@@ -64,7 +78,7 @@ public class ListCellEditor extends DialogCellEditor {
         if (ret == IDialogConstants.OK_ID) {
         	
         	List list = (List)dialog.getValue();
-        	ElementModel elem = (ElementModel)value;
+        	AbstractElementModel elem = (AbstractElementModel)value;
         	//elem.setChildren(list);
         	//elem.getChildren().clear();
         	//elem.getChildren().addAll(list);

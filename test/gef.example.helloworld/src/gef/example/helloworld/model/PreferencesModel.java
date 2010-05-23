@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class PreferencesModel extends ElementModel {
+public class PreferencesModel extends AbstractElementModel {
 	
 	@Override
 	public String getName() {

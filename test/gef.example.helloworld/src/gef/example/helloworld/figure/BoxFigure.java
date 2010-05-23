@@ -1,12 +1,16 @@
 package gef.example.helloworld.figure;
 
+import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Insets;
 
-public class BoxFigure extends ElementFigure {
+public class BoxFigure extends AbstractElementFigure {
 
 	public BoxFigure() {
 		super();
@@ -22,13 +26,63 @@ public class BoxFigure extends ElementFigure {
 	@Override
 	public int getDefaultHeight() {
 		// TODO Auto-generated method stub
-		return 0;
+		int w=0;
+		ToolbarLayout tl = (ToolbarLayout) getLayoutManager();
+		if(tl.isHorizontal()){		
+			List list = getChildren();
+			int max = 0;
+			if(list.size()>0){
+				for (Object obj : list) {
+					
+					AbstractElementFigure fig = (AbstractElementFigure) obj;
+					if(max < fig.getDefaultHeight()){
+						max = fig.getDefaultHeight();
+					}
+				}
+				return max;
+			}		
+		}else{
+			List list = getChildren();
+			if(list.size()>0){
+				for (Object obj : list) {
+					AbstractElementFigure fig = (AbstractElementFigure) obj;
+					w+=fig.getDefaultHeight();
+				}
+				return w;
+			}
+		}
+		return 100;
 	}
 
 	@Override
 	public int getDefaultWidth() {
 		// TODO Auto-generated method stub
-		return 0;
+		int w=0;
+		ToolbarLayout tl = (ToolbarLayout) getLayoutManager();
+		if(tl.isHorizontal()){		
+			List list = getChildren();
+			if(list.size()>0){
+				for (Object obj : list) {
+					AbstractElementFigure fig = (AbstractElementFigure) obj;
+					w+=fig.getDefaultWidth();
+				}
+				return w;
+			}		
+		}else{
+			List list = getChildren();
+			int max = 0;
+			if(list.size()>0){
+				for (Object obj : list) {
+					
+					AbstractElementFigure fig = (AbstractElementFigure) obj;
+					if(max < fig.getDefaultWidth()){
+						max = fig.getDefaultWidth();
+					}
+				}
+				return max;
+			}			
+		}
+		return 100;
 	}
 
 }

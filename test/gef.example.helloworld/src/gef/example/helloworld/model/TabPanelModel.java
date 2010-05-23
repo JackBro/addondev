@@ -24,7 +24,7 @@ public class TabPanelModel extends BoxModel {
 		StringBuilder buf= new StringBuilder();
 		buf.append("<tabpanel>");
 		for (Object obj : getChildren()) {
-			buf.append(((ElementModel)obj).toXML());
+			buf.append(((AbstractElementModel)obj).toXML());
 			buf.append("\n");
 		}
 		buf.append("</tabpanel>");

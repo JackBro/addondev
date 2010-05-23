@@ -7,7 +7,7 @@ import java.util.List;
 import gef.example.helloworld.figure.TabBoxFigure;
 import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.model.BoxModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.PrefpaneModel;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
@@ -17,7 +17,7 @@ import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 
-public class PrefwindowEditPart extends TabEditPart {
+public class PrefwindowEditPart extends AbstractTabEditPart {
 
 	@Override
 	protected IFigure createFigure() {
@@ -43,7 +43,7 @@ public class PrefwindowEditPart extends TabEditPart {
 		
 		if(evt.getPropertyName().equals("prefnanes")){
 			BoxModel model =  (BoxModel)getModel();
-			ElementModel tabs = (ElementModel)model.getPropertyValue("prefnanes");
+			AbstractElementModel tabs = (AbstractElementModel)model.getPropertyValue("prefnanes");
 			List list = (List)evt.getNewValue();
 			while(tabs.getChildren().size() > 0){
 				tabs.getChildren().remove(0);
@@ -55,7 +55,7 @@ public class PrefwindowEditPart extends TabEditPart {
 			
 			model.removeAllChild();
 			for (Object object : list) {
-				model.addChild((ElementModel) object);
+				model.addChild((AbstractElementModel) object);
 			}
 			//refreshTabs();
 		}		

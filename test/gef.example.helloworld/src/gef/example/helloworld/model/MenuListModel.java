@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class MenuListModel extends ElementModel {
+public class MenuListModel extends AbstractElementModel {
 
 //	public static final String ATTR_MENUPOPUP = "menupopup";
 	

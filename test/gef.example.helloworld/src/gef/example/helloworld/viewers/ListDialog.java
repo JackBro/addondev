@@ -1,6 +1,6 @@
 package gef.example.helloworld.viewers;
 
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -34,17 +34,17 @@ public class ListDialog extends Dialog {
 	//private Button fAddButton, fDeleteButton;
 	private Class fClass;
 	private List fValues;
-	private ListProperty fListproperty;
+	//private ListProperty fListproperty;
 	
-	public void setValue(ListProperty listproperty) {
-		fListproperty = listproperty;
-		fClass = fListproperty.getClass();
-		fValues = fListproperty.getValues();
-	}
+//	public void setValue(ListProperty listproperty) {
+//		fListproperty = listproperty;
+//		fClass = fListproperty.getClass();
+//		fValues = fListproperty.getValues();
+//	}
 	
-	public void setValue(Class cl, List values) {
+	public void setValue(Class _class, List values) {
 		//fListproperty = listproperty;
-		fClass = cl;
+		fClass = _class;
 		fValues = values;
 	}
 
@@ -126,7 +126,7 @@ public class ListDialog extends Dialog {
 				// TODO Auto-generated method stub
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 				Object element = sel.getFirstElement();
-				if(element instanceof ElementModel){
+				if(element instanceof AbstractElementModel){
 					en.setValues(new Object[]{element});
 				}
 				
@@ -204,8 +204,8 @@ public class ListDialog extends Dialog {
 		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			// TODO Auto-generated method stub
-			if(element instanceof ElementModel){
-				ElementModel model = (ElementModel)element;
+			if(element instanceof AbstractElementModel){
+				AbstractElementModel model = (AbstractElementModel)element;
 				return model.getName();
 			}
 			return null;

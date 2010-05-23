@@ -4,7 +4,7 @@ import gef.example.helloworld.figure.TabBoxFigure;
 import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.figure.TabPanelLineBorder;
 import gef.example.helloworld.model.BoxModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.TabBoxModel;
 import gef.example.helloworld.model.TabPanelModel;
 import gef.example.helloworld.model.TabPanelsModel;
@@ -20,7 +20,7 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.gef.EditPart;
 
-public class TabBoxEditPart extends TabEditPart {
+public class TabBoxEditPart extends AbstractTabEditPart {
 
 	@Override
 	protected IFigure createFigure() {
@@ -39,7 +39,7 @@ public class TabBoxEditPart extends TabEditPart {
 		
 		if(evt.getPropertyName().equals("tabpanels")){
 			BoxModel model =  (BoxModel)getModel();
-			ElementModel tabpanels = (ElementModel)model.getPropertyValue("tabpanels");
+			AbstractElementModel tabpanels = (AbstractElementModel)model.getPropertyValue("tabpanels");
 			List list = (List)evt.getNewValue();
 			while(tabpanels.getChildren().size() > 0){
 				tabpanels.getChildren().remove(0);
@@ -51,7 +51,7 @@ public class TabBoxEditPart extends TabEditPart {
 			
 			model.removeAllChild();
 			for (Object object : list) {
-				model.addChild((ElementModel) object);
+				model.addChild((AbstractElementModel) object);
 			}
 		}
 	}	

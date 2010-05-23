@@ -121,7 +121,7 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		// .getModel();
 		// ElementModel model = (ElementModel) parent.getChildren().get(0);
 		// String mm = model.toXML();
-		ElementModel model = (ElementModel) xulroot.getChildren().get(0);
+		AbstractElementModel model = (AbstractElementModel) xulroot.getChildren().get(0);
 		// String mm = model.toXML(xulpart.getChildren());
 		String mm = model.toXML();
 		getCommandStack().markSaveLocation();

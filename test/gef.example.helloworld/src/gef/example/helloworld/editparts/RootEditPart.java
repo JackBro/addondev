@@ -1,5 +1,6 @@
 package gef.example.helloworld.editparts;
 
+import gef.example.helloworld.editpolicies.MyXYLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.RootXYLayoutEditPolicy;
 import gef.example.helloworld.figure.BorderFigure;
 import gef.example.helloworld.model.ContentsModel;
@@ -14,7 +15,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 
-public class RootEditPart extends EditPartWithListener {
+public class RootEditPart extends AbstractEditPartWithListener {
 
 	private BorderFigure figure;
 	
@@ -39,14 +40,14 @@ public class RootEditPart extends EditPartWithListener {
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
 		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new MyXYLayoutEditPolicy());
-		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new RootXYLayoutEditPolicy((ContentsModel)getModel()));
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new RootXYLayoutEditPolicy((ContentsModel)getModel()));
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
-		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILDREN)
-				|| evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILDREN)) {
+		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILD)
+				|| evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILD)) {
 			// 子モデルの構造が変化したので子EditPartの構造も更新する
 			refreshChildren();
 		}

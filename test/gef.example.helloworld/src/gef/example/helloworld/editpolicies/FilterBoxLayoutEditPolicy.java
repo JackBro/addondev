@@ -1,7 +1,7 @@
 package gef.example.helloworld.editpolicies;
 
 import gef.example.helloworld.editparts.RadioEditPart;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.RadioModel;
 
 import org.eclipse.gef.EditPart;
@@ -27,11 +27,11 @@ public abstract class FilterBoxLayoutEditPolicy extends BoxLayoutEditPolicy {
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		// TODO Auto-generated method stub
-		ElementModel model = (ElementModel) request.getNewObject();	
+		AbstractElementModel model = (AbstractElementModel) request.getNewObject();	
 		if(isFilter(model)) return null;
 		return super.getCreateCommand(request);
 	}
 	
 	abstract protected boolean isFilter(EditPart editpart);
-	abstract protected boolean isFilter(ElementModel model);
+	abstract protected boolean isFilter(AbstractElementModel model);
 }

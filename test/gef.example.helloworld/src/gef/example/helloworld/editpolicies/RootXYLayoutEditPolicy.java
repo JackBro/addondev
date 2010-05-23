@@ -3,7 +3,7 @@ package gef.example.helloworld.editpolicies;
 import java.util.List;
 
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.commands.ChangeConstraintCommand;
 import gef.example.helloworld.model.commands.CreateCommand;
 
@@ -48,7 +48,7 @@ public class RootXYLayoutEditPolicy extends FlowLayoutEditPolicy {
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		// TODO Auto-generated method stub
-		ElementModel model = (ElementModel) request.getNewObject();		
+		AbstractElementModel model = (AbstractElementModel) request.getNewObject();		
 		EditPart after = getInsertionReference(request);
 		int index = getHost().getChildren().indexOf(after);
 		CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model, index);		

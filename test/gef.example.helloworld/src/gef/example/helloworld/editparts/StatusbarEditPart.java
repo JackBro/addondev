@@ -12,7 +12,7 @@ import org.eclipse.draw2d.SimpleLoweredBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPolicy;
 
-public class StatusbarEditPart extends ContentsEditPart {
+public class StatusbarEditPart extends AbstractContentsEditPart {
 
 	@Override
 	protected IFigure createFigure() {
@@ -39,7 +39,7 @@ public class StatusbarEditPart extends ContentsEditPart {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
 		if(evt.getPropertyName().equals(StatusbarModel.ATTR_MENUPOPUP)){
-			ElementModel model = (ElementModel)getModel();
+			AbstractElementModel model = (AbstractElementModel)getModel();
 			MenuPopupModel popup = (MenuPopupModel)model.getPropertyValue(StatusbarModel.ATTR_MENUPOPUP);
 			popup.setChildren((List)evt.getNewValue());
 			

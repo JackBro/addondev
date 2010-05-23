@@ -1,7 +1,7 @@
 package gef.example.helloworld.editpolicies;
 
 import gef.example.helloworld.model.ContentsModel;
-import gef.example.helloworld.model.ElementModel;
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.commands.CreateCommand;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
 public class TreeEditPolicy extends TreeContainerEditPolicy {
-	protected Command createCreateCommand(ElementModel child, int index) {
+	protected Command createCreateCommand(AbstractElementModel child, int index) {
 		
 //		Rectangle rect;
 //		if (r == null) {
@@ -48,7 +48,7 @@ public class TreeEditPolicy extends TreeContainerEditPolicy {
 	    		
 	    	}else{
 	    		if (index == -1) index = 0;
-	    		 command.add(createCreateCommand((ElementModel)child.getModel(), index));
+	    		 command.add(createCreateCommand((AbstractElementModel)child.getModel(), index));
 	    	}
 
 	    	  
@@ -60,7 +60,7 @@ public class TreeEditPolicy extends TreeContainerEditPolicy {
 	protected Command getCreateCommand(CreateRequest request) {
 		// TODO Auto-generated method stub
 		if(getHost().getModel() instanceof ContentsModel){
-			ElementModel model = (ElementModel) request.getNewObject();	
+			AbstractElementModel model = (AbstractElementModel) request.getNewObject();	
 			int index = findIndexOfTreeItemAt(request.getLocation());
 			CreateCommand command = new CreateCommand((ContentsModel)getHost().getModel(), model, index);		
 			return command;

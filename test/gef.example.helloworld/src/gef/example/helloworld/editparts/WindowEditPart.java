@@ -21,8 +21,8 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 
-public class WindowEditPart extends ContentsEditPart {
-
+//public class WindowEditPart extends AbstractContentsEditPart {
+public class WindowEditPart extends BoxEditPart {
 	private WindowFigure window;
 	private BorderFigure figure;
 	

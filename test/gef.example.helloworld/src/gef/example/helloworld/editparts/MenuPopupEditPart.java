@@ -13,7 +13,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-public class MenuPopupEditPart extends EditPartWithListener {
+public class MenuPopupEditPart extends AbstractEditPartWithListener {
 
 	@Override
 	protected IFigure createFigure() {
@@ -34,7 +34,7 @@ public class MenuPopupEditPart extends EditPartWithListener {
 		{
 			EditPart part = (EditPart)getRoot().getChildren().get(0);
 			AbstractGraphicalEditPart xulpart = (AbstractGraphicalEditPart)part.getChildren().get(0);
-			int index = ((ElementModel)xulpart.getModel()).getChildren().indexOf(getModel());
+			int index = ((AbstractElementModel)xulpart.getModel()).getChildren().indexOf(getModel());
 			if(index != -1){
 				//xulpart.setSelected(index);
 				EditPart e = (EditPart) xulpart.getChildren().get(index);

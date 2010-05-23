@@ -39,34 +39,34 @@ abstract public class AbstractModel implements IPropertySource  {
 		return this;
 	}
 
-	@Override
-	public IPropertyDescriptor[] getPropertyDescriptors() {
-		// TODO Auto-generated method stub
-		return new IPropertyDescriptor[0];
-	}
-
-	@Override
-	public Object getPropertyValue(Object id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isPropertySet(Object id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void resetPropertyValue(Object id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setPropertyValue(Object id, Object value) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public IPropertyDescriptor[] getPropertyDescriptors() {
+//		// TODO Auto-generated method stub
+//		return new IPropertyDescriptor[0];
+//	}
+//
+//	@Override
+//	public Object getPropertyValue(Object id) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public boolean isPropertySet(Object id) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public void resetPropertyValue(Object id) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void setPropertyValue(Object id, Object value) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 }
