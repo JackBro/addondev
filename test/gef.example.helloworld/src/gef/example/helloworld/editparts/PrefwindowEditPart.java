@@ -9,6 +9,8 @@ import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.model.BoxModel;
 import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.PrefpaneModel;
+import gef.example.helloworld.model.PrefwindowModel;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -42,8 +44,9 @@ public class PrefwindowEditPart extends AbstractTabEditPart {
 		super.propertyChange(evt);
 		
 		if(evt.getPropertyName().equals("prefnanes")){
-			BoxModel model =  (BoxModel)getModel();
-			AbstractElementModel tabs = (AbstractElementModel)model.getPropertyValue("prefnanes");
+			PrefwindowModel model =  (PrefwindowModel)getModel();
+			//AbstractElementModel tabs = (AbstractElementModel)model.getPropertyValue("prefnanes");
+			AbstractElementModel tabs = model.getPrefPanesModel();
 			List list = (List)evt.getNewValue();
 			while(tabs.getChildren().size() > 0){
 				tabs.getChildren().remove(0);

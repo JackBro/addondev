@@ -7,6 +7,8 @@ import gef.example.helloworld.figure.AbstractElementFigure;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.GridModel;
+import gef.example.helloworld.model.RowModel;
+import gef.example.helloworld.model.RowsModel;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -40,12 +42,12 @@ public class GridEditPart extends AbstractEditPartWithListener {
 		
 		AbstractElementFigure fig = new BoxFigure();
 		GridLayout gl = new GridLayout();
-		gl.numColumns = model.getColumns().size();
+		gl.numColumns = model.getColumns().getChildren().size();
 		fig.setBorder(new LineBorder(ColorConstants.black,1, Graphics.LINE_DOT));
 		fig.setLayoutManager(gl);
 		
 		if(model.getChildren().size()==0){	
-			for(int i=0; i<2; i++){
+			for(int i=0; i<1; i++){
 				Label label = new Label("cBox");
 				label.setBorder(
 				new CompoundBorder(new LineBorder(), new MarginBorder(1)));
@@ -73,20 +75,32 @@ public class GridEditPart extends AbstractEditPartWithListener {
 			
 			if(((ContentsModel) getModel()).getChildren().size()==1 ){
 				getFigure().remove(dummys.get(0));
-			} else if(((ContentsModel) getModel()).getChildren().size()==2){
-				getFigure().remove(dummys.get(1));
+			} 
+//			else if(((ContentsModel) getModel()).getChildren().size()==2){
+//				getFigure().remove(dummys.get(1));
+//			}
+			
+			GridModel grid = (GridModel)getModel();
+			int rows = children.size()/grid.getColumns().getChildren().size();
+			//if(grid.getRows().getChildren().size() < rows){
+			int ss = ((RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS)).getChildren().size();
+			if(((RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS)).getChildren().size()< rows){
+				//grid.getRows().getChildren().add(new RowModel());
+				((RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS)).getChildren().add(new RowModel());
 			}
 			refreshChildren();
+			
 		}else if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILD)){
 			if(((ContentsModel) getModel()).getChildren().size()==0 ){
 				getFigure().add(dummys.get(0));
-			}else if(((ContentsModel) getModel()).getChildren().size()==1 ){
-				getFigure().add(dummys.get(1));
 			}
+//			else if(((ContentsModel) getModel()).getChildren().size()==1 ){
+//				getFigure().add(dummys.get(1));
+//			}
 			refreshChildren();
 		} else if (evt.getPropertyName().equals(GridModel.ATTR_COLUMS)) {
 			GridModel elem = (GridModel)getModel();
-			int columns = elem.getColumns().size();
+			int columns = elem.getColumns().getChildren().size();
 			List<Integer> columlist = elem.getColumnFlex();
 			
 			List cheldern = getChildren();			

@@ -18,13 +18,13 @@ public class ContentsTreeEditPart extends MyTreeEditPart {
 		super.fireActivated();
 	}
 
-	@Override
-	protected void fireSelectionChanged() {
-		// TODO Auto-generated method stub
-		List list = getViewer().getSelectedEditParts();
-		Object oj = getRoot();
-		super.fireSelectionChanged();
-	}
+//	@Override
+//	protected void fireSelectionChanged() {
+//		// TODO Auto-generated method stub
+//		List list = getViewer().getSelectedEditParts();
+//		Object oj = getRoot();
+//		super.fireSelectionChanged();
+//	}
 
 	@Override
 	protected List getModelChildren() {

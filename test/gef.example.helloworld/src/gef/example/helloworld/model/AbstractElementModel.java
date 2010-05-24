@@ -2,6 +2,7 @@ package gef.example.helloworld.model;
 
 import gef.example.helloworld.viewers.ListPropertyDescriptor;
 import gef.example.helloworld.viewers.MenuPropertyDescriptor;
+import gef.example.helloworld.viewers.TabListPropertyDescriptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,30 +41,35 @@ public abstract class AbstractElementModel extends AbstractModel {
 		AddProperty(id, new PropertyDescriptor(id, displayname), obj);	
 	}
 	
-	public void AddTextProperty(String id, String displayname, Object obj){
+	public void AddAttrProperty(String id, String displayname, Object obj){
 		
 		AddProperty(id, new TextPropertyDescriptor(id, displayname), obj);	
 	}		
 	
-	public void AddListProperty(String id, String displayname, Class _class, AbstractElementModel obj){
+	public void AddListProperty(String id, String displayname, AbstractElementModel listenermodel, Class _class, AbstractElementModel obj){
 		
-		AddProperty(id, new ListPropertyDescriptor(id, displayname, _class), obj);	
+		AddProperty(id, new ListPropertyDescriptor(id, displayname, listenermodel, _class), obj);	
 	}	
 	
-	public void AddListProperty(String id, String displayname, Class _class, List obj){
-		
-		AddProperty(id, new ListPropertyDescriptor(id, displayname, _class), obj);	
-	}	
+//	public void AddListProperty(String id, String displayname, Class _class, List obj){
+//		
+//		AddProperty(id, new ListPropertyDescriptor(id, displayname, _class), obj);	
+//	}	
 	
 	public void AddMenuProperty(String id, String displayname, List obj){
 		
 		AddProperty(id, new MenuPropertyDescriptor(id, displayname), obj);	
 	}
 	
+	public void AddTabListProperty(String id, String displayname, AbstractElementModel listenermodel, Class _class, List obj){
+		
+		AddProperty(id, new TabListPropertyDescriptor(id, displayname, listenermodel, _class), obj);	
+	}
+	
 	public void installModelProperty(){
 		AddConstProperty(NAME, NAME, getName());
-		AddTextProperty(ATTR_FLEX, ATTR_FLEX, "");
-		AddTextProperty(ATTR_ID, ATTR_ID, "");
+		AddAttrProperty(ATTR_FLEX, ATTR_FLEX, "");
+		AddAttrProperty(ATTR_ID, ATTR_ID, "");
 	}
 	
 	public AbstractElementModel getAttrCopy(){
@@ -76,7 +82,7 @@ public abstract class AbstractElementModel extends AbstractModel {
 				IPropertyDescriptor propdescriptor = prop.getPropertyDescriptor();
 				if(propdescriptor instanceof TextPropertyDescriptor){
 					Object obj = fAttributeMap.get(id);
-					model.AddTextProperty((String) id, propdescriptor.getDisplayName(), obj);
+					model.AddAttrProperty((String) id, propdescriptor.getDisplayName(), obj);
 				}
 			}
 		} catch (InstantiationException e) {
@@ -99,7 +105,7 @@ public abstract class AbstractElementModel extends AbstractModel {
 				IPropertyDescriptor propdescriptor = prop.getPropertyDescriptor();
 				if(propdescriptor instanceof TextPropertyDescriptor){
 					Object obj = fAttributeMap.get(id);
-					model.AddTextProperty((String) id, propdescriptor.getDisplayName(), obj);
+					model.AddAttrProperty((String) id, propdescriptor.getDisplayName(), obj);
 				}
 			}
 			for (Object obj : children) {

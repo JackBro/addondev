@@ -26,7 +26,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 public class BoxEditPart extends AbstractContentsEditPart {
 
-	private Figure dummy;
+	private Figure dummy=null;
 	@Override
 	protected IFigure createFigure() {
 		
@@ -56,13 +56,13 @@ public class BoxEditPart extends AbstractContentsEditPart {
 		
 		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILD))
 		{
-			if(getFigure().getChildren().size() > 0){
+			if(getFigure().getChildren().size() > 0 && dummy != null){
 				getFigure().getChildren().remove(dummy);
 			}
 			refreshChildren();
 		}else if(evt.getPropertyName().equals(BoxModel.P_REMOVE_CHILD)){
 			ContentsModel elm = (ContentsModel)getModel();
-			if(elm.getChildren().size() == 0){
+			if(elm.getChildren().size() == 0 && dummy != null){
 				getFigure().add(dummy);	
 			}			
 			refreshChildren();

@@ -16,7 +16,7 @@ public class MenuItemModel extends AbstractElementModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddTextProperty(ATTR_LABEL, ATTR_LABEL, "item");
+		AddAttrProperty(ATTR_LABEL, ATTR_LABEL, "item");
 	}
 
 }

@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Control;
 public class ListCellEditor extends DialogCellEditor {
 	
 	private Class fClass;
+	private AbstractElementModel flistenermodel;
+	private String id;
 //	private static Map<Class, Class> map = new HashMap<Class, Class>(); 
 //	static {
 //		map.put(MenuPopupModel.class, MenuItemModel.class);
@@ -23,7 +25,18 @@ public class ListCellEditor extends DialogCellEditor {
 //		map.put(PrefPanesModel.class, PrefpaneModel.class);
 //		map.put(PreferencesModel.class, PreferenceModel.class);
 //	}
+	
+	public void setClass(Class _class) {
+		this.fClass = _class;
+	}
 
+	public void setListenerModel(AbstractElementModel listenermodel) {
+		this.flistenermodel = listenermodel;
+	}
+
+	public void setID(String id) {
+		this.id = id;
+	}
 	private ListCellEditor(Composite parent) {
         this(parent, SWT.NONE);
     }
@@ -78,16 +91,20 @@ public class ListCellEditor extends DialogCellEditor {
         if (ret == IDialogConstants.OK_ID) {
         	
         	List list = (List)dialog.getValue();
-        	AbstractElementModel elem = (AbstractElementModel)value;
-        	//elem.setChildren(list);
-        	//elem.getChildren().clear();
-        	//elem.getChildren().addAll(list);
-        	//return elem;
-        	if(elem.getParent() != null){
-        		elem.getParent().firePropertyChange(elem.getName(), null, list);
-        	}
-        	//return list;
-        	return null;
+//        	AbstractElementModel elem = (AbstractElementModel)value;
+//
+//        	//elem.setChildren(list);
+//        	//elem.getChildren().clear();
+//        	//elem.getChildren().addAll(list);
+//        	//return elem;
+//        	if(elem.getParent() != null){
+//        		elem.getParent().firePropertyChange(elem.getName(), null, list);
+//        	}
+        	
+        	flistenermodel.firePropertyChange(id, null, list);
+        	
+        	return list;
+        	//return null;
         }
         else{
         	return null;

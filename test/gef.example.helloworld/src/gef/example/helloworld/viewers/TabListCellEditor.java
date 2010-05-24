@@ -14,15 +14,27 @@ import org.eclipse.swt.widgets.Control;
 public class TabListCellEditor extends DialogCellEditor {
     
 	private Class fClass;
+	private AbstractElementModel flistenermodel;
+	private String id;
 	
-	public TabListCellEditor(Composite parent, Class _class) {
-        this(parent, SWT.NONE, _class);
-        fClass = _class;
+	public void setClass(Class _class) {
+		this.fClass = _class;
+	}
+
+	public void setListenerModel(AbstractElementModel listenermodel) {
+		this.flistenermodel = listenermodel;
+	}
+
+	public void setID(String id) {
+		this.id = id;
+	}
+
+	public TabListCellEditor(Composite parent) {
+        this(parent, SWT.NONE);
     }
     
-    public TabListCellEditor(Composite parent, int style, Class _class) {
+    public TabListCellEditor(Composite parent, int style) {
         super(parent, style);
-        fClass = _class;
     }
 	
     @Override
@@ -31,8 +43,9 @@ public class TabListCellEditor extends DialogCellEditor {
     	ListDialog dialog = new ListDialog(cellEditorWindow.getShell());
     	Object value = getValue();
     	List orgChildren = null;
-    	if(value != null && (value instanceof AbstractElementModel)){
-    		orgChildren = ((AbstractElementModel)value).getChildren();
+    	if(value != null && (value instanceof List)){
+    		//orgChildren = ((AbstractElementModel)value).getChildren();
+    		orgChildren = (List)value;
     	
 	    	List newChildren = new ArrayList();
 	    	for (Object obj : orgChildren) {
@@ -48,16 +61,18 @@ public class TabListCellEditor extends DialogCellEditor {
         if (ret == IDialogConstants.OK_ID) {
         	
         	List list = (List)dialog.getValue();
-        	AbstractElementModel elem = (AbstractElementModel)value;
-        	//elem.setChildren(list);
-        	//elem.getChildren().clear();
-        	//elem.getChildren().addAll(list);
-        	//return elem;
-        	if(elem.getParent() != null){
-        		elem.getParent().firePropertyChange(elem.getName(), null, list);
-        	}
+//        	AbstractElementModel elem = (AbstractElementModel)value;
+//        	//elem.setChildren(list);
+//        	//elem.getChildren().clear();
+//        	//elem.getChildren().addAll(list);
+//        	//return elem;
+//        	if(elem.getParent() != null){
+//        		elem.getParent().firePropertyChange(elem.getName(), null, list);
+//        	}
+        	
+        	flistenermodel.firePropertyChange(id, null, list);
         	//return list;
-        	return null;
+        	return list;
         }
         else{
         	return null;

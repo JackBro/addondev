@@ -37,7 +37,8 @@ abstract public class AbstractEditPartWithListener
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new MyComponentEditPolicy());
+		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new MyComponentEditPolicy());
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new MyComponentEditPolicy());
 	}
 
 	protected List getModelChildren() {

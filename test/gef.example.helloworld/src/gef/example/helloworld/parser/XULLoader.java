@@ -28,6 +28,8 @@ public class XULLoader {
 		parsers.put("vbox", new DefaultXULParser(VBoxModel.class));
 		parsers.put("hbox", new DefaultXULParser(HBoxModel.class));
 		parsers.put("statusbar", new DefaultXULParser(StatusbarModel.class));
+		parsers.put("menupopup", new DefaultXULParser(MenuPopupModel.class));
+		parsers.put("menuitem", new DefaultXULParser(MenuItemModel.class));
 	}
 	public static AbstractElementModel parseElement(AbstractElementModel root, Element e) {
 		String elementName = e.getTagName();
@@ -42,7 +44,7 @@ public class XULLoader {
 			}else{
 				model = parser.parse(e);
 				if(root != null){
-					
+					root.addChild(model);
 				}
 				return model;
 			}

@@ -10,7 +10,7 @@ public class ColumnsModel extends AbstractElementModel {
 	
 	public void setDefault(){
 		getChildren().add(new ColumnModel());
-		getChildren().add(new ColumnModel());
+		//getChildren().add(new ColumnModel());
 	}
 
 }

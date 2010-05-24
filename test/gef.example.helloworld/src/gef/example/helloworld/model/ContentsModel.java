@@ -36,8 +36,9 @@ public abstract class ContentsModel extends AbstractElementModel {
 	@Override
 	public void removeChild(AbstractElementModel child) {
 		// TODO Auto-generated method stub
-		firePropertyChange(P_REMOVE_CHILD, null, child);
+		
 		super.removeChild(child);
+		firePropertyChange(P_REMOVE_CHILD, null, child);
 	}
 	@Override
 	public AbstractElementModel removeChild(int index) {

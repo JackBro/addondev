@@ -38,8 +38,9 @@ public class TabBoxEditPart extends AbstractTabEditPart {
 		super.propertyChange(evt);
 		
 		if(evt.getPropertyName().equals("tabpanels")){
-			BoxModel model =  (BoxModel)getModel();
-			AbstractElementModel tabpanels = (AbstractElementModel)model.getPropertyValue("tabpanels");
+			TabBoxModel tabboxmodel =  (TabBoxModel)getModel();
+			//AbstractElementModel tabpanels = (AbstractElementModel)model.getPropertyValue("tabpanels");
+			AbstractElementModel tabpanels = tabboxmodel.getTabPanelsModel();
 			List list = (List)evt.getNewValue();
 			while(tabpanels.getChildren().size() > 0){
 				tabpanels.getChildren().remove(0);
@@ -49,9 +50,9 @@ public class TabBoxEditPart extends AbstractTabEditPart {
 				tabpanels.getChildren().add(object);
 			}
 			
-			model.removeAllChild();
+			tabboxmodel.removeAllChild();
 			for (Object object : list) {
-				model.addChild((AbstractElementModel) object);
+				tabboxmodel.addChild((AbstractElementModel) object);
 			}
 		}
 	}	

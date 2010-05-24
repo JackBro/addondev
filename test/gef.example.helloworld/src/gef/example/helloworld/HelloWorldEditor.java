@@ -61,14 +61,15 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		@Override
 		public void dispose() {
 			// TODO Auto-generated method stub
+			
 			getSelectionSynchronizer().removeViewer(getViewer());
 			super.dispose();
 		}
 	}
 
 	private RootModel root;
-	private XULRootModel xulroot;
-	private XULPartModel xulpart;
+	//private XULRootModel xulroot;
+	//private XULPartModel xulpart;
 	private MyContentOutlinePage outline;
 
 	public HelloWorldEditor() {
@@ -82,8 +83,8 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		// viewer.setContents(root);
 
 		// XULRootModel xulroot = new XULRootModel();
-		xulroot = new XULRootModel();
-		xulpart = new XULPartModel(xulroot);
+		//xulroot = new XULRootModel();
+		//xulpart = new XULPartModel(xulroot);
 		// xulpart.AddObjProperty("root", "", xulroot);
 
 		//root.addChild(xulpart);
@@ -121,9 +122,10 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		// .getModel();
 		// ElementModel model = (ElementModel) parent.getChildren().get(0);
 		// String mm = model.toXML();
-		AbstractElementModel model = (AbstractElementModel) xulroot.getChildren().get(0);
+		//AbstractElementModel model = (AbstractElementModel) xulroot.getChildren().get(0);
 		// String mm = model.toXML(xulpart.getChildren());
-		String mm = model.toXML();
+		//String mm = model.toXML();
+		String mm = root.toXML();
 		getCommandStack().markSaveLocation();
 	}
 

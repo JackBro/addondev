@@ -1,6 +1,8 @@
 package gef.example.helloworld.viewers;
 
 import gef.example.helloworld.model.AbstractElementModel;
+import gef.example.helloworld.viewers.MenuDialog.ViewLableProvider;
+
 import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -11,6 +13,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -29,32 +32,29 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 
 public class ListDialog extends Dialog {
 
-	private TableViewer viewer;
+	protected TableViewer viewer;
 	private PropertySheetPage fPropertySheetPage;
-	//private Button fAddButton, fDeleteButton;
 	private Class fClass;
 	private List fValues;
-	//private ListProperty fListproperty;
-	
-//	public void setValue(ListProperty listproperty) {
-//		fListproperty = listproperty;
-//		fClass = fListproperty.getClass();
-//		fValues = fListproperty.getValues();
-//	}
-	
+	private boolean isConst;
+
 	public void setValue(Class _class, List values) {
-		//fListproperty = listproperty;
 		fClass = _class;
 		fValues = values;
 	}
 
-	public Object getValue() {
+	public List getValue() {
 		return fValues;
-//		Object o = viewer.getInput();
-//		viewer.getTable().get
-//		return o;
 	}
 	
+	public boolean isConst() {
+		return isConst;
+	}
+
+	public void setConst(boolean isConst) {
+		this.isConst = isConst;
+	}
+
 	private Object getInstance(){
 		try {
 			Object element = fClass.newInstance();
@@ -71,39 +71,96 @@ public class ListDialog extends Dialog {
 	
 	protected ListDialog(Shell parentShell) {
 		super(parentShell);
-		//setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX );
+		isConst = false;
 	}
 	
 	@Override
 	protected int getShellStyle() {
-		// TODO Auto-generated method stub
-		return super.getShellStyle()|SWT.RESIZE|SWT.MAX; //super.getShellStyle();
+		return super.getShellStyle()|SWT.RESIZE|SWT.MAX;
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		// TODO Auto-generated method stub		
+//		// TODO Auto-generated method stub		
+//		Composite composite = (Composite)super.createDialogArea(parent);
+//		
+//		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		composite.setLayout(new GridLayout(3, false));
+//		
+//		viewer = new TableViewer(composite, SWT.FULL_SELECTION);
+//		Table table = viewer.getTable();
+//		table.setHeaderVisible(true);
+//		table.setLinesVisible(true);
+//		
+//		TableColumn column = new TableColumn(table, SWT.NULL);
+//		column.setText("");
+//		column.setWidth(100);
+//		
+//		viewer.setContentProvider(new ArrayContentProvider());
+//		viewer.setLabelProvider(new ViewLableProvider());
+//		viewer.setInput(fValues);
+//		
+//		fPropertySheetPage = new PropertySheetPage();
+//		fPropertySheetPage.createControl(composite);
+//		
+//		final PropertySheetEntry en = new PropertySheetEntry();
+//		en.setPropertySourceProvider(new IPropertySourceProvider() {
+//			
+//			@Override
+//			public IPropertySource getPropertySource(Object object) {
+//				// TODO Auto-generated method stub
+//				if(object instanceof IPropertySource){
+//					IPropertySource src = (IPropertySource) object;
+//					return src;
+//				}
+//				return null;
+//			}
+//		});
+//		fPropertySheetPage.setRootEntry(en);
+//
+//		viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+//			
+//			@Override
+//			public void selectionChanged(SelectionChangedEvent event) {
+//				// TODO Auto-generated method stub
+//				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+//				Object element = sel.getFirstElement();
+//				if(element instanceof AbstractElementModel){
+//					en.setValues(new Object[]{element});
+//				}
+//				
+//			}
+//		});
+//		
+//		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		fPropertySheetPage.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		
+//		
+//		Composite buttonComposite = new Composite(composite, SWT.None);
+//		buttonComposite.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false));
+//		buttonComposite.setLayout(new GridLayout(1, false));	
 		Composite composite = (Composite)super.createDialogArea(parent);
-		
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		composite.setLayout(new GridLayout(3, false));
+		composite.setLayout(new GridLayout(2, false));
 		
-		viewer = new TableViewer(composite, SWT.FULL_SELECTION);
+		SashForm baseSash = new SashForm(composite, SWT.HORIZONTAL);
+		baseSash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		viewer = new TableViewer(baseSash, SWT.BORDER|SWT.FULL_SELECTION);
 		Table table = viewer.getTable();
+		table = viewer.getTable();
+		TableColumn column = new TableColumn(table, SWT.NULL);
+		column.setWidth(100);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		TableColumn column = new TableColumn(table, SWT.NULL);
-		column.setText("");
-		column.setWidth(100);
-		
+
 		viewer.setContentProvider(new ArrayContentProvider());
 		viewer.setLabelProvider(new ViewLableProvider());
-		viewer.setInput(fValues);
+		viewer.setInput(getValue());
 		
 		fPropertySheetPage = new PropertySheetPage();
-		fPropertySheetPage.createControl(composite);
-		
+		fPropertySheetPage.createControl(baseSash);
 		final PropertySheetEntry en = new PropertySheetEntry();
 		en.setPropertySourceProvider(new IPropertySourceProvider() {
 			
@@ -117,8 +174,8 @@ public class ListDialog extends Dialog {
 				return null;
 			}
 		});
-		fPropertySheetPage.setRootEntry(en);
-
+		fPropertySheetPage.setRootEntry(en);		
+		//baseSash.setWeights(new int [] {20,80})
 		viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
@@ -133,14 +190,10 @@ public class ListDialog extends Dialog {
 			}
 		});
 		
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		fPropertySheetPage.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
-		
 		Composite buttonComposite = new Composite(composite, SWT.None);
 		buttonComposite.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false));
-		buttonComposite.setLayout(new GridLayout(1, false));		
-		createButtions(buttonComposite);
+		buttonComposite.setLayout(new GridLayout(1, false));
+		createButtionArea(buttonComposite);
 
 		
 //	    // 各カラムの幅を計算する
@@ -153,7 +206,7 @@ public class ListDialog extends Dialog {
 		return composite;
 	}
 
-	protected void createButtions(Composite parent){
+	protected void createButtionArea(Composite parent){
 		Button fAddButton = new Button(parent, SWT.NONE);
 		fAddButton.setText("Add");
 		fAddButton.addSelectionListener(new SelectionListener() {
@@ -210,6 +263,5 @@ public class ListDialog extends Dialog {
 			}
 			return null;
 		}
-		
 	}
 }

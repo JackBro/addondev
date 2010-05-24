@@ -3,7 +3,12 @@ package gef.example.helloworld.model;
 public class PrefwindowModel extends BoxModel {
 
 	public static final String ATTR_TABS = "tabs";
+	private PrefPanesModel fPrefPanesModel;
 	
+	public PrefPanesModel getPrefPanesModel() {
+		return fPrefPanesModel;
+	}
+
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
@@ -15,9 +20,11 @@ public class PrefwindowModel extends BoxModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 		
-		PrefPanesModel prefpanes = new PrefPanesModel();
-		prefpanes.setParent(this);
+		fPrefPanesModel = new PrefPanesModel();
+		fPrefPanesModel.setParent(this);
 		//prefpanes.setDefault();
-		AddListProperty("prefnanes", "prefnanes", prefpanes);
+		//AddListProperty("prefnanes", "prefnanes", prefpanes);
+		AddTabListProperty(fPrefPanesModel.getName(), "prefnanes", 
+				this, PrefpaneModel.class, fPrefPanesModel.getChildren());
 	}
 }

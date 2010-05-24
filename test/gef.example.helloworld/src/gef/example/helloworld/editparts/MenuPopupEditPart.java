@@ -13,7 +13,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-public class MenuPopupEditPart extends AbstractEditPartWithListener {
+public class MenuPopupEditPart extends DataElementEditPart {
 
 	@Override
 	protected IFigure createFigure() {
@@ -26,28 +26,28 @@ public class MenuPopupEditPart extends AbstractEditPartWithListener {
 		return figure;
 	}
 
-	@Override
-	protected void fireSelectionChanged() {
-		// TODO Auto-generated method stub
-		super.fireSelectionChanged();
-		if(!(getParent() instanceof XULPartEditPart))
-		{
-			EditPart part = (EditPart)getRoot().getChildren().get(0);
-			AbstractGraphicalEditPart xulpart = (AbstractGraphicalEditPart)part.getChildren().get(0);
-			int index = ((AbstractElementModel)xulpart.getModel()).getChildren().indexOf(getModel());
-			if(index != -1){
-				//xulpart.setSelected(index);
-				EditPart e = (EditPart) xulpart.getChildren().get(index);
-				if(getSelected() == SELECTED_NONE){
-					e.setSelected(SELECTED_NONE);
-				}else{
-					e.setSelected(SELECTED_PRIMARY);
-				}
-				//int sel = isS)?SELECTED_NONE:SELECTED_PRIMARY;
-				
-			}
-		}
-	}
+//	@Override
+//	protected void fireSelectionChanged() {
+//		// TODO Auto-generated method stub
+//		super.fireSelectionChanged();
+//		if(!(getParent() instanceof XULPartEditPart))
+//		{
+//			EditPart part = (EditPart)getRoot().getChildren().get(0);
+//			AbstractGraphicalEditPart xulpart = (AbstractGraphicalEditPart)part.getChildren().get(0);
+//			int index = ((AbstractElementModel)xulpart.getModel()).getChildren().indexOf(getModel());
+//			if(index != -1){
+//				//xulpart.setSelected(index);
+//				EditPart e = (EditPart) xulpart.getChildren().get(index);
+//				if(getSelected() == SELECTED_NONE){
+//					e.setSelected(SELECTED_NONE);
+//				}else{
+//					e.setSelected(SELECTED_PRIMARY);
+//				}
+//				//int sel = isS)?SELECTED_NONE:SELECTED_PRIMARY;
+//				
+//			}
+//		}
+//	}
 	
 //	@Override
 //	public void propertyChange(PropertyChangeEvent evt) {

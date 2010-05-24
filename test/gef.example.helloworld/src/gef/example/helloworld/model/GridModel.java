@@ -1,18 +1,22 @@
 package gef.example.helloworld.model;
 
-import gef.example.helloworld.viewers.ListProperty;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GridModel extends ContentsModel {
 	
 	public static final String ATTR_COLUMS = "columns";
+	public static final String ATTR_ROWS = "rows";
 	//public static final String COLUMS_FLEX = "columnsflex";
 	//protected String columnsflex="0,0";
 	//private static final int defaultcolumn = 2;
 	private ColumnsModel columns;
 	private RowsModel rows;
 	
+	public RowsModel getRows() {
+		return rows;
+	}
+
 	@Override
 	public String getName() {
 		return "grid";
@@ -26,7 +30,10 @@ public class GridModel extends ContentsModel {
 		//AddListProperty(ATTR_COLUMS, ATTR_COLUMS, ColumnModel.class, getDeafult());
 		columns = new ColumnsModel();
 		columns.setDefault();
-		AddListProperty(ATTR_COLUMS, ATTR_COLUMS, ColumnModel.class, columns.getChildren());
+		AddListProperty(ATTR_COLUMS, ATTR_COLUMS, this, ColumnModel.class, columns);
+		
+		rows = new RowsModel();
+		AddListProperty(ATTR_ROWS, ATTR_ROWS, this, RowModel.class, rows);
 	}
 
 	@Override
@@ -36,7 +43,7 @@ public class GridModel extends ContentsModel {
 		buf.append("<grid>\n");
 		
 		List children = getChildren();
-		List<ColumnModel> list = getColumns();
+		List<ColumnModel> list = getColumns().getChildren();
 		int columns = list.size();
 		//int rows =  children.size()/columns;
 		int rows = children.size()%columns==0?children.size()/columns:children.size()/columns+1;
@@ -48,8 +55,8 @@ public class GridModel extends ContentsModel {
 //		}
 //		buf.append("</columns>\n");
 		
-		buf.append(((ColumnsModel)getPropertyValue(ATTR_COLUMS)).toXML());
-		buf.append("\n");
+		//buf.append(((ColumnsModel)getPropertyValue(ATTR_COLUMS)).toXML());
+		buf.append(getColumns().toXML());
 		
 		buf.append("<rows>\n");
 		for (int j = 0; j < rows; j++) {
@@ -64,7 +71,8 @@ public class GridModel extends ContentsModel {
 			buf.append("</row>\n");
 		}
 		buf.append("</rows>\n");
-	
+		//buf.append(getRows().toXML());
+		
 		buf.append("</grid>\n");
 		return buf.toString();
 		
@@ -77,16 +85,18 @@ public class GridModel extends ContentsModel {
 //		return list;
 //	}
 	
-	public List getColumns(){
+	public AbstractElementModel getColumns(){
 		//Object obj = getPropertyValue(ATTR_COLUMS);
 		//List list = ((ColumnsModel)getPropertyValue(ATTR_COLUMS)).getChildren();
-		List list = columns.getChildren();
-		return list;
+//		List list = columns.getChildren();
+//		return list;
+		
+		return columns;
 	}
 	
 	public List<Integer> getColumnFlex(){
 		List<Integer> flexlist = new ArrayList<Integer>();
-		List<ColumnModel> list = getColumns();
+		List<ColumnModel> list = getColumns().getChildren();
 		for (ColumnModel column : list) {
 			//ColumnModel column = (ColumnModel)obj;
 			//int flex = Integer.parseInt(map.get("flex"));

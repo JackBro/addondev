@@ -32,7 +32,7 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(OverlayModel.class, OverlayEditPart.class);
 		editpartMap.put(StatusbarModel.class, StatusbarEditPart.class);
 		editpartMap.put(MenuPopupModel.class, MenuPopupEditPart.class);
-		//editpartMap.put(MenuPopupBoxModel.class, MenuPopupEditPart.class);
+		editpartMap.put(MenuItemModel.class, MenuItemEditPart.class);
 	}
 	/* (非 Javadoc)
 	 * @see org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart, java.lang.Object)
@@ -86,8 +86,9 @@ public class MyEditPartFactory implements EditPartFactory {
 //			part = new XULPartEditPart();
 //		else if(model instanceof XULRootModel)
 //			part = new XULRootEditPart();
-		
+		if(part != null){
 		part.setModel(model); // モデルをEditPartに設定する
+		}
 		return part;
 	}
 

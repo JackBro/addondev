@@ -22,6 +22,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 public abstract class AbstractContentsEditPart extends AbstractEditPartWithListener {
 
 	protected void createEditPolicies() {
+		super.createEditPolicies();
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
 	}
 
