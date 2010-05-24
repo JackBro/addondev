@@ -60,13 +60,9 @@ public class ListCellEditor extends DialogCellEditor {
 		// TODO Auto-generated method stub
         ListDialog dialog = new ListDialog(cellEditorWindow.getShell());
         Object value = getValue();
-        if(value != null){
-        	List orgChildren;
-        	if(value instanceof AbstractElementModel){
-        		orgChildren = ((AbstractElementModel)value).getChildren();
-        	}else{
-        		orgChildren = (List)value;
-        	}
+        if(value != null && value instanceof AbstractElementModel){
+        	List orgChildren = ((AbstractElementModel)value).getChildren();
+
         	List newChildren = new ArrayList();
         	
         	//AbstractElementModel elem = (AbstractElementModel)value;
@@ -100,11 +96,15 @@ public class ListCellEditor extends DialogCellEditor {
 //        	if(elem.getParent() != null){
 //        		elem.getParent().firePropertyChange(elem.getName(), null, list);
 //        	}
+        	if(flistenermodel != null){
+        		flistenermodel.firePropertyChange(id, null, list);
+        		//((AbstractElementModel)value).setChildren(list);
+        	}else{
+        		((AbstractElementModel)value).setChildren(list);
+        	}
         	
-        	flistenermodel.firePropertyChange(id, null, list);
-        	
-        	return list;
-        	//return null;
+        	//return list;
+        	return value;
         }
         else{
         	return null;

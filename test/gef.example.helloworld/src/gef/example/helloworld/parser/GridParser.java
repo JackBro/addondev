@@ -56,7 +56,7 @@ public class GridParser extends AbstractXULParser {
 //						}else{
 //							list.add(map);
 //						}
-						list.add(new ColumnsModel());
+						list.add(new ColumnModel());
 					}
 				}
 				//ColumnsModel colums = new ColumnsModel();

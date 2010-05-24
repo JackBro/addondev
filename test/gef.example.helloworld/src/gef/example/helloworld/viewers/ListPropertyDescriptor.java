@@ -16,11 +16,11 @@ public class ListPropertyDescriptor extends PropertyDescriptor {
 		// TODO Auto-generated constructor stub
 	}
 
-//	public ListPropertyDescriptor(Object id, String displayName, Class _class) {
-//		super(id, displayName);
-//		// TODO Auto-generated constructor stub
-//		fClass = _class;
-//	}
+	public ListPropertyDescriptor(Object id, String displayName, Class _class) {
+		super(id, displayName);
+		// TODO Auto-generated constructor stub
+		fClass = _class;
+	}
 	
 	public ListPropertyDescriptor(Object id, String displayName, AbstractElementModel listenermodel, Class _class){
 		super(id, displayName);

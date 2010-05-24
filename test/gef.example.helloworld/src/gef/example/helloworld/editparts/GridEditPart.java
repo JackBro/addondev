@@ -4,6 +4,7 @@ import gef.example.helloworld.editpolicies.MyXYLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.figure.BoxFigure;
 import gef.example.helloworld.figure.AbstractElementFigure;
+import gef.example.helloworld.model.ColumnsModel;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.GridModel;
@@ -81,12 +82,17 @@ public class GridEditPart extends AbstractEditPartWithListener {
 //			}
 			
 			GridModel grid = (GridModel)getModel();
-			int rows = children.size()/grid.getColumns().getChildren().size();
+			
+			//int rows = children.size()/grid.getColumns().getChildren().size();
+			int rows = getRowsCount(grid.getChildren());
 			//if(grid.getRows().getChildren().size() < rows){
 			int ss = ((RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS)).getChildren().size();
-			if(((RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS)).getChildren().size()< rows){
+			RowsModel rowsmodel = getRowsModel();
+			//if(((RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS)).getChildren().size()< rows){
+			if(rowsmodel.getChildren().size()< rows){
 				//grid.getRows().getChildren().add(new RowModel());
-				((RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS)).getChildren().add(new RowModel());
+				//((RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS)).getChildren().add(new RowModel());
+				rowsmodel.addChild(new RowModel());
 			}
 			refreshChildren();
 			
@@ -99,28 +105,81 @@ public class GridEditPart extends AbstractEditPartWithListener {
 //			}
 			refreshChildren();
 		} else if (evt.getPropertyName().equals(GridModel.ATTR_COLUMS)) {
-			GridModel elem = (GridModel)getModel();
-			int columns = elem.getColumns().getChildren().size();
-			List<Integer> columlist = elem.getColumnFlex();
 			
-			List cheldern = getChildren();			
-			if(cheldern.size() == 0) return;
+			if(!(evt.getNewValue() instanceof List)) 
+				return;
 			
-			List<Integer> cwidths =  getResizedWidth(cheldern, columns, columlist);	
+			GridModel grid = (GridModel)getModel();
+			//int columns = elem.getColumns().getChildren().size();
+			getColumnsModel().setChildren((List)evt.getNewValue());
+			int columns = getColumnsModel().getChildren().size();
 			
-			int rows = cheldern.size()/columns;
+			GridLayout gl = (GridLayout)getFigure().getLayoutManager();
+			gl.numColumns = columns;			
+			
+			
+			List<Integer> columlist = grid.getColumnFlex();
+			
+			//List cheldern = grid.getChildren();			
+			if(grid.getChildren().size() == 0) return;
+			
+			List<Integer> cwidths =  getResizedWidth(columns, columlist);	
+			
+			//int rows = cheldern.size()/columns;
+			int rows = getRowsCount(grid.getChildren());
 			
 			for (int j = 0; j < rows; j++) {
 				for (int i = 0; i < columns; i++) {
 					int index = j*rows+i;
+					
 					//ElementModel elm = (ElementModel)((EditPartWithListener)cheldern.get(index)).getModel();
 					//ElementModel elm = (ElementModel)cheldern.get(index);
 					//elm.setPreSize(cwidths.get(i), ph);
-					AbstractElementFigure figuer = (AbstractElementFigure) ((AbstractEditPartWithListener)cheldern.get(index)).getFigure();
-					figuer.setPreferredSize(new Dimension(cwidths.get(i), figuer.getDefaultHeight()));
+					if(index < children.size()){
+						AbstractElementFigure figuer = (AbstractElementFigure) ((AbstractEditPartWithListener)children.get(index)).getFigure();
+						figuer.setPreferredSize(new Dimension(cwidths.get(i), figuer.getDefaultHeight()));
+					}
 				}
 			}
+			changeRows(rows);
+			//refreshChildren();
 	    }
+	}
+	
+	private void changeRows(int rows){
+		int old = getRowsModel().getChildren().size();
+		int diff = old - rows;
+		List list = getRowsModel().getChildren();
+		if(diff > 0){
+			while(diff>0){
+				list.remove(list.size()-1);
+				diff--;
+			}
+		}else if(diff < 0){
+			diff = Math.abs(diff);
+			while(diff>0){
+				list.add(new RowModel());
+				diff--;
+			}			
+		}
+		
+	}
+	
+	private RowsModel getRowsModel(){
+		GridModel grid = (GridModel)getModel();
+		return (RowsModel)grid.getPropertyValue(GridModel.ATTR_ROWS);
+	}
+	
+	private ColumnsModel getColumnsModel(){
+		GridModel grid = (GridModel)getModel();
+		Object oo = grid.getPropertyValue(GridModel.ATTR_COLUMS);
+		return (ColumnsModel)grid.getPropertyValue(GridModel.ATTR_COLUMS);
+	}
+	
+	private int getRowsCount(List children){
+		int columns = getColumnsModel().getChildren().size();
+		int rows = children.size()%columns==0?children.size()/columns:children.size()/columns+1;
+		return rows;
 	}
 	
 //	public void resizeColumns(){
@@ -155,7 +214,7 @@ public class GridEditPart extends AbstractEditPartWithListener {
 //		}		
 //	}
 	
-	public List<Integer> getResizedWidth(List children, int columnsize, List<Integer> flexs){
+	public List<Integer> getResizedWidth(int columnsize, List<Integer> flexs){
 		
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		
@@ -167,6 +226,7 @@ public class GridEditPart extends AbstractEditPartWithListener {
 		for (int i = 0; i < columnsize; i++) {
 			Object object = children.get(i);
 			AbstractElementModel elem = (AbstractElementModel)((AbstractEditPartWithListener)object).getModel();
+			//AbstractElementModel elem = (AbstractElementModel)object;
 			//int flex = Integer.parseInt(elem.getPropertyValue(ElementModel.ATTR_FLEX).toString());
 			int flex = flexs.get(i);
 			sumflex += flex;
