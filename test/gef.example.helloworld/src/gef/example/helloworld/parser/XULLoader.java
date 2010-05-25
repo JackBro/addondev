@@ -34,6 +34,9 @@ public class XULLoader {
 	public static AbstractElementModel parseElement(AbstractElementModel root, Element e) {
 		String elementName = e.getTagName();
 		AbstractXULParser parser = parsers.get(elementName);
+		if(parser == null){
+			parser = new AnonymousParser(elementName);
+		}
 		if(parser !=null){
 			AbstractElementModel model = null;
 			if(root instanceof ContentsModel){

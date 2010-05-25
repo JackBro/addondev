@@ -17,6 +17,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 
 public class PrefwindowEditPart extends AbstractTabEditPart {
@@ -61,7 +62,20 @@ public class PrefwindowEditPart extends AbstractTabEditPart {
 				model.addChild((AbstractElementModel) object);
 			}
 			//refreshTabs();
-		}		
+		}else if(evt.getPropertyName().equals("resize")){
+			Rectangle rect = (Rectangle)evt.getNewValue();
+			IFigure figure = getFigure();
+			//Rectangle rewrect = figure.getBounds()
+			//figure.setBounds(rect);
+			//figure.setSize(figure.getBounds().width+rect.width, figure.getBounds().height+rect.height);
+
+			//figure.setPreferredSize(new Dimension(figure.getBounds().width, figure.getBounds().height));
+			int w = figure.getPreferredSize().width +rect.width;
+			int h = figure.getPreferredSize().height+rect.height;
+			figure.setPreferredSize(new Dimension(w, h));
+			refreshVisuals(); 
+			//refreshChildren();
+		}
 	}
 
 	@Override

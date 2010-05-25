@@ -6,6 +6,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.SimpleRaisedBorder;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.ToolbarLayout;
 
@@ -32,6 +33,8 @@ public class TabBoxFigure extends Figure {
 	     layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
 	     layout.setVertical(false);
 	     //layout.setStretchMinorAxis(false);
+	     
+	     setBorder(new SimpleRaisedBorder());
 	     
 	     this.tabs.setLayoutManager(layout);
 	     add(this.canvas,BorderLayout.CENTER);

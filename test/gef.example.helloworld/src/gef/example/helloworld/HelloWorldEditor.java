@@ -185,64 +185,27 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		ImageDescriptor descriptor = ImageDescriptor.createFromFile(
 				HelloWorldEditor.class, "newModel.gif");
 
-		// 'モデルの作成'ツールの作成と追加
-		CreationToolEntry creationEntry = new CreationToolEntry(
-				"HelloModelの作成", // パレットに表示される文字列
-				"モデル作成", // ツールチップ
-				new SimpleFactory(LabelModel.class), // モデルを作成するファクトリ
-				descriptor, // パレットに表示する16X16のイメージ
-				descriptor);// パレットに表示する24X24のイメージ
-		drawer.add(creationEntry);
+		addCreationToolEntry(drawer, ButtonModel.class, "Buttonの作成", "モデル作成", descriptor);	
+		addCreationToolEntry(drawer, LabelModel.class, "HelloModelの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, VBoxModel.class, "VBoxの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, HBoxModel.class, "HBoxの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, GridModel.class, "Gridの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, GroupBoxModel.class, "GroupBoxの作成", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, RadioModel.class, "Radioの作成", "モデル作成",descriptor);
+		addCreationToolEntry(drawer, RadioGroupModel.class, "RadioGroupの作成","モデル作成", descriptor);
+		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成",descriptor);
+		addCreationToolEntry(drawer, MenuListModel.class, "MenuListの作成","モデル作成", descriptor);
+		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成",descriptor);
+		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成","モデル作成", descriptor);
+		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbarの作成","モデル作成", descriptor);
 
-		// 'モデルの作成'ツールの作成と追加
-		CreationToolEntry creationVBoxEntry = new CreationToolEntry("VBoxの作成", // パレットに表示される文字列
-				"モデル作成", // ツールチップ
-				new SimpleFactory(VBoxModel.class), // モデルを作成するファクトリ
-				descriptor, // パレットに表示する16X16のイメージ
-				descriptor);// パレットに表示する24X24のイメージ
-		drawer.add(creationVBoxEntry);
-
-		// 'モデルの作成'ツールの作成と追加
-		CreationToolEntry creationHBoxEntry = new CreationToolEntry("HBoxの作成", // パレットに表示される文字列
-				"モデル作成", // ツールチップ
-				new SimpleFactory(HBoxModel.class), // モデルを作成するファクトリ
-				descriptor, // パレットに表示する16X16のイメージ
-				descriptor);// パレットに表示する24X24のイメージ
-		drawer.add(creationHBoxEntry);
-
-		CreationToolEntry creationGridEntry = new CreationToolEntry("Gridの作成", // パレットに表示される文字列
-				"モデル作成", // ツールチップ
-				new SimpleFactory(GridModel.class), // モデルを作成するファクトリ
-				descriptor, // パレットに表示する16X16のイメージ
-				descriptor);// パレットに表示する24X24のイメージ
-		drawer.add(creationGridEntry);
-
-		CreationToolEntry creationGroupBoxEntry = new CreationToolEntry(
-				"GroupBoxの作成", // パレットに表示される文字列
-				"モデル作成", // ツールチップ
-				new SimpleFactory(GroupBoxModel.class), // モデルを作成するファクトリ
-				descriptor, // パレットに表示する16X16のイメージ
-				descriptor);// パレットに表示する24X24のイメージ
-		drawer.add(creationGroupBoxEntry);
-
-		addCreationToolEntry(drawer, RadioModel.class, "Radioの作成", "モデル作成",
-				descriptor);
-		addCreationToolEntry(drawer, RadioGroupModel.class, "RadioGroupの作成",
-				"モデル作成", descriptor);
-		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成",
-				descriptor);
-		addCreationToolEntry(drawer, MenuListModel.class, "MenuListの作成",
-				"モデル作成", descriptor);
-		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成",
-				descriptor);
-		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成",
-				"モデル作成", descriptor);
-		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbarの作成",
-				"モデル作成", descriptor);
-
+		PaletteDrawer datadrawer = new PaletteDrawer("data");
+		addCreationToolEntry(datadrawer, PreferencesModel.class, "Preferencesの作成","モデル作成", descriptor);
+		
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);
 		root.add(drawer);
+		root.add(datadrawer);
 
 		return root;
 	}

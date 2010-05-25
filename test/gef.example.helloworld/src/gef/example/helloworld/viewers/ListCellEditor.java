@@ -60,9 +60,13 @@ public class ListCellEditor extends DialogCellEditor {
 		// TODO Auto-generated method stub
         ListDialog dialog = new ListDialog(cellEditorWindow.getShell());
         Object value = getValue();
-        if(value != null && value instanceof AbstractElementModel){
-        	List orgChildren = ((AbstractElementModel)value).getChildren();
-
+        if(value != null ){
+        	List orgChildren = null;
+        	if(value instanceof AbstractElementModel)
+        		orgChildren = ((AbstractElementModel)value).getChildren();
+        	else if(value instanceof List)
+        		orgChildren = (List)value;
+        	
         	List newChildren = new ArrayList();
         	
         	//AbstractElementModel elem = (AbstractElementModel)value;

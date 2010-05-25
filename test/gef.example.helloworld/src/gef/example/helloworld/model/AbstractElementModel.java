@@ -51,10 +51,10 @@ public abstract class AbstractElementModel extends AbstractModel {
 		AddProperty(id, new ListPropertyDescriptor(id, displayname, listenermodel, _class), obj);	
 	}	
 	
-//	public void AddListProperty(String id, String displayname, Class _class, List obj){
-//		
-//		AddProperty(id, new ListPropertyDescriptor(id, displayname, _class), obj);	
-//	}	
+	public void AddListProperty(String id, String displayname, Class _class, List obj){
+		
+		AddProperty(id, new ListPropertyDescriptor(id, displayname, _class), obj);	
+	}	
 	
 	public void AddMenuProperty(String id, String displayname, List obj){
 		

@@ -12,9 +12,11 @@ public class MyEditPartFactory implements EditPartFactory {
 	
 	private static Map<Class, Class> editpartMap = new HashMap<Class, Class>();
 	static{
+		editpartMap.put(ButtonModel.class, ButtonEditPart.class);
 		editpartMap.put(TextBoxModel.class, TextBoxEditPart.class);
 		editpartMap.put(VBoxModel.class, BoxEditPart.class);
 		editpartMap.put(HBoxModel.class, BoxEditPart.class);
+		editpartMap.put(AnonymousModel.class, BoxEditPart.class);
 		editpartMap.put(GroupBoxModel.class, GroupBoxEditPart.class);
 		editpartMap.put(LabelModel.class, LabelEditPart.class);
 		editpartMap.put(GridModel.class, GridEditPart.class);
@@ -33,10 +35,9 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(StatusbarModel.class, StatusbarEditPart.class);
 		editpartMap.put(MenuPopupModel.class, MenuPopupEditPart.class);
 		editpartMap.put(MenuItemModel.class, MenuItemEditPart.class);
+		editpartMap.put(PreferencesModel.class, PreferencesEditPart.class);
 	}
-	/* (非 Javadoc)
-	 * @see org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart, java.lang.Object)
-	 */
+
 	public EditPart createEditPart(EditPart context, Object model) {
 		EditPart part = null;
 		
@@ -52,42 +53,8 @@ public class MyEditPartFactory implements EditPartFactory {
 			}
 		}
 		
-//		if(model instanceof TextBoxModel)
-//			part = new TextBoxEditPart();	
-//		if(model instanceof VBoxModel)
-//			part = new BoxEditPart();
-//		else if(model instanceof HBoxModel)
-//			part = new BoxEditPart();
-//		if(model instanceof GroupBoxModel)
-//			part = new GroupBoxEditPart();
-//		else if(model instanceof LabelModel)
-//			part = new LabelEditPart();
-//		else if(model instanceof GridModel)
-//			part = new GridEditPart();		
-//		else if(model instanceof WindowModel)
-//			part = new WindowEditPart();		
-//		else if(model instanceof RootModel)
-//			part = new RootEditPart();
-//		else if(model instanceof RadioModel)
-//			part = new RadioEditPart();
-//		else if(model instanceof RadioGroupModel)
-//			part = new RadioGroupEditPart();
-//		else if(model instanceof TabBoxModel)
-//			part = new TabBoxEditPart();
-//		else if(model instanceof TabPanelModel)
-//			part = new TabPanelEditPart();
-//		else if(model instanceof MenuListModel)
-//			part = new MenuListEditPart();
-//		else if(model instanceof PrefwindowModel)
-//			part = new PrefwindowEditPart();
-//		else if(model instanceof PrefpaneModel)
-//			part = new TabPanelEditPart();
-//		else if(model instanceof XULPartModel)
-//			part = new XULPartEditPart();
-//		else if(model instanceof XULRootModel)
-//			part = new XULRootEditPart();
 		if(part != null){
-		part.setModel(model); // モデルをEditPartに設定する
+			part.setModel(model); // モデルをEditPartに設定する
 		}
 		return part;
 	}
