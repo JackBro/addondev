@@ -58,14 +58,14 @@ public class MenuPopupEditPart extends DataElementEditPart {
 //			MenuPopupModel popup = (MenuPopupModel)model.getPropertyValue(StatusbarModel.ATTR_MENUPOPUP);
 //			popup.setChildren((List)evt.getNewValue());
 //		}
-		if(evt.getPropertyName().equals(MenuBaseModel.CHANGE_MENU)){
-			AbstractElementModel model = (AbstractElementModel)getModel();
-			model.removeAllChild();
-			List newlist = (List)evt.getNewValue();
-			for (Object object : newlist) {
-				model.addChild((AbstractElementModel) object);
-			}
-			//refreshChildren();
-		}
+//		if(evt.getPropertyName().equals(MenuBaseModel.CHANGE_MENU)){
+////			AbstractElementModel model = (AbstractElementModel)getModel();
+////			model.removeAllChild();
+////			List newlist = (List)evt.getNewValue();
+////			for (Object object : newlist) {
+////				model.addChild((AbstractElementModel) object);
+////			}
+//			refreshChildren();
+//		}
 	}
 }

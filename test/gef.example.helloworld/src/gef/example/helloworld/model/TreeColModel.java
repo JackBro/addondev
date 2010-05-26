@@ -1,8 +1,8 @@
 package gef.example.helloworld.model;
 
-public class TreeCol extends AbstractElementModel {
+public class TreeColModel extends AbstractElementModel {
 
-	
+	public static final String ATTR_LABEL = "label";
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
@@ -13,6 +13,6 @@ public class TreeCol extends AbstractElementModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		//AddProperty(id, propertyDescriptor, obj)
+		AddAttrProperty(ATTR_LABEL, ATTR_LABEL, "col");
 	}
 }

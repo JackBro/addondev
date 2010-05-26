@@ -1,22 +1,25 @@
 package gef.example.helloworld.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TreeModel extends AbstractElementModel {
+public class TreeRowModel extends AbstractElementModel {
 
-	private List treecols;
-	private List treechildren;
+	private List treecells; //treecell
 	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "tree";
+		return "treerow";
 	}
 
 	@Override
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
+		
+		treecells = new ArrayList();
+		
 	}
 
 }

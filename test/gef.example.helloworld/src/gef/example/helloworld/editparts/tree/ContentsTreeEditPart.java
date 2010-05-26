@@ -39,8 +39,8 @@ public class ContentsTreeEditPart extends MyTreeEditPart {
 		      refreshChildren();
 		if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILD))
 		      refreshChildren();
-		if(evt.getPropertyName().equals("change_menu"))
-		      refreshChildren();
+		//if(evt.getPropertyName().equals("change_menu"))
+		//      refreshChildren();
 	}
 
 	@Override
