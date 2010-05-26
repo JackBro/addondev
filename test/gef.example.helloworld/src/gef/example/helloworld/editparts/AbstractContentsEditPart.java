@@ -7,6 +7,7 @@ import gef.example.helloworld.model.AbstractDataModel;
 import gef.example.helloworld.model.BoxModel;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.AbstractElementModel;
+import gef.example.helloworld.model.MenuPopupModel;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -93,6 +94,9 @@ public abstract class AbstractContentsEditPart extends AbstractEditPartWithListe
 	
 	protected boolean isPartChild(EditPart childEditPart){
 		if(childEditPart.getModel() instanceof AbstractDataModel){
+			return true;
+		}
+		if(childEditPart.getModel() instanceof MenuPopupModel){
 			return true;
 		}
 		return false;

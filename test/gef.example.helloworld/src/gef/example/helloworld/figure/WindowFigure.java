@@ -39,8 +39,8 @@ public class WindowFigure extends AbstractElementFigure {
 		top.setBackgroundColor(ColorConstants.gray);
 		top.setOpaque(true);
 		ToolbarLayout ttl = new ToolbarLayout();
-		ttl.setStretchMinorAxis(false);
-		ttl.setVertical(false);
+		ttl.setStretchMinorAxis(true);
+		ttl.setVertical(true);
 		ttl.setSpacing(5);
 		top.setLayoutManager(ttl);	
 		

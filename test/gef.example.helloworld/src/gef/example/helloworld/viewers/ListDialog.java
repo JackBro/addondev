@@ -1,7 +1,6 @@
 package gef.example.helloworld.viewers;
 
 import gef.example.helloworld.model.AbstractElementModel;
-import gef.example.helloworld.viewers.MenuDialog.ViewLableProvider;
 
 import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
@@ -34,17 +33,20 @@ public class ListDialog extends Dialog {
 
 	protected TableViewer viewer;
 	private PropertySheetPage fPropertySheetPage;
-	private Class fClass;
-	private List fValues;
-	private boolean isConst;
+	protected Class fClass;
+	protected List fValues;
+	protected boolean isConst;
 
-	public void setValue(Class _class, List values) {
-		fClass = _class;
+	public void setValue(List values) {
 		fValues = values;
 	}
 
 	public List getValue() {
 		return fValues;
+	}
+	
+	public void setClass(Class _class){
+		fClass = _class;
 	}
 	
 	public boolean isConst() {
@@ -80,65 +82,7 @@ public class ListDialog extends Dialog {
 	}
 
 	@Override
-	protected Control createDialogArea(Composite parent) {
-//		// TODO Auto-generated method stub		
-//		Composite composite = (Composite)super.createDialogArea(parent);
-//		
-//		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		composite.setLayout(new GridLayout(3, false));
-//		
-//		viewer = new TableViewer(composite, SWT.FULL_SELECTION);
-//		Table table = viewer.getTable();
-//		table.setHeaderVisible(true);
-//		table.setLinesVisible(true);
-//		
-//		TableColumn column = new TableColumn(table, SWT.NULL);
-//		column.setText("");
-//		column.setWidth(100);
-//		
-//		viewer.setContentProvider(new ArrayContentProvider());
-//		viewer.setLabelProvider(new ViewLableProvider());
-//		viewer.setInput(fValues);
-//		
-//		fPropertySheetPage = new PropertySheetPage();
-//		fPropertySheetPage.createControl(composite);
-//		
-//		final PropertySheetEntry en = new PropertySheetEntry();
-//		en.setPropertySourceProvider(new IPropertySourceProvider() {
-//			
-//			@Override
-//			public IPropertySource getPropertySource(Object object) {
-//				// TODO Auto-generated method stub
-//				if(object instanceof IPropertySource){
-//					IPropertySource src = (IPropertySource) object;
-//					return src;
-//				}
-//				return null;
-//			}
-//		});
-//		fPropertySheetPage.setRootEntry(en);
-//
-//		viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
-//			
-//			@Override
-//			public void selectionChanged(SelectionChangedEvent event) {
-//				// TODO Auto-generated method stub
-//				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-//				Object element = sel.getFirstElement();
-//				if(element instanceof AbstractElementModel){
-//					en.setValues(new Object[]{element});
-//				}
-//				
-//			}
-//		});
-//		
-//		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		fPropertySheetPage.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		
-//		
-//		Composite buttonComposite = new Composite(composite, SWT.None);
-//		buttonComposite.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false));
-//		buttonComposite.setLayout(new GridLayout(1, false));	
+	protected Control createDialogArea(Composite parent) {	
 		Composite composite = (Composite)super.createDialogArea(parent);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(2, false));
@@ -156,7 +100,7 @@ public class ListDialog extends Dialog {
 		
 
 		viewer.setContentProvider(new ArrayContentProvider());
-		viewer.setLabelProvider(new ViewLableProvider());
+		viewer.setLabelProvider(getLableProvider());
 		viewer.setInput(getValue());
 		
 		fPropertySheetPage = new PropertySheetPage();
@@ -209,6 +153,7 @@ public class ListDialog extends Dialog {
 	protected void createButtionArea(Composite parent){
 		Button fAddButton = new Button(parent, SWT.NONE);
 		fAddButton.setText("Add");
+		fAddButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
 		fAddButton.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -227,6 +172,7 @@ public class ListDialog extends Dialog {
 		
 		Button fDeleteButton = new Button(parent, SWT.NONE);
 		fDeleteButton.setText("Delete");
+		fDeleteButton.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
 		fDeleteButton.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -244,6 +190,10 @@ public class ListDialog extends Dialog {
 				
 			}
 		});		
+	}
+	
+	protected ViewLableProvider getLableProvider(){
+		return new ViewLableProvider();
 	}
 	
 	class ViewLableProvider extends LabelProvider implements ITableLabelProvider {

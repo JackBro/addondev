@@ -30,18 +30,18 @@ public class CreateCommand extends Command {
 		//contentsModel.addChild(childModel);
 	}
 
-//	public void setContentsModel(Object model) {
-////		if(model instanceof VBoxModel)
-////			vboxModel = (VBoxModel) model;
-////		else
-////			contentsModel = (ContentsModel) model;
-//		
-//		contentsModel = (ContentsModel) model;
-//	}
-//
-//	public void setHelloModel(Object model) {
-//		helloModel = (AbstractModel) model;
-//	}
+	public void setContentsModel(Object model) {
+//		if(model instanceof VBoxModel)
+//			vboxModel = (VBoxModel) model;
+//		else
+//			contentsModel = (ContentsModel) model;
+		
+		contentsModel = (ContentsModel) model;
+	}
+
+	public void setHelloModel(Object model) {
+		childModel = (AbstractElementModel) model;
+	}
 
 
 	public void undo() {

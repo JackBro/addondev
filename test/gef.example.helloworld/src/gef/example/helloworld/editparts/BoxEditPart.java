@@ -46,6 +46,8 @@ public class BoxEditPart extends AbstractContentsEditPart {
 			figure.add(dummy);
 		}
 		
+		model.setStyle(figure);
+		
 		return figure;
 	}
 
@@ -60,13 +62,14 @@ public class BoxEditPart extends AbstractContentsEditPart {
 				getFigure().getChildren().remove(dummy);
 			}
 			refreshChildren();
-		}else if(evt.getPropertyName().equals(BoxModel.P_REMOVE_CHILD)){
+		}else if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILD)){
 			ContentsModel elm = (ContentsModel)getModel();
 			if(elm.getChildren().size() == 0 && dummy != null){
 				getFigure().add(dummy);	
 			}			
 			refreshChildren();
-		}else if(evt.getPropertyName().equals(BoxModel.ATTR_ORIENT)){
+		}else 
+		if(evt.getPropertyName().equals(BoxModel.ATTR_ORIENT)){
 			ToolbarLayout tl = (ToolbarLayout) getFigure().getLayoutManager();
 			tl.setVertical(isVertical());
 			getFigure().validate();

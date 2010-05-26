@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class MenuBaseModel extends AbstractDataModel {
+public class MenuBaseModel extends AbstractElementModel {
 
 	public static final String CHANGE_MENU = "change_menu";
 	
@@ -14,7 +14,8 @@ public class MenuBaseModel extends AbstractDataModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddMenuProperty(CHANGE_MENU, "menus", children);
+		//AddMenuProperty(CHANGE_MENU, "menus", children);
+		AddMenuProperty(CHANGE_MENU, "menus", this, children);
 	}
 
 }

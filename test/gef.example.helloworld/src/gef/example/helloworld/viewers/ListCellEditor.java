@@ -80,7 +80,8 @@ public class ListCellEditor extends DialogCellEditor {
 //        			((ContentsModel)newchile).setChildren(content.getChildren());
 //        		}
 			}
-        	dialog.setValue(fClass, newChildren);
+        	dialog.setValue(newChildren);
+        	dialog.setClass(fClass);
         }
 //        if (value != null && (value instanceof ListProperty)) {
 //        	ListProperty property = ((ListProperty)value).cp();

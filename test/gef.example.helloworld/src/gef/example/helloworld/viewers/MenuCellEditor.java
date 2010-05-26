@@ -1,6 +1,7 @@
 package gef.example.helloworld.viewers;
 
 import gef.example.helloworld.model.AbstractElementModel;
+import gef.example.helloworld.model.MenuBaseModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,12 @@ import org.eclipse.swt.widgets.Control;
 
 public class MenuCellEditor extends DialogCellEditor {
 
+	private AbstractElementModel flistenermodel;
+	
+	public void setListenerModel(AbstractElementModel listenermodel) {
+		this.flistenermodel = listenermodel;
+	}
+	
     public MenuCellEditor(Composite parent) {
         this(parent, SWT.NONE);
     }
@@ -37,8 +44,15 @@ public class MenuCellEditor extends DialogCellEditor {
         if (ret == IDialogConstants.OK_ID) {
         	List org = (List)value;
         	List newlist = dialog.getValue();
-        	org.clear();
-        	org.addAll(newlist);
+
+        	if(flistenermodel != null){
+        		flistenermodel.firePropertyChange(MenuBaseModel.CHANGE_MENU, null, newlist);
+        		//((AbstractElementModel)value).setChildren(list);
+        	}else{
+            	org.clear();
+            	org.addAll(newlist);        		
+        	}
+        	
         	return org;
         }
         return null;

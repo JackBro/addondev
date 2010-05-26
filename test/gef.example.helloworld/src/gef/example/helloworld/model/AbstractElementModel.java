@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
@@ -59,6 +60,11 @@ public abstract class AbstractElementModel extends AbstractModel {
 	public void AddMenuProperty(String id, String displayname, List obj){
 		
 		AddProperty(id, new MenuPropertyDescriptor(id, displayname), obj);	
+	}
+	
+	public void AddMenuProperty(String id, String displayname, AbstractElementModel listenermodel, List obj){
+		
+		AddProperty(id, new MenuPropertyDescriptor(id, displayname, listenermodel), obj);	
 	}
 	
 	public void AddTabListProperty(String id, String displayname, AbstractElementModel listenermodel, Class _class, List obj){
@@ -175,6 +181,10 @@ public abstract class AbstractElementModel extends AbstractModel {
 	public void setConstraint(Rectangle rectangle)
 	{
 		firePropertyChange("resize", null, rectangle);
+	}
+	
+	public void setStyle(IFigure figure){
+		
 	}
 	
 	public List getChildren() {

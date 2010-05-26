@@ -6,6 +6,7 @@ import gef.example.helloworld.figure.WindowFigure;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.MenuBaseModel;
 import gef.example.helloworld.model.StatusbarModel;
+import gef.example.helloworld.model.ToolBoxModel;
 
 import java.beans.PropertyChangeEvent;
 
@@ -138,6 +139,15 @@ public class WindowEditPart extends BoxEditPart {
 		// TODO Auto-generated method stub
 		return window.getTop();
 	}
+
+//	@Override
+//	protected boolean isTopChild(EditPart childEditPart) {
+//		// TODO Auto-generated method stub
+//		if(childEditPart.getModel() instanceof ToolBoxModel){
+//			return true;
+//		}		
+//		return super.isTopChild(childEditPart);
+//	}
 
 	@Override
 	protected boolean isBottomChild(EditPart childEditPart) {

@@ -54,7 +54,8 @@ public class TabListCellEditor extends DialogCellEditor {
 	    		newchile.setChildren(orgchild.getChildren());
 	    		newChildren.add(newchile);
 	    	}
-	    	dialog.setValue(fClass, newChildren);
+	    	dialog.setValue(newChildren);
+	    	dialog.setClass(fClass);
     	}
     	
         int ret = dialog.open();

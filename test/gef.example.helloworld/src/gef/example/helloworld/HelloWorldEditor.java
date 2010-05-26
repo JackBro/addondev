@@ -198,6 +198,10 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成",descriptor);
 		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成","モデル作成", descriptor);
 		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbarの作成","モデル作成", descriptor);
+		addCreationToolEntry(drawer, ToolBoxModel.class, "ToolBoxの作成","モデル作成", descriptor);
+		//addCreationToolEntry(drawer, MenuModel.class, "Menuの作成","モデル作成", descriptor);
+		//addCreationToolEntry(drawer, MenuItemModel.class, "MenuItemの作成","モデル作成", descriptor);
+		addCreationToolEntry(drawer, MenubarModel.class, "MenuBarの作成","モデル作成", descriptor);
 
 		PaletteDrawer datadrawer = new PaletteDrawer("data");
 		addCreationToolEntry(datadrawer, PreferencesModel.class, "Preferencesの作成","モデル作成", descriptor);

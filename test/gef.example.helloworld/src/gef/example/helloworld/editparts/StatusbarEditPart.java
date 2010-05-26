@@ -38,12 +38,12 @@ public class StatusbarEditPart extends AbstractContentsEditPart {
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
-		if(evt.getPropertyName().equals(StatusbarModel.ATTR_MENUPOPUP)){
-			AbstractElementModel model = (AbstractElementModel)getModel();
-			MenuPopupModel popup = (MenuPopupModel)model.getPropertyValue(StatusbarModel.ATTR_MENUPOPUP);
-			popup.setChildren((List)evt.getNewValue());
-			
-		}
+//		if(evt.getPropertyName().equals(StatusbarModel.ATTR_MENUPOPUP)){
+//			AbstractElementModel model = (AbstractElementModel)getModel();
+//			MenuPopupModel popup = (MenuPopupModel)model.getPropertyValue(StatusbarModel.ATTR_MENUPOPUP);
+//			popup.setChildren((List)evt.getNewValue());
+//			
+//		}
 	}
 	@Override
 	public Figure getBottom() {

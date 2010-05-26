@@ -49,14 +49,23 @@ public class MenuPopupEditPart extends DataElementEditPart {
 //		}
 //	}
 	
-//	@Override
-//	public void propertyChange(PropertyChangeEvent evt) {
-//		// TODO Auto-generated method stub
-//		super.propertyChange(evt);
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		super.propertyChange(evt);
 //		if(evt.getPropertyName().equals(MenuBaseModel.CHANGE_MENU)){
 //			ElementModel model = (ElementModel)getModel();
 //			MenuPopupModel popup = (MenuPopupModel)model.getPropertyValue(StatusbarModel.ATTR_MENUPOPUP);
 //			popup.setChildren((List)evt.getNewValue());
 //		}
-//	}
+		if(evt.getPropertyName().equals(MenuBaseModel.CHANGE_MENU)){
+			AbstractElementModel model = (AbstractElementModel)getModel();
+			model.removeAllChild();
+			List newlist = (List)evt.getNewValue();
+			for (Object object : newlist) {
+				model.addChild((AbstractElementModel) object);
+			}
+			//refreshChildren();
+		}
+	}
 }

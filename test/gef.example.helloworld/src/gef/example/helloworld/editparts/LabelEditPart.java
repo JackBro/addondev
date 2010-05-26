@@ -19,10 +19,10 @@ import org.eclipse.gef.EditPolicy;
 public class LabelEditPart extends AbstractElementEditPart {
 
 	protected IFigure createFigure() {
-		LabelModel model = (LabelModel) getModel();
+		AbstractElementModel model = (AbstractElementModel) getModel();
 
 		LabelFigure label = new LabelFigure();
-		label.setText(model.getText());
+		label.setText(model.getName());
 		
 		return label;
 	}
@@ -60,8 +60,8 @@ public class LabelEditPart extends AbstractElementEditPart {
 	protected void refreshVisuals() {
 		// TODO Auto-generated method stub
 		super.refreshVisuals();
-    	LabelFigure label = (LabelFigure) getFigure();
-    	LabelModel model = (LabelModel) getModel();
-    	label.setText(model.getText());
+//    	LabelFigure label = (LabelFigure) getFigure();
+//    	LabelModel model = (LabelModel) getModel();
+//    	label.setText(model.getText());
 	}
 }
