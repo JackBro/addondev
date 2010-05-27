@@ -6,6 +6,8 @@ import gef.example.helloworld.figure.AbstractElementFigure;
 import gef.example.helloworld.model.BoxModel;
 import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.AbstractElementModel;
+import gef.example.helloworld.model.AbstractDataModel;
+
 
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
@@ -40,7 +42,15 @@ public class BoxEditPart extends AbstractContentsEditPart {
 		tl.setStretchMinorAxis(true);
 		figure.setLayoutManager(tl);
 		
-		if(model.getChildren().size() == 0){
+		int datacnt=0;
+		List ch = model.getChildren();
+		for (Object object : ch) {
+			if(object instanceof AbstractDataModel){
+				datacnt++;
+			}
+		}
+		
+		if(model.getChildren().size() == 0 || model.getChildren().size() == datacnt){
 			dummy  = new Figure();
 			dummy.setPreferredSize(10, 20);		
 			figure.add(dummy);
@@ -58,11 +68,15 @@ public class BoxEditPart extends AbstractContentsEditPart {
 		
 		if (evt.getPropertyName().equals(ContentsModel.P_ADD_CHILD))
 		{
+			//if(evt.getNewValue() instanceof AbstractDataModel) return;
+			
 			if(getFigure().getChildren().size() > 0 && dummy != null){
 				getFigure().getChildren().remove(dummy);
 			}
 			refreshChildren();
 		}else if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILD)){
+			//if(evt.getNewValue() instanceof AbstractDataModel) return;
+			
 			ContentsModel elm = (ContentsModel)getModel();
 			if(elm.getChildren().size() == 0 && dummy != null){
 				getFigure().add(dummy);	

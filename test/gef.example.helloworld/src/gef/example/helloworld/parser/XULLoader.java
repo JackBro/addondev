@@ -30,6 +30,7 @@ public class XULLoader {
 		parsers.put("statusbar", new DefaultXULParser(StatusbarModel.class));
 		parsers.put("menupopup", new DefaultXULParser(MenuPopupModel.class));
 		parsers.put("menuitem", new DefaultXULParser(MenuItemModel.class));
+		parsers.put("template", new TemplateParser());
 	}
 	public static AbstractElementModel parseElement(AbstractElementModel root, Element e) {
 		String elementName = e.getTagName();

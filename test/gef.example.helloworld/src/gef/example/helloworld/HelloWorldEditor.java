@@ -186,6 +186,8 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 				HelloWorldEditor.class, "newModel.gif");
 
 		addCreationToolEntry(drawer, ButtonModel.class, "Buttonの作成", "モデル作成", descriptor);	
+		addCreationToolEntry(drawer, CheckBoxModel.class, "CheckBoxの作成", "モデル作成", descriptor);	
+		addCreationToolEntry(drawer, ListBoxModel.class, "ListBoxの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, LabelModel.class, "HelloModelの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, VBoxModel.class, "VBoxの作成", "モデル作成", descriptor);
 		addCreationToolEntry(drawer, HBoxModel.class, "HBoxの作成", "モデル作成", descriptor);

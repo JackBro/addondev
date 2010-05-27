@@ -2,6 +2,7 @@ package gef.example.helloworld.model;
 
 import gef.example.helloworld.viewers.ListPropertyDescriptor;
 import gef.example.helloworld.viewers.MenuPropertyDescriptor;
+import gef.example.helloworld.viewers.MultiTextPropertyDescriptor;
 import gef.example.helloworld.viewers.TabListPropertyDescriptor;
 
 import java.util.ArrayList;
@@ -70,6 +71,11 @@ public abstract class AbstractElementModel extends AbstractModel {
 	public void AddTabListProperty(String id, String displayname, AbstractElementModel listenermodel, Class _class, List obj){
 		
 		AddProperty(id, new TabListPropertyDescriptor(id, displayname, listenermodel, _class), obj);	
+	}
+	
+	public void AddMultiLineTextProperty(String id, String displayname, String text){
+		
+		AddProperty(id, new MultiTextPropertyDescriptor(id, displayname), text);	
 	}
 	
 	public void installModelProperty(){

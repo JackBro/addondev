@@ -25,7 +25,7 @@ public abstract class AbstractXULParser {
 		return model;
 	}
 	
-	private void parseAttribute(AbstractElementModel model, Element e) {
+	protected void parseAttribute(AbstractElementModel model, Element e) {
 		// TODO Auto-generated method stub
 		NamedNodeMap attrs = e.getAttributes();
 		for (int i = 0; i < attrs.getLength(); i++) {

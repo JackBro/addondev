@@ -1,4 +1,9 @@
-﻿http://www.java2s.com/Code/Java/SWT-JFace-Eclipse/SWTTreeWithMulticolumns.htm
+﻿http://d.hatena.ne.jp/yamkazu/?of=30
+http://d.hatena.ne.jp/nobeans/?of=10
+http://d.hatena.ne.jp/kkawa/?of=5
+http://d.hatena.ne.jp/uehaj/?of=7
+
+http://www.java2s.com/Code/Java/SWT-JFace-Eclipse/SWTTreeWithMulticolumns.htm
 http://www.java-forums.org/swt/9905-how-create-swt-tree-multi-columns.html
 http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg43267.html
 http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet170.java?view=co

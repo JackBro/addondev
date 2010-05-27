@@ -3,6 +3,8 @@ package gef.example.helloworld.viewers;
 import gef.example.helloworld.model.AbstractElementModel;
 
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 
