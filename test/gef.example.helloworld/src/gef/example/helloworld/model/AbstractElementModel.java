@@ -1,5 +1,6 @@
 package gef.example.helloworld.model;
 
+import gef.example.helloworld.viewers.ElementComboBoxPropertyDescriptor;
 import gef.example.helloworld.viewers.ListPropertyDescriptor;
 import gef.example.helloworld.viewers.MenuPropertyDescriptor;
 import gef.example.helloworld.viewers.MultiTextPropertyDescriptor;
@@ -13,6 +14,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
@@ -43,6 +45,10 @@ public abstract class AbstractElementModel extends AbstractModel {
 		AddProperty(id, new PropertyDescriptor(id, displayname), obj);	
 	}
 	
+	public void AddBoolProperty(String id, String displayname, Boolean defaultvalue){
+		AddProperty(id, new ElementComboBoxPropertyDescriptor(id, displayname, new String[]{"true", "false"}), String.valueOf(defaultvalue));	
+	}
+	
 	public void AddAttrProperty(String id, String displayname, Object obj){
 		
 		AddProperty(id, new TextPropertyDescriptor(id, displayname), obj);	
@@ -52,6 +58,11 @@ public abstract class AbstractElementModel extends AbstractModel {
 		
 		AddProperty(id, new ListPropertyDescriptor(id, displayname, listenermodel, _class), obj);	
 	}	
+	
+	public void AddListProperty(String id, String displayname, AbstractElementModel listenermodel, Class _class, List obj){
+		
+		AddProperty(id, new ListPropertyDescriptor(id, displayname, listenermodel, _class), obj);	
+	}
 	
 	public void AddListProperty(String id, String displayname, Class _class, List obj){
 		
@@ -164,6 +175,11 @@ public abstract class AbstractElementModel extends AbstractModel {
 	public void setPropertyValue(Object id, Object value) {
 		fAttributeMap.put(id, value);
 		firePropertyChange(id.toString(), null, value);
+	}
+	
+	public void setPropertyValue(Object id, Object value, boolean lisen) {
+		fAttributeMap.put(id, value);
+		//firePropertyChange(id.toString(), null, value);
 	}
 
 	private ContentsModel parent;

@@ -49,7 +49,8 @@ public class LabelFigure extends AbstractElementFigure {
 	@Override
 	public int getDefaultHeight() {
 		// TODO Auto-generated method stub
-		return label.getSize().height+8;
+		//return label.getSize().height+8;
+		return 20;
 	}
 
 	@Override

@@ -31,7 +31,7 @@ abstract public class AbstractEditPartWithListener
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
-		refresh();
+		//refresh();
 	}
 
 	@Override

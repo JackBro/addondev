@@ -105,11 +105,16 @@ public class ListCellEditor extends DialogCellEditor {
         		flistenermodel.firePropertyChange(id, null, list);
         		//((AbstractElementModel)value).setChildren(list);
         	}else{
-        		((AbstractElementModel)value).setChildren(list);
+        		if(value instanceof AbstractElementModel){
+        			((AbstractElementModel)value).setChildren(list);
+        		}else{
+        			List orgChildren = (List)value;
+        			orgChildren = list;
+        		}
         	}
         	
         	//return list;
-        	return value;
+        	return list;
         }
         else{
         	return null;

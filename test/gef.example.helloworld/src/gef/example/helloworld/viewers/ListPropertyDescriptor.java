@@ -2,7 +2,10 @@ package gef.example.helloworld.viewers;
 
 import gef.example.helloworld.model.AbstractElementModel;
 
+
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -22,13 +25,17 @@ public class ListPropertyDescriptor extends PropertyDescriptor {
 		super(id, displayName);
 		// TODO Auto-generated constructor stub
 		fClass = _class;
+		setValidator(new ListValidator());
+		//setLabelProvider(new ListLabelProvider());
 	}
 	
 	public ListPropertyDescriptor(Object id, String displayName, AbstractElementModel listenermodel, Class _class){
 		super(id, displayName);
 		// TODO Auto-generated constructor stub
 		fClass = _class;
-		flistenermodel = listenermodel;		
+		flistenermodel = listenermodel;	
+		setValidator(new ListValidator());
+		//setLabelProvider(new ListLabelProvider());
 	}
 	
 	@Override
@@ -44,5 +51,18 @@ public class ListPropertyDescriptor extends PropertyDescriptor {
 		}		
 		 return editor;
 	}
+	
+	class ListValidator implements ICellEditorValidator{
 
+		@Override
+		public String isValid(Object value) {
+			// TODO Auto-generated method stub
+			//if()
+			return null;
+		}
+	}
+
+	class ListLabelProvider extends LabelProvider{
+		
+	}
 }
