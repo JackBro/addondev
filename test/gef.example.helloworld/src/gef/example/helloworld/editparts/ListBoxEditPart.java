@@ -11,6 +11,7 @@ import gef.example.helloworld.model.ListBoxModel;
 import gef.example.helloworld.model.ListCellModel;
 import gef.example.helloworld.model.ListItemModel;
 
+import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.IFigure;
@@ -18,6 +19,9 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPolicy;
 
 public class ListBoxEditPart extends BoxEditPart {
+	
+	private Figure top;
+	private Figure center;
 	
 	@Override
 	protected IFigure createFigure() {
@@ -32,11 +36,14 @@ public class ListBoxEditPart extends BoxEditPart {
 		gl.horizontalSpacing = 0;
 		gl.makeColumnsEqualWidth = true;
 		gl.numColumns = 1;
-		fig.setLayoutManager(gl);
+		//fig.setLayoutManager(gl);
 		
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setVertical(true);
 		tl.setStretchMinorAxis(true);
+		//fig.setLayoutManager(tl);
+		
+		BorderLayout bl = new BorderLayout();
 		fig.setLayoutManager(tl);
 		
 		fig.setPreferredSize(100, 22);

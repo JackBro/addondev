@@ -7,6 +7,11 @@ public class ListCellModel extends AbstractElementModel {
 	public String getText(){
 		return (String) getPropertyValue(LABEL);
 	}
+
+	public void setText(String value) {
+		// TODO Auto-generated method stub
+		setPropertyValue(LABEL, value);
+	}
 	
 	@Override
 	public String getName() {
@@ -19,6 +24,7 @@ public class ListCellModel extends AbstractElementModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 
-		AddAttrProperty(LABEL, LABEL, "");
+		AddAttrProperty(LABEL, LABEL, "label");
 	}
+
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -57,7 +58,7 @@ public class ListDialog extends Dialog {
 		this.isConst = isConst;
 	}
 
-	private Object getInstance(){
+	protected Object getInstance(){
 		try {
 			Object element = fClass.newInstance();
 			return element;
@@ -99,7 +100,7 @@ public class ListDialog extends Dialog {
 		table.setLinesVisible(true);
 		
 
-		viewer.setContentProvider(new ArrayContentProvider());
+		viewer.setContentProvider(getContentProvider());
 		viewer.setLabelProvider(getLableProvider());
 		viewer.setInput(getValue());
 		
@@ -191,8 +192,12 @@ public class ListDialog extends Dialog {
 			}
 		});		
 	}
+
+	protected IStructuredContentProvider getContentProvider(){
+		return new ArrayContentProvider();
+	}
 	
-	protected ViewLableProvider getLableProvider(){
+	protected ITableLabelProvider getLableProvider(){
 		return new ViewLableProvider();
 	}
 	

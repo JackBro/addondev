@@ -18,6 +18,10 @@ public class ListItemModel extends AbstractElementModel {
 		return (String) getPropertyValue(ATTR_LABEL);
 	}
 	
+	public void setText(String text){
+		setPropertyValue(ATTR_LABEL, text);
+	}
+	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub

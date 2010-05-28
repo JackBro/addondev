@@ -58,7 +58,7 @@ public class ListCellEditor extends DialogCellEditor {
 	@Override
 	protected Object openDialogBox(Control cellEditorWindow) {
 		// TODO Auto-generated method stub
-        ListDialog dialog = new ListDialog(cellEditorWindow.getShell());
+        ListDialog dialog = new ListDialog(cellEditorWindow.getShell());     
         Object value = getValue();
         if(value != null ){
         	List orgChildren = null;

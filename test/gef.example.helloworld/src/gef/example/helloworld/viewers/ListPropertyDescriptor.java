@@ -13,8 +13,8 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 
 public class ListPropertyDescriptor extends PropertyDescriptor {
 
-	private Class fClass;
-	private AbstractElementModel flistenermodel;
+	protected Class fClass;
+	protected AbstractElementModel flistenermodel;
 	
 	private ListPropertyDescriptor(Object id, String displayName) {
 		super(id, displayName);

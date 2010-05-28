@@ -35,7 +35,7 @@ public abstract class AbstractElementModel extends AbstractModel {
 	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
 	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();	
 	
-	protected void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
+	public void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
 		
 		fPropertyMap.put(id, new ModelProperty(id, propertyDescriptor));
 		fAttributeMap.put(id, obj);	

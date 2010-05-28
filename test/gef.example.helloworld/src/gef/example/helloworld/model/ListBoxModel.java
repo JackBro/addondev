@@ -1,5 +1,7 @@
 package gef.example.helloworld.model;
 
+import gef.example.helloworld.viewers.ListBoxItemPropertyDescriptor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +48,9 @@ public class ListBoxModel extends BoxModel {
 		AddListProperty(LISTCOLS, "columes", this, ListColModel.class, listcols);
 		
 		listitems = new ArrayList();
-		AddListProperty(LISTITEMS, "items", this, ListItemModel.class, listitems);
+		//AddListProperty(LISTITEMS, "items", this, ListItemModel.class, listitems);
+		ListBoxItemPropertyDescriptor prop = new ListBoxItemPropertyDescriptor(LISTITEMS, LISTITEMS, this, ListItemModel.class);
+		AddProperty(LISTITEMS, prop, listitems);
 	}
 
 }
