@@ -19,7 +19,7 @@ public class MenubarModel extends BoxModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddAttrProperty(ATTR_ORIENT, ATTR_ORIENT, "horizontal");
+		AddAttrTextProperty(ATTR_ORIENT, ATTR_ORIENT, "horizontal");
 		//menus = new ArrayList();
 		AddMenuProperty(MenuBaseModel.CHANGE_MENU, "menu", this, children);
 	}

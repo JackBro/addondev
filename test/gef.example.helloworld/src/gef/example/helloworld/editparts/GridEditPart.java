@@ -1,6 +1,5 @@
 package gef.example.helloworld.editparts;
 
-import gef.example.helloworld.editpolicies.MyXYLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.figure.BoxFigure;
 import gef.example.helloworld.figure.AbstractElementFigure;
@@ -17,21 +16,14 @@ import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
-import org.eclipse.gef.requests.CreateRequest;
 
 
 public class GridEditPart extends AbstractEditPartWithListener {

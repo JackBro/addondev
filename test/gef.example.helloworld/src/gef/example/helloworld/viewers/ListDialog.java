@@ -75,8 +75,17 @@ public class ListDialog extends Dialog {
 	protected ListDialog(Shell parentShell) {
 		super(parentShell);
 		isConst = false;
+		
 	}
 	
+	@Override
+	protected void initializeBounds() {
+		// TODO Auto-generated method stub
+		super.initializeBounds();
+		this.getShell().setSize(400, 400);
+
+	}
+
 	@Override
 	protected int getShellStyle() {
 		return super.getShellStyle()|SWT.RESIZE|SWT.MAX;
@@ -85,6 +94,7 @@ public class ListDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {	
 		Composite composite = (Composite)super.createDialogArea(parent);
+		//composite.setSize(400, 400)
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(2, false));
 		
@@ -93,11 +103,8 @@ public class ListDialog extends Dialog {
 		
 		viewer = new TableViewer(baseSash, SWT.BORDER|SWT.FULL_SELECTION);
 		Table table = viewer.getTable();
-		table = viewer.getTable();
-		TableColumn column = new TableColumn(table, SWT.NULL);
-		column.setWidth(100);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
+		//table = viewer.getTable();
+		createTableColumns(table);
 		
 
 		viewer.setContentProvider(getContentProvider());
@@ -129,7 +136,8 @@ public class ListDialog extends Dialog {
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 				Object element = sel.getFirstElement();
 				if(element instanceof AbstractElementModel){
-					en.setValues(new Object[]{element});
+					//en.setValues(new Object[]{element});
+					en.setValues(getTableViewerSelectionElements((AbstractElementModel)element));
 				}
 				
 			}
@@ -139,7 +147,6 @@ public class ListDialog extends Dialog {
 		buttonComposite.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false));
 		buttonComposite.setLayout(new GridLayout(1, false));
 		createButtionArea(buttonComposite);
-
 		
 //	    // 各カラムの幅を計算する
 //	    TableColumn[] columns = table.getColumns();
@@ -149,6 +156,17 @@ public class ListDialog extends Dialog {
 
 		
 		return composite;
+	}
+	
+	protected Object[] getTableViewerSelectionElements(AbstractElementModel element){
+		return new Object[]{element};
+	}
+	
+	protected void createTableColumns(Table table){
+		TableColumn column = new TableColumn(table, SWT.NULL);
+		column.setWidth(100);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);		
 	}
 
 	protected void createButtionArea(Composite parent){

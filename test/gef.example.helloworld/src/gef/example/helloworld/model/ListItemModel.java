@@ -6,12 +6,13 @@ import java.util.List;
 public class ListItemModel extends AbstractElementModel {
 
 	public static final String ATTR_LABEL = "label";
+	public static final String ATTR_VALUE = "value";
 	public static final String LISTITEM_LISTCELL = "listitem_listcell";
 	
-	private List<ListCellModel> listcells;
+	//private List<ListCellModel> listcells;
 	
 	public List<ListCellModel> getListcells() {
-		return listcells;
+		return (List<ListCellModel>)getChildren();
 	}
 
 	public String getText(){
@@ -33,9 +34,10 @@ public class ListItemModel extends AbstractElementModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 		
-		AddAttrProperty(ATTR_LABEL, ATTR_LABEL, "item");
+		AddAttrTextProperty(ATTR_LABEL, ATTR_LABEL, "item");
+		AddAttrTextProperty(ATTR_VALUE, ATTR_VALUE, "");
 		
-		listcells = new ArrayList<ListCellModel>();
-		AddListProperty(LISTITEM_LISTCELL, LISTITEM_LISTCELL, ListCellModel.class, listcells);
+		//listcells = new ArrayList<ListCellModel>();
+		//AddListProperty(LISTITEM_LISTCELL, LISTITEM_LISTCELL, ListCellModel.class, getChildren());
 	}
 }

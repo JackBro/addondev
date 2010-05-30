@@ -19,7 +19,7 @@ public class ButtonModel extends AbstractElementModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		
+		//AddAttrBoolProperty("test","test", true);
 	}
 
 }

@@ -13,6 +13,6 @@ public class TreeColModel extends AbstractElementModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddAttrProperty(ATTR_LABEL, ATTR_LABEL, "col");
+		AddAttrTextProperty(ATTR_LABEL, ATTR_LABEL, "col");
 	}
 }

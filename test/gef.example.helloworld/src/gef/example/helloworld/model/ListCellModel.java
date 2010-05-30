@@ -2,7 +2,7 @@ package gef.example.helloworld.model;
 
 public class ListCellModel extends AbstractElementModel {
 
-	public static final String LABEL = "listcell_label";
+	public static final String LABEL = "label";
 	
 	public String getText(){
 		return (String) getPropertyValue(LABEL);
@@ -24,7 +24,7 @@ public class ListCellModel extends AbstractElementModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 
-		AddAttrProperty(LABEL, LABEL, "label");
+		AddAttrTextProperty(LABEL, LABEL, "label");
 	}
 
 }

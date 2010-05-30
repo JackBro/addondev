@@ -15,7 +15,7 @@ public class ScriptModel extends AbstractDataModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		//super.installModelProperty();
-		AddAttrProperty(ATTR_TYPE, ATTR_TYPE, "application/x-javascript");
-		AddAttrProperty(ATTR_SRC, ATTR_SRC, "");
+		AddAttrTextProperty(ATTR_TYPE, ATTR_TYPE, "application/x-javascript");
+		AddAttrTextProperty(ATTR_SRC, ATTR_SRC, "");
 	}
 }

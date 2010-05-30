@@ -14,7 +14,7 @@ public class TabPanelModel extends BoxModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddAttrProperty(ATTR_LABEL_TEXT, ATTR_LABEL_TEXT, "tab");
+		AddAttrTextProperty(ATTR_LABEL_TEXT, ATTR_LABEL_TEXT, "tab");
 	}
 	
 	@Override

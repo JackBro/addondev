@@ -13,7 +13,7 @@ public class CommandModel extends AbstractDataModel{
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddAttrProperty(ATTR_ONCOMMAND, ATTR_ONCOMMAND, "");
+		AddAttrTextProperty(ATTR_ONCOMMAND, ATTR_ONCOMMAND, "");
 	}
 
 }

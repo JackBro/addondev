@@ -30,8 +30,8 @@ public class WindowModel extends BoxModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddAttrProperty(ATTR_XMLNS, ATTR_XMLNS, "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-		AddAttrProperty(ATTR_TITLE, ATTR_TITLE, getName());
+		AddAttrTextProperty(ATTR_XMLNS, ATTR_XMLNS, "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+		AddAttrTextProperty(ATTR_TITLE, ATTR_TITLE, getName());
 		
 		if(scripts == null) scripts = new ArrayList();
 		AddListProperty(SCRIPTS, SCRIPTS, ScriptModel.class, scripts);

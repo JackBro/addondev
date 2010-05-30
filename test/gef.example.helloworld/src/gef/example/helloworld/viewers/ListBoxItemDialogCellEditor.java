@@ -1,5 +1,6 @@
 package gef.example.helloworld.viewers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import gef.example.helloworld.model.AbstractElementModel;
@@ -48,13 +49,25 @@ public class ListBoxItemDialogCellEditor extends DialogCellEditor {
 		dialog.setNumColum(columnum);
         Object value = getValue();
         if(value != null ){
-        	
-    		dialog.setValue((List) value);
+        	List orgvalue = (List)value;
+        	List newvalue = new ArrayList();
+        	for (Object object : orgvalue) {
+        		//newvalue.add(((AbstractElementModel)object).getCopy());
+        		newvalue.add(((AbstractElementModel)object).clone());
+			}
+    		dialog.setValue(newvalue);
         }
         
         int ret = dialog.open();
         if (ret == IDialogConstants.OK_ID) {
-        	
+        	//List newvalue = dialog.getValue();
+        	//((List)value).clear();
+        	//((List)value).addAll(newvalue);
+        	List orgvalue = (List)value;
+        	orgvalue.clear();
+        	orgvalue.addAll(dialog.getValue());
+        	//orgvalue = dialog.getValue();
+        	return orgvalue;
         }
 		return null;
 	}

@@ -2,8 +2,16 @@ package gef.example.helloworld.model;
 
 public class ListHeaderModel extends AbstractElementModel {
 
-	public static final String LABEL = "listheader_label";
-	public static final String SHOW_HEADER = "header";
+	public static final String LABEL = "label";
+	//public static final String SHOW_HEADER = "header";
+	
+	public String getText(){
+		return (String) getPropertyValue(LABEL);
+	}
+	
+	public void setText(String text){
+		setPropertyValue(LABEL, text);
+	}
 	
 	@Override
 	public String getName() {
@@ -16,8 +24,8 @@ public class ListHeaderModel extends AbstractElementModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 		
-		AddBoolProperty(SHOW_HEADER, SHOW_HEADER, false);
-		AddAttrProperty(LABEL, LABEL, "");
+		//AddAttrBoolProperty(SHOW_HEADER, SHOW_HEADER, false);
+		AddAttrTextProperty(LABEL, LABEL, "");
 	}
 
 }

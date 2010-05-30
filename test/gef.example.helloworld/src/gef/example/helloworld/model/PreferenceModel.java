@@ -16,8 +16,8 @@ public class PreferenceModel extends AbstractDataModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		//super.installModelProperty();
-		AddAttrProperty(ATTR_NAME, ATTR_NAME, "");
-		AddAttrProperty(ATTR_ID, ATTR_ID, "");
-		AddAttrProperty(ATTR_TYPE, ATTR_TYPE, "");
+		AddAttrTextProperty(ATTR_NAME, ATTR_NAME, "");
+		AddAttrTextProperty(ATTR_ID, ATTR_ID, "");
+		AddAttrTextProperty(ATTR_TYPE, ATTR_TYPE, "");
 	}
 }

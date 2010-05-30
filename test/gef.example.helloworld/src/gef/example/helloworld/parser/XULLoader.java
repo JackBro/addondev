@@ -31,12 +31,20 @@ public class XULLoader {
 		parsers.put("menupopup", new DefaultXULParser(MenuPopupModel.class));
 		parsers.put("menuitem", new DefaultXULParser(MenuItemModel.class));
 		parsers.put("template", new TemplateParser());
+		parsers.put("listbox", new ListBoxParser());
+		parsers.put("listheader", new DefaultXULParser(ListHeaderModel.class));
+		parsers.put("listcol", new DefaultXULParser(ListColModel.class));
+		parsers.put("listcell", new DefaultXULParser(ListCellModel.class));
+		
+		parsers.put("checkbox", new DefaultXULParser(CheckBoxModel.class));
+		parsers.put("radiogroup", new DefaultXULParser(RadioGroupModel.class));
+		parsers.put("radio", new DefaultXULParser(RadioModel.class));
 	}
 	public static AbstractElementModel parseElement(AbstractElementModel root, Element e) {
 		String elementName = e.getTagName();
 		AbstractXULParser parser = parsers.get(elementName);
 		if(parser == null){
-			parser = new AnonymousParser(elementName);
+			//parser = new AnonymousParser(elementName);
 		}
 		if(parser !=null){
 			AbstractElementModel model = null;

@@ -1,5 +1,6 @@
 package gef.example.helloworld.viewers;
 
+import gef.example.helloworld.model.AbstractElementModel;
 import gef.example.helloworld.model.ListCellModel;
 import gef.example.helloworld.model.ListItemModel;
 
@@ -56,6 +57,17 @@ public class ListBoxItemDialog extends ListDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		// TODO Auto-generated method stub
+		List<ListItemModel> listitems = getValue();
+		if(numcolum == 0){
+			for (ListItemModel item : listitems) {
+				if(item.getListcells().size() > 0){
+					
+				}
+			}
+		}else{
+			
+		}
+		
 		Control composite = super.createDialogArea(parent);
 
 		Table table = viewer.getTable();
@@ -68,25 +80,53 @@ public class ListBoxItemDialog extends ListDialog {
 		
 		int columnum = table.getColumnCount();
 		for (int i = 1; i < numcolum; i++) {
-			TableColumn column = new TableColumn(table, SWT.NULL);
-			column.setWidth(100);	
+			//TableColumn column = new TableColumn(table, SWT.NULL);
+			//column.setWidth(100);	
 			ed.add(new TextCellEditor(table));
 			clist.add(String.valueOf(i));
 		}
 
-		List<ListItemModel> listitems = getValue();
+		//List<ListItemModel> listitems = getValue();
 
-		String[] properties = clist.toArray(new String[clist.size()]); //new String[] { "0", "1" };
-		// カラム・プロパティの設定
+		String[] properties = clist.toArray(new String[clist.size()]);
 		viewer.setColumnProperties(properties);
 
-		// 各カラムに設定するセル・エディタの配列
-		CellEditor[] editors = ed.toArray(new CellEditor[ed.size()]); //new CellEditor[] { new TextCellEditor(table), new TextCellEditor(table) };
-
+		CellEditor[] editors = ed.toArray(new CellEditor[ed.size()]);
 		viewer.setCellEditors(editors);
 		viewer.setCellModifier(new MyCellModifier(viewer));
+		
+		
+		
 
 		return composite;
+	}
+
+	
+	@Override
+	protected Object[] getTableViewerSelectionElements(
+			AbstractElementModel element) {
+		// TODO Auto-generated method stub
+		//return super.getTableViewerSelectionElements(element);
+		if (numcolum == 0) {
+			return super.getTableViewerSelectionElements(element);
+		} else {
+			ListItemModel listitem = (ListItemModel) element;
+			List list = listitem.getListcells();
+			return list.toArray();
+		}		
+	}
+
+	@Override
+	protected void createTableColumns(Table table) {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < numcolum; i++) {
+			TableColumn column = new TableColumn(table, SWT.NULL);
+			column.setWidth(100);	
+			//ed.add(new TextCellEditor(table));
+			//clist.add(String.valueOf(i));
+		}
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);	
 	}
 
 	@Override

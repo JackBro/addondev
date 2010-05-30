@@ -73,7 +73,8 @@ public class ListCellEditor extends DialogCellEditor {
         	//List childern = elem.getChildren();
         	for (Object obj : orgChildren) {
         		AbstractElementModel child = (AbstractElementModel)obj;
-        		AbstractElementModel newchile = child.getCopy();
+        		//AbstractElementModel newchile = child.getCopy();
+        		AbstractElementModel newchile = child.clone();
         		newChildren.add(newchile);
 //        		if(child instanceof ContentsModel){
 //        			ContentsModel content = (ContentsModel)child;
@@ -102,7 +103,7 @@ public class ListCellEditor extends DialogCellEditor {
 //        		elem.getParent().firePropertyChange(elem.getName(), null, list);
 //        	}
         	if(flistenermodel != null){
-        		flistenermodel.firePropertyChange(id, null, list);
+        		//flistenermodel.firePropertyChange(id, null, list);
         		//((AbstractElementModel)value).setChildren(list);
         	}else{
         		if(value instanceof AbstractElementModel){

@@ -15,7 +15,7 @@ public class PrefpaneModel extends BoxModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddAttrProperty(ATTR_LABEL_TEXT, ATTR_LABEL_TEXT, "OK");
+		AddAttrTextProperty(ATTR_LABEL_TEXT, ATTR_LABEL_TEXT, "OK");
 		PreferencesModel prefs = new PreferencesModel();
 		prefs.setParent(getParent());
 		//AddListProperty(prefs.getName(), prefs.getName(), prefs);
