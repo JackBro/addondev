@@ -38,4 +38,31 @@ public class TabPanelModel extends BoxModel {
 		// TODO Auto-generated method stub
 		return "tabpanel";
 	}
+
+	@Override
+	public AbstractElementModel clone() {
+		// TODO Auto-generated method stub
+		
+		try {
+			AbstractElementModel model = this.getClass().newInstance();
+			for (Object id : fPropertyMap.keySet()) {
+				ModelProperty prop = fPropertyMap.get(id);
+				prop.clone();
+				Object obj = fAttributeMap.get(id);
+				model.AddProperty((String)id, prop.getPropertyDescriptor(), obj);
+				//model.AddAttrTextProperty((String) id, prop.getPropertyDescriptor().getDisplayName(), obj);
+			}
+			model.setChildren(getChildren());
+			
+			return model;
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

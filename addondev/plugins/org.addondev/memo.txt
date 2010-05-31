@@ -2,6 +2,7 @@
 http://d.hatena.ne.jp/nobeans/?of=10
 http://d.hatena.ne.jp/kkawa/?of=5
 http://d.hatena.ne.jp/uehaj/?of=7
+http://d.hatena.ne.jp/masanobuimai/?of=20
 
 http://www.java2s.com/Code/Java/SWT-JFace-Eclipse/SWTTreeWithMulticolumns.htm
 http://www.java-forums.org/swt/9905-how-create-swt-tree-multi-columns.html

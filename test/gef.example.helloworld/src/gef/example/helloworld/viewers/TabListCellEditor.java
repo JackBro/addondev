@@ -50,8 +50,9 @@ public class TabListCellEditor extends DialogCellEditor {
 	    	List newChildren = new ArrayList();
 	    	for (Object obj : orgChildren) {
 	    		AbstractElementModel orgchild = (AbstractElementModel)obj;
-	    		AbstractElementModel newchile = orgchild.getAttrCopy();
-	    		newchile.setChildren(orgchild.getChildren());
+	    		//AbstractElementModel newchile = orgchild.getAttrCopy();
+	    		//newchile.setChildren(orgchild.getChildren());
+	    		AbstractElementModel newchile = orgchild.clone();
 	    		newChildren.add(newchile);
 	    	}
 	    	dialog.setValue(newChildren);

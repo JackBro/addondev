@@ -3,6 +3,7 @@ package gef.example.helloworld.model;
 import org.eclipse.draw2d.IFigure;
 
 import gef.example.helloworld.editparts.AbstractElementEditPart;
+import gef.example.helloworld.viewers.KeyModifiersPropertyDescriptor;
 
 public class ButtonModel extends AbstractElementModel {
 
@@ -20,6 +21,7 @@ public class ButtonModel extends AbstractElementModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 		//AddAttrBoolProperty("test","test", true);
+		//AddProperty("test", new KeyModifiersPropertyDescriptor("test", "keytest"), "");
 	}
 
 }

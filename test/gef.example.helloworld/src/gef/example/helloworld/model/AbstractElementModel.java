@@ -30,10 +30,11 @@ public abstract class AbstractElementModel extends AbstractModel implements Clon
 	public static final String ATTR_ID = "id";
 	public static final String ATTR_CLASS = "class";
 	public static final String ATTR_INSERTBEFORE = "insertbefore";
+	public static final String ATTR_GROUP ="group";
 
 	
-	private Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
-	private Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();	
+	protected Map<Object, ModelProperty> fPropertyMap = new HashMap<Object, ModelProperty>();
+	protected Map<Object, Object> fAttributeMap = new HashMap<Object, Object>();	
 	
 	public void AddProperty(String id, IPropertyDescriptor propertyDescriptor, Object obj){
 		
@@ -128,6 +129,14 @@ public abstract class AbstractElementModel extends AbstractModel implements Clon
 		AddProperty(id, new MultiTextPropertyDescriptor(id, displayname), text);	
 	}
 	
+	public void AddAttrMultiLineTextProperty(String id, String displayname, String text){
+		
+		AddProperty(id, new MultiTextPropertyDescriptor(id, displayname), text);
+		ModelProperty prop = getModelProperty(id);
+		prop.setAttr(true);
+		prop.setIsSerialize(true);
+	}
+	
 	public ModelProperty getModelProperty(String id){
 		return fPropertyMap.get(id);
 	}
@@ -136,34 +145,35 @@ public abstract class AbstractElementModel extends AbstractModel implements Clon
 		AddConstProperty(NAME, NAME, getName());
 		AddAttrTextProperty(ATTR_FLEX, ATTR_FLEX, "");
 		AddAttrTextProperty(ATTR_ID, ATTR_ID, "");
+		AddAttrTextProperty(ATTR_GROUP, ATTR_GROUP, "");
 	}
 	
-	public AbstractElementModel getAttrCopy(){
-		AbstractElementModel model= null;
-		try {
-			model = this.getClass().newInstance();
-			for (Object id : fPropertyMap.keySet()) {
-				ModelProperty prop = fPropertyMap.get(id);
-
-				IPropertyDescriptor propdescriptor = prop.getPropertyDescriptor();
-				if((propdescriptor instanceof TextPropertyDescriptor
-						|| propdescriptor instanceof ElementComboBoxPropertyDescriptor)
-						&& prop.isAttr()){
-				//if(prop.isSerialize()){
-					
-					Object obj = fAttributeMap.get(id);
-					model.AddAttrTextProperty((String) id, propdescriptor.getDisplayName(), obj);
-				}
-			}
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return model;
-	}
+//	public AbstractElementModel getAttrCopy(){
+//		AbstractElementModel model= null;
+//		try {
+//			model = this.getClass().newInstance();
+//			for (Object id : fPropertyMap.keySet()) {
+//				ModelProperty prop = fPropertyMap.get(id);
+//
+//				IPropertyDescriptor propdescriptor = prop.getPropertyDescriptor();
+//				if((propdescriptor instanceof TextPropertyDescriptor
+//						|| propdescriptor instanceof ElementComboBoxPropertyDescriptor)
+//						&& prop.isAttr()){
+//				//if(prop.isSerialize()){
+//					
+//					Object obj = fAttributeMap.get(id);
+//					model.AddAttrTextProperty((String) id, propdescriptor.getDisplayName(), obj);
+//				}
+//			}
+//		} catch (InstantiationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return model;
+//	}
 	
 	
 	
@@ -199,35 +209,35 @@ public abstract class AbstractElementModel extends AbstractModel implements Clon
 		return null;
 	}
 
-	public AbstractElementModel getCopy(){
-		AbstractElementModel model= null;
-		try {
-			model = this.getClass().newInstance();
-			for (Object id : fPropertyMap.keySet()) {
-				ModelProperty prop = fPropertyMap.get(id);
-				
-				IPropertyDescriptor propdescriptor = prop.getPropertyDescriptor();
-				//if(propdescriptor instanceof TextPropertyDescriptor){
-				if((propdescriptor instanceof TextPropertyDescriptor
-						|| propdescriptor instanceof ElementComboBoxPropertyDescriptor)){
-						//&& prop.isAttr()){				
-					Object obj = fAttributeMap.get(id);
-					model.AddAttrTextProperty((String) id, propdescriptor.getDisplayName(), obj);
-				}
-			}
-			for (Object obj : children) {
-				AbstractElementModel child = (AbstractElementModel)obj;
-				model.getChildren().add(child.getCopy());
-			}
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return model;
-	}
+//	public AbstractElementModel getCopy(){
+//		AbstractElementModel model= null;
+//		try {
+//			model = this.getClass().newInstance();
+//			for (Object id : fPropertyMap.keySet()) {
+//				ModelProperty prop = fPropertyMap.get(id);
+//				
+//				IPropertyDescriptor propdescriptor = prop.getPropertyDescriptor();
+//				//if(propdescriptor instanceof TextPropertyDescriptor){
+//				if((propdescriptor instanceof TextPropertyDescriptor
+//						|| propdescriptor instanceof ElementComboBoxPropertyDescriptor)){
+//						//&& prop.isAttr()){				
+//					Object obj = fAttributeMap.get(id);
+//					model.AddAttrTextProperty((String) id, propdescriptor.getDisplayName(), obj);
+//				}
+//			}
+//			for (Object obj : children) {
+//				AbstractElementModel child = (AbstractElementModel)obj;
+//				model.getChildren().add(child.getCopy());
+//			}
+//		} catch (InstantiationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return model;
+//	}
 	
 	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {

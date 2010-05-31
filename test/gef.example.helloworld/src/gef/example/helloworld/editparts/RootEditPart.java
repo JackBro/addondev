@@ -1,5 +1,6 @@
 package gef.example.helloworld.editparts;
 
+import gef.example.helloworld.editpolicies.BoxLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.MyXYLayoutEditPolicy;
 import gef.example.helloworld.editpolicies.RootXYLayoutEditPolicy;
 import gef.example.helloworld.figure.BorderFigure;
@@ -40,7 +41,8 @@ public class RootEditPart extends AbstractEditPartWithListener {
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
 		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new MyXYLayoutEditPolicy());
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new RootXYLayoutEditPolicy((ContentsModel)getModel()));
+		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new RootXYLayoutEditPolicy((ContentsModel)getModel()));
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
 	}
 
 	@Override

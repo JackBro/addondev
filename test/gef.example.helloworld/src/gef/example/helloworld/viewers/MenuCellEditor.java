@@ -37,7 +37,8 @@ public class MenuCellEditor extends DialogCellEditor {
         if(value != null){
         	List children = (List)value;
         	for (Object elem : children) {
-        		newvalue.add(((AbstractElementModel)elem).getCopy());
+        		//newvalue.add(((AbstractElementModel)elem).getCopy());
+        		newvalue.add(((AbstractElementModel)elem).clone());
 			}
         	dialog.setValue(newvalue);
         }
