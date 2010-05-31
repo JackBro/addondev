@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class PreferenceModel extends AbstractDataModel {
+public class PreferenceModel extends AbstractElementModel {
 
 	public static final String ATTR_NAME = "name";
 	public static final String ATTR_ID = "id";

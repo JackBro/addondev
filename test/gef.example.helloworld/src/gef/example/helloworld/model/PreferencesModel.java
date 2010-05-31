@@ -1,5 +1,7 @@
 package gef.example.helloworld.model;
 
+import gef.example.helloworld.HelloworldPlugin;
+
 public class PreferencesModel extends AbstractDataModel {
 	
 	public static final String CHANGE_PREFERENCE = "change_preference";
@@ -15,6 +17,18 @@ public class PreferencesModel extends AbstractDataModel {
 		// TODO Auto-generated method stub
 		//super.installModelProperty();
 		AddListProperty(CHANGE_PREFERENCE, "preference", PreferenceModel.class, children);
+	}
+
+	@Override
+	public String getImage() {
+		// TODO Auto-generated method stub
+		return HelloworldPlugin.IMG_DUMMY;
+	}
+
+	@Override
+	public String getLabel() {
+		// TODO Auto-generated method stub
+		return "preferences";
 	}
 
 }

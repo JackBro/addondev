@@ -2,7 +2,7 @@ package gef.example.helloworld.model;
 
 import gef.example.helloworld.viewers.KeyModifiersPropertyDescriptor;
 
-public class KeyModel extends AbstractDataModel {
+public class KeyModel extends AbstractElementModel {
 
 	public static final String ATTR_COMMAND = "command";
 	public static final String ATTR_DISABLED = "disabled";

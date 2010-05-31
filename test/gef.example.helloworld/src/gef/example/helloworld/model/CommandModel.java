@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class CommandModel extends AbstractDataModel{
+public class CommandModel extends AbstractElementModel{
 	
 	public static final String ATTR_ONCOMMAND = "oncommand";
 	

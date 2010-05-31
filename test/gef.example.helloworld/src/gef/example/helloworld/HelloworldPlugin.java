@@ -3,12 +3,22 @@ package gef.example.helloworld;
 import org.eclipse.ui.plugin.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.resources.*;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+
+import java.net.URL;
 import java.util.*;
 
 /**
  * The main plugin class to be used in the desktop.
  */
 public class HelloworldPlugin extends AbstractUIPlugin {
+	
+	public static final String IMG_CHECKBOX = "checkbox";
+	public static final String IMG_COLORPICKER = "colorpicker";
+	public static final String IMG_RADIO = "radio";
+	public static final String IMG_DUMMY = "radio";
+	
 	//The shared instance.
 	private static HelloworldPlugin plugin;
 	//Resource bundle.
@@ -59,5 +69,23 @@ public class HelloworldPlugin extends AbstractUIPlugin {
 	 */
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
+	}
+
+	@Override
+	protected void initializeImageRegistry(ImageRegistry reg) {
+		// TODO Auto-generated method stub
+		super.initializeImageRegistry(reg);
+		registerImage(reg, IMG_CHECKBOX, "checkbox.png");
+		registerImage(reg, IMG_COLORPICKER, "colorpicker.png");
+		registerImage(reg, IMG_RADIO, "radio.png");
+		registerImage(reg, IMG_DUMMY, "dummy.png");
+	}
+	
+	private void registerImage(ImageRegistry registry, String key,String fileName){
+		URL url = getBundle().getEntry("icon/" + fileName);
+		if (url != null) {
+			ImageDescriptor desc = ImageDescriptor.createFromURL(url);
+			registry.put(key, desc);
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package gef.example.helloworld.figure;
 
+import gef.example.helloworld.HelloworldPlugin;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.SimpleLoweredBorder;
@@ -7,7 +9,7 @@ import org.eclipse.swt.graphics.Image;
 
 public class CheckBoxFigure extends LabelFigure {
 
-	static final Image CHECKBOX = LabelFigure.createImage("checkbox.png");
+	static final Image CHECKBOX = HelloworldPlugin.getDefault().getImageRegistry().get(HelloworldPlugin.IMG_CHECKBOX); //AbstractElementFigure.createImage("checkbox.png");
 	
 	@Override
 	protected void init() {

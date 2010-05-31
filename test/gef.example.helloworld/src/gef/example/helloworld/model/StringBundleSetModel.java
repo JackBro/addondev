@@ -2,22 +2,12 @@ package gef.example.helloworld.model;
 
 import gef.example.helloworld.HelloworldPlugin;
 
-public class KeySetModel extends AbstractDataModel {
+public class StringBundleSetModel extends AbstractDataModel {
 
-	public static final String KEY = "key";
-	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "keyset";
-	}
-
-	@Override
-	public void installModelProperty() {
-		// TODO Auto-generated method stub
-		super.installModelProperty();
-		
-		AddListProperty(KEY, KEY, KeyModel.class, getChildren());
+		return "stringbundleset";
 	}
 
 	@Override
@@ -29,7 +19,7 @@ public class KeySetModel extends AbstractDataModel {
 	@Override
 	public String getLabel() {
 		// TODO Auto-generated method stub
-		return "keyset";
+		return "stringbundleset";
 	}
 
 }

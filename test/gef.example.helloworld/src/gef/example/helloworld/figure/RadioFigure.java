@@ -1,11 +1,13 @@
 package gef.example.helloworld.figure;
 
+import gef.example.helloworld.HelloworldPlugin;
+
 import org.eclipse.draw2d.CheckBox;
 import org.eclipse.swt.graphics.Image;
 
 public class RadioFigure extends LabelFigure {
 
-	static final Image RAIDO = LabelFigure.createImage("radio.png");
+	static final Image RAIDO = HelloworldPlugin.getDefault().getImageRegistry().get(HelloworldPlugin.IMG_RADIO); //LabelFigure.createImage("radio.png");
 
 	@Override
 	protected void init() {

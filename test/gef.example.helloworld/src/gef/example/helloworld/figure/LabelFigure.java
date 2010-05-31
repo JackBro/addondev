@@ -13,7 +13,7 @@ import org.eclipse.swt.graphics.Image;
 
 public class LabelFigure extends AbstractElementFigure {
 
-	private Label label;
+	protected Label label;
 
 	public LabelFigure() {
 		super();
@@ -61,17 +61,5 @@ public class LabelFigure extends AbstractElementFigure {
 	
 	protected void setImage(Image image){
 		label.setIcon(image);
-	}
-	
-	public static Image createImage(String name) {
-		if(name == null) return null;
-		
-		InputStream stream = LabelFigure.class.getResourceAsStream(name);
-		Image image = new Image(null, stream);
-		try {
-			stream.close();
-		} catch (IOException ioe) {
-		}
-		return image;
 	}
 }

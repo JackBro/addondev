@@ -35,8 +35,8 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(XULRootModel.class, XULRootEditPart.class);
 		editpartMap.put(OverlayModel.class, OverlayEditPart.class);
 		editpartMap.put(StatusbarModel.class, StatusbarEditPart.class);
-		editpartMap.put(MenuPopupModel.class, MenuPopupEditPart.class);
-		editpartMap.put(PreferencesModel.class, PreferencesEditPart.class);
+		
+
 		editpartMap.put(CheckBoxModel.class, CheckBoxEditPart.class);
 		editpartMap.put(ListBoxModel.class, ListBoxEditPart.class);
 		
@@ -44,7 +44,14 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(MenuModel.class, LabelEditPart.class);
 		editpartMap.put(MenubarModel.class, MenuBarEditPart.class);
 		
-		editpartMap.put(TemplateModel.class, TemplateEditPart.class);
+		//editpartMap.put(TemplateModel.class, TemplateEditPart.class);
+		editpartMap.put(TemplateModel.class, DataElementEditPart.class);
+		//editpartMap.put(MenuPopupModel.class, MenuPopupEditPart.class);
+		editpartMap.put(MenuPopupModel.class, DataElementEditPart.class);
+		//editpartMap.put(PreferencesModel.class, PreferencesEditPart.class);
+		editpartMap.put(PreferencesModel.class, DataElementEditPart.class);
+		
+		editpartMap.put(ColorPickerModel.class, ColorPickerEditPart.class);
 	}
 
 	public EditPart createEditPart(EditPart context, Object model) {

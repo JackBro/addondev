@@ -1,5 +1,7 @@
 package gef.example.helloworld.model;
 
+import gef.example.helloworld.HelloworldPlugin;
+
 public class TemplateModel extends AbstractDataModel {
 
 	public static final String TEXT = "text";
@@ -27,6 +29,18 @@ public class TemplateModel extends AbstractDataModel {
 		//super.installModelProperty();
 		text="";
 		AddMultiLineTextProperty(TEXT, "template", text);	
+	}
+
+	@Override
+	public String getImage() {
+		// TODO Auto-generated method stub
+		return HelloworldPlugin.IMG_DUMMY;
+	}
+
+	@Override
+	public String getLabel() {
+		// TODO Auto-generated method stub
+		return "template";
 	}
 
 	
