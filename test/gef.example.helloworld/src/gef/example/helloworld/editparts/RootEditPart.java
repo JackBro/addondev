@@ -33,7 +33,7 @@ public class RootEditPart extends AbstractEditPartWithListener {
 //		figure.setLayoutManager(tl);
 
 		figure = new BorderFigure();
-		
+		figure.getBottom().setPreferredSize(100, 80);		
 		return figure;
 	}
 

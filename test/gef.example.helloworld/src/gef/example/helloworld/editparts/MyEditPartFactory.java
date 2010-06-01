@@ -35,7 +35,7 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(XULRootModel.class, XULRootEditPart.class);
 		editpartMap.put(OverlayModel.class, OverlayEditPart.class);
 		editpartMap.put(StatusbarModel.class, StatusbarEditPart.class);
-		
+		editpartMap.put(SeparatorModel.class, SeparatorEditPart.class);
 
 		editpartMap.put(CheckBoxModel.class, CheckBoxEditPart.class);
 		editpartMap.put(ListBoxModel.class, ListBoxEditPart.class);
@@ -50,6 +50,7 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(MenuPopupModel.class, DataElementEditPart.class);
 		//editpartMap.put(PreferencesModel.class, PreferencesEditPart.class);
 		editpartMap.put(PreferencesModel.class, DataElementEditPart.class);
+		editpartMap.put(KeySetModel.class, DataElementEditPart.class);
 		
 		editpartMap.put(ColorPickerModel.class, ColorPickerEditPart.class);
 	}

@@ -23,14 +23,16 @@ public class XULLoader {
 		parsers.put("window", new DefaultXULParser(WindowModel.class));
 		parsers.put("overlay", new DefaultXULParser(OverlayModel.class));
 		parsers.put("prefwindow", new DefaultXULParser(PrefwindowModel.class));
+		
+		parsers.put("button", new DefaultXULParser(ButtonModel.class));
+		parsers.put("colorpicker", new DefaultXULParser(ColorPickerModel.class));
 		parsers.put("grid", new GridParser());
 		parsers.put("label", new DefaultXULParser(LabelModel.class));
 		parsers.put("vbox", new DefaultXULParser(VBoxModel.class));
 		parsers.put("hbox", new DefaultXULParser(HBoxModel.class));
 		parsers.put("statusbar", new DefaultXULParser(StatusbarModel.class));
-		parsers.put("menupopup", new DefaultXULParser(MenuPopupModel.class));
 		parsers.put("menuitem", new DefaultXULParser(MenuItemModel.class));
-		parsers.put("template", new TemplateParser());
+
 		parsers.put("listbox", new ListBoxParser());
 		parsers.put("listheader", new DefaultXULParser(ListHeaderModel.class));
 		parsers.put("listcol", new DefaultXULParser(ListColModel.class));
@@ -39,6 +41,16 @@ public class XULLoader {
 		parsers.put("checkbox", new DefaultXULParser(CheckBoxModel.class));
 		parsers.put("radiogroup", new DefaultXULParser(RadioGroupModel.class));
 		parsers.put("radio", new DefaultXULParser(RadioModel.class));
+		
+		parsers.put("menupopup", new DefaultXULParser(MenuPopupModel.class));
+		parsers.put("template", new TemplateParser());
+		
+		parsers.put("preferences", new DefaultXULParser(PreferencesModel.class));
+		parsers.put("preference", new DefaultXULParser(PreferenceModel.class));
+		
+		parsers.put("keyset", new DefaultXULParser(KeySetModel.class));
+		parsers.put("key", new DefaultXULParser(KeyModel.class));
+		
 	}
 	public static AbstractElementModel parseElement(AbstractElementModel root, Element e) {
 		String elementName = e.getTagName();

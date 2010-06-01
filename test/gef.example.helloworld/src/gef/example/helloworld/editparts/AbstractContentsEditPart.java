@@ -96,9 +96,9 @@ public abstract class AbstractContentsEditPart extends AbstractEditPartWithListe
 		if(childEditPart.getModel() instanceof AbstractDataModel){
 			return true;
 		}
-		if(childEditPart.getModel() instanceof MenuPopupModel){
-			return true;
-		}
+//		if(childEditPart.getModel() instanceof MenuPopupModel){
+//			return true;
+//		}
 		return false;
 	}
 	protected boolean isMainChild(EditPart childEditPart){

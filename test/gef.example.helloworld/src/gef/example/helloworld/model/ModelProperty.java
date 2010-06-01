@@ -9,14 +9,14 @@ public class ModelProperty implements Cloneable {
 	private boolean isattr;
 	private String fName;
 	private IPropertyDescriptor fPropertyDescriptor;
-	private boolean fIsSerialize;
+	//private boolean fIsSerialize;
 	
 	public ModelProperty(String name, IPropertyDescriptor propertyDescriptor) {
 		super();
 		this.fName = name;
 		this.fPropertyDescriptor = propertyDescriptor;
 		this.isattr = false;
-		this.fIsSerialize = false;
+		//this.fIsSerialize = false;
 	}
 
 	public boolean isAttr() {
@@ -43,13 +43,13 @@ public class ModelProperty implements Cloneable {
 		this.fPropertyDescriptor = fPropertyDescriptor;
 	}
 
-	public boolean isSerialize() {
-		return fIsSerialize;
-	}
-
-	public void setIsSerialize(boolean isserialize) {
-		this.fIsSerialize = isserialize;
-	}
+//	public boolean isSerialize() {
+//		return fIsSerialize;
+//	}
+//
+//	public void setIsSerialize(boolean isserialize) {
+//		this.fIsSerialize = isserialize;
+//	}
 	
 	public ModelProperty clone() {
 		try {

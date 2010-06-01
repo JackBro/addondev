@@ -185,29 +185,34 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		ImageDescriptor descriptor = ImageDescriptor.createFromFile(
 				HelloWorldEditor.class, "newModel.gif");
 
-		addCreationToolEntry(drawer, ButtonModel.class, "Buttonの作成", "モデル作成", descriptor);	
-		addCreationToolEntry(drawer, CheckBoxModel.class, "CheckBoxの作成", "モデル作成", descriptor);	
-		addCreationToolEntry(drawer, ListBoxModel.class, "ListBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, LabelModel.class, "HelloModelの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, VBoxModel.class, "VBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, HBoxModel.class, "HBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, GridModel.class, "Gridの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, GroupBoxModel.class, "GroupBoxの作成", "モデル作成", descriptor);
-		addCreationToolEntry(drawer, RadioModel.class, "Radioの作成", "モデル作成",descriptor);
-		addCreationToolEntry(drawer, RadioGroupModel.class, "RadioGroupの作成","モデル作成", descriptor);
-		addCreationToolEntry(drawer, TabBoxModel.class, "TabBoxの作成", "モデル作成",descriptor);
-		addCreationToolEntry(drawer, MenuListModel.class, "MenuListの作成","モデル作成", descriptor);
-		addCreationToolEntry(drawer, TextBoxModel.class, "TextBoxの作成", "モデル作成",descriptor);
-		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopupの作成","モデル作成", descriptor);
-		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbarの作成","モデル作成", descriptor);
-		addCreationToolEntry(drawer, ToolBoxModel.class, "ToolBoxの作成","モデル作成", descriptor);
+		addCreationToolEntry(drawer, ButtonModel.class, "Button", "モデル作成", descriptor);	
+		addCreationToolEntry(drawer, CheckBoxModel.class, "CheckBox", "モデル作成", descriptor);	
+		addCreationToolEntry(drawer, ListBoxModel.class, "ListBox", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, LabelModel.class, "Label", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, VBoxModel.class, "VBox", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, HBoxModel.class, "HBox", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, GridModel.class, "Grid", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, GroupBoxModel.class, "GroupBox", "モデル作成", descriptor);
+		addCreationToolEntry(drawer, RadioModel.class, "Radio", "モデル作成",descriptor);
+		addCreationToolEntry(drawer, RadioGroupModel.class, "RadioGroup","モデル作成", descriptor);
+		addCreationToolEntry(drawer, TabBoxModel.class, "TabBox", "モデル作成",descriptor);
+		addCreationToolEntry(drawer, MenuListModel.class, "MenuList","モデル作成", descriptor);
+		addCreationToolEntry(drawer, TextBoxModel.class, "TextBox", "モデル作成",descriptor);
+		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopup","モデル作成", descriptor);
+		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbar","モデル作成", descriptor);
+		addCreationToolEntry(drawer, ToolBoxModel.class, "ToolBox","モデル作成", descriptor);
 		//addCreationToolEntry(drawer, MenuModel.class, "Menuの作成","モデル作成", descriptor);
 		//addCreationToolEntry(drawer, MenuItemModel.class, "MenuItemの作成","モデル作成", descriptor);
-		addCreationToolEntry(drawer, MenubarModel.class, "MenuBarの作成","モデル作成", descriptor);
-		addCreationToolEntry(drawer, ColorPickerModel.class, "ColorPickerの作成","モデル作成", descriptor);
+		addCreationToolEntry(drawer, MenubarModel.class, "MenuBar","モデル作成", descriptor);
+		addCreationToolEntry(drawer, ColorPickerModel.class, "ColorPicker","モデル作成", descriptor);
+		addCreationToolEntry(drawer, SeparatorModel.class, "Separator","モデル作成", descriptor);
 
 		PaletteDrawer datadrawer = new PaletteDrawer("data");
-		addCreationToolEntry(datadrawer, PreferencesModel.class, "Preferencesの作成","モデル作成", descriptor);
+		addCreationToolEntry(datadrawer, PreferencesModel.class, "Preferences","モデル作成", descriptor);
+		addCreationToolEntry(datadrawer, TemplateModel.class, "Template","モデル作成", descriptor);
+		addCreationToolEntry(datadrawer, CommandSetModel.class, "CommandSet","モデル作成", descriptor);
+		addCreationToolEntry(datadrawer, KeySetModel.class, "KeySet","モデル作成", descriptor);
+		addCreationToolEntry(datadrawer, StringBundleSetModel.class, "StringBundleSet","モデル作成", descriptor);
 		
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);

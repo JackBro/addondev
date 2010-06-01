@@ -52,7 +52,7 @@ public class KeyModel extends AbstractElementModel {
 		AddProperty(ATTR_MODIFIERS, keymoddes, "");
 		ModelProperty keymoddesprop = getModelProperty(ATTR_MODIFIERS);
 		keymoddesprop.setAttr(true);
-		keymoddesprop.setIsSerialize(true);
+		//keymoddesprop.setIsSerialize(true);
 		
 		AddAttrMultiLineTextProperty(ATTR_ONCOMMAND, ATTR_ONCOMMAND, "");
 	}

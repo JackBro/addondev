@@ -14,7 +14,8 @@ public class GroupBoxEditPart extends BoxEditPart {
 		
 		IFigure figure = super.createFigure();
 		GroupBoxBorder border = new GroupBoxBorder();
-		border.setLabel(model.getName());
+		//border.setLabel(model.getName());
+		border.setLabel("");
 		figure.setBorder(border);
 		return figure;
 	}

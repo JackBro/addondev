@@ -58,7 +58,7 @@ public abstract class AbstractElementModel extends AbstractModel implements Clon
 				String.valueOf(defaultvalue));	
 		ModelProperty prop = getModelProperty(id);
 		prop.setAttr(true);
-		prop.setIsSerialize(true);
+		//prop.setIsSerialize(true);
 	}
 	
 	public void AddBoolProperty(String id, String displayname, Boolean defaultvalue){
@@ -72,7 +72,7 @@ public abstract class AbstractElementModel extends AbstractModel implements Clon
 		AddProperty(id, new TextPropertyDescriptor(id, displayname), obj);	
 		ModelProperty prop = getModelProperty(id);
 		prop.setAttr(true);
-		prop.setIsSerialize(true);
+		//prop.setIsSerialize(true);
 	}
 	
 	public void AddTextProperty(String id, String displayname, Object obj){
@@ -86,7 +86,7 @@ public abstract class AbstractElementModel extends AbstractModel implements Clon
 				defaultvalue);	
 		ModelProperty prop = getModelProperty(id);
 		prop.setAttr(true);
-		prop.setIsSerialize(true);
+		//prop.setIsSerialize(true);
 	}
 	
 	public void AddListProperty(String id, String displayname, AbstractElementModel listenermodel, Class _class, AbstractElementModel obj){
@@ -134,7 +134,7 @@ public abstract class AbstractElementModel extends AbstractModel implements Clon
 		AddProperty(id, new MultiTextPropertyDescriptor(id, displayname), text);
 		ModelProperty prop = getModelProperty(id);
 		prop.setAttr(true);
-		prop.setIsSerialize(true);
+		//prop.setIsSerialize(true);
 	}
 	
 	public ModelProperty getModelProperty(String id){

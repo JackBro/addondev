@@ -24,12 +24,12 @@ public class DataElementEditPart extends AbstractEditPartWithListener {
 	@Override
 	protected void addChildVisual(EditPart childEditPart, int index) {
 		// TODO Auto-generated method stub
-		//super.addChildVisual(childEditPart, index);
+		super.addChildVisual(childEditPart, index);
 	}
 
 	@Override
 	protected void removeChildVisual(EditPart childEditPart) {
 		// TODO Auto-generated method stub
-		//super.removeChildVisual(childEditPart);
+		super.removeChildVisual(childEditPart);
 	}
 }
