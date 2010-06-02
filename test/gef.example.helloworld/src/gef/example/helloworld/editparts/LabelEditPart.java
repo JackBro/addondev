@@ -19,10 +19,10 @@ import org.eclipse.gef.EditPolicy;
 public class LabelEditPart extends AbstractElementEditPart {
 
 	protected IFigure createFigure() {
-		AbstractElementModel model = (AbstractElementModel) getModel();
+		LabelModel model = (LabelModel) getModel();
 
 		LabelFigure label = new LabelFigure();
-		label.setText(model.getName());
+		label.setText(model.getText());
 		
 		return label;
 	}

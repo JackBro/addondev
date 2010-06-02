@@ -3,17 +3,39 @@ package gef.example.helloworld.parser;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.validation.Schema;
+import javax.xml.validation.Validator;
+import javax.xml.validation.ValidatorHandler;
 
 import org.eclipse.core.resources.IFile;
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
+import org.w3c.dom.stylesheets.DocumentStyle;
+import org.w3c.dom.stylesheets.StyleSheetList;
+
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import gef.example.helloworld.model.*;
 
 public class XULLoader {
@@ -84,10 +106,56 @@ public class XULLoader {
 	        //is = new ByteArrayInputStream(parseStr.getBytes("UTF-8"));
 	        
 			DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
+			//dbfactory.setValidating(true);
+			dbfactory.setIgnoringElementContentWhitespace(true);
 			DocumentBuilder builder;
 			builder = dbfactory.newDocumentBuilder();
-			Document doc = builder.parse(in);
+			
+			builder.setEntityResolver(new EntityResolver() {
+				
+				@Override
+				public InputSource resolveEntity(String publicId, String systemId)
+						throws SAXException, IOException {
+					// TODO Auto-generated method stub
+			           if(systemId.equals("chrome://bug489729/locale/bug489729.dtd")){
+			        	   
+			               InputStream reader = new FileInputStream("D:/data/src/PDE/xpi/bug489729-1.3-fx/chrome/bug489729/locale/ja/bug489729.dtd");
+			               return new InputSource(reader);
+			           }
 
+					return null;
+				}
+			});
+			builder.setErrorHandler(new ErrorHandler() {
+				
+				@Override
+				public void warning(SAXParseException exception) throws SAXException {
+					// TODO Auto-generated method stub
+					int i=0;
+					i++;					
+				}
+				
+				@Override
+				public void fatalError(SAXParseException exception) throws SAXException {
+					// TODO Auto-generated method stub
+					int i=0;
+					i++;
+				}
+				
+				@Override
+				public void error(SAXParseException exception) throws SAXException {
+					// TODO Auto-generated method stub
+					int i=0;
+					i++;					
+				}
+			});
+			Document doc = builder.parse(in);
+			String aa = document2String(doc);
+			//DOMImplementation hh = doc.getImplementation();
+			//StyleSheetList h = ((DocumentStyle) doc.getDocumentElement().getOwnerDocument()).getStyleSheets();
+			//String aa = doc.getDocumentElement().toString();
+			//DocumentStyle ds = (DocumentStyle)hh;
+			//StyleSheetList h = ds.getStyleSheets();
 			AbstractElementModel child = parseElement(root, doc.getDocumentElement());
 			return child;
 			
@@ -97,6 +165,25 @@ public class XULLoader {
 			return new RootModel();
 		}			
 	}
+	
+	public static String document2String(Document doc) {
+		String string = null;
+		StringWriter writer = new StringWriter();
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory factory = TransformerFactory.newInstance();
+
+		Transformer former;
+		try {
+		former = factory.newTransformer();
+		former.transform(new DOMSource(doc.getDocumentElement()), result);
+		string = result.getWriter().toString();
+		} catch (TransformerConfigurationException e) {
+		//_logger.warn(e);
+		} catch (TransformerException e) {
+		//_logger.warn(e);
+		}
+		return string;
+		}
 	
 	public static String getContent(InputStream input) throws IOException
 	{			

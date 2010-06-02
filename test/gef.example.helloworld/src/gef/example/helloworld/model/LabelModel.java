@@ -12,7 +12,7 @@ public class LabelModel extends AbstractElementModel {
 	public void installModelProperty() {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
-		AddAttrTextProperty(VALUE, VALUE, "Hello World");
+		AddAttrTextProperty(VALUE, VALUE, "label");
 	}
 
 	@Override
