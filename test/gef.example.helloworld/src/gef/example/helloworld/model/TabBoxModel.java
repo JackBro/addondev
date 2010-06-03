@@ -7,6 +7,7 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 public class TabBoxModel extends BoxModel {
 	
 	public static final String ATTR_TABS = "tabs";
+	public static final String TABPANELS = "tabpanels";
 	private TabPanelsModel fTabPanelsModel;
 
 	public TabPanelsModel getTabPanelsModel() {
@@ -26,11 +27,11 @@ public class TabBoxModel extends BoxModel {
 //				new ComboBoxPropertyDescriptor(ATTR_ORIENT, ATTR_ORIENT, new String[] { "horizontal"}),
 //				"horizontal");
 		//AddTextProperty(ATTR_TABS, ATTR_TABS, "0");
-		fTabPanelsModel = new TabPanelsModel();
-		fTabPanelsModel.setParent(this);
-		//AddListProperty(model.getName(), model.getName(), model);
-		AddTabListProperty(fTabPanelsModel.getName(), fTabPanelsModel.getName(), 
-				this, TabPanelModel.class, fTabPanelsModel.getChildren());
+		//fTabPanelsModel = new TabPanelsModel();
+		//fTabPanelsModel.setParent(this);
+		AddListProperty(TABPANELS, TABPANELS, this, TabPanelModel.class, getChildren());
+		//AddTabListProperty(fTabPanelsModel.getName(), fTabPanelsModel.getName(), 
+		//		this, TabPanelModel.class, fTabPanelsModel.getChildren());
 	}
 
 	@Override

@@ -22,10 +22,10 @@ public class PrefwindowModel extends WindowModel {
 		
 		fPrefPanesModel = new PrefPanesModel();
 		fPrefPanesModel.setParent(this);
-		AddTabListProperty(fPrefPanesModel.getName(), "prefnanes", 
-				this, PrefpaneModel.class, fPrefPanesModel.getChildren());
+		//AddTabListProperty(fPrefPanesModel.getName(), "prefnanes", 
+		//		this, PrefpaneModel.class, fPrefPanesModel.getChildren());
 		
-//		AddListProperty("prefnanes", "prefnanes", 
-//				this, PrefpaneModel.class, getChildren());
+		AddListProperty("prefpanes", "prefpanes", 
+				this, PrefpaneModel.class, getChildren());
 	}
 }

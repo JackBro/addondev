@@ -51,7 +51,8 @@ public class XULLoader {
 		//parsers.put("prefwindow", new DefaultXULParser(PrefwindowModel.class));
 		parsers.put("window", new WindowParser());
 		parsers.put("prefwindow", new PrefwindowParser());
-		parsers.put("prefwindow", new PrefwindowParser());
+		parsers.put("prefpane", new DefaultXULParser(PrefpaneModel.class));
+		//parsers.put("prefwindow", new DefaultXULParser(PrefwindowModel.class));
 		
 		parsers.put("button", new DefaultXULParser(ButtonModel.class));
 		parsers.put("colorpicker", new DefaultXULParser(ColorPickerModel.class));
@@ -66,6 +67,9 @@ public class XULLoader {
 		parsers.put("listheader", new DefaultXULParser(ListHeaderModel.class));
 		parsers.put("listcol", new DefaultXULParser(ListColModel.class));
 		parsers.put("listcell", new DefaultXULParser(ListCellModel.class));
+		
+		parsers.put("tabbox", new TabBoxParser());
+		parsers.put("tabpanel", new DefaultXULParser(TabPanelModel.class));
 		
 		parsers.put("checkbox", new DefaultXULParser(CheckBoxModel.class));
 		parsers.put("radiogroup", new DefaultXULParser(RadioGroupModel.class));

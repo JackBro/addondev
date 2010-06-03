@@ -19,21 +19,21 @@ public class PrefwindowParser extends WindowParser {
 		return new PrefwindowModel();
 	}
 
-	@Override
-	protected void parseChildElement(AbstractElementModel model,
-			FuzzyXMLElement e) {
-		// TODO Auto-generated method stub
-		if(e.getName().equals("prefpane")){
-			PrefpaneModel prefpane = new PrefpaneModel();
-			parseAttribute(prefpane, e);
-			parseChildren(prefpane, e);
-			((PrefwindowModel)model).getPrefPanesModel().addChild(prefpane);
-			//((PrefwindowModel)model).firePropertyChange("prefnanes", null, ((PrefwindowModel)model).getPrefPanesModel().getChildren());
-			//((PrefwindowModel)model).addChild(prefpane);
-		}else{
-			super.parseChildElement(model, e);
-		}
-	}
+//	@Override
+//	protected void parseChildElement(AbstractElementModel model,
+//			FuzzyXMLElement e) {
+//		// TODO Auto-generated method stub
+//		if(e.getName().equals("prefpane")){
+//			PrefpaneModel prefpane = new PrefpaneModel();
+//			parseAttribute(prefpane, e);
+//			parseChildren(prefpane, e);
+//			((PrefwindowModel)model).getPrefPanesModel().addChild(prefpane);
+//			//((PrefwindowModel)model).firePropertyChange("prefnanes", null, ((PrefwindowModel)model).getPrefPanesModel().getChildren());
+//			//((PrefwindowModel)model).addChild(prefpane);
+//		}else{
+//			super.parseChildElement(model, e);
+//		}
+//	}
 	
 	
 }

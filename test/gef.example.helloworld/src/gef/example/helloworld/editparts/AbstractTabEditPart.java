@@ -68,7 +68,7 @@ public abstract class AbstractTabEditPart extends BoxEditPart {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new TabBoxLayoutEditPolicy());
+		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new TabBoxLayoutEditPolicy());
 	}
 
 	@Override

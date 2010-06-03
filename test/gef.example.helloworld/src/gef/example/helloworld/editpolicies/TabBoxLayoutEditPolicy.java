@@ -3,6 +3,7 @@ package gef.example.helloworld.editpolicies;
 import gef.example.helloworld.editparts.RadioEditPart;
 import gef.example.helloworld.editparts.TabPanelEditPart;
 import gef.example.helloworld.model.AbstractElementModel;
+import gef.example.helloworld.model.PrefpaneModel;
 import gef.example.helloworld.model.RadioModel;
 import gef.example.helloworld.model.TabPanelModel;
 
@@ -13,13 +14,13 @@ public class TabBoxLayoutEditPolicy extends FilterBoxLayoutEditPolicy {
 	@Override
 	protected boolean isFilter(EditPart editpart) {
 		// TODO Auto-generated method stub
-		return !(editpart instanceof TabPanelEditPart);
+		return !((editpart instanceof TabPanelEditPart));
 	}
 
 	@Override
 	protected boolean isFilter(AbstractElementModel model) {
 		// TODO Auto-generated method stub
-		return !(model instanceof TabPanelModel);
+		return !((model instanceof TabPanelModel) && (model instanceof PrefpaneModel));
 	}
 
 }

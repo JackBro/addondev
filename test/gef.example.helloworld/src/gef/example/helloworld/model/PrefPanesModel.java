@@ -5,7 +5,7 @@ public class PrefPanesModel extends AbstractElementModel {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "prefnanes";
+		return "prefpanes";
 	}	
 	
 	@Override

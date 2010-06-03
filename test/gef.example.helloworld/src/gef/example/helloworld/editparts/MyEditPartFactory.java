@@ -30,7 +30,7 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(TabPanelModel.class, TabPanelEditPart.class);
 		editpartMap.put(MenuListModel.class, MenuListEditPart.class);
 		editpartMap.put(PrefwindowModel.class, PrefwindowEditPart.class);
-		editpartMap.put(PrefpaneModel.class, TabPanelEditPart.class);
+		editpartMap.put(PrefpaneModel.class, PrefPaneEditPart.class);
 		editpartMap.put(XULPartModel.class, XULPartEditPart.class);
 		editpartMap.put(XULRootModel.class, XULRootEditPart.class);
 		editpartMap.put(OverlayModel.class, OverlayEditPart.class);
