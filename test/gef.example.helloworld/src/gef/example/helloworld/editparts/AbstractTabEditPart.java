@@ -27,7 +27,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 
-public abstract class AbstractTabEditPart extends AbstractEditPartWithListener {
+public abstract class AbstractTabEditPart extends BoxEditPart {
 
 	private HashMap<IFigure, Label> buttonMap = new HashMap<IFigure, Label>();
 	

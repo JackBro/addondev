@@ -33,7 +33,13 @@ public class PrefwindowEditPart extends AbstractTabEditPart {
 		//BoxModel model =  (BoxModel)getModel();
 		//model.addChild(new PrefpaneModel());
 		//model.addChild(new PrefpaneModel());
+		PrefwindowModel model = (PrefwindowModel)getModel();
 		
+		refreshChildren();
+//		if(model.getPrefPanesModel().getChildren().size()>0){
+//			model.firePropertyChange("prefnanes", null, model.getPrefPanesModel().getChildren());
+//		}
+//		
 		return tabbox;
 	}
 	
@@ -47,6 +53,7 @@ public class PrefwindowEditPart extends AbstractTabEditPart {
 		if(evt.getPropertyName().equals("prefnanes")){
 			PrefwindowModel model =  (PrefwindowModel)getModel();
 			//AbstractElementModel tabs = (AbstractElementModel)model.getPropertyValue("prefnanes");
+			//AbstractElementModel tabs = model.getPrefPanesModel();
 			AbstractElementModel tabs = model.getPrefPanesModel();
 			List list = (List)evt.getNewValue();
 			while(tabs.getChildren().size() > 0){
@@ -61,7 +68,7 @@ public class PrefwindowEditPart extends AbstractTabEditPart {
 			for (Object object : list) {
 				model.addChild((AbstractElementModel) object);
 			}
-			//refreshTabs();
+			refreshTabs();
 		}else if(evt.getPropertyName().equals("resize")){
 			Rectangle rect = (Rectangle)evt.getNewValue();
 			IFigure figure = getFigure();

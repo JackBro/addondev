@@ -1,4 +1,4 @@
-package gef.example.helloworld.parser;
+package gef.example.helloworld.parser.xul;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,6 +22,10 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 import javax.xml.validation.ValidatorHandler;
 
+import jp.aonir.fuzzyxml.FuzzyXMLDocument;
+import jp.aonir.fuzzyxml.FuzzyXMLElement;
+import jp.aonir.fuzzyxml.FuzzyXMLParser;
+
 import org.eclipse.core.resources.IFile;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -42,20 +46,23 @@ public class XULLoader {
 
 	private static Map<String, AbstractXULParser> parsers = new HashMap<String, AbstractXULParser>();
 	static {
-		parsers.put("window", new DefaultXULParser(WindowModel.class));
+		//parsers.put("window", new DefaultXULParser(WindowModel.class));
 		parsers.put("overlay", new DefaultXULParser(OverlayModel.class));
-		parsers.put("prefwindow", new DefaultXULParser(PrefwindowModel.class));
+		//parsers.put("prefwindow", new DefaultXULParser(PrefwindowModel.class));
+		parsers.put("window", new WindowParser());
+		parsers.put("prefwindow", new PrefwindowParser());
+		parsers.put("prefwindow", new PrefwindowParser());
 		
 		parsers.put("button", new DefaultXULParser(ButtonModel.class));
 		parsers.put("colorpicker", new DefaultXULParser(ColorPickerModel.class));
-		parsers.put("grid", new GridParser());
+		//parsers.put("grid", new GridParser());
 		parsers.put("label", new DefaultXULParser(LabelModel.class));
 		parsers.put("vbox", new DefaultXULParser(VBoxModel.class));
 		parsers.put("hbox", new DefaultXULParser(HBoxModel.class));
 		parsers.put("statusbar", new DefaultXULParser(StatusbarModel.class));
-		parsers.put("menuitem", new DefaultXULParser(MenuItemModel.class));
+		parsers.put("groupbox", new DefaultXULParser(GroupBoxModel.class));
 
-		parsers.put("listbox", new ListBoxParser());
+		//parsers.put("listbox", new ListBoxParser());
 		parsers.put("listheader", new DefaultXULParser(ListHeaderModel.class));
 		parsers.put("listcol", new DefaultXULParser(ListColModel.class));
 		parsers.put("listcell", new DefaultXULParser(ListCellModel.class));
@@ -65,7 +72,8 @@ public class XULLoader {
 		parsers.put("radio", new DefaultXULParser(RadioModel.class));
 		
 		parsers.put("menupopup", new DefaultXULParser(MenuPopupModel.class));
-		parsers.put("template", new TemplateParser());
+		parsers.put("menuitem", new DefaultXULParser(MenuItemModel.class));
+		//parsers.put("template", new TemplateParser());
 		
 		parsers.put("preferences", new DefaultXULParser(PreferencesModel.class));
 		parsers.put("preference", new DefaultXULParser(PreferenceModel.class));
@@ -73,9 +81,11 @@ public class XULLoader {
 		parsers.put("keyset", new DefaultXULParser(KeySetModel.class));
 		parsers.put("key", new DefaultXULParser(KeyModel.class));
 		
+		parsers.put("script", new DefaultXULParser(ScriptModel.class));
+		
 	}
-	public static AbstractElementModel parseElement(AbstractElementModel root, Element e) {
-		String elementName = e.getTagName();
+	public static AbstractElementModel parseElement(AbstractElementModel root, FuzzyXMLElement e) {
+		String elementName = e.getName();
 		AbstractXULParser parser = parsers.get(elementName);
 		if(parser == null){
 			//parser = new AnonymousParser(elementName);
@@ -101,64 +111,13 @@ public class XULLoader {
 	public static AbstractElementModel loadXUL(InputStream in, ContentsModel root){
 	//public static ElementModel loadXUL(IFile file, RootModel root){
 		try {
-			//String parseStr = getContent(file.getContents());
-	        //InputStream is = null;
-	        //is = new ByteArrayInputStream(parseStr.getBytes("UTF-8"));
-	        
-			DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
-			dbfactory.setExpandEntityReferences(false);
-			//dbfactory.setValidating(false);
-			//dbfactory.setIgnoringElementContentWhitespace(true);
-			DocumentBuilder builder;
-			builder = dbfactory.newDocumentBuilder();
+			String xul = getContent(in);
+			FuzzyXMLElement targetelement = null;
+			FuzzyXMLParser parser = new FuzzyXMLParser();
+			FuzzyXMLDocument document = parser.parse(xul);
+			FuzzyXMLElement element = document.getDocumentElement();
 			
-			builder.setEntityResolver(new EntityResolver() {
-				
-				@Override
-				public InputSource resolveEntity(String publicId, String systemId)
-						throws SAXException, IOException {
-					// TODO Auto-generated method stub
-			           if(systemId.equals("chrome://bug489729/locale/bug489729.dtd")){
-			        	   
-			               InputStream reader = new FileInputStream("D:/data/src/PDE/xpi/bug489729-1.3-fx/chrome/bug489729/locale/ja/bug489729.dtd");
-			               return new InputSource(reader);
-			               //return new InputSource("");
-			           }
-
-					return null;
-				}
-			});
-			builder.setErrorHandler(new ErrorHandler() {
-				
-				@Override
-				public void warning(SAXParseException exception) throws SAXException {
-					// TODO Auto-generated method stub
-					int i=0;
-					i++;					
-				}
-				
-				@Override
-				public void fatalError(SAXParseException exception) throws SAXException {
-					// TODO Auto-generated method stub
-					int i=0;
-					i++;
-				}
-				
-				@Override
-				public void error(SAXParseException exception) throws SAXException {
-					// TODO Auto-generated method stub
-					int i=0;
-					i++;					
-				}
-			});
-			Document doc = builder.parse(in);
-			//String aa = document2String(doc);
-			//DOMImplementation hh = doc.getImplementation();
-			//StyleSheetList h = ((DocumentStyle) doc.getDocumentElement().getOwnerDocument()).getStyleSheets();
-			//String aa = doc.getDocumentElement().toString();
-			//DocumentStyle ds = (DocumentStyle)hh;
-			//StyleSheetList h = ds.getStyleSheets();
-			AbstractElementModel child = parseElement(root, doc.getDocumentElement());
+			AbstractElementModel child = parseElement(root, (FuzzyXMLElement) element.getChildren()[0]);
 			return child;
 			
 		} catch (Exception e) {

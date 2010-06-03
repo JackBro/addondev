@@ -14,6 +14,14 @@ public class WindowModel extends BoxModel {
 	
 	private List scripts;
 	
+	public List getScripts() {
+		return scripts;
+	}
+
+	public void setScripts(List scripts) {
+		this.scripts = scripts;
+	}
+
 	public WindowModel() {
 		super();
 		// TODO Auto-generated constructor stub

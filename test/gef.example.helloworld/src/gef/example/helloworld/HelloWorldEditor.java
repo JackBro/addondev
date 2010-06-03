@@ -6,7 +6,8 @@ import java.util.List;
 import gef.example.helloworld.editparts.MyEditPartFactory;
 import gef.example.helloworld.editparts.tree.TreeEditPartFactory;
 import gef.example.helloworld.model.*;
-import gef.example.helloworld.parser.XULLoader;
+import gef.example.helloworld.parser.xul.XULLoader;
+//import gef.example.helloworld.parser.XULLoader;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;

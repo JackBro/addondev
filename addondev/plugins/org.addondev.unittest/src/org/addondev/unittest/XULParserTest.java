@@ -13,8 +13,9 @@ import org.junit.Test;
 public class XULParserTest {
 	
 	private static Pattern doctypePattern = Pattern.compile("<!DOCTYPE\\s+([^\\s]+)\\s+SYSTEM\\s+\"(([^\"]+))\"\\s*>", Pattern.MULTILINE);
-	private static Pattern doctypelistPattern = Pattern.compile("<!DOCTYPE\\s+([^\\s])\\s+\\[(.+)\\]\\s*>", Pattern.MULTILINE);
-	private static Pattern entityPattern = Pattern.compile("<!ENTITY\\s+%\\s+([^\\s])\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>\\s+%(.+);", Pattern.MULTILINE);
+	private static Pattern doctypelistPattern = Pattern.compile("<!DOCTYPE\\s+([^\\s]+)\\s*\\[(.+)\\]\\s*>", Pattern.MULTILINE | Pattern.DOTALL);
+	
+	private static Pattern entityPattern = Pattern.compile("<!ENTITY\\s+%\\s+([^\\s]+)\\s+SYSTEM\\s+\"([^\"]+)\"\\s*>\\s+%(.+);", Pattern.MULTILINE);
 	//private static Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+href=\\s*\"([^\"]+)\"\\s*.*\\?>", Pattern.MULTILINE);
 	private static Pattern stylesheetPattern = Pattern.compile("<\\?xml-stylesheet\\s+((.*))\\?>");
 	private static Pattern attrPattern = Pattern.compile("([^\\s]+)\\s*=\\s*\"(([^\"]+))\"");
@@ -28,19 +29,20 @@ public class XULParserTest {
 		String text = getSource(XULParserTest.class.getResourceAsStream("test.xul"));
 		
 		ArrayList<Pattern> patterns = new ArrayList<Pattern>();
-		patterns.add(doctypePattern);
+		//patterns.add(doctypePattern);
 		patterns.add(doctypelistPattern);
-		patterns.add(entityPattern);
-		//patterns.add(stylesheetPattern);
-		patterns.add(docPattern);
+		//patterns.add(entityPattern);
+		//patterns.add(docPattern);
 		
 		for (Pattern pattern : patterns) {
 			Matcher m = pattern.matcher(text);
 			while(m.find()){
 				if(m.pattern().equals(doctypelistPattern)){
-					Matcher m2 = entityPattern.matcher(m.group(1));
+					System.out.println("diclist pattern = " + doctypelistPattern.pattern());
+					System.out.println("diclist entity text = " + m.group(2));
+					Matcher m2 = entityPattern.matcher(m.group(2));
 					if(m2.find()){
-						System.out.println("pattern = " + entityPattern.pattern());
+						System.out.println("diclist entity pattern = " + entityPattern.pattern());
 						for (int i = 0; i <m2.groupCount(); i++) {
 							System.out.println(m2.group(i));
 						}

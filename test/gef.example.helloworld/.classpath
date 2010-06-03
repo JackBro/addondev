@@ -3,5 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="lib/FuzzyXML/fuzzyxml.jar" sourcepath="lib/FuzzyXML/src.zip"/>
+	<classpathentry kind="lib" path="lib/FuzzyXML/lib/commons-jxpath-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

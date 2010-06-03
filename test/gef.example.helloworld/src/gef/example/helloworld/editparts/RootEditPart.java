@@ -41,8 +41,8 @@ public class RootEditPart extends AbstractEditPartWithListener {
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
 		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new MyXYLayoutEditPolicy());
-		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new RootXYLayoutEditPolicy((ContentsModel)getModel()));
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new RootXYLayoutEditPolicy((ContentsModel)getModel()));
+		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new BoxLayoutEditPolicy());
 	}
 
 	@Override

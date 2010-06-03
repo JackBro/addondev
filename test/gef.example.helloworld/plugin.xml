@@ -8,6 +8,11 @@
 
    <runtime>
       <library name="helloworld.jar"/>
+      <library name="lib/FuzzyXML/fuzzyxml.jar">
+         <export
+               name="*">
+         </export>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.core.resources"/>

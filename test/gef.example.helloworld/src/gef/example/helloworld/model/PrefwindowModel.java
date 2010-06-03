@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class PrefwindowModel extends BoxModel {
+public class PrefwindowModel extends WindowModel {
 
 	public static final String ATTR_TABS = "tabs";
 	private PrefPanesModel fPrefPanesModel;
@@ -22,9 +22,10 @@ public class PrefwindowModel extends BoxModel {
 		
 		fPrefPanesModel = new PrefPanesModel();
 		fPrefPanesModel.setParent(this);
-		//prefpanes.setDefault();
-		//AddListProperty("prefnanes", "prefnanes", prefpanes);
 		AddTabListProperty(fPrefPanesModel.getName(), "prefnanes", 
 				this, PrefpaneModel.class, fPrefPanesModel.getChildren());
+		
+//		AddListProperty("prefnanes", "prefnanes", 
+//				this, PrefpaneModel.class, getChildren());
 	}
 }

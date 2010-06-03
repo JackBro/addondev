@@ -70,7 +70,7 @@ public class XULParser {
 		FuzzyXMLParser parser = new FuzzyXMLParser();
 		FuzzyXMLDocument document = parser.parse(text);
 		FuzzyXMLElement element = document.getDocumentElement();
-
+		
 		if(element.hasChildren())
 		{
 			HashSet<String> set = new HashSet<String>();
