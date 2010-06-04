@@ -1,10 +1,22 @@
 package gef.example.helloworld.model;
 
-public class PrefwindowModel extends WindowModel {
+import java.util.ArrayList;
+import java.util.List;
+
+public class PrefwindowModel extends BoxModel {
 
 	public static final String ATTR_TABS = "tabs";
 	private PrefPanesModel fPrefPanesModel;
+	private List panels;
 	
+	public List getPanels() {
+		return panels;
+	}
+
+	public void setPanels(List panels) {
+		this.panels = panels;
+	}
+
 	public PrefPanesModel getPrefPanesModel() {
 		return fPrefPanesModel;
 	}
@@ -20,12 +32,17 @@ public class PrefwindowModel extends WindowModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 		
+
 		fPrefPanesModel = new PrefPanesModel();
 		fPrefPanesModel.setParent(this);
 		//AddTabListProperty(fPrefPanesModel.getName(), "prefnanes", 
 		//		this, PrefpaneModel.class, fPrefPanesModel.getChildren());
 		
+		//AddListProperty("prefpanes", "prefpanes", 
+		//		this, PrefpaneModel.class, getChildren());
+		
+		panels = new ArrayList();
 		AddListProperty("prefpanes", "prefpanes", 
-				this, PrefpaneModel.class, getChildren());
+				this, PrefpaneModel.class, panels);
 	}
 }

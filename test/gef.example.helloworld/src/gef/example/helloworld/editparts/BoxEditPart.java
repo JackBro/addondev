@@ -38,6 +38,7 @@ public class BoxEditPart extends AbstractContentsEditPart {
 		
 		ToolbarLayout tl = new ToolbarLayout();
 		tl.setSpacing(5);	
+		boolean ss = isVertical();
 		tl.setVertical(isVertical());
 		tl.setStretchMinorAxis(true);
 		figure.setLayoutManager(tl);
@@ -96,7 +97,8 @@ public class BoxEditPart extends AbstractContentsEditPart {
 
 	protected boolean isVertical(){
 		String orient = ((BoxModel)getModel()).getPropertyValue(BoxModel.ATTR_ORIENT).toString();
-		return orient.equalsIgnoreCase("vertical");		
+		//return orient.equalsIgnoreCase("vertical");
+		return orient.equals("vertical");	
 	}
 	
 	@Override

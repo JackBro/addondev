@@ -68,39 +68,69 @@ public abstract class AbstractTabEditPart extends BoxEditPart {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		//installEditPolicy(EditPolicy.LAYOUT_ROLE, new TabBoxLayoutEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new TabBoxLayoutEditPolicy());
 	}
 
+	@Override
+	protected void addChild(EditPart child, int index) {
+		// TODO Auto-generated method stub
+		//super.addChild(child, index);
+//		if(child instanceof DataElementEditPart){
+//			
+//			super.addChild(child, 0);
+//		}else{
+//			super.addChild(child, index);
+//		}
+		super.addChild(child, index-datacnt);
+	}
+
+	int datacnt=0;
+	
 	@Override
 	protected void addChildVisual(EditPart childEditPart, int index) {
 		// TODO Auto-generated method stub
         IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
-        
-        Object constraint = BorderLayout.CENTER;
-        //Object constraint = BorderLayout.BOTTOM;
-        TabBoxFigure figure = getLayout();
-        figure.getCanvas().add(child, constraint, index);
-        //TabButton b = new TabButton((TabPanelFigure)child, childEditPart);
-        Label b = getNewTab((TabPanelFigure)child, childEditPart);
-        figure.getTabs().add(b, constraint, index);
-        this.buttonMap.put(child, b);
-        hideChilds();
-        activateChilds(childEditPart);
-        child.setVisible(true);
-        childEditPart.refresh();
+        if(child instanceof  TabPanelFigure){
+	        
+	        Object constraint = BorderLayout.CENTER;
+	        //Object constraint = BorderLayout.BOTTOM;
+	        TabBoxFigure figure = getLayout();
+	        figure.getCanvas().add(child, constraint, index);
+	        //TabButton b = new TabButton((TabPanelFigure)child, childEditPart);
+	        Label b = getNewTab((TabPanelFigure)child, childEditPart);
+	        figure.getTabs().add(b, constraint, index);
+	        this.buttonMap.put(child, b);
+	        hideChilds();
+	        activateChilds(childEditPart);
+	        child.setVisible(true);
+	        childEditPart.refresh();
+        }else if(childEditPart instanceof DataElementEditPart){
+        	int i=0;
+        	i++;
+        	datacnt++;
+        	//getRootBorderFigure().getBottom().add(child);
+        	super.addChildVisual(childEditPart, index);
+        }
 	}
 
 	@Override
 	protected void removeChildVisual(EditPart childEditPart) {
 		// TODO Auto-generated method stub
-        IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
-        TabBoxFigure figure = getLayout();
-        figure.getCanvas().remove(child);
-        deactivateChilds(childEditPart);
-        //TabButton b = this.buttonMap.get(child);
-        Label b = this.buttonMap.get(child);
-        figure.getTabs().remove(b);
-        this.buttonMap.remove(child);
+        if(childEditPart instanceof DataElementEditPart){
+        	datacnt--;
+        	//getRootBorderFigure().getBottom().add(child);
+        	super.removeChildVisual(childEditPart);
+        }else{
+	        IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+	        TabBoxFigure figure = getLayout();
+	        figure.getCanvas().remove(child);
+	        deactivateChilds(childEditPart);
+	        //TabButton b = this.buttonMap.get(child);
+	        Label b = this.buttonMap.get(child);
+	        figure.getTabs().remove(b);
+	        this.buttonMap.remove(child);
+        }
+
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package gef.example.helloworld.model;
 
-public class MenuItemModel extends AbstractElementModel {
+public class MenuItemModel extends AbstractElementModel implements ILabelModel{
 
 	public static final String ATTR_LABEL = "label";
 	public static final String ATTR_ONCOMMAND = "label";
@@ -17,6 +17,12 @@ public class MenuItemModel extends AbstractElementModel {
 		// TODO Auto-generated method stub
 		super.installModelProperty();
 		AddAttrTextProperty(ATTR_LABEL, ATTR_LABEL, "item");
+	}
+
+	@Override
+	public String getText() {
+		// TODO Auto-generated method stub
+		return "menuitem";
 	}
 
 }

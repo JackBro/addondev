@@ -5,16 +5,21 @@ public class GroupBoxModel extends BoxModel {
 	public static final String CAPTION = "caption";
 	public static final String CHECKBOX = "checkbox";
 	
-	private boolean hascaption;
+	private boolean checkbox;
 	
-	public boolean isHascaption() {
-		return hascaption;
+	public boolean isCheckBox() {
+		return Boolean.parseBoolean((String)getPropertyValue(CHECKBOX));
 	}
 
-	public void setHascaption(boolean hascaption) {
-		this.hascaption = hascaption;
+	public void setCheckBox(boolean checkbox) {
+		//this.checkbox = checkbox;
+		setPropertyValue(CHECKBOX, String.valueOf(checkbox));
 	}
 
+	public String getText(){
+		return (String) getPropertyValue(CAPTION);
+	}
+	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub

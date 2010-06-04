@@ -40,6 +40,7 @@ public abstract class AbstractContentsEditPart extends AbstractEditPartWithListe
 		IFigure child = ((GraphicalEditPart)childEditPart).getFigure();
 		if(isPartChild(childEditPart)){
 			BorderFigure  figure = getRootBorderFigure();
+			//Figure tm =  figure.getBottom();
 			figure.getBottom().add(child);			
 		}
 		else if(isTopChild(childEditPart)){

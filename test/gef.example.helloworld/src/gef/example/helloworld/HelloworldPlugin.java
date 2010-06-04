@@ -16,7 +16,7 @@ public class HelloworldPlugin extends AbstractUIPlugin {
 	
 	public static final String IMG_CHECKBOX = "checkbox";
 	public static final String IMG_COLORPICKER = "colorpicker";
-	public static final String IMG_RADIO = "radio";
+	public static final String IMG_RADIO = "dummy";
 	public static final String IMG_DUMMY = "radio";
 	
 	//The shared instance.

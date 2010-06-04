@@ -2,12 +2,16 @@ package gef.example.helloworld.editparts;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.text.html.parser.ContentModel;
 
 import gef.example.helloworld.figure.TabBoxFigure;
 import gef.example.helloworld.figure.TabPanelFigure;
 import gef.example.helloworld.model.BoxModel;
 import gef.example.helloworld.model.AbstractElementModel;
+import gef.example.helloworld.model.ContentsModel;
 import gef.example.helloworld.model.PrefpaneModel;
 import gef.example.helloworld.model.PrefwindowModel;
 
@@ -33,8 +37,17 @@ public class PrefwindowEditPart extends AbstractTabEditPart {
 		//BoxModel model =  (BoxModel)getModel();
 		//model.addChild(new PrefpaneModel());
 		//model.addChild(new PrefpaneModel());
+		List panels = new ArrayList();
 		PrefwindowModel model = (PrefwindowModel)getModel();
-		
+		for (Object obj : model.getChildren()) {
+			if(obj instanceof PrefpaneModel){
+				//panels.add(obj);
+				if(model.getPanels().indexOf(obj) == -1){
+					model.getPanels().add(obj);
+				}
+			}
+		}
+		//model.setPanels(panels);
 //		refreshChildren();
 //		if(model.getPrefPanesModel().getChildren().size()>0){
 //			model.firePropertyChange("prefnanes", null, model.getPrefPanesModel().getChildren());
@@ -43,14 +56,20 @@ public class PrefwindowEditPart extends AbstractTabEditPart {
 		return tabbox;
 	}
 	
-	
+	private boolean lock= false;
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
 		super.propertyChange(evt);
 		
-		if(evt.getPropertyName().equals("prefpanes")){
+		if(evt.getPropertyName().equals(ContentsModel.P_ADD_CHILD) && !lock){
+			PrefwindowModel model =  (PrefwindowModel)getModel();
+			model.getPanels().add(evt.getNewValue());
+		}else if(evt.getPropertyName().equals(ContentsModel.P_REMOVE_CHILD) && !lock){
+			PrefwindowModel model =  (PrefwindowModel)getModel();
+			model.getPanels().remove(evt.getNewValue());
+		}else if(evt.getPropertyName().equals("prefpanes")){
 			PrefwindowModel model =  (PrefwindowModel)getModel();
 			//AbstractElementModel tabs = (AbstractElementModel)model.getPropertyValue("prefnanes");
 			//AbstractElementModel tabs = model.getPrefPanesModel();
@@ -62,12 +81,22 @@ public class PrefwindowEditPart extends AbstractTabEditPart {
 //			
 //			for (Object object : list) {
 //				tabs.getChildren().add(object);
-//			}
+//			}		
 			
-			model.removeAllChild();
+//			model.removeAllChild();
+//			for (Object object : list) {
+//				model.addChild((AbstractElementModel) object);
+//			}
+			lock = true;
+			List panels = model.getPanels();
+			for (Object panel : panels) {
+				model.removeChild((AbstractElementModel) panel);		
+			}
+			
 			for (Object object : list) {
 				model.addChild((AbstractElementModel) object);
 			}
+			lock = false;
 			//refreshTabs();
 		}else if(evt.getPropertyName().equals("resize")){
 			Rectangle rect = (Rectangle)evt.getNewValue();

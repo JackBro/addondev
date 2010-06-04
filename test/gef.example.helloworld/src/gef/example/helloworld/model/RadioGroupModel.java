@@ -7,4 +7,12 @@ public class RadioGroupModel extends BoxModel {
 		return "radiogroup";
 	}
 
+	@Override
+	public void installModelProperty() {
+		// TODO Auto-generated method stub
+		super.installModelProperty();
+		
+		setPropertyValue(BoxModel.ATTR_ORIENT, "horizontal");
+	}
+
 }

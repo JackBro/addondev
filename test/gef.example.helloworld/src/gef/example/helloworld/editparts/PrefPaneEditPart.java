@@ -10,4 +10,12 @@ public class PrefPaneEditPart extends BoxEditPart {
 		// TODO Auto-generated method stub
 		return new TabPanelFigure();
 	}
+
+	@Override
+	public IFigure getMain() {
+		// TODO Auto-generated method stub
+		return super.getMain();
+	}
+	
+	
 }

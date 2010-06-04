@@ -18,7 +18,6 @@ public class TabBoxParser extends AbstractXULParser {
 			FuzzyXMLElement e) {
 		// TODO Auto-generated method stub
 		if(e.getName().equals("tabpanels")){
-			FuzzyXMLNode[] i= e.getChildren();
 			for (FuzzyXMLNode node : e.getChildren()) {
 				if(node instanceof FuzzyXMLElement)
 					super.parseChildElement(model, (FuzzyXMLElement) node);

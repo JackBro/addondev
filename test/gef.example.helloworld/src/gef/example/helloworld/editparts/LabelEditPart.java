@@ -3,6 +3,7 @@ package gef.example.helloworld.editparts;
 import gef.example.helloworld.editpolicies.MyComponentEditPolicy;
 import gef.example.helloworld.figure.LabelFigure;
 import gef.example.helloworld.model.AbstractElementModel;
+import gef.example.helloworld.model.ILabelModel;
 import gef.example.helloworld.model.LabelModel;
 import java.beans.PropertyChangeEvent;
 
@@ -19,7 +20,7 @@ import org.eclipse.gef.EditPolicy;
 public class LabelEditPart extends AbstractElementEditPart {
 
 	protected IFigure createFigure() {
-		LabelModel model = (LabelModel) getModel();
+		ILabelModel model = (ILabelModel) getModel();
 
 		LabelFigure label = new LabelFigure();
 		label.setText(model.getText());
