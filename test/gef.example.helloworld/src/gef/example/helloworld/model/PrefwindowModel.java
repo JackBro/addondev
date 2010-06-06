@@ -3,7 +3,7 @@ package gef.example.helloworld.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrefwindowModel extends BoxModel {
+public class PrefwindowModel extends WindowModel {
 
 	public static final String ATTR_TABS = "tabs";
 	private PrefPanesModel fPrefPanesModel;

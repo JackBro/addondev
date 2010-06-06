@@ -8,6 +8,7 @@ import gef.example.helloworld.viewers.KeyModifiersPropertyDescriptor;
 public class ButtonModel extends AbstractElementModel {
 
 	public static final String ATTR_LABEL = "label";
+	public static final String ATTR_TYPE = "type";
 	
 	
 	@Override
@@ -22,6 +23,8 @@ public class ButtonModel extends AbstractElementModel {
 		super.installModelProperty();
 		//AddAttrBoolProperty("test","test", true);
 		//AddProperty("test", new KeyModifiersPropertyDescriptor("test", "keytest"), "");
+		String[] types = new String[]{"","checkbox", "menu", "menu-button", "radio", "repeat"};
+		AddAttrStringsProperty(ATTR_TYPE, ATTR_TYPE, types, "");
 	}
 
 }

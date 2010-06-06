@@ -3,7 +3,6 @@ package gef.example.helloworld;
 import java.util.EventObject;
 import java.util.List;
 
-import gef.example.helloworld.editparts.MyEditPartFactory;
 import gef.example.helloworld.editparts.tree.TreeEditPartFactory;
 import gef.example.helloworld.model.*;
 import gef.example.helloworld.parser.xul.XULLoader;
@@ -201,12 +200,18 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		addCreationToolEntry(drawer, TextBoxModel.class, "TextBox", "モデル作成",descriptor);
 		addCreationToolEntry(drawer, MenuPopupModel.class, "MenuPopup","モデル作成", descriptor);
 		addCreationToolEntry(drawer, StatusbarModel.class, "Statusbar","モデル作成", descriptor);
-		addCreationToolEntry(drawer, ToolBoxModel.class, "ToolBox","モデル作成", descriptor);
+		
 		//addCreationToolEntry(drawer, MenuModel.class, "Menuの作成","モデル作成", descriptor);
 		//addCreationToolEntry(drawer, MenuItemModel.class, "MenuItemの作成","モデル作成", descriptor);
 		addCreationToolEntry(drawer, MenubarModel.class, "MenuBar","モデル作成", descriptor);
 		addCreationToolEntry(drawer, ColorPickerModel.class, "ColorPicker","モデル作成", descriptor);
 		addCreationToolEntry(drawer, SeparatorModel.class, "Separator","モデル作成", descriptor);
+		
+		PaletteDrawer toolbardrawer = new PaletteDrawer("ToolBar");
+		addCreationToolEntry(toolbardrawer, ToolBoxModel.class, "ToolBox","モデル作成", descriptor);
+		addCreationToolEntry(toolbardrawer, ToolBarModel.class, "ToolBar","モデル作成", descriptor);
+		addCreationToolEntry(toolbardrawer, ToolBarItemModel.class, "ToolBarItem","モデル作成", descriptor);
+		addCreationToolEntry(toolbardrawer, ToolBarButtonModel.class, "ToolBarButton","モデル作成", descriptor);
 
 		PaletteDrawer datadrawer = new PaletteDrawer("data");
 		addCreationToolEntry(datadrawer, PreferencesModel.class, "Preferences","モデル作成", descriptor);
@@ -218,6 +223,7 @@ public class HelloWorldEditor extends GraphicalEditorWithPalette {
 		// 作成した2つのグループをルートに追加
 		root.add(toolGroup);
 		root.add(drawer);
+		root.add(toolbardrawer);
 		root.add(datadrawer);
 
 		return root;

@@ -18,6 +18,7 @@
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.ui.forms" version="3.4.1"/>
    </requires>
 
 
@@ -32,6 +33,12 @@
             icon="example.gif"
             id="gef.example.helloworld.editor1"
             name="Hello World Editor">
+      </editor>
+      <editor
+            class="gef.example.helloworld.editor.overlay.OverlayEditor"
+            default="false"
+            id="gef.example.helloworld.editor1"
+            name="overlay">
       </editor>
    </extension>
 
