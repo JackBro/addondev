@@ -1,8 +1,9 @@
-package gef.example.helloworld.editparts;
+package gef.example.helloworld;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import gef.example.helloworld.editparts.*;
 import gef.example.helloworld.model.*;
 
 import org.eclipse.gef.EditPart;
@@ -43,6 +44,13 @@ public class MyEditPartFactory implements EditPartFactory {
 		editpartMap.put(MenuItemModel.class, LabelEditPart.class);
 		editpartMap.put(MenuModel.class, LabelEditPart.class);
 		editpartMap.put(MenubarModel.class, MenuBarEditPart.class);
+		
+		
+		editpartMap.put(ToolBoxModel.class, ToolBoxEditPart.class);
+		editpartMap.put(ToolBarModel.class, ToolBarEditPart.class);
+		editpartMap.put(ToolBarItemModel.class, ToolBarItemEditPart.class);
+		editpartMap.put(ToolBarButtonModel.class, ToolBarButtonEditPart.class);
+		
 		
 		//editpartMap.put(TemplateModel.class, TemplateEditPart.class);
 		editpartMap.put(TemplateModel.class, DataElementEditPart.class);
