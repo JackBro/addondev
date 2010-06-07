@@ -3,7 +3,9 @@ package gef.example.helloworld.editor.overlay;
 import java.util.HashSet;
 import java.util.Set;
 
+import gef.example.helloworld.HelloworldPlugin;
 import gef.example.helloworld.editor.overlay.action.ExitAction;
+import gef.example.helloworld.editor.overlay.wizard.ExtentionWizard;
 import gef.example.helloworld.model.*;
 import gef.example.helloworld.parser.xul.XULLoader;
 
@@ -14,6 +16,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -21,6 +24,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -35,7 +39,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 
 	private static Set<Class> registerSet = new HashSet<Class>();
 	static{
-		registerSet.add(CheckBoxModel.class);
+		registerSet.add(StatusbarModel.class);
 	}
 	
 	private IEditorInput input;
@@ -68,7 +72,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 
 		//Composite client = toolkit.createComposite(section);
 		//client.setLayout(new FillLayout());
-		Tree tree = toolkit.createTree(viewercomposite, SWT.NONE);
+		Tree tree = toolkit.createTree(viewercomposite, SWT.BORDER);
 		TreeViewer viewer = new TreeViewer(tree);
 		viewer.setContentProvider(new XULTreeContentProvider());
 		viewer.setLabelProvider(new XULLabelProvider());
@@ -111,7 +115,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		createButtons(viewercomposite);
 	}
 
-	private void createButtons(Composite composite) {
+	private void createButtons(final Composite composite) {
         final Composite buttons = fManagedForm.getToolkit().createComposite(composite);
         GridData layoutData = new GridData();
         layoutData.verticalAlignment = GridData.FILL;
@@ -124,6 +128,10 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 			public void widgetSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
 				//
+				ExtentionWizard wiz = new ExtentionWizard();
+				Shell shell = HelloworldPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
+				WizardDialog dialog = new WizardDialog(shell, wiz);
+				dialog.open();
 			}
 			
 			@Override

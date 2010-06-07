@@ -26,13 +26,25 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 
 public class PropertyDetailsPage implements IDetailsPage {
 
+	class PropertyChange implements PropertyChangeListener{
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 	private IManagedForm form;
 	private PropertySheetPage fPropertySheetPage;
 	private PropertySheetEntry fPropertySheetEntry;
+	private PropertyChange fPropertyChange;
 	
 	public PropertyDetailsPage(IManagedForm form) {
 		super();
 		this.form = form;
+		fPropertyChange = new PropertyChange();
 	}
 
 	@Override
@@ -154,15 +166,17 @@ public class PropertyDetailsPage implements IDetailsPage {
 	public void selectionChanged(IFormPart part, ISelection selection) {
 		// TODO Auto-generated method stub
 		AbstractElementModel model = (AbstractElementModel) ((IStructuredSelection) selection).getFirstElement();
-		model.addPropertyChangeListener(new PropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				// TODO Auto-generated method stub
-				int i=0;
-				i++;
-			}
-		});
+		model.removePropertyChangeListener(fPropertyChange);
+		model.addPropertyChangeListener(fPropertyChange);
+//		model.addPropertyChangeListener(new PropertyChangeListener() {
+//			
+//			@Override
+//			public void propertyChange(PropertyChangeEvent evt) {
+//				// TODO Auto-generated method stub
+//				int i=0;
+//				i++;
+//			}
+//		});
 		objs[0] = model;
 		fPropertySheetEntry.setValues(objs);
 	}

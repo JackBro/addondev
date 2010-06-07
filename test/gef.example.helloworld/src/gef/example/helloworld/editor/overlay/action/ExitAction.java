@@ -7,6 +7,7 @@ public class ExitAction extends Action {
 	public ExitAction(String text) {
 		super(text);
 		// TODO Auto-generated constructor stub
+
 	}
 
 }
