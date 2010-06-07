@@ -35,9 +35,10 @@
             name="Hello World Editor">
       </editor>
       <editor
-            class="gef.example.helloworld.editor.overlay.OverlayEditor"
+            class="gef.example.helloworld.editor.overlay.OverlayFormEditor"
             default="false"
-            id="gef.example.helloworld.editor1"
+            extensions="world"
+            id="gef.example.helloworld.editor2"
             name="overlay">
       </editor>
    </extension>
