@@ -56,6 +56,8 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		registerSet.add(StatusbarModel.class);
 	}
 	
+	//private static Map<Class, Class[]> registerSet = new HashSet<Class>();
+	
 	private IEditorInput input;
 	private AbstractElementModel fCurrentSelection;
 	private IManagedForm fManagedForm;
@@ -105,24 +107,38 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 				// TODO Auto-generated method stub
 				//return null;
 				  Menu menu = new Menu(parent);
-                  MenuItem item1 = new MenuItem(menu, SWT.NONE);
-                  item1.setText("アイテム１");
-                  item1.addSelectionListener(new SelectionListener() {
-					
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						// TODO Auto-generated method stub
+				  for (final Class iterable_element : registerSet) {
+	                  MenuItem item1 = new MenuItem(menu, SWT.NONE);
+	                  item1.setText(iterable_element.getSimpleName());
+	                  item1.addSelectionListener(new SelectionListener() {
 						
-					}
-					
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-						// TODO Auto-generated method stub
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							// TODO Auto-generated method stub
+							if(fCurrentSelection instanceof KeySetModel){
+								//addmenu.run();
+							}
+							AbstractElementModel model = (AbstractElementModel)(fCurrentSelection);
+							//try {
+								try {
+									model.addChild((AbstractElementModel) iterable_element.newInstance());
+								} catch (InstantiationException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (IllegalAccessException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								viewer.refresh();
+						}
 						
-					}
-				});
-                  MenuItem item2 = new MenuItem(menu, SWT.NONE);
-                  item2.setText("アイテム２");
+						@Override
+						public void widgetDefaultSelected(SelectionEvent e) {
+							// TODO Auto-generated method stub
+							
+						}
+					});					
+				  }
                   return menu;
 			}
 			
@@ -148,7 +164,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 				// TODO Auto-generated method stub
 				int i =0;
 				i++;
-
+				
 			}
 			
 			@Override
