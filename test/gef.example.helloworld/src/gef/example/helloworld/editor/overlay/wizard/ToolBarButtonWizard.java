@@ -1,22 +1,25 @@
 package gef.example.helloworld.editor.overlay.wizard;
 
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class MenuWizard extends Wizard {
+public class ToolBarButtonWizard extends Wizard {
+	
+	public class ToolBarButtonWizardPage extends WizardPage {
 
-	public class MenuWizardPage extends WizardPage {
-
-		protected MenuWizardPage(String pageName) {
+		protected Text fId, fLabel;
+		
+		
+		protected ToolBarButtonWizardPage(String pageName) {
 			super(pageName);
 			// TODO Auto-generated constructor stub
 		}
@@ -27,7 +30,7 @@ public class MenuWizard extends Wizard {
 			Composite c = new Composite(parent, SWT.NONE);
 	        c.setLayout(new GridLayout(2, false));
 	        GridData gd;
-	        new Label(c, SWT.NONE).setText("menu");
+	        new Label(c, SWT.NONE).setText("ToolBarButton");
 	       
 	        Button button1 = new Button(c, SWT.RADIO);
 	        button1.setText("1");
@@ -41,24 +44,34 @@ public class MenuWizard extends Wizard {
 	        list.add("menu_ToolsPopup");
 	        
 	        new Label(c, SWT.NONE).setText("id");
-	        new Text(c, SWT.BORDER);
+	        fId = new Text(c, SWT.BORDER);
 	        new Label(c, SWT.NONE).setText("label");
-	        new Text(c, SWT.BORDER);
+	        fLabel = new Text(c, SWT.BORDER);
 	        setControl(c);
 		}
 
-	}	
+	}
+	private TreeViewer fTreeViewer;
+	private ToolBarButtonWizardPage page1;
 	
+	public ToolBarButtonWizard(TreeViewer treeviewer) {
+		super();
+		// TODO Auto-generated constructor stub
+		fTreeViewer = treeviewer;		
+	}
+
 	@Override
 	public void addPages() {
 		// TODO Auto-generated method stub
 		super.addPages();
-		addPage(new MenuWizardPage("menu"));
+		page1 = new ToolBarButtonWizardPage("ToolBarButton");
+		addPage(page1);
 	}
 
 	@Override
 	public boolean performFinish() {
 		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

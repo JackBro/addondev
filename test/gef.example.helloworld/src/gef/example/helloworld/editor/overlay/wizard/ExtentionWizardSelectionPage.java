@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
@@ -29,18 +30,20 @@ import org.eclipse.swt.widgets.Label;
 
 public class ExtentionWizardSelectionPage extends WizardSelectionPage implements ISelectionChangedListener{
 
-	private static Map<String, IWizard> elementMap = new HashMap<String, IWizard>();
-	static{
-//		elementMap.put("KeySet", KeySetModel.class);
-//		elementMap.put("CommandSet", CommandSetModel.class);
-//		elementMap.put("StringBundleSet", StringBundleSetModel.class);
+	private Map<String, IWizard> elementMap = new HashMap<String, IWizard>();
+//	static{
+////		elementMap.put("KeySet", KeySetModel.class);
+////		elementMap.put("CommandSet", CommandSetModel.class);
+////		elementMap.put("StringBundleSet", StringBundleSetModel.class);
+////		
+////		elementMap.put("ToolBox", ToolBoxModel.class);
+////		elementMap.put("ToolBar", ToolBarModel.class);
 //		
-//		elementMap.put("ToolBox", ToolBoxModel.class);
-//		elementMap.put("ToolBar", ToolBarModel.class);
-		
-		elementMap.put("Menu", new MenuWizard());
-	}
+//		elementMap.put("Menu", new MenuWizard());
+//		elementMap.put("ToolBarButton", new ToolBarButtonWizard());
+//	}
 	
+	private TreeViewer fTreeViewer;
 	private Wizard fWizard;
 	private Object value;
 	
@@ -48,12 +51,14 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 		return elementMap.get(value);
 	}
 
-	protected ExtentionWizardSelectionPage(String pageName, Wizard wizard) {
+	protected ExtentionWizardSelectionPage(String pageName, Wizard wizard, TreeViewer treeviewer) {
 		super(pageName);
 		// TODO Auto-generated constructor stub
 		fWizard = wizard;	
+		fTreeViewer = treeviewer;
 		
-		
+		elementMap.put("Menu", new MenuWizard());
+		elementMap.put("ToolBarButton", new ToolBarButtonWizard(fTreeViewer));
 	}
 
 	@Override
