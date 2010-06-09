@@ -1,4 +1,6 @@
-﻿http://julius.sourceforge.jp/index.php
+﻿http://www.clear-code.com/blog/
+
+http://julius.sourceforge.jp/index.php
 
 http://webcache.googleusercontent.com/search?q=cache:4BbRZe5NnckJ:moondial0.net/blog/ao15+xml%E3%80%80DOCTYPE+java+parser&cd=48&hl=ja&ct=clnk&gl=jp&lr=lang_ja&client=firefox-a
 http://www.smellman.homelinux.org/mozilla/xul-hack.html

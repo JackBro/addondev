@@ -1,6 +1,11 @@
 package gef.example.helloworld.editor.overlay;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import gef.example.helloworld.HelloworldPlugin;
@@ -56,18 +61,28 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		registerSet.add(StatusbarModel.class);
 	}
 	
-	//private static Map<Class, Class[]> registerSet = new HashSet<Class>();
+	private static Map<Class, List<Class>> addmenuMap = new HashMap<Class,List<Class>>();
+	static{
+		addmenuMap.put(KeySetModel.class, new ArrayList<Class>(Arrays.asList(KeyModel.class)));
+		addmenuMap.put(CommandSetModel.class, new ArrayList<Class>(Arrays.asList(CommandModel.class)));
+		
+		addmenuMap.put(OverlayModel.class, new ArrayList<Class>(Arrays.asList(
+			KeySetModel.class, CommandSetModel.class,
+			StatusbarModel.class, MenuPopupModel.class)));
+		addmenuMap.put(MenuPopupModel.class, new ArrayList<Class>(Arrays.asList(MenuItemModel.class, MenuSeparatorModel.class)));
+		addmenuMap.put(StatusbarModel.class, new ArrayList<Class>(Arrays.asList(MenuPopupModel.class)));
+	}
 	
 	private IEditorInput input;
 	private AbstractElementModel fCurrentSelection;
 	private IManagedForm fManagedForm;
 	private TreeViewer viewer;
+	private List<MenuItem> items = new ArrayList<MenuItem>();
+
 	
 	public OverlayMasterBlock(IEditorInput input) {
 		super();
-		// TODO Auto-generated constructor stub
 		this.input = input;
-		
 	}
 
 	@Override
@@ -87,8 +102,6 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		viewercomposite.setLayout(new GridLayout(2, false));
 		viewercomposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		//Composite client = toolkit.createComposite(section);
-		//client.setLayout(new FillLayout());
 		final Tree tree = toolkit.createTree(viewercomposite, SWT.BORDER);
 		viewer = new TreeViewer(tree);
 		viewer.setContentProvider(new XULTreeContentProvider());
@@ -96,40 +109,37 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		
 		MenuManager menu_manager = new MenuManager();
 		
-		final Action addmenu = new AddAction("exit");
+		final Action addmenu = new AddAction("add");
 		menu_manager.add(addmenu);
-		Menu m = menu_manager.createContextMenu(viewer.getTree());
-		
+		final Menu m = menu_manager.createContextMenu(viewer.getTree());
 		addmenu.setMenuCreator(new IMenuCreator() {
 			
 			@Override
 			public Menu getMenu(Menu parent) {
 				// TODO Auto-generated method stub
+				//if(fCurrentSelection == null) return null;
 				//return null;
 				  Menu menu = new Menu(parent);
-				  for (final Class iterable_element : registerSet) {
+				  for (final Class iterable_element : addmenuMap.get(OverlayModel.class)) {
 	                  MenuItem item1 = new MenuItem(menu, SWT.NONE);
 	                  item1.setText(iterable_element.getSimpleName());
+	                  item1.setData(iterable_element);
 	                  item1.addSelectionListener(new SelectionListener() {
 						
 						@Override
 						public void widgetSelected(SelectionEvent e) {
 							// TODO Auto-generated method stub
-							if(fCurrentSelection instanceof KeySetModel){
-								//addmenu.run();
-							}
 							AbstractElementModel model = (AbstractElementModel)(fCurrentSelection);
-							//try {
-								try {
-									model.addChild((AbstractElementModel) iterable_element.newInstance());
-								} catch (InstantiationException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								} catch (IllegalAccessException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
+							try {
+								model.addChild((AbstractElementModel) iterable_element.newInstance());
 								viewer.refresh();
+							} catch (InstantiationException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IllegalAccessException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						}
 						
 						@Override
@@ -137,8 +147,12 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 							// TODO Auto-generated method stub
 							
 						}
-					});					
+					});	
+	                  
+	                  items.add(item1);
 				  }
+				  
+
                   return menu;
 			}
 			
@@ -155,16 +169,18 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 			}
 		});
 		
-		
 		viewer.getTree().setMenu(m);
 		m.addMenuListener(new MenuListener() {
 			
 			@Override
 			public void menuShown(MenuEvent e) {
 				// TODO Auto-generated method stub
-				int i =0;
-				i++;
-				
+				if(fCurrentSelection == null) return;
+				List<Class> classes = addmenuMap.get(fCurrentSelection.getClass());
+				for (MenuItem item : items) {	
+					item.setEnabled(classes.contains(item.getData()));
+				}
+
 			}
 			
 			@Override
@@ -290,11 +306,9 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 
 	@Override
 	protected void registerPages(DetailsPart detailsPart) {
-		// TODO Auto-generated method stub
 		for (Class regclass : registerSet) {
 			detailsPart.registerPage(regclass, new PropertyDetailsPage(fManagedForm));
 		}
-		//detailsPart.registerPage(WindowModel.class, new PropertyDetailsPage(fManagedForm));
 	}
 
 }

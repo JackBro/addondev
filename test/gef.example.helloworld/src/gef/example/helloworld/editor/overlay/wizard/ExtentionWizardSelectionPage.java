@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.swt.SWT;
@@ -28,16 +29,16 @@ import org.eclipse.swt.widgets.Label;
 
 public class ExtentionWizardSelectionPage extends WizardSelectionPage implements ISelectionChangedListener{
 
-	private static Map<String, Class> elementMap = new HashMap<String, Class>();
+	private static Map<String, IWizard> elementMap = new HashMap<String, IWizard>();
 	static{
-		elementMap.put("KeySet", KeySetModel.class);
-		elementMap.put("CommandSet", CommandSetModel.class);
-		elementMap.put("StringBundleSet", StringBundleSetModel.class);
+//		elementMap.put("KeySet", KeySetModel.class);
+//		elementMap.put("CommandSet", CommandSetModel.class);
+//		elementMap.put("StringBundleSet", StringBundleSetModel.class);
+//		
+//		elementMap.put("ToolBox", ToolBoxModel.class);
+//		elementMap.put("ToolBar", ToolBarModel.class);
 		
-		elementMap.put("ToolBox", ToolBoxModel.class);
-		elementMap.put("ToolBar", ToolBarModel.class);
-		
-		elementMap.put("MenuPopup", MenuPopupModel.class);
+		elementMap.put("Menu", new MenuWizard());
 	}
 	
 	private Wizard fWizard;
@@ -51,7 +52,8 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 		super(pageName);
 		// TODO Auto-generated constructor stub
 		fWizard = wizard;	
-		setSelectedNode(new ExtentionWizardNode());
+		
+		
 	}
 
 	@Override
@@ -83,12 +85,15 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 			public void doubleClick(DoubleClickEvent event) {
 				// TODO Auto-generated method stub
 				
-				value = ((IStructuredSelection)event.getSelection()).getFirstElement(); 
-				setPageComplete(true);
-				fWizard.performFinish();
-				fWizard.getShell().close();
-				fWizard.dispose();
-				fWizard.setContainer(null);
+				value = ((IStructuredSelection)event.getSelection()).getFirstElement();
+				String key = (String)value; 
+				IWizard wizerd = elementMap.get(key);
+				setSelectedNode(new ExtentionWizardNode(wizerd));
+				//setPageComplete(true);
+//				fWizard.performFinish();
+//				fWizard.getShell().close();
+//				fWizard.dispose();
+//				fWizard.setContainer(null);
 			}
 		});
         //Dialog.applyDialogFont(container);
@@ -99,7 +104,11 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 	public void selectionChanged(SelectionChangedEvent event) {
 		// TODO Auto-generated method stub
 		value = ((IStructuredSelection)event.getSelection()).getFirstElement(); 
-		setPageComplete(true);
+		//setPageComplete(true);
+		value = ((IStructuredSelection)event.getSelection()).getFirstElement();
+		String key = (String)value; 
+		IWizard wizerd = elementMap.get(key);
+		setSelectedNode(new ExtentionWizardNode(wizerd));
 	}
 
 }

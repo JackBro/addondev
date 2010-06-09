@@ -6,6 +6,12 @@ import org.eclipse.swt.graphics.Point;
 
 public class ExtentionWizardNode implements IWizardNode {
 
+	private IWizard wizard;
+	
+	public ExtentionWizardNode(IWizard wizard) {
+		this.wizard = wizard;
+	}
+
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
@@ -21,7 +27,7 @@ public class ExtentionWizardNode implements IWizardNode {
 	@Override
 	public IWizard getWizard() {
 		// TODO Auto-generated method stub
-		return new DefaultWizard();
+		return wizard;
 	}
 
 	@Override
