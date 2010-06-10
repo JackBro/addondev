@@ -14,7 +14,7 @@ public class ExtentionWizard extends Wizard {
 	public void addPages() {
 		// TODO Auto-generated method stub
 		super.addPages();
-		page = new ExtentionWizardSelectionPage("", this);
+		page = new ExtentionWizardSelectionPage("");
 		addPage(page);
 		//addPage(new ExtentionWizardSelectionPage("2"));
 	}
@@ -22,7 +22,7 @@ public class ExtentionWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	@Override

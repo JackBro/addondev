@@ -23,9 +23,12 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 
 public class ExtentionWizardSelectionPage extends WizardSelectionPage implements ISelectionChangedListener{
@@ -43,29 +46,43 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 //		elementMap.put("ToolBarButton", new ToolBarButtonWizard());
 //	}
 	
-	private TreeViewer fTreeViewer;
-	private Wizard fWizard;
+	//private TreeViewer fTreeViewer;
+	//private Wizard fWizard;
 	private Object value;
 	
 	public Object getValue() {
-		return elementMap.get(value);
+		return value;
 	}
 
-	protected ExtentionWizardSelectionPage(String pageName, Wizard wizard, TreeViewer treeviewer) {
+	protected ExtentionWizardSelectionPage(String pageName) {
 		super(pageName);
 		// TODO Auto-generated constructor stub
-		fWizard = wizard;	
-		fTreeViewer = treeviewer;
+		//fWizard = wizard;	
+		//fTreeViewer = treeviewer;
 		
-		elementMap.put("Menu", new MenuWizard());
-		elementMap.put("ToolBarButton", new ToolBarButtonWizard(fTreeViewer));
+		elementMap.put("Menu", initWizard(new MenuWizard()));
+		elementMap.put("ToolBarButton", initWizard(new ToolBarButtonWizard()));
+		elementMap.put("ContextMenu", initWizard(new ToolBarButtonWizard()));
 	}
 
+	private IWizard initWizard(AbstractXULWizard wizard){
+		wizard.setSelectionListener(new FinishPerformSelectionLisner() {
+			
+			@Override
+			public void finishSelected(Event e) {
+				// TODO Auto-generated method stub
+				value = e.data;
+			}
+		});
+		
+		return wizard;
+	}
+	
 	@Override
 	public void createControl(Composite parent) {
 		// TODO Auto-generated method stub
 		Composite c = new Composite(parent, SWT.NONE);
-        c.setLayout(new GridLayout(2, false));
+        c.setLayout(new GridLayout(1, false));
         GridData gd;
         new Label(c, SWT.NONE).setText("test sel");
         
@@ -79,10 +96,7 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
         for (String string : keylist) {
         	listviewer.add(string);
 		}
-//        listviewer.add("add mennubar");
-//        listviewer.add("add menupopup");
-//        listviewer.add("add ContextMenu");
-//        listviewer.add("add toolbarbutton");
+
         listviewer.addSelectionChangedListener(this);
         listviewer.addDoubleClickListener(new IDoubleClickListener() {
 			
@@ -94,11 +108,6 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 				String key = (String)value; 
 				IWizard wizerd = elementMap.get(key);
 				setSelectedNode(new ExtentionWizardNode(wizerd));
-				//setPageComplete(true);
-//				fWizard.performFinish();
-//				fWizard.getShell().close();
-//				fWizard.dispose();
-//				fWizard.setContainer(null);
 			}
 		});
         //Dialog.applyDialogFont(container);

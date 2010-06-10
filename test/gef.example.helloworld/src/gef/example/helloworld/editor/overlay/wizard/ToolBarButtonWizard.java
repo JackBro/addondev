@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -12,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class ToolBarButtonWizard extends Wizard {
+public class ToolBarButtonWizard extends AbstractXULWizard {
 	
 	public class ToolBarButtonWizardPage extends WizardPage {
 
@@ -51,14 +52,8 @@ public class ToolBarButtonWizard extends Wizard {
 		}
 
 	}
-	private TreeViewer fTreeViewer;
+
 	private ToolBarButtonWizardPage page1;
-	
-	public ToolBarButtonWizard(TreeViewer treeviewer) {
-		super();
-		// TODO Auto-generated constructor stub
-		fTreeViewer = treeviewer;		
-	}
 
 	@Override
 	public void addPages() {
@@ -66,13 +61,19 @@ public class ToolBarButtonWizard extends Wizard {
 		super.addPages();
 		page1 = new ToolBarButtonWizardPage("ToolBarButton");
 		addPage(page1);
+		
+	}
+
+	@Override
+	protected Object getElement() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public boolean performFinish() {
 		// TODO Auto-generated method stub
-		
-		return false;
+		return super.performFinish();
 	}
 
 }

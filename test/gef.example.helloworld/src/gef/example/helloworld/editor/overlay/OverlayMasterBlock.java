@@ -1,5 +1,7 @@
 package gef.example.helloworld.editor.overlay;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +21,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -59,6 +60,8 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		registerSet.add(KeySetModel.class);
 		registerSet.add(CommandSetModel.class);
 		registerSet.add(StatusbarModel.class);
+		registerSet.add(MenuPopupModel.class);
+		registerSet.add(MenuItemModel.class);
 	}
 	
 	private static Map<Class, List<Class>> addmenuMap = new HashMap<Class,List<Class>>();
@@ -76,7 +79,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 	private IEditorInput input;
 	private AbstractElementModel fCurrentSelection;
 	private IManagedForm fManagedForm;
-	private TreeViewer viewer;
+	private TreeViewer fTreeViewer;
 	private List<MenuItem> items = new ArrayList<MenuItem>();
 
 	
@@ -103,15 +106,15 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		viewercomposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		final Tree tree = toolkit.createTree(viewercomposite, SWT.BORDER);
-		viewer = new TreeViewer(tree);
-		viewer.setContentProvider(new XULTreeContentProvider());
-		viewer.setLabelProvider(new XULLabelProvider());
+		fTreeViewer = new TreeViewer(tree);
+		fTreeViewer.setContentProvider(new XULTreeContentProvider());
+		fTreeViewer.setLabelProvider(new XULLabelProvider());
 		
 		MenuManager menu_manager = new MenuManager();
 		
 		final Action addmenu = new AddAction("add");
 		menu_manager.add(addmenu);
-		final Menu m = menu_manager.createContextMenu(viewer.getTree());
+		final Menu m = menu_manager.createContextMenu(fTreeViewer.getTree());
 		addmenu.setMenuCreator(new IMenuCreator() {
 			
 			@Override
@@ -132,7 +135,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 							AbstractElementModel model = (AbstractElementModel)(fCurrentSelection);
 							try {
 								model.addChild((AbstractElementModel) iterable_element.newInstance());
-								viewer.refresh();
+								fTreeViewer.refresh();
 							} catch (InstantiationException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -169,7 +172,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 			}
 		});
 		
-		viewer.getTree().setMenu(m);
+		fTreeViewer.getTree().setMenu(m);
 		m.addMenuListener(new MenuListener() {
 			
 			@Override
@@ -193,7 +196,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		//menu_manager.add(open_action);
 		
 		final SectionPart part = new SectionPart(section);
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		fTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -218,7 +221,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 			public void mouseDown(MouseEvent e) {
 				// TODO Auto-generated method stub
 				if(tree.getItem(new Point(e.x, e.y)) == null)
-					viewer.setSelection(null);
+					fTreeViewer.setSelection(null);
 			}
 			
 			@Override
@@ -238,8 +241,8 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 				e.printStackTrace();
 			}
 		}
-		viewer.setInput(root);
-		viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		fTreeViewer.setInput(root);
+		fTreeViewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		createButtons(viewercomposite);
 	}
@@ -262,18 +265,10 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 				WizardDialog dialog = new WizardDialog(shell, wiz);
 				int ret = dialog.open();
 				if(ret == IDialogConstants.OK_ID){
-					Class obj = (Class)wiz.getValue();
-					AbstractElementModel model = (AbstractElementModel)((AbstractElementModel)viewer.getInput()).getChildren().get(0);
-					try {
-						model.addChild((AbstractElementModel) obj.newInstance());
-						viewer.refresh();
-					} catch (InstantiationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IllegalAccessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					AbstractElementModel obj = (AbstractElementModel)wiz.getValue();
+					AbstractElementModel model = (AbstractElementModel)((AbstractElementModel)fTreeViewer.getInput()).getChildren().get(0);
+					model.addChild(obj);
+					fTreeViewer.refresh();
 				}
 			}
 			
@@ -307,7 +302,16 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 	@Override
 	protected void registerPages(DetailsPart detailsPart) {
 		for (Class regclass : registerSet) {
-			detailsPart.registerPage(regclass, new PropertyDetailsPage(fManagedForm));
+			PropertyDetailsPage detailpage = new PropertyDetailsPage();
+			detailpage.setPropertyChange(new PropertyChangeListener() {
+				
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					// TODO Auto-generated method stub
+					fTreeViewer.refresh();
+				}
+			});
+			detailsPart.registerPage(regclass, detailpage);
 		}
 	}
 

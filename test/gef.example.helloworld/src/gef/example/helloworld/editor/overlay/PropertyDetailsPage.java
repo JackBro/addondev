@@ -26,25 +26,28 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 
 public class PropertyDetailsPage implements IDetailsPage {
 
-	class PropertyChange implements PropertyChangeListener{
-
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
+//	class PropertyChange implements PropertyChangeListener{
+//
+//		@Override
+//		public void propertyChange(PropertyChangeEvent evt) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//		
+//	}
 	
-	private IManagedForm form;
+	//private IManagedForm form;
 	private PropertySheetPage fPropertySheetPage;
 	private PropertySheetEntry fPropertySheetEntry;
-	private PropertyChange fPropertyChange;
+	private PropertyChangeListener fPropertyChangeListener;
 	
-	public PropertyDetailsPage(IManagedForm form) {
-		super();
-		this.form = form;
-		fPropertyChange = new PropertyChange();
+//	public PropertyDetailsPage(IManagedForm form) {
+//		super();
+//		//this.form = form;
+//	}
+
+	public void setPropertyChange(PropertyChangeListener listener) {
+		this.fPropertyChangeListener = listener;
 	}
 
 	@Override
@@ -87,30 +90,6 @@ public class PropertyDetailsPage implements IDetailsPage {
 			}
 		});
 		fPropertySheetPage.setRootEntry(fPropertySheetEntry);      
-//		fPropertySheetEntry.addPropertySheetEntryListener(new IPropertySheetEntryListener() {
-//			
-//			@Override
-//			public void valueChanged(IPropertySheetEntry entry) {
-//				// TODO Auto-generated method stub
-//				int i= 0;
-//				i++;				
-//			}
-//			
-//			@Override
-//			public void errorMessageChanged(IPropertySheetEntry entry) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void childEntriesChanged(IPropertySheetEntry node) {
-//				// TODO Auto-generated method stub
-//				int i= 0;
-//				i++;
-//			}
-//		});
-
-        //section.setClient(parent);
 	}
 
 	@Override
@@ -166,17 +145,8 @@ public class PropertyDetailsPage implements IDetailsPage {
 	public void selectionChanged(IFormPart part, ISelection selection) {
 		// TODO Auto-generated method stub
 		AbstractElementModel model = (AbstractElementModel) ((IStructuredSelection) selection).getFirstElement();
-		model.removePropertyChangeListener(fPropertyChange);
-		model.addPropertyChangeListener(fPropertyChange);
-//		model.addPropertyChangeListener(new PropertyChangeListener() {
-//			
-//			@Override
-//			public void propertyChange(PropertyChangeEvent evt) {
-//				// TODO Auto-generated method stub
-//				int i=0;
-//				i++;
-//			}
-//		});
+		model.removePropertyChangeListener(fPropertyChangeListener);
+		model.addPropertyChangeListener(fPropertyChangeListener);
 		objs[0] = model;
 		fPropertySheetEntry.setValues(objs);
 	}

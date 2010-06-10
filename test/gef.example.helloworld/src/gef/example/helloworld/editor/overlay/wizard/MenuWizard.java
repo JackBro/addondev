@@ -1,21 +1,28 @@
 package gef.example.helloworld.editor.overlay.wizard;
 
-import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.wizard.Wizard;
+import gef.example.helloworld.model.MenuItemModel;
+import gef.example.helloworld.model.MenuPopupModel;
+
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class MenuWizard extends Wizard {
+public class MenuWizard extends AbstractXULWizard {
 
 	public class MenuWizardPage extends WizardPage {
 
+		private Text fid, fLabel;
+		private String fPart;
+		
 		protected MenuWizardPage(String pageName) {
 			super(pageName);
 			// TODO Auto-generated constructor stub
@@ -24,42 +31,83 @@ public class MenuWizard extends Wizard {
 		@Override
 		public void createControl(Composite parent) {
 			// TODO Auto-generated method stub
-			Composite c = new Composite(parent, SWT.NONE);
-	        c.setLayout(new GridLayout(2, false));
-	        GridData gd;
-	        new Label(c, SWT.NONE).setText("menu");
+			Composite composite = new Composite(parent, SWT.NONE);
+	        composite.setLayout(new GridLayout(1, false));
+	        new Label(composite, SWT.NONE).setText("menu");
 	       
-	        Button button1 = new Button(c, SWT.RADIO);
-	        button1.setText("1");
-	        Button button2 = new Button(c, SWT.RADIO);
-	        button2.setText("2");
+//			Label label = new Label(composite, SWT.LEFT);
+//			label.setText("Element");
+//			GridData gd = new GridData();
+//			gd.horizontalSpan = 2;
+//			label.setLayoutData(gd);
 	        
-	        ListViewer list = new ListViewer(c);
-	        list.add("menu_FilePopup");
-	        list.add("menu_EditPopup");
-	        list.add("menu_viewPopup");
-	        list.add("menu_ToolsPopup");
+	        Group group = new Group(composite, SWT.NONE);
+	        group.setText("place");
+	        FillLayout fill = new FillLayout();
+	        fill.marginHeight = 5;
+	        fill.marginWidth = 5;
+	        group.setLayout(fill);
 	        
-	        new Label(c, SWT.NONE).setText("id");
-	        new Text(c, SWT.BORDER);
-	        new Label(c, SWT.NONE).setText("label");
-	        new Text(c, SWT.BORDER);
-	        setControl(c);
-		}
+	        createRaidButton(group, "File", "menu_FilePopup").setSelection(true);
+	        createRaidButton(group, "Edit", "menu_EditPopup");
+	        createRaidButton(group, "view", "menu_viewPopup");
+	        createRaidButton(group, "Tools", "menu_ToolsPopup");
 
+			Composite attr = new Composite(composite, SWT.NONE);
+			attr.setLayout(new GridLayout(2, false));	
+			attr.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	        new Label(attr, SWT.NONE).setText("id");
+	        fid = new Text(attr, SWT.BORDER);
+	        fid.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	        new Label(attr, SWT.NONE).setText("label");
+	        fLabel = new Text(attr, SWT.BORDER);
+	        fLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	        
+	        setControl(composite);
+		}
+		
+		private Button createRaidButton(Composite parent, String text, final String data){
+			Button button = new Button(parent, SWT.RADIO);
+			button.setText(text);
+			//button.setData(data);
+			button.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+					fPart = data;
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			
+			return button;
+		}
 	}	
+
+	private MenuWizardPage page1;
 	
 	@Override
 	public void addPages() {
 		// TODO Auto-generated method stub
 		super.addPages();
-		addPage(new MenuWizardPage("menu"));
+		page1 = new MenuWizardPage("menu");
+		addPage(page1);
 	}
 
 	@Override
-	public boolean performFinish() {
+	protected Object getElement() {
 		// TODO Auto-generated method stub
-		return false;
+		MenuPopupModel popup = new MenuPopupModel();
+		popup.setPropertyValue(MenuPopupModel.ATTR_ID, page1.fPart);
+		MenuItemModel menuitem = new MenuItemModel();
+		menuitem.setPropertyValue(MenuPopupModel.ATTR_ID, page1.fid.getText());
+		menuitem.setPropertyValue(MenuItemModel.ATTR_LABEL, page1.fLabel.getText());
+		popup.addChild(menuitem);
+		return popup;
 	}
-
 }
