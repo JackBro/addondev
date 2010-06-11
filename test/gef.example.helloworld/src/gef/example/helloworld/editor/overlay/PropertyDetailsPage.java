@@ -26,25 +26,9 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 
 public class PropertyDetailsPage implements IDetailsPage {
 
-//	class PropertyChange implements PropertyChangeListener{
-//
-//		@Override
-//		public void propertyChange(PropertyChangeEvent evt) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		
-//	}
-	
-	//private IManagedForm form;
 	private PropertySheetPage fPropertySheetPage;
 	private PropertySheetEntry fPropertySheetEntry;
 	private PropertyChangeListener fPropertyChangeListener;
-	
-//	public PropertyDetailsPage(IManagedForm form) {
-//		super();
-//		//this.form = form;
-//	}
 
 	public void setPropertyChange(PropertyChangeListener listener) {
 		this.fPropertyChangeListener = listener;
@@ -54,25 +38,6 @@ public class PropertyDetailsPage implements IDetailsPage {
 	public void createContents(Composite parent) {
 		// TODO Auto-generated method stub
 		parent.setLayout(new FillLayout());
-//		FormToolkit toolkit =  form.getToolkit();
-//		
-//		Section section = toolkit.createSection(parent, Section.TITLE_BAR | Section.DESCRIPTION);
-//		section.setText("test"); 
-//		
-//		Composite client = toolkit.createComposite(section);
-//		client.setLayout(new FillLayout());
-//		Button button = new Button(parent, SWT.NONE);
-//		button.setText("bbbbb");
-		
-//		GridLayout layout = new GridLayout(1, false);
-//        layout.marginHeight = 0;
-//        layout.marginWidth = 0;
-//        parent.setLayout(layout);
-//
-//        FormToolkit toolkit = form.getToolkit();
-//
-//        Section section = toolkit.createSection(parent, Section.TITLE_BAR);
-//        section.setText("フィールド詳細");
         
         fPropertySheetPage = new PropertySheetPage();
         fPropertySheetPage.createControl(parent);

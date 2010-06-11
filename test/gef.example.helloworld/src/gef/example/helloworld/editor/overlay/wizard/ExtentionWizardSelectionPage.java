@@ -23,20 +23,6 @@ import org.eclipse.swt.widgets.Label;
 public class ExtentionWizardSelectionPage extends WizardSelectionPage implements ISelectionChangedListener{
 
 	private Map<String, IWizard> elementMap = new HashMap<String, IWizard>();
-//	static{
-////		elementMap.put("KeySet", KeySetModel.class);
-////		elementMap.put("CommandSet", CommandSetModel.class);
-////		elementMap.put("StringBundleSet", StringBundleSetModel.class);
-////		
-////		elementMap.put("ToolBox", ToolBoxModel.class);
-////		elementMap.put("ToolBar", ToolBarModel.class);
-//		
-//		elementMap.put("Menu", new MenuWizard());
-//		elementMap.put("ToolBarButton", new ToolBarButtonWizard());
-//	}
-	
-	//private TreeViewer fTreeViewer;
-	//private Wizard fWizard;
 	private Object value;
 	
 	public Object getValue() {
@@ -46,12 +32,10 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 	protected ExtentionWizardSelectionPage(String pageName) {
 		super(pageName);
 		// TODO Auto-generated constructor stub
-		//fWizard = wizard;	
-		//fTreeViewer = treeviewer;
 		
 		elementMap.put("Menu", initWizard(new MenuWizard()));
 		elementMap.put("ToolBarButton", initWizard(new ToolBarButtonWizard()));
-		elementMap.put("ContextMenu", initWizard(new ToolBarButtonWizard()));
+		elementMap.put("ContextMenu", initWizard(new ContextMenuWizard()));
 	}
 
 	private IWizard initWizard(AbstractXULWizard wizard){
@@ -70,12 +54,13 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 	@Override
 	public void createControl(Composite parent) {
 		// TODO Auto-generated method stub
-		Composite c = new Composite(parent, SWT.NONE);
-        c.setLayout(new GridLayout(1, false));
+		Composite composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(new GridLayout(1, false));
         GridData gd;
-        new Label(c, SWT.NONE).setText("test sel");
+        new Label(composite, SWT.NONE).setText("test sel");
         
-        ListViewer listviewer = new ListViewer(c);
+        ListViewer listviewer = new ListViewer(composite);
+        listviewer.getList().setLayoutData(new GridData(GridData.FILL_BOTH));
         ArrayList<String> keylist = new ArrayList<String>();
        
         for (String key : elementMap.keySet()) {
@@ -100,7 +85,7 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 			}
 		});
         //Dialog.applyDialogFont(container);
-        setControl(c);
+        setControl(composite);
 	}
 
 	@Override

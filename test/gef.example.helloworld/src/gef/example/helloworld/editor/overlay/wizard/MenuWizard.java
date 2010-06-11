@@ -52,6 +52,8 @@ public class MenuWizard extends AbstractXULWizard {
 	        createRaidButton(group, "Edit", "menu_EditPopup");
 	        createRaidButton(group, "view", "menu_viewPopup");
 	        createRaidButton(group, "Tools", "menu_ToolsPopup");
+	        
+	        
 
 			Composite attr = new Composite(composite, SWT.NONE);
 			attr.setLayout(new GridLayout(2, false));	

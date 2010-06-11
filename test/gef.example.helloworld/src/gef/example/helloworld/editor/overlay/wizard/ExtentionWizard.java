@@ -16,7 +16,6 @@ public class ExtentionWizard extends Wizard {
 		super.addPages();
 		page = new ExtentionWizardSelectionPage("");
 		addPage(page);
-		//addPage(new ExtentionWizardSelectionPage("2"));
 	}
 
 	@Override

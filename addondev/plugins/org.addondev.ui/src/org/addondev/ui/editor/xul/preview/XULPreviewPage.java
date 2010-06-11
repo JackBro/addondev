@@ -138,7 +138,30 @@ public class XULPreviewPage extends Page{
 
 	}
 
-
+//	public void setDocument(EnumXULWindow type, List<String> xuls) {
+//		final Browser browser = fBrowserList.get(0);
+//		Display.getDefault().asyncExec(new Runnable() {
+//		public void run() {
+//				//URL url = getClass().getResource("preview.xul");
+////				String url="file:///D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.ui/preview.xul";
+////				String url2="file:///D:/data/src/PDE/workrepository/plugins/addondev/plugins/org.addondev.ui/preview2.xul";
+////				//browser.refresh();
+////				if(cnt%2==0)
+////				{
+////					browser.setUrl(url);
+////				}
+////				else
+////				{
+////					browser.setUrl(url2);
+////				}
+//			//Browser.clearSessions();
+//				browser.setUrl("file:///D:/data/src/PDE/workrepository/work/stacklink/chrome/content/base.xul");
+//				//browser.redraw();
+//				//browser.refresh();
+//				//fBrowser.setUrl("about:blank");
+//			}
+//	});			
+//	}
 	public void setDocument(EnumXULWindow type, List<String> xuls) {
 	//public void setDocument(FileEditorInput input) {
 		//IProject project = input.getFile().getProject();
@@ -264,7 +287,7 @@ public class XULPreviewPage extends Page{
 //			}
 //			else
 //			{
-				browser.addProgressListener(new PreviewBrowserProgressListener(browser, xul));		
+				//browser.addProgressListener(new PreviewBrowserProgressListener(browser, xul));		
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 							//URL url = getClass().getResource("preview.xul");
@@ -281,6 +304,7 @@ public class XULPreviewPage extends Page{
 //							}
 						//Browser.clearSessions();
 							browser.setUrl(fPreviewXULURL);
+							//browser.setUrl("file:///D:/data/src/PDE/workrepository/work/stacklink/chrome/content/base.xul");
 							//browser.redraw();
 							//browser.refresh();
 							//fBrowser.setUrl("about:blank");
