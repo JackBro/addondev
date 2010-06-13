@@ -9,7 +9,6 @@ import gef.example.helloworld.model.PrefpaneModel;
 import gef.example.helloworld.model.PrefwindowModel;
 import gef.example.helloworld.model.ScriptModel;
 import gef.example.helloworld.model.WindowModel;
-import gef.example.helloworld.parser.AbstractXULParser;
 
 public class PrefwindowParser extends WindowParser {
 
