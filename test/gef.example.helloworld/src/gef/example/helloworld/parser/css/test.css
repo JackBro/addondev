@@ -1,0 +1,21 @@
+
+
+/*
+comment test
+*/
+
+
+#test1, 
+test2,
+#noscript-statusIcon.noscript-inactive-yes
+ {
+  display: -moz-box;
+  padding-left: 3px;
+  padding-right: 3px;
+  -moz-border-bottom-colors: #222 #888 #222;
+}
+
+#test3:hover[state="active"],test4:hover { 
+  -moz-image-region: rect(16px, 16px, 32px, 0px);
+  -list-style-image: url("chrome://test/content/test.png");
+}

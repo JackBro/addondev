@@ -40,7 +40,7 @@ public class Lexer {
 		case ',':
 	    case '(':
 	    case ')':
-	    case '.':	    	
+	    //case '.':	    	
 	    case '^':
 	    case '~':
 	    case '[':
@@ -48,17 +48,17 @@ public class Lexer {
 	    case '\\':
 	    case '?':
 	    //case '$':
-	    case '#':
-	    case '!':
+	    //case '#':
+	    //case '!':
 	    case '*':
-	    case '>':
+	    //case '>':
 	    case '<':
 	    case '+':
-	    case '-':
+	    //case '-':
 	    case '|':
 	    case '&':
 	    case '%':
-	    case '@':
+	    //case '@':
 			tok = c;
 			break;
 		case '=':
@@ -85,12 +85,12 @@ public class Lexer {
 			tok = TokenType.STRING;
 			break;
 		default:
-			if(Character.isDigit((char)c)){
-		          reader.unread(c);
-		          lexDigit();
-		          tok = TokenType.INT;				 
-			}
-			else
+//			if(Character.isDigit((char)c)){
+//		          reader.unread(c);
+//		          lexDigit();
+//		          tok = TokenType.INT;				 
+//			}
+//			else
 			{
 				reader.unread(c);
 				lexSymbol(); 
@@ -178,7 +178,7 @@ public class Lexer {
 			if (c < 0) {
 				// throw new Exception("ファイルの終わりに到達しました。");
 			}
-			if (!Character.isJavaIdentifierPart((char) c)) {
+			if (!isCSS((char) c)) {
 				reader.unread(c);
 				break;
 			}
@@ -203,8 +203,21 @@ public class Lexer {
 		return offset;
 	}
 	
-	public void un(int c)
-	{
-		reader.unread(c);
+//	public void un(int c)
+//	{
+//		reader.unread(c);
+//	}
+	
+	private boolean isCSS(char c){
+		if (!Character.isJavaIdentifierPart(c)) {
+			if(c == '-' || c == '#' || c == '@' || c == '!' || c == '>' || c == '.'
+				|| Character.isDigit(c)){
+				return true;
+			}
+			return false;
+		}
+		
+		return true;
 	}
+	
 }
