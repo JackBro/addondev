@@ -1,5 +1,10 @@
 package gef.example.helloworld;
 
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.resources.*;
@@ -87,5 +92,14 @@ public class HelloworldPlugin extends AbstractUIPlugin {
 			ImageDescriptor desc = ImageDescriptor.createFromURL(url);
 			registry.put(key, desc);
 		}
+	}
+	
+	public static IEditorPart getActiveEditorPart(){
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+		IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+		IEditorPart editorPart = workbenchPage.getActiveEditor();
+		
+		return editorPart;
 	}
 }
