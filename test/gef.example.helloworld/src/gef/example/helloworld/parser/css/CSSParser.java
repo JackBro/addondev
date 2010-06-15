@@ -32,8 +32,8 @@ public class CSSParser {
 			fStyleSheets.add(stylesheet);
 			getToken();
 			break;
-		case '{':
-			
+		case '@':
+			at_stmt();
 			break;
 		default:
 			getToken();
@@ -41,6 +41,10 @@ public class CSSParser {
 		
 	}
 	
+	private void at_stmt() {
+		// TODO Auto-generated method stub
+		
+	}
 	private void selector_stmt(StyleSheet stylesheet) {
 		// TODO Auto-generated method stub
 		String sym = lex.value();
@@ -110,13 +114,6 @@ public class CSSParser {
 		value.setName(name);	
 		getToken(); //skip symbol
 		while(token != ';' && token != TokenType.EOS){
-			//String property = lex.value();
-//			getToken(); //skip symbol
-//			getToken(); //skip :
-//			String name = lex.value();
-//			value.setName(name);
-			//DeclarationValue value = new DeclarationValue(name);
-			//getToken(); //skip symbol
 			if(token == '('){
 				getToken(); //skip (
 				String arg = lex.value();
