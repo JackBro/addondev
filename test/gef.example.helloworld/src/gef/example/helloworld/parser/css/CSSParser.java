@@ -124,11 +124,19 @@ public class CSSParser {
 				getToken(); //skip symbol
 				if(token == ','){
 					while(token != ')' && token != TokenType.EOS){
-						getToken(); //skip ,
+						if(token == ','){
+							getToken(); //skip ,
+						}
 						arg = lex.value();
 						value.addArg(arg);
 						getToken(); //skip symbol
 					}
+				}else{
+					while(token != ')' && token != TokenType.EOS){
+						arg = lex.value();
+						value.addArg(arg);
+						getToken(); //skip symbol
+					}					
 				}
 				getToken(); //skip )
 			}else{

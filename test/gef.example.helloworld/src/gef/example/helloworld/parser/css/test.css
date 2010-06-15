@@ -19,3 +19,8 @@ test2,
   -moz-image-region: rect(16px, 16px, 32px, 0px);
   -list-style-image: url("chrome://test/content/test.png");
 }
+
+test4 { 
+  -moz-image-region: rect(16px 16px 32px 0px);
+  -list-style-image: url("chrome://test/content/test.png");
+}
