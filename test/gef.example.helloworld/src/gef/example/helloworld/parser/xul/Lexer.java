@@ -13,9 +13,15 @@ public class Lexer {
 	private static Map<String, Integer> reserved = new HashMap<String, Integer>();
 
 	static {
-
-		//reserved.put("@import", new Integer(TokenType.IMPORT));
-		//reserved.put("@namespace", new Integer(TokenType.NAMESPACE));
+		reserved.put("<!", new Integer(TokenType.ETAG));
+		reserved.put("<?", new Integer(TokenType.QTAG));
+		reserved.put("?>", new Integer(TokenType.END_QTAG));
+		reserved.put("--", new Integer(TokenType.MM));
+		reserved.put("-->", new Integer(TokenType.END_COMMENTTAG));
+		reserved.put("xml", new Integer(TokenType.XML));
+		reserved.put("xml-stylesheet", new Integer(TokenType.XUL_STYLESHEET));
+		reserved.put("xml-overlay", new Integer(TokenType.XUL_OVERLAY));
+		reserved.put("DOCTYPE", new Integer(TokenType.DOCTYPE));
 	}
 
 	public Lexer(String src) {
@@ -46,13 +52,13 @@ public class Lexer {
 	    case '[':
 	    case ']':
 	    case '\\':
-	    case '?':
+	    //case '?':
 	    //case '$':
 	    //case '#':
 	    //case '!':
 	    case '*':
-	    //case '>':
-	    case '<':
+	    case '>':
+	    //case '<':
 	    case '+':
 	    //case '-':
 	    case '|':
@@ -61,15 +67,26 @@ public class Lexer {
 	    //case '@':
 			tok = c;
 			break;
-		case '/':
-	        c = reader.read();   // 次の文字が
-	        if(c == '*'){  // '*'だったら
-	        	c = reader.read(); // /** だったら
-
-		          skipComment();     //   複数行コメントとして読み飛ばし
-		          return advance();  //   次のトークンを読みにいく。
-	        }
-			break;
+//		case '<':
+//	        c = reader.read();   // 次の文字が
+//	        if(c == '!'){  // '!'だったら
+//	        	c = reader.read(); // <!- だったら
+//	        	if(c=='-'){
+//	        		c = reader.read(); // <!-- だったら
+//			          skipComment();     //   複数行コメントとして読み飛ばし
+//			          return advance();  //   次のトークンを読みにいく。        		
+//	        	}else if(){
+//	        		if (reserved.containsKey(s)) { // (A)
+//	        			tok = ((Integer) reserved.get(s)).intValue();
+//	        		}
+//	        	}
+//	        }else if(c == '?'){
+//	        	tok =TokenType.QTAG;
+//	        }else{
+//	        	reader.unread(c);
+//	        	tok = '<';  
+//	        }
+//			break;
 		case '"':
 		case '\'':
 			lexString((char)c);
@@ -138,10 +155,13 @@ public class Lexer {
 	        //throw new Exception("コメント中にファイルの終端に到達しました。");
 	    	  break;
 	      }
-	      if(c == '*'){
+	      if(c == '-'){
 	        c = reader.read();
-	        if(c == '/'){
-	          break;
+	        if(c == '-'){
+	        	 c = reader.read();
+	        	 if(c == '>'){
+	        		 break;
+	        	 }
 	        }
 	      }
 	    }		
@@ -201,7 +221,7 @@ public class Lexer {
 	
 	private boolean isCSS(char c){
 		if (!Character.isJavaIdentifierPart(c)) {
-			if(c == '-' || c == '#' || c == '@' || c == '!' || c == '>' || c == '.'
+			if(c == '-' 
 				|| Character.isDigit(c)){
 				return true;
 			}

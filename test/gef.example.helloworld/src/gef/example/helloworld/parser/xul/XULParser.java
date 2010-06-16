@@ -1,5 +1,6 @@
 package gef.example.helloworld.parser.xul;
 
+
 import java.util.regex.Pattern;
 
 public class XULParser {
@@ -10,7 +11,49 @@ public class XULParser {
 	private static Pattern attrPattern = Pattern.compile("([^\\s]+)\\s*=\\s*\"(([^\"]+))\"", Pattern.MULTILINE);
 	private static Pattern declarePattern = Pattern.compile("<\\?([^\\s]+)\\s+((.*))\\?>", Pattern.MULTILINE);
 
-	public void parse(String xul){
-		
+	private Lexer lex;
+	private int token;
+	
+	private void getToken() {
+		if (lex.advance()) {
+			token = lex.token();
+		} else {
+			token = TokenType.EOS;
+		}
 	}
+	
+	public void parse(String src){
+		lex = new Lexer(src);
+		while (token != TokenType.EOS) {
+			stmt();
+		}
+	}
+	
+	private void stmt(){
+		switch (token) {
+		case TokenType.ETAG:
+			getToken();
+			if(token == '-'){
+				getToken(); //-
+				if(token == '-'){
+					
+				}
+			}else{
+				if(token == TokenType.XML){
+					xml_stmt();
+				}
+			}
+			break;
+		case TokenType.QTAG:
+			break;
+		}
+	}
+
+	private void xml_stmt() {
+		// TODO Auto-generated method stub
+		while(token != TokenType.END_QTAG && token != TokenType.EOS){
+			
+		}
+	}
+	
 }

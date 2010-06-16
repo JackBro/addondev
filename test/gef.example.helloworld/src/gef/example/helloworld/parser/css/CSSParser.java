@@ -12,6 +12,14 @@ public class CSSParser {
 	private List<String> imports;
 	private List<String> namespaces;
 	
+	private void getToken() {
+		if (lex.advance()) {
+			token = lex.token();
+		} else {
+			token = TokenType.EOS;
+		}
+	}
+	
 	public List<StyleSheet> getStyleSheets() {
 		return fStyleSheets;
 	}
@@ -243,11 +251,5 @@ public class CSSParser {
 		}
 		stylesheet.addDeclaration(property, value);
 	}
-	private void getToken() {
-		if (lex.advance()) {
-			token = lex.token();
-		} else {
-			token = TokenType.EOS;
-		}
-	}
+
 }
