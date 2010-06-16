@@ -1,4 +1,4 @@
-package gef.example.helloworld.parser.xul;
+package gef.example.helloworld.model.parser;
 
 import java.util.ArrayList;
 import java.util.List;

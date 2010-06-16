@@ -23,7 +23,22 @@ public class StyleSheet {
 	public void addDeclaration(String property, DeclarationValue value){
 		fDeclaration.put(property, value);
 	}
-
+	
+	public List<Selector> getSelector(String name){
+		List<Selector> list = new ArrayList<Selector>();
+		for (Selector sel : fSelectors) {
+			if(sel.getName().equals(name)){
+				list.add(sel);
+			}
+		}
+		
+		return list;
+	}
+	
+	public DeclarationValue getDeclarationrValue(String property){
+		return fDeclaration.get(property);
+	}
+	
 	public String toCSS(){
 		StringBuilder sb = new StringBuilder();
 		Selector lastsel = fSelectors.get(fSelectors.size()-1);

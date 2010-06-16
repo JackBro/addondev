@@ -9,21 +9,24 @@ public class CSSParser {
 	private Lexer lex;
 	private int token;
 	private List<StyleSheet> fStyleSheets;
-	
+	private List<String> imports;
+	private List<String> namespaces;
 	
 	public List<StyleSheet> getStyleSheets() {
 		return fStyleSheets;
 	}
 	public CSSParser() {
 		fStyleSheets = new ArrayList<StyleSheet>();
+		imports = new ArrayList<String>();
+		namespaces = new ArrayList<String>();
 	}
-	public void parse(String src){
+	public void parse(String src) throws CSSException{
 		lex = new Lexer(src);
 		while (token != TokenType.EOS) {
 			stmt();
 		}
 	}
-	private void stmt(){
+	private void stmt() throws CSSException{
 		switch (token) {
 		case TokenType.SYMBOL:
 			StyleSheet stylesheet = new StyleSheet();
@@ -32,8 +35,11 @@ public class CSSParser {
 			fStyleSheets.add(stylesheet);
 			getToken();
 			break;
-		case '@':
-			at_stmt();
+		case TokenType.IMPORT:
+			import_stmt();
+			break;
+		case TokenType.NAMESPACE:
+			namespace_stmt();
 			break;
 		default:
 			getToken();
@@ -41,10 +47,101 @@ public class CSSParser {
 		
 	}
 	
-	private void at_stmt() {
+	//@import url(xxx.css);
+	//@import "xxx.css";
+	private void import_stmt() throws CSSException {
 		// TODO Auto-generated method stub
-		
+		String sym = lex.value();
+		getToken(); //skip symbol
+
+		if(token == TokenType.SYMBOL){
+			String url = url_stmt();
+			imports.add(url);
+		}else if(token == TokenType.STRING){
+			String url = lex.value();
+			imports.add(url);
+			getToken(); //skip url
+			if(token == ';'){
+				getToken(); //;
+			}else{
+				throw new CSSException(lex.offset());
+			}
+		}else{
+			throw new CSSException(lex.offset());
+		}
 	}
+	
+	//@namespace "http1";
+	//@namespace url("http2");
+	//@namespace xul "http3";
+	//@namespace xul url("http4");
+	private void namespace_stmt() throws CSSException {
+		// TODO Auto-generated method stub
+		String sym = lex.value();
+		getToken(); //skip symbol
+		
+		if(token == TokenType.SYMBOL){
+			String m = lex.value();
+			if(m.equals("url")){
+				String url = url_stmt();
+				namespaces.add(url);
+			}else{
+				getToken(); //skip symbol
+				if(token == TokenType.STRING){
+					namespaces.add(lex.value());
+					getToken(); //skip symbol
+				}else if(token == TokenType.SYMBOL){
+					String u = lex.value();
+					if(u.equals("url")){
+						String url = url_stmt();
+						namespaces.add(url);					
+					}else{
+						throw new CSSException(lex.offset());
+					}		
+				}else{
+					throw new CSSException(lex.offset());
+				}
+				
+			}
+		}else if(token == TokenType.STRING){
+			String value = lex.value();
+			namespaces.add(value);
+			getToken(); //skip url
+		}else{
+			throw new CSSException(lex.offset());
+		}	
+		
+		if(token == ';'){
+			getToken(); //;
+		}else{
+			throw new CSSException(lex.offset());
+		}
+	}
+	
+	private String url_stmt() throws CSSException{
+		String url = "";
+		getToken(); //sympol
+		if(token =='('){
+			getToken(); //(
+			//String value = lex.value();
+			url = lex.value();
+			getToken(); //skip symbol
+			if(token == ')'){
+				getToken(); //)
+//				if(token == ';'){
+//					getToken(); //;
+//				}else{
+//					throw new CSSException(lex.offset());
+//				}
+			}else{
+				throw new CSSException(lex.offset());
+			}
+		}else{
+			throw new CSSException(lex.offset());
+		}	
+		return url;
+	}
+	
 	private void selector_stmt(StyleSheet stylesheet) {
 		// TODO Auto-generated method stub
 		String sym = lex.value();

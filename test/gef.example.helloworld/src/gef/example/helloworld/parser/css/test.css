@@ -4,6 +4,14 @@
 comment test
 */
 
+@import url(xxx1.css);
+@import "xxx2.css";
+
+
+@namespace "http1";
+@namespace url("http2");
+@namespace xul "http3";
+@namespace xul url("http4");
 
 #test1, 
 test2,

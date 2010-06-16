@@ -50,32 +50,59 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 	public class ToolBarButtonWizardPage extends WizardPage {
 
 		protected Text fId, fLabel;
-		private ArrayList<Image> images;
 		
 		protected ToolBarButtonWizardPage(String pageName) {
 			super(pageName);
 			// TODO Auto-generated constructor stub
-			images = new ArrayList<Image>();
 		}
 
 		@Override
-		public void createControl(final Composite parent) {
+		public void createControl(Composite parent) {
 			// TODO Auto-generated method stub
-			Composite c = new Composite(parent, SWT.NONE);
-	        c.setLayout(new GridLayout(2, false));
-	        GridData gd;
-	        //new Label(c, SWT.NONE).setText("ToolBarButton");
+			Composite composite = new Composite(parent, SWT.NONE);
+			composite.setLayout(new GridLayout(2, false));
 	        
-	        new Label(c, SWT.NONE).setText("id");
-	        fId = new Text(c, SWT.BORDER);
-	        new Label(c, SWT.NONE).setText("label");
-	        fLabel = new Text(c, SWT.BORDER);
-	        
+	        new Label(composite, SWT.NONE).setText("id");
+	        fId = new Text(composite, SWT.BORDER);
+	        fId.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	        new Label(composite, SWT.NONE).setText("label");
+	        fLabel = new Text(composite, SWT.BORDER);
+	        fLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-	        createToolBarImageEdit(c, "test");
+	        setControl(composite);
+		}
+	}
 
+	public class ToolBarButtonImageWizardPage extends WizardPage {
+
+		private String state;
+		private String cond;
+		private ArrayList<Image> images;
+
+		public void setState(String state) {
+			this.state = state;
+		}
+
+		public void setCond(String cond) {
+			this.cond = cond;
+		}
+
+		protected ToolBarButtonImageWizardPage(String pageName) {
+			super(pageName);
+			// TODO Auto-generated constructor stub
+			images = new ArrayList<Image>();
+		}
+		
+		@Override
+		public void createControl(Composite parent) {
+			Composite composite = new Composite(parent, SWT.NONE);
+			composite.setLayout(new GridLayout(1, false));
+			composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	        
-	        setControl(c);
+			createToolBarImageEdit(composite, getTitle());
+			setControl(composite);
+			
+			setPageComplete(true);
 		}
 		
 		private void createToolBarImageEdit(final Composite parent, String label){
@@ -94,7 +121,6 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 	        check.setText("rect");
 			GridData gd = new GridData();
 			gd.horizontalSpan = 3;
-			//check.setLayoutData(gd);
 
 	        
 			final FigureCanvas canvas = new FigureCanvas(composite);
@@ -106,7 +132,7 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 			//panel.setPreferredSize(200, 100);
 			panel.setLayoutManager(new FlowLayout());
 			canvas.setContents(panel);
-			final ImageFigure image = new ImageFigure();//new ImageFigure(HelloworldPlugin.getDefault().getImageRegistry().get(HelloworldPlugin.IMG_DUMMY));
+			final ImageFigure image = new ImageFigure();
 			
 			panel.add(image);
 
@@ -176,7 +202,6 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 				
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					// TODO Auto-generated method stub
 			        
 			        ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(composite.getShell(),
 			        		new WorkbenchLabelProvider(), 
@@ -205,24 +230,29 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 							} catch (CoreException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
-							} //new FileInputStream(imgfile);
-
-
+							}
 						}		
 			        }
 				}
 				
 				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
-					// TODO Auto-generated method stub
-					
 				}
 			});			
 		}
 
+		@Override
+		public void dispose() {
+			// TODO Auto-generated method stub
+			for (Image image : images) {
+				image.dispose();
+			}
+			super.dispose();
+		}
 	}
-
+	
 	private ToolBarButtonWizardPage page1;
+	private ToolBarButtonImageWizardPage page2;
 
 	@Override
 	public void addPages() {
@@ -231,6 +261,8 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		page1 = new ToolBarButtonWizardPage("ToolBarButton");
 		addPage(page1);
 		
+		page2 = new ToolBarButtonImageWizardPage("normal");
+		addPage(page2);
 	}
 
 	@Override
@@ -244,15 +276,4 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		// TODO Auto-generated method stub
 		return super.performFinish();
 	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		for (Image image : page1.images) {
-			image.dispose();
-		}
-		super.dispose();
-		//image
-	}
-
 }

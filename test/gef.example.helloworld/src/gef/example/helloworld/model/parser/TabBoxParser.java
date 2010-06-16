@@ -1,4 +1,4 @@
-package gef.example.helloworld.parser.xul;
+package gef.example.helloworld.model.parser;
 
 import jp.aonir.fuzzyxml.FuzzyXMLElement;
 import jp.aonir.fuzzyxml.FuzzyXMLNode;

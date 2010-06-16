@@ -29,4 +29,7 @@ public class TokenType {
 
 	public static final int LET = 279; //
 	public static final int ARRAY = 280;
+	
+	public static final int IMPORT = 281;
+	public static final int NAMESPACE = 282;
 }

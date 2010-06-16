@@ -50,7 +50,12 @@ public class CSSTest {
 	public void test1(){
 		CSSParser parser = new CSSParser();
 		String src = getSource(CSSTest.class.getResourceAsStream("test.css"));
-		parser.parse(src);
+		try {
+			parser.parse(src);
+		} catch (CSSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		List<StyleSheet> sl = parser.getStyleSheets();
 		for (StyleSheet styleSheet : sl) {

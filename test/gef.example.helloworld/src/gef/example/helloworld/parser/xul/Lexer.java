@@ -1,4 +1,4 @@
-package gef.example.helloworld.parser.css;
+package gef.example.helloworld.parser.xul;
 
 
 import java.util.HashMap;
@@ -14,8 +14,8 @@ public class Lexer {
 
 	static {
 
-		reserved.put("@import", new Integer(TokenType.IMPORT));
-		reserved.put("@namespace", new Integer(TokenType.NAMESPACE));
+		//reserved.put("@import", new Integer(TokenType.IMPORT));
+		//reserved.put("@namespace", new Integer(TokenType.NAMESPACE));
 	}
 
 	public Lexer(String src) {
@@ -60,15 +60,6 @@ public class Lexer {
 	    case '%':
 	    //case '@':
 			tok = c;
-			break;
-		case '=':
-	        c = reader.read();
-	        if(c == '='){
-	          tok = TokenType.EQ;    // '=='
-	        }else{
-	          reader.unread(c);
-	          tok = '=';             // '='
-	        }			
 			break;
 		case '/':
 	        c = reader.read();   // 次の文字が

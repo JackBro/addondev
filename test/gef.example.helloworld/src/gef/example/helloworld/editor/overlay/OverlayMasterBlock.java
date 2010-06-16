@@ -14,7 +14,7 @@ import gef.example.helloworld.HelloworldPlugin;
 import gef.example.helloworld.editor.overlay.action.AddAction;
 import gef.example.helloworld.editor.overlay.wizard.ExtentionWizard;
 import gef.example.helloworld.model.*;
-import gef.example.helloworld.parser.xul.XULLoader;
+import gef.example.helloworld.model.parser.XULLoader;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;

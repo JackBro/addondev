@@ -1,4 +1,4 @@
-package gef.example.helloworld.parser.xul;
+package gef.example.helloworld.model.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
