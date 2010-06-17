@@ -13,15 +13,17 @@ public class Lexer {
 	private static Map<String, Integer> reserved = new HashMap<String, Integer>();
 
 	static {
-		reserved.put("<!", new Integer(TokenType.ETAG));
-		reserved.put("<?", new Integer(TokenType.QTAG));
+		//reserved.put("<!", new Integer(TokenType.ETAG));
+		//reserved.put("<?", new Integer(TokenType.QTAG));
 		reserved.put("?>", new Integer(TokenType.END_QTAG));
 		reserved.put("--", new Integer(TokenType.MM));
-		reserved.put("-->", new Integer(TokenType.END_COMMENTTAG));
-		reserved.put("xml", new Integer(TokenType.XML));
-		reserved.put("xml-stylesheet", new Integer(TokenType.XUL_STYLESHEET));
-		reserved.put("xml-overlay", new Integer(TokenType.XUL_OVERLAY));
-		reserved.put("DOCTYPE", new Integer(TokenType.DOCTYPE));
+		//reserved.put("<!--", new Integer(TokenType.START_COMMENTTAG));
+		//reserved.put("-->", new Integer(TokenType.END_COMMENTTAG));
+		reserved.put("<?xml", new Integer(TokenType.XML));
+		reserved.put("<?xml-stylesheet", new Integer(TokenType.XUL_STYLESHEET));
+		reserved.put("<?xml-overlay", new Integer(TokenType.XUL_OVERLAY));
+		reserved.put("<!DOCTYPE", new Integer(TokenType.DOCTYPE));
+		reserved.put("<!ENTITY", new Integer(TokenType.ENTITY));
 	}
 
 	public Lexer(String src) {
@@ -56,6 +58,7 @@ public class Lexer {
 	    //case '$':
 	    //case '#':
 	    //case '!':
+	    case '=':
 	    case '*':
 	    case '>':
 	    //case '<':
@@ -64,29 +67,29 @@ public class Lexer {
 	    case '|':
 	    case '&':
 	    case '%':
-	    //case '@':
+	    case '@':
 			tok = c;
 			break;
-//		case '<':
-//	        c = reader.read();   // 次の文字が
-//	        if(c == '!'){  // '!'だったら
-//	        	c = reader.read(); // <!- だったら
-//	        	if(c=='-'){
-//	        		c = reader.read(); // <!-- だったら
-//			          skipComment();     //   複数行コメントとして読み飛ばし
-//			          return advance();  //   次のトークンを読みにいく。        		
-//	        	}else if(){
-//	        		if (reserved.containsKey(s)) { // (A)
-//	        			tok = ((Integer) reserved.get(s)).intValue();
-//	        		}
-//	        	}
-//	        }else if(c == '?'){
-//	        	tok =TokenType.QTAG;
-//	        }else{
-//	        	reader.unread(c);
-//	        	tok = '<';  
-//	        }
-//			break;
+		case '<':
+	        c = reader.read();   // 次の文字が
+	        if(c == '!'){  // '!'だったら
+	        	int c2 = reader.read(); // <!- だったら
+	        	if(c2=='-'){
+	        		int c3 = reader.read(); // <!-- だったら
+	        		if(c3=='-'){
+			          skipComment();     //   複数行コメントとして読み飛ばし
+			          return advance();  //   次のトークンを読みにいく。 
+	        		}else{
+	        			lexSymbol(new StringBuilder("<" + (char)c + (char)c2 + (char)c3)); 
+	        		}
+	        	}else{
+	        		lexSymbol(new StringBuilder("<" + (char)c + (char)c2)); 
+	        	}
+	        }else{
+	        	//reader.unread(c);
+	        	lexSymbol(new StringBuilder("<" + (char)c)); 
+	        }
+			break;
 		case '"':
 		case '\'':
 			lexString((char)c);
@@ -101,7 +104,7 @@ public class Lexer {
 //			else
 			{
 				reader.unread(c);
-				lexSymbol(); 
+				lexSymbol(new StringBuilder()); 
 			}
 		}
 		return true;
@@ -179,11 +182,11 @@ public class Lexer {
 		reader.unread(c);
 	}
 
-	private void lexSymbol() {
+	private void lexSymbol(StringBuilder buf) {
 		offset = reader.offset();
 		
 		tok = TokenType.SYMBOL;
-		StringBuilder buf = new StringBuilder();
+		//StringBuilder buf = new StringBuilder();
 		while (true) {
 			int c = reader.read();
 			if (c < 0) {
@@ -221,13 +224,14 @@ public class Lexer {
 	
 	private boolean isCSS(char c){
 		if (!Character.isJavaIdentifierPart(c)) {
-			if(c == '-' 
+			if(c == '-' || c == '<' || c == '>' || c == '?' || c == '!' 
 				|| Character.isDigit(c)){
 				return true;
 			}
+
 			return false;
 		}
-		
+
 		return true;
 	}
 	

@@ -1,7 +1,5 @@
 package gef.example.helloworld.editor.overlay.wizard;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -16,16 +14,11 @@ import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.Panel;
-import org.eclipse.draw2d.XYLayout;
-import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -35,7 +28,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -274,6 +266,7 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 	@Override
 	public boolean performFinish() {
 		// TODO Auto-generated method stub
+		
 		return super.performFinish();
 	}
 }

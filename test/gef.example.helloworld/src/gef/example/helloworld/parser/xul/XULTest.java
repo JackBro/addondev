@@ -38,5 +38,7 @@ private static String getSource(InputStream in) {
 		String src =  getSource(XULTest.class.getResourceAsStream("test.xul"));
 		XULParser parser = new XULParser();
 		parser.parse(src);
+		int i=0;
+		i++;
 	}
 }

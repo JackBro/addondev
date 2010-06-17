@@ -1,6 +1,10 @@
+
+<!-- Support for tracing. Only available in X version -->
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://test/content/test.css"?>
+
+<!DOCTYPE prefwindow SYSTEM "chrome://test/locale/test.dtd">
 
 <!DOCTYPE window [
 <!ENTITY % testDTD SYSTEM "chrome://test/locale/test.dtd">
@@ -8,6 +12,3 @@
 <!ENTITY % test2DTD SYSTEM "chrome://test2/locale/test2.dtd">
 %test2DTD;
 ]>
-
-<!-- Support for tracing. Only available in X version -->
-<?xul-overlay href="chrome://test/content/testOverlay.xul"?>
