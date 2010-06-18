@@ -1,4 +1,7 @@
-﻿http://www.clear-code.com/blog/
+﻿
+http://w3g.jp/css/guide/
+
+http://www.clear-code.com/blog/
 
 http://julius.sourceforge.jp/index.php
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeclarationValue {
-	private String name;
+	private String value;
 	private List<String> args;
 	
 //	public DeclarationValue(String name) {
@@ -18,12 +18,20 @@ public class DeclarationValue {
 		args = new ArrayList<String>();
 	}
 	
-	public String getName() {
-		return name;
+	public String getValue() {
+		return value;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	public List<String> getArgs() {
+		return args;
+	}
+
+	public void setArgs(List<String> args) {
+		this.args = args;
 	}
 
 	public void addArg(String arg){
@@ -32,7 +40,7 @@ public class DeclarationValue {
 	
 	public String toCSS(){
 		StringBuilder sb = new StringBuilder();
-		sb.append(name);
+		sb.append(value);
 		if(args.size()>0){
 			String last = args.get(args.size()-1);
 			sb.append("(");

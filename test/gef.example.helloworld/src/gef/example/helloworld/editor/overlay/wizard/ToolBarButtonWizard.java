@@ -24,10 +24,12 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -70,6 +72,7 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		private String state;
 		private String cond;
 		private ArrayList<Image> images;
+		private  Label imageW, imageH;
 
 		public void setState(String state) {
 			this.state = state;
@@ -87,61 +90,54 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		
 		@Override
 		public void createControl(Composite parent) {
-			Composite composite = new Composite(parent, SWT.NONE);
-			composite.setLayout(new GridLayout(1, false));
-			composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-	        
+	        Composite composite = new Composite(parent, SWT.NONE);
+	        GridLayout layout = new GridLayout();
+	        layout.marginWidth = 0;
+	        layout.marginHeight = 0;
+	        composite.setLayout(layout);
+	        composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL
+	                | GridData.HORIZONTAL_ALIGN_FILL));
+			
 			createToolBarImageEdit(composite, getTitle());
 			setControl(composite);
 			
 			setPageComplete(true);
 		}
-		
+				
 		private void createToolBarImageEdit(final Composite parent, String label){
 			
 			final Composite composite = new Composite(parent, SWT.NONE);
-			
 			composite.setLayout(new GridLayout(3, false));
-			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+			composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
 	        new Label(composite, SWT.NONE).setText("path");
 	        final Text path = new Text(composite, SWT.BORDER);
+	        path.setEnabled(false);
+	        path.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	        Button btton = new Button(composite, SWT.NONE);
-	        btton.setText("browse");
-	        
-	        final Button check = new Button(composite, SWT.CHECK);
-	        check.setText("rect");
-			GridData gd = new GridData();
-			gd.horizontalSpan = 3;
-
-	        
-			final FigureCanvas canvas = new FigureCanvas(composite);
-			GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true);
-			gd2.horizontalSpan = 3;
+	        btton.setText("select image");
+	  
+			
+			Composite compositeWH = new Composite(parent, SWT.NONE);
+			compositeWH.setLayout(new GridLayout(2, true));
+			compositeWH.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			
+			imageW = new Label(compositeWH, SWT.NONE);
+			imageW.setText("width");
+			imageW.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			imageH = new Label(compositeWH, SWT.NONE);
+			imageH.setText("height");
+			imageH.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			
+			final FigureCanvas canvas = new FigureCanvas(parent);
+			GridData gd2 = new GridData(GridData.FILL_BOTH);
 			canvas.setLayoutData(gd2);
 			Panel panel=new Panel();
-			panel.setBorder(new LineBorder(2));
-			//panel.setPreferredSize(200, 100);
+			panel.setBorder(new LineBorder(1));
 			panel.setLayoutManager(new FlowLayout());
 			canvas.setContents(panel);
 			final ImageFigure image = new ImageFigure();
-			
 			panel.add(image);
-
-			check.addSelectionListener(new SelectionListener() {
-				
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					// TODO Auto-generated method stub
-					canvas.redraw();
-				}
-				
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-			});	
 			
 			ModifyListener modify = new ModifyListener() {
 				
@@ -151,28 +147,24 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 					canvas.redraw();
 				}
 			};
-			Label xlabel = new Label(composite, SWT.NONE);
-			xlabel.setText("x");
-			final Spinner spinnerX = new Spinner(composite, SWT.BORDER);
-			spinnerX.setMaximum(0);
-			spinnerX.addModifyListener(modify);
 			
-			new Label(composite, SWT.NONE).setText("y");
-			final Spinner spinnerY = new Spinner(composite, SWT.BORDER);
-			spinnerY.setMaximum(0);
-			spinnerY.addModifyListener(modify);
-			
-			Label widthlabel = new Label(composite, SWT.NONE);
-			widthlabel.setText("width");
-			final Spinner spinnerW = new Spinner(composite, SWT.BORDER);
-			spinnerW.setMaximum(0);
-			spinnerW.addModifyListener(modify);
-			
-			Label heightlabel = new Label(composite, SWT.NONE);
-			heightlabel.setText("height");
-			final Spinner spinnerH = new Spinner(composite, SWT.BORDER);
-			spinnerH.setMaximum(0);
-			spinnerH.addModifyListener(modify);
+	        final Button check = new Button(parent, SWT.CHECK);
+	        check.setText("set rect");
+	        check.setEnabled(false);
+			//check.setLayoutData(gd);
+
+			final Group rectgroup = new Group(parent, SWT.NONE);
+			rectgroup.setText("rect");
+			rectgroup.setEnabled(false);
+			GridData gd = new GridData();
+			gd.horizontalSpan = 3;
+			rectgroup.setLayoutData(gd);
+			rectgroup.setLayout(new GridLayout(4, false));
+						
+			final Spinner spinnerX = createSpinner(rectgroup, "x", modify);
+			final Spinner spinnerY = createSpinner(rectgroup, "y", modify);
+			final Spinner spinnerW = createSpinner(rectgroup, "width", modify);
+			final Spinner spinnerH = createSpinner(rectgroup, "height", modify);
 			
 			canvas.addPaintListener(new PaintListener() {
 
@@ -214,11 +206,14 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 								input = imgfile.getContents();
 								path.setText(res.getFullPath().toString());
 								Image pngimage = new Image(null, input);
-								
+								imageW.setText("width:" + String.valueOf(pngimage.getImageData().width));
+								imageH.setText("height:" + String.valueOf(pngimage.getImageData().height));
+								check.setEnabled(true);
 								images.add(pngimage);
 								
 								image.setImage(pngimage);
 								image.repaint();
+								
 							} catch (CoreException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -230,7 +225,29 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
-			});			
+			});	
+	        
+			check.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+					rectgroup.setEnabled(check.getSelection());
+					spinnerX.setEnabled(check.getSelection());
+					spinnerY.setEnabled(check.getSelection());
+					spinnerW.setEnabled(check.getSelection());
+					spinnerH.setEnabled(check.getSelection());
+					canvas.redraw();
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});	
+			
+
 		}
 
 		@Override
@@ -240,6 +257,15 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 				image.dispose();
 			}
 			super.dispose();
+		}
+		
+		private Spinner createSpinner(Composite parent, String text, ModifyListener modify){
+			new Label(parent, SWT.NONE).setText(text);
+			Spinner spinner = new Spinner(parent, SWT.BORDER);
+			spinner.setMaximum(0);
+			spinner.addModifyListener(modify);
+			spinner.setEnabled(false);
+			return spinner;
 		}
 	}
 	

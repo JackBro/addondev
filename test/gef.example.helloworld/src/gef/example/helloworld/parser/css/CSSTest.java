@@ -57,10 +57,12 @@ public class CSSTest {
 			e.printStackTrace();
 		}
 		
-		List<StyleSheet> sl = parser.getStyleSheets();
-		for (StyleSheet styleSheet : sl) {
-			System.out.println(styleSheet.toCSS());
-		}
-		int s = sl.size();
+//		List<StyleSheet> sl = parser.getStyleSheets();
+//		for (StyleSheet styleSheet : sl) {
+//			System.out.println(styleSheet.toCSS());
+//		}
+		CSS css = parser.getCSS();
+		System.out.println(css.toCSS());
+		int s =0;
 	}
 }

@@ -59,7 +59,7 @@ public class StyleSheet {
 			sb.append(";\n");
 		}
 		
-		sb.append("}\n");
+		sb.append("}");
 		
 		return sb.toString();
 	}
