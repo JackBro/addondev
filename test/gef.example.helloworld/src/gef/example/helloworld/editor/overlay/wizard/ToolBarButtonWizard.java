@@ -270,7 +270,7 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 	}
 	
 	private ToolBarButtonWizardPage page1;
-	private ToolBarButtonImageWizardPage page2;
+	private ToolBarButtonImageWizardPage page2, page3, page4, page5;
 
 	@Override
 	public void addPages() {
@@ -281,6 +281,15 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		
 		page2 = new ToolBarButtonImageWizardPage("normal");
 		addPage(page2);
+		
+		page3 = new ToolBarButtonImageWizardPage("hover");
+		addPage(page3);
+		
+		page4 = new ToolBarButtonImageWizardPage("iconsize=small");
+		addPage(page4);
+		
+		page5 = new ToolBarButtonImageWizardPage("iconsize=small hover");
+		addPage(page5);
 	}
 
 	@Override

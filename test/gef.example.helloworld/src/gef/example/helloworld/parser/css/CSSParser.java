@@ -47,6 +47,12 @@ public class CSSParser {
 			css.addStyleSheet(stylesheet);
 			getToken();
 			break;
+//		case '#':
+//			
+//			break;
+//		case '@':
+//			
+//			break;
 		case TokenType.IMPORT:
 			import_stmt();
 			break;
@@ -186,6 +192,13 @@ public class CSSParser {
 				selector_condition_stmt(selector2);
 				stylesheet.addSelector(selector2);
 			}
+		}
+	}
+	
+	private void selector2_stmt(StyleSheet stylesheet) {
+		
+		while(token != ',' && token != TokenType.EOS){
+			
 		}
 	}
 	

@@ -28,7 +28,7 @@ test2,
   -list-style-image: url("chrome://test/content/test.png");
 }
 
-test4 { 
+test4.test5{ 
   -moz-image-region: rect(16px 16px 32px 0px);
   -list-style-image: url("chrome://test/content/test.png");
 }
