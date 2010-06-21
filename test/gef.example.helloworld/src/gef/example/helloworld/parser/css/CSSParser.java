@@ -180,20 +180,44 @@ public class CSSParser {
 	private void ruleset_stmt(){
 		selector2_stmt(null);
 		if(token == ','){
-			while(token == ','){
+			while(token == ',' && token != TokenType.EOS){
 				getToken(); //,
 				selector2_stmt(null);
 			}
 		}
 		if(token == '{'){
 			getToken(); //{
-			while(token != '}'){
-				
+			while(token != '}' && token != TokenType.EOS){
+				declaration_stmt();
 			}
 			getToken(); //}
 		}
 	}
 	
+	private void declaration_stmt() {
+		// TODO Auto-generated method stub
+		//getToken(); // skip {
+		if(token == TokenType.SYMBOL){
+//			while(token != ';' && token != TokenType.EOS){
+//				property_stmt(stylesheet);
+//				getToken(); //skip ;
+//			}
+			String sym = lex.value();
+			getToken();
+			if(token == ':'){
+				getToken(); //:
+				while(token != ';' && token != TokenType.EOS){
+					
+				}
+			}else{
+				getToken();
+			}
+			
+		}else{
+			getToken();
+		}
+	}
+
 	private void selector_stmt(StyleSheet stylesheet) {
 		// TODO Auto-generated method stub
 		String sym = lex.value();
