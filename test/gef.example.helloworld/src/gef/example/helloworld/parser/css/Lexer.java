@@ -40,7 +40,7 @@ public class Lexer {
 		case ',':
 	    case '(':
 	    case ')':
-	    //case '.':	    	
+	    case '.':	    	
 	    case '^':
 	    case '~':
 	    case '[':
@@ -48,10 +48,10 @@ public class Lexer {
 	    case '\\':
 	    case '?':
 	    //case '$':
-	    //case '#':
+	    case '#':
 	    //case '!':
 	    case '*':
-	    //case '>':
+	    case '>':
 	    case '<':
 	    case '+':
 	    //case '-':
@@ -210,7 +210,7 @@ public class Lexer {
 	
 	private boolean isCSS(char c){
 		if (!Character.isJavaIdentifierPart(c)) {
-			if(c == '-' || c == '#' || c == '@' || c == '!' || c == '>' || c == '.'
+			if(c == '-' //|| c == '#' || c == '@' || c == '!' || c == '>' || c == '.'
 				|| Character.isDigit(c)){
 				return true;
 			}

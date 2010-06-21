@@ -33,8 +33,10 @@ public class CSSParser {
 	}
 	public void parse(String src) throws CSSException{
 		lex = new Lexer(src);
+		getToken();
 		while (token != TokenType.EOS) {
-			stmt();
+			//stmt();
+			ruleset_stmt();
 		}
 	}
 	private void stmt() throws CSSException{
@@ -174,6 +176,24 @@ public class CSSParser {
 		return url;
 	}
 	
+	
+	private void ruleset_stmt(){
+		selector2_stmt(null);
+		if(token == ','){
+			while(token == ','){
+				getToken(); //,
+				selector2_stmt(null);
+			}
+		}
+		if(token == '{'){
+			getToken(); //{
+			while(token != '}'){
+				
+			}
+			getToken(); //}
+		}
+	}
+	
 	private void selector_stmt(StyleSheet stylesheet) {
 		// TODO Auto-generated method stub
 		String sym = lex.value();
@@ -196,12 +216,116 @@ public class CSSParser {
 	}
 	
 	private void selector2_stmt(StyleSheet stylesheet) {
+		// TODO Auto-generated method stub
+		String sym = lex.value();
+		Selector selector = new Selector(sym);
+		simpleselector_stmt(selector);
+		//getToken(); //skip symbol
 		
-		while(token != ',' && token != TokenType.EOS){
+		while(token != '{' && token != TokenType.EOS){
+			switch (token) {
+			case '+':
+			case '>':
+			case '~':
+				simpleselector_stmt(selector);
+				break;
+			default:
+				simpleselector_stmt(selector);
+				break;
+			}
+		}
+		
+//		//selector_condition_stmt(selector);
+//		//stylesheet.addSelector(selector);
+//		if(token == ','){
+//			while(token != '{' && token != TokenType.EOS){
+//				getToken(); //skip ,
+//				sym = lex.value();
+//				Selector selector2 = new Selector(sym);
+//				simpleselector_stmt(selector2);
+//				getToken(); //skip symbol
+//				
+//				//selector_condition_stmt(selector2);
+//				stylesheet.addSelector(selector2);
+//			}
+//		}
+	}
+	
+	private void simpleselector_stmt(Selector selector) {
+		
+		if(token == TokenType.SYMBOL){
+			SimpleSelector simpleselector = new SimpleSelector();
+			String elemnt = lex.value();
+			simpleselector.setElemnt(elemnt);
+			int offset = lex.offset();
+			getToken(); //SYMBOL
 			
+			SimpleSelector parent = simpleselector;
+			while(token != TokenType.EOS){
+				switch (token) {
+				case TokenType.SYMBOL:
+					String sym = lex.value();
+					getToken(); //SYMBOL
+					SimpleSelector child = new SimpleSelector();
+					child.setElemnt(sym);
+					parent.setChild(child);
+					parent = child;
+					break;
+				case '.': //class
+					int offset2 = lex.offset();
+					if(offset != offset2){
+						
+					}else{
+						getToken(); //.
+						String cls = lex.value();
+						getToken(); //SYMBOL
+						SimpleSelector child2 = new SimpleSelector();
+						child2.set_class(cls);
+						parent.setChild(child2);
+						parent = child2;
+					}
+					break;
+				case '#': //id
+					getToken(); //#
+					String id = lex.value();
+					getToken(); //SYMBOL
+					SimpleSelector child3 = new SimpleSelector();
+					child3.setId(id);
+					parent.setChild(child3);
+					parent = child3;
+					break;	
+				case '[':
+					attr_stmt(parent);
+					break;	
+				case ':':
+					pseudo_stmt(parent);
+					break;
+				default:
+					return;
+					//break;
+				}
+			}
 		}
 	}
 	
+	private void attr_stmt(SimpleSelector parent) {
+		// TODO Auto-generated method stub
+		getToken(); //[
+		if(token == TokenType.SYMBOL){
+			String sym = lex.value();
+		}		
+	}
+	
+	private void pseudo_stmt(SimpleSelector parent) {
+		// TODO Auto-generated method stub
+		getToken(); //:
+		if(token == TokenType.SYMBOL){
+			String sym = lex.value();
+		}
+	}
+
+
+
 	private void selector_condition_stmt(Selector selector) {
 		if(token == '['){
 			getToken(); //skip [

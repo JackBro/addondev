@@ -65,4 +65,24 @@ public class CSSTest {
 		System.out.println(css.toCSS());
 		int s =0;
 	}
+	
+	@Test
+	public void test2(){
+		CSSParser parser = new CSSParser();
+		String src = getSource(CSSTest.class.getResourceAsStream("test2.css"));
+		try {
+			parser.parse(src);
+		} catch (CSSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+//		List<StyleSheet> sl = parser.getStyleSheets();
+//		for (StyleSheet styleSheet : sl) {
+//			System.out.println(styleSheet.toCSS());
+//		}
+		CSS css = parser.getCSS();
+		System.out.println(css.toCSS());
+		int s =0;
+	}
 }
