@@ -1,3 +1,8 @@
-test4.test5{ 
-
+test5[state="active"][state2="active2"],test4{ 
+/*
+	display: -moz-box;
+	border: 1px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+*/
+	background: url("test.png") repeat-y top left !important;
 }

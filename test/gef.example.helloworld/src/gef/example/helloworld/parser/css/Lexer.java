@@ -14,8 +14,17 @@ public class Lexer {
 
 	static {
 
-		reserved.put("@import", new Integer(TokenType.IMPORT));
-		reserved.put("@namespace", new Integer(TokenType.NAMESPACE));
+		//reserved.put("@import", new Integer(TokenType.IMPORT));
+		//reserved.put("@namespace", new Integer(TokenType.NAMESPACE));
+		
+		reserved.put("=", new Integer(TokenType.EQ));
+		reserved.put("^=", new Integer(TokenType.NOTEQ));
+		reserved.put("~=", new Integer(TokenType.TILDEEQ));
+		reserved.put("$=", new Integer(TokenType.DOLEQ));
+		reserved.put("*=", new Integer(TokenType.ASTERISKEQ));
+		reserved.put("|=", new Integer(TokenType.OREQ));
+		
+		reserved.put("!important", new Integer(TokenType.IMPORTANT));
 	}
 
 	public Lexer(String src) {
@@ -41,34 +50,48 @@ public class Lexer {
 	    case '(':
 	    case ')':
 	    case '.':	    	
-	    case '^':
-	    case '~':
 	    case '[':
 	    case ']':
 	    case '\\':
 	    case '?':
-	    //case '$':
 	    case '#':
 	    //case '!':
-	    case '*':
 	    case '>':
 	    case '<':
 	    case '+':
 	    //case '-':
-	    case '|':
 	    case '&':
-	    case '%':
-	    //case '@':
+	    case '%':    	
+	    case '@':
 			tok = c;
 			break;
+	
+	    case '^':
+	    case '~':			
+	    case '$':	
+	    case '*':
+	    case '|':
+	    	 int cn = reader.read();
+	    	 if(cn == '='){
+	    		 String sym = String.valueOf(c) + String.valueOf(cn);
+	    		if (reserved.containsKey(sym)) {
+	    			tok = ((Integer) reserved.get(sym)).intValue();
+	    		}
+	    	 }else{
+	    		 reader.unread(cn);
+	    		 tok = c;
+	    	 }
+	    	break;
 		case '=':
-	        c = reader.read();
-	        if(c == '='){
-	          tok = TokenType.EQ;    // '=='
-	        }else{
-	          reader.unread(c);
-	          tok = '=';             // '='
-	        }			
+//	        c = reader.read();
+//	        if(c == '='){
+//	          tok = TokenType.EQ;    // '=='
+//	        }else{
+//	          reader.unread(c);
+//	          tok = '=';             // '='
+//	        }		
+			tok = TokenType.EQ; 
+			val = "=";
 			break;
 		case '/':
 	        c = reader.read();   // 次の文字が
@@ -210,7 +233,7 @@ public class Lexer {
 	
 	private boolean isCSS(char c){
 		if (!Character.isJavaIdentifierPart(c)) {
-			if(c == '-' //|| c == '#' || c == '@' || c == '!' || c == '>' || c == '.'
+			if(c == '-' || c == '!' //|| c == '@' || c == '!' || c == '>' || c == '.'
 				|| Character.isDigit(c)){
 				return true;
 			}

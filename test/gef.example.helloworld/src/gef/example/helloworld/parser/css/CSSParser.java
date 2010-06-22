@@ -1,16 +1,10 @@
 package gef.example.helloworld.parser.css;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class CSSParser {
 	
 	private Lexer lex;
 	private int token;
-	//private List<StyleSheet> fStyleSheets;
-	//private List<String> imports;
-	//private List<String> namespaces;
 	private CSS css;
 	
 	private void getToken() {
@@ -26,45 +20,23 @@ public class CSSParser {
 	}
 	
 	public CSSParser() {
-		//fStyleSheets = new ArrayList<StyleSheet>();
-		//imports = new ArrayList<String>();
-		//namespaces = new ArrayList<String>();
 		css = new CSS();
 	}
 	public void parse(String src) throws CSSException{
 		lex = new Lexer(src);
 		getToken();
 		while (token != TokenType.EOS) {
-			//stmt();
-			ruleset_stmt();
+			switch (token) {
+			case '@':
+				getToken();//@
+				
+				break;
+
+			default:
+				ruleset_stmt();
+				break;
+			}
 		}
-	}
-	private void stmt() throws CSSException{
-		switch (token) {
-		case TokenType.SYMBOL:
-			StyleSheet stylesheet = new StyleSheet();
-			selector_stmt(stylesheet);
-			declaration_stmt(stylesheet);
-			//fStyleSheets.add(stylesheet);
-			css.addStyleSheet(stylesheet);
-			getToken();
-			break;
-//		case '#':
-//			
-//			break;
-//		case '@':
-//			
-//			break;
-		case TokenType.IMPORT:
-			import_stmt();
-			break;
-		case TokenType.NAMESPACE:
-			namespace_stmt();
-			break;
-		default:
-			getToken();
-		}
-		
 	}
 	
 	//@import url(xxx.css);
@@ -178,37 +150,43 @@ public class CSSParser {
 	
 	
 	private void ruleset_stmt(){
-		selector2_stmt(null);
+		RuleSet ruleset = new RuleSet();
+		css.addRuleSet(ruleset);
+		selector_stmt(ruleset);
 		if(token == ','){
+			//getToken(); //,
 			while(token == ',' && token != TokenType.EOS){
 				getToken(); //,
-				selector2_stmt(null);
+				selector_stmt(ruleset);
 			}
 		}
 		if(token == '{'){
 			getToken(); //{
 			while(token != '}' && token != TokenType.EOS){
-				declaration_stmt();
+				declaration_stmt(ruleset);
 			}
 			getToken(); //}
+		}else{
+			getToken();
 		}
 	}
 	
-	private void declaration_stmt() {
+	private void declaration_stmt(RuleSet ruleset) {
 		// TODO Auto-generated method stub
-		//getToken(); // skip {
 		if(token == TokenType.SYMBOL){
-//			while(token != ';' && token != TokenType.EOS){
-//				property_stmt(stylesheet);
-//				getToken(); //skip ;
-//			}
 			String sym = lex.value();
 			getToken();
 			if(token == ':'){
+				Declaration declaration = new Declaration();
+				declaration.setName(sym);
+				ruleset.getDeclarations().add(declaration);
+				Expr expr = new Expr();
+				declaration.setExpr(expr);
 				getToken(); //:
 				while(token != ';' && token != TokenType.EOS){
-					
+					term_stm(declaration, expr);
 				}
+				getToken(); //;
 			}else{
 				getToken();
 			}
@@ -218,61 +196,74 @@ public class CSSParser {
 		}
 	}
 
-	private void selector_stmt(StyleSheet stylesheet) {
-		// TODO Auto-generated method stub
-		String sym = lex.value();
-		Selector selector = new Selector(sym);
-		getToken(); //skip symbol
-		
-		selector_condition_stmt(selector);
-		stylesheet.addSelector(selector);
-		if(token == ','){
-			while(token != '{' && token != TokenType.EOS){
-				getToken(); //skip ,
-				sym = lex.value();
-				Selector selector2 = new Selector(sym);
-				getToken(); //skip symbol
-				
-				selector_condition_stmt(selector2);
-				stylesheet.addSelector(selector2);
+	private void term_stm(Declaration declaration, Expr expr) {
+		switch (token) {
+		case TokenType.STRING:
+			String qssym = lex.value();
+			getToken();
+			QuotedStringTerm qsterm = new QuotedStringTerm();
+			qsterm.setValue(qssym);
+			expr.getTerms().add(qsterm);				
+			break;
+		case TokenType.SYMBOL:
+			String sym = lex.value();
+			getToken();
+			if(token == '('){
+				FunctionTerm trem = new FunctionTerm();
+				trem.setValue(sym);
+				Expr funcexpr = new Expr();
+				trem.setExpr(funcexpr);
+				while(token != ')' && token != TokenType.EOS){
+					term_stm(null, funcexpr);
+				}
+				getToken(); //)
+				expr.getTerms().add(trem);
+			}else{
+				SymbolTerm trem = new SymbolTerm();
+				trem.setValue(sym);
+				expr.getTerms().add(trem);		
 			}
+			break;
+		case '#':
+			getToken(); //#
+			String hex = "#" + lex.value();
+			getToken(); //hex
+			SymbolTerm trem = new SymbolTerm();
+			trem.setValue(hex);
+			expr.getTerms().add(trem);			
+			break;
+		case TokenType.IMPORTANT:
+			if(declaration != null) declaration.setImportant(true);
+			getToken(); //!importaint
+			break;
+		default:
+			getToken();
+			break;
 		}
 	}
 	
-	private void selector2_stmt(StyleSheet stylesheet) {
-		// TODO Auto-generated method stub
+	private void selector_stmt(RuleSet ruleset) {
 		String sym = lex.value();
-		Selector selector = new Selector(sym);
+		Selector selector = new Selector();
 		simpleselector_stmt(selector);
 		//getToken(); //skip symbol
 		
-		while(token != '{' && token != TokenType.EOS){
+		//while(token != '{' && token != TokenType.EOS){
+		while(token != TokenType.EOS){
 			switch (token) {
 			case '+':
 			case '>':
 			case '~':
+				//getToken();
 				simpleselector_stmt(selector);
 				break;
 			default:
 				simpleselector_stmt(selector);
-				break;
+				ruleset.selctors.add(selector);
+				return;
+				//break;
 			}
 		}
-		
-//		//selector_condition_stmt(selector);
-//		//stylesheet.addSelector(selector);
-//		if(token == ','){
-//			while(token != '{' && token != TokenType.EOS){
-//				getToken(); //skip ,
-//				sym = lex.value();
-//				Selector selector2 = new Selector(sym);
-//				simpleselector_stmt(selector2);
-//				getToken(); //skip symbol
-//				
-//				//selector_condition_stmt(selector2);
-//				stylesheet.addSelector(selector2);
-//			}
-//		}
 	}
 	
 	private void simpleselector_stmt(Selector selector) {
@@ -281,6 +272,7 @@ public class CSSParser {
 			SimpleSelector simpleselector = new SimpleSelector();
 			String elemnt = lex.value();
 			simpleselector.setElemnt(elemnt);
+			selector.getSimpleSelectors().add(simpleselector);
 			int offset = lex.offset();
 			getToken(); //SYMBOL
 			
@@ -291,20 +283,22 @@ public class CSSParser {
 					String sym = lex.value();
 					getToken(); //SYMBOL
 					SimpleSelector child = new SimpleSelector();
+					selector.getSimpleSelectors().add(child);
 					child.setElemnt(sym);
 					parent.setChild(child);
 					parent = child;
 					break;
 				case '.': //class
 					int offset2 = lex.offset();
+					getToken(); //.
+					String cls = lex.value();
+					getToken(); //SYMBOL
+					SimpleSelector child2 = new SimpleSelector();
+					child2.set_class(cls);
 					if(offset != offset2){
-						
+						selector.getSimpleSelectors().add(child2);
 					}else{
-						getToken(); //.
-						String cls = lex.value();
-						getToken(); //SYMBOL
-						SimpleSelector child2 = new SimpleSelector();
-						child2.set_class(cls);
+						//selector.getSimpleSelectors().add(child2);
 						parent.setChild(child2);
 						parent = child2;
 					}
@@ -314,121 +308,88 @@ public class CSSParser {
 					String id = lex.value();
 					getToken(); //SYMBOL
 					SimpleSelector child3 = new SimpleSelector();
+					selector.getSimpleSelectors().add(child3);
 					child3.setId(id);
 					parent.setChild(child3);
 					parent = child3;
 					break;	
 				case '[':
-					attr_stmt(parent);
+					offset = attr_stmt(parent);
+					//offset = lex.offset();
 					break;	
 				case ':':
-					pseudo_stmt(parent);
+					offset = pseudo_stmt(parent);
+					//offset = lex.offset();
 					break;
 				default:
+					//getToken();
 					return;
 					//break;
-				}
+				}	
 			}
+		}else{
+			//getToken();
 		}
 	}
 	
-	private void attr_stmt(SimpleSelector parent) {
+	private int attr_stmt(SimpleSelector parent) {
 		// TODO Auto-generated method stub
 		getToken(); //[
 		if(token == TokenType.SYMBOL){
 			String sym = lex.value();
-		}		
-	}
-	
-	private void pseudo_stmt(SimpleSelector parent) {
-		// TODO Auto-generated method stub
-		getToken(); //:
-		if(token == TokenType.SYMBOL){
-			String sym = lex.value();
-		}
-	}
-
-
-
-	private void selector_condition_stmt(Selector selector) {
-		if(token == '['){
-			getToken(); //skip [
-			String cond = lex.value();
-			getToken(); //skip symbol
-			selector.setCondition(cond);
-			getToken(); //skip ]
-		}else if(token == ':'){
-			getToken(); //skip :
-			String def = lex.value();
-			selector.setDefinedclass(def);
-			getToken(); //skip def
-			if(token == '['){
-				getToken(); //skip [
-				String cond = lex.value();
-				getToken(); //skip symbol
-				getToken(); //skip =
-				String st = lex.value();
-				getToken(); //skip string
-				selector.setCondition(cond + "=" + st);
-				getToken(); //skip ]
-			}
-		}		
-	}
-	
-	private void declaration_stmt(StyleSheet stylesheet) {
-		// TODO Auto-generated method stub
-		getToken(); // skip {
-		property_stmt(stylesheet);
-		getToken(); //skip ;
-		
-		while(token != '}' && token != TokenType.EOS){
-			property_stmt(stylesheet);
-			getToken(); //skip ;
-		}
-	}
-	
-	private void property_stmt(StyleSheet stylesheet) {
-		// TODO Auto-generated method stub
-		String property = lex.value();
-		DeclarationValue value = new DeclarationValue();
-		
-		getToken(); //skip symbol
-		getToken(); //skip :
-		String name = lex.value();
-		value.setValue(name);	
-		getToken(); //skip symbol
-		while(token != ';' && token != TokenType.EOS){
-			if(token == '('){
-				getToken(); //skip (
-				String arg = lex.value();
-				value.addArg(arg);
-				getToken(); //skip symbol
-				if(token == ','){
-					while(token != ')' && token != TokenType.EOS){
-						if(token == ','){
-							getToken(); //skip ,
-						}
-						arg = lex.value();
-						value.addArg(arg);
-						getToken(); //skip symbol
-					}
-				}else{
-					while(token != ')' && token != TokenType.EOS){
-						arg = lex.value();
-						value.addArg(arg);
-						getToken(); //skip symbol
-					}					
-				}
-				getToken(); //skip )
-			}else{
-				String val = lex.value();
-				value.setValue( value.getValue() + " " + val);
-				getToken(); //skip symbol
-			}
+			Attr attr = new Attr();
+			attr.setName(sym);
 			
-			//stylesheet.addDeclaration(property, value);
+			//parent.setAttr(attr);
+			parent.getAttrs().add(attr);
+			
+			getToken(); //symbol
+			if(token == TokenType.EQ || 
+					token == TokenType.NOTEQ ||
+					token == TokenType.TILDEEQ ||
+					token == TokenType.DOLEQ ||
+					token == TokenType.ASTERISKEQ ||
+					token == TokenType.OREQ
+					){
+				attr.setOperator(lex.value());
+				getToken();
+				
+				if(token == TokenType.SYMBOL){
+					String vale = lex.value();
+					getToken();
+					attr.setValue(vale);
+				}else if(token == TokenType.STRING){
+					String vale = lex.value();
+					getToken();
+					attr.setValue(vale);
+				}
+			}
 		}
-		stylesheet.addDeclaration(property, value);
+		while(token != ']' && token != TokenType.EOS){
+			getToken();
+		}
+		int offset = lex.offset()+1;
+		getToken(); //]
+		
+		return offset;
 	}
-
+	
+	private int pseudo_stmt(SimpleSelector parent) {
+		// TODO Auto-generated method stub
+		int offset=lex.offset()+1;
+		getToken(); //:
+		if(token ==':') {
+			offset=lex.offset()+1;
+			getToken();
+		}
+		if(token == TokenType.SYMBOL){
+			String value = lex.value();
+			//parent.setPseudo(value);
+			parent.getPseudos().add(value);
+			offset=lex.offset()+value.length();
+			getToken(); //symbol
+		}
+		
+		return offset;
+	}
 }

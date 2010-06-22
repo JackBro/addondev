@@ -1,13 +1,36 @@
 package gef.example.helloworld.parser.css;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SimpleSelector {
 	private String id;
 	private String _class;
 	private String elemnt;
 	private String exp;
 	
+	private List<Attr> attrs = new ArrayList<Attr>();
+	private List<String> pseudos = new ArrayList<String>();
+	
 	private SimpleSelector child;
 	
+	
+	public List<Attr> getAttrs() {
+		return attrs;
+	}
+
+	public void setAttrs(List<Attr> attrs) {
+		this.attrs = attrs;
+	}
+
+	public List<String> getPseudos() {
+		return pseudos;
+	}
+
+	public void setPseudos(List<String> pseudos) {
+		this.pseudos = pseudos;
+	}
+
 	public String getExp() {
 		return exp;
 	}
