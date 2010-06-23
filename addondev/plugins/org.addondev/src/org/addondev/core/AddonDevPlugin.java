@@ -85,7 +85,7 @@ public class AddonDevPlugin extends AbstractUIPlugin {
     {
 		if(project != null)
 		{
-			IFile file = project.getFile(ChromeURLMap.MANIFEST_FILENAME);
+			//IFile file = project.getFile(ChromeURLMap.MANIFEST_FILENAME);
 			String name = project.getName();
 			if(fChromeURL.containsKey(name))
 			{
@@ -96,7 +96,8 @@ public class AddonDevPlugin extends AbstractUIPlugin {
 				ChromeURLMap map = new ChromeURLMap();
 				try {
 					//map.readManifest(file.getLocation());
-					map.readManifest(file);
+					//map.readManifest(file);
+					map.readManifest(project);
     				fChromeURL.put(name, map);
     				
 				} catch (IOException e) {

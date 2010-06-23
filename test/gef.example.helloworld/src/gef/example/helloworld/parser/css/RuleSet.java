@@ -19,5 +19,20 @@ public class RuleSet {
 		this.declarations = declarations;
 	}
 	
-	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < selctors.size(); i++) {
+			Selector selector = selctors.get(i);
+			if(i!=0) sb.append(",");
+			sb.append(selector.toString());
+		}
+		sb.append("{\n");
+		for (Declaration declaration : declarations) {
+			sb.append(declaration.toString() + ";\n");
+		}
+		sb.append("\n}");
+		return sb.toString();
+	}
 }

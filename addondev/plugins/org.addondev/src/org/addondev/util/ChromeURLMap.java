@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -29,6 +30,8 @@ public class ChromeURLMap {
 	private static Pattern chrome_resource_pattern = Pattern.compile("resource:\\/\\/([^\\s^\\/]+)"); 
 	private static Pattern chrome_skin_pattern = Pattern.compile("chrome:\\/\\/([^\\s^\\/]+)\\/skin\\/(.*)"); 
 	private static Pattern chrome_locale_pattern = Pattern.compile("chrome:\\/\\/([^\\s^\\/]+)\\/locale\\/(.*)");  
+	
+	private IProject fProject;
 	
 	//private String fLocale;
 	private Locale fLocale;
@@ -74,12 +77,16 @@ public class ChromeURLMap {
 		fLocaleMap.clear();
 	}
 	
-	public void readManifest(IFile manifest) throws CoreException, IOException
+	//public void readManifest(IFile manifest) throws CoreException, IOException
+	public void readManifest(IProject project) throws CoreException, IOException
 	{
+		//fProject = manifest.getProject();
 		fLocaleList.clear();
+		
+		fProject = project;
 		//fContentMap = new HashMap<String, String>();
-		//IFile file = fProject.getFile(MANIFEST_FILENAME);
-		IFile file = manifest;
+		IFile file = fProject.getFile(MANIFEST_FILENAME);
+		//IFile file = manifest;
 		//fBasePath = file.getLocation().removeLastSegments(1);
 		fBasePath = file.getFullPath().removeLastSegments(1);
 		fLocationBasePath = file.getLocation().removeLastSegments(1);
@@ -96,30 +103,30 @@ public class ChromeURLMap {
 		}
 	}
 	
-	public void readManifest(File manifest) throws CoreException, IOException
-	{
-		fLocaleList.clear();
-		//fContentMap = new HashMap<String, String>();
-		//IFile file = fProject.getFile(MANIFEST_FILENAME);
-		//IFile file = manifest;
-		//fBasePath = file.getLocation().removeLastSegments(1);
-		IPath path = new Path(manifest.getAbsolutePath());
-		//fBasePath = path.removeLastSegments(1);
-		fLocationBasePath = path.removeLastSegments(1);
-			
-		FileInputStream fin = new FileInputStream(manifest);
-		
-		InputStreamReader in = new InputStreamReader(fin);// (fin. , "UTF-8");
-		BufferedReader reader = new BufferedReader(in);
-		String line = null;
-		while((line = reader.readLine()) != null)
-		{
-			makeContentMap(line);
-			makeResourceMap(line);
-			makeSkinMap(line);
-			makeLocaleMap(line);
-		}
-	}
+//	public void readManifest(File manifest) throws CoreException, IOException
+//	{
+//		fLocaleList.clear();
+//		//fContentMap = new HashMap<String, String>();
+//		//IFile file = fProject.getFile(MANIFEST_FILENAME);
+//		//IFile file = manifest;
+//		//fBasePath = file.getLocation().removeLastSegments(1);
+//		IPath path = new Path(manifest.getAbsolutePath());
+//		//fBasePath = path.removeLastSegments(1);
+//		fLocationBasePath = path.removeLastSegments(1);
+//			
+//		FileInputStream fin = new FileInputStream(manifest);
+//		
+//		InputStreamReader in = new InputStreamReader(fin);// (fin. , "UTF-8");
+//		BufferedReader reader = new BufferedReader(in);
+//		String line = null;
+//		while((line = reader.readLine()) != null)
+//		{
+//			makeContentMap(line);
+//			makeResourceMap(line);
+//			makeSkinMap(line);
+//			makeLocaleMap(line);
+//		}
+//	}
 	
 	
 	// /stacklink/chrome/content/tmp/stacklink.js //file
@@ -175,31 +182,12 @@ public class ChromeURLMap {
 					return chromeurl;
 					
 				}
-		}		
+			}		
 		}
 		
 		
 		return chromeurl;
 	}
-	
-//	public String convertLocal2Chrome(IPath fullpath)
-//	{
-//		String chromeurl = null;
-//		for(String key1 : fContentMap.keySet()) {
-//			
-//			HashMap<String, String> map = fContentMap.get(key1);
-//			String uri = map.get("uri");
-//			IPath path = fBasePath.append(uri);
-//			if(fullpath.toPortableString().indexOf(path.toPortableString()) == 0)
-//			{
-//				chromeurl = "chrome://" + 
-//				fullpath.toPortableString().replaceFirst(path.toPortableString(), key1 + "/content/");
-//				break;
-//				
-//			}
-//		}
-//		return chromeurl;
-//	}
 	
 	public String convertChrome2Local(String path, String prefix)
 	{
@@ -267,6 +255,14 @@ public class ChromeURLMap {
 	public String convertChrome2Local(String path)
 	{
 		return convertChrome2Local(path, null);
+	}
+	
+	public IFile convertChrome2File(String path)
+	{
+		String fullpath = convertChrome2Local(path, null);
+		IPath p = new Path(fullpath);
+		IFile file = fProject.getFile(p.makeRelativeTo(fProject.getLocation()));
+		return file;
 	}
 	
 //	public String convertDTDChrome2Local(String path)

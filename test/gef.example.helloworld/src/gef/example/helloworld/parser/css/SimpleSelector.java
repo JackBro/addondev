@@ -78,8 +78,27 @@ public class SimpleSelector {
 	public SimpleSelector(String id, String class1, String elemnt) {
 		super();
 		this.id = id;
-		_class = class1;
+		this._class = class1;
 		this.elemnt = elemnt;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		StringBuilder sb = new StringBuilder();
+		if(id != null) sb.append("#" + id);
+		if(_class != null) sb.append("." + _class);
+		if(elemnt != null) sb.append(elemnt);
+		for (Attr attr : attrs) {
+			sb.append(attr.toString());
+		}
+		for (String pseudo : pseudos) {
+			sb.append(":" + pseudo);
+		}		
+		
+		if(child != null) sb.append(child.getExp() + child.toString());
+		
+		return sb.toString();
 	}
 	
 	

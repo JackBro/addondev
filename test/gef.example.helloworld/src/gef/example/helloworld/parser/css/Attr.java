@@ -22,6 +22,15 @@ public class Attr {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
-	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		sb.append(name);
+		sb.append(operator);
+		sb.append("\"" + value + "\"");
+		sb.append("]");
+		return sb.toString();
+	}
 }

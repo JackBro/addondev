@@ -95,7 +95,7 @@ public class CSS {
 		}
 		
 		for (RuleSet ruleset : rulesets) {
-			//sb.append(ruleset.toCSS() + "\n");
+			sb.append(ruleset.toString() + "\n");
 		}
 		
 		return sb.toString();

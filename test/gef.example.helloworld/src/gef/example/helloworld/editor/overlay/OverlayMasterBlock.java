@@ -63,6 +63,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		registerSet.add(MenuPopupModel.class);
 		registerSet.add(MenuItemModel.class);
 		registerSet.add(PopupModel.class);
+		registerSet.add(ScriptModel.class);
 	}
 	
 	private static Map<Class, List<Class>> addmenuMap = new HashMap<Class,List<Class>>();

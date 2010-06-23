@@ -13,5 +13,16 @@ public class Expr {
 	public void setTerms(List<Term> terms) {
 		this.terms = terms;
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		StringBuilder sb = new StringBuilder();
+		for (Term term : terms) {
+			sb.append(term.toString());
+			sb.append(" ");
+		}
+		return sb.toString();
+	}
 	
 }

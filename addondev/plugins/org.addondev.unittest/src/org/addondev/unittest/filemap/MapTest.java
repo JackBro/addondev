@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +16,7 @@ import org.addondev.unittest.Activator;
 import org.addondev.util.ChromeURLMap;
 import org.addondev.util.FileUtil;
 import org.addondev.util.Locale;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -40,28 +43,26 @@ public class MapTest {
 	@Test
 	public void ChromeURLMapTest() throws CoreException, IOException {
 		IWorkspace work = ResourcesPlugin.getWorkspace();
-		
 		IWorkspaceRoot root =  work.getRoot();
+		IProject project = root.getProject("stacklink");
 		
-		//root.work
-		IProject rproject = root.getProject("/stacklink");
-		IPath pp = root.getLocation();
-		IProject[] ss = root.getProjects();
-		boolean pe = rproject.exists();
-		IProject[] s = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		IProject project = AddonDevPlugin.getWorkspace().getRoot().getProject("stacklink");
-		//boolean pe = project.exists();
+		if (!project.exists()) project.create(null);
+		if (!project.isOpen()) project.open(null);
+
 		ChromeURLMap cm = new ChromeURLMap();	
-		//URL url = AddonDevPlugin.getDefault().getBundle().getEntry("stacklink/chrome.manifest");
-		//URL url = new URL("file:///D:/data/src/PDE/work/org.addondev.unittest/stacklink/");
-		//project.getFile(ChromeURLMap.MANIFEST_FILENAME).
-		//cm.readManifest(project.getFile(ChromeURLMap.MANIFEST_FILENAME));
+		cm.readManifest(project);
 		
 //		String bpath = "D:/data/src/PDE/work/"; 
 //		String filepath = "stacklink/chrome.manifest"; 
 //		cm.readManifest(new File(bpath + filepath));
 //		
-//		//String pp = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
+		String pp = cm.convertChrome2Local("chrome://stacklink/content/stacklink.js");
+		
+		String css = cm.convertChrome2Local("chrome://stacklink/skin/preference.css");
+		
+		IFile file = cm.convertChrome2File("chrome://stacklink/content/stacklink.js");
+		assertTrue(file.exists());
+		
 //		assertEquals("file:///" + bpath + "/chrome/content/stacklink.js", cm.convertChrome2Local("chrome://stacklink/content/stacklink.js"));
 //		assertEquals("file:///" + bpath + "/skin/classic/preference.css", cm.convertChrome2Local("chrome://stacklink/skin/preference.css"));
 //		

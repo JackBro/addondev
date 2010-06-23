@@ -29,8 +29,7 @@
             class="gef.example.helloworld.HelloWorldEditor"
             contributorClass="gef.example.helloworld.MyContributor"
             default="true"
-            extensions="world"
-            filenames="hello.world"
+            extensions="xul"
             icon="example.gif"
             id="gef.example.helloworld.editor1"
             name="Hello World Editor">
@@ -38,7 +37,7 @@
       <editor
             class="gef.example.helloworld.editor.overlay.OverlayFormEditor"
             default="false"
-            extensions="world"
+            extensions="xul"
             id="gef.example.helloworld.editor2"
             name="overlay">
       </editor>
