@@ -300,13 +300,13 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		}
 	}
 	
-	public class ToolBarButtonEachImageWizardPage extends WizardPage {
+	public class ToolBarButtonEachImageWizardPage1 extends WizardPage {
 
 		private Text nText, nText2, nText3, nText4;
 		private ArrayList<Image> images = new ArrayList<Image>();
 		//private Label imageW, imageH;
 		
-		protected ToolBarButtonEachImageWizardPage(String pageName) {
+		protected ToolBarButtonEachImageWizardPage1(String pageName) {
 			super(pageName);
 			// TODO Auto-generated constructor stub
 		}
@@ -344,11 +344,6 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 			group.setLayout(new GridLayout(3, false));
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
-//			Composite composite = new Composite(group, SWT.NONE);
-//			composite.setLayout(new GridLayout(4, false));
-//			composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			
-			//new Label(composite, SWT.NONE).setText("path");
 	        final Text path = new Text(group, SWT.BORDER);
 	        path.setEnabled(false);
 	        path.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -407,7 +402,108 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		
 	}
 	
-	public class ToolBarButtonRectangleImageWizardPage extends WizardPage {
+	public class ToolBarButtonRectangleImageWizardPage1 extends WizardPage {
+
+		private ImageFigure imagefigure;
+		private ArrayList<Image> images = new ArrayList<Image>();
+		private Label imagesize;
+		
+		protected ToolBarButtonRectangleImageWizardPage1(
+				String pageName) {
+			super(pageName);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void createControl(Composite parent) {
+			// TODO Auto-generated method stub
+	        Composite composite = new Composite(parent, SWT.NONE);
+	        GridLayout layout = new GridLayout();
+	        layout.marginWidth = 0;
+	        layout.marginHeight = 0;
+	        composite.setLayout(layout);
+	        composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL
+	                | GridData.HORIZONTAL_ALIGN_FILL));
+			
+			createToolBarImageLoad(composite);
+			setControl(composite);
+		}
+
+		private void createToolBarImageLoad(Composite parent) {
+			// TODO Auto-generated method stub
+			final Composite composite = new Composite(parent, SWT.NONE);
+			composite.setLayout(new GridLayout(3, false));
+			composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			
+	        new Label(composite, SWT.NONE).setText("path");
+	        final Text path = new Text(composite, SWT.BORDER);
+	        path.setEnabled(false);
+	        path.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	        Button btton = new Button(composite, SWT.NONE);
+	        btton.setText("select image");
+			
+			imagesize = new Label(parent, SWT.NONE);
+			imagesize.setText("");
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.verticalSpan = 3;
+			
+			final FigureCanvas canvas = new FigureCanvas(parent);
+			GridData gd2 = new GridData(GridData.FILL_BOTH);
+			canvas.setLayoutData(gd2);
+			Panel panel=new Panel();
+			panel.setBorder(new LineBorder(1));
+			panel.setLayoutManager(new FlowLayout());
+			canvas.setContents(panel);
+			imagefigure = new ImageFigure();
+			panel.add(imagefigure);
+
+			btton.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+			        
+			        ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(composite.getShell(),
+			        		new WorkbenchLabelProvider(), 
+			        		new WorkbenchContentProvider());
+			        IEditorPart editor = HelloworldPlugin.getActiveEditorPart();
+			        FileEditorInput file = (FileEditorInput) editor.getEditorInput();
+			        IProject project = file.getFile().getProject();
+			        
+			        dialog.setInput(project);
+			        if (dialog.open() == Window.OK) {
+						IResource res= (IResource) dialog.getFirstResult();
+						if(res.getType() == IResource.FILE)
+						{
+							IFile imgfile = (IFile)res;
+							
+							InputStream input = null;
+							try {
+								input = imgfile.getContents();
+								path.setText(res.getFullPath().toString());
+								Image pngimage = new Image(null, input);
+								imagesize.setText(String.valueOf(pngimage.getImageData().width)
+										+ "x" + String.valueOf(pngimage.getImageData().height));
+								images.add(pngimage);
+								
+								imagefigure.setImage(pngimage);
+								imagefigure.repaint();
+								
+							} catch (CoreException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}		
+			        }
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});	
+		}
+	}
+	
+	public class ToolBarButtonRectangleImageWizardPage2 extends WizardPage {
 		
 		private String state;
 		private String cond;
@@ -415,7 +511,7 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		private Label imageW, imageH;
 		private HashMap<Group, Rectangle> rectangleMap = new HashMap<Group, Rectangle>();
 		
-		protected ToolBarButtonRectangleImageWizardPage(String pageName) {
+		protected ToolBarButtonRectangleImageWizardPage2(String pageName) {
 			super(pageName);
 			// TODO Auto-generated constructor stub
 		}
@@ -477,6 +573,8 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 			
 	        createRectangleGroup(compositeRectangleGroup, "normal");
 	        createRectangleGroup(compositeRectangleGroup, "hover");
+	        createRectangleGroup(compositeRectangleGroup, "small");
+	        createRectangleGroup(compositeRectangleGroup, "small hover");
 			
 			canvas.addPaintListener(new PaintListener() {
 
@@ -603,8 +701,8 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 	private ToolBarButtonWizardPage page1;
 	private ToolBarButtonImageTypeWizardPage imagetypepage;
 	//private ToolBarButtonImageWizardPage page2, page3, page4, page5;
-	private ToolBarButtonRectangleImageWizardPage page2;
-	private ToolBarButtonEachImageWizardPage page6;
+	private ToolBarButtonRectangleImageWizardPage2 page2;
+	private ToolBarButtonEachImageWizardPage1 page6;
 
 	@Override
 	public void addPages() {
@@ -616,7 +714,7 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		imagetypepage = new ToolBarButtonImageTypeWizardPage("ToolBarButton");
 		addPage(imagetypepage);		
 		
-		page2 = new ToolBarButtonRectangleImageWizardPage("normal");
+		page2 = new ToolBarButtonRectangleImageWizardPage2("normal");
 		addPage(page2);
 //		
 //		page3 = new ToolBarButtonImageWizardPage("hover");
@@ -628,7 +726,7 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 //		page5 = new ToolBarButtonImageWizardPage("iconsize=small hover");
 //		addPage(page5);
 		
-		page6 = new ToolBarButtonEachImageWizardPage("iconsize=small hover");
+		page6 = new ToolBarButtonEachImageWizardPage1("iconsize=small hover");
 		addPage(page6);
 	}
 
@@ -642,7 +740,7 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 				return page2;
 			}
 		}
-		if(page == imagetypepage){
+		if(page == page2){
 			return null;
 		}
 		return super.getNextPage(page);
