@@ -1,5 +1,5 @@
 
-<!-- Support for tracing. Only available in X version -->
+<!-- Support for tracing. Only available in X version 
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://test/content/test.css"?>
@@ -12,3 +12,39 @@
 <!ENTITY % test2DTD SYSTEM "chrome://test2/locale/test2.dtd">
 %test2DTD;
 ]>
+-->
+
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://stacklink/locale/stacklink.dtd">
+<?xml-stylesheet href="chrome://stacklink/content/stacklink.css" type="text/css"?>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/x-javascript;version=1.8" src="chrome://stacklink/content/stacklink.js" />
+	<script type="application/x-javascript;version=1.8" src="chrome://stacklink/content/test1.js" />
+	<script type="application/x-javascript;version=1.8" src="chrome://stacklink/content/test2.js" />
+
+      	
+	<statusbar id="status-bar">
+		<command id="stacklink_cmd_setpref" oncommand="stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6.stackpanel.setPref();"/>
+		
+		<statusbarpanel
+			class="statusbarpanel-menu-iconic" id="my-panel" context="stacklink-status-popup" 
+						onmousedown='stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6.stackpanel.onClickStatusbarIcon(event)'>
+			<image id="stacklinkStatusBarIcon" tooltiptext="stacklink" />
+		</statusbarpanel>
+		
+		<menupopup id="stacklink-status-popup"
+			        position="before_start"
+			        onclick="">
+			<menuitem label="&stacklink.contextmenu.pref;"
+			          oncommand="stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6.stackpanel.showPreference();" />
+			<menuseparator />
+			<menuitem label="&stacklink.contextmenu.moveleft;"
+			          oncommand="stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6.stackpanel.movePanelPos('before_start');" />
+			<menuitem label="&stacklink.contextmenu.moveright;"
+			          oncommand="stacklink_106ec9de_7db3_40c6_93c2_39563e25a8d6.stackpanel.movePanelPos('before_end');" />
+		</menupopup>
+		<popupset id="stacklink-popupset"></popupset>
+	</statusbar>
+</overlay>

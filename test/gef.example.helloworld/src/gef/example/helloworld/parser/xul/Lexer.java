@@ -19,11 +19,11 @@ public class Lexer {
 		reserved.put("--", new Integer(TokenType.MM));
 		//reserved.put("<!--", new Integer(TokenType.START_COMMENTTAG));
 		//reserved.put("-->", new Integer(TokenType.END_COMMENTTAG));
-		reserved.put("<?xml", new Integer(TokenType.XML));
-		reserved.put("<?xml-stylesheet", new Integer(TokenType.XUL_STYLESHEET));
-		reserved.put("<?xml-overlay", new Integer(TokenType.XUL_OVERLAY));
-		reserved.put("<!DOCTYPE", new Integer(TokenType.DOCTYPE));
-		reserved.put("<!ENTITY", new Integer(TokenType.ENTITY));
+		reserved.put("?xml", new Integer(TokenType.XML));
+		reserved.put("?xml-stylesheet", new Integer(TokenType.XUL_STYLESHEET));
+		reserved.put("?xml-overlay", new Integer(TokenType.XUL_OVERLAY));
+		reserved.put("!DOCTYPE", new Integer(TokenType.DOCTYPE));
+		reserved.put("!ENTITY", new Integer(TokenType.ENTITY));
 	}
 
 	public Lexer(String src) {
@@ -64,6 +64,7 @@ public class Lexer {
 	    //case '<':
 	    case '+':
 	    //case '-':
+	    case '/':
 	    case '|':
 	    case '&':
 	    case '%':
@@ -80,14 +81,21 @@ public class Lexer {
 			          skipComment();     //   複数行コメントとして読み飛ばし
 			          return advance();  //   次のトークンを読みにいく。 
 	        		}else{
-	        			lexSymbol(new StringBuilder("<" + (char)c + (char)c2 + (char)c3)); 
+	        			String str = String.valueOf(new char[]{(char)c, (char)c2, (char)c3});
+	        			//lexSymbol(new StringBuilder("<" + (char)c + (char)c2 + (char)c3)); 
+	        			lexSymbol(new StringBuilder(str)); 
 	        		}
 	        	}else{
-	        		lexSymbol(new StringBuilder("<" + (char)c + (char)c2)); 
+	        		//lexSymbol(new StringBuilder("<" + (char)c + (char)c2)); 
+	        		String str = String.valueOf(new char[]{(char)c, (char)c2});
+	        		lexSymbol(new StringBuilder(str)); 
 	        	}
+	        //}else if(c == '?'){
+	        //	lexSymbol(new StringBuilder((char)c)); 
 	        }else{
 	        	//reader.unread(c);
-	        	lexSymbol(new StringBuilder("<" + (char)c)); 
+	        	String str = String.valueOf((char)c);
+	        	lexSymbol(new StringBuilder(str)); 
 	        }
 			break;
 		case '"':
@@ -224,7 +232,7 @@ public class Lexer {
 	
 	private boolean isCSS(char c){
 		if (!Character.isJavaIdentifierPart(c)) {
-			if(c == '-' || c == '<' || c == '>' || c == '?' || c == '!' 
+			if(c == '-' || c == '>' || c == '?' || c == '!' 
 				|| Character.isDigit(c)){
 				return true;
 			}

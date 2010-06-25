@@ -27,4 +27,8 @@ public class Element {
 	public void setAttr(String id, String value){
 		attr.put(id, value);
 	}
+	
+	public String getAttr(String id){
+		return attr.get(id);
+	}
 }

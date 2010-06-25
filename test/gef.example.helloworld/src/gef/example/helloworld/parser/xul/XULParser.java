@@ -8,9 +8,22 @@ public class XULParser {
 
 	private Lexer lex;
 	private int token;
-	private List<Element> list = new ArrayList<Element>();
+	private Element xml, overlay;
+	private List<Element> stylesheets = new ArrayList<Element>();
 	private List<Doctype> doctypelist = new ArrayList<Doctype>();
 	
+	public Element getOverlay() {
+		return overlay;
+	}
+
+	public List<Element> getStylesheets() {
+		return stylesheets;
+	}
+
+	public List<Doctype> getDoctypelist() {
+		return doctypelist;
+	}
+
 	private void getToken() {
 		if (lex.advance()) {
 			token = lex.token();
@@ -33,15 +46,15 @@ public class XULParser {
 //			comment_stmt();
 //			break;
 		case TokenType.XUL_STYLESHEET: //<?xml-stylesheet
-			element_stmt();
+			stylesheets.add(element_stmt());
 			break;
 		case TokenType.XML:
 			//getToken();
-			element_stmt();	
+			xml = element_stmt();	
 			break;
 		case TokenType.XUL_OVERLAY:
 			//getToken();
-			element_stmt();	
+			overlay = element_stmt();	
 			break;
 		case TokenType.DOCTYPE: //<!DOCTYPE
 			doctype_stmt();
@@ -129,13 +142,14 @@ public class XULParser {
 		getToken(); //skip >
 	}
 
-	private void element_stmt() {
+	private Element element_stmt() {
 		String name = lex.value();
 		Element elem = new Element(name);
-		list.add(elem);
 		
 		getToken();
 		attr_stmt(elem);
+		
+		return elem;
 	}
 	
 	private void attr_stmt(Element elem) {
