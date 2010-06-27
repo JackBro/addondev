@@ -100,6 +100,4 @@ public class SimpleSelector {
 		
 		return sb.toString();
 	}
-	
-	
 }

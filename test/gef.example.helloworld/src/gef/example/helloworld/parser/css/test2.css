@@ -1,8 +1,21 @@
-test5[state="active"][state2="active2"],test4{ 
 /*
+test5[state="active"][state2="active2"],test4{ 
+
 	display: -moz-box;
 	border: 1px;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
-*/
+
+	-list-style-image: url("chrome://test/content/test.png");
 	background: url("test.png") repeat-y top left !important;
+}
+*/
+#test1{ 
+  -moz-image-region: rect(16px 16px 32px 0px);
+  #background: url("test.png") repeat-y top left !important;
+  
+}
+
+#test1:hover{ 
+  -moz-image-region: rect(-16px 16px 32px 0.2);
+  
 }

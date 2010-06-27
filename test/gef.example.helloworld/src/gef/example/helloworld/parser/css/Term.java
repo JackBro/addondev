@@ -8,4 +8,12 @@ public abstract class Term {
 	public String getValue(){
 		return value;
 	}
+	public Term(String value) {
+		super();
+		this.value = value;
+	}
+	public Term() {
+		super();
+	}
+	
 }

@@ -173,8 +173,13 @@ public class CSSParser {
 	
 	private void declaration_stmt(RuleSet ruleset) {
 		// TODO Auto-generated method stub
+		String sym = "";
+		if(token =='#'){
+			sym = "#";
+			getToken(); //#
+		}
 		if(token == TokenType.SYMBOL){
-			String sym = lex.value();
+			sym = sym + lex.value();
 			getToken();
 			if(token == ':'){
 				Declaration declaration = new Declaration();
@@ -219,8 +224,8 @@ public class CSSParser {
 				getToken(); //)
 				expr.getTerms().add(trem);
 			}else{
-				SymbolTerm trem = new SymbolTerm();
-				trem.setValue(sym);
+				SymbolTerm trem = new SymbolTerm(sym);
+				//trem.setValue(sym);
 				expr.getTerms().add(trem);		
 			}
 			break;
@@ -228,8 +233,8 @@ public class CSSParser {
 			getToken(); //#
 			String hex = "#" + lex.value();
 			getToken(); //hex
-			SymbolTerm trem = new SymbolTerm();
-			trem.setValue(hex);
+			SymbolTerm trem = new SymbolTerm(hex);
+			//trem.setValue(hex);
 			expr.getTerms().add(trem);			
 			break;
 		case TokenType.IMPORTANT:
@@ -268,10 +273,21 @@ public class CSSParser {
 	
 	private void simpleselector_stmt(Selector selector) {
 		
-		if(token == TokenType.SYMBOL){
+		if(token == TokenType.SYMBOL || token == '.' || token == '#'){
 			SimpleSelector simpleselector = new SimpleSelector();
-			String elemnt = lex.value();
-			simpleselector.setElemnt(elemnt);
+			if(token == TokenType.SYMBOL ){
+				String elemnt = lex.value();
+				simpleselector.setElemnt(elemnt);
+			}else if(token == '.' ){
+				getToken();
+				String elemnt = lex.value();
+				simpleselector.set_class(elemnt);
+			}
+			else if(token == '#'){
+				getToken();
+				String elemnt = lex.value();
+				simpleselector.setId(elemnt);
+			}
 			selector.getSimpleSelectors().add(simpleselector);
 			int offset = lex.offset();
 			getToken(); //SYMBOL
@@ -391,5 +407,34 @@ public class CSSParser {
 		}
 		
 		return offset;
+	}
+	
+	public Declaration declaration_stmt(String src) {
+		Declaration declaration = null;
+		lex = new Lexer(src);
+		getToken();
+
+		if(token == TokenType.SYMBOL){
+			String sym = lex.value();
+			getToken();
+			if(token == ':'){
+				declaration = new Declaration();
+				declaration.setName(sym);
+				Expr expr = new Expr();
+				declaration.setExpr(expr);
+				getToken(); //:
+				while(token != ';' && token != TokenType.EOS){
+					term_stm(declaration, expr);
+				}
+				getToken(); //;
+			}else{
+				getToken();
+			}
+			
+		}else{
+			getToken();
+		}
+		
+		return declaration;
 	}
 }

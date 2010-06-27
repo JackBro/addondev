@@ -60,6 +60,8 @@ public class MapTest {
 		
 		String css = cm.convertChrome2Local("chrome://stacklink/skin/preference.css");
 		
+		String gcss = cm.convertChrome2Local("chrome://global/skin/global.css");
+		
 		IFile file = cm.convertChrome2File("chrome://stacklink/content/stacklink.js");
 		assertTrue(file.exists());
 		

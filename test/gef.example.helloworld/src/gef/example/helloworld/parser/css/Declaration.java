@@ -23,6 +23,15 @@ public class Declaration {
 	public void setImportant(boolean important) {
 		this.important = important;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(obj instanceof Declaration){
+			return (this.toString().equals(obj.toString()));
+		}
+		return false;
+	}
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub

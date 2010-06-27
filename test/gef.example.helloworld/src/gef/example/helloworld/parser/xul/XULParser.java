@@ -163,7 +163,7 @@ public class XULParser {
 					if(token == TokenType.STRING){
 						String value = lex.value();
 						elem.setAttr(id, value);
-						System.out.println("value = " + value);
+						//System.out.println("value = " + value);
 						//getToken();
 					}else{
 						//break;

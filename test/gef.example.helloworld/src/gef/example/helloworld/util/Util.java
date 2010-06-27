@@ -14,9 +14,22 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 public class Util {
+	
 	public static IFile getFile(IProject project, String chromeurl){
 		ChromeURLMap map = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
 		return map.convertChrome2File(chromeurl);
+	}
+	
+	public static IFile getFile(String chromeurl){
+		IProject project = getCurrentProject();
+		ChromeURLMap map = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+		return map.convertChrome2File(chromeurl);
+	}
+	
+	public static String getChromeUrl(IFile file){
+		IProject project = getCurrentProject();
+		ChromeURLMap map = AddonDevPlugin.getDefault().getChromeURLMap(project, false);
+		return map.convertLocal2Chrome(file);
 	}
 	
 	public static IProject getCurrentProject(){

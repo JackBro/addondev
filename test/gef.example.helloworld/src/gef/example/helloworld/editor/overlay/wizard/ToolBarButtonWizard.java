@@ -2,13 +2,17 @@ package gef.example.helloworld.editor.overlay.wizard;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-
 import gef.example.helloworld.HelloworldPlugin;
 import gef.example.helloworld.model.ToolBarButtonModel;
 import gef.example.helloworld.model.ToolBarPaletteModel;
+import gef.example.helloworld.parser.css.Attr;
+import gef.example.helloworld.parser.css.CSS;
+import gef.example.helloworld.parser.css.CSSException;
+import gef.example.helloworld.parser.css.CSSParser;
+import gef.example.helloworld.parser.css.Declaration;
 import gef.example.helloworld.parser.xul.Element;
 import gef.example.helloworld.parser.xul.XULParser;
 import gef.example.helloworld.util.Util;
@@ -62,6 +66,14 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 	private static String SMALL_HOVER = "small_hover";
 	
 
+	private String getToolBarButtonID(){
+		return page1.getToolBarButtonID();
+	}
+	
+	private void setCss(CSS css, String id){
+		
+	}
+	
 	@Override
 	public void addPages() {
 		// TODO Auto-generated method stub
@@ -124,11 +136,12 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		ToolBarPaletteModel palette = new ToolBarPaletteModel();
 		palette.setPropertyValue("id", "BrowserToolbarPalette");
 		ToolBarButtonModel button = new ToolBarButtonModel();
-		button.setPropertyValue("id", "");
-		button.setPropertyValue("label", "");
+		button.setPropertyValue("id", page1.getToolBarButtonID());
+		button.setPropertyValue("label", page1.getToolBarButtonLabel());
 		
+		palette.addChild(button);
 		
-		return null;
+		return palette;
 	}
 
 	@Override
@@ -142,10 +155,43 @@ public class ToolBarButtonWizard extends AbstractXULWizard {
 		XULParser parser = new XULParser();
 		parser.parse(src);
 		List<Element> styles = parser.getStylesheets();
+		
+		String chromeurl = styles.get(1).getAttr("href");
+		IFile sfile = Util.getFile(chromeurl);
+		
+		CSSParser cssparser = new CSSParser();
+		try {
+			String csssrc = Util.getContent(sfile);
+			cssparser.parse(csssrc);
+		} catch (CSSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		CSS css = cssparser.getCSS();
+		
+		if(imagetypepage.each.getSelection()){
+			IFile normal = eachpage1.imagefilemap.get(NORMAl);
+			String normalurl = Util.getChromeUrl(normal);
+			
+			
+		}
+		
+		String id = getToolBarButtonID();
+		Attr attr = new Attr("iconsize", "=", "small");
+		Declaration declaration = cssparser.declaration_stmt("-moz-image-region: rect(24px 24px 48px 0px);");
+		css.addDeclaration(id, 
+				new ArrayList<Attr>(Arrays.asList(attr)), 
+				new ArrayList<String>(Arrays.asList("hover")),
+				declaration);
+		
+		String cssstr = css.toString();
+		
 		return super.performFinish();
 	}
 	
-	
+	private void add(){
+		
+	}
 	
 	public class ToolBarButtonWizardPage extends WizardPage {
 

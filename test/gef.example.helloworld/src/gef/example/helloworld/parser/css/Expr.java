@@ -14,6 +14,15 @@ public class Expr {
 		this.terms = terms;
 	}
 
+	public Expr() {
+		super();
+	}
+
+	public Expr(List<Term> terms) {
+		super();
+		this.terms = terms;
+	}
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub

@@ -15,7 +15,8 @@ public class Selector {
 		this.simpleselectors = simpleselectors;
 	}
 	
-	public String toCSS(){
+	@Override
+	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < simpleselectors.size(); i++) {
 			SimpleSelector simpleselector = simpleselectors.get(i);
@@ -25,4 +26,5 @@ public class Selector {
 		
 		return sb.toString();
 	}
+	
 }
