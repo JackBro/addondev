@@ -18,12 +18,57 @@ import org.eclipse.swt.widgets.Text;
 
 public class MenuWizard extends AbstractXULWizard {
 
-	public class MenuWizardPage extends WizardPage {
+	public class MenuWizardPage1 extends WizardPage {
+
+		private Button addnewbutton, addexistingbutton;
+
+		public boolean isAddNewMenu(){
+			return addnewbutton.getSelection();
+		}
+		
+		protected MenuWizardPage1(String pageName) {
+			super(pageName);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void createControl(Composite parent) {
+			// TODO Auto-generated method stub
+			Composite composite = new Composite(parent, SWT.NONE);
+	        composite.setLayout(new GridLayout(1, false));
+	        
+	        addexistingbutton = new Button(composite, SWT.RADIO);
+	        addexistingbutton.setText("add to existing menu");  
+	        addexistingbutton.setSelection(true);
+	        
+	        addnewbutton = new Button(composite, SWT.RADIO);
+	        addnewbutton.setText("add new menu");
+	        
+	        setControl(composite);
+		}
+	}
+	
+	public class AddNewMenuWizardPage extends WizardPage {
+
+		protected AddNewMenuWizardPage(String pageName) {
+			super(pageName);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void createControl(Composite parent) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	public class AddExistMenuWizardPage extends WizardPage {
 
 		private Text fid, fLabel;
 		private String fPart;
 		
-		protected MenuWizardPage(String pageName) {
+		protected AddExistMenuWizardPage(String pageName) {
 			super(pageName);
 			// TODO Auto-generated constructor stub
 		}
@@ -91,13 +136,13 @@ public class MenuWizard extends AbstractXULWizard {
 		}
 	}	
 
-	private MenuWizardPage page1;
+	private AddExistMenuWizardPage page1;
 	
 	@Override
 	public void addPages() {
 		// TODO Auto-generated method stub
 		super.addPages();
-		page1 = new MenuWizardPage("menu");
+		page1 = new AddExistMenuWizardPage("menu");
 		addPage(page1);
 	}
 

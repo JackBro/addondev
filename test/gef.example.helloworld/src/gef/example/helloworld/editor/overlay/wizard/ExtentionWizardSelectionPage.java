@@ -36,9 +36,9 @@ public class ExtentionWizardSelectionPage extends WizardSelectionPage implements
 		super(pageName);
 		// TODO Auto-generated constructor stub
 		
-		elementMap.put("Menu", initWizard(new MenuWizard()));
-		elementMap.put("ToolBarButton", initWizard(new ToolBarButtonWizard()));
-		elementMap.put("ContextMenu", initWizard(new ContextMenuWizard()));
+		elementMap.put("Add Menu", initWizard(new MenuWizard()));
+		elementMap.put("Add ToolBarButton", initWizard(new ToolBarButtonWizard()));
+		elementMap.put("Add ContextMenu", initWizard(new ContextMenuWizard()));
 	}
 
 	private IWizard initWizard(AbstractXULWizard wizard){

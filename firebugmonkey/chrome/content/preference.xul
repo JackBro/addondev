@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<?xml-stylesheet href="chrome://mozapps/content/preferences/preferences.css"?>
+<?xml-stylesheet href="chrome://browser/skin/preferences/preferences.css"?>
+
+
+<?xml-stylesheet href="chrome://firebugmonkey/skin/preference.css" type="text/css"?>
+<!--
+<!DOCTYPE dialog SYSTEM "chrome://bugmonkey/locale/bugmonkey.dtd">
+-->
+<!DOCTYPE prefwindow SYSTEM "chrome://firebugmonkey/locale/firebugmonkey.dtd">
+
+<prefwindow 
+	type="prefwindow"
+	id="firebugmonkeypreference"
+            xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+            windowtype="window:type"
+            title="firebugmonkey preference"
+            buttons="accept,cancel,extra1"
+            buttonlabelextra1="Apply"
+  			onload="init();"
+            ondialogaccept="onDialogAccept();"
+            ondialogcancel=""
+  			ondialogextra1="onDialogAccept();"
+            onunload=""
+            style="width: 47em; min-height: 39em;">
+	
+	<prefpane id="generalPane" label="&firebugmonkey.preference.scriptPane;" flex="1">
+		
+		<groupbox orient="horizontal" flex="1">
+			<caption label="&firebugmonkey.preference.script.group;"/>
+			<hbox flex="1">
+					<tree id="scriptTree" flex="1" editable="true" ondblclick="editItem();">
+	    				<treecols>
+	        				<treecol label="&firebugmonkey.preference.script.list.filename;" flex="1" primary="true" />
+	        				<treecol label="&firebugmonkey.preference.script.list.enable;" type="checkbox" editable="true" />
+	    				</treecols>
+	    				<treechildren flex="1" />
+					</tree>
+					<vbox>
+					<button class="new"
+			        	label="&firebugmonkey.preference.script.new;"
+			        	id="button-new"
+			        	oncommand="newItem();"/>
+					<button class="edit"
+			        	label="&firebugmonkey.preference.script.edit;"
+			        	id="button-edit"
+			        	oncommand="editItem();"/>
+					<button class="delete"
+			        	label="&firebugmonkey.preference.script.delete;"
+			       		id="button-delete"
+			        	oncommand="deleteItem();"/>
+					<hbox>
+			    		<button class="up"
+			    			label="&firebugmonkey.preference.script.up;"
+			    			id="button-up"
+			            	oncommand="moveItem(-1);"/>
+			    		<spacer flex="1"/>
+			    		<button class="down"
+			    			label="&firebugmonkey.preference.script.down;"
+			    			id="button-down"
+			            	oncommand="moveItem(1);"/>
+					</hbox>	
+					<spacer flex="1" />
+					<button class="openfolder"
+			    		label="&firebugmonkey.preference.script.openfolder;"
+			    		id="button-openfolder"
+			            oncommand="openfolder();"/>
+					</vbox>
+			</hbox>
+		</groupbox>
+		
+		<checkbox id="enablexpcom" label="&firebugmonkey.preference.script.ebablexpcom;"/>
+		<label value="&firebugmonkey.preference.script.ebablexpcomatt;"/>
+	</prefpane>
+
+	<prefpane id="advancedPane" label="&firebugmonkey.preference.advancedPane;" flex="1">
+		<groupbox orient="vertical">
+			<caption label="&firebugmonkey.preference.editor.group;"/>
+    		<grid>
+    			<columns>
+    				<column/>
+    				<column flex="1"/>
+    			</columns>
+    			<rows>
+    				<row align="center" >
+    					<label value="&firebugmonkey.preference.editor.path;"/>
+    					<textbox id="editor-path" />
+    					<button label="Browse..." oncommand="selectFile(document.getElementById('editor-path'))"/>
+    				</row>
+    				<row align="center" >
+    					<label value="&firebugmonkey.preference.editor.args;"/>
+    					<textbox id="editor-args" />
+    				</row>
+    			</rows>
+    		</grid>
+		</groupbox>
+		<groupbox orient="vertical">
+			<caption label="&firebugmonkey.preference.openfolder.group;"/>
+    		<grid>
+    			<columns>
+    				<column/>
+    				<column flex="1"/>
+    			</columns>
+    			<rows>
+    				<row align="center" >
+    					<label value="&firebugmonkey.preference.openfolder.path;"/>
+    					<textbox id="openfolder-path" />
+    					<button label="Browse..." oncommand="selectFile(document.getElementById('openfolder-path'))"/>
+    				</row>
+    				<row align="center" >
+    					<label value="&firebugmonkey.preference.openfolder.args;"/>
+    					<textbox id="openfolder-args" />
+    				</row>
+    			</rows>
+    		</grid>
+		</groupbox>
+	</prefpane>
+	
+    <script type="application/x-javascript" src="chrome://firebugmonkey/content/preference.js" />
+</prefwindow>		
+

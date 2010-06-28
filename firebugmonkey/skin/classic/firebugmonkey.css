@@ -1,0 +1,37 @@
+/* TODO */
+
+#firebugmonkeyMenu {
+    margin: 0px;
+    padding: 0;
+    list-style-image: url(chrome://firebugmonkey/skin/firebugmonkey20.png);
+}
+
+#firebugmonkeyMenu > .toolbarbutton-icon {
+    padding: 0;
+}
+
+#firebugmonkeyMenu:hover {
+    list-style-image: url(chrome://firebugmonkey/skin/firebugmonkey20.png);
+}
+
+#firebugmonkeyMenu:hover:active,
+#firebugmonkeyMenu[open="true"] {
+    list-style-image: url(chrome://firebugmonkey/skin/firebugmonkey20.png);
+}
+
+#firebugmonkeyMenu > .toolbarbutton-text,
+#firebugmonkeyMenu > .toolbarbutton-menu-dropmarker {
+    display: none;
+}
+
+#firebugmonkeyStatusBar {
+    cursor: pointer;
+}
+
+#firebugmonkeyStatusBarIcon {
+    list-style-image: url(chrome://firebugmonkey/skin/firebugmonkey16-disable.png);
+}
+
+#firebugmonkeyStatusBarIcon[enable="on"] {
+    list-style-image: url(chrome://firebugmonkey/skin/firebugmonkey16.png);
+}

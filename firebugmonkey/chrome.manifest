@@ -1,0 +1,10 @@
+content firebugmonkey chrome/content/
+
+resource fbm_modules modules/
+
+locale	firebugmonkey	en-US		locale/en-US/
+locale	firebugmonkey	ja-JP		locale/ja-JP/
+
+skin	firebugmonkey	classic/1.0	skin/classic/
+
+overlay chrome://firebug/content/firebugOverlay.xul    chrome://firebugmonkey/content/firebugmonkey.xul

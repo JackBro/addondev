@@ -1,0 +1,24 @@
+<!ENTITY firebugmonkey.menu.tooltiptext "firebugmonkey">
+<!ENTITY firebugmonkey.menu.enabled "firebugmonkey有効">
+<!ENTITY firebugmonkey.menu.doc "ドキュメント">
+<!ENTITY firebugmonkey.menu.preference "スクリプトの管理">
+<!ENTITY firebugmonkey.menu.about "About">
+<!ENTITY firebugmonkey.preference.scriptPane "スクリプト">
+<!ENTITY firebugmonkey.preference.advancedPane "詳細">
+<!ENTITY firebugmonkey.preference.script.group "スクリプト">
+<!ENTITY firebugmonkey.preference.script.list.filename "ファイル名">
+<!ENTITY firebugmonkey.preference.script.list.enable "有効">
+<!ENTITY firebugmonkey.preference.script.new "新規">
+<!ENTITY firebugmonkey.preference.script.edit "編集">
+<!ENTITY firebugmonkey.preference.script.delete "削除">
+<!ENTITY firebugmonkey.preference.script.up "上へ">
+<!ENTITY firebugmonkey.preference.script.down "下へ">
+<!ENTITY firebugmonkey.preference.script.openfolder "フォルダを開く">
+<!ENTITY firebugmonkey.preference.script.ebablexpcom "xpcomを使用可能にする">
+<!ENTITY firebugmonkey.preference.script.ebablexpcomatt "注意!! スクリプトでxpcomが使用可能になります">
+<!ENTITY firebugmonkey.preference.editor.group "編集で使用するエディタ">
+<!ENTITY firebugmonkey.preference.editor.path "エディタのパス">
+<!ENTITY firebugmonkey.preference.editor.args "引数">
+<!ENTITY firebugmonkey.preference.openfolder.group "フォルダを開くで使用する実行ファイル">
+<!ENTITY firebugmonkey.preference.openfolder.path "実行ファイルのパス">
+<!ENTITY firebugmonkey.preference.openfolder.args "引数">

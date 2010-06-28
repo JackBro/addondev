@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://firebugmonkey/skin/firebugmonkey.css" type="text/css"?>
+<!DOCTYPE dialog SYSTEM "chrome://firebugmonkey/locale/firebugmonkey.dtd">
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script src="chrome://firebugmonkey/content/firebugmonkey.js" type="application/javascript;version=1.8"/>
+	<script src="chrome://firebugmonkey/content/firebugmonkey_script.js" type="application/javascript;version=1.8"/>
+	<script src="chrome://firebugmonkey/content/firebugmonkey_model.js" type="application/javascript;version=1.8"/>
+	
+	  
+	<stringbundleset id="stringbundleset"> 
+		<stringbundle id="firebugmonkey-bundle" src="chrome://firebugmonkey/locale/firebugmonkey.properties" /> 
+	</stringbundleset> 
+  
+    
+	<toolbar id="fbToolbar">
+		<toolbarbutton id="firebugmonkeyMenu" type="menu" insertafter="fbFirebugMenu" tooltiptext="&firebugmonkey.menu.tooltiptext;">  
+			<menupopup id="firebugmonkeyMenuPopup" onpopupshowing="Firebug.firebugmonkey_Model.onPopupShowing()">        
+            	<menuitem id="firebugmonkeyEnableMenu" type="checkbox" label="&firebugmonkey.menu.enabled;"
+                       	oncommand="Firebug.firebugmonkey_Model.onToggleEnableMenu(this)"
+                       	option="enabled"/>
+		        <menuitem label="&firebugmonkey.menu.doc;" oncommand="Firebug.firebugmonkey_Model.openDoc()"/>		    	
+		    	<menuitem label="&firebugmonkey.menu.preference;" oncommand="Firebug.firebugmonkey_Model.showPreference()"/>	
+		    	<menuseparator/>	        
+		        <menuitem id="firebugmonkeyAbout" label="&firebugmonkey.menu.about;" oncommand="Firebug.firebugmonkey_Model.showAboutDialog()"/>	
+  			</menupopup>     
+		</toolbarbutton>
+	</toolbar>
+    
+    <statusbar id="status-bar">
+    	<statusbarpanel id="firebugmonkeyStatusBar"
+      		class="statusbarpanel-menu-iconic"
+      		onmousedown="Firebug.firebugmonkey_Model.onClickStatusIcon(event);">
+    		<image id="firebugmonkeyStatusBarIcon" tooltiptext="firebugmonkey"/>
+      	</statusbarpanel>
+    </statusbar>
+</overlay>

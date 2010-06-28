@@ -1,0 +1,24 @@
+<!ENTITY firebugmonkey.menu.tooltiptext "firebugmonkey">
+<!ENTITY firebugmonkey.menu.enabled "Enabled firebugmonkey">
+<!ENTITY firebugmonkey.menu.doc "Document">
+<!ENTITY firebugmonkey.menu.preference "Script Manager">
+<!ENTITY firebugmonkey.menu.about "About">
+<!ENTITY firebugmonkey.preference.scriptPane "Script">
+<!ENTITY firebugmonkey.preference.advancedPane "Advanced">
+<!ENTITY firebugmonkey.preference.script.group "Script">
+<!ENTITY firebugmonkey.preference.script.list.filename "FileName">
+<!ENTITY firebugmonkey.preference.script.list.enable "Enable">
+<!ENTITY firebugmonkey.preference.script.new "New">
+<!ENTITY firebugmonkey.preference.script.edit "Edit">
+<!ENTITY firebugmonkey.preference.script.delete "Delete">
+<!ENTITY firebugmonkey.preference.script.up "Up">
+<!ENTITY firebugmonkey.preference.script.down "Down">
+<!ENTITY firebugmonkey.preference.script.openfolder "Open Folder">
+<!ENTITY firebugmonkey.preference.script.ebablexpcom "Enable xpcom">
+<!ENTITY firebugmonkey.preference.script.ebablexpcomatt "!! can use xpcom in script">
+<!ENTITY firebugmonkey.preference.editor.group "Editor">
+<!ENTITY firebugmonkey.preference.editor.path "Path">
+<!ENTITY firebugmonkey.preference.editor.args "Arguments">
+<!ENTITY firebugmonkey.preference.openfolder.group "Executable">
+<!ENTITY firebugmonkey.preference.openfolder.path "Path">
+<!ENTITY firebugmonkey.preference.openfolder.args "Arguments">

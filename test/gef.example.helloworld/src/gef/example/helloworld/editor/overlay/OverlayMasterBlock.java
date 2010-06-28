@@ -101,7 +101,7 @@ public class OverlayMasterBlock extends MasterDetailsBlock {
 		composite.setLayout(new GridLayout(1, false));			
 		
 		Section section = toolkit.createSection(composite, Section.TITLE_BAR );
-		section.setText("test");
+		section.setText("overlay");
 		
 		Composite viewercomposite = toolkit.createComposite(composite, SWT.NONE);
 		viewercomposite.setLayout(new GridLayout(2, false));
