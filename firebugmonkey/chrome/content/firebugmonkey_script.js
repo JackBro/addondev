@@ -45,7 +45,8 @@ Firebug.firebugmonkey.Script.prototype =
 {
 	get	enable(){ return this._enable; },
 		
-	get ID(){ return this._url + this._filename; },
+	//get ID(){ return this._url + this._filename; },
+	get ID(){ return this._filename; },
 	
 	get url(){ return this._url; },
 	

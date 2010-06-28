@@ -1,9 +1,18 @@
-var EXPORTED_SYMBOLS = ["GM_log", "GM_xmlhttpRequester", "GM_Scripthrefs", "GM_ScriptStorage", "GM_listen", "GM_hitch", "GM_addStyle", "GM_openInTab", "GM_Resources"];
+var EXPORTED_SYMBOLS = ["GM_log", 
+                        "GM_xmlhttpRequester", 
+                        "GM_Scripthrefs", 
+                        "GM_ScriptStorage", 
+                        "GM_listen", 
+                        "GM_hitch", 
+                        "GM_addStyle", 
+                        "GM_openInTab", 
+                        "GM_Resources"];
 
 //const Cc = Components.classes;
 //const Ci = Components.interfaces;
 var Application = Components.classes["@mozilla.org/fuel/application;1"].getService(Components.interfaces.fuelIApplication);
 var consoleService = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
+
 
 var GM_Scripthrefs = 
 {
@@ -220,9 +229,11 @@ function(unsafeContentWin, req, event, details) {
 
 //////////////////////////////////////////////////////////////////////////
 //GM_ScriptStorage
-function GM_ScriptStorage(scripturl) {
+var StorageValues = {};
+
+function GM_ScriptStorage(scriptid) {
 	this.strage = {};
-	this._url = scripturl;
+	this._id = scriptid;
 }
 
 GM_ScriptStorage.prototype.setValue = function(name, val) {
@@ -230,8 +241,8 @@ GM_ScriptStorage.prototype.setValue = function(name, val) {
     return;
   }
 
-  //this.strage[name] = val;
-  Application.storage.set(this._url + "." + name, val);
+  StorageValues[this._id + "." + name] = val;
+  //Application.storage.set(this._url + "." + name, val);
 };
 
 GM_ScriptStorage.prototype.getValue = function(name, defVal) {
@@ -240,8 +251,23 @@ GM_ScriptStorage.prototype.getValue = function(name, defVal) {
   }
 
   //return this.strage[name] ? this.strage[name] : defVal;
-  return Application.storage.get(this._url + "." + name, defVal);
+  //return Application.storage.get(this._url + "." + name, defVal);
+  return StorageValues[this._id + "." + name];
 };
+
+GM_ScriptStorage.prototype.deleteValue = function(name) {
+	StorageValues[this._id + "." + name] = null;
+}
+
+GM_ScriptStorage.prototype.listValues = function() {
+	var values = [];
+	for(var key in StorageValues){
+		if(StorageValues[key] != null){
+			values.push(StorageValues[key]);
+		}
+	}
+	return vlues;
+}
 
 /////////////////////////////////////////////////////////////////////////
 //GM_addStyle

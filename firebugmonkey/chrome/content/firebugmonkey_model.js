@@ -16,7 +16,6 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 	
 	initialize: function() 
 	{				
-		
 		var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
 		//if(!filterSystemURLs)
 			Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
@@ -70,119 +69,8 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 			fbMenu.appendChild(fbmMenu);
 	},
 
-/*
-	versionCheck : function()
-	{
-		this.fx30fb13 = false;
-		this.fx35fb14 = false;
-		
-		var versionChecker = Cc["@mozilla.org/xpcom/version-comparator;1"].getService(Ci.nsIVersionComparator);
-		var appInfo = Cc["@mozilla.org/xre/app-info;1"].getService(Ci.nsIXULAppInfo);
-		
-		var v35 = versionChecker.compare(appInfo.version, "3.5*") >= 0;	
-		if(v35 && (Firebug.version.indexOf('1.4') != -1))
-		{
-			this.fx35fb14 = true;
-		}
-		else
-		{
-			var v30 = versionChecker.compare(appInfo.version, "3.0*") >= 0;
-			if(v30 && (Firebug.version.indexOf('1.3') != -1))
-			{
-				this.fx30fb13 = true;
-			}
-		}	
-	},
-	
-	initfx30fb13 : function()
-	{
-		var getFrameContext = function(frame)
-		{
-			var win = getFrameScopeWindowAncestor(frame);
-			return win ? TabWatcher.getContextByWindow(win) : null;
-		}
-		
-		var getFrameScopeWindowAncestor = function(frame)  // walk script scope chain to bottom, null unless a Window
-		{
-			var scope = frame.scope;
-			if (scope)
-			{	
-				while(scope.jsParent)
-					scope = scope.jsParent;
-			
-				if (scope.jsClassName == "Window" || scope.jsClassName == "ChromeWindow")
-					return  scope.getWrappedValue();
-			}
-			else
-				return null;
-		}
-		
-		var RETURN_CONTINUE = Ci.jsdIExecutionHook.RETURN_CONTINUE;
-		
-		var fbm_supportsGlobal = 
-			'var cc = (TabWatcher ? TabWatcher.getContextByWindow(global) : null);'		
-			+'if (Firebug.firebugmonkey.enable && !cc){'
-	 		+	'if(global.location.toString() == Firebug.firebugmonkey_Model.SANDBOX_XUL_PATH){'
-			+		'for (var i = 0; i < TabWatcher.contexts.length; ++i){'			
-			+			'if(TabWatcher.contexts[i].window.location.toString() == Firebug.firebugmonkey.testURL){'
-			+				'cc = TabWatcher.contexts[i];'
-        	+				'this.breakContext = cc;'
-        	+				'return !!cc;'
-			+			'}'
-		    +		'}'
-	        +	'}'
-            +'}';	
-		if ('supportsGlobal' in Firebug.Debugger) {
-		  eval('Firebug.Debugger.supportsGlobal = '+
-		    Firebug.Debugger.supportsGlobal.toSource().replace(
-		      '{',
-		      '$&' + fbm_supportsGlobal
-		    )
-		  );
-		}	
-		
-		
-		var fbm_onBreak = 
-			'if(!this.breakContext && !getFrameContext(frame)){'
-        	+	'if(Firebug.firebugmonkey.enable && Firebug.firebugmonkey.sourcehrefs && Firebug.firebugmonkey_Model.hasSourcehref(frame.script.fileName)){'
-			+		'let context;'
-		    +		'for (var i = 0; i < TabWatcher.contexts.length; ++i){'
-		    +       	'if(TabWatcher.contexts[i].window.location.toString() == Firebug.firebugmonkey.testURL){'
-		    +           	'context = TabWatcher.contexts[i];'
-			+				'break;'
-		    +            '}'
-		    +        '}'	
-			+		'if(!context){'
-			+			'return RETURN_CONTINUE;'
-			+		'}'
-			+		'return this.stop(context, frame, type);'
-        	+	'}'
-			+'}';	
-		if ('onBreak' in Firebug.Debugger) {
-		  eval('Firebug.Debugger.onBreak = '+
-		    Firebug.Debugger.onBreak.toSource().replace(
-		      '{',
-		      '$&' + fbm_onBreak
-		    )
-		  );
-		}
-		
-		Firebug.firebugmonkey_Model.hasSourcehref = function(href)
-		{
-	    	sourcehref = href;
-			if(sourcehref.indexOf("file:/", 0) == 0 && sourcehref.indexOf("file:///", 0) == -1)
-			{
-				sourcehref = sourcehref.replace("file:\/", "file:\/\/\/");
-			}
-			return Firebug.firebugmonkey.sourcehrefs.indexOf(sourcehref, 0) == -1 ? false : true;
-		}
-	},
-*/
 	initfx35fb14 : function()
 	{	
-	
-
-	
 		var getFrameContext = function(frame)
 		{
 			var win = getFrameScopeWindowAncestor(frame);
@@ -366,7 +254,6 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
   	onClickStatusIcon : function(event)
   	{		
   		//if(!this.fx30fb13 && !this.fx35fb14) return;
-  		//Application.console.log("Firebug.firebugmonkey_Model onClickStatusIcon "); 
   		Firebug.firebugmonkey.enable = !Firebug.firebugmonkey.enable; 		
   		Application.prefs.setValue("extensions.firebugmonkey.enable", Firebug.firebugmonkey.enable);
   		fbmStatusIcon.setAttribute("enable", Firebug.firebugmonkey.enable == true?"on":"off");
@@ -376,9 +263,12 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
   	
   	onPopupShowing : function()
   	{
-  		var enableemnu = document.getElementById("firebugmonkeyEnableMenu");
-  		enableemnu.setAttribute("checked", Firebug.firebugmonkey.enable);		
+  		var enablemenu = document.getElementById("firebugmonkeyEnableMenu");
+  		enablemenu.setAttribute("checked", Firebug.firebugmonkey.enable);		
   		//this.update(Firebug.firebugmonkey.enable);
+  		
+  		var enablestatusbar = document.getElementById("firebugmonkeyEnableMenu-statusbar");
+  		enablestatusbar.setAttribute("checked", Firebug.firebugmonkey.enable);	
   	},
  
   	showPreference : function()
