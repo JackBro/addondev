@@ -44,6 +44,7 @@ Firebug.firebugmonkey = {
 		this.GM_listen(this.appContent, "DOMContentLoaded", this.GM_hitch(this, "contentLoad"));
 		//    Components.lookupMethod(appContent, "addEventListener")(
 	   // "DOMContentLoaded", this.contentLoad, null);
+		
 	},
 
 	chromeUnload : function(e) {
@@ -112,9 +113,9 @@ Firebug.firebugmonkey = {
 	 	
 	 	if(this.enablescripts.length >0)
 		{
-			Firebug.Debugger.fbs.filterSystemURLs = false;
-			Firebug.filterSystemURLs = false;
-			Firebug.showAllSourceFiles = true;
+			//Firebug.Debugger.fbs.filterSystemURLs = false;
+			//Firebug.filterSystemURLs = false;
+			//Firebug.showAllSourceFiles = true;
 			
 	 		this.testURL = e.target.URL;
 			var fbmsandbox;	
@@ -215,7 +216,7 @@ Firebug.firebugmonkey = {
 		    uris.push(sourcefiles[level]);		    
 		    uris.forEach(function(uri){
 		      	var script = doc.createElementNS('http://www.w3.org/1999/xhtml', 'script');
-		      	script.setAttribute('type', 'application/javascript; version=1.7');
+		      	script.setAttribute('type', 'application/javascript; version=1.8');
 		      	script.setAttribute('src',   uri);
 		      	doc.documentElement.appendChild(script);
 		      

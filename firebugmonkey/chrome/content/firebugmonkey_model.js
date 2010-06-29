@@ -17,23 +17,24 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 	initialize: function() 
 	{				
 		var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
-		//if(!filterSystemURLs)
+		if(filterSystemURLs)
 			Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
+		
+		var showAllSourceFiles = Application.prefs.getValue("extensions.firebug.service.showAllSourceFiles", false);
+		if(!showAllSourceFiles)
+			Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);		
+
 		//Firebug.filterSystemURLs = false;
-		//extensions.firebug.service.showAllSourceFiles;false
+		//extensions.firebug.service.filterSystemURLs
+		
 		//Firebug.showAllSourceFiles = true;
+		//extensions.firebug.service.showAllSourceFiles;false
+		
 		
 		this.SANDBOX_XUL_PATH = SANDBOX_XUL_PATH;
 		Firebug.firebugmonkey.init();	
 		
-		//if(this.fx30fb13)
-		//{
-		//	this.initfx30fb13();
-		//}
-		//else if(this.fx35fb14)
-		//{
-			this.initfx35fb14();
-		//}
+		this.setFunction();
 		
 		var firebug_resetBreakpoints =  Firebug.Debugger.fbs.resetBreakpoints;
 		Firebug.Debugger.fbs.resetBreakpoints = function(sourceFile, lastLineNumber)
@@ -48,28 +49,14 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 
 	initializeUI: function()
 	{
-/*
-		this.versionCheck();
-		if(this.fx30fb13)
-		{
-		}
-		else if(this.fx35fb14)
-		{
-			var fbfbToolbar = document.getElementById("fbToolbar");
-			var fbMenu = document.getElementById("fbPanelBar1-buttons");
-			var fbmMenu = document.getElementById("firebugmonkeyMenu");	
-			fbmMenu.insertafter="fbBreakOnNextButton";
-			fbMenu.appendChild(fbmMenu);
-		}
-	*/
-				var fbfbToolbar = document.getElementById("fbToolbar");
-			var fbMenu = document.getElementById("fbPanelBar1-buttons");
-			var fbmMenu = document.getElementById("firebugmonkeyMenu");	
-			fbmMenu.insertafter="fbBreakOnNextButton";
-			fbMenu.appendChild(fbmMenu);
+		var fbfbToolbar = document.getElementById("fbToolbar");
+		var fbMenu = document.getElementById("fbPanelBar1-buttons");
+		var fbmMenu = document.getElementById("firebugmonkeyMenu");	
+		fbmMenu.insertafter="fbBreakOnNextButton";
+		fbMenu.appendChild(fbmMenu);
 	},
 
-	initfx35fb14 : function()
+	setFunction : function()
 	{	
 		var getFrameContext = function(frame)
 		{
@@ -97,7 +84,7 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 		var fbm_supportsGlobal = 
 			'var cc = ((frameWin && TabWatcher) ? TabWatcher.getContextByWindow(frameWin) : null);'		
 			+'if (Firebug.firebugmonkey.enable && !cc){'
-	 		+	'if(frameWin.location.toString() == Firebug.firebugmonkey_Model.SANDBOX_XUL_PATH){'
+	 		+	'if(frameWin.location!=undefined && frameWin.location.toString() == Firebug.firebugmonkey_Model.SANDBOX_XUL_PATH){'
 			+		'for (var i = 0; i < TabWatcher.contexts.length; ++i){'			
 			+			'if(TabWatcher.contexts[i].window.location.toString() == Firebug.firebugmonkey.testURL){'
 			+				'cc = TabWatcher.contexts[i];'
@@ -123,7 +110,7 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
         	+	'if(Firebug.firebugmonkey.enable && Firebug.firebugmonkey.sourcehrefs && Firebug.firebugmonkey_Model.hasSourcehref(frame.script.fileName)){'
 			+		'let context;'
 		    +		'for (var i = 0; i < TabWatcher.contexts.length; ++i){'
-		    +       	'if(TabWatcher.contexts[i].window.location.toString() == Firebug.firebugmonkey.testURL){'
+		    +       	'if(TabWatcher.contexts[i].window.location!=undefined && TabWatcher.contexts[i].window.location.toString() == Firebug.firebugmonkey.testURL){'
 		    +           	'context = TabWatcher.contexts[i];'
 			+				'break;'
 		    +            '}'
@@ -242,30 +229,19 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
   	},
   	
   	onToggleEnableMenu : function(menuitem)
-  	{
-  		//if(!this.fx30fb13 && !this.fx35fb14) return;
-  		
-  		Firebug.firebugmonkey.enable = !Firebug.firebugmonkey.enable;
-  		fbmStatusIcon.setAttribute("enable", Firebug.firebugmonkey.enable == true?"on":"off");
-  		
-  		this.update(Firebug.firebugmonkey.enable);
+  	{ 		
+  		this.update();
   	},
   	
   	onClickStatusIcon : function(event)
   	{		
-  		//if(!this.fx30fb13 && !this.fx35fb14) return;
-  		Firebug.firebugmonkey.enable = !Firebug.firebugmonkey.enable; 		
-  		Application.prefs.setValue("extensions.firebugmonkey.enable", Firebug.firebugmonkey.enable);
-  		fbmStatusIcon.setAttribute("enable", Firebug.firebugmonkey.enable == true?"on":"off");
-  		
-  		this.update(Firebug.firebugmonkey.enable);
+  		this.update();
   	},
   	
   	onPopupShowing : function()
   	{
   		var enablemenu = document.getElementById("firebugmonkeyEnableMenu");
   		enablemenu.setAttribute("checked", Firebug.firebugmonkey.enable);		
-  		//this.update(Firebug.firebugmonkey.enable);
   		
   		var enablestatusbar = document.getElementById("firebugmonkeyEnableMenu-statusbar");
   		enablestatusbar.setAttribute("checked", Firebug.firebugmonkey.enable);	
@@ -287,11 +263,9 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
   	
   	update : function(isenable)
   	{
-  		if(isenable)
-  		{
-			Firebug.showAllSourceFiles = true;
-			serviceOptionMenu("ShowAllSourceFiles", "showAllSourceFiles");  
-  		}	
+  		Firebug.firebugmonkey.enable = !Firebug.firebugmonkey.enable; 		
+  		Application.prefs.setValue("extensions.firebugmonkey.enable", Firebug.firebugmonkey.enable);
+  		fbmStatusIcon.setAttribute("enable", Firebug.firebugmonkey.enable == true?"on":"off");
   	}
 });
 
@@ -366,15 +340,6 @@ var Firebugmonkey_ConsoleListener =
     }
 };
 
-	/*
-	Firebug.firebugmonkey_Model.versionCheck();
-	if(	!Firebug.firebugmonkey_Model.fx30fb13 && !Firebug.firebugmonkey_Model.fx35fb14)
-	{
-		var bundle = document.getElementById('firebugmonkey-bundle');
-		Components.utils.reportError(bundle.getString("VERSIONERROR"));
-		return;
-	}
-	*/
 	try
 	{
 		Firebugmonkey_ConsoleListener.init();

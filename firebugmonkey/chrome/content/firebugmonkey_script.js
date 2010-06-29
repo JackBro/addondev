@@ -45,8 +45,8 @@ Firebug.firebugmonkey.Script.prototype =
 {
 	get	enable(){ return this._enable; },
 		
-	//get ID(){ return this._url + this._filename; },
-	get ID(){ return this._filename; },
+	get ID(){ return this._url + this._filename; },
+	//get ID(){ return this._filename; },
 	
 	get url(){ return this._url; },
 	
@@ -107,6 +107,9 @@ Firebug.firebugmonkey.Script.prototype =
 		var basedirUri = this._basedirUri;
 		
 		var lines = this.source.match(/.+/g);
+		//var lines = this.source.split("\n");
+		//Application.console.log("this.source = " + this.source);
+		//Application.console.log("lines = " + lines);
 	    var lnIdx = 0;
 	    var result = {};
 	    var foundMeta = false;
