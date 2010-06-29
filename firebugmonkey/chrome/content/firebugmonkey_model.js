@@ -84,6 +84,7 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 		var fbm_supportsGlobal = 
 			'var cc = ((frameWin && TabWatcher) ? TabWatcher.getContextByWindow(frameWin) : null);'		
 			+'if (Firebug.firebugmonkey.enable && !cc){'
+			//+ 'Application.console.log("fbm_supportsGlobal url = " +  frameWin.location.toString());'
 	 		+	'if(frameWin.location!=undefined && frameWin.location.toString() == Firebug.firebugmonkey_Model.SANDBOX_XUL_PATH){'
 			+		'for (var i = 0; i < TabWatcher.contexts.length; ++i){'			
 			+			'if(TabWatcher.contexts[i].window.location.toString() == Firebug.firebugmonkey.testURL){'
@@ -135,6 +136,7 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 		var fbm_makeURI = 
 		    'try{'			
 		 	+	'if(Firebug.firebugmonkey.enable){'
+		 	//+ 'Application.console.log("fbm_makeURI urlString = " +  urlString);'
 			+		'if(urlString.indexOf(Firebug.firebugmonkey_Model.SANDBOX_XUL_PATH) != -1){'
 			+			'Firebug.firebugmonkey_Model.fbmScript = Firebug.firebugmonkey_Model.getFbmScriptFromblistUrl(urlString);'
 		    +    		'return ioService.newURI(Firebug.firebugmonkey_Model.SANDBOX_XUL_PATH, null, null);'
@@ -151,7 +153,7 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 		}
 				
 		var fbm_getResource = 
-			'if(aURL.indexOf("chrome/content/sandbox.xul")>0){'		
+			 'if(aURL.indexOf("chrome/content/sandbox.xul")>0){'		
 			+	'var spec = Firebug.firebugmonkey_Model.getFbmScriptSpecFromSandbox(aURL);'
 			+	'if(spec){'
 			+		'aURL = spec;'
@@ -168,6 +170,7 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 		
 		Firebug.firebugmonkey_Model.hasSourcehref = function(href)
 		{		
+			//Application.console.log("hasSourcehref href = " + href);
 			if(href.indexOf(SANDBOX_XUL_PATH + ' -> ') == -1) return false;
 			
 			var hrefs = href.split(' -> ');

@@ -183,8 +183,17 @@ Firebug.firebugmonkey = {
 	evalInSandbox : function(sourcefiles, level)
 	{
 		try
-		{								
+		{				
+			/*
+	      	var script = document.createElementNS('http://www.w3.org/1999/xhtml', 'script');
+	    	//var script = doc.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'script');
+	      	script.setAttribute('type', 'application/javascript; version=1.8');
+	      	script.setAttribute('src',   sourcefiles[0]);
+	      	document.documentElement.appendChild(script);
+			*/
+			
 		  	var env = document.createElement('browser');
+		  	//var env = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'browser');
 		  	env.setAttribute('type', 'content-frame');
 		  	env.setAttribute('src', SANDBOX_XUL_PATH);
 		  	document.documentElement.appendChild(env);
@@ -192,6 +201,10 @@ Firebug.firebugmonkey = {
 		  	
 			var doc = env.contentDocument.wrappedJSObject || env.contentDocument;
 		    var win = env.contentWindow.wrappedJSObject || env.contentWindow;	    
+			//var doc = env.contentDocument;
+		    //var win = env.contentWindow;	
+			//var doc = env.contentDocument.wrappedJSObject;
+		    //var win = env.contentWindow.wrappedJSObject;	  
 		    
 		    var loaded = 0;
 		    
@@ -216,6 +229,8 @@ Firebug.firebugmonkey = {
 		    uris.push(sourcefiles[level]);		    
 		    uris.forEach(function(uri){
 		      	var script = doc.createElementNS('http://www.w3.org/1999/xhtml', 'script');
+		      	//var script = doc.createElement('script');
+		    	//var script = doc.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'script');
 		      	script.setAttribute('type', 'application/javascript; version=1.8');
 		      	script.setAttribute('src',   uri);
 		      	doc.documentElement.appendChild(script);
@@ -223,11 +238,13 @@ Firebug.firebugmonkey = {
 		      	script.addEventListener('load', onLoad, true);
 		      	script.addEventListener('error', onLoad, true);
 		    });
-		  }, true);
+		    
+		  }, true);	  
 		}
 		catch(e)
 		{	
 		}
+
 		return env;	
 	}
 };
