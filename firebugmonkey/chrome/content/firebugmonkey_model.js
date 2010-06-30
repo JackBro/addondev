@@ -103,11 +103,11 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 		    )
 		  );
 		}	
-		
-		//false
+
 		var fbm_onBreak = 
 		  'const TYPE_DEBUGGER_KEYWORD = Components.interfaces.jsdIExecutionHook.TYPE_DEBUGGER_KEYWORD;'
 			+ 'if(!this.breakContext && !getFrameContext(frame)){'
+			//+ 'Application.console.log("fbm_onBreak = " + frame.script.fileName);'
         	+	'if(Firebug.firebugmonkey.enable && Firebug.firebugmonkey.sourcehrefs && Firebug.firebugmonkey_Model.hasSourcehref(frame.script.fileName)){'
 			+		'let context;'
 		    +		'for (var i = 0; i < TabWatcher.contexts.length; ++i){'
@@ -168,8 +168,44 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 		  );
 		}
 		
+//		for(var name in FBL)
+//		{
+//			try{
+//				Application.console.log("name = " + name +" : " + FBL[name]); 
+//				//for(var name2 in Firebug.module[name]){
+//				//	Application.console.log("name2 = " + name2 +" : " + Firebug.module[name][name2]); 
+//				//}
+//			}catch(exc){
+//				//en += "name = " + name +" ERROR";
+//			}
+//		}
+//		var tt = Firebug.chrome.selectSidePanel("WatchPanel");
+//		
+//		Application.console.log("tt = " + tt);
+//		
+//		var addMemberStr =
+//			 'var myinsecureObject = unwrapObject(object);'
+//			 +'		for (var myname in myinsecureObject){'
+//			 +'			if(typeof(myinsecureObject[myname]) == "xml"){'
+//			 +'				myinsecureObject[myname] = myinsecureObject[myname].toString();'
+//			 +'			}'
+//			 //+'		}'
+//			 //+'		//rep = Firebug.getRep(value); '
+//			 //+'		//tag = rep.shortTag ? rep.shortTag : rep.tag;'
+//			 +'}';
+//			 
+//	  	eval('Firebug.DOMBasePanel.prototype.getMembers = '+
+//	  			Firebug.DOMBasePanel.prototype.getMembers.toSource().replace(
+//			      '{',
+//			      '$&' + addMemberStr
+//			    )
+//			  );
+		
+	  	Application.console.log("name2 = " + " : " + Firebug.WatchPanel);
+		
 		Firebug.firebugmonkey_Model.hasSourcehref = function(href)
 		{		
+			//if(href.indexOf("cal.js") != -1) return true;
 			//Application.console.log("hasSourcehref href = " + href);
 			if(href.indexOf(SANDBOX_XUL_PATH + ' -> ') == -1) return false;
 			
@@ -188,6 +224,25 @@ Firebug.firebugmonkey_Model = extend(Firebug.Module,
 		Firebugmonkey_ConsoleListener.unregisterListener();
     },
 	
+    watchWindow: function(context, win){
+//		for(var name in context)
+//		{
+//			try{
+//				Application.console.log("name = " + name +" : " + context[name]); 
+//				//for(var name2 in Firebug.module[name]){
+//				//	Application.console.log("name2 = " + name2 +" : " + Firebug.module[name][name2]); 
+//				//}
+//			}catch(exc){
+//				//en += "name = " + name +" ERROR";
+//			}
+//		}
+		 var panelType = Firebug.getPanelType("watches");
+		 for(var name in panelType){
+			 Application.console.log("name = " + name +" : " + panelType[name]); 
+		 }
+		
+    },
+    
 	hasSourcehref : function(href)
 	{	
 	},

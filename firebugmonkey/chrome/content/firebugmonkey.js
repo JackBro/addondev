@@ -193,10 +193,12 @@ Firebug.firebugmonkey = {
 			*/
 			
 		  	var env = document.createElement('browser');
+		  	//var env = document.createElement('iframe');
 		  	//var env = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'browser');
 		  	env.setAttribute('type', 'content-frame');
 		  	env.setAttribute('src', SANDBOX_XUL_PATH);
 		  	document.documentElement.appendChild(env);
+		  	
 		  	env.addEventListener('load', function(){
 		  	
 			var doc = env.contentDocument.wrappedJSObject || env.contentDocument;
@@ -233,7 +235,16 @@ Firebug.firebugmonkey = {
 		    	//var script = doc.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'script');
 		      	script.setAttribute('type', 'application/javascript; version=1.8');
 		      	script.setAttribute('src',   uri);
+		      	//script.setAttribute('src',   "chrome://firebugmonkey/content/cal.js");
 		      	doc.documentElement.appendChild(script);
+		      	
+//		      	var old = "alert(10);";
+//		      	var script = doc.getElementById("contentyy");
+//		      	Application.console.log("script = " + script);
+//		      	 var dataURI = "data:application/vnd.mozilla.xul+xml," + encodeURIComponent(old);
+//		      	//script.setAttribute("src",dataURI);
+//		      	script.location = dataURI;
+//		      	//doc.documentElement.appendChild(script);
 		      
 		      	script.addEventListener('load', onLoad, true);
 		      	script.addEventListener('error', onLoad, true);
