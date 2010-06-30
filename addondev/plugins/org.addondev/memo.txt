@@ -1,4 +1,6 @@
-﻿firebug-1.4.5
+﻿http://qttabbar.sourceforge.net/
+
+firebug-1.4.5
 firebug-1.5X.0b1
 firebug-1.5X.0a26
 firebug-1.5.4
