@@ -2,7 +2,7 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 const BUGMONKEY_SCRIPT_DIR = "fbm_scripts";
-const BUGMONKEY_SCRIPTLIST_FILE = "fbm_scripts.xml";
+const BUGMONKEY_SCRIPTLIST_FILE = "fbm_scripts.json";
 
 var scriptTreeView = null;
 var editorFile = null;
@@ -23,23 +23,26 @@ function init() {
 	
 	var data = [];
 	
-	if(file.exists()) 
-	{
-		var xmlutil ={};
-		Components.utils.import("resource://fbm_modules/xmlutil.js", xmlutil);
+	if(file.exists()){
+		//var xmlutil ={};
+		//Components.utils.import("resource://fbm_modules/xmlutil.js", xmlutil);	
+		//let xmldata = fileutil.read(scriptsxmlfile);
+		//let result = xmlutil.XML2Obj.parseFromString(xmldata);
+//	 	for(let i=0;i<result.length; i++)
+//	 	{	 		
+//	 		var filename = result[i]["src"];
+//	 		var enable   = result[i]["enable"];
+//	 		if(filename)
+//	 		{	 	
+//	 			data.push({filename:filename, enable:enable});
+//	 		}
+//	 	}
 		
-		let xmldata = fileutil.read(scriptsxmlfile);
-		let result = xmlutil.XML2Obj.parseFromString(xmldata);
-
-	 	for(let i=0;i<result.length; i++)
-	 	{	 		
-	 		var filename = result[i]["src"];
-	 		var enable   = result[i]["enable"];
-	 		if(filename)
-	 		{	 	
-	 			data.push({filename:filename, enable:enable});
-	 		}
-	 	}
+		let jsonstr = fileutil.read(scriptsxmlfile);
+		let result = JSON.parse(jsonstr);
+		for(let key in result){
+			data.push(result[key]);
+		}
 	}	
 	
 	scriptTreeView = new ScriptTreeView(data);
@@ -64,8 +67,7 @@ function moveItem(aUpDown) {
     scriptTreeView.moveItem(sourceIndex, targetIndex);
 }
 
-function newItem()
-{
+function newItem(){
     var ret = window.prompt("Enter file name.", "", "");
     if (!ret)
         return;
@@ -80,22 +82,23 @@ function newItem()
     //}
 }
 
-function editItem()
-{	 
+function editItem(){	 
 	var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
 	file.initWithPath(scriptDirPath);
 	file.append(scriptTreeView.getSelectionData.filename);
 	
-	var args = Application.prefs.getValue("extensions.firebugmonkey.option.editor.args", ""); //document.getElementById("editor-args").value;
+	//var args = Application.prefs.getValue("extensions.firebugmonkey.option.editor.args", ""); 
+	var args = document.getElementById("editor-args").value;
 	args = args.replace('%path%', file.path);
 	var argary = args.split(' ');
 	
-	var editorPathField = document.getElementById("editor-path");
-	launchProgram(editorPathField.value, argary);
+	var editorPath= document.getElementById("editor-path").value;
+	if(!launchProgram(editorPath, argary)){
+		showMessageBox("error", "not find editor\nadvanced panel");
+	}
 }
 
-function deleteItem()
-{
+function deleteItem(){
     var rows = scriptTreeView.selectedIndexes;
     
     Application.console.log("rows = " + rows);
@@ -105,35 +108,40 @@ function deleteItem()
     }	
 }
 
-function openfolder()
-{
-	var args = Application.prefs.getValue("extensions.firebugmonkey.option.openfolder.args", ""); //document.getElementById("openfolder-args").value;
+function openfolder(){
+	//var args = Application.prefs.getValue("extensions.firebugmonkey.option.openfolder.args", ""); //document.getElementById("openfolder-args").value;
+	var args = document.getElementById("openfolder-args").value;
 	args = args.replace('%path%', scriptDirPath);
 	var argary = args.split(' ');
 	
-	var exepath = Application.prefs.getValue("extensions.firebugmonkey.option.openfolder.path", "");
+	//var exepath = Application.prefs.getValue("extensions.firebugmonkey.option.openfolder.path", "");
+	var exepath = document.getElementById("openfolder-path").value;
 	launchProgram(exepath, argary);
 }
 
-function save()
-{
-	var data = "";	
+function save(){
+//	var data = "";	
+//	for (var index = 0; index < scriptTreeView.rowCount; index++) {
+//		var script = scriptTreeView._data[index];
+//		data += '<script src="' + script.filename + '" ' + 'enable="' + script.enable + '"/>\n'
+//	}
+//	
+//	data = "<xml>\n" + data + "</xml>";
+	
+	var data = [];	
 	for (var index = 0; index < scriptTreeView.rowCount; index++) {
 		var script = scriptTreeView._data[index];
-		data += '<script src="' + script.filename + '" ' + 'enable="' + script.enable + '"/>\n'
-	}
+		data.push(script);
+	}	
 	
-	data = "<xml>\n" + data + "</xml>";
+	var jsonstr = JSON.stringify(data);
 	
-	try
-	{
+	try{
 		var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
 		file.initWithPath(scriptDirPath);
 		file.append(BUGMONKEY_SCRIPTLIST_FILE);	
-		fileutil.write(data, file.path);
-	}
-	catch(e)
-	{
+		fileutil.write(jsonstr, file.path);
+	}catch(e){
 		Components.utils.reportError("save error. " + e);
 	}
 }
@@ -151,8 +159,7 @@ function selectFile(node) {
     }
 }
 
-function onDialogAccept()
-{
+function onDialogAccept(){
 	Application.prefs.setValue("extensions.firebugmonkey.option.editor.path", document.getElementById("editor-path").value);
 	Application.prefs.setValue("extensions.firebugmonkey.option.editor.args", document.getElementById("editor-args").value);
 	
@@ -164,24 +171,25 @@ function onDialogAccept()
 	save();
 }
 
-var launchProgram = function(exePath, args)
-{
-    try 
-    {
+var launchProgram = function(exePath, args){
+	if (exePath == null || (exePath !=null && exePath.length == 0))
+		return false;
+	
+    try {
         var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
         file.initWithPath(exePath);
         if (!file.exists())
             return false;
+        
         var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);
         process.init(file);
         process.run(false, args, args.length, {});
-        return true;
-    }
-    catch(exc)
-    {
+       
+    }catch(exc){
         Components.utils.reportError("launch error " + exc);
+        return false;
     }
-    return false;
+    return true;
 };
 
 ////////////////////////////////////////////////////////////////
@@ -311,12 +319,19 @@ ScriptTreeView.prototype = {
         return ret;
     },
 	
-    get getSelectionData()
-    {
+    get getSelectionData(){
     	var sel = this.selectedIndexes;
     	if(sel.length >0)
     		return this._data[sel[0]];
     		
     	return null;
     }
+};
+
+
+////////////////////////////////////////////////////////////////
+//messagebox
+function showMessageBox(title, message) {
+	var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
+    prompts.alert(window, title, message);
 };

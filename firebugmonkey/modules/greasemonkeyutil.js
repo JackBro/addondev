@@ -6,7 +6,8 @@ var EXPORTED_SYMBOLS = ["GM_log",
                         "GM_hitch", 
                         "GM_addStyle", 
                         "GM_openInTab", 
-                        "GM_Resources"];
+                        "GM_Resources",
+                        "GM_registerMenuCommand"];
 
 //const Cc = Components.classes;
 //const Ci = Components.interfaces;
@@ -242,7 +243,7 @@ GM_ScriptStorage.prototype.setValue = function(name, val) {
   }
 
   StorageValues[this._id + "." + name] = val;
-  //Application.storage.set(this._url + "." + name, val);
+  //Application.storage.set(this._id + "." + name, val);
 };
 
 GM_ScriptStorage.prototype.getValue = function(name, defVal) {
@@ -251,7 +252,7 @@ GM_ScriptStorage.prototype.getValue = function(name, defVal) {
   }
 
   //return this.strage[name] ? this.strage[name] : defVal;
-  //return Application.storage.get(this._url + "." + name, defVal);
+  //return Application.storage.get(this._id + "." + name, defVal);
   return StorageValues[this._id + "." + name];
 };
 
@@ -318,3 +319,10 @@ GM_Resources.prototype.getDep_ = function(name) {
       return resource;
   throw new Error("No resource with name: " + name); // NOTE: Non localised string
 };
+
+/////////////////////////////////////////////////////////////////////////
+//GM_registerMenuCommand
+function GM_registerMenuCommand(commandName, commandFunc, accelKey, accelModifiers, accessKey) 
+{
+	//empty
+}

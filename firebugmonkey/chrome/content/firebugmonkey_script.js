@@ -11,8 +11,7 @@ FBL.ns(function () { with (FBL) {
  * @param string filename 
  * 
  */
-Firebug.firebugmonkey.Script = function(url, scriptdir, scriptmpdir, filename, enbale)
-{
+Firebug.firebugmonkey.Script = function(url, scriptdir, scriptmpdir, filename, enbale){
 	this._url = url;
 	//this._ioservice = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
 	this._localfile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
@@ -47,11 +46,10 @@ Firebug.firebugmonkey.Script.prototype =
 		
 	get ID(){ return this._url + this._filename; },
 	//get ID(){ return this._filename; },
-	
+	get namespace(){ return this._namespace; },
 	get url(){ return this._url; },
 	
-	get tmpFileUri()
-	{	
+	get tmpFileUri(){	
 		return this._tmpfileuri;	
 	},
 	
@@ -65,17 +63,14 @@ Firebug.firebugmonkey.Script.prototype =
     	return this._includes.some(test) && !this._excludes.some(test);
 	},
 	
-	get getText()
-	{
+	get getText(){
 		return this.source;
 	},
 	
-	get getConcatText()
-	{	
+	get getConcatText(){	
 		var srcoffset = 1;
  		var requireSources=[];
- 		for(var uri in this._requireUris)
- 		{
+ 		for(var uri in this._requireUris){
  			//Application.console.log("_requireUris uri = " + this._requireUris[uri].spec);
  			this._offsets.push({filespec:this._requireUris[uri].spec, offset:srcoffset});	
  			var src = this.loadText(this._requireUris[uri]);
@@ -95,21 +90,14 @@ Firebug.firebugmonkey.Script.prototype =
         return scriptSrc;
 	},
 	
-	init : function()
-	{
+	init : function(){
 		this.source = this.loadText(this._fileuri);
 		this.parse();		
 	},
 	
-	parse : function()
-	{
-		//var _source = this.source;
-		var basedirUri = this._basedirUri;
-		
+	parse : function(){
+		var basedirUri = this._basedirUri;	
 		var lines = this.source.match(/.+/g);
-		//var lines = this.source.split("\n");
-		//Application.console.log("this.source = " + this.source);
-		//Application.console.log("lines = " + lines);
 	    var lnIdx = 0;
 	    var result = {};
 	    var foundMeta = false;
@@ -136,73 +124,62 @@ Firebug.firebugmonkey.Script.prototype =
 	        if (value) { // @header <value>
 	          switch (header) {
 	          	case "name":
-	          	break;
+	          		break;
 	          	case "namespace":
-	          	break;
+	          		this._namespace = value;
+	          		//Application.console.log("script filename = "+ this._filename + " _namespace = " + this._namespace);
+	          		break;
 	          	case "include":
 	          		this._includes.push(value);
-	          	break;
+	          		break;
 	          	case "exclude":
 		          	this._excludes.push(value);
 		          	break;
 	            case "require":
-	            	try
-	            	{
+	            	try{
 	            		var requirepath = basedirUri.resolve(value);
 	            		//Application.console.log("requirepath = " + requirepath);
 	            		this._requireUris.push(ioservice.newURI(requirepath, null, null));
-	            	}
-	            	catch(e)
-	            	{
+	            	}catch(e){
 	            		Components.utils.reportError("incorrect require " + e);
 	            	}
 	            	break;
 	            case "resource":
-	            	try
-	            	{
-	            	var res = value.match(/(\S+)\s+(.*)/);
-	            	var resName = res[1];
-	            	var scriptResource = new Firebug.firebugmonkey.ScriptResource();
-	            	scriptResource._name = resName;
-	            	var resfile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-	            	var resPath = this._fileutil.getFileFromURLSpec(basedirUri.resolve(res[2])).path;
-	            	
-	            	resfile.initWithPath(resPath);
-	    	        if (!resfile.exists())
-	    	        {
-	    	        	
-	    	        	var consoleSvc = Cc["@mozilla.org/consoleservice;1"].getService(Ci.nsIConsoleService);
-	    	        	  var scriptError = Cc["@mozilla.org/scripterror;1"].createInstance(Ci.nsIScriptError);
-	    	        	           //scriptError.init(aMessage, aSourceName, aSourceLine, aLineNumber, 
-	    	        	           //                 aColumnNumber, aFlags, aCategory);
-	    	        	  scriptError.init("error !resfile.exists()", resPath, 1, 1, 0, scriptError.errorFlag, null);
-	    	        	  consoleSvc.logMessage(scriptError);
-	
-	    	        
-	    	        	//Components.utils.reportError("error !resfile.exists()");
-	    	        	//throw "ERROR : not exists " + resPath;
-	    	            //return false;
-	    	        }
-	            	scriptResource._file = resfile;
-	            	this._resources.push(scriptResource);
-	            	}
-	            	catch(e)
-	            	{
+	            	try{
+		            	var res = value.match(/(\S+)\s+(.*)/);
+		            	var resName = res[1];
+		            	var scriptResource = new Firebug.firebugmonkey.ScriptResource();
+		            	scriptResource._name = resName;
+		            	var resfile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+		            	var resPath = this._fileutil.getFileFromURLSpec(basedirUri.resolve(res[2])).path;
+		            	
+		            	resfile.initWithPath(resPath);
+		    	        if (!resfile.exists()){
+		    	        	
+		    	        	var consoleSvc = Cc["@mozilla.org/consoleservice;1"].getService(Ci.nsIConsoleService);
+		    	        	var scriptError = Cc["@mozilla.org/scripterror;1"].createInstance(Ci.nsIScriptError);
+		    	        	//scriptError.init(aMessage, aSourceName, aSourceLine, aLineNumber, 
+		    	        	//                 aColumnNumber, aFlags, aCategory);
+		    	        	var resourceerrmsg = "not find resource " + resPath;
+		    	        	scriptError.init(resourceerrmsg, this._fileuri.spec, lnIdx, lnIdx, 0, scriptError.errorFlag, null);
+		    	        	consoleSvc.logMessage(scriptError);
+		    	        	this._enable = false;
+		    	        }
+		            	scriptResource._file = resfile;
+		            	this._resources.push(scriptResource);
+	            	}catch(e){
 	            		Components.utils.reportError("incorrect resource " + e);
 	            	}
 	            	break;
-	          }
+	          	}
 	        }
 	      }
-	    }
-	    else
-	    {
+	    } else {
 	    	
 	    }   
 	},
 	
-	loadText : function(aURI)
-	{
+	loadText : function(aURI){
 	  try {	
 		  var channel = ioservice.newChannelFromURI(aURI);
 		  var stream  = channel.open();
@@ -220,9 +197,7 @@ Firebug.firebugmonkey.Script.prototype =
 //		  return unicodeConverter.ConvertToUnicode(fileContents);
 		  
 		  return fileContents;
-	  }
-	  catch(e) 
-	  {
+	  }catch(e) {
 	  	Components.utils.reportError("error loadText " + e);
 	  }
 	}

@@ -8,20 +8,14 @@ FBL.ns(function () { with (FBL) {
 	
 	const fbmStatusIcon = $('firebugmonkeyStatusBarIcon');
 	
-	const SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
+	//const SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
+	
+	var RETURN_CONTINUE = Ci.jsdIExecutionHook.RETURN_CONTINUE;
 
 	Firebug.firebugmonkey_Model = extend(Firebug.Module, { 
 		sourcemap:{},
 		
-		initialize: function() {				
-			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
-			if(filterSystemURLs)
-				Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
-			
-			var showAllSourceFiles = Application.prefs.getValue("extensions.firebug.service.showAllSourceFiles", false);
-			if(!showAllSourceFiles)
-				Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);		
-	
+		initialize: function() {					
 			//Firebug.filterSystemURLs = false;
 			//extensions.firebug.service.filterSystemURLs
 			
@@ -29,20 +23,11 @@ FBL.ns(function () { with (FBL) {
 			//extensions.firebug.service.showAllSourceFiles;false
 			
 			
-			this.SANDBOX_XUL_PATH = SANDBOX_XUL_PATH;
-			Firebug.firebugmonkey.init();	
+			this.SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
+			Firebug.firebugmonkey.init();
 			
-			this.setFunction();
-			
-			var firebug_resetBreakpoints =  Firebug.Debugger.fbs.resetBreakpoints;
-			Firebug.Debugger.fbs.resetBreakpoints = function(sourceFile, lastLineNumber){		
-				if(Firebug.firebugmonkey.enable 
-					&& Firebug.firebugmonkey.sourcehrefs 
-					&& Firebug.firebugmonkey_Model.hasSourcehref(sourceFile.href)){
-					Firebug.firebugmonkey_Model.sourcemap[sourceFile.href] = sourceFile;
-				}
-				firebug_resetBreakpoints(sourceFile, lastLineNumber);
-			}	
+			this.setPrefForDebug();
+			this.setFunctionForDebug();
 		},
 	
 		initializeUI: function(){
@@ -53,7 +38,20 @@ FBL.ns(function () { with (FBL) {
 			fbMenu.appendChild(fbmMenu);
 		},
 	
-		setFunction : function(){	
+		setPrefForDebug : function(){	
+//			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
+//			if(filterSystemURLs)
+//				Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
+//			
+//			var showAllSourceFiles = Application.prefs.getValue("extensions.firebug.service.showAllSourceFiles", false);
+//			if(!showAllSourceFiles)
+//				Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);
+			
+			Firebug.filterSystemURLs = false;
+			Firebug.showAllSourceFiles = true;
+		},
+		
+		setFunctionForDebug : function(){	
 			var getFrameContext = function(frame){
 				var win = getFrameScopeWindowAncestor(frame);
 				return win ? TabWatcher.getContextByWindow(win) : null;
@@ -71,7 +69,7 @@ FBL.ns(function () { with (FBL) {
 					return null;
 			}
 			
-			var RETURN_CONTINUE = Ci.jsdIExecutionHook.RETURN_CONTINUE;
+			//var RETURN_CONTINUE = Ci.jsdIExecutionHook.RETURN_CONTINUE;
 			
 			var fbm_supportsGlobal = 
 				'var cc = ((frameWin && TabWatcher) ? TabWatcher.getContextByWindow(frameWin) : null);'		
@@ -96,6 +94,30 @@ FBL.ns(function () { with (FBL) {
 			  );
 			}	
 	
+//			var firebug_resetBreakpoints =  Firebug.Debugger.fbs.resetBreakpoints;
+//			Firebug.Debugger.fbs.resetBreakpoints = function(sourceFile, lastLineNumber){		
+//				if(Firebug.firebugmonkey.enable 
+//					&& Firebug.firebugmonkey.sourcehrefs 
+//					&& Firebug.firebugmonkey_Model.hasSourcehref(sourceFile.href)){
+//					Firebug.firebugmonkey_Model.sourcemap[sourceFile.href] = sourceFile;
+//				}
+//				firebug_resetBreakpoints(sourceFile, lastLineNumber);
+//			}
+			var fbm_resetBreakpoints = 
+				'if(Firebug.firebugmonkey.enable '
+				+	'&& Firebug.firebugmonkey.sourcehrefs){ '
+				+	'Firebug.firebugmonkey_Model.sourcemap[sourceFile.href] = sourceFile;'
+				+'}';
+				//'Firebug.firebugmonkey_Model.setSourceMap(sourceFile);';
+			if ('setJSDBreakpoint' in Firebug.Debugger.fbs) {
+				  eval('Firebug.Debugger.fbs.setJSDBreakpoint = '+
+						  Firebug.Debugger.fbs.setJSDBreakpoint.toSource().replace(
+				      '{',
+				      '$&' + fbm_resetBreakpoints
+				    )
+				  );
+				}			
+			
 			var fbm_onBreak = 
 			  'const TYPE_DEBUGGER_KEYWORD = Components.interfaces.jsdIExecutionHook.TYPE_DEBUGGER_KEYWORD;'
 				+ 'if(!this.breakContext && !getFrameContext(frame)){'
@@ -160,23 +182,23 @@ FBL.ns(function () { with (FBL) {
 			  );
 			}
 		
-
-			const consoleService = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces["nsIConsoleService"]);	
-				var fbm_unwrapObject =
-					'try {'
-					+'	var currentFunction = arguments.callee.caller.toString();'
-					//+'consoleService.logStringMessage("currentFunction = " +currentFunction);'
-					+'	if(currentFunction.indexOf("var insecureObject = unwrapObject(object);") != -1){'
-					+'		for (var name in object) {'
-					+'			if (typeof(object[name]) == "xml" && object[name].toString().indexOf("<") != -1 && object[name].toString().indexOf(">") != -1){'
-					//+'				consoleService.logStringMessage("object name = " +name + " : " + object[name]);'
-					+'				object[name] = object[name].toString();'
-					+'			}'
-					+'		}'
-					+'	}'
-					+'} catch (exc) {'
-					+'	 consoleService.logStringMessage("fbm_unwrapObject exc = " +exc);'
-					+'}';
+			
+			var fbm_unwrapObject =
+				'try {'
+				//+'	var currentFunction = arguments.callee.caller.toString();'
+				//+'Application.console.log("currentFunction = " +currentFunction);'
+				//+'	if(currentFunction.indexOf("var insecureObject = unwrapObject(object);") != -1){'
+				+'	if(Firebug.firebugmonkey_Model.isTargetFunction(arguments.callee.caller)){'
+				+'		for (var name in object) {'
+				+'			if (typeof(object[name]) == "xml" && object[name].toString().indexOf("<") != -1 && object[name].toString().indexOf(">") != -1){'
+				//+'				Application.console.log("object name = " +name + " : " + object[name]);'
+				+'				object[name] = object[name].toString();'
+				+'			}'
+				+'		}'
+				+'	}'
+				+'} catch (exc) {'
+				+'	 Application.console.log("fbm_unwrapObject exc = " +exc);'
+				+'}';
 	
 			try{
 				if ('unwrapObject' in FBL) {
@@ -192,7 +214,7 @@ FBL.ns(function () { with (FBL) {
 			}	
 			
 			Firebug.firebugmonkey_Model.hasSourcehref = function(href){		
-				if(href.indexOf(SANDBOX_XUL_PATH + ' -> ') == -1) return false;
+				if(href.indexOf(this.SANDBOX_XUL_PATH + ' -> ') == -1) return false;
 				
 				var hrefs = href.split(' -> ');
 				var sourcehref = hrefs[1];
@@ -207,12 +229,19 @@ FBL.ns(function () { with (FBL) {
 			Firebugmonkey_ConsoleListener.unregisterListener();
 	    },
 	    
-		hasSourcehref : function(href){	
-		},
+	    isTargetFunction: function(func){
+	    	var strfunc = func.toString();
+	    	return strfunc.indexOf("var insecureObject = unwrapObject(object);") != -1;
+	    },
+		isE4XObject: function(obj){
+    		return (typeof(obj) == "xml" 
+    			&& obj.toString().indexOf("<") != -1 
+    			&& obj.toString().indexOf(">") != -1);
+    	}, 
 	
 		getFbmScriptSpecFromSandbox : function(spec){	
 			try{
-	        	var uri = chromeReg.convertChromeURL(ioService.newURI(SANDBOX_XUL_PATH, null, null));
+	        	var uri = chromeReg.convertChromeURL(ioService.newURI(this.SANDBOX_XUL_PATH, null, null));
 	        	if(uri.spec == spec){
 	        		return Firebug.firebugmonkey_Model.fbmScript;
 	        	}	
@@ -224,7 +253,7 @@ FBL.ns(function () { with (FBL) {
 		},	
 		
 		getFbmScriptFromblistUrl : function(href){	
-			if(href.indexOf(SANDBOX_XUL_PATH + ' -> ') == -1) return;	
+			if(href.indexOf(this.SANDBOX_XUL_PATH + ' -> ') == -1) return;	
 				
 			var hrefs = href.split(' -> ');	
 			var sourcehref = hrefs[1];
@@ -275,7 +304,6 @@ FBL.ns(function () { with (FBL) {
 	  		fbmStatusIcon.setAttribute("enable", Firebug.firebugmonkey.enable == true?"on":"off");
 	  	}
 	});
-	
 	
 	var Firebugmonkey_ConsoleListener = {
 		aConsoleService:null,

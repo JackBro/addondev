@@ -12,7 +12,7 @@
 		  <Description>
 		    <em:locale>ja-JP</em:locale>
 		    <em:name>Firebugmonkey</em:name>
-		    <em:description>FirebugによるGreasemonkeyスクリプトのデバッグを可能にします。</em:description>
+		    <em:description>FirebugによるGreasemonkeyスクリプトのデバッグを可能にします。(Firebug1.5.4推奨)</em:description>
 		    <em:creator>konkon</em:creator>
 		    <em:homepageURL>http://orange.zero.jp/zbn39616.pine/addon/firebugmonkey/index.html</em:homepageURL>
 		  </Description>
@@ -28,7 +28,7 @@
 		</em:targetApplication>
 		
 		<em:name>Firebugmonkey</em:name>
-    	<em:description>greasemonkey script allows you to debug by Firebug</em:description>
+    	<em:description>can debug greasemonkey script with Firebug.(recommended Firebug1.5.4)</em:description>
     	<em:creator>konkon</em:creator>
     	<em:iconURL>chrome://firebugmonkey/skin/firebugmonkey32.png</em:iconURL>
     	<em:homepageURL>http://orange.zero.jp/zbn39616.pine/addon/firebugmonkey/index.html</em:homepageURL>

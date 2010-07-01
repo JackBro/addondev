@@ -5,9 +5,9 @@ const Ci = Components.interfaces;
 
 const ioService = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
 
-const SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
+//const SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
 const FBM_SCRIPT_DIR = "fbm_scripts";
-const FBM_SCRIPTLIST_FILE = "fbm_scripts.xml";
+const FBM_SCRIPTLIST_FILE = "fbm_scripts.json";
 
 const fbmStatusIcon = $('firebugmonkeyStatusBarIcon');
 
@@ -65,57 +65,54 @@ Firebug.firebugmonkey = {
 		var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
 		file.initWithPath(scriptdir.path);
 		file.append(FBM_SCRIPTLIST_FILE);
-		var scriptsxmlfile = file.path;
+		var scriptsjsonfile = file.path;
 
 		if(!file.exists()) 
 		{
-			Components.utils.reportError("!file.exists() " + file.path);
+			Components.utils.reportError("firebugmonkey error : not find " + file.path);
 			return;
 		}
 		
-		var XMLUtil ={};
-		Components.utils.import("resource://fbm_modules/xmlutil.js", XMLUtil);
-		var data = this.fileutil.read(scriptsxmlfile);
-		var result = XMLUtil.XML2Obj.parseFromString(data);
+		//var XMLUtil ={};
+		//Components.utils.import("resource://fbm_modules/xmlutil.js", XMLUtil);
+		//var data = this.fileutil.read(scriptsxmlfile);
+		//var result = XMLUtil.XML2Obj.parseFromString(data);
 
+		let jsonstr = this.fileutil.read(scriptsjsonfile);
+		let result = JSON.parse(jsonstr);
+		
 	 	this.GM_Scripthrefs.clear();
 	 	
 	 	var scripts = [];
 	 	this.sourcehrefs = [];
 
-	 	for(let i=0;i<result.length; i++)
-	 	{	 		
+	 	for(let key in result){	 		
 	 		
-	 		var filename = result[i]["src"];
-	 		var enable   = result[i]["enable"] == 'true'?true:false;
-	 		if(filename && enable && enable == true)
-	 		{	 	
-	 			try
-	 			{
+	 		var filename = result[key]["filename"];
+	 		var enable   = result[key]["enable"];
+	 		
+	 		if(filename && enable && enable == true){	 	
+	 			try{
 	 				var fbmscript = new Firebug.firebugmonkey.Script(e.target.URL, scriptdir, scriptmpdir, filename, enable);
 	 				fbmscript.init();
 	 				scripts.push(fbmscript);
-	 			}
-	 			catch(e)
-	 			{
+	 			}catch(e){
 	 				Components.utils.reportError('firebugmonkey error : ' + e);
 	 			}	 			
 	 		}
 	 	}
 
-	 	this.enablescripts = (function() 
-	 	{
+	 	this.enablescripts = (function() {
 		    function testMatch(script) {
 		      return script.enable && script.matchesURL(e.target.URL);
 		    }
 	    	return scripts.filter(testMatch);
 	 	})();
 	 	
-	 	if(this.enablescripts.length >0)
-		{
-			//Firebug.Debugger.fbs.filterSystemURLs = false;
+	 	if(this.enablescripts.length >0){
 			//Firebug.filterSystemURLs = false;
 			//Firebug.showAllSourceFiles = true;
+			Firebug.firebugmonkey_Model.setPrefForDebug();
 			
 	 		this.testURL = e.target.URL;
 			var fbmsandbox;	
@@ -129,20 +126,17 @@ Firebug.firebugmonkey = {
 			var appSvc = Components.classes["@mozilla.org/appshell/appShellService;1"].getService(Components.interfaces.nsIAppShellService);
 			var gmutil = {};
 			Components.utils.import("resource://fbm_modules/greasemonkeyutil.js", gmutil);
-		    for ( var int = 0; int < this.enablescripts.length; int++) 
-		    {		    	
-		    	var enablescript = this.enablescripts[int];
-		    	try
-		    	{
-		    		this.fileutil.write(enablescript.getConcatText, this.fileutil.getFileFromURLSpec(enablescript.tmpFileUri.spec).path);
-		    	}
-		    	catch(e)
-		    	{
+		    
+			for ( let i = 0; i < this.enablescripts.length; i++) {
+		    	let script = this.enablescripts[i];
+		    	try{
+		    		this.fileutil.write(script.getConcatText, this.fileutil.getFileFromURLSpec(script.tmpFileUri.spec).path);
+		    	}catch(e){
 		    		Components.utils.reportError('firebugmonkey error : ' + e);
 		    	}
 		    	
-		 		this.sourcehrefs.push(enablescript.tmpFileUri.spec);
-		 		this.GM_Scripthrefs.setHref(enablescript.tmpFileUri.spec);
+		 		this.sourcehrefs.push(script.tmpFileUri.spec);
+		 		this.GM_Scripthrefs.setHref(script.tmpFileUri.spec);
 		    	
 		    	fbmsandbox = {};	
 			    fbmsandbox.window = safeWindow;
@@ -156,58 +150,45 @@ Firebug.firebugmonkey = {
 				
 				fbmsandbox.GM_addStyle = gmutil.GM_hitch(gmutil, "GM_addStyle", fbmsandbox.document);
 				
-				var storage = new gmutil.GM_ScriptStorage(enablescript.ID);
+				//var storage = new gmutil.GM_ScriptStorage(script.ID);
+				//Application.console.log("script.namespace = "+script.namespace);
+				var storage = new gmutil.GM_ScriptStorage(script.namespace);
 				fbmsandbox.GM_setValue = gmutil.GM_hitch(storage, "setValue");
 				fbmsandbox.GM_getValue = gmutil.GM_hitch(storage, "getValue");
+				fbmsandbox.GM_deleteValue = gmutil.GM_hitch(storage, "deleteValue");
+				fbmsandbox.GM_listValues = gmutil.GM_hitch(storage, "listValues");
 				
 				fbmsandbox.GM_openInTab = gmutil.GM_hitch(gmutil, "GM_openInTab", window);
 				fbmsandbox.GM_registerMenuCommand = function(title, func){};
 				
-				var resources = new gmutil.GM_Resources(enablescript);
+				var resources = new gmutil.GM_Resources(script);
 				fbmsandbox.GM_getResourceURL = gmutil.GM_hitch(resources, "getResourceURL");
 				fbmsandbox.GM_getResourceText = gmutil.GM_hitch(resources, "getResourceText");	
+				
+				fbmsandbox.GM_registerMenuCommand = gmutil.GM_registerMenuCommand;	
 				
 				if(!Application.prefs.getValue("extensions.firebugmonkey.option.enablexpcom", false))
 					fbmsandbox.Components = null;
 				
-				Application.storage.set(enablescript.ID, fbmsandbox);	    	
+				Application.storage.set(script.ID, fbmsandbox);	    	
 			}
 			
 			this.evalInSandbox(this.sourcehrefs, 0);
-		}
-		else
-		{
+		}else{
 		}
 	},
 		  
-	evalInSandbox : function(sourcefiles, level)
-	{
-		try
-		{				
-			/*
-	      	var script = document.createElementNS('http://www.w3.org/1999/xhtml', 'script');
-	    	//var script = doc.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'script');
-	      	script.setAttribute('type', 'application/javascript; version=1.8');
-	      	script.setAttribute('src',   sourcefiles[0]);
-	      	document.documentElement.appendChild(script);
-			*/
-			
+	evalInSandbox : function(sourcefiles, level){
+		try{						
 		  	var env = document.createElement('browser');
-		  	//var env = document.createElement('iframe');
-		  	//var env = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'browser');
 		  	env.setAttribute('type', 'content-frame');
-		  	env.setAttribute('src', SANDBOX_XUL_PATH);
+		  	env.setAttribute('src', Firebug.firebugmonkey_Model.SANDBOX_XUL_PATH);
 		  	document.documentElement.appendChild(env);
 		  	
 		  	env.addEventListener('load', function(){
 		  	
 			var doc = env.contentDocument.wrappedJSObject || env.contentDocument;
 		    var win = env.contentWindow.wrappedJSObject || env.contentWindow;	    
-			//var doc = env.contentDocument;
-		    //var win = env.contentWindow;	
-			//var doc = env.contentDocument.wrappedJSObject;
-		    //var win = env.contentWindow.wrappedJSObject;	  
-		    
 		    var loaded = 0;
 		    
 		    function clearSandbox(){
@@ -220,8 +201,7 @@ Firebug.firebugmonkey = {
 		      loaded++;   
 		      if(loaded == uris.length){
 		      	clearSandbox();
-		      	if(sourcefiles.length-1 > level)
-		      	{
+		      	if(sourcefiles.length-1 > level){
 		      		Firebug.firebugmonkey.evalInSandbox(sourcefiles, ++level);
 		      	}
 		      }	
@@ -231,34 +211,19 @@ Firebug.firebugmonkey = {
 		    uris.push(sourcefiles[level]);		    
 		    uris.forEach(function(uri){
 		      	var script = doc.createElementNS('http://www.w3.org/1999/xhtml', 'script');
-		      	//var script = doc.createElement('script');
-		    	//var script = doc.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'script');
 		      	script.setAttribute('type', 'application/javascript; version=1.8');
 		      	script.setAttribute('src',   uri);
-		      	//script.setAttribute('src',   "chrome://firebugmonkey/content/cal.js");
 		      	doc.documentElement.appendChild(script);
-		      	
-//		      	var old = "alert(10);";
-//		      	var script = doc.getElementById("contentyy");
-//		      	Application.console.log("script = " + script);
-//		      	 var dataURI = "data:application/vnd.mozilla.xul+xml," + encodeURIComponent(old);
-//		      	//script.setAttribute("src",dataURI);
-//		      	script.location = dataURI;
-//		      	//doc.documentElement.appendChild(script);
-		      
+		      	 
 		      	script.addEventListener('load', onLoad, true);
 		      	script.addEventListener('error', onLoad, true);
 		    });
 		    
 		  }, true);	  
-		}
-		catch(e)
-		{	
-		}
+		}catch(e){}
 
 		return env;	
 	}
 };
-
 
 }});
