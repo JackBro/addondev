@@ -36,6 +36,8 @@ Firebug.firebugmonkey = {
 		Components.utils.import("resource://fbm_modules/fileutil.js", this.fileutil);	
 		
 		this.enablescripts =[];
+		
+		this.stringBundle = null;
 	},
 
 	chromeLoad : function(e) {	
@@ -69,7 +71,7 @@ Firebug.firebugmonkey = {
 
 		if(!file.exists()) 
 		{
-			Components.utils.reportError("firebugmonkey error : not find " + file.path);
+			Application.console.log("firebugmonkey : not find " + file.path);
 			return;
 		}
 		
@@ -223,6 +225,13 @@ Firebug.firebugmonkey = {
 		}catch(e){}
 
 		return env;	
+	},
+	
+	getStrbundleString: function(str){
+		if(!this.stringBundle ){
+			this.stringBundle = document.getElementById("firebugmonkey-bundle");
+		}
+		return strbundle.getString(str);
 	}
 };
 

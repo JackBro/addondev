@@ -23,6 +23,10 @@
             onunload=""
             style="width: 47em; min-height: 39em;">
 	
+	<stringbundleset id="firebugmonkey-stringbundleset"> 
+		<stringbundle id="firebugmonkey-bundle" src="chrome://firebugmonkey/locale/firebugmonkey.properties" /> 
+	</stringbundleset> 	
+	
 	<prefpane id="generalPane" label="&firebugmonkey.preference.scriptPane;" flex="1">
 		
 		<groupbox orient="horizontal" flex="1">

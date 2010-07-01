@@ -10,7 +10,7 @@
 	<script src="chrome://firebugmonkey/content/firebugmonkey_model.js" type="application/javascript;version=1.8"/>
 	
 	  
-	<stringbundleset id="stringbundleset"> 
+	<stringbundleset id="firebugmonkey-stringbundleset"> 
 		<stringbundle id="firebugmonkey-bundle" src="chrome://firebugmonkey/locale/firebugmonkey.properties" /> 
 	</stringbundleset> 
   

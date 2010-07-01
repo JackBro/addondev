@@ -5,6 +5,12 @@ const Ci = Components.interfaces;
 
 const IOService = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
 
+var FileUtils = {
+		
+	_getStream:function(file){
+		
+	}
+}
 var copy = function(sourcefile, destdir, distfile)
 {
 	  var aFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);

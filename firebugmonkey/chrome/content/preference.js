@@ -10,6 +10,8 @@ var scriptDirPath = null;
 
 var fileutil = {};
 
+var strbundle = null;
+
 function init() {	
 	Components.utils.import("resource://fbm_modules/fileutil.js", fileutil);
 	
@@ -57,6 +59,13 @@ function init() {
     document.getElementById("enablexpcom").checked = Application.prefs.getValue("extensions.firebugmonkey.option.enablexpcom", false);
 }
 
+function getStrbundleString(str){
+	if(!strbundle ){
+		strbundle = document.getElementById("firebugmonkey-bundle");
+	}
+	return strbundle.getString(str);
+}
+
 //////////////////////////////////////////////////////////////
 // Script
 function moveItem(aUpDown) {
@@ -94,7 +103,7 @@ function editItem(){
 	
 	var editorPath= document.getElementById("editor-path").value;
 	if(!launchProgram(editorPath, argary)){
-		showMessageBox("error", "not find editor\nadvanced panel");
+		showMessageBox("Error", getStrbundleString("EditorNotFindMessage"));
 	}
 }
 
@@ -116,7 +125,10 @@ function openfolder(){
 	
 	//var exepath = Application.prefs.getValue("extensions.firebugmonkey.option.openfolder.path", "");
 	var exepath = document.getElementById("openfolder-path").value;
-	launchProgram(exepath, argary);
+	
+	if(!launchProgram(exepath, argary)){
+		showMessageBox("Error", getStrbundleString("FolderNotFindMessage"));
+	}
 }
 
 function save(){

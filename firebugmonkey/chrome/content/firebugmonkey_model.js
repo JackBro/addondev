@@ -8,8 +8,6 @@ FBL.ns(function () { with (FBL) {
 	
 	const fbmStatusIcon = $('firebugmonkeyStatusBarIcon');
 	
-	//const SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
-	
 	var RETURN_CONTINUE = Ci.jsdIExecutionHook.RETURN_CONTINUE;
 
 	Firebug.firebugmonkey_Model = extend(Firebug.Module, { 
@@ -21,7 +19,6 @@ FBL.ns(function () { with (FBL) {
 			
 			//Firebug.showAllSourceFiles = true;
 			//extensions.firebug.service.showAllSourceFiles;false
-			
 			
 			this.SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
 			Firebug.firebugmonkey.init();
@@ -68,8 +65,6 @@ FBL.ns(function () { with (FBL) {
 				}else
 					return null;
 			}
-			
-			//var RETURN_CONTINUE = Ci.jsdIExecutionHook.RETURN_CONTINUE;
 			
 			var fbm_supportsGlobal = 
 				'var cc = ((frameWin && TabWatcher) ? TabWatcher.getContextByWindow(frameWin) : null);'		
