@@ -19,6 +19,31 @@ FBL.ns(function () { with (FBL) {
 			
 			//Firebug.showAllSourceFiles = true;
 			//extensions.firebug.service.showAllSourceFiles;false
+			try {
+				Components.utils.import("resource://fbm_modules/fileutils.js", this);
+				//var text = this.FileUtils.getContentFromURI("http://cyprus.ex.nii.ac.jp/~kameda/blog/KMKM/KMKM0711030805.htm");
+				//Application.console.log("getContentFromURI = " + text);
+				var pp = this.FileUtils.getAbsoluteFile("testpath.js", "D:\\data\\src");
+				Application.console.log("getAbsolutePath = " + pp.path);
+				
+//				var urlpp = this.FileUtils.getAbsoluteFile("../urltestpath.js", "file///D:/data/src");
+//				Application.console.log("getAbsolutePath urltestpath = " + urlpp.path);
+//				
+////		 		var basefile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+////		 		basefile.initWithPath("D:\\data\\src\\cal.js");
+////				var cnt = this.FileUtils.getContent(basefile);
+////				Application.console.log("getContent = " + cnt);
+////				
+////				basefile.initWithPath("D:\\data\\src\\outcal.js");
+////				this.FileUtils.write(basefile, "aa");
+				IOService = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
+				let sp = IOService.newFileURI(this.FileUtils.getFile("D:\\data\\src"));
+				Application.console.log("newFileURI = " + sp.spec);
+			}catch(e){
+				Application.console.log("getAbsolutePath err= " + e);
+			}
+			
+
 			
 			this.SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
 			Firebug.firebugmonkey.init();

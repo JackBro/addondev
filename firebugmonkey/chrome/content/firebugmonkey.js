@@ -93,7 +93,7 @@ Firebug.firebugmonkey = {
 	 		var filename = result[key]["filename"];
 	 		var enable   = result[key]["enable"];
 	 		
-	 		if(filename && enable && enable == true){	 	
+	 		if(filename && enable && enable == "true"){	
 	 			try{
 	 				var fbmscript = new Firebug.firebugmonkey.Script(e.target.URL, scriptdir, scriptmpdir, filename, enable);
 	 				fbmscript.init();

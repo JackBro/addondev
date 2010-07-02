@@ -13,12 +13,12 @@
 <!ENTITY firebugmonkey.preference.script.delete "削除">
 <!ENTITY firebugmonkey.preference.script.up "上へ">
 <!ENTITY firebugmonkey.preference.script.down "下へ">
-<!ENTITY firebugmonkey.preference.script.openfolder "フォルダを開く">
+<!ENTITY firebugmonkey.preference.script.openfolder "スクリプトフォルダを開く">
 <!ENTITY firebugmonkey.preference.script.ebablexpcom "xpcomを使用可能にする">
 <!ENTITY firebugmonkey.preference.script.ebablexpcomatt "注意!! スクリプトでxpcomが使用可能になります">
 <!ENTITY firebugmonkey.preference.editor.group "編集で使用するエディタ">
-<!ENTITY firebugmonkey.preference.editor.path "エディタのパス">
+<!ENTITY firebugmonkey.preference.editor.path "パス">
 <!ENTITY firebugmonkey.preference.editor.args "引数">
 <!ENTITY firebugmonkey.preference.openfolder.group "フォルダを開くのに使用するアプリケーション">
-<!ENTITY firebugmonkey.preference.openfolder.path "アプリケーションのパス">
+<!ENTITY firebugmonkey.preference.openfolder.path "パス">
 <!ENTITY firebugmonkey.preference.openfolder.args "引数">
