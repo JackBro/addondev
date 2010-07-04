@@ -6,41 +6,24 @@ const BUGMONKEY_SCRIPTLIST_FILE = "fbm_scripts.json";
 
 var scriptTreeView = null;
 var editorFile = null;
-var scriptDirPath = null;
 
-var fileutil = {};
+var scriptDir = null;
+var scriptFile = null;
+
+var util = {};
 
 var strbundle = null;
 
 function init() {	
-	Components.utils.import("resource://fbm_modules/fileutil.js", fileutil);
 	
-	var profiledir = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties).get("ProfD", Ci.nsILocalFile);
-	scriptDirPath = fileutil.makeDir(profiledir.path, BUGMONKEY_SCRIPT_DIR).path;
+	Components.utils.import("resource://fbm_modules/fileutils.js", util);
 	
-	var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-	file.initWithPath(scriptDirPath);
-	file.append(BUGMONKEY_SCRIPTLIST_FILE);
-	var scriptsxmlfile = file.path;
+	scriptDir = util.FileUtils.makeDir(util.FileUtils.getProfileDir(), BUGMONKEY_SCRIPT_DIR);
+	scriptFile = util.FileUtils.getFile(scriptDir, BUGMONKEY_SCRIPTLIST_FILE);
 	
 	var data = [];
-	
-	if(file.exists()){
-		//var xmlutil ={};
-		//Components.utils.import("resource://fbm_modules/xmlutil.js", xmlutil);	
-		//let xmldata = fileutil.read(scriptsxmlfile);
-		//let result = xmlutil.XML2Obj.parseFromString(xmldata);
-//	 	for(let i=0;i<result.length; i++)
-//	 	{	 		
-//	 		var filename = result[i]["src"];
-//	 		var enable   = result[i]["enable"];
-//	 		if(filename)
-//	 		{	 	
-//	 			data.push({filename:filename, enable:enable});
-//	 		}
-//	 	}
-		
-		let jsonstr = fileutil.read(scriptsxmlfile);
+	if(scriptFile.exists()){
+		let jsonstr = util.FileUtils.getContent(scriptFile);
 		let result = JSON.parse(jsonstr);
 		for(let key in result){
 			data.push(result[key]);
@@ -66,6 +49,10 @@ function getStrbundleString(str){
 	return strbundle.getString(str);
 }
 
+function getScriptTemplete(){
+	return "";
+}
+
 //////////////////////////////////////////////////////////////
 // Script
 function moveItem(aUpDown) {
@@ -77,26 +64,42 @@ function moveItem(aUpDown) {
 }
 
 function newItem(){
-    var ret = window.prompt("Enter file name.", "", "");
-    if (!ret)
-        return;
-        
-    var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-    file.initWithPath(scriptDirPath);
-    file.append(ret);
-    //if(!file.exists())
-    //{
-    	scriptTreeView.appendItem({filename:ret, enable:true});
-		fileutil.write("", file.path);   	
-    //}
+	
+    let findfile=false;
+    let ret;
+    while(true){
+    	findfile = false;
+	    ret = window.prompt("Enter file name.", "", "");
+	    if (!ret)
+	        return;
+	       
+		for (var index = 0; index < scriptTreeView.rowCount; index++) {
+			var script = scriptTreeView._data[index];
+			if(script.filename == ret){
+				findfile = true;
+				break;
+			}
+		}
+		if(findfile)
+			alert(getStrbundleString("EnterOtherFilename"));
+		else
+			break;
+    }
+    
+    let dirname = util.FileUtils.getFileNameExceptExt(ret);
+    let dir = util.FileUtils.makeDir(scriptDir, dirname);
+    let script = util.FileUtils.getFile(dir, ret);
+    
+    util.FileUtils.write(script, getScriptTemplete());
+    
+    scriptTreeView.appendItem({dir:dirname, filename:ret, enable:true});
+    save();
 }
 
 function editItem(){	 
-	var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-	file.initWithPath(scriptDirPath);
+	var file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.dir);
 	file.append(scriptTreeView.getSelectionData.filename);
 	
-	//var args = Application.prefs.getValue("extensions.firebugmonkey.option.editor.args", ""); 
 	var args = document.getElementById("editor-args").value;
 	args = args.replace('%path%', file.path);
 	var argary = args.split(' ');
@@ -109,21 +112,16 @@ function editItem(){
 
 function deleteItem(){
     var rows = scriptTreeView.selectedIndexes;
-    
-    Application.console.log("rows = " + rows);
-    
     for (var i = rows.length - 1; i >= 0; i--) {
     	scriptTreeView.removeItemAt(rows[i]);
     }	
 }
 
 function openfolder(){
-	//var args = Application.prefs.getValue("extensions.firebugmonkey.option.openfolder.args", ""); //document.getElementById("openfolder-args").value;
 	var args = document.getElementById("openfolder-args").value;
-	args = args.replace('%path%', scriptDirPath);
+	args = args.replace('%path%', scriptDir.path);
 	var argary = args.split(' ');
-	
-	//var exepath = Application.prefs.getValue("extensions.firebugmonkey.option.openfolder.path", "");
+
 	var exepath = document.getElementById("openfolder-path").value;
 	
 	if(!launchProgram(exepath, argary)){
@@ -131,30 +129,18 @@ function openfolder(){
 	}
 }
 
-function save(){
-//	var data = "";	
-//	for (var index = 0; index < scriptTreeView.rowCount; index++) {
-//		var script = scriptTreeView._data[index];
-//		data += '<script src="' + script.filename + '" ' + 'enable="' + script.enable + '"/>\n'
-//	}
-//	
-//	data = "<xml>\n" + data + "</xml>";
-	
+function save(){	
 	var data = [];	
 	for (var index = 0; index < scriptTreeView.rowCount; index++) {
 		var script = scriptTreeView._data[index];
 		data.push(script);
 	}	
-	
 	var jsonstr = JSON.stringify(data);
 	
 	try{
-		var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-		file.initWithPath(scriptDirPath);
-		file.append(BUGMONKEY_SCRIPTLIST_FILE);	
-		fileutil.write(jsonstr, file.path);
+		util.FileUtils.write(scriptFile, jsonstr);
 	}catch(e){
-		Components.utils.reportError("save error. " + e);
+		Components.utils.reportError("firebugmonkey : save error. " + e);
 	}
 }
 
@@ -165,8 +151,6 @@ function selectFile(node) {
     filePicker.init(window, "Choose a file.", filePicker.modeOpen);
     if (filePicker.show() == filePicker.returnOK) {
         editorFile = filePicker.file;
-        //var editorPathField = document.getElementById("editor-path");
-        //editorPathField.value = editorFile.path;
         node.value = editorFile.path;
     }
 }

@@ -14,7 +14,7 @@
 		    <em:name>Firebugmonkey</em:name>
 		    <em:description>FirebugによるGreasemonkeyスクリプトのデバッグを可能にします。(Firebug1.5.4推奨)</em:description>
 		    <em:creator>konkon</em:creator>
-		    <em:homepageURL>http://orange.zero.jp/zbn39616.pine/addon/firebugmonkey/index.html</em:homepageURL>
+		    <em:homepageURL>http://code.google.com/p/addondev/</em:homepageURL>
 		  </Description>
 		</em:localized>
 		
@@ -31,6 +31,6 @@
     	<em:description>can debug greasemonkey script with Firebug.(recommended Firebug1.5.4)</em:description>
     	<em:creator>konkon</em:creator>
     	<em:iconURL>chrome://firebugmonkey/skin/firebugmonkey32.png</em:iconURL>
-    	<em:homepageURL>http://orange.zero.jp/zbn39616.pine/addon/firebugmonkey/index.html</em:homepageURL>
+    	<em:homepageURL>http://code.google.com/p/addondev/</em:homepageURL>
 	</Description>
 </RDF>

@@ -14,12 +14,16 @@ const fbmStatusIcon = $('firebugmonkeyStatusBarIcon');
 Firebug.firebugmonkey = {
 	testURL : null,
 	sourcehrefs : null,
-	srctmpmap : null,
+	//srctmpmap : null,
 	enable : false,
 	enablescripts : null,
 	  	
 	init : function() {	
 
+		//this.fileutil = {};
+		//Components.utils.import("resource://fbm_modules/fileutil.js", this.fileutil);	
+		Components.utils.import("resource://fbm_modules/fileutils.js", this);
+	
   		this.enable = Application.prefs.getValue("extensions.firebugmonkey.enable", false);
   		fbmStatusIcon.setAttribute("enable", this.enable == true?"on":"off");
   		
@@ -32,9 +36,6 @@ Firebug.firebugmonkey = {
   		this.GM_listen(window, "unload", this.GM_hitch(this, "chromeUnload"));
 		this.sourcefiles = [];
 		
-		this.fileutil = {};
-		Components.utils.import("resource://fbm_modules/fileutil.js", this.fileutil);	
-		
 		this.enablescripts =[];
 		
 		this.stringBundle = null;
@@ -46,7 +47,6 @@ Firebug.firebugmonkey = {
 		this.GM_listen(this.appContent, "DOMContentLoaded", this.GM_hitch(this, "contentLoad"));
 		//    Components.lookupMethod(appContent, "addEventListener")(
 	   // "DOMContentLoaded", this.contentLoad, null);
-		
 	},
 
 	chromeUnload : function(e) {
@@ -60,18 +60,22 @@ Firebug.firebugmonkey = {
 	contentLoad : function(e) {
 		if(!this.enable) return;
 		
-		var profiledir = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties).get("ProfD", Ci.nsILocalFile);
-		var scriptdir = this.fileutil.makeDir(profiledir.path, FBM_SCRIPT_DIR);
-		var scriptmpdir = this.fileutil.makeDir(scriptdir.path, "tmp");
-		
-		var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-		file.initWithPath(scriptdir.path);
-		file.append(FBM_SCRIPTLIST_FILE);
-		var scriptsjsonfile = file.path;
+//		var profiledir = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties).get("ProfD", Ci.nsILocalFile);
+//		var scriptdir = this.fileutil.makeDir(profiledir.path, FBM_SCRIPT_DIR);
+//		var scriptmpdir = this.fileutil.makeDir(scriptdir.path, "tmp");
+//		
+//		var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+//		file.initWithPath(scriptdir.path);
+//		file.append(FBM_SCRIPTLIST_FILE);
+//		var scriptsjsonfile = file.path;
 
-		if(!file.exists()) 
+		var profiledir = this.FileUtils.getProfileDir(); 
+		var scriptdir = this.FileUtils.makeDir(profiledir, FBM_SCRIPT_DIR);
+		var jsonfile = this.FileUtils.getFile(scriptdir, FBM_SCRIPTLIST_FILE);
+		
+		if(!jsonfile.exists()) 
 		{
-			Application.console.log("firebugmonkey : not find " + file.path);
+			Application.console.log("firebugmonkey : not find " + jsonfile.path);
 			return;
 		}
 		
@@ -80,7 +84,8 @@ Firebug.firebugmonkey = {
 		//var data = this.fileutil.read(scriptsxmlfile);
 		//var result = XMLUtil.XML2Obj.parseFromString(data);
 
-		let jsonstr = this.fileutil.read(scriptsjsonfile);
+		//let jsonstr = this.fileutil.read(scriptsjsonfile);
+		let jsonstr = this.FileUtils.getContent(jsonfile);
 		let result = JSON.parse(jsonstr);
 		
 	 	this.GM_Scripthrefs.clear();
@@ -89,18 +94,22 @@ Firebug.firebugmonkey = {
 	 	this.sourcehrefs = [];
 
 	 	for(let key in result){	 		
-	 		
+	 		var dirname = result[key]["dir"];
 	 		var filename = result[key]["filename"];
 	 		var enable   = result[key]["enable"];
 	 		
-	 		if(filename && enable && enable == "true"){	
-	 			try{
-	 				var fbmscript = new Firebug.firebugmonkey.Script(e.target.URL, scriptdir, scriptmpdir, filename, enable);
+	 		if(dirname && filename && enable && enable == "true"){	
+	 			//try{
+	 				var dir = this.FileUtils.getFile(scriptdir, dirname);
+	 				//Application.console.log("contentLoad dir = " + dirname);
+	 				//Application.console.log("contentLoad dirfile = " + dir.path);
+
+	 				var fbmscript = new Firebug.firebugmonkey.Script(e.target.URL, dir, filename, enable);
 	 				fbmscript.init();
 	 				scripts.push(fbmscript);
-	 			}catch(e){
-	 				Components.utils.reportError('firebugmonkey error : ' + e);
-	 			}	 			
+	 			//}catch(e){
+	 			//	Components.utils.reportError('firebugmonkey error : ' + e);
+	 			//}	 			
 	 		}
 	 	}
 
@@ -114,7 +123,9 @@ Firebug.firebugmonkey = {
 	 	if(this.enablescripts.length >0){
 			//Firebug.filterSystemURLs = false;
 			//Firebug.showAllSourceFiles = true;
-			Firebug.firebugmonkey_Model.setPrefForDebug();
+			if(!Firebug.firebugmonkey_Model.setPrefForDebug()){
+				return;
+			}
 			
 	 		this.testURL = e.target.URL;
 			var fbmsandbox;	
@@ -131,14 +142,21 @@ Firebug.firebugmonkey = {
 		    
 			for ( let i = 0; i < this.enablescripts.length; i++) {
 		    	let script = this.enablescripts[i];
-		    	try{
-		    		this.fileutil.write(script.getConcatText, this.fileutil.getFileFromURLSpec(script.tmpFileUri.spec).path);
-		    	}catch(e){
-		    		Components.utils.reportError('firebugmonkey error : ' + e);
-		    	}
+	    		let src = script.concatSrc;
+	    		if(src){
+	    			try{
+	    				this.FileUtils.write(script.tmpFile, src);
+	    			}catch(e){
+	    				Components.utils.reportError('firebugmonkey error copy : ' + e);
+	    				continue;
+	    			}
+	    		}else{
+	    			Components.utils.reportError('firebugmonkey : error not execute ' + script.uri.spec);
+	    			continue;
+	    		}
 		    	
-		 		this.sourcehrefs.push(script.tmpFileUri.spec);
-		 		this.GM_Scripthrefs.setHref(script.tmpFileUri.spec);
+		 		this.sourcehrefs.push(script.tmpUri.spec);
+		 		this.GM_Scripthrefs.setHref(script.tmpUri.spec);
 		    	
 		    	fbmsandbox = {};	
 			    fbmsandbox.window = safeWindow;

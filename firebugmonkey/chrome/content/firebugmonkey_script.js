@@ -4,54 +4,25 @@ FBL.ns(function () { with (FBL) {
 	const Ci = Components.interfaces;	
 	
 	const ioservice = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);	
+	const consolesvc = Cc["@mozilla.org/consoleservice;1"].getService(Ci.nsIConsoleService);
 /**
  * @param string url target page 
- * @param nsILocalFile scriptdir 
+ * @param nsIFile scriptdir 
  * @param string filename 
- * 
+ * @param bool enbale 
  */
-//Firebug.firebugmonkey.Script = function(url, scriptdir, scriptmpdir, filename, enbale){
 Firebug.firebugmonkey.Script = function(url, scriptdir, filename, enbale){
-	
-	
-	this._fileutil = {};
-	Components.utils.import("resource://fbm_modules/fileutil.js", this._fileutil);
 	
 	Components.utils.import("resource://fbm_modules/fileutils.js", this);	
 	
 	this._url = url;
-	//this._ioservice = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
-		
+	this._scriptdir = scriptdir;
 	this._filename = filename;
 	this._enable = enbale;
-	
-	
-	this._localfile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-	this._localfile.initWithPath(scriptdir.path);
-	this._localfile.append(this._filename);
-	
-	this._basedirUri = ioservice.newURI(ioservice.newFileURI(this._localfile).spec, null,null);
-	
-
-	this._fileuri = ioservice.newURI(this._basedirUri.resolve(this._filename), null, null);
-
-	this._localfile.initWithPath(scriptmpdir.path);
-	this._localfile.append(this._filename);
-	this._tmpfileuri = ioservice.newURI(ioservice.newFileURI(this._localfile).spec, null, null);
-
-	
-	//
-	this._basePath = scriptdir.path;
-	
-	//this._scriptFile = this.FileUtils.getFile(this._basePath, this._filename);
-	
-	//this.FileUtils.makeDir(this._basePath, "");
-	//this._tmpScriptFile = this.FileUtils.getFile(this._basePath, this._filename);
-	
-	
+		
 	this._includes = [];
 	this._excludes = [];
-	this._requireUris =[];
+	this._requires =[];
 	this._resources = [];
 	
 	this._offsets = [];
@@ -67,13 +38,10 @@ Firebug.firebugmonkey.Script.prototype =
 	
 	get url(){ return this._url; },
 	
-	get tmpFileUri(){	
-		return this._tmpfileuri;	
-	},
+	get uri(){ return this._scripturi;	 },
 	
-	get tmpScriptFile(){	
-		return this._tmpfileuri;	
-	},
+	get tmpUri(){ return this._scripttmpuri; },
+	get tmpFile(){ return this._scripttmpfile; },
 	
 	get resources() { return this._resources.concat(); },
 	
@@ -85,67 +53,54 @@ Firebug.firebugmonkey.Script.prototype =
     	return this._includes.some(test) && !this._excludes.some(test);
 	},
 	
-	get getText(){
-		return this.source;
-	},
-	
-	get getConcatText(){	
-		var srcoffset = 1;
- 		var requireSources=[];
- 		for(var uri in this._requireUris){
- 			//Application.console.log("_requireUris uri = " + this._requireUris[uri].spec);
- 			this._offsets.push({filespec:this._requireUris[uri].spec, offset:srcoffset});	
- 			var src = this.loadText(this._requireUris[uri]);
- 			srcoffset += src.split("\n").length;
- 			requireSources.push(src);
+	get concatSrc(){
+		var scriptSrc = null;
+		try{
+		var offset = 1;
+ 		var requiresrc=[];
+ 		for(var key in this._requires){
+ 			let url = this._requires[key];
+ 			this._offsets.push({url:url, offset:offset});	
+ 			let src = this.FileUtils.getContentFromURI(url);
+ 			offset += src.split("\n").length;
+ 			requiresrc.push(src);
  		}
  		
- 		this._offsets.push({filespec:this._basedirUri.spec, offset:srcoffset});
- 		var reqsrc = requireSources.length==0 ? "" : requireSources.join("\n") + "\n";
-       	var scriptSrc = 
+ 		this._offsets.push({url:this.uri.spec, offset:offset});
+ 		var requires = requiresrc.length==0 ? "" : requiresrc.join("\n");
+       	scriptSrc = 
        		"var sandbox = Application.storage.get('" + this.ID + "', null);"
        		+"with(sandbox){(function(){\n"
-            + reqsrc
+            + requires + "\n"
             + this.source
             +"\n})()}";	
-                         
-        return scriptSrc;
+		}catch(e){
+			scriptSrc = null;
+	    	Components.utils.reportError("firebugmonkey : error concatSrc " + e);
+	    	this._enable = false;
+		}
+        return scriptSrc;		
 	},
 	
 	init : function(){
-		
-		var name = this.FileUtils.getFileNameExceptExt(this._filename);
-		
-		if(this.FileUtils.getFile(this._basePath, name).exists()){	
-			let index = 1;
-			while(index < 10000){
-				if(!this.FileUtils.getFile(dir, name + "-" +index).exists()){
-					this._scriptFile = this.FileUtils.makeDir(dir, name + "-" +index);
-					this._scriptFile.append(this._filename);
-					break;
-				}
-				index++;
-			}			
-		}else{
-			this._scriptFile = this.FileUtils.makeDir(this._basePath, name);
-			this._scriptFile.append(this._filename);
-		}
-		
-		//this._scriptFile = this.FileUtils.getFile(this._basePath, this._filename);
-		let tmp = dirthis._scriptFile.parent;
-		this._tmpScriptFile = this.FileUtils.makeDir(tmp, "tmp");
-
-		
-		this.source = this.loadText(this._fileuri);
-		this.parse();		
+		this._scriptfile = this.FileUtils.getFile(this._scriptdir, this._filename);
+		this._scripturi = ioservice.newFileURI(this.FileUtils.getFile(this._scriptfile));
+		this._scripttmpfile = this.FileUtils.getFile(
+				this.FileUtils.getFile(this._scriptdir, "tmp"),
+				this._filename);
+		this._scripttmpuri = ioservice.newFileURI(this.FileUtils.getFile(this._scripttmpfile));
+		this.source = this.FileUtils.getContent(this._scriptfile);
+		this.parse();	
 	},
 	
-	parse : function(){
-		var basedirUri = this._basedirUri;	
+	parse : function(){	
 		var lines = this.source.match(/.+/g);
 	    var lnIdx = 0;
 	    var result = {};
 	    var foundMeta = false;
+	    
+	    var requireUrls = [];
+	    var resourceUrls = [];
 	
 	    while ((result = lines[lnIdx++])) {
 	      if (result.indexOf("// ==UserScript==") == 0) {
@@ -180,93 +135,158 @@ Firebug.firebugmonkey.Script.prototype =
 	          	case "exclude":
 		          	this._excludes.push(value);
 		          	break;
-	            case "require":
-	            	try{
-	            		var requirepath = basedirUri.resolve(value);
-	            		//Application.console.log("requirepath = " + requirepath);
-	            		this._requireUris.push(ioservice.newURI(requirepath, null, null));
-	            		
-	            		if(/^[a-z]+:[/][/]/i.test(value)){
-	            			
-	            		}else{
-	            			let reqfile = this.FileUtils.getAbsoluteFile(value, this._scriptFile.parent);
-	            			let requrl = ioservice.newFileURI(this.FileUtils.getFile(reqfile.path)).spec;
-	            			this._requireUris.push(requrl);
-	            		}
-	            		
-	            	}catch(e){
-	            		Components.utils.reportError("incorrect require " + e);
-	            	}
+	            case "require":          		
+            		if(/^[a-z]+:[/][/]/i.test(value)){
+            			requireUrls.push({url:value, line:lnIdx});
+            		}else{ 
+            			//local
+            			let reqfile = this.FileUtils.getAbsoluteFile(value, this._scriptfile.parent);
+            			if(reqfile.exists()){
+            				let requrl = ioservice.newFileURI(this.FileUtils.getFile(reqfile.path)).spec;
+            				this._requires.push(requrl);
+            			}else{
+            				this._scriptError("error not find require " + reqfile.path, 
+            						this._scripturi.spec, lnIdx);
+            			}
+            		}
 	            	break;
 	            case "resource":
-	            	try{
-		            	var res = value.match(/(\S+)\s+(.*)/);
-		            	var resName = res[1];
-		            	var scriptResource = new Firebug.firebugmonkey.ScriptResource();
-		            	scriptResource._name = resName;
-		            	var resfile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-		            	var resPath = this._fileutil.getFileFromURLSpec(basedirUri.resolve(res[2])).path;
-		            	
-		            	resfile.initWithPath(resPath);
-		    	        if (!resfile.exists()){
-		    	        	
-		    	        	var consoleSvc = Cc["@mozilla.org/consoleservice;1"].getService(Ci.nsIConsoleService);
-		    	        	var scriptError = Cc["@mozilla.org/scripterror;1"].createInstance(Ci.nsIScriptError);
-		    	        	//scriptError.init(aMessage, aSourceName, aSourceLine, aLineNumber, 
-		    	        	//                 aColumnNumber, aFlags, aCategory);
-		    	        	var resourceerrmsg = "not find resource " + resPath;
-		    	        	scriptError.init(resourceerrmsg, this._fileuri.spec, lnIdx, lnIdx, 0, scriptError.errorFlag, null);
-		    	        	consoleSvc.logMessage(scriptError);
-		    	        	this._enable = false;
-		    	        }
-		            	scriptResource._file = resfile;
-		            	this._resources.push(scriptResource);
-		            	
-		            	//
-		            	var res = value.match(/(\S+)\s+(.*)/);
-		            	var respath = res[1];
-		            	if(/^[a-z]+:[/][/]/i.test(respath)){
-		            		
-		            	}else{
-		            	}
-	            	}catch(e){
-	            		Components.utils.reportError("incorrect resource " + e);
+	            	var res = value.match(/(\S+)\s+(.*)/);
+	            	var resName = res[1];
+	            	var resPath = res[2];
+	            	if(/^[a-z]+:[/][/]/i.test(resPath)){
+	            		resourceUrls.push({name:resName, url:resPath, line:lnIdx});
+	            	}else{
+	            		//local
+            			let resfile = this.FileUtils.getAbsoluteFile(resPath, this._scriptfile.parent);
+            			if(resfile.exists()){
+            				var scriptResource = new Firebug.firebugmonkey.ScriptResource();
+            				scriptResource._name = resName;
+            				scriptResource._file = resfile;
+            				this._resources.push(scriptResource);	
+            			}else{
+            				this._scriptError("error not find resource " + resfile.path, 
+            						this._scripturi.spec, lnIdx);
+            			}
 	            	}
 	            	break;
 	          	}
 	        }
 	      }
+	      
+	      this.loadRequires(requireUrls);
+	      this.loadResources(resourceUrls);
+	      
 	    } else {
-	    	
+	    	Components.utils.reportError("firebugmonkey : not meta data " + this._scriptfile.path);
+	    	this._enable = false;
 	    }   
 	},
 	
-	loadText : function(aURI){
-	  try {	
-		  var channel = ioservice.newChannelFromURI(aURI);
-		  var stream  = channel.open();
-		
-		  var scriptableStream = Cc['@mozilla.org/scriptableinputstream;1'].createInstance(Ci.nsIScriptableInputStream);
-		  scriptableStream.init(stream);
-				    
-		  var fileContents = scriptableStream.read(scriptableStream.available());
-		
-		  scriptableStream.close();
-		  stream.close();
-		
-//		  var unicodeConverter = Cc['@mozilla.org/intl/scriptableunicodeconverter'].createInstance(Ci.nsIScriptableUnicodeConverter);
-//		  unicodeConverter.charset = 'UTF-8';  
-//		  return unicodeConverter.ConvertToUnicode(fileContents);
-		  
-		  return fileContents;
-	  }catch(e) {
-	  	Components.utils.reportError("error loadText " + e);
-	  }
+	loadRequires:function(requireUrls){
+		for(let key in requireUrls){
+			let url = requireUrls[key].url;
+			let name = this._getLastSegment(url);
+			
+			let localfile = this.FileUtils.getFile(this._scriptfile.parent, name)
+			if(!localfile.exists()){
+				/*
+				let text = this.FileUtils.getContentFromURI(url);
+				if(text){		
+					if(this.FileUtils.write(localfile, text)){
+						var localurl = ioservice.newFileURI(localfile).spec;
+						this._requires.push(localurl);
+					}else{
+						this._reportErrorr("error file write " 
+								+ localfile.path + " " + this.FileUtils.ERROR);
+					}
+				}else{
+					this._scriptError("error file read ", localfile.spac, requireUrls[key].line);
+				}	
+				*/
+				let res = this.FileUtils.saveFileFromURI(url, localfile);
+				if(!res){
+					Components.utils.reportError("firebugmonkey : error file get " 
+							+ localfile.path + " " + this.FileUtils.ERROR);
+					this._enable = false;
+				}
+			}
+			var localurl = ioservice.newFileURI(localfile).spec;
+			this._requires.push(localurl);
+		}
+	},
+	
+	loadResources:function(resourceUrls){
+		for(let key in resourceUrls){
+			let url = resourceUrls[key].url;
+			let name = this._getLastSegment(url);
+			//Application.console.log("get file " + url);
+			/*
+			let byte = this.FileUtils.getBinaryContentFromURI(url);
+			Application.console.log("loadResources byte " + byte);
+			if(byte){
+				let localfile = this.FileUtils.getFile(this._scriptfile.parent, name);
+				if(this.FileUtils.writeBinary(localfile, byte)){
+					var localurl = ioservice.newFileURI(localfile).spec;
+    				var scriptResource = new Firebug.firebugmonkey.ScriptResource();
+    				scriptResource._name = resourceUrls[key].name;
+    				scriptResource._file = localurl;
+    				this._resources.push(scriptResource);
+				}else{
+					this._reportError("error file write " 
+							+ localfile.path + " " + this.FileUtils.ERROR);
+				}
+			}else{
+				this._scriptError("error file read ", this._scripturi.spac, resourceUrls[key].line);
+			}
+			*/
+			let localfile = this.FileUtils.getFile(this._scriptfile.parent, name);
+			if(!localfile.exists()){
+				let res = this.FileUtils.saveFileFromURI(url, localfile);
+				if(!res){
+					Components.utils.reportError("firebugmonkey : error file get " 
+							+ localfile.path + " " + this.FileUtils.ERROR);
+					this._enable = false;
+				}
+			}
+			var localurl = ioservice.newFileURI(localfile).spec;
+			var scriptResource = new Firebug.firebugmonkey.ScriptResource();
+			scriptResource._name = resourceUrls[key].name;
+			scriptResource._file = localfile;
+			this._resources.push(scriptResource);
+		}		
+	},
+	
+	/**
+	 * 
+	 * @param string url
+	 * 
+	 * @return string
+	 */
+	_getLastSegment:function(url){
+		let name = null;
+		let n;
+		if ((n = url.lastIndexOf("/")) != -1) {
+		    name = url.substring(n+1);
+		}
+		return name;	
+	},
+	
+//	_reportError:function(msg){
+//		this._enable = false;
+//		Components.utils.reportError("firebugmonkey : " + msg);
+//		
+//	},
+	
+	_scriptError:function(msg, fileurl, line){
+		this._enable = false;
+		var scriptError = Cc["@mozilla.org/scripterror;1"].createInstance(Ci.nsIScriptError);
+		scriptError.init("firebugmonkey : " + msg, fileurl, line, line, 0, scriptError.errorFlag, null);
+		consolesvc.logMessage(scriptError);
 	}
 }
 
 Firebug.firebugmonkey.ScriptResource = function() {
-	//this.fileutil = {};
 	Components.utils.import("resource://fbm_modules/fileutils.js", this);	
 
 	this._name = null;	
@@ -279,8 +299,7 @@ Firebug.firebugmonkey.ScriptResource.prototype = {
 		get name() { return this._name; },	
 		
 		get textContent() { 
-			//return this.fileutil.getContents(this._file); 
-			return this.FileUtils.getContentFromURI(this._file); 
+			return this.FileUtils.getContent(this._file); 
 		},
 
 		get dataContent() {
@@ -290,8 +309,7 @@ Firebug.firebugmonkey.ScriptResource.prototype = {
 		    var appSvc = Cc["@mozilla.org/appshell/appShellService;1"].getService(Ci.nsIAppShellService);
 
 		    var window = appSvc.hiddenDOMWindow;
-		    //var binaryContents = this.fileutil.getBinaryContents(this._file);
-		    var binaryContents = this.getBinaryContents(this._file);
+		    var binaryContents = this.FileUtils.getBinaryContent(this._file);
 
 		    //if (this._charset && this._charset.length > 0) {
 		    //  mimetype += ";charset=" + this._charset;

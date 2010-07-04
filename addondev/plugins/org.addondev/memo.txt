@@ -1,4 +1,11 @@
-﻿http://cyprus.ex.nii.ac.jp/~kameda/blog/KMKM/KMKM0711030805.htm
+﻿http://objectmix.com/dotnet/372134-playing-ishellexecutehook.html
+http://www.codeproject.com/KB/cs/dateparser.aspx
+http://japan.internet.com/developer/20051011/27.html
+http://eternalwindows.jp/shell/shellex/shellex12.html
+http://delphindo.wordpress.com/2009/01/23/ishellexecutehook-untuk-memonitor-windows-explorer/
+http://www.pcmmm.com/dotnet/net/35828.html
+
+http://cyprus.ex.nii.ac.jp/~kameda/blog/KMKM/KMKM0711030805.htm
 http://www.oxymoronical.com/experiments/apidocs/interface/nsIFile
 
 http://qttabbar.sourceforge.net/

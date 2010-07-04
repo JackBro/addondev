@@ -5,6 +5,7 @@ FBL.ns(function () { with (FBL) {
 	
 	const ioService = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
 	const chromeReg = Cc["@mozilla.org/chrome/chrome-registry;1"].createInstance(Ci.nsIToolkitChromeRegistry);
+	const stringBundleService = Cc["@mozilla.org/intl/stringbundle;1"].createInstance(Ci.nsIStringBundleService);
 	
 	const fbmStatusIcon = $('firebugmonkeyStatusBarIcon');
 	
@@ -13,42 +14,12 @@ FBL.ns(function () { with (FBL) {
 	Firebug.firebugmonkey_Model = extend(Firebug.Module, { 
 		sourcemap:{},
 		
-		initialize: function() {					
-			//Firebug.filterSystemURLs = false;
-			//extensions.firebug.service.filterSystemURLs
-			
-			//Firebug.showAllSourceFiles = true;
-			//extensions.firebug.service.showAllSourceFiles;false
-			try {
-				Components.utils.import("resource://fbm_modules/fileutils.js", this);
-				//var text = this.FileUtils.getContentFromURI("http://cyprus.ex.nii.ac.jp/~kameda/blog/KMKM/KMKM0711030805.htm");
-				//Application.console.log("getContentFromURI = " + text);
-				var pp = this.FileUtils.getAbsoluteFile("testpath.js", "D:\\data\\src");
-				Application.console.log("getAbsolutePath = " + pp.path);
-				
-//				var urlpp = this.FileUtils.getAbsoluteFile("../urltestpath.js", "file///D:/data/src");
-//				Application.console.log("getAbsolutePath urltestpath = " + urlpp.path);
-//				
-////		 		var basefile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-////		 		basefile.initWithPath("D:\\data\\src\\cal.js");
-////				var cnt = this.FileUtils.getContent(basefile);
-////				Application.console.log("getContent = " + cnt);
-////				
-////				basefile.initWithPath("D:\\data\\src\\outcal.js");
-////				this.FileUtils.write(basefile, "aa");
-				IOService = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
-				let sp = IOService.newFileURI(this.FileUtils.getFile("D:\\data\\src"));
-				Application.console.log("newFileURI = " + sp.spec);
-			}catch(e){
-				Application.console.log("getAbsolutePath err= " + e);
-			}
-			
-
-			
+		initialize: function() {	
+			this.stringBundle = null;
 			this.SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
 			Firebug.firebugmonkey.init();
 			
-			this.setPrefForDebug();
+			//this.setPrefForDebug();
 			this.setFunctionForDebug();
 		},
 	
@@ -61,6 +32,11 @@ FBL.ns(function () { with (FBL) {
 		},
 	
 		setPrefForDebug : function(){	
+			
+			var result = true;
+			//Firebug.filterSystemURLs = false;
+			//Firebug.showAllSourceFiles = true;
+			
 //			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
 //			if(filterSystemURLs)
 //				Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
@@ -69,8 +45,26 @@ FBL.ns(function () { with (FBL) {
 //			if(!showAllSourceFiles)
 //				Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);
 			
-			Firebug.filterSystemURLs = false;
-			Firebug.showAllSourceFiles = true;
+			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);	
+			var showAllSourceFiles = Application.prefs.getValue("extensions.firebug.service.showAllSourceFiles", false);
+			
+			if(filterSystemURLs || !showAllSourceFiles){
+				var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
+				if(this.stringBundle == null){
+				 	this.stringBundle = stringBundleService.createBundle("chrome://firebugmonkey/locale/firebugmonkey.properties");
+				}
+				var msg = this.stringBundle.GetStringFromName("SetPrefForFirebumonkeyDebug");
+				
+				//ok true
+				//cancal false
+				result = prompts.confirm(window, "Change firebug prefs", msg);
+				if(result){
+					Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
+					Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);					
+				}
+			}
+			
+			return result;
 		},
 		
 		setFunctionForDebug : function(){	
@@ -176,7 +170,7 @@ FBL.ns(function () { with (FBL) {
 			    +    		'return ioService.newURI(Firebug.firebugmonkey_Model.SANDBOX_XUL_PATH, null, null);'
 				+		'}'
 		    	+	'}'			
-			    +'}catch(exc){Components.utils.reportError("fbm_makeURI  : " + exc);}';	
+			    +'}catch(exc){Components.utils.reportError("firebugmonkey : error fbm_makeURI " + exc);}';	
 			if ('makeURI' in FBL) {
 			  eval('FBL.makeURI = '+
 			    FBL.makeURI.toSource().replace(
@@ -205,9 +199,7 @@ FBL.ns(function () { with (FBL) {
 			
 			var fbm_unwrapObject =
 				'try {'
-				//+'	var currentFunction = arguments.callee.caller.toString();'
 				//+'Application.console.log("currentFunction = " +currentFunction);'
-				//+'	if(currentFunction.indexOf("var insecureObject = unwrapObject(object);") != -1){'
 				+'	if(Firebug.firebugmonkey_Model.isTargetFunction(arguments.callee.caller)){'
 				+'		for (var name in object) {'
 				+'			if (typeof(object[name]) == "xml" && object[name].toString().indexOf("<") != -1 && object[name].toString().indexOf(">") != -1){'
@@ -217,22 +209,18 @@ FBL.ns(function () { with (FBL) {
 				+'		}'
 				+'	}'
 				+'} catch (exc) {'
-				+'	 Application.console.log("fbm_unwrapObject exc = " +exc);'
+				+'	 Components.utils.reportError("firebugmonkey : error fbm_unwrapObject = " +exc);'
 				+'}';
 	
-			try{
-				if ('unwrapObject' in FBL) {
-					eval('FBL.unwrapObject = '+
-							FBL.unwrapObject.toSource().replace(
-					      '{',
-					      '$&' + fbm_unwrapObject
-					    )
-					  );
-				}
-			}catch(exc){
-				Application.console.log("fbm_unwrapObject exc= " + exc); 
-			}	
-			
+			if ('unwrapObject' in FBL) {
+				eval('FBL.unwrapObject = '+
+						FBL.unwrapObject.toSource().replace(
+				      '{',
+				      '$&' + fbm_unwrapObject
+				    )
+				  );
+			}
+
 			Firebug.firebugmonkey_Model.hasSourcehref = function(href){		
 				if(href.indexOf(this.SANDBOX_XUL_PATH + ' -> ') == -1) return false;
 				
@@ -267,6 +255,7 @@ FBL.ns(function () { with (FBL) {
 	        	}	
 			}catch(e){
 				//Application.console.log("getFbmScriptSpecFromSandbox ERROR = " + e);
+				Components.utils.reportError("firebugmonkey : error getFbmScriptSpecFromSandbox " + e);
 			}
 		
 			return false;
@@ -325,7 +314,7 @@ FBL.ns(function () { with (FBL) {
 	  	}
 	});
 	
-	var Firebugmonkey_ConsoleListener = {
+	Firebug.Firebugmonkey_ConsoleListener = {
 		aConsoleService:null,
 		
 		init : function(){
@@ -349,14 +338,14 @@ FBL.ns(function () { with (FBL) {
 					if(Firebug.firebugmonkey_Model.hasSourcehref(aMessage.sourceName)){
 						for(s in Firebug.firebugmonkey.enablescripts){
 							var script = Firebug.firebugmonkey.enablescripts[s];
-							if(aMessage.sourceName.indexOf(script.tmpFileUri.spec) != -1){
+							if(aMessage.sourceName.indexOf(script.tmpUri.spec) != -1){
 								var rev = script._offsets;
 								for ( var off = rev.length-1; off >= 0; off--){
 									if(rev[off].offset <= aMessage.lineNumber){
-										var filespec = rev[off].filespec;
-										var line = aMessage.lineNumber - rev[off].offset;		
+										var url = rev[off].url;
+										var line = aMessage.lineNumber - rev[off].offset;
 										var scriptError = Cc["@mozilla.org/scripterror;1"].createInstance(Ci.nsIScriptError);
-										scriptError.init(aMessage.errorMessage, filespec, null, line, aMessage.columnNumber, aMessage.errorFlag, aMessage.category);
+										scriptError.init(aMessage.errorMessage, url, null, line, aMessage.columnNumber, aMessage.errorFlag, aMessage.category);
 	  									this.aConsoleService.logMessage(scriptError);
 										return;								
 									}
@@ -380,10 +369,10 @@ FBL.ns(function () { with (FBL) {
 	};
 
 	try{
-		Firebugmonkey_ConsoleListener.init();
-		Firebugmonkey_ConsoleListener.registerListener();
+		Firebug.Firebugmonkey_ConsoleListener.init();
+		Firebug.Firebugmonkey_ConsoleListener.registerListener();
 	}catch(exc){
-		Components.utils.reportError("Firebugmonkey consoleListener init error  : " + exc);
+		Components.utils.reportError("Firebugmonkey : consoleListener init error  : " + exc);
 	}
 
 	Firebug.registerModule(Firebug.firebugmonkey_Model); 
