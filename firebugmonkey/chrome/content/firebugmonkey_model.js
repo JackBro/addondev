@@ -199,7 +199,7 @@ FBL.ns(function () { with (FBL) {
 			
 			var fbm_unwrapObject =
 				'try {'
-				//+'Application.console.log("currentFunction = " +currentFunction);'
+				//+'Application.console.log("this.name = " +this.name);'
 				+'	if(Firebug.firebugmonkey_Model.isTargetFunction(arguments.callee.caller)){'
 				+'		for (var name in object) {'
 				+'			if (typeof(object[name]) == "xml" && object[name].toString().indexOf("<") != -1 && object[name].toString().indexOf(">") != -1){'
@@ -239,7 +239,8 @@ FBL.ns(function () { with (FBL) {
 	    
 	    isTargetFunction: function(func){
 	    	var strfunc = func.toString();
-	    	return strfunc.indexOf("var insecureObject = unwrapObject(object);") != -1;
+	    	return (strfunc.indexOf("var domMembers = getDOMMembers(object);") != -1)
+	    	  && (strfunc.indexOf("var insecureObject = unwrapObject(object);") != -1);
 	    },
 		isE4XObject: function(obj){
     		return (typeof(obj) == "xml" 
