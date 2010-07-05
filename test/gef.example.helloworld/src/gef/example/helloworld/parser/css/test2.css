@@ -1,4 +1,4 @@
-/*
+
 test5[state="active"][state2="active2"],test4{ 
 
 	display: -moz-box;
@@ -8,8 +8,8 @@ test5[state="active"][state2="active2"],test4{
 	-list-style-image: url("chrome://test/content/test.png");
 	background: url("test.png") repeat-y top left !important;
 }
-*/
-#test1{ 
+
+#test1 > test3{ 
   -moz-image-region: rect(16px 16px 32px 0px);
   #background: url("test.png") repeat-y top left !important;
   

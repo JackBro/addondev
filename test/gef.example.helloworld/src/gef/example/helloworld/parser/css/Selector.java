@@ -21,6 +21,7 @@ public class Selector {
 		for (int i = 0; i < simpleselectors.size(); i++) {
 			SimpleSelector simpleselector = simpleselectors.get(i);
 			if(i!=0) sb.append(" ");
+			if(simpleselector.getExp() !=null) sb.append(simpleselector.getExp() + " ");
 			sb.append(simpleselector.toString());
 		}
 		

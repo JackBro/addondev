@@ -122,7 +122,7 @@ public class Lexer {
 				tok = TokenType.SYMBOL;
 			}else{
 				reader.unread(c);
-				lexSymbol(null);
+				lexSymbol("-");
 			}
 			break;
 		

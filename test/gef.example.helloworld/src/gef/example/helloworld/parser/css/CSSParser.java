@@ -29,7 +29,12 @@ public class CSSParser {
 			switch (token) {
 			case '@':
 				getToken();//@
-				
+				String val = lex.value();
+				if("import".equals(val)){
+					import_stmt();
+				}else if("namespace".equals(val)){
+					namespace_stmt();
+				}
 				break;
 
 			default:
@@ -43,17 +48,30 @@ public class CSSParser {
 	//@import "xxx.css";
 	private void import_stmt() throws CSSException {
 		// TODO Auto-generated method stub
-		String sym = lex.value();
-		getToken(); //skip symbol
+		//String sym = lex.value();
+		getToken(); //skip symbol import
 
 		if(token == TokenType.SYMBOL){
-			String url = url_stmt();
-			//imports.add(url);
-			css.addImport(url);
+			URI uri = url_stmt();
+			Import _import = new Import();
+			_import.setUri(uri);
+			css.addImport(_import);
 		}else if(token == TokenType.STRING){
+//			String url = lex.value();
+//			//imports.add(url);
+//			css.addImport(url);
+//			getToken(); //skip url
+//			if(token == ';'){
+//				getToken(); //;
+//			}else{
+//				throw new CSSException(lex.offset());
+//			}
+			//URI uri = url_stmt();
 			String url = lex.value();
-			//imports.add(url);
-			css.addImport(url);
+			Import _import = new Import();
+			_import.setUrl(new QuotedStringTerm(url));
+			css.addImport(_import);
+			
 			getToken(); //skip url
 			if(token == ';'){
 				getToken(); //;
@@ -76,28 +94,28 @@ public class CSSParser {
 		
 		getToken(); //skip symbol
 		
-//		while(){
-//			
-//		}
-		
 		if(token == TokenType.SYMBOL){
 			String m = lex.value();
 			if(m.equals("url")){
-				String url = url_stmt();
+				URI uri = url_stmt();
 				//namespaces.add(url);
-				namespace.setUrl(url);
+				namespace.setUri(uri);
 			}else{
 				getToken(); //skip symbol
 				if(token == TokenType.STRING){
 					//namespaces.add(lex.value());
-					namespace.setName(lex.value());
-					getToken(); //skip symbol
+					namespace.setName(m);
+					//getToken(); //skip symbol
+					namespace.setUrl(new QuotedStringTerm(lex.value()));
+					getToken(); //skip url
+					
 				}else if(token == TokenType.SYMBOL){
+					namespace.setName(m);
 					String u = lex.value();
 					if(u.equals("url")){
-						String url = url_stmt();
+						URI uri = url_stmt();
 						//namespaces.add(url);
-						namespace.setUrl(url);
+						namespace.setUri(uri);
 					}else{
 						throw new CSSException(lex.offset());
 					}		
@@ -109,7 +127,7 @@ public class CSSParser {
 		}else if(token == TokenType.STRING){
 			String value = lex.value();
 			//namespaces.add(value);
-			namespace.setUrl(value);
+			namespace.setUrl(new QuotedStringTerm(value));
 			getToken(); //skip url
 		}else{
 			throw new CSSException(lex.offset());
@@ -124,28 +142,41 @@ public class CSSParser {
 		}
 	}
 	
-	private String url_stmt() throws CSSException{
-		String url = "";
-		getToken(); //sympol
+	private URI url_stmt() throws CSSException{
+		URI uri = new URI();
+		getToken(); //sympol url
 		if(token =='('){
 			getToken(); //(
 			//String value = lex.value();
-			url = lex.value();
-			getToken(); //skip symbol
+			String url = lex.value();
+			getToken(); //skip symbol url
 			if(token == ')'){
 				getToken(); //)
-//				if(token == ';'){
-//					getToken(); //;
-//				}else{
-//					throw new CSSException(lex.offset());
-//				}
+				uri.setParen(true);
+				uri.setUrl(new QuotedStringTerm(url));
+				
+				if(token == ';'){
+					getToken(); //;
+				}else{
+					throw new CSSException(lex.offset());
+				}
+			}else{
+				throw new CSSException(lex.offset());
+			}
+		}else if(token == TokenType.STRING){
+			uri.setParen(false);
+			String url = lex.value();
+			getToken();
+			uri.setUrl(new QuotedStringTerm(url));
+			if(token==';'){
+				getToken(); //;
 			}else{
 				throw new CSSException(lex.offset());
 			}
 		}else{
 			throw new CSSException(lex.offset());
 		}	
-		return url;
+		return uri;
 	}
 	
 	
@@ -206,8 +237,8 @@ public class CSSParser {
 		case TokenType.STRING:
 			String qssym = lex.value();
 			getToken();
-			QuotedStringTerm qsterm = new QuotedStringTerm();
-			qsterm.setValue(qssym);
+			QuotedStringTerm qsterm = new QuotedStringTerm(qssym);
+			//qsterm.setValue(qssym);
 			expr.getTerms().add(qsterm);				
 			break;
 		case TokenType.SYMBOL:
@@ -259,8 +290,9 @@ public class CSSParser {
 			case '+':
 			case '>':
 			case '~':
-				//getToken();
-				simpleselector_stmt(selector);
+				String exp = String.valueOf((char)token);
+				getToken();
+				simpleselector_stmt(selector, exp);
 				break;
 			default:
 				simpleselector_stmt(selector);
@@ -271,7 +303,7 @@ public class CSSParser {
 		}
 	}
 	
-	private void simpleselector_stmt(Selector selector) {
+	private void simpleselector_stmt(Selector selector, String exp) {
 		
 		if(token == TokenType.SYMBOL || token == '.' || token == '#'){
 			SimpleSelector simpleselector = new SimpleSelector();
@@ -287,6 +319,9 @@ public class CSSParser {
 				getToken();
 				String elemnt = lex.value();
 				simpleselector.setId(elemnt);
+			}
+			if(exp != null){
+				simpleselector.setExp(exp);
 			}
 			selector.getSimpleSelectors().add(simpleselector);
 			int offset = lex.offset();
@@ -345,7 +380,11 @@ public class CSSParser {
 			}
 		}else{
 			//getToken();
-		}
+		}		
+	}
+	
+	private void simpleselector_stmt(Selector selector) {
+		simpleselector_stmt(selector, null);
 	}
 	
 	private int attr_stmt(SimpleSelector parent) {

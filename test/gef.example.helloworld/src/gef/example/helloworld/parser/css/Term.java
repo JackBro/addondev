@@ -1,7 +1,7 @@
 package gef.example.helloworld.parser.css;
 
 public abstract class Term {
-	private String value;
+	protected String value;
 	public void setValue(String value){
 		this.value = value;
 	}

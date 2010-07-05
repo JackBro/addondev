@@ -96,7 +96,8 @@ public class SimpleSelector {
 			sb.append(":" + pseudo);
 		}		
 		
-		if(child != null) sb.append(child.getExp() + child.toString());
+		//if(child != null) sb.append(child.getExp() + child.toString());
+		if(child != null) sb.append(" " + child.toString());
 		
 		return sb.toString();
 	}

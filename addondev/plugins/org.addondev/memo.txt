@@ -1,4 +1,8 @@
-﻿correspond Firebug1.5.4(Firefox3.5, Firefox3.6).
+﻿
+http://sourceforge.net/projects/adsdetector/files/
+http://www.codeproject.com/KB/cs/BandObjects20.aspx
+
+correspond Firebug1.5.4(Firefox3.5, Firefox3.6).
 add GM_deleteValue, GM_listValues, GM_registerMenuCommand(GM_registerMenuCommand is dummy).
 setting file change xml to json.
 E4X was displayed as string in debugging with the breakpoint. 

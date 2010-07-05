@@ -92,14 +92,14 @@ public class CSSTest {
 //		expr.setTerms( new ArrayList<Term>(Arrays.asList(trem)));
 //		declaration.setExpr(expr);
 		
-		Declaration declaration = parser.declaration_stmt("-list-style-image:rect(16xp 16xp);");
-		css.addDeclaration("test1", null, null, declaration);
-		
-		Declaration declaration2 = parser.declaration_stmt("-list-style-image:rect(16xp 16xp 16xp 16xp);");
-		css.addDeclaration("test1", null, new ArrayList<String>(Arrays.asList("hover")), declaration2);
-		
-		Declaration declaration3 = parser.declaration_stmt("-list-style-image3:rect(16xp 16xp);");
-		css.addDeclaration("test3", null, null, declaration3);
+//		Declaration declaration = parser.declaration_stmt("-list-style-image:rect(16xp 16xp);");
+//		css.addDeclaration("test1", null, null, declaration);
+//		
+//		Declaration declaration2 = parser.declaration_stmt("-list-style-image:rect(16xp 16xp 16xp 16xp);");
+//		css.addDeclaration("test1", null, new ArrayList<String>(Arrays.asList("hover")), declaration2);
+//		
+//		Declaration declaration3 = parser.declaration_stmt("-list-style-image3:rect(16xp 16xp);");
+//		css.addDeclaration("test3", null, null, declaration3);
 		
 		System.out.println(css.toString());
 	}

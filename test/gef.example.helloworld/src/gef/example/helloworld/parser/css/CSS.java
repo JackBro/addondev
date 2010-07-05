@@ -15,12 +15,12 @@ public class CSS {
 	}
 	
 	private List<RuleSet> rulesets;
-	private List<String> imports;
+	private List<Import> imports;
 	private List<NameSpace> namespaces;
 	
 	public CSS() {
 		rulesets = new ArrayList<RuleSet>();
-		imports = new ArrayList<String>();
+		imports = new ArrayList<Import>();
 		namespaces = new ArrayList<NameSpace>();
 	}
 
@@ -173,8 +173,8 @@ public class CSS {
 //		}
 //	}
 	
-	public void addImport(String url){
-		imports.add(url);
+	public void addImport(Import _import){
+		imports.add(_import);
 	}
 	
 	public void addNameSpace(NameSpace namespace){
@@ -186,11 +186,11 @@ public class CSS {
 		StringBuilder sb = new StringBuilder();
 		
 		for (NameSpace namespace : namespaces) {
-			sb.append(namespace.toCSS() + "\n");
+			sb.append(namespace.toString() + "\n");
 		}
 		
-		for (String imp : imports) {
-			sb.append("@import \"" + imp + "\";\n");
+		for (Import imp : imports) {
+			sb.append(imp.toString() + "\n");
 		}
 		
 		for (RuleSet ruleset : rulesets) {
