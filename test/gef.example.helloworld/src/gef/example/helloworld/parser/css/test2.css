@@ -1,4 +1,7 @@
 
+@namespace xul url("http4");
+@import url(xxx.css);
+
 test5[state="active"][state2="active2"],test4{ 
 
 	display: -moz-box;

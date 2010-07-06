@@ -6,6 +6,7 @@ public class CSSParser {
 	private Lexer lex;
 	private int token;
 	private CSS css;
+	private boolean checkall;
 	
 	private void getToken() {
 		if (lex.advance()) {
@@ -45,6 +46,7 @@ public class CSSParser {
 	}
 	
 	//@import url(xxx.css);
+	//@import url("xxx.css");
 	//@import "xxx.css";
 	private void import_stmt() throws CSSException {
 		// TODO Auto-generated method stub
@@ -148,31 +150,46 @@ public class CSSParser {
 		if(token =='('){
 			getToken(); //(
 			//String value = lex.value();
-			String url = lex.value();
-			getToken(); //skip symbol url
-			if(token == ')'){
-				getToken(); //)
+			if(token == TokenType.STRING){
 				uri.setParen(true);
+				String url = lex.value();
+				getToken();
 				uri.setUrl(new QuotedStringTerm(url));
-				
-				if(token == ';'){
-					getToken(); //;
-				}else{
-					throw new CSSException(lex.offset());
-				}
+				getToken();
 			}else{
-				throw new CSSException(lex.offset());
+				//String url = lex.value();
+				//getToken(); //skip symbol url
+				
+				StringBuilder sb = new StringBuilder();
+				while(token != ')' && token != TokenType.EOS){
+					if(token == TokenType.SYMBOL){
+						sb.append(lex.value());
+					}else{
+						sb.append((char)token);
+					}
+					getToken();
+				}
+				//if(token == ')'){
+					getToken(); //)
+					uri.setParen(true);
+					uri.setUrl(new QuotedStringTerm(sb.toString()));
+					
+	//				if(token == ';'){
+	//					getToken(); //;
+	//				}else{
+	//					throw new CSSException(lex.offset());
+	//				}
+				//}else{
+	//				throw new CSSException(lex.offset());
+				//}
 			}
 		}else if(token == TokenType.STRING){
 			uri.setParen(false);
 			String url = lex.value();
-			getToken();
+			getToken(); //symbol
 			uri.setUrl(new QuotedStringTerm(url));
-			if(token==';'){
-				getToken(); //;
-			}else{
-				throw new CSSException(lex.offset());
-			}
+			
+			getToken();
 		}else{
 			throw new CSSException(lex.offset());
 		}	
