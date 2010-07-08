@@ -28,6 +28,12 @@
             id="org.addondev.ui.editor.xml"
             name="XML">
       </editor>
+      <editor
+            class="org.addondev.ui.editor.manifest.ManifestFormEditor"
+            default="false"
+            id="org.addondev.ui.editor.manifest"
+            name="Manifest">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.editorActions">

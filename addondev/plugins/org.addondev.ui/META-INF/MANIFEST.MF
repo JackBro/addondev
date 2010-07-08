@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.views;bundle-version="3.4.1",
  org.addondev.rhino;bundle-version="1.0.0",
- org.addondev;bundle-version="1.0.0"
+ org.addondev;bundle-version="1.0.0",
+ org.eclipse.ui.forms;bundle-version="3.5.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.ui,
