@@ -1,4 +1,12 @@
-﻿http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.6-201006080911/org.eclipse.pde.source-3.6.zip
+﻿http://d.hatena.ne.jp/espresso3389/20080212
+http://social.msdn.microsoft.com/forums/en-US/windowssearch/thread/4b71fcb3-bea9-4cfb-bdb7-2f1a91522ea6/
+http://kerneldrivers.blogspot.com/
+http://sourceforge.jp/projects/passer/cvs/
+http://sourceforge.jp/projects/sfnet_launchone/
+http://d.hatena.ne.jp/gsf_zero1/20080229/p1
+http://mitc.xrea.jp/diary/046
+
+http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.6-201006080911/org.eclipse.pde.source-3.6.zip
 
 http://sourceforge.net/projects/adsdetector/files/
 http://www.codeproject.com/KB/cs/BandObjects20.aspx
