@@ -60,7 +60,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="fileextd.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="C:\Program Files\Microsoft Visual Studio 9.0\VC\lib\i386"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

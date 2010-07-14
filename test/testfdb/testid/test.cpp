@@ -56,11 +56,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	//CloseHandle(hFile);
 
 	FILE_ID_DESCRIPTOR fileIDDesc;
-	fileIDDesc.FileId.HighPart = 0 ;
-	fileIDDesc.FileId.LowPart = 0 ;
-	fileIDDesc.FileId.QuadPart = 0 ;
-fileIDDesc.FileId.u.HighPart = 0;
-fileIDDesc.FileId.u.LowPart = 0;
+//	fileIDDesc.FileId.HighPart = 0 ;
+//	fileIDDesc.FileId.LowPart = 0 ;
+//	fileIDDesc.FileId.QuadPart = 0 ;
+//fileIDDesc.FileId.u.HighPart = 0;
+//fileIDDesc.FileId.u.LowPart = 0;
 
 	fileIDDesc.Type = ObjectIdType; // enum value
 	//fileIDDesc.ObjectId.Data1 = (data.ObjectId[0] << 24) 
