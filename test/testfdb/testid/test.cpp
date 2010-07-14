@@ -14,7 +14,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	printf_s("%S\n", argv[1]);
 
-
 	HANDLE hFile = CreateFileW(
 		argv[1], GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 
