@@ -8,51 +8,109 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Data.SQLite;
 
 namespace testfdb_cs
 {
     public partial class Form1 : Form
     {
+        //[StructLayout(LayoutKind.Sequential)]
+        //public struct Fuga
+        //{
+        //    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] 
+        //    public Byte[] id;
+
+        //    public override string ToString()
+        //    {
+        //        string s = "";
+        //        foreach(Byte b in id)
+        //        {
+        //           s+= b.ToString();
+        //        }
+            
+        //        return s;//base.ToString();
+        //    }
+        //}
+
         [StructLayout(LayoutKind.Sequential)]
-        public struct Fuga
+        public struct FILEGUID
         {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] 
-            public Byte[] id;
+            public ulong  Data1;
+            public ushort Data2;
+            public ushort Data3;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] 
+            public Byte[] Data4;
+
+            public override string ToString()
+            {
+                return String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}",
+                    Data1.ToString(),
+                    Data2.ToString(),
+                    Data3.ToString(),
+                    Data4[0].ToString(),
+                    Data4[1].ToString(),
+                    Data4[2].ToString(),
+                    Data4[3].ToString());
+            }
+
+            public static FILEGUID parse(string guid)
+            {
+                FILEGUID fileguid = new FILEGUID();
+                fileguid.Data4 = new Byte[4];
+
+                string[] g = guid.Split('-');
+                fileguid.Data1 = ulong.Parse(g[0]);
+                fileguid.Data2 = ushort.Parse(g[1]);
+                fileguid.Data3 = ushort.Parse(g[2]);
+                fileguid.Data4[0] = Byte.Parse(g[3]);
+                fileguid.Data4[1] = Byte.Parse(g[4]);
+                fileguid.Data4[2] = Byte.Parse(g[5]);
+                fileguid.Data4[3] = Byte.Parse(g[6]);
+
+                return fileguid;
+            }
         }
 
         [DllImport("fgutil.dll", EntryPoint = "getObjectID", CharSet = CharSet.Unicode)]
-        public static extern Boolean getObjectID(string msg, ref Fuga fuga);
+        public static extern Boolean getObjectID(string msg, ref FILEGUID guid);
 
         [DllImport("fgutil.dll", EntryPoint = "getFullPathByObjectID", CharSet = CharSet.Unicode)]
-        public static extern Boolean getFullPathByObjectID(Fuga fuga, [MarshalAs(UnmanagedType.BStr)]ref string msg);
+        public static extern Boolean getFullPathByObjectID(FILEGUID guid, [MarshalAs(UnmanagedType.BStr)]ref string msg);
 
         public Form1()
         {
             InitializeComponent();
         }
-        Fuga fuga;
+        FILEGUID fuga;
         private void button1_Click(object sender, EventArgs e)
         {
-            fuga = new Fuga();
-            fuga.id = new Byte[16];
-
+            fuga = new FILEGUID();
+            fuga.Data4 = new Byte[4];
+            
             string msg = @"D:\data\src\PDE\xt2howm.rb";
             Boolean rc = getObjectID(msg, ref fuga);
             if (rc)
             {
-                MessageBox.Show(msg.ToString());
+                MessageBox.Show(fuga.ToString());
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-             //string path="";
-             //Boolean rc = getFullPathByObjectID(fuga, ref path);
-             //if (rc)
-             //{
-             //    MessageBox.Show(path.ToString());
-             //}
-            DoIt(@"D:\data\src\PDE\workrepository\plugins\test\testfdb_cs");
+            string path = "";
+            //Fuga f = new Fuga();
+            //f.id = new Byte[16];
+            //Int64 ii = 1287905504378253229;
+            //f.id = BitConverter.GetBytes(ii);
+            FILEGUID guid = FILEGUID.parse("1287905504378253229-60810-3072-118-29-23-147");
+            
+            Boolean rc = getFullPathByObjectID(guid, ref path);
+            if (rc)
+            {
+                MessageBox.Show(path.ToString());
+            }
+            //DoIt(@"D:\data\src\PDE\workrepository\plugins\test\testfdb_cs");
         }
 
 
@@ -85,5 +143,17 @@ namespace testfdb_cs
 
             return list;
         }
+
+        //http://techbank.jp/Community/blogs/poohkid/archive/2009/11/14/22590.aspx
+        //http://sites.google.com/site/gsfzero1/
+        public void createTable(string filename)
+        {
+            using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + filename))
+            {
+
+            }
+        }
     }
+
+
 }
