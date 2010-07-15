@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace testfdb_cs
 {
@@ -45,12 +46,44 @@ namespace testfdb_cs
 
         private void button2_Click(object sender, EventArgs e)
         {
-             string path="";
-             Boolean rc = getFullPathByObjectID(fuga, ref path);
-             if (rc)
-             {
-                 MessageBox.Show(path.ToString());
-             }
+             //string path="";
+             //Boolean rc = getFullPathByObjectID(fuga, ref path);
+             //if (rc)
+             //{
+             //    MessageBox.Show(path.ToString());
+             //}
+            DoIt(@"D:\data\src\PDE\workrepository\plugins\test\testfdb_cs");
+        }
+
+
+        private List<string> DoIt(string dir)
+        {
+            List<string> list = new List<string>();
+
+            Queue<string> q = new Queue<string>();
+            q.Enqueue(dir);
+
+            while (q.Count > 0)
+            {
+                string d = q.Dequeue();
+
+                string[] files = Directory.GetFiles(d);
+                foreach (string s in files)
+                {
+                    list.Add(s);
+                    Console.WriteLine(s);
+                }
+
+                string[] dirs = Directory.GetDirectories(d);
+                foreach (string s in dirs)
+                {
+                    list.Add(s);
+                    Console.WriteLine(s);
+                    q.Enqueue(s);
+                }
+            }
+
+            return list;
         }
     }
 }
