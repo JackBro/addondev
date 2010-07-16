@@ -149,8 +149,11 @@ namespace testfdb_cs
         public void createTable(string filename)
         {
             using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + filename))
+            using (SQLiteCommand cmd = cnn.CreateCommand())
             {
-
+                cnn.Open();
+                cmd.CommandText = "CREATE TABLE FOO (ID INTEGER PRIMARY KEY, guid TEXT))";
+                cmd.ExecuteNonQuery();
             }
         }
     }
