@@ -14,82 +14,20 @@ namespace testfdb_cs
 {
     public partial class Form1 : Form
     {
-        //[StructLayout(LayoutKind.Sequential)]
-        //public struct Fuga
-        //{
-        //    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] 
-        //    public Byte[] id;
-
-        //    public override string ToString()
-        //    {
-        //        string s = "";
-        //        foreach(Byte b in id)
-        //        {
-        //           s+= b.ToString();
-        //        }
-            
-        //        return s;//base.ToString();
-        //    }
-        //}
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct FILEGUID
-        {
-            public ulong  Data1;
-            public ushort Data2;
-            public ushort Data3;
-
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] 
-            public Byte[] Data4;
-
-            public override string ToString()
-            {
-                return String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}",
-                    Data1.ToString(),
-                    Data2.ToString(),
-                    Data3.ToString(),
-                    Data4[0].ToString(),
-                    Data4[1].ToString(),
-                    Data4[2].ToString(),
-                    Data4[3].ToString());
-            }
-
-            public static FILEGUID parse(string guid)
-            {
-                FILEGUID fileguid = new FILEGUID();
-                fileguid.Data4 = new Byte[4];
-
-                string[] g = guid.Split('-');
-                fileguid.Data1 = ulong.Parse(g[0]);
-                fileguid.Data2 = ushort.Parse(g[1]);
-                fileguid.Data3 = ushort.Parse(g[2]);
-                fileguid.Data4[0] = Byte.Parse(g[3]);
-                fileguid.Data4[1] = Byte.Parse(g[4]);
-                fileguid.Data4[2] = Byte.Parse(g[5]);
-                fileguid.Data4[3] = Byte.Parse(g[6]);
-
-                return fileguid;
-            }
-        }
-
-        [DllImport("fgutil.dll", EntryPoint = "getObjectID", CharSet = CharSet.Unicode)]
-        public static extern Boolean getObjectID(string msg, ref FILEGUID guid);
-
-        [DllImport("fgutil.dll", EntryPoint = "getFullPathByObjectID", CharSet = CharSet.Unicode)]
-        public static extern Boolean getFullPathByObjectID(FILEGUID guid, [MarshalAs(UnmanagedType.BStr)]ref string msg);
-
         public Form1()
         {
             InitializeComponent();
+
         }
-        FILEGUID fuga;
+
+        Win32.FILEGUID fuga;
         private void button1_Click(object sender, EventArgs e)
         {
-            fuga = new FILEGUID();
+            fuga = new Win32.FILEGUID();
             fuga.Data4 = new Byte[4];
             
             string msg = @"D:\data\src\PDE\xt2howm.rb";
-            Boolean rc = getObjectID(msg, ref fuga);
+            Boolean rc = Win32.getObjectID(msg, ref fuga);
             if (rc)
             {
                 MessageBox.Show(fuga.ToString());
@@ -103,9 +41,9 @@ namespace testfdb_cs
             //f.id = new Byte[16];
             //Int64 ii = 1287905504378253229;
             //f.id = BitConverter.GetBytes(ii);
-            FILEGUID guid = FILEGUID.parse("1287905504378253229-60810-3072-118-29-23-147");
-            
-            Boolean rc = getFullPathByObjectID(guid, ref path);
+            Win32.FILEGUID guid = Win32.FILEGUID.parse("1287905504378253229-60810-3072-118-29-23-147");
+
+            Boolean rc = Win32.getFullPathByObjectID(guid, ref path);
             if (rc)
             {
                 MessageBox.Show(path.ToString());
@@ -146,14 +84,103 @@ namespace testfdb_cs
 
         //http://techbank.jp/Community/blogs/poohkid/archive/2009/11/14/22590.aspx
         //http://sites.google.com/site/gsfzero1/
-        public void createTable(string filename)
+        public void createNameTable(string filename)
         {
             using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + filename))
             using (SQLiteCommand cmd = cnn.CreateCommand())
             {
                 cnn.Open();
-                cmd.CommandText = "CREATE TABLE FOO (ID INTEGER PRIMARY KEY, guid TEXT))";
+                cmd.CommandText = "CREATE TABLE name (ID INTEGER PRIMARY KEY AUTOINCREMENT, guid TEXT, name TEXT)";
                 cmd.ExecuteNonQuery();
+                cnn.Close();
+            }
+        }
+
+        public void insert(string fullpath)
+        {
+            String filename = Path.GetFileName(fullpath);
+            using (SQLiteConnection cnn = new SQLiteConnection("Data Source=name.db"))
+            using (SQLiteCommand cmd = cnn.CreateCommand())
+            {
+                cnn.Open();
+
+                SQLiteTransaction transaction = cnn.BeginTransaction();
+
+                string strcmd = String.Format("INSERT INTO name VALUES('{0}', '{1}')",
+                    Win32.getObjectID(fullpath).ToString(), filename);
+                cmd.CommandText = strcmd;
+                cmd.ExecuteNonQuery();
+
+                transaction.Commit();
+                transaction.Dispose();
+                transaction = null;
+
+                cnn.Close();
+            }
+        }
+
+        public void select(string key)
+        {
+            using (SQLiteConnection cnn = new SQLiteConnection("Data Source=name.db"))
+            using (SQLiteCommand cmd = cnn.CreateCommand())
+            {
+                cnn.Open();
+
+                SQLiteTransaction transaction = cnn.BeginTransaction();
+
+                string strcmd = String.Format("select * from name where name like '%{0}%'", key);
+                cmd.CommandText = strcmd;
+                //cmd.ExecuteNonQuery();
+                using (SQLiteDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(String.Format("ID = {0}, MyValue = {1}", reader[0], reader[1]));
+                        //string path = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(reader[0].ToString()));
+                        //Console.WriteLine(String.Format("path = {0}", path));
+                    }
+
+                }
+                transaction.Commit();
+                transaction.Dispose();
+                transaction = null;
+
+                cnn.Close();
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            createNameTable("name.db");
+        }
+
+        private void Form1_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop))
+                {
+                    insert(fileName);
+                }
+            }
+        }
+
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.All;
+        }
+
+        private void comboBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r')
+            {
+                e.Handled = true;
+                select(comboBox1.Text);
             }
         }
     }
