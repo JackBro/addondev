@@ -22,36 +22,36 @@ namespace testfdb_cs
 
         }
 
-        Win32.FILEGUID fuga;
-        private void button1_Click(object sender, EventArgs e)
-        {
-            fuga = new Win32.FILEGUID();
-            fuga.Data4 = new Byte[4];
+        //Win32.FILEGUID fuga;
+        //private void button1_Click(object sender, EventArgs e)
+        //{
+        //    fuga = new Win32.FILEGUID();
+        //    fuga.Data4 = new Byte[4];
             
-            string msg = @"D:\data\src\PDE\xt2howm.rb";
-            Boolean rc = Win32.getObjectID(msg, ref fuga);
-            if (rc)
-            {
-                MessageBox.Show(fuga.ToString());
-            }
-        }
+        //    string msg = @"D:\data\src\PDE\xt2howm.rb";
+        //    Boolean rc = Win32.getObjectID(msg, ref fuga);
+        //    if (rc)
+        //    {
+        //        MessageBox.Show(fuga.ToString());
+        //    }
+        //}
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string path = "";
-            //Fuga f = new Fuga();
-            //f.id = new Byte[16];
-            //Int64 ii = 1287905504378253229;
-            //f.id = BitConverter.GetBytes(ii);
-            Win32.FILEGUID guid = Win32.FILEGUID.parse("1287905504378253229-60810-3072-118-29-23-147");
+        //private void button2_Click(object sender, EventArgs e)
+        //{
+        //    string path = "";
+        //    //Fuga f = new Fuga();
+        //    //f.id = new Byte[16];
+        //    //Int64 ii = 1287905504378253229;
+        //    //f.id = BitConverter.GetBytes(ii);
+        //    Win32.FILEGUID guid = Win32.FILEGUID.parse("1287905504378253229-60810-3072-118-29-23-147");
 
-            Boolean rc = Win32.getFullPathByObjectID(guid, ref path);
-            if (rc)
-            {
-                MessageBox.Show(path.ToString());
-            }
-            //DoIt(@"D:\data\src\PDE\workrepository\plugins\test\testfdb_cs");
-        }
+        //    Boolean rc = Win32.getFullPathByObjectID(guid, ref path);
+        //    if (rc)
+        //    {
+        //        MessageBox.Show(path.ToString());
+        //    }
+        //    //DoIt(@"D:\data\src\PDE\workrepository\plugins\test\testfdb_cs");
+        //}
 
 
         private List<string> DoIt(string dir)
