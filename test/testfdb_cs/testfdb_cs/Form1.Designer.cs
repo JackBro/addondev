@@ -35,9 +35,9 @@
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.NameCheckBox = new System.Windows.Forms.CheckBox();
             this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.TextCheckBox = new System.Windows.Forms.CheckBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -89,27 +89,28 @@
             this.listView1.TabIndex = 5;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(46, 29);
+            this.comboBox1.Location = new System.Drawing.Point(0, 29);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(203, 20);
+            this.comboBox1.Size = new System.Drawing.Size(249, 20);
             this.comboBox1.TabIndex = 7;
             this.comboBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox1_KeyPress);
             this.comboBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBox1_KeyDown);
             // 
-            // checkBox1
+            // NameCheckBox
             // 
-            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(255, 27);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(71, 22);
-            this.checkBox1.TabIndex = 9;
-            this.checkBox1.Text = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.NameCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
+            this.NameCheckBox.Location = new System.Drawing.Point(255, 27);
+            this.NameCheckBox.Name = "NameCheckBox";
+            this.NameCheckBox.Size = new System.Drawing.Size(71, 22);
+            this.NameCheckBox.TabIndex = 9;
+            this.NameCheckBox.Text = "Name";
+            this.NameCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.NameCheckBox.UseVisualStyleBackColor = true;
             // 
             // MainMenuStrip
             // 
@@ -119,16 +120,16 @@
             this.MainMenuStrip.TabIndex = 10;
             this.MainMenuStrip.Text = "menuStrip1";
             // 
-            // checkBox2
+            // TextCheckBox
             // 
-            this.checkBox2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(332, 27);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(71, 22);
-            this.checkBox2.TabIndex = 11;
-            this.checkBox2.Text = "checkBox2";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.TextCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
+            this.TextCheckBox.Location = new System.Drawing.Point(332, 27);
+            this.TextCheckBox.Name = "TextCheckBox";
+            this.TextCheckBox.Size = new System.Drawing.Size(71, 22);
+            this.TextCheckBox.TabIndex = 11;
+            this.TextCheckBox.Text = "Text";
+            this.TextCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.TextCheckBox.UseVisualStyleBackColor = true;
             // 
             // splitContainer1
             // 
@@ -172,14 +173,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(458, 374);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.TextCheckBox);
+            this.Controls.Add(this.NameCheckBox);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.MainMenuStrip);
-            this.MainMenuStrip = this.MainMenuStrip;
             this.Name = "Form1";
             this.Text = "Form1";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
@@ -202,9 +202,9 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox NameCheckBox;
         private System.Windows.Forms.MenuStrip MainMenuStrip;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox TextCheckBox;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;

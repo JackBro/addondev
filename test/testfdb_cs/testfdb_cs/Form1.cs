@@ -12,6 +12,8 @@ using System.Data.SQLite;
 
 namespace testfdb_cs
 {
+    //http://www.adamrocker.com/blog/195/practical_way_of_autocompletetextview_with_sqlite.html
+    //http://webcache.googleusercontent.com/search?q=cache:NSovgXJuaKMJ:blog.livedoor.jp/maru_tak/archives/cat_10012124.html+sqlite+ROWNUM&cd=1&hl=ja&ct=clnk&gl=jp&lr=lang_ja&client=firefox-a
     public partial class Form1 : Form
     {
         public Form1()
@@ -86,31 +88,38 @@ namespace testfdb_cs
         //http://sites.google.com/site/gsfzero1/
         public void createNameTable(string filename)
         {
-            using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + filename))
-            using (SQLiteCommand cmd = cnn.CreateCommand())
+            if (!new FileInfo(filename).Exists)
             {
-                cnn.Open();
-                cmd.CommandText = "CREATE TABLE name (ID INTEGER PRIMARY KEY AUTOINCREMENT, guid TEXT, name TEXT)";
-                cmd.ExecuteNonQuery();
-                cnn.Close();
+                using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + filename))
+                using (SQLiteCommand cmd = cnn.CreateCommand())
+                {
+                    cnn.Open();
+                    cmd.CommandText = "CREATE TABLE name (ID INTEGER PRIMARY KEY AUTOINCREMENT, guid TEXT, name TEXT)";
+                    cmd.ExecuteNonQuery();
+                    cnn.Close();
+                }
             }
         }
 
-        public void insert(string fullpath)
+        public void insert(string[] fullpaths)
         {
-            String filename = Path.GetFileName(fullpath);
+            
             using (SQLiteConnection cnn = new SQLiteConnection("Data Source=name.db"))
             using (SQLiteCommand cmd = cnn.CreateCommand())
             {
                 cnn.Open();
 
                 SQLiteTransaction transaction = cnn.BeginTransaction();
-
-                string strcmd = String.Format("INSERT INTO name VALUES('{0}', '{1}')",
-                    Win32.getObjectID(fullpath).ToString(), filename);
-                cmd.CommandText = strcmd;
-                cmd.ExecuteNonQuery();
-
+                foreach (string fullpath in fullpaths)
+                {
+                    String filename = Path.GetFileName(fullpath);
+                    string guid = Win32.getObjectID(fullpath).ToString();
+                    bool res = hasData(cmd, guid);
+                    string strcmd = String.Format("INSERT INTO name(guid,name) VALUES('{0}', '{1}')",
+                        guid, filename);
+                    cmd.CommandText = strcmd;
+                    //cmd.ExecuteNonQuery();
+                }
                 transaction.Commit();
                 transaction.Dispose();
                 transaction = null;
@@ -135,9 +144,15 @@ namespace testfdb_cs
                 {
                     while (reader.Read())
                     {
+                        
                         Console.WriteLine(String.Format("ID = {0}, MyValue = {1}", reader[0], reader[1]));
+                        
                         //string path = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(reader[0].ToString()));
                         //Console.WriteLine(String.Format("path = {0}", path));
+                       // string[] item1 = { reader[0], reader[1] };
+                        ListViewItem item = new ListViewItem(reader[2].ToString());
+                        item.Tag = reader[1].ToString();
+                        listView1.Items.Add(item);
                     }
 
                 }
@@ -149,6 +164,22 @@ namespace testfdb_cs
             }
         }
 
+        public bool hasData(SQLiteCommand cmd, string guid)
+        {
+            bool res = false;
+
+            //string strcmd = String.Format("SELECT * FROM name WHERE guid = '{0}' AND rowid <= 1", guid);
+            string strcmd = String.Format("SELECT * FROM name WHERE guid = '{0}'", guid);
+            cmd.CommandText = strcmd;
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                res = reader.Read();
+            }
+
+            return res;
+
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
             createNameTable("name.db");
@@ -158,10 +189,12 @@ namespace testfdb_cs
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop))
-                {
-                    insert(fileName);
-                }
+                createNameTable("name.db");
+                //foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop))
+                //{
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                insert(files);
+                //}
             }
         }
 
@@ -181,6 +214,18 @@ namespace testfdb_cs
             {
                 e.Handled = true;
                 select(comboBox1.Text);
+            }
+        }
+
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 1)
+            {
+                ListViewItem selitem = listView1.SelectedItems[0];
+                string guid = selitem.Tag.ToString();
+
+                string fullpath = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(guid));
+                 MessageBox.Show(fullpath);
             }
         }
     }
