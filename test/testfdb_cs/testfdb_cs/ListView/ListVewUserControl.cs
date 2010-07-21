@@ -15,5 +15,15 @@ namespace testfdb_cs
         {
             InitializeComponent();
         }
+
+        private void listView1_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            
+        }
+
+        private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            
+        }
     }
 }
