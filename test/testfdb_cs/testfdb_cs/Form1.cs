@@ -145,7 +145,7 @@ namespace testfdb_cs
                     while (reader.Read())
                     {
                         
-                        Console.WriteLine(String.Format("ID = {0}, MyValue = {1}", reader[0], reader[1]));
+                        //Console.WriteLine(String.Format("ID = {0}, MyValue = {1}", reader[0], reader[1]));
                         
                         //string path = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(reader[0].ToString()));
                         //Console.WriteLine(String.Format("path = {0}", path));
@@ -203,17 +203,14 @@ namespace testfdb_cs
             e.Effect = DragDropEffects.All;
         }
 
-        private void comboBox1_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
         private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\r')
             {
                 e.Handled = true;
                 select(comboBox1.Text);
+                TabPage newtab = new TabPage();
+                tabControl1.TabPages.Add(newtab);
             }
         }
 
