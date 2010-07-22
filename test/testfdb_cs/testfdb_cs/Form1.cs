@@ -152,7 +152,7 @@ namespace testfdb_cs
                        // string[] item1 = { reader[0], reader[1] };
                         ListViewItem item = new ListViewItem(reader[2].ToString());
                         item.Tag = reader[1].ToString();
-                        listView1.Items.Add(item);
+                        //listView1.Items.Add(item);
                     }
 
                 }
@@ -208,22 +208,25 @@ namespace testfdb_cs
             if (e.KeyChar == '\r')
             {
                 e.Handled = true;
-                select(comboBox1.Text);
-                TabPage newtab = new TabPage();
-                tabControl1.TabPages.Add(newtab);
+                //select(comboBox1.Text);
+                //TabPage newtab = new TabPage(comboBox1.Text);
+                //tabControl1.TabPages.Add(newtab);
+                //ListVewUserControl listview = new ListVewUserControl();
+                //listview.Dock = DockStyle.Fill;
+                //newtab.Controls.Add(listview);
             }
         }
 
         private void listView1_DoubleClick(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 1)
-            {
-                ListViewItem selitem = listView1.SelectedItems[0];
-                string guid = selitem.Tag.ToString();
+            //if (listView1.SelectedItems.Count == 1)
+            //{
+            //    ListViewItem selitem = listView1.SelectedItems[0];
+            //    string guid = selitem.Tag.ToString();
 
-                string fullpath = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(guid));
-                 MessageBox.Show(fullpath);
-            }
+            //    string fullpath = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(guid));
+            //     MessageBox.Show(fullpath);
+            //}
         }
     }
 
