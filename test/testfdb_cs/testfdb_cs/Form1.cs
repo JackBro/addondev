@@ -22,38 +22,6 @@ namespace testfdb_cs
 
         }
 
-        //Win32.FILEGUID fuga;
-        //private void button1_Click(object sender, EventArgs e)
-        //{
-        //    fuga = new Win32.FILEGUID();
-        //    fuga.Data4 = new Byte[4];
-            
-        //    string msg = @"D:\data\src\PDE\xt2howm.rb";
-        //    Boolean rc = Win32.getObjectID(msg, ref fuga);
-        //    if (rc)
-        //    {
-        //        MessageBox.Show(fuga.ToString());
-        //    }
-        //}
-
-        //private void button2_Click(object sender, EventArgs e)
-        //{
-        //    string path = "";
-        //    //Fuga f = new Fuga();
-        //    //f.id = new Byte[16];
-        //    //Int64 ii = 1287905504378253229;
-        //    //f.id = BitConverter.GetBytes(ii);
-        //    Win32.FILEGUID guid = Win32.FILEGUID.parse("1287905504378253229-60810-3072-118-29-23-147");
-
-        //    Boolean rc = Win32.getFullPathByObjectID(guid, ref path);
-        //    if (rc)
-        //    {
-        //        MessageBox.Show(path.ToString());
-        //    }
-        //    //DoIt(@"D:\data\src\PDE\workrepository\plugins\test\testfdb_cs");
-        //}
-
-
         private List<string> DoIt(string dir)
         {
             List<string> list = new List<string>();
@@ -128,8 +96,10 @@ namespace testfdb_cs
             }
         }
 
-        public void select(string key)
+        public List<ListViewItem> select(string key)
         {
+            List<ListViewItem> co = new List<ListViewItem>();
+
             using (SQLiteConnection cnn = new SQLiteConnection("Data Source=name.db"))
             using (SQLiteCommand cmd = cnn.CreateCommand())
             {
@@ -150,9 +120,11 @@ namespace testfdb_cs
                         //string path = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(reader[0].ToString()));
                         //Console.WriteLine(String.Format("path = {0}", path));
                        // string[] item1 = { reader[0], reader[1] };
-                        ListViewItem item = new ListViewItem(reader[2].ToString());
-                        item.Tag = reader[1].ToString();
+                        ListViewItem item = new ListViewItem(reader[1].ToString());
+                        item.Tag = reader[0].ToString();
                         //listView1.Items.Add(item);
+                        
+                        co.Add(item);
                     }
 
                 }
@@ -162,6 +134,8 @@ namespace testfdb_cs
 
                 cnn.Close();
             }
+
+            return co;
         }
 
         public bool hasData(SQLiteCommand cmd, string guid)
@@ -208,12 +182,35 @@ namespace testfdb_cs
             if (e.KeyChar == '\r')
             {
                 e.Handled = true;
-                //select(comboBox1.Text);
-                //TabPage newtab = new TabPage(comboBox1.Text);
-                //tabControl1.TabPages.Add(newtab);
+
+                 List<ListViewItem> co = select(toolStripComboBox1.Text);
+                TabPage newtab = new TabPage(toolStripComboBox1.Text);
+                tabControl2.TabPages.Add(newtab);
                 //ListVewUserControl listview = new ListVewUserControl();
-                //listview.Dock = DockStyle.Fill;
-                //newtab.Controls.Add(listview);
+                ListView listview = new ListView();
+                listview.View = View.Details;
+                ColumnHeader header1 = new ColumnHeader();
+                header1.Text = "name";
+                listview.Columns.Add(header1);
+                listview.FullRowSelect = true;
+
+                listview.DoubleClick += delegate
+                {
+                    ListViewItem selitem = listview.SelectedItems[0];
+                    string guid = selitem.Tag.ToString();
+
+                    string fullpath = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(guid));
+                    MessageBox.Show(fullpath);
+                };
+               
+                listview.Dock = DockStyle.Fill;
+                newtab.Controls.Add(listview);
+                tabControl2.SelectedTab = newtab;
+
+                foreach (ListViewItem item in co)
+                {
+                    listview.Items.Add(item);
+                }
             }
         }
 
@@ -227,6 +224,11 @@ namespace testfdb_cs
             //    string fullpath = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(guid));
             //     MessageBox.Show(fullpath);
             //}
+        }
+
+        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+            flowLayoutPanel1.Visible = !flowLayoutPanel1.Visible;
         }
     }
 
