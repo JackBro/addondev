@@ -33,18 +33,17 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.TextCheckBox = new System.Windows.Forms.CheckBox();
-            this.NameCheckBox = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.NameCheckBox = new System.Windows.Forms.CheckBox();
+            this.TextCheckBox = new System.Windows.Forms.CheckBox();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -110,15 +109,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(365, 53);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // textBox1
-            // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(365, 152);
-            this.textBox1.TabIndex = 0;
-            // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.AutoSize = true;
@@ -136,18 +126,16 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(363, 51);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
-            // TextCheckBox
+            // flowLayoutPanel1
             // 
-            this.TextCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.TextCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.TextCheckBox.Location = new System.Drawing.Point(74, 1);
-            this.TextCheckBox.Margin = new System.Windows.Forms.Padding(1);
-            this.TextCheckBox.Name = "TextCheckBox";
-            this.TextCheckBox.Size = new System.Drawing.Size(71, 22);
-            this.TextCheckBox.TabIndex = 11;
-            this.TextCheckBox.Text = "Text";
-            this.TextCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.TextCheckBox.UseVisualStyleBackColor = true;
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.Controls.Add(this.NameCheckBox);
+            this.flowLayoutPanel1.Controls.Add(this.TextCheckBox);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(1, 26);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(1);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(146, 24);
+            this.flowLayoutPanel1.TabIndex = 14;
             // 
             // NameCheckBox
             // 
@@ -162,16 +150,32 @@
             this.NameCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.NameCheckBox.UseVisualStyleBackColor = true;
             // 
-            // flowLayoutPanel1
+            // TextCheckBox
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.NameCheckBox);
-            this.flowLayoutPanel1.Controls.Add(this.TextCheckBox);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(1, 26);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(1);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(146, 24);
-            this.flowLayoutPanel1.TabIndex = 14;
+            this.TextCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
+            this.TextCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.TextCheckBox.Location = new System.Drawing.Point(74, 1);
+            this.TextCheckBox.Margin = new System.Windows.Forms.Padding(1);
+            this.TextCheckBox.Name = "TextCheckBox";
+            this.TextCheckBox.Size = new System.Drawing.Size(71, 22);
+            this.TextCheckBox.TabIndex = 11;
+            this.TextCheckBox.Text = "Text";
+            this.TextCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.TextCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripComboBox1,
+            this.toolStripButton1,
+            this.toolStripSplitButton1});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.toolStrip1.Size = new System.Drawing.Size(363, 25);
+            this.toolStrip1.TabIndex = 15;
+            this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripComboBox1
             // 
@@ -194,23 +198,18 @@
             this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
             this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButton1.Name = "toolStripSplitButton1";
-            this.toolStripSplitButton1.Size = new System.Drawing.Size(32, 17);
+            this.toolStripSplitButton1.Size = new System.Drawing.Size(32, 22);
             this.toolStripSplitButton1.Text = "toolStripSplitButton1";
             this.toolStripSplitButton1.ButtonClick += new System.EventHandler(this.toolStripSplitButton1_ButtonClick);
             // 
-            // toolStrip1
+            // textBox1
             // 
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripComboBox1,
-            this.toolStripButton1,
-            this.toolStripSplitButton1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(363, 25);
-            this.toolStrip1.TabIndex = 15;
-            this.toolStrip1.Text = "toolStrip1";
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(365, 152);
+            this.textBox1.TabIndex = 0;
             // 
             // splitContainer2
             // 
@@ -220,7 +219,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.listView1);
+            this.splitContainer2.Panel1.Controls.Add(this.listBox1);
             // 
             // splitContainer2.Panel2
             // 
@@ -229,20 +228,16 @@
             this.splitContainer2.SplitterDistance = 89;
             this.splitContainer2.TabIndex = 15;
             // 
-            // listView1
+            // listBox1
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.FullRowSelect = true;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(89, 350);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(89, 350);
+            this.listBox1.TabIndex = 0;
             // 
             // Form1
             // 
@@ -292,8 +287,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

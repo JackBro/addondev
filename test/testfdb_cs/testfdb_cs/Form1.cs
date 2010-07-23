@@ -10,6 +10,11 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Data.SQLite;
 
+
+//http://yoshikazuasada.biz/note/tools/1057
+//http://d.hatena.ne.jp/mame-tanuki/20091127/FenrirFS
+//http://web.me.com/jonstovell/Tag_Folders/Tag_Folders_Home.html
+
 namespace testfdb_cs
 {
     //http://www.adamrocker.com/blog/195/practical_way_of_autocompletetextview_with_sqlite.html
@@ -229,6 +234,7 @@ namespace testfdb_cs
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
             flowLayoutPanel1.Visible = !flowLayoutPanel1.Visible;
+
         }
     }
 
