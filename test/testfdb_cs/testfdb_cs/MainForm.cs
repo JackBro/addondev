@@ -193,8 +193,8 @@ namespace testfdb_cs
             {
                 e.Handled = true;
 
-                 List<ListViewItem> co = select(toolStripComboBox1.Text);
-                TabPage newtab = new TabPage(toolStripComboBox1.Text);
+                 List<ListViewItem> co = select(NameComboBox.Text);
+                TabPage newtab = new TabPage(NameComboBox.Text);
                 tabControl2.TabPages.Add(newtab);
                 //ListVewUserControl listview = new ListVewUserControl();
                 ListView listview = new ListView();

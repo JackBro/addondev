@@ -1,0 +1,32 @@
+﻿http://d.hatena.ne.jp/litespeeed/20080212/p1
+http://rina.jpn.ph/~rance/om/sql/hosoku02.html
+http://www.confrage.com/oracle/oracle_sql/dml/distinct/distinct.html
+http://gihyo.jp/dev/feature/01/vs2008csharp/0002
+
+//////
+//file
+"id","tags","commnet"
+"0","text,src","src"
+"1","text","2010"
+"2","image","image"
+"3","text,src","src"
+
+
+//////
+//tag
+"id","tag"
+"0","text"
+"0","src"
+"1","text"
+"2","image"
+"3","text"
+"3","src"
+
+detail
+SELECT * FROM test WHERE tag = 'src' OR tag = 'text' 
+SELECT * FROM (SELECT * FROM test WHERE tag = 'text' ) WHERE tag = 'src' 
+SELECT * FROM test WHERE tag IN ('text', 'src') GROUP BY name HAVING COUNT(*) = 2
+SELECT * FROM file WHERE id = (SELECT id FROM tag WHERE tag IN ('text', 'src') GROUP BY id HAVING COUNT(*) = 2)
+
+SELECT * FROM file WHERE id IN (SELECT id FROM tag WHERE tag IN ('text', 'src') GROUP BY id HAVING COUNT(*) = 2)
+SELECT * FROM file WHERE id IN (SELECT id FROM tag WHERE tag IN ('text', 'src') GROUP BY id HAVING COUNT(*) = 2)
