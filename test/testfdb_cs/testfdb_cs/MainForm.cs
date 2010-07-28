@@ -27,9 +27,11 @@ namespace testfdb_cs
         {
             InitializeComponent();
 
+            
             tagdb.FileName = "file.db";
             tagdb.FileTableName = "filetable";
             tagdb.TagTableName = "tagtable";
+            tagdb.Connection();
             tagdb.createTable();
         }
 
@@ -38,35 +40,7 @@ namespace testfdb_cs
             return "file.db";
         }
 
-        private List<string> DoIt(string dir)
-        {
-            List<string> list = new List<string>();
-
-            Queue<string> q = new Queue<string>();
-            q.Enqueue(dir);
-
-            while (q.Count > 0)
-            {
-                string d = q.Dequeue();
-
-                string[] files = Directory.GetFiles(d);
-                foreach (string s in files)
-                {
-                    list.Add(s);
-                    Console.WriteLine(s);
-                }
-
-                string[] dirs = Directory.GetDirectories(d);
-                foreach (string s in dirs)
-                {
-                    list.Add(s);
-                    Console.WriteLine(s);
-                    q.Enqueue(s);
-                }
-            }
-
-            return list;
-        }
+  
 
         //http://techbank.jp/Community/blogs/poohkid/archive/2009/11/14/22590.aspx
         //http://sites.google.com/site/gsfzero1/
@@ -171,15 +145,61 @@ namespace testfdb_cs
 
         }
 
+        //private List<string> DoIt(string dir, Action<string> func)
+        private void DoIt(string dir, Action<string> func)
+        {
+            //List<string> list = new List<string>();
+
+            Queue<string> q = new Queue<string>();
+            q.Enqueue(dir);
+
+            while (q.Count > 0)
+            {
+                string d = q.Dequeue();
+
+                string[] files = Directory.GetFiles(d);
+                foreach (string s in files)
+                {
+                    //list.Add(s);
+                    //Console.WriteLine(s);
+                    func(s);
+                }
+
+                string[] dirs = Directory.GetDirectories(d);
+                foreach (string s in dirs)
+                {
+                    //list.Add(s);
+                    func(s);
+                    //Console.WriteLine(s);
+                    q.Enqueue(s);
+                }
+            }
+
+            //return list;
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
-            createFileTable(getFileDbName());
+            //createFileTable(getFileDbName());
         }
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
+                List<TagDB.FileData> files = new List<TagDB.FileData>();
+
+                Action<string> func = x =>
+                {
+                    String name = Path.GetFileName(x);
+                    string guid = Win32.getObjectID(x).ToString();
+                    TagDB.FileData filedata = tagdb.selectFileData(guid);
+                    if (filedata == null)
+                    {
+                        filedata = new TagDB.FileData(guid, name, new List<string>(), "");
+                    }
+                    files.Add(filedata);
+                };
                 //createFileTable(getFileDbName());
                 //foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop))
                 //{
@@ -193,12 +213,26 @@ namespace testfdb_cs
                     string guid = Win32.getObjectID(fullpath).ToString();
                     //string strcmd = String.Format("INSERT INTO {0}(guid,name) VALUES('{1}', '{2}')",
                     //    getFileDbName(), guid, filename);
-
+                    if (File.GetAttributes(fullpath) == FileAttributes.Directory)
+                    {
+                        DoIt(fullpath, func);
+                    }
+                    else
+                    {
+                        //files.Add(fullpath);
+                        files.Add(new TagDB.FileData(guid, name, new List<string>(), ""));
+                    }
                     
                 }
 
                 RegisterForm reg = new RegisterForm();
-
+                reg.FileDatas = files;
+                reg.SetFileData();
+                DialogResult res = reg.ShowDialog();
+                if (res == DialogResult.OK)
+                {
+                    tagdb.insertFiles(reg.FileDatas, reg.Tags.ToList<string>());
+                }
 
             }
         }

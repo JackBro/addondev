@@ -1,4 +1,5 @@
 ﻿http://slashdot.jp/security/
+http://codezine.jp/article/detail/1771
 
 http://d.hatena.ne.jp/litespeeed/20080212/p1
 http://rina.jpn.ph/~rance/om/sql/hosoku02.html

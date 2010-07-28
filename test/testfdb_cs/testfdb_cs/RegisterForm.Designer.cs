@@ -28,18 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.FileListView = new System.Windows.Forms.ListView();
+            this.TagTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.CommentTextBox = new System.Windows.Forms.TextBox();
+            this.TagCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.OKButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.OKButton = new System.Windows.Forms.Button();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.tableLayoutPanel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -48,22 +51,28 @@
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // listView1
+            // FileListView
             // 
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(356, 195);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.FileListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.FileListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileListView.FullRowSelect = true;
+            this.FileListView.Location = new System.Drawing.Point(0, 0);
+            this.FileListView.Name = "FileListView";
+            this.FileListView.Size = new System.Drawing.Size(356, 195);
+            this.FileListView.TabIndex = 0;
+            this.FileListView.UseCompatibleStateImageBehavior = false;
+            this.FileListView.View = System.Windows.Forms.View.Details;
             // 
-            // textBox1
+            // TagTextBox
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(60, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(293, 19);
-            this.textBox1.TabIndex = 2;
+            this.TagTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TagTextBox.Location = new System.Drawing.Point(60, 3);
+            this.TagTextBox.Name = "TagTextBox";
+            this.TagTextBox.Size = new System.Drawing.Size(293, 19);
+            this.TagTextBox.TabIndex = 2;
             // 
             // label1
             // 
@@ -82,10 +91,10 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.textBox1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.TagTextBox, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.textBox2, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.checkedListBox1, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.CommentTextBox, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.TagCheckedListBox, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -105,14 +114,23 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "comment";
             // 
-            // textBox2
+            // CommentTextBox
             // 
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox2.Location = new System.Drawing.Point(60, 111);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(293, 77);
-            this.textBox2.TabIndex = 7;
+            this.CommentTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CommentTextBox.Location = new System.Drawing.Point(60, 111);
+            this.CommentTextBox.Multiline = true;
+            this.CommentTextBox.Name = "CommentTextBox";
+            this.CommentTextBox.Size = new System.Drawing.Size(293, 77);
+            this.CommentTextBox.TabIndex = 7;
+            // 
+            // TagCheckedListBox
+            // 
+            this.TagCheckedListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TagCheckedListBox.FormattingEnabled = true;
+            this.TagCheckedListBox.Location = new System.Drawing.Point(60, 28);
+            this.TagCheckedListBox.Name = "TagCheckedListBox";
+            this.TagCheckedListBox.Size = new System.Drawing.Size(293, 74);
+            this.TagCheckedListBox.TabIndex = 8;
             // 
             // splitContainer1
             // 
@@ -123,7 +141,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.listView1);
+            this.splitContainer1.Panel1.Controls.Add(this.FileListView);
             // 
             // splitContainer1.Panel2
             // 
@@ -158,16 +176,6 @@
             this.panel1.Size = new System.Drawing.Size(362, 30);
             this.panel1.TabIndex = 8;
             // 
-            // OKButton
-            // 
-            this.OKButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.OKButton.Location = new System.Drawing.Point(203, 4);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 0;
-            this.OKButton.Text = "OK";
-            this.OKButton.UseVisualStyleBackColor = true;
-            // 
             // CancelButton
             // 
             this.CancelButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -177,15 +185,18 @@
             this.CancelButton.TabIndex = 1;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // checkedListBox1
+            // OKButton
             // 
-            this.checkedListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(60, 28);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(293, 74);
-            this.checkedListBox1.TabIndex = 8;
+            this.OKButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.OKButton.Location = new System.Drawing.Point(203, 4);
+            this.OKButton.Name = "OKButton";
+            this.OKButton.Size = new System.Drawing.Size(75, 23);
+            this.OKButton.TabIndex = 0;
+            this.OKButton.Text = "OK";
+            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
             // RegisterForm
             // 
@@ -194,6 +205,7 @@
             this.ClientSize = new System.Drawing.Size(362, 426);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "RegisterForm";
+            this.ShowInTaskbar = false;
             this.Text = "RegisterForm";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -208,17 +220,20 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView FileListView;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox TagTextBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox CommentTextBox;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.CheckedListBox TagCheckedListBox;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
     }
 }

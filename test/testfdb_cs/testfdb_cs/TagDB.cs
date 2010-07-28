@@ -39,6 +39,10 @@ namespace testfdb_cs
 
                 return seltags;
             }
+
+            //public static List<string> parseTags(string tags)
+            //{
+            //}
         }
 
         public delegate void tagsSelect(string guid, string name, string tags, string comment);
@@ -89,12 +93,19 @@ namespace testfdb_cs
 
         public TagDB()
         {
+            //connection = new SQLiteConnection("Data Source=" + FileName);
+            //connection.Open();
+
+            //cmd = connection.CreateCommand();
+        }
+
+        public void Connection()
+        {
             connection = new SQLiteConnection("Data Source=" + FileName);
             connection.Open();
 
             cmd = connection.CreateCommand();
         }
-
 
         public void Dispose()
         {
@@ -170,23 +181,23 @@ namespace testfdb_cs
             commitTransaction();
         }
 
-        public void updateFile(string guid, string name)
-        {
-            string strcmd = String.Format("UPDATE {0} SET name = '{1}' where guid = '{2}'", FileTableName, name, guid);
-            cmd.CommandText = strcmd;
-            cmd.ExecuteNonQuery();
-        }
+        //public void updateFile(string guid, string name)
+        //{
+        //    string strcmd = String.Format("UPDATE {0} SET name = '{1}' where guid = '{2}'", FileTableName, name, guid);
+        //    cmd.CommandText = strcmd;
+        //    cmd.ExecuteNonQuery();
+        //}
 
-        public void updateFile(string guid, List<string> tags)
-        {
-        }
+        //public void updateFile(string guid, List<string> tags)
+        //{
+        //}
 
-        public void updateFile(string guid, string comment)
-        {
-            string strcmd = String.Format("UPDATE {0} SET comment = '{1}' where guid = '{2}'", FileTableName, comment, guid);
-            cmd.CommandText = strcmd;
-            cmd.ExecuteNonQuery();
-        }
+        //public void updateFile(string guid, string comment)
+        //{
+        //    string strcmd = String.Format("UPDATE {0} SET comment = '{1}' where guid = '{2}'", FileTableName, comment, guid);
+        //    cmd.CommandText = strcmd;
+        //    cmd.ExecuteNonQuery();
+        //}
 
         public void updateFile(string guid, FileData filedata)
         {
@@ -244,6 +255,37 @@ namespace testfdb_cs
             }
 
             commitTransaction();
+        }
+
+        public FileData selectFileData(string guid)
+        {
+
+            FileData res = null;
+
+            beginTransaction();
+
+            List<string> tags = new List<string>();
+            cmd.CommandText = String.Format("SELECT * FROM {0} WHERE guid = '{1}'", TagTableName, guid); ;
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    tags.Add((string)reader[0]);
+                }
+            }
+
+            cmd.CommandText = String.Format("SELECT * FROM {0} WHERE guid = '{1}'", FileTableName, guid); ;
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    res = new FileData((string)reader[0], (string)reader[1], tags, (string)reader[3]);
+                }
+            }
+
+            commitTransaction();
+
+            return res;
         }
 
         public bool hasFileData(string guid)
