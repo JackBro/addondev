@@ -1,4 +1,6 @@
-﻿http://d.hatena.ne.jp/litespeeed/20080212/p1
+﻿http://slashdot.jp/security/
+
+http://d.hatena.ne.jp/litespeeed/20080212/p1
 http://rina.jpn.ph/~rance/om/sql/hosoku02.html
 http://www.confrage.com/oracle/oracle_sql/dml/distinct/distinct.html
 http://gihyo.jp/dev/feature/01/vs2008csharp/0002
