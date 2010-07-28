@@ -21,10 +21,16 @@ namespace testfdb_cs
     //http://webcache.googleusercontent.com/search?q=cache:NSovgXJuaKMJ:blog.livedoor.jp/maru_tak/archives/cat_10012124.html+sqlite+ROWNUM&cd=1&hl=ja&ct=clnk&gl=jp&lr=lang_ja&client=firefox-a
     public partial class MainForm : Form
     {
+        private TagDB tagdb = new TagDB();
+
         public MainForm()
         {
             InitializeComponent();
 
+            tagdb.FileName = "file.db";
+            tagdb.FileTableName = "filetable";
+            tagdb.TagTableName = "tagtable";
+            tagdb.createTable();
         }
 
         private string getFileDbName()
@@ -150,17 +156,18 @@ namespace testfdb_cs
 
         public bool hasData(SQLiteCommand cmd, string guid)
         {
-            bool res = false;
+            //bool res = false;
 
             //string strcmd = String.Format("SELECT * FROM name WHERE guid = '{0}' AND rowid <= 1", guid);
-            string strcmd = String.Format("SELECT * FROM {0} WHERE guid = '{1}'", getFileDbName(), guid);
+            string strcmd = String.Format("SELECT COUNT({0}) FROM {1} WHERE guid = '{0}'", guid, getFileDbName());
             cmd.CommandText = strcmd;
-            using (SQLiteDataReader reader = cmd.ExecuteReader())
-            {
-                res = reader.Read();
-            }
+            return !cmd.ExecuteScalar().Equals(0);
+            //using (SQLiteDataReader reader = cmd.ExecuteReader())
+            //{
+            //    res = reader.Read();
+            //}
 
-            return res;
+            //return res;
 
         }
 
@@ -173,12 +180,26 @@ namespace testfdb_cs
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                createFileTable(getFileDbName());
+                //createFileTable(getFileDbName());
                 //foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop))
                 //{
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                insert(files);
+                string[] fullpaths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                //insert(files);
                 //}
+
+                foreach (string fullpath in fullpaths)
+                {
+                    String filename = Path.GetFileName(fullpath);
+                    string guid = Win32.getObjectID(fullpath).ToString();
+                    //string strcmd = String.Format("INSERT INTO {0}(guid,name) VALUES('{1}', '{2}')",
+                    //    getFileDbName(), guid, filename);
+
+                    
+                }
+
+                RegisterForm reg = new RegisterForm();
+
+
             }
         }
 

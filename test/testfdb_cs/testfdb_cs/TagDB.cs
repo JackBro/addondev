@@ -31,7 +31,7 @@ namespace testfdb_cs
                 foreach (string tag in tags)
                 {
                     seltags += "'" + tag + "'";
-                    if (tags[tags.Length - 1] != tag)
+                    if (tags[tags.Count - 1] != tag)
                     {
                         seltags += ",";
                     }
@@ -41,8 +41,8 @@ namespace testfdb_cs
             }
         }
 
-        private delegate void tagsSelect(string guid, string name, string tags, string comment);
-        public tagsSelect tagsSelectEvent;
+        public delegate void tagsSelect(string guid, string name, string tags, string comment);
+        public tagsSelect tagsSelectEvent = null;
 
         private string name;
         public string FileName
@@ -92,7 +92,7 @@ namespace testfdb_cs
             connection = new SQLiteConnection("Data Source=" + FileName);
             connection.Open();
 
-            cmd = cnn.CreateCommand();
+            cmd = connection.CreateCommand();
         }
 
 
@@ -131,6 +131,7 @@ namespace testfdb_cs
                 cmd.ExecuteNonQuery();
                 //    cnn.Close();
                 //}
+                
             }
         }
 
@@ -140,24 +141,58 @@ namespace testfdb_cs
 
             foreach(FileData file in filedatas)
             {
-                List<string> newtags = file.tags.Union(addtags).Except(file.tags.Intersect(addtags));
-                file.tags = file.tags.Union(addtags);
+                IEnumerable<string> newtags = file.tags.Union(addtags).Except(file.tags.Intersect(addtags));
+                file.tags = file.tags.Union(addtags).ToList<string>();
 
-                string strcmd = String.Format("INSERT INTO {0}(guid, name, tags, comment) VALUES('{1}', '{2}', '{3}', '{4}')",
-                    FileTableName, file.guid, file.name, file.getTagsConcat(), file.comment);
-                cmd.CommandText = strcmd;
-                cmd.ExecuteNonQuery();
-
+                if (hasFileData(file.guid))
+                {
+                    //updateFile
+                }
+                else
+                {
+                    string strcmd = String.Format("INSERT INTO {0}(guid, name, tags, comment) VALUES('{1}', '{2}', '{3}', '{4}')",
+                        FileTableName, file.guid, file.name, file.getTagsConcat(), file.comment);
+                    cmd.CommandText = strcmd;
+                    cmd.ExecuteNonQuery();
+                }
                 foreach (string tag in newtags)
                 {
-                    string tagcmd = String.Format("INSERT INTO {0}(guid,tag) VALUES('{1}', '{2}')",
-                        TagTableName, file.guid, tag);
-                    cmd.CommandText = tagcmd;
-                    cmd.ExecuteNonQuery();
+                    if (!hasTagData(file.guid, tag))
+                    {
+                        string tagcmd = String.Format("INSERT INTO {0}(guid,tag) VALUES('{1}', '{2}')",
+                            TagTableName, file.guid, tag);
+                        cmd.CommandText = tagcmd;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
 
             commitTransaction();
+        }
+
+        public void updateFile(string guid, string name)
+        {
+            string strcmd = String.Format("UPDATE {0} SET name = '{1}' where guid = '{2}'", FileTableName, name, guid);
+            cmd.CommandText = strcmd;
+            cmd.ExecuteNonQuery();
+        }
+
+        public void updateFile(string guid, List<string> tags)
+        {
+        }
+
+        public void updateFile(string guid, string comment)
+        {
+            string strcmd = String.Format("UPDATE {0} SET comment = '{1}' where guid = '{2}'", FileTableName, comment, guid);
+            cmd.CommandText = strcmd;
+            cmd.ExecuteNonQuery();
+        }
+
+        public void updateFile(string guid, FileData filedata)
+        {
+            //string strcmd = String.Format("UPDATE {0} SET comment = '{1}' where guid = '{2}'", FileTableName, comment, guid);
+            //cmd.CommandText = strcmd;
+            //cmd.ExecuteNonQuery();
         }
 
         public void insertTags(string[] guids, string[] tags)
@@ -209,6 +244,20 @@ namespace testfdb_cs
             }
 
             commitTransaction();
+        }
+
+        public bool hasFileData(string guid)
+        {
+            string strcmd = String.Format("SELECT COUNT({0}) FROM {1} WHERE guid = '{0}'", guid, FileTableName);
+            cmd.CommandText = strcmd;
+            return !cmd.ExecuteScalar().Equals(0);
+        }
+
+        public bool hasTagData(string guid, string tag)
+        {
+            string strcmd = String.Format("SELECT COUNT(*) FROM {1} WHERE guid = '{0}' AND tag = '{2}'", guid, TagTableName, tag);
+            cmd.CommandText = strcmd;
+            return !cmd.ExecuteScalar().Equals(0);
         }
     }
 }
