@@ -34,8 +34,8 @@ BOOL WINAPI DllMain (HINSTANCE hDLL, DWORD dwReason, LPVOID lpReserved)
 //boolean __declspec(dllexport) __stdcall getObjectID(LPCWSTR path,  FILE_OBJECTID* fid)
 boolean __declspec(dllexport) __stdcall getObjectID(LPCWSTR path, GUID* guid)
 {
-	HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-	
+	//HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
 
 	if(hFile == INVALID_HANDLE_VALUE){
 		return false;

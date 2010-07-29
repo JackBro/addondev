@@ -1,4 +1,8 @@
-﻿http://slashdot.jp/security/
+﻿http://yokohama.cool.ne.jp/chokuto/urawaza/api/CreateFile.html
+http://d.hatena.ne.jp/fgshun/20090401/1238587820
+http://floralcompany.jp/archives/2008/03/sqlitenet.html
+
+http://slashdot.jp/security/
 http://codezine.jp/article/detail/1771
 
 http://d.hatena.ne.jp/litespeeed/20080212/p1
@@ -33,3 +37,15 @@ SELECT * FROM file WHERE id = (SELECT id FROM tag WHERE tag IN ('text', 'src') G
 
 SELECT * FROM file WHERE id IN (SELECT id FROM tag WHERE tag IN ('text', 'src') GROUP BY id HAVING COUNT(*) = 2)
 SELECT * FROM file WHERE id IN (SELECT id FROM tag WHERE tag IN ('text', 'src') GROUP BY id HAVING COUNT(*) = 2)
+
+
+http://yoshikazuasada.biz/note/tools/1057
+http://d.hatena.ne.jp/mame-tanuki/20091127/FenrirFS
+http://web.me.com/jonstovell/Tag_Folders/Tag_Folders_Home.html
+
+http://www.adamrocker.com/blog/195/practical_way_of_autocompletetextview_with_sqlite.html
+http://webcache.googleusercontent.com/search?q=cache:NSovgXJuaKMJ:blog.livedoor.jp/maru_tak/archives/cat_10012124.html+sqlite+ROWNUM&cd=1&hl=ja&ct=clnk&gl=jp&lr=lang_ja&client=firefox-a
+       
+http://techbank.jp/Community/blogs/poohkid/archive/2009/11/14/22590.aspx
+http://sites.google.com/site/gsfzero1/
+

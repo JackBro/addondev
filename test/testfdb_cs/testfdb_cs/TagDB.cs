@@ -7,49 +7,63 @@ using System.Data.SQLite;
 
 namespace testfdb_cs
 {
+
+    public class FileData
+    {
+        public string guid;
+        public string name;
+        public List<string> tags;
+        public string comment;
+
+        public FileData(string guid, string name, List<string> tags, string comment)
+        {
+            this.guid = guid;
+            this.name = name;
+            this.tags = tags;
+            this.comment = comment;
+        }
+
+        public FileData(string guid, string name, string tags, string comment)
+        {
+            this.guid = guid;
+            this.name = name;
+            this.tags = parseTags(tags);
+            this.comment = comment;
+        }
+
+        public string getTagsConcat()
+        {
+            string seltags = "";
+            foreach (string tag in tags)
+            {
+                //seltags += "'" + tag + "'";
+                seltags += tag;
+                if (tags[tags.Count - 1] != tag)
+                {
+                    seltags += ",";
+                }
+            }
+
+            return seltags;
+        }
+
+        public static List<string> parseTags(string tags)
+        {
+            return tags.Split(new char[] { ',' }).ToList<string>();
+        }
+    }
+
     class TagDB
     {
 
-        public class FileData
-        {
-            public string guid;
-            public string name;
-            public List<string> tags;
-            public string comment;
 
-            public FileData(string guid, string name, List<string> tags, string comment)
-            {
-                this.guid = guid;
-                this.name = name;
-                this.tags = tags;
-                this.comment = comment;
-            }
-
-            public string getTagsConcat()
-            {
-                string seltags = "";
-                foreach (string tag in tags)
-                {
-                    seltags += "'" + tag + "'";
-                    if (tags[tags.Count - 1] != tag)
-                    {
-                        seltags += ",";
-                    }
-                }
-
-                return seltags;
-            }
-
-            //public static List<string> parseTags(string tags)
-            //{
-            //}
-        }
 
         public delegate void tagsSelect(string guid, string name, string tags, string comment);
         public tagsSelect tagsSelectEvent = null;
 
+
         private string name;
-        public string FileName
+        public string DBFileName
         {
             get 
             {
@@ -101,7 +115,7 @@ namespace testfdb_cs
 
         public void Connection()
         {
-            connection = new SQLiteConnection("Data Source=" + FileName);
+            connection = new SQLiteConnection("Data Source=" + DBFileName);
             connection.Open();
 
             cmd = connection.CreateCommand();
@@ -129,21 +143,56 @@ namespace testfdb_cs
 
         public void createTable()
         {
-            if (new FileInfo(FileName).Exists)
+            if (new FileInfo(DBFileName).Exists)
             {
                 //using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + Name))
                 //using (SQLiteCommand cmd = cnn.CreateCommand())
                 //{
                 //    cnn.Open();
-                cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, name TEXT, tags TEXT, comment TEXT)", FileTableName);
-                cmd.ExecuteNonQuery();
-
-                cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, tag TEXT)", TagTableName);
-                cmd.ExecuteNonQuery();
+                if (!existTable(FileTableName))
+                {
+                    cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, name TEXT, tags TEXT, comment TEXT)", FileTableName);
+                    cmd.ExecuteNonQuery();
+                }
+                if (!existTable(TagTableName))
+                {
+                    cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, tag TEXT)", TagTableName);
+                    cmd.ExecuteNonQuery();
+                }
                 //    cnn.Close();
                 //}
                 
             }
+        }
+
+        private bool existTable(string tablename)
+        {
+            string strcmd = String.Format("select count(*) from sqlite_master where type='table' and name='{0}'", tablename);
+            cmd.CommandText = strcmd;
+            Int64 oo = (Int64)cmd.ExecuteScalar();
+            return !(oo == 0);
+            //bool bb = !int.Equals(int.Parse(oo.ToString()), 0);
+            //return bb;
+            //return !cmd.ExecuteScalar().Equals(0);
+        }
+
+        public string[] getTags()
+        {
+            List<string> tags = new List<string>();
+            beginTransaction();
+            cmd.CommandText = String.Format("SELECT DISTINCT tag FROM {0}", TagTableName);
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    tags.Add((string)reader[0]);
+                }
+            }
+            commitTransaction();
+
+            tags.Sort();
+
+            return tags.ToArray<string>();
         }
 
         public void insertFiles(List<FileData> filedatas, List<string> addtags)
@@ -224,8 +273,10 @@ namespace testfdb_cs
             commitTransaction();
         }
 
-        public void selectTags(string[] tags)
+        public List<FileData> selectTags(string[] tags)
         {
+            List<FileData> filedatas = new List<FileData>();
+
             string seltags="";
             foreach(string tag in tags)
             {
@@ -236,8 +287,8 @@ namespace testfdb_cs
                 }
             }
                                       //SELECT * FROM file WHERE id IN (SELECT id FROM tag WHERE tag IN ('text', 'src') GROUP BY id HAVING COUNT(*) = 2)
-            string sql = String.Format("SELECT * FROM {0} WHERE {1} IN (SELECT {1} FROM {2} WHERE {2} IN ({3}) GROUP BY {1} HAVING COUNT(*) = {7})",
-                FileTableName, "guid", "tag", seltags, tags.Length);
+            string sql = String.Format("SELECT * FROM {0} WHERE {1} IN (SELECT {1} FROM {2} WHERE {3} IN ({4}) GROUP BY {1} HAVING COUNT(*) = {5})",
+                FileTableName, "guid", TagTableName, "tag", seltags, tags.Length);
 
             beginTransaction();
 
@@ -247,14 +298,18 @@ namespace testfdb_cs
             {
                 while (reader.Read())
                 {
-                    if (reader.FieldCount == 3)
+                    if (reader.FieldCount == 4)
                     {
-                        tagsSelectEvent((string)reader[0], (string)reader[1], (string)reader[2], (string)reader[3]);
+                        
+                        //tagsSelectEvent((string)reader[0], (string)reader[1], (string)reader[2], (string)reader[3]);
+                        filedatas.Add(new FileData((string)reader[0], (string)reader[1], (string)reader[2], (string)reader[3]));
                     }
                 }
             }
 
             commitTransaction();
+
+            return filedatas;
         }
 
         public FileData selectFileData(string guid)
@@ -290,16 +345,22 @@ namespace testfdb_cs
 
         public bool hasFileData(string guid)
         {
-            string strcmd = String.Format("SELECT COUNT({0}) FROM {1} WHERE guid = '{0}'", guid, FileTableName);
+            string strcmd = String.Format("SELECT COUNT(*) FROM {0} WHERE guid = '{1}'", FileTableName, guid);
             cmd.CommandText = strcmd;
-            return !cmd.ExecuteScalar().Equals(0);
+            Int64 cnt = (Int64)cmd.ExecuteScalar();
+            return !(cnt==0);
+            
+            //return !cmd.ExecuteScalar().Equals(0);
         }
 
         public bool hasTagData(string guid, string tag)
         {
             string strcmd = String.Format("SELECT COUNT(*) FROM {1} WHERE guid = '{0}' AND tag = '{2}'", guid, TagTableName, tag);
             cmd.CommandText = strcmd;
-            return !cmd.ExecuteScalar().Equals(0);
+            //return !cmd.ExecuteScalar().Equals(0);
+            Int64 cnt = (Int64)cmd.ExecuteScalar();
+            return !(cnt == 0);
         }
+
     }
 }

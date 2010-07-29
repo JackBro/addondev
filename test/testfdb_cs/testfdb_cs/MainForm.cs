@@ -11,14 +11,10 @@ using System.IO;
 using System.Data.SQLite;
 
 
-//http://yoshikazuasada.biz/note/tools/1057
-//http://d.hatena.ne.jp/mame-tanuki/20091127/FenrirFS
-//http://web.me.com/jonstovell/Tag_Folders/Tag_Folders_Home.html
+
 
 namespace testfdb_cs
 {
-    //http://www.adamrocker.com/blog/195/practical_way_of_autocompletetextview_with_sqlite.html
-    //http://webcache.googleusercontent.com/search?q=cache:NSovgXJuaKMJ:blog.livedoor.jp/maru_tak/archives/cat_10012124.html+sqlite+ROWNUM&cd=1&hl=ja&ct=clnk&gl=jp&lr=lang_ja&client=firefox-a
     public partial class MainForm : Form
     {
         private TagDB tagdb = new TagDB();
@@ -27,12 +23,25 @@ namespace testfdb_cs
         {
             InitializeComponent();
 
-            
-            tagdb.FileName = "file.db";
+            tagdb.DBFileName = "file.db";
             tagdb.FileTableName = "filetable";
             tagdb.TagTableName = "tagtable";
             tagdb.Connection();
             tagdb.createTable();
+
+
+            string[] tags = tagdb.getTags();
+            TreeNode node = TagTreeView.Nodes["TagNode"];
+            foreach (string tag in tags)
+            {
+                node.Nodes.Add(tag);
+            }
+        }
+
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            tagdb.Dispose();
         }
 
         private string getFileDbName()
@@ -42,8 +51,6 @@ namespace testfdb_cs
 
   
 
-        //http://techbank.jp/Community/blogs/poohkid/archive/2009/11/14/22590.aspx
-        //http://sites.google.com/site/gsfzero1/
         public void createFileTable(string filename)
         {
             if (!new FileInfo(filename).Exists)
@@ -187,16 +194,16 @@ namespace testfdb_cs
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                List<TagDB.FileData> files = new List<TagDB.FileData>();
+                List<FileData> files = new List<FileData>();
 
                 Action<string> func = x =>
                 {
                     String name = Path.GetFileName(x);
                     string guid = Win32.getObjectID(x).ToString();
-                    TagDB.FileData filedata = tagdb.selectFileData(guid);
+                    FileData filedata = tagdb.selectFileData(guid);
                     if (filedata == null)
                     {
-                        filedata = new TagDB.FileData(guid, name, new List<string>(), "");
+                        filedata = new FileData(guid, name, new List<string>(), "");
                     }
                     files.Add(filedata);
                 };
@@ -209,8 +216,7 @@ namespace testfdb_cs
 
                 foreach (string fullpath in fullpaths)
                 {
-                    String filename = Path.GetFileName(fullpath);
-                    string guid = Win32.getObjectID(fullpath).ToString();
+
                     //string strcmd = String.Format("INSERT INTO {0}(guid,name) VALUES('{1}', '{2}')",
                     //    getFileDbName(), guid, filename);
                     if (File.GetAttributes(fullpath) == FileAttributes.Directory)
@@ -219,19 +225,30 @@ namespace testfdb_cs
                     }
                     else
                     {
+                        String filename = Path.GetFileName(fullpath);
+                        string guid = Win32.getObjectID(fullpath).ToString();
                         //files.Add(fullpath);
-                        files.Add(new TagDB.FileData(guid, name, new List<string>(), ""));
+                        files.Add(new FileData(guid, filename, new List<string>(), ""));
                     }
                     
                 }
-
+                string[] oldtags = tagdb.getTags();
                 RegisterForm reg = new RegisterForm();
                 reg.FileDatas = files;
+                reg.SetAllTags(tagdb.getTags());
                 reg.SetFileData();
-                DialogResult res = reg.ShowDialog();
+                DialogResult res = reg.ShowDialog(this);
                 if (res == DialogResult.OK)
                 {
                     tagdb.insertFiles(reg.FileDatas, reg.Tags.ToList<string>());
+                }
+
+                //IEnumerable<string> addtags = oldtags.Intersect(tagdb.getTags());
+                IEnumerable<string> addtags = tagdb.getTags().Except(oldtags);
+                foreach (string tag in addtags)
+                {
+                    TreeNode node = TagTreeView.Nodes["TagNode"];
+                    node.Nodes.Add(tag);
                 }
 
             }
@@ -290,6 +307,72 @@ namespace testfdb_cs
             //     MessageBox.Show(fullpath);
             //}
         }
+
+        private void TagTreeView_DragEnter(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void TagTreeView_DragDrop(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void TagTreeView_DragOver(object sender, DragEventArgs e)
+        {
+            
+        }
+
+        private void TagTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+  
+            ListView listview = new ListView();
+            listview.View = View.Details;
+            ColumnHeader header1 = new ColumnHeader();
+            header1.Text = "name";
+            listview.Columns.Add(header1);
+
+            ColumnHeader header2 = new ColumnHeader();
+            header2.Text = "tags";
+            listview.Columns.Add(header2);
+
+            ColumnHeader header3 = new ColumnHeader();
+            header3.Text = "comment";
+            listview.Columns.Add(header3);
+
+            listview.FullRowSelect = true;
+
+            listview.DoubleClick += delegate
+            {
+                ListViewItem selitem = listview.SelectedItems[0];
+                string guid = selitem.Tag.ToString();
+
+                string fullpath = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(guid));
+                MessageBox.Show(fullpath);
+            };
+
+            listview.Dock = DockStyle.Fill;
+
+            TabPage newtab = new TabPage(NameComboBox.Text);
+            tabControl2.TabPages.Add(newtab);
+            newtab.Controls.Add(listview);
+            tabControl2.SelectedTab = newtab;
+
+            List<FileData> filedatas = tagdb.selectTags(new string[]{"test"});
+            
+            foreach (FileData file in filedatas)
+            {
+                ListViewItem item = new ListViewItem(new string[]{file.name, file.getTagsConcat(), file.comment});
+                item.Tag = file.guid;
+                listview.Items.Add(item);
+            }
+        }
+
+        private void TagTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+
+        }
+
     }
 
 

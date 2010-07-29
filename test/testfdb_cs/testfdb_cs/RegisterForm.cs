@@ -28,8 +28,8 @@ namespace testfdb_cs
             }
         }
 
-        private List<TagDB.FileData> filedatas;
-        public List<TagDB.FileData> FileDatas
+        private List<FileData> filedatas;
+        public List<FileData> FileDatas
         {
             get
             {
@@ -49,10 +49,18 @@ namespace testfdb_cs
 
         public void SetFileData()
         {
-            foreach(TagDB.FileData filedata in filedatas)
+            foreach(FileData filedata in filedatas)
             {
                 ListViewItem item = new ListViewItem(new string[]{filedata.name, filedata.getTagsConcat(), filedata.comment});
-                FileListView.Items.Add();
+                FileListView.Items.Add(item);
+            }
+        }
+
+        public void SetAllTags(string[] tags)
+        {
+            foreach (string tag in tags)
+            {
+                TagCheckedListBox.Items.Add(tag);
             }
         }
 
@@ -66,6 +74,11 @@ namespace testfdb_cs
         {
             this.DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void TagCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            
         }
     }
 }

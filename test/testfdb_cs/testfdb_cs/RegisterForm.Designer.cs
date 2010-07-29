@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.FileListView = new System.Windows.Forms.ListView();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.TagTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -40,9 +43,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.tableLayoutPanel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -53,6 +54,7 @@
             // 
             // FileListView
             // 
+            this.FileListView.CheckBoxes = true;
             this.FileListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
@@ -131,6 +133,7 @@
             this.TagCheckedListBox.Name = "TagCheckedListBox";
             this.TagCheckedListBox.Size = new System.Drawing.Size(293, 74);
             this.TagCheckedListBox.TabIndex = 8;
+            this.TagCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.TagCheckedListBox_ItemCheck);
             // 
             // splitContainer1
             // 
@@ -206,6 +209,7 @@
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "RegisterForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "RegisterForm";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -235,5 +239,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
