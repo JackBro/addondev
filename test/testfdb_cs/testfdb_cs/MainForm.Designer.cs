@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("ノード0");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("NoTag");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("ノード2", new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("ノード0");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("NoTag");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("ノード2", new System.Windows.Forms.TreeNode[] {
+            treeNode5});
             this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -47,12 +47,10 @@
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TagTreeView = new System.Windows.Forms.TreeView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -80,10 +78,6 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.textBox1);
             this.splitContainer1.Size = new System.Drawing.Size(502, 433);
             this.splitContainer1.SplitterDistance = 240;
             this.splitContainer1.TabIndex = 12;
@@ -187,15 +181,6 @@
             this.toolStripButton3.Size = new System.Drawing.Size(47, 22);
             this.toolStripButton3.Text = "both";
             // 
-            // textBox1
-            // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(502, 189);
-            this.textBox1.TabIndex = 0;
-            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -219,15 +204,15 @@
             this.TagTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TagTreeView.Location = new System.Drawing.Point(0, 0);
             this.TagTreeView.Name = "TagTreeView";
-            treeNode1.Name = "ノード0";
-            treeNode1.Text = "ノード0";
-            treeNode2.Name = "ノード1";
-            treeNode2.Text = "NoTag";
-            treeNode3.Name = "TagNode";
-            treeNode3.Text = "ノード2";
+            treeNode4.Name = "ノード0";
+            treeNode4.Text = "ノード0";
+            treeNode5.Name = "ノード1";
+            treeNode5.Text = "NoTag";
+            treeNode6.Name = "TagNode";
+            treeNode6.Text = "ノード2";
             this.TagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode3});
+            treeNode4,
+            treeNode6});
             this.TagTreeView.Size = new System.Drawing.Size(121, 433);
             this.TagTreeView.TabIndex = 0;
             this.TagTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TagTreeView_NodeMouseDoubleClick);
@@ -260,8 +245,6 @@
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
@@ -279,7 +262,6 @@
         private System.Windows.Forms.MenuStrip MainMenuStrip;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TabControl tabControl2;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripComboBox NameComboBox;
         private System.Windows.Forms.ToolStripButton toolStripButton1;

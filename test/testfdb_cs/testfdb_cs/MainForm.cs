@@ -308,6 +308,11 @@ namespace testfdb_cs
             //}
         }
 
+        private void UpdateListView()
+        {
+
+        }
+
         private void TagTreeView_DragEnter(object sender, DragEventArgs e)
         {
 
