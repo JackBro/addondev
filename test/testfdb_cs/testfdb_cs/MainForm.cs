@@ -308,9 +308,33 @@ namespace testfdb_cs
             //}
         }
 
-        private void UpdateListView()
+        private void UpdateListView(ListView listview, List<FileData> filedatas, string[] tags)
         {
+            listview.Clear();
 
+            //List<FileData> filedatas = tagdb.selectTags(tags);
+
+            foreach (FileData file in filedatas)
+            {
+                ListViewItem item = new ListViewItem(new string[] { file.name, file.getTagsConcat(), file.comment });
+                item.Tag = file.guid;
+                listview.Items.Add(item);
+            }
+        }
+
+        private void UpdateListView(ListView listview, List<FileData> filedatas, Func<FileData, bool> filter)
+        {
+            listview.Clear();
+
+            foreach(FileData filedata in filedatas)
+            {
+                if (filter(filedata))
+                {
+                    ListViewItem item = new ListViewItem(new string[] { filedata.name, filedata.getTagsConcat(), filedata.comment });
+                    item.Tag = filedata.guid;
+                    listview.Items.Add(item);
+                }
+            }
         }
 
         private void TagTreeView_DragEnter(object sender, DragEventArgs e)
