@@ -343,6 +343,15 @@ namespace testfdb_cs
             return res;
         }
 
+        public FileData selectFileData(string[] names, string[] words)
+        {
+            beginTransaction();
+
+
+
+            commitTransaction();
+        }
+
         public bool hasFileData(string guid)
         {
             string strcmd = String.Format("SELECT COUNT(*) FROM {0} WHERE guid = '{1}'", FileTableName, guid);
