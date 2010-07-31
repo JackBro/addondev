@@ -23,18 +23,25 @@ namespace testfdb_cs
         {
             InitializeComponent();
 
+            AddTagMenuItem.Click += (sender, e) =>
+            {
+                MessageBox.Show("AddTagMenuItem");
+            };
+
             tagdb.DBFileName = "file.db";
-            tagdb.FileTableName = "filetable";
-            tagdb.TagTableName = "tagtable";
+            tagdb.FileTable = "filetable";
+            tagdb.TagedFileTable = "tagedfiletable";
+            tagdb.TagTable = "tagtable";
             tagdb.Connection();
             tagdb.createTable();
 
 
-            string[] tags = tagdb.getTags();
+            string[] tags = tagdb.getAllTags();
             TreeNode node = TagTreeView.Nodes["TagNode"];
             foreach (string tag in tags)
             {
-                node.Nodes.Add(tag);
+                TreeNode tagnode = node.Nodes.Add(tag);
+                tagnode.Tag = tag;
             }
         }
 
@@ -44,113 +51,118 @@ namespace testfdb_cs
             tagdb.Dispose();
         }
 
-        private string getFileDbName()
+        private TabControl getTabControl()
         {
-            return "file.db";
+            return this.tabControl2;
         }
+
+        //private string getFileDbName()
+        //{
+        //    return "file.db";
+        //}
 
   
 
-        public void createFileTable(string filename)
-        {
-            if (!new FileInfo(filename).Exists)
-            {
-                using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + getFileDbName()))
-                using (SQLiteCommand cmd = cnn.CreateCommand())
-                {
-                    cnn.Open();
-                    cmd.CommandText = String.Format("CREATE TABLE {0} (ID INTEGER PRIMARY KEY AUTOINCREMENT, guid TEXT, name TEXT, comment TEXT)", getFileDbName());
-                    cmd.ExecuteNonQuery();
-                    cnn.Close();
-                }
-            }
-        }
+        //public void createFileTable(string filename)
+        //{
+        //    if (!new FileInfo(filename).Exists)
+        //    {
+        //        using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + getFileDbName()))
+        //        using (SQLiteCommand cmd = cnn.CreateCommand())
+        //        {
+        //            cnn.Open();
+        //            cmd.CommandText = String.Format("CREATE TABLE {0} (ID INTEGER PRIMARY KEY AUTOINCREMENT, guid TEXT, name TEXT, comment TEXT)", getFileDbName());
+        //            cmd.ExecuteNonQuery();
+        //            cnn.Close();
+        //        }
+        //    }
+        //}
 
-        public void insert(string[] fullpaths)
-        {
+        //public void insert(string[] fullpaths)
+        //{
 
-            using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + getFileDbName()))
-            using (SQLiteCommand cmd = cnn.CreateCommand())
-            {
-                cnn.Open();
+        //    using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + getFileDbName()))
+        //    using (SQLiteCommand cmd = cnn.CreateCommand())
+        //    {
+        //        cnn.Open();
 
-                SQLiteTransaction transaction = cnn.BeginTransaction();
-                foreach (string fullpath in fullpaths)
-                {
-                    String filename = Path.GetFileName(fullpath);
-                    string guid = Win32.getObjectID(fullpath).ToString();
-                    bool res = hasData(cmd, guid);
-                    string strcmd = String.Format("INSERT INTO {0}(guid,name) VALUES('{1}', '{2}')",
-                        getFileDbName(), guid, filename);
-                    cmd.CommandText = strcmd;
-                    //cmd.ExecuteNonQuery();
-                }
-                transaction.Commit();
-                transaction.Dispose();
-                transaction = null;
+        //        SQLiteTransaction transaction = cnn.BeginTransaction();
+        //        foreach (string fullpath in fullpaths)
+        //        {
+        //            String filename = Path.GetFileName(fullpath);
+        //            string guid = Win32.getObjectID(fullpath).ToString();
+        //            bool res = hasData(cmd, guid);
+        //            string strcmd = String.Format("INSERT INTO {0}(guid,name) VALUES('{1}', '{2}')",
+        //                getFileDbName(), guid, filename);
+        //            cmd.CommandText = strcmd;
+        //            //cmd.ExecuteNonQuery();
+        //        }
+        //        transaction.Commit();
+        //        transaction.Dispose();
+        //        transaction = null;
 
-                cnn.Close();
-            }
-        }
+        //        cnn.Close();
+        //    }
+        //}
 
-        public List<ListViewItem> select(string key)
-        {
-            List<ListViewItem> co = new List<ListViewItem>();
+        //public List<ListViewItem> select(string key)
+        //{
+        //    List<ListViewItem> co = new List<ListViewItem>();
 
-            using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + getFileDbName()))
-            using (SQLiteCommand cmd = cnn.CreateCommand())
-            {
-                cnn.Open();
+        //    using (SQLiteConnection cnn = new SQLiteConnection("Data Source=" + getFileDbName()))
+        //    using (SQLiteCommand cmd = cnn.CreateCommand())
+        //    {
+        //        cnn.Open();
 
-                SQLiteTransaction transaction = cnn.BeginTransaction();
+        //        SQLiteTransaction transaction = cnn.BeginTransaction();
 
-                string strcmd = String.Format("select * from {0} where name like '%{1}%'",getFileDbName(), key);
-                cmd.CommandText = strcmd;
-                //cmd.ExecuteNonQuery();
-                using (SQLiteDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
+        //        string strcmd = String.Format("select * from {0} where name like '%{1}%'",getFileDbName(), key);
+        //        cmd.CommandText = strcmd;
+        //        //cmd.ExecuteNonQuery();
+        //        using (SQLiteDataReader reader = cmd.ExecuteReader())
+        //        {
+        //            while (reader.Read())
+        //            {
                         
-                        //Console.WriteLine(String.Format("ID = {0}, MyValue = {1}", reader[0], reader[1]));
+        //                //Console.WriteLine(String.Format("ID = {0}, MyValue = {1}", reader[0], reader[1]));
                         
-                        //string path = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(reader[0].ToString()));
-                        //Console.WriteLine(String.Format("path = {0}", path));
-                       // string[] item1 = { reader[0], reader[1] };
-                        ListViewItem item = new ListViewItem(reader[1].ToString());
-                        item.Tag = reader[0].ToString();
-                        //listView1.Items.Add(item);
+        //                //string path = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(reader[0].ToString()));
+        //                //Console.WriteLine(String.Format("path = {0}", path));
+        //               // string[] item1 = { reader[0], reader[1] };
+        //                ListViewItem item = new ListViewItem(reader[1].ToString());
+        //                item.Tag = reader[0].ToString();
+        //                //listView1.Items.Add(item);
                         
-                        co.Add(item);
-                    }
+        //                co.Add(item);
+        //            }
 
-                }
-                transaction.Commit();
-                transaction.Dispose();
-                transaction = null;
+        //        }
+        //        transaction.Commit();
+        //        transaction.Dispose();
+        //        transaction = null;
 
-                cnn.Close();
-            }
+        //        cnn.Close();
+        //    }
 
-            return co;
-        }
+        //    return co;
+        //}
 
-        public bool hasData(SQLiteCommand cmd, string guid)
-        {
-            //bool res = false;
+        //public bool hasData(SQLiteCommand cmd, string guid)
+        //{
+        //    //bool res = false;
 
-            //string strcmd = String.Format("SELECT * FROM name WHERE guid = '{0}' AND rowid <= 1", guid);
-            string strcmd = String.Format("SELECT COUNT({0}) FROM {1} WHERE guid = '{0}'", guid, getFileDbName());
-            cmd.CommandText = strcmd;
-            return !cmd.ExecuteScalar().Equals(0);
-            //using (SQLiteDataReader reader = cmd.ExecuteReader())
-            //{
-            //    res = reader.Read();
-            //}
+        //    //string strcmd = String.Format("SELECT * FROM name WHERE guid = '{0}' AND rowid <= 1", guid);
+        //    string strcmd = String.Format("SELECT COUNT({0}) FROM {1} WHERE guid = '{0}'", guid, getFileDbName());
+        //    cmd.CommandText = strcmd;
+        //    return !cmd.ExecuteScalar().Equals(0);
+        //    //using (SQLiteDataReader reader = cmd.ExecuteReader())
+        //    //{
+        //    //    res = reader.Read();
+        //    //}
 
-            //return res;
+        //    //return res;
 
-        }
+        //}
 
         //private List<string> DoIt(string dir, Action<string> func)
         private void DoIt(string dir, Action<string> func)
@@ -207,13 +219,8 @@ namespace testfdb_cs
                     }
                     files.Add(filedata);
                 };
-                //createFileTable(getFileDbName());
-                //foreach (string fileName in (string[])e.Data.GetData(DataFormats.FileDrop))
-                //{
-                string[] fullpaths = (string[])e.Data.GetData(DataFormats.FileDrop);
-                //insert(files);
-                //}
 
+                string[] fullpaths = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (string fullpath in fullpaths)
                 {
 
@@ -232,19 +239,19 @@ namespace testfdb_cs
                     }
                     
                 }
-                string[] oldtags = tagdb.getTags();
+                string[] oldtags = tagdb.getAllTags();
                 RegisterForm reg = new RegisterForm();
                 reg.FileDatas = files;
-                reg.SetAllTags(tagdb.getTags());
+                reg.Tags = tagdb.getAllTags();
                 reg.SetFileData();
                 DialogResult res = reg.ShowDialog(this);
                 if (res == DialogResult.OK)
                 {
-                    tagdb.insertFiles(reg.FileDatas, reg.Tags.ToList<string>());
+                    tagdb.insertFileData(reg.FileDatas, reg.Tags.ToList<string>());
                 }
 
                 //IEnumerable<string> addtags = oldtags.Intersect(tagdb.getTags());
-                IEnumerable<string> addtags = tagdb.getTags().Except(oldtags);
+                IEnumerable<string> addtags = tagdb.getAllTags().Except(oldtags);
                 foreach (string tag in addtags)
                 {
                     TreeNode node = TagTreeView.Nodes["TagNode"];
@@ -265,34 +272,34 @@ namespace testfdb_cs
             {
                 e.Handled = true;
 
-                 List<ListViewItem> co = select(NameComboBox.Text);
-                TabPage newtab = new TabPage(NameComboBox.Text);
-                tabControl2.TabPages.Add(newtab);
-                //ListVewUserControl listview = new ListVewUserControl();
-                ListView listview = new ListView();
-                listview.View = View.Details;
-                ColumnHeader header1 = new ColumnHeader();
-                header1.Text = "name";
-                listview.Columns.Add(header1);
-                listview.FullRowSelect = true;
+                // List<ListViewItem> co = select(NameComboBox.Text);
+                //TabPage newtab = new TabPage(NameComboBox.Text);
+                //tabControl2.TabPages.Add(newtab);
+                ////ListVewUserControl listview = new ListVewUserControl();
+                //ListView listview = new ListView();
+                //listview.View = View.Details;
+                //ColumnHeader header1 = new ColumnHeader();
+                //header1.Text = "name";
+                //listview.Columns.Add(header1);
+                //listview.FullRowSelect = true;
 
-                listview.DoubleClick += delegate
-                {
-                    ListViewItem selitem = listview.SelectedItems[0];
-                    string guid = selitem.Tag.ToString();
+                //listview.DoubleClick += delegate
+                //{
+                //    ListViewItem selitem = listview.SelectedItems[0];
+                //    string guid = selitem.Tag.ToString();
 
-                    string fullpath = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(guid));
-                    MessageBox.Show(fullpath);
-                };
+                //    string fullpath = Win32.getFullPathByObjectID(Win32.FILEGUID.parse(guid));
+                //    MessageBox.Show(fullpath);
+                //};
                
-                listview.Dock = DockStyle.Fill;
-                newtab.Controls.Add(listview);
-                tabControl2.SelectedTab = newtab;
+                //listview.Dock = DockStyle.Fill;
+                //newtab.Controls.Add(listview);
+                //tabControl2.SelectedTab = newtab;
 
-                foreach (ListViewItem item in co)
-                {
-                    listview.Items.Add(item);
-                }
+                //foreach (ListViewItem item in co)
+                //{
+                //    listview.Items.Add(item);
+                //}
             }
         }
 
@@ -308,34 +315,7 @@ namespace testfdb_cs
             //}
         }
 
-        private void UpdateListView(ListView listview, List<FileData> filedatas, string[] tags)
-        {
-            listview.Clear();
-
-            //List<FileData> filedatas = tagdb.selectTags(tags);
-
-            foreach (FileData file in filedatas)
-            {
-                ListViewItem item = new ListViewItem(new string[] { file.name, file.getTagsConcat(), file.comment });
-                item.Tag = file.guid;
-                listview.Items.Add(item);
-            }
-        }
-
-        private void UpdateListView(ListView listview, List<FileData> filedatas, Func<FileData, bool> filter)
-        {
-            listview.Clear();
-
-            foreach(FileData filedata in filedatas)
-            {
-                if (filter(filedata))
-                {
-                    ListViewItem item = new ListViewItem(new string[] { filedata.name, filedata.getTagsConcat(), filedata.comment });
-                    item.Tag = filedata.guid;
-                    listview.Items.Add(item);
-                }
-            }
-        }
+ 
 
         private void TagTreeView_DragEnter(object sender, DragEventArgs e)
         {
@@ -354,8 +334,31 @@ namespace testfdb_cs
 
         private void TagTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-  
+            if (e.Node.Tag != null)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    var listview = getActiveListView();
+                    listview.Items.Clear();
+                    UpdateListView(listview, tagdb.selectFileData(new string[] { (string)e.Node.Tag }));
+                }
+                else if (e.Button == MouseButtons.Middle)
+                {
+                    OpenNewTab(tagdb.selectFileData(new string[] { (string)e.Node.Tag }));
+                }
+            }
+        }
+
+        private void TagTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+
+        }
+
+        private ListView CreateListView()
+        {
             ListView listview = new ListView();
+            listview.Name = "listview";
+
             listview.View = View.Details;
             ColumnHeader header1 = new ColumnHeader();
             header1.Text = "name";
@@ -382,26 +385,67 @@ namespace testfdb_cs
 
             listview.Dock = DockStyle.Fill;
 
-            TabPage newtab = new TabPage(NameComboBox.Text);
-            tabControl2.TabPages.Add(newtab);
-            newtab.Controls.Add(listview);
-            tabControl2.SelectedTab = newtab;
+            return listview;
+        }
 
-            List<FileData> filedatas = tagdb.selectTags(new string[]{"test"});
-            
-            foreach (FileData file in filedatas)
+        private ListViewItem CreateItem(FileData filedata)
+        {
+            var item = new ListViewItem(new string[] { filedata.name, filedata.getTagsConcat(), filedata.comment });
+            item.Tag = filedata.guid;
+
+            return item;
+        }
+
+        private void UpdateListView(ListView listview, List<FileData> filedatas)
+        {
+            filedatas.ForEach(file =>
             {
-                ListViewItem item = new ListViewItem(new string[]{file.name, file.getTagsConcat(), file.comment});
-                item.Tag = file.guid;
+                ListViewItem item = CreateItem(file);
                 listview.Items.Add(item);
+            });
+        }
+
+        private void UpdateListView(ListView listview, List<FileData> filedatas, Func<FileData, bool> func)
+        {
+            var filte = filedatas.FindAll(x => func(x));//x => x.Length == 5);
+            filte.ForEach(file =>
+            {
+                ListViewItem item = CreateItem(file);
+                listview.Items.Add(item);
+            });
+        }
+
+        private TabPage OpenNewTab(List<FileData> filedatas)
+        {
+            var listview = CreateListView();
+            listview.Tag = filedatas;
+
+            filedatas.ForEach(file =>
+            {
+                ListViewItem item = CreateItem(file);
+                listview.Items.Add(item);
+            });
+
+
+            var newtabpage = new TabPage(NameComboBox.Text);
+            getTabControl().TabPages.Add(newtabpage);
+            newtabpage.Controls.Add(listview);
+            getTabControl().SelectedTab = newtabpage;
+
+            return newtabpage;
+        }
+
+        private ListView getActiveListView()
+        {
+            if (getTabControl().TabPages.Count == 0)
+            {
+                return CreateListView();
+            }
+            else
+            {
+                return (ListView)getTabControl().TabPages[getTabControl().SelectedIndex].Controls["listview"];
             }
         }
-
-        private void TagTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-
-        }
-
     }
 
 

@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("ノード0");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("NoTag");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("ノード2", new System.Windows.Forms.TreeNode[] {
-            treeNode5});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("ノード0");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("NoTag");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("ノード2", new System.Windows.Forms.TreeNode[] {
+            treeNode2});
             this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -50,6 +51,8 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TagTreeView = new System.Windows.Forms.TreeView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.TagTreeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.AddTagMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -57,6 +60,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.TagTreeViewContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainMenuStrip
@@ -93,6 +97,7 @@
             // 
             // tabControl2
             // 
+            this.tabControl2.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Multiline = true;
@@ -201,18 +206,19 @@
             // TagTreeView
             // 
             this.TagTreeView.AllowDrop = true;
+            this.TagTreeView.ContextMenuStrip = this.TagTreeViewContextMenu;
             this.TagTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TagTreeView.Location = new System.Drawing.Point(0, 0);
             this.TagTreeView.Name = "TagTreeView";
-            treeNode4.Name = "ノード0";
-            treeNode4.Text = "ノード0";
-            treeNode5.Name = "ノード1";
-            treeNode5.Text = "NoTag";
-            treeNode6.Name = "TagNode";
-            treeNode6.Text = "ノード2";
+            treeNode1.Name = "ノード0";
+            treeNode1.Text = "ノード0";
+            treeNode2.Name = "ノード1";
+            treeNode2.Text = "NoTag";
+            treeNode3.Name = "TagNode";
+            treeNode3.Text = "ノード2";
             this.TagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4,
-            treeNode6});
+            treeNode1,
+            treeNode3});
             this.TagTreeView.Size = new System.Drawing.Size(121, 433);
             this.TagTreeView.TabIndex = 0;
             this.TagTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TagTreeView_NodeMouseDoubleClick);
@@ -228,6 +234,19 @@
             this.statusStrip1.Size = new System.Drawing.Size(627, 22);
             this.statusStrip1.TabIndex = 16;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // TagTreeViewContextMenu
+            // 
+            this.TagTreeViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddTagMenuItem});
+            this.TagTreeViewContextMenu.Name = "TagcontextMenuStrip1";
+            this.TagTreeViewContextMenu.Size = new System.Drawing.Size(169, 48);
+            // 
+            // AddTagMenuItem
+            // 
+            this.AddTagMenuItem.Name = "AddTagMenuItem";
+            this.AddTagMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.AddTagMenuItem.Text = "toolStripMenuItem1";
             // 
             // MainForm
             // 
@@ -252,6 +271,7 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            this.TagTreeViewContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,6 +296,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ContextMenuStrip TagTreeViewContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem AddTagMenuItem;
     }
 }
 

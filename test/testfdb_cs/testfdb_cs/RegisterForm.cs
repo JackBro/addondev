@@ -23,23 +23,30 @@ namespace testfdb_cs
         {
             get
             {
-                string tags = TagTextBox.Text;
-                return tags.Split(',');
+                string[] tags = TagTextBox.Text.Split(',');
+
+                var checkedtag = new List<string>();
+                for(int i=0;i<TagCheckedListBox.Items.Count; i++)
+                {
+                    if (TagCheckedListBox.GetItemChecked(i))
+                    {
+                        checkedtag.Add((string)TagCheckedListBox.Items[i]);
+                    }
+                }
+                return checkedtag.Union(tags).ToArray<string>();
+            }
+
+            set
+            {
+                foreach (string tag in value)
+                {
+                    TagCheckedListBox.Items.Add(tag);
+                }
             }
         }
 
-        private List<FileData> filedatas;
-        public List<FileData> FileDatas
-        {
-            get
-            {
-                return filedatas;
-            }
-            set
-            {
-                filedatas = value;
-            }
-        }
+        //private List<FileData> filedatas;
+        public List<FileData> FileDatas {get;set;}
         
 
         public RegisterForm()
@@ -49,18 +56,10 @@ namespace testfdb_cs
 
         public void SetFileData()
         {
-            foreach(FileData filedata in filedatas)
+            foreach (FileData filedata in FileDatas)
             {
                 ListViewItem item = new ListViewItem(new string[]{filedata.name, filedata.getTagsConcat(), filedata.comment});
                 FileListView.Items.Add(item);
-            }
-        }
-
-        public void SetAllTags(string[] tags)
-        {
-            foreach (string tag in tags)
-            {
-                TagCheckedListBox.Items.Add(tag);
             }
         }
 
@@ -74,11 +73,6 @@ namespace testfdb_cs
         {
             this.DialogResult = DialogResult.Cancel;
             Close();
-        }
-
-        private void TagCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            
         }
     }
 }

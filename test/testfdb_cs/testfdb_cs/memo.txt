@@ -1,4 +1,12 @@
-﻿http://yokohama.cool.ne.jp/chokuto/urawaza/api/CreateFile.html
+﻿http://social.msdn.microsoft.com/Forums/ja-JP/vcexpressja/thread/1cc6f010-c277-4c9f-8c6c-7931af0d923a
+http://csharp30matome.seesaa.net/category/7142936-1.html
+http://itnandemolab.blog70.fc2.com/blog-entry-1211.html
+http://csharper.blog57.fc2.com/blog-entry-224.html
+http://blogs.wankuma.com/andochin/archive/2009/04/25/172063.aspx
+http://www.labasp.net/CsharpNote/mTips/Linq/A01_A10.html#A02
+http://labaq.com/archives/51178781.html
+
+http://yokohama.cool.ne.jp/chokuto/urawaza/api/CreateFile.html
 http://d.hatena.ne.jp/fgshun/20090401/1238587820
 http://floralcompany.jp/archives/2008/03/sqlitenet.html
 

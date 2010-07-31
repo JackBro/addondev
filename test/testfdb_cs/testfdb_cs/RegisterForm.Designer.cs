@@ -133,7 +133,6 @@
             this.TagCheckedListBox.Name = "TagCheckedListBox";
             this.TagCheckedListBox.Size = new System.Drawing.Size(293, 74);
             this.TagCheckedListBox.TabIndex = 8;
-            this.TagCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.TagCheckedListBox_ItemCheck);
             // 
             // splitContainer1
             // 

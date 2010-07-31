@@ -52,6 +52,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DetailView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DetailView.Designer.cs">
+      <DependentUpon>DetailView.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileDataListView.cs">
       <SubType>Component</SubType>
     </Compile>
