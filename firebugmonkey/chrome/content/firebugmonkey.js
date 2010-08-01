@@ -14,14 +14,10 @@ const fbmStatusIcon = $('firebugmonkeyStatusBarIcon');
 Firebug.firebugmonkey = {
 	testURL : null,
 	sourcehrefs : null,
-	//srctmpmap : null,
 	enable : false,
 	enablescripts : null,
 	  	
 	init : function() {	
-
-		//this.fileutil = {};
-		//Components.utils.import("resource://fbm_modules/fileutil.js", this.fileutil);	
 		Components.utils.import("resource://fbm_modules/fileutils.js", this);
 	
   		this.enable = Application.prefs.getValue("extensions.firebugmonkey.enable", false);
@@ -42,11 +38,8 @@ Firebug.firebugmonkey = {
 	},
 
 	chromeLoad : function(e) {	
-		//this.tabBrowser = document.getElementById("content");
 		this.appContent = document.getElementById("appcontent");	
 		this.GM_listen(this.appContent, "DOMContentLoaded", this.GM_hitch(this, "contentLoad"));
-		//    Components.lookupMethod(appContent, "addEventListener")(
-	   // "DOMContentLoaded", this.contentLoad, null);
 	},
 
 	chromeUnload : function(e) {
@@ -58,16 +51,8 @@ Firebug.firebugmonkey = {
 	},
 
 	contentLoad : function(e) {
+
 		if(!this.enable) return;
-		
-//		var profiledir = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties).get("ProfD", Ci.nsILocalFile);
-//		var scriptdir = this.fileutil.makeDir(profiledir.path, FBM_SCRIPT_DIR);
-//		var scriptmpdir = this.fileutil.makeDir(scriptdir.path, "tmp");
-//		
-//		var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-//		file.initWithPath(scriptdir.path);
-//		file.append(FBM_SCRIPTLIST_FILE);
-//		var scriptsjsonfile = file.path;
 
 		var profiledir = this.FileUtils.getProfileDir(); 
 		var scriptdir = this.FileUtils.makeDir(profiledir, FBM_SCRIPT_DIR);
@@ -78,13 +63,7 @@ Firebug.firebugmonkey = {
 			Application.console.log("firebugmonkey : not find " + jsonfile.path);
 			return;
 		}
-		
-		//var XMLUtil ={};
-		//Components.utils.import("resource://fbm_modules/xmlutil.js", XMLUtil);
-		//var data = this.fileutil.read(scriptsxmlfile);
-		//var result = XMLUtil.XML2Obj.parseFromString(data);
 
-		//let jsonstr = this.fileutil.read(scriptsjsonfile);
 		let jsonstr = this.FileUtils.getContent(jsonfile);
 		let result = JSON.parse(jsonstr);
 		
@@ -97,8 +76,8 @@ Firebug.firebugmonkey = {
 	 		var dirname = result[key]["dir"];
 	 		var filename = result[key]["filename"];
 	 		var enable   = result[key]["enable"];
-	 		
-	 		if(dirname && filename && enable && enable == "true"){	
+
+			if(dirname && filename && enable){
 	 			//try{
 	 				var dir = this.FileUtils.getFile(scriptdir, dirname);
 	 				//Application.console.log("contentLoad dir = " + dirname);

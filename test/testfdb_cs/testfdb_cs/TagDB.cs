@@ -51,7 +51,7 @@ namespace testfdb_cs
 
         public string FileTable{ get; set; }
 
-        public string TagedFileTable{ get; set; }
+        public string TaggedFileTable{ get; set; }
 
         public string TagTable { get; set; }
 
@@ -98,9 +98,9 @@ namespace testfdb_cs
                     cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, name TEXT, tags TEXT, comment TEXT)", FileTable);
                     cmd.ExecuteNonQuery();
                 }
-                if (!existTable(TagedFileTable))
+                if (!existTable(TaggedFileTable))
                 {
-                    cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, tag TEXT)", TagedFileTable);
+                    cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, tag TEXT)", TaggedFileTable);
                     cmd.ExecuteNonQuery();
                 }
 
@@ -151,15 +151,40 @@ namespace testfdb_cs
             return tags.ToArray<string>();
         }
 
-        public void insertTag(string newtag)
+        public void insertTag(string[] newtags)
         {
             beginTransaction();
 
-            string strcmd = String.Format("INSERT INTO {0}(tag) VALUES('{1}')", TagTable, newtag);
-            cmd.CommandText = strcmd;
-            cmd.ExecuteNonQuery();
+            List<string> tags = new List<string>();
+            cmd.CommandText = String.Format("SELECT DISTINCT tag FROM {0}", TagTable);
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    tags.Add((string)reader[0]);
+                }
+            }
 
+            IEnumerable<string> addtags = newtags.Except(tags);
+
+            foreach (string tag in addtags)
+            {
+                string strcmd = String.Format("INSERT INTO {0}(tag) VALUES('{1}')", TagTable, tag);
+                cmd.CommandText = strcmd;
+                cmd.ExecuteNonQuery();
+            }
             commitTransaction();
+        }
+
+        private IEnumerable<string> unique(IEnumerable<string> tags)
+        {
+
+
+
+            foreach (string tag in tags)
+            {
+                yield return tag;
+            }
         }
 
         public void insertFileData(List<FileData> filedatas, List<string> addtags)
@@ -184,10 +209,10 @@ namespace testfdb_cs
                 }
                 foreach (string tag in newtags)
                 {
-                    if (!hasTagData(file.guid, tag))
+                    if (!hasTaggedFileData(file.guid, tag))
                     {
                         string tagcmd = String.Format("INSERT INTO {0}(guid,tag) VALUES('{1}', '{2}')",
-                            TagedFileTable, file.guid, tag);
+                            TaggedFileTable, file.guid, tag);
                         cmd.CommandText = tagcmd;
                         cmd.ExecuteNonQuery();
                     }
@@ -256,7 +281,7 @@ namespace testfdb_cs
 
                                       //SELECT * FROM file WHERE id IN (SELECT id FROM tag WHERE tag IN ('text', 'src') GROUP BY id HAVING COUNT(*) = 2)
             string sql = String.Format("SELECT * FROM {0} WHERE {1} IN (SELECT {1} FROM {2} WHERE {3} IN ({4}) GROUP BY {1} HAVING COUNT(*) = {5})",
-                FileTable, "guid", TagedFileTable, "tag", seltags, tags.Length);
+                FileTable, "guid", TaggedFileTable, "tag", seltags, tags.Length);
 
             beginTransaction();
 
@@ -288,7 +313,7 @@ namespace testfdb_cs
             beginTransaction();
 
             List<string> tags = new List<string>();
-            cmd.CommandText = String.Format("SELECT * FROM {0} WHERE guid = '{1}'", TagedFileTable, guid);
+            cmd.CommandText = String.Format("SELECT * FROM {0} WHERE guid = '{1}'", TaggedFileTable, guid);
             using (SQLiteDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -351,9 +376,16 @@ namespace testfdb_cs
             return !(cnt==0);
         }
 
-        public bool hasTagData(string guid, string tag)
+        public bool hasTaggedFileData(string guid, string tag)
         {
-            cmd.CommandText = String.Format("SELECT COUNT(*) FROM {1} WHERE guid = '{0}' AND tag = '{2}'", guid, TagedFileTable, tag);
+            cmd.CommandText = String.Format("SELECT COUNT(*) FROM {1} WHERE guid = '{0}' AND tag = '{2}'", guid, TaggedFileTable, tag);
+            Int64 cnt = (Int64)cmd.ExecuteScalar();
+            return !(cnt == 0);
+        }
+
+        public bool hasTagData(string tag)
+        {
+            cmd.CommandText = String.Format("SELECT COUNT(*) FROM {0} WHERE tag = '{1}'", tag);
             Int64 cnt = (Int64)cmd.ExecuteScalar();
             return !(cnt == 0);
         }

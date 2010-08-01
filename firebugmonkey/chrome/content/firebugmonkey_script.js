@@ -187,7 +187,7 @@ Firebug.firebugmonkey.Script.prototype =
 		for(let key in requireUrls){
 			let url = requireUrls[key].url;
 			let name = this._getLastSegment(url);
-			
+			name = name.replace(/\?/g,'_');
 			let localfile = this.FileUtils.getFile(this._scriptfile.parent, name)
 			if(!localfile.exists()){
 				/*

@@ -25,12 +25,15 @@ namespace testfdb_cs
 
             AddTagMenuItem.Click += (sender, e) =>
             {
-                MessageBox.Show("AddTagMenuItem");
+                
+                MessageBox.Show(
+                tagdb.insertTag
+
             };
 
             tagdb.DBFileName = "file.db";
             tagdb.FileTable = "filetable";
-            tagdb.TagedFileTable = "tagedfiletable";
+            tagdb.TaggedFileTable = "taggedfiletable";
             tagdb.TagTable = "tagtable";
             tagdb.Connection();
             tagdb.createTable();

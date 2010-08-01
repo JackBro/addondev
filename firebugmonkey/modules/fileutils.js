@@ -4,6 +4,7 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 
 const IOService = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
+const Application = Cc["@mozilla.org/fuel/application;1"].getService(Ci.fuelIApplication);
 
 var FileUtils = {
 	
@@ -78,7 +79,6 @@ var FileUtils = {
 			}
 		}catch(e){
 			this.ERROR = e;
-			//Application.console.log("getAbsolutePath err= " + e);
 			data = null;
 		}finally{
 			if(fis)fis.close();
@@ -92,6 +92,7 @@ var FileUtils = {
 	 * 
 	 */
 	getContentFromURI:function(uri, charset){
+
 		var ioService=Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
 		if( !charset ) {
 			charset = "UTF-8"
