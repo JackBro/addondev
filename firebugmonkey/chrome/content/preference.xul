@@ -44,6 +44,10 @@
 			        	label="&firebugmonkey.preference.script.new;"
 			        	id="button-new"
 			        	oncommand="newItem();"/>
+			        <button class="browse"
+			        	label="&firebugmonkey.preference.script.browse;"
+			        	id="button-browse"
+			        	oncommand="browseFile();"/>
 					<button class="edit"
 			        	label="&firebugmonkey.preference.script.edit;"
 			        	id="button-edit"

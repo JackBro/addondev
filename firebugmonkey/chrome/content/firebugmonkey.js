@@ -65,25 +65,29 @@ Firebug.firebugmonkey = {
 		}
 
 		let jsonstr = this.FileUtils.getContent(jsonfile);
-		let result = JSON.parse(jsonstr);
-		
+		//let result = JSON.parse(jsonstr);
+		let result = this.FileUtils.loadPref(jsonstr);
 	 	this.GM_Scripthrefs.clear();
 	 	
 	 	var scripts = [];
 	 	this.sourcehrefs = [];
 
 	 	for(let key in result){	 		
-	 		var dirname = result[key]["dir"];
-	 		var filename = result[key]["filename"];
-	 		var enable   = result[key]["enable"];
+	 		//var dirname = result[key]["dir"];
+	 		//var filename = result[key]["filename"];
+	 		//var enable   = result[key]["enable"];
+	 		
+	 		let myscript = result[key];
 
-			if(dirname && filename && (enable == true || enable == "true") ){
+			//if(dirname && filename && (enable == true || enable == "true") ){
+	 		if(myscript.dir && myscript.filename && myscript.fullpath && (myscript.enable == true || myscript.enable == "true") ){
 	 			//try{
-	 				var dir = this.FileUtils.getFile(scriptdir, dirname);
+	 				var dir = this.FileUtils.getFile(scriptdir, myscript.dir);
 	 				//Application.console.log("contentLoad dir = " + dirname);
 	 				//Application.console.log("contentLoad dirfile = " + dir.path);
 
-	 				var fbmscript = new Firebug.firebugmonkey.Script(e.target.URL, dir, filename, enable);
+	 				//var fbmscript = new Firebug.firebugmonkey.Script(e.target.URL, dir, filename, enable);
+	 				var fbmscript = new Firebug.firebugmonkey.Script(e.target.URL, dir, myscript);
 	 				fbmscript.init();
 	 				scripts.push(fbmscript);
 	 			//}catch(e){
@@ -91,10 +95,12 @@ Firebug.firebugmonkey = {
 	 			//}	 			
 	 		}
 	 	}
-
+	 	
 	 	this.enablescripts = (function() {
 		    function testMatch(script) {
-		      return script.enable && script.matchesURL(e.target.URL);
+		    	//Application.console.log("script.enable = " + script.enable);
+
+		      return (script.enable == true || script.enable == "true") && script.matchesURL(e.target.URL);
 		    }
 	    	return scripts.filter(testMatch);
 	 	})();
@@ -122,6 +128,7 @@ Firebug.firebugmonkey = {
 			for ( let i = 0; i < this.enablescripts.length; i++) {
 		    	let script = this.enablescripts[i];
 	    		let src = script.concatSrc;
+	    		
 	    		if(src){
 	    			try{
 	    				this.FileUtils.write(script.tmpFile, src);

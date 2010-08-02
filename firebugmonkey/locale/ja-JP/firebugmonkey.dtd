@@ -9,6 +9,7 @@
 <!ENTITY firebugmonkey.preference.script.list.filename "ファイル名">
 <!ENTITY firebugmonkey.preference.script.list.enable "有効">
 <!ENTITY firebugmonkey.preference.script.new "新規">
+<!ENTITY firebugmonkey.preference.script.browse "選択">
 <!ENTITY firebugmonkey.preference.script.edit "編集">
 <!ENTITY firebugmonkey.preference.script.delete "削除">
 <!ENTITY firebugmonkey.preference.script.up "上へ">

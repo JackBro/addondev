@@ -309,6 +309,27 @@ var FileUtils = {
 	
 	getProfileDir:function(){
 		return Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties).get("ProfD", Ci.nsILocalFile);
+	},
+	
+	loadPref(file){
+		var data = [];
+		if(file.exists()){
+			let jsonstr = this.getContent(file);
+			let result = JSON.parse(jsonstr);
+			for(let key in result){
+				data.push(result[key]);
+			}
+			
+			if(result["version"] == undefined){
+				data.version = 2;
+				var BUGMONKEY_SCRIPT_DIR = "fbm_scripts";
+				for(let key in data){
+					var scriptDir = this.getFile(util.FileUtils.getProfileDir(), BUGMONKEY_SCRIPT_DIR);
+					data[key]["fullpath"] = this.getFile(scriptDir, data[key]["filename"]);
+				}				
+			}
+		}
+		return data;
 	}
 }
 

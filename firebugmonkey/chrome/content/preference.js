@@ -22,13 +22,14 @@ function init() {
 	scriptFile = util.FileUtils.getFile(scriptDir, BUGMONKEY_SCRIPTLIST_FILE);
 	
 	var data = [];
-	if(scriptFile.exists()){
-		let jsonstr = util.FileUtils.getContent(scriptFile);
-		let result = JSON.parse(jsonstr);
-		for(let key in result){
-			data.push(result[key]);
-		}
-	}	
+	data = util.FileUtils.loadPref(scriptFile);
+//	if(scriptFile.exists()){
+//		let jsonstr = util.FileUtils.getContent(scriptFile);
+//		let result = JSON.parse(jsonstr);
+//		for(let key in result){
+//			data.push(result[key]);
+//		}
+//	}	
 	
 	scriptTreeView = new ScriptTreeView(data);
     document.getElementById("scriptTree").view = scriptTreeView;
@@ -92,14 +93,33 @@ function newItem(){
     
     util.FileUtils.write(script, getScriptTemplete());
     
-    scriptTreeView.appendItem({dir:dirname, filename:ret, enable:true});
+    scriptTreeView.appendItem({dir:dirname, filename:ret, fullpath:script.path, enable:true});
     save();
 }
 
+function browseFile(){
+	var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+	fp.init( window, "Select File", fp.modeOpen);
+	var res = fp.show();
+	if (res == fp.returnOK){
+		var file = fp.file;
+		var dirname = util.FileUtils.getFileNameExceptExt(file.leafName);
+	    util.FileUtils.makeDir(scriptDir, dirname);
+		
+		scriptTreeView.appendItem({dir:dirname, filename:file.leafName, fullpath:file.path, enable:true});
+		save();
+	}
+}
+
 function editItem(){	 
-	var file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.dir);
-	file.append(scriptTreeView.getSelectionData.filename);
-	
+//	var file;
+//	if(scriptTreeView.getSelectionData.selectfilepath){
+//		file = util.FileUtils.getFile(scriptTreeView.getSelectionData.selectfilepath);
+//	}else{
+//		file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.dir);
+//		file.append(scriptTreeView.getSelectionData.filename);
+//	}
+	var file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.fullpath);
 	var args = document.getElementById("editor-args").value;
 	args = args.replace('%path%', file.path);
 	var argary = args.split(' ');

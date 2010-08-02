@@ -9,6 +9,7 @@
 <!ENTITY firebugmonkey.preference.script.list.filename "FileName">
 <!ENTITY firebugmonkey.preference.script.list.enable "Enable">
 <!ENTITY firebugmonkey.preference.script.new "New">
+<!ENTITY firebugmonkey.preference.script.browse "Browse">
 <!ENTITY firebugmonkey.preference.script.edit "Edit">
 <!ENTITY firebugmonkey.preference.script.delete "Delete">
 <!ENTITY firebugmonkey.preference.script.up "Up">

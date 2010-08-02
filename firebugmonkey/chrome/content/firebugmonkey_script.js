@@ -11,14 +11,16 @@ FBL.ns(function () { with (FBL) {
  * @param string filename 
  * @param bool enbale 
  */
-Firebug.firebugmonkey.Script = function(url, scriptdir, filename, enbale){
+//Firebug.firebugmonkey.Script = function(url, scriptdir, filename, enbale){
+Firebug.firebugmonkey.Script = function(url, scriptdir, script){
 	
 	Components.utils.import("resource://fbm_modules/fileutils.js", this);	
 	
 	this._url = url;
 	this._scriptdir = scriptdir;
-	this._filename = filename;
-	this._enable = enbale;
+	this._filename = script.filename;
+	this._fullpath = script.fullpath;
+	this._enable = script.enable;
 		
 	this._includes = [];
 	this._excludes = [];
@@ -86,7 +88,11 @@ Firebug.firebugmonkey.Script.prototype =
 	},
 	
 	init : function(){
-		this._scriptfile = this.FileUtils.getFile(this._scriptdir, this._filename);
+//		this._scriptfile = this.FileUtils.getFile(this._scriptdir, this._filename);
+//		if(this._selectfilepath != undefined){
+//			this._scriptfile = this.FileUtils.getFile(this._selectfilepath);
+//		}
+		this._scriptfile = this.FileUtils.getFile(this._fullpath);
 		this._scripturi = ioservice.newFileURI(this.FileUtils.getFile(this._scriptfile));
 		this._scripttmpfile = this.FileUtils.getFile(
 				this.FileUtils.getFile(this._scriptdir, "tmp"),
@@ -95,11 +101,16 @@ Firebug.firebugmonkey.Script.prototype =
 				
 		this._scripttmpuri = ioservice.newFileURI(this.FileUtils.getFile(this._scripttmpfile));
 		this.source = this.FileUtils.getContent(this._scriptfile);
+		//Application.console.log("this._scriptfile src = " + this.source);	
 		this.parse();	
 	},
 	
 	parse : function(){	
 		var lines = this.source.match(/.+/g);
+		if(lines == null){
+			Application.console.log(this._scripturi.spec + " is empty");	
+			return;
+		}
 	    var lnIdx = 0;
 	    var result = {};
 	    var foundMeta = false;
@@ -107,6 +118,7 @@ Firebug.firebugmonkey.Script.prototype =
 	    var requireUrls = [];
 	    var resourceUrls = [];
 	
+
 	    while ((result = lines[lnIdx++])) {
 	      if (result.indexOf("// ==UserScript==") == 0) {
 	        foundMeta = true;
@@ -195,20 +207,6 @@ Firebug.firebugmonkey.Script.prototype =
 			name = name.replace(/\?/g,'_');
 			let localfile = this.FileUtils.getFile(this._scriptfile.parent, name)
 			if(!localfile.exists()){
-				/*
-				let text = this.FileUtils.getContentFromURI(url);
-				if(text){		
-					if(this.FileUtils.write(localfile, text)){
-						var localurl = ioservice.newFileURI(localfile).spec;
-						this._requires.push(localurl);
-					}else{
-						this._reportErrorr("error file write " 
-								+ localfile.path + " " + this.FileUtils.ERROR);
-					}
-				}else{
-					this._scriptError("error file read ", localfile.spac, requireUrls[key].line);
-				}	
-				*/
 				let res = this.FileUtils.saveTextFileFromURI(url, localfile);
 				if(!res){
 					Components.utils.reportError("firebugmonkey : error get file" 
@@ -225,27 +223,7 @@ Firebug.firebugmonkey.Script.prototype =
 		for(let key in resourceUrls){
 			let url = resourceUrls[key].url;
 			let name = this._getLastSegment(url);
-			name = name.replace(/\?/g,'_');
-			//Application.console.log("get file " + url);
-			/*
-			let byte = this.FileUtils.getBinaryContentFromURI(url);
-			Application.console.log("loadResources byte " + byte);
-			if(byte){
-				let localfile = this.FileUtils.getFile(this._scriptfile.parent, name);
-				if(this.FileUtils.writeBinary(localfile, byte)){
-					var localurl = ioservice.newFileURI(localfile).spec;
-    				var scriptResource = new Firebug.firebugmonkey.ScriptResource();
-    				scriptResource._name = resourceUrls[key].name;
-    				scriptResource._file = localurl;
-    				this._resources.push(scriptResource);
-				}else{
-					this._reportError("error file write " 
-							+ localfile.path + " " + this.FileUtils.ERROR);
-				}
-			}else{
-				this._scriptError("error file read ", this._scripturi.spac, resourceUrls[key].line);
-			}
-			*/
+			name = name.replace(/\?/g,'_');s
 			let localfile = this.FileUtils.getFile(this._scriptfile.parent, name);
 			if(!localfile.exists()){
 				let res = this.FileUtils.getBinaryFileFromURI(url, localfile);
@@ -277,12 +255,6 @@ Firebug.firebugmonkey.Script.prototype =
 		}
 		return name;	
 	},
-	
-//	_reportError:function(msg){
-//		this._enable = false;
-//		Components.utils.reportError("firebugmonkey : " + msg);
-//		
-//	},
 	
 	_scriptError:function(msg, fileurl, line){
 		this._enable = false;
