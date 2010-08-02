@@ -61,6 +61,9 @@ Firebug.firebugmonkey.Script.prototype =
  		for(var key in this._requires){
  			let url = this._requires[key];
  			this._offsets.push({url:url, offset:offset});	
+ 			
+ 			//Application.console.log("url = " + url);
+ 			
  			let src = this.FileUtils.getContentFromURI(url);
  			offset += src.split("\n").length;
  			requiresrc.push(src);
@@ -88,6 +91,8 @@ Firebug.firebugmonkey.Script.prototype =
 		this._scripttmpfile = this.FileUtils.getFile(
 				this.FileUtils.getFile(this._scriptdir, "tmp"),
 				this._filename);
+		//Application.console.log("this._scripttmpfile = " + this._scripttmpfile.path);			
+				
 		this._scripttmpuri = ioservice.newFileURI(this.FileUtils.getFile(this._scripttmpfile));
 		this.source = this.FileUtils.getContent(this._scriptfile);
 		this.parse();	
@@ -204,9 +209,9 @@ Firebug.firebugmonkey.Script.prototype =
 					this._scriptError("error file read ", localfile.spac, requireUrls[key].line);
 				}	
 				*/
-				let res = this.FileUtils.saveFileFromURI(url, localfile);
+				let res = this.FileUtils.saveTextFileFromURI(url, localfile);
 				if(!res){
-					Components.utils.reportError("firebugmonkey : error file get " 
+					Components.utils.reportError("firebugmonkey : error get file" 
 							+ localfile.path + " " + this.FileUtils.ERROR);
 					this._enable = false;
 				}
@@ -220,6 +225,7 @@ Firebug.firebugmonkey.Script.prototype =
 		for(let key in resourceUrls){
 			let url = resourceUrls[key].url;
 			let name = this._getLastSegment(url);
+			name = name.replace(/\?/g,'_');
 			//Application.console.log("get file " + url);
 			/*
 			let byte = this.FileUtils.getBinaryContentFromURI(url);
@@ -242,7 +248,7 @@ Firebug.firebugmonkey.Script.prototype =
 			*/
 			let localfile = this.FileUtils.getFile(this._scriptfile.parent, name);
 			if(!localfile.exists()){
-				let res = this.FileUtils.saveFileFromURI(url, localfile);
+				let res = this.FileUtils.getBinaryFileFromURI(url, localfile);
 				if(!res){
 					Components.utils.reportError("firebugmonkey : error file get " 
 							+ localfile.path + " " + this.FileUtils.ERROR);

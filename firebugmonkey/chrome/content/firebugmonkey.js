@@ -77,7 +77,7 @@ Firebug.firebugmonkey = {
 	 		var filename = result[key]["filename"];
 	 		var enable   = result[key]["enable"];
 
-			if(dirname && filename && enable){
+			if(dirname && filename && (enable == true || enable == "true") ){
 	 			//try{
 	 				var dir = this.FileUtils.getFile(scriptdir, dirname);
 	 				//Application.console.log("contentLoad dir = " + dirname);

@@ -45,10 +45,11 @@ FBL.ns(function () { with (FBL) {
 //			if(!showAllSourceFiles)
 //				Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);
 			
+			var scriptenableSites = Application.prefs.getValue("extensions.firebug.script.enableSites", false);
 			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);	
 			var showAllSourceFiles = Application.prefs.getValue("extensions.firebug.service.showAllSourceFiles", false);
 			
-			if(filterSystemURLs || !showAllSourceFiles){
+			if(!scriptenableSites || filterSystemURLs || !showAllSourceFiles){
 				var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
 				if(this.stringBundle == null){
 				 	this.stringBundle = stringBundleService.createBundle("chrome://firebugmonkey/locale/firebugmonkey.properties");
@@ -59,8 +60,17 @@ FBL.ns(function () { with (FBL) {
 				//cancal false
 				result = prompts.confirm(window, "Change firebug prefs", msg);
 				if(result){
-					Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
-					Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);					
+					//user_pref("extensions.firebug.script.enableSites", true);
+					
+					if(!scriptenableSites){
+						Application.prefs.setValue("extensions.firebug.script.enableSites", true);
+					}
+					if(filterSystemURLs){
+						Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
+					}
+					if(!showAllSourceFiles){
+						Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);	
+					}
 				}
 			}
 			

@@ -5,7 +5,7 @@
 
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>firebugmonkey@konkon.jp</em:id>
-		<em:version>0.2.0</em:version>
+		<em:version>0.2.1</em:version>
 		<em:optionsURL>chrome://firebugmonkey/content/preference.xul</em:optionsURL>
 		
 		<em:localized>
@@ -28,7 +28,7 @@
 		</em:targetApplication>
 		
 		<em:name>Firebugmonkey</em:name>
-    	<em:description>can debug greasemonkey script with Firebug.(recommended Firebug1.5.4)</em:description>
+    	<em:description>You can debug greasemonkey script with Firebug.(recommended Firebug1.5.4)</em:description>
     	<em:creator>konkon</em:creator>
     	<em:iconURL>chrome://firebugmonkey/skin/firebugmonkey32.png</em:iconURL>
     	<em:homepageURL>http://code.google.com/p/addondev/</em:homepageURL>

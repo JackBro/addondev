@@ -10,6 +10,15 @@ greasemonkey-0.8.20090123.1-fx Copyright 2004-2007 Aaron Boodman
 
 
 ○履歴
+2010/08/02 0.2.1
+・スクリプトの有効/無効の判断にバグがあったので修正
+・@requireや@resourceがhttp://example/updater.php?id=0とかの場合、ファイル名がupdater.php?id=0
+になってしまい、ローカルへの保存に失敗していたので?を_に置換するようにした
+・@requireや@resourceでファイルが作成されないうちにスクリプトを実行しようとしていたので
+webからの取得を同期で行うようにした
+・スクリプト管理画面で削除を行った時、ディレクトリごと削除するようにした
+・firebugの設定変更にスクリプトパネルの有効化を追加
+
 2010/07/05 0.2.0
 ・Firebug1.5.4(Firefox3.5, Firefox3.6)に対応
 ・GM_deleteValue, GM_listValues, GM_registerMenuCommand追加(GM_registerMenuCommandは中身が空のダミー)

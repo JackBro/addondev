@@ -6,6 +6,8 @@ const Ci = Components.interfaces;
 const IOService = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
 const Application = Cc["@mozilla.org/fuel/application;1"].getService(Ci.fuelIApplication);
 
+//Application.console.log();
+
 var FileUtils = {
 	
 	/**
@@ -113,6 +115,9 @@ var FileUtils = {
 			scriptableStream.init(input);
 			var str=scriptableStream.read(input.available());
 			text = unicodeConverter.ConvertToUnicode(str);
+			
+			if(scriptableStream) scriptableStream.close();
+			if(input) input.close();
 		} catch( e ) {
 			this.ERROR = e;
 			text = null;
@@ -140,31 +145,37 @@ var FileUtils = {
 	
 	/**
 	 * 
-	 * 
-	 * @param URI or string uri
+	 * @param string url
+	 * @param nsIFile savefile
 	 */
-	/*
-	getBinaryContentFromURI:function(uri) {
-	    var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+	getBinaryFileFromURI:function(uri, savefile) {
+		var res = true;
+		try{
+		    var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+	
+			if(isString(uri)){
+				uri = ioService.newURI(uri, null, null);
+			}
+		    
+		    var channel = ioService.newChannelFromURI(uri);
+		    var input = channel.open();
+	
+		    var bstream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
+		    bstream.setInputStream(input);
+			
+		    var bytes = bstream.readBytes(bstream.available());
 
-		if(isString(uri)){
-			uri = ioService.newURI(uri, null, null);
+		    input.close();
+		    bstream.close();
+		    
+		    this.writeBinary(savefile, bytes);
+		    
+	    }catch(e){
+			this.ERROR = e;
+			res = false;
 		}
-	    
-	    var channel = ioService.newChannelFromURI(uri);
-	    var input = channel.open();
-
-	    var bstream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
-	    bstream.setInputStream(input);
-
-	    var bytes = bstream.readBytes(bstream.available());
-
-	    bstream.close();
-	    input.close();
-	    
-	    return bytes;
+	    return res;
 	},
-	*/
 	
 	/**
 	 * 
@@ -173,14 +184,16 @@ var FileUtils = {
 	 * 
 	 * @return bool
 	 */
-	saveFileFromURI:function(url, savefile){
+	saveTextFileFromURI:function(url, savefile){
 		var res = true;
 		try{
-			var iurl = Cc["@mozilla.org/network/standard-url;1"].createInstance(Ci.nsIURL);
-			iurl.spec = url;
+			//var iurl = Cc["@mozilla.org/network/standard-url;1"].createInstance(Ci.nsIURL);
+			//iurl.spec = url;
 
-			var wbp = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].createInstance(Ci.nsIWebBrowserPersist);
-			wbp.saveURI(iurl, null, null, null, null, savefile);
+			//var wbp = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].createInstance(Ci.nsIWebBrowserPersist);
+			//wbp.saveURI(iurl, null, null, null, null, savefile);
+			var text = this.getContentFromURI(url);
+			this.write(savefile, text);
 		}catch(e){
 			this.ERROR = e;
 			res = false;
@@ -225,15 +238,15 @@ var FileUtils = {
 	 * 
 	 * @return bool OK:true, NG:false
 	 */
-	writeBinary:function(file, byte){
+	writeBinary:function(file, bytes){
 		var res = true;
 		try {
-			file.createUnique( Ci.nsIFile.NORMAL_FILE_TYPE, 600);
+			//file.createUnique( Ci.nsIFile.NORMAL_FILE_TYPE, 600);
 			            
 			var stream = Cc["@mozilla.org/network/safe-file-output-stream;1"].createInstance(Ci.nsIFileOutputStream);
 			stream.init(file, 0x04 | 0x08 | 0x20, 664, 0);
 			            
-			stream.write(file, file.length);
+			stream.write(bytes, bytes.length);
 			if (stream instanceof Components.interfaces.nsISafeOutputStream) {
 			    stream.finish();
 			} else {
@@ -269,6 +282,18 @@ var FileUtils = {
 			dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
 			
 		return dir;
+	},
+	
+	/**
+	 * 
+	 * @param nsIFile file
+	 * @param bool recursive
+	 */
+	deleteFile:function(file, recursive){
+		if (file instanceof Components.interfaces.nsILocalFile){
+			Application.console.log("deleteFile = " + file.path);
+  			file.remove(recursive);
+		}
 	},
 	
 	getFileFromURI:function(uri) 

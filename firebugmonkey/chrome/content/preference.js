@@ -113,8 +113,19 @@ function editItem(){
 function deleteItem(){
     var rows = scriptTreeView.selectedIndexes;
     for (var i = rows.length - 1; i >= 0; i--) {
+    	try{
+	    	var script = scriptTreeView._data[rows[i]];
+	    	var file = util.FileUtils.getFile(scriptDir, script.dir);
+			if(file.exists()){
+				util.FileUtils.deleteFile(file, true);
+			}    	
+    	}catch(e){
+    		Components.utils.reportError("firebugmonkey : delete error. " + e);
+    		continue;
+    	}
     	scriptTreeView.removeItemAt(rows[i]);
     }	
+    save();
 }
 
 function openfolder(){
@@ -258,9 +269,9 @@ ScriptTreeView.prototype = {
     performAction: function(action) {},
     performActionOnRow: function(action, row) {},
     performActionOnCell: function(action, row, col) {
-    	Application.console.log("performActionOnCell row= " + row);
-    	Application.console.log("performActionOnCell col= " + col);
-    	Application.console.log("performActionOnCell action= " + action);
+    	//Application.console.log("performActionOnCell row= " + row);
+    	//Application.console.log("performActionOnCell col= " + col);
+    	//Application.console.log("performActionOnCell action= " + action);
     },
     
     /**
