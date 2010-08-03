@@ -1,4 +1,4 @@
-var EXPORTED_SYMBOLS =["FileUtils"];
+var EXPORTED_SYMBOLS =["FileUtils", "Utils"];
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
@@ -163,6 +163,8 @@ var FileUtils = {
 		    var bstream = Cc["@mozilla.org/binaryinputstream;1"].createInstance(Ci.nsIBinaryInputStream);
 		    bstream.setInputStream(input);
 			
+		    //Application.console.log("this.bstream.available() = " + bstream.available());
+		    
 		    var bytes = bstream.readBytes(bstream.available());
 
 		    input.close();
@@ -265,10 +267,11 @@ var FileUtils = {
 	 * 
 	 * @param nsIFile or string basedir
 	 * @param string newdir
+	 * @param bool unique name
 	 * 
 	 * @return nsIFile newdir
 	 */
-	makeDir:function(basedir, newdir)
+	makeDir:function(basedir, newdir, isunique)
 	{
 		var dir = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
 		if(basedir instanceof Ci.nsIFile){
@@ -278,9 +281,12 @@ var FileUtils = {
 		}
 		
 		dir.append(newdir);
-		if(!dir.exists())
-			dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
-			
+		if(isunique){
+			dir.createUnique(Ci.nsIFile.DIRECTORY_TYPE, 0755);
+		}else{
+			if(!dir.exists())
+				dir.create(Ci.nsIFile.DIRECTORY_TYPE, 0755);
+		}
 		return dir;
 	},
 	
@@ -309,27 +315,69 @@ var FileUtils = {
 	
 	getProfileDir:function(){
 		return Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties).get("ProfD", Ci.nsILocalFile);
+	}
+}
+
+var Utils = {
+	FBM_SCRIPT_DIR:"fbm_scripts",
+	FBM_SCRIPTJSON:"fbm_scripts.json",
+	version:23,
+	_FbmScriptDir:null,
+	
+	get FbmScriptDir(){
+		if(this._FbmScriptDir == null){
+			this._FbmScriptDir = FileUtils.makeDir(FileUtils.getProfileDir(), this.FBM_SCRIPT_DIR);
+		}
+		return this._FbmScriptDir;
 	},
 	
-	loadPref(file){
-		var data = [];
+	loadSetting:function(){
+		var file = FileUtils.getFile(this.FbmScriptDir, this.FBM_SCRIPTJSON);
+		var data = {version:23, files:[]};
 		if(file.exists()){
-			let jsonstr = this.getContent(file);
-			let result = JSON.parse(jsonstr);
-			for(let key in result){
-				data.push(result[key]);
-			}
-			
-			if(result["version"] == undefined){
-				data.version = 2;
-				var BUGMONKEY_SCRIPT_DIR = "fbm_scripts";
-				for(let key in data){
-					var scriptDir = this.getFile(util.FileUtils.getProfileDir(), BUGMONKEY_SCRIPT_DIR);
-					data[key]["fullpath"] = this.getFile(scriptDir, data[key]["filename"]);
-				}				
+			try{
+				var jsonstr = FileUtils.getContent(file);
+				//Application.console.log("loadSetting jsonstr = " + jsonstr);
+				var result = JSON.parse(jsonstr);
+	
+				if(result.version == undefined){ //min than 0.2.3
+					//Application.console.log("loadSetting result[version] == undefined");
+					data.version = this.version;
+					var scriptDir = FileUtils.getFile(FileUtils.getProfileDir(), this.FBM_SCRIPT_DIR);
+					for(let key in result){	
+						var elm = result[key];
+						var newdir = FileUtils.makeDir(scriptDir, elm.dir, true);
+						var fullpath = FileUtils.getFile(FileUtils.getFile(scriptDir, elm.dir), elm.filename).path;
+						data.files.push({dir:newdir.leafName, filename:elm.filename, fullpath:fullpath, enable:elm.enable});
+						//Application.console.log("loadSetting data elm.dir = " + elm.dir);
+						//Application.console.log("loadSetting data elm.filename = " + elm.filename);
+						//Application.console.log("loadSetting data fullpath = " + fullpath);
+						//Application.console.log("loadSetting data elm.enable = " + elm.enable);
+					}
+					var jsonstr = JSON.stringify(data);
+					FileUtils.write(file, jsonstr);
+				}else{
+					//for(let key in result.files){
+					//	data.files.push(result[key]);
+					//}
+					data = result;
+				}
+			}catch(e){
+				this.ERROR = e;
 			}
 		}
 		return data;
+	},
+	
+	saveSetting:function(scripts){
+		try{
+			var file = FileUtils.getFile(this.FbmScriptDir, this.FBM_SCRIPTJSON);
+			var data = {version:this.version, files:scripts};
+			var jsonstr = JSON.stringify(data);
+			FileUtils.write(file, jsonstr);
+		}catch(e){
+			Components.utils.reportError("firebugmonkey : fault save " + file.leafName + " : "+ e);
+		}		
 	}
 }
 

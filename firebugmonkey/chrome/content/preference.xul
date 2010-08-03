@@ -21,6 +21,7 @@
             ondialogcancel=""
   			ondialogextra1="onDialogAccept();"
             onunload=""
+            persist="width height" 
             style="width: 47em; min-height: 39em;">
 	
 	<stringbundleset id="firebugmonkey-stringbundleset"> 
@@ -52,17 +53,19 @@
 			        	label="&firebugmonkey.preference.script.edit;"
 			        	id="button-edit"
 			        	oncommand="editItem();"/>
-					<button class="delete"
-			        	label="&firebugmonkey.preference.script.delete;"
-			       		id="button-delete"
-			        	oncommand="deleteItem();"/>
+					<button class="remove"
+			        	label="&firebugmonkey.preference.script.remove;"
+			       		id="button-remove"
+			        	oncommand="removeItem();"/>
+			        <spacer />
 					<hbox>
 			    		<button class="up"
+			    			flex="1" 
 			    			label="&firebugmonkey.preference.script.up;"
 			    			id="button-up"
 			            	oncommand="moveItem(-1);"/>
-			    		<spacer flex="1"/>
 			    		<button class="down"
+			    			flex="1" 
 			    			label="&firebugmonkey.preference.script.down;"
 			    			id="button-down"
 			            	oncommand="moveItem(1);"/>
@@ -121,6 +124,10 @@
     			</rows>
     		</grid>
 		</groupbox>
+		<spacer/>
+		<vbox flex="1">
+			<checkbox id="remove-confirm" label="&firebugmonkey.preference.remove.confirm;" checked="true"/>
+		</vbox>
 	</prefpane>
 	
     <script type="application/x-javascript" src="chrome://firebugmonkey/content/preference.js" />

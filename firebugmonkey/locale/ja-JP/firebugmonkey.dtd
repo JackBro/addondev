@@ -11,7 +11,7 @@
 <!ENTITY firebugmonkey.preference.script.new "新規">
 <!ENTITY firebugmonkey.preference.script.browse "選択">
 <!ENTITY firebugmonkey.preference.script.edit "編集">
-<!ENTITY firebugmonkey.preference.script.delete "削除">
+<!ENTITY firebugmonkey.preference.script.remove "削除">
 <!ENTITY firebugmonkey.preference.script.up "上へ">
 <!ENTITY firebugmonkey.preference.script.down "下へ">
 <!ENTITY firebugmonkey.preference.script.openfolder "スクリプトフォルダを開く">
@@ -23,3 +23,4 @@
 <!ENTITY firebugmonkey.preference.openfolder.group "フォルダを開くのに使用するアプリケーション">
 <!ENTITY firebugmonkey.preference.openfolder.path "パス">
 <!ENTITY firebugmonkey.preference.openfolder.args "引数">
+<!ENTITY firebugmonkey.preference.remove.confirm "削除する際、警告する">

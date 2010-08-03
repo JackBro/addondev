@@ -1,8 +1,8 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
-const BUGMONKEY_SCRIPT_DIR = "fbm_scripts";
-const BUGMONKEY_SCRIPTLIST_FILE = "fbm_scripts.json";
+//const FBM_SCRIPT_DIR = "fbm_scripts";
+//const FBM_SCRIPTLIST_FILE = "fbm_scripts.json";
 
 var scriptTreeView = null;
 var editorFile = null;
@@ -16,13 +16,14 @@ var strbundle = null;
 
 function init() {	
 	
-	Components.utils.import("resource://fbm_modules/fileutils.js", util);
+	Components.utils.import("resource://fbm_modules/utils.js", util);
 	
-	scriptDir = util.FileUtils.makeDir(util.FileUtils.getProfileDir(), BUGMONKEY_SCRIPT_DIR);
-	scriptFile = util.FileUtils.getFile(scriptDir, BUGMONKEY_SCRIPTLIST_FILE);
+	//scriptDir = util.FileUtils.makeDir(util.FileUtils.getProfileDir(), util.Utils.FBM_SCRIPT_DIR);
+	scriptDir = util.Utils.FbmScriptDir;
+	//scriptFile = util.FileUtils.getFile(scriptDir, util.Utils.FBM_SCRIPTLIST_FILE);
 	
-	var data = [];
-	data = util.FileUtils.loadPref(scriptFile);
+	//Application.console.log("loadPref scriptDir= " + scriptDir.path);
+	var data = util.Utils.loadSetting();
 //	if(scriptFile.exists()){
 //		let jsonstr = util.FileUtils.getContent(scriptFile);
 //		let result = JSON.parse(jsonstr);
@@ -31,7 +32,7 @@ function init() {
 //		}
 //	}	
 	
-	scriptTreeView = new ScriptTreeView(data);
+	scriptTreeView = new ScriptTreeView(data.files);
     document.getElementById("scriptTree").view = scriptTreeView;
 
     document.getElementById("editor-path").value = Application.prefs.getValue("extensions.firebugmonkey.option.editor.path", "");
@@ -41,6 +42,8 @@ function init() {
     document.getElementById("openfolder-args").value = Application.prefs.getValue("extensions.firebugmonkey.option.openfolder.args", "%path%");
     
     document.getElementById("enablexpcom").checked = Application.prefs.getValue("extensions.firebugmonkey.option.enablexpcom", false);
+    
+    document.getElementById("remove-confirm").checked = Application.prefs.getValue("extensions.firebugmonkey.option.remove.confirm", true);
 }
 
 function getStrbundleString(str){
@@ -66,47 +69,71 @@ function moveItem(aUpDown) {
 
 function newItem(){
 	
-    let findfile=false;
-    let ret;
-    while(true){
-    	findfile = false;
-	    ret = window.prompt("Enter file name.", "", "");
-	    if (!ret)
-	        return;
-	       
-		for (var index = 0; index < scriptTreeView.rowCount; index++) {
-			var script = scriptTreeView._data[index];
-			if(script.filename == ret){
-				findfile = true;
-				break;
-			}
-		}
-		if(findfile)
-			alert(getStrbundleString("EnterOtherFilename"));
-		else
-			break;
+//    let findfile=false;
+//    let ret;
+//    while(true){
+//    	findfile = false;
+//	    ret = window.prompt("Enter file name.", "", "");
+//	    if (!ret)
+//	        return;
+//	       
+//		for (var index = 0; index < scriptTreeView.rowCount; index++) {
+//			var script = scriptTreeView._data[index];
+//			if(script.filename == ret){
+//				findfile = true;
+//				break;
+//			}
+//		}
+//		if(findfile)
+//			alert(getStrbundleString("EnterOtherFilename"));
+//		else
+//			break;
+//    }
+    try{
+	    var filePicker = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+	    filePicker.appendFilter('JavaScript', '*.js');
+	    filePicker.appendFilter('All', '*');
+	    filePicker.init(window, "save file.", filePicker.modeSave);
+	    if (filePicker.show() == filePicker.returnOK) {
+	        let newfile = filePicker.file;
+	        
+	        if(hasItem(newfile.path)){
+	        	showMessageBox("Info", getStrbundleString("HasFileMessage"));
+	        	return;
+	        }
+	        
+		    let dirname = util.FileUtils.getFileNameExceptExt(newfile.leafName);
+		    let dir = util.FileUtils.makeDir(scriptDir, dirname, true);
+		    //let script = util.FileUtils.getFile(dir, ret);    
+		    util.FileUtils.write(newfile, getScriptTemplete());
+		    
+		    scriptTreeView.appendItem({dir:dir.leafName, filename:newfile.leafName, fullpath:newfile.path, enable:true});
+		    save();
+    	}
+    }catch(e){
+    	showMessageBox("Error", getStrbundleString("FaultSaveFileMessage"));
+    	Components.utils.reportError("firebugmonkey : error newfile save : " + e);
     }
-    
-    let dirname = util.FileUtils.getFileNameExceptExt(ret);
-    let dir = util.FileUtils.makeDir(scriptDir, dirname);
-    let script = util.FileUtils.getFile(dir, ret);
-    
-    util.FileUtils.write(script, getScriptTemplete());
-    
-    scriptTreeView.appendItem({dir:dirname, filename:ret, fullpath:script.path, enable:true});
-    save();
 }
 
 function browseFile(){
-	var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
-	fp.init( window, "Select File", fp.modeOpen);
-	var res = fp.show();
-	if (res == fp.returnOK){
-		var file = fp.file;
-		var dirname = util.FileUtils.getFileNameExceptExt(file.leafName);
-	    util.FileUtils.makeDir(scriptDir, dirname);
+	var filePicker = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
+	filePicker.appendFilter('JavaScript', '*.js');
+	filePicker.appendFilter('All', '*');
+	filePicker.init( window, "Select File", filePicker.modeOpen);
+	var res = filePicker.show();
+	if (res == filePicker.returnOK){
+		var file = filePicker.file;
 		
-		scriptTreeView.appendItem({dir:dirname, filename:file.leafName, fullpath:file.path, enable:true});
+		if(hasItem(file.path)){
+	    	showMessageBox("Info", getStrbundleString("HasFileMessage"));
+	    	return;
+	    }
+		
+		var dirname = util.FileUtils.getFileNameExceptExt(file.leafName);
+	    var dir = util.FileUtils.makeDir(scriptDir, dirname, true);
+		
+		scriptTreeView.appendItem({dir:dir.leafName, filename:file.leafName, fullpath:file.path, enable:true});
 		save();
 	}
 }
@@ -119,9 +146,10 @@ function editItem(){
 //		file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.dir);
 //		file.append(scriptTreeView.getSelectionData.filename);
 //	}
-	var file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.fullpath);
+	//var file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.fullpath);
+	var fullpath = scriptTreeView.getSelectionData.fullpath;
 	var args = document.getElementById("editor-args").value;
-	args = args.replace('%path%', file.path);
+	args = args.replace('%path%', fullpath);
 	var argary = args.split(' ');
 	
 	var editorPath= document.getElementById("editor-path").value;
@@ -130,7 +158,16 @@ function editItem(){
 	}
 }
 
-function deleteItem(){
+function removeItem(){
+    
+	if(document.getElementById("remove-confirm").checked){
+		var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);		
+		//ok true
+		//cancal false
+		result = prompts.confirm(window, getStrbundleString("DeleteConfirmDialogTitle"), getStrbundleString("DeleteConfirmDialogMessage"));    
+	    if(!result) return;
+	}
+	
     var rows = scriptTreeView.selectedIndexes;
     for (var i = rows.length - 1; i >= 0; i--) {
     	try{
@@ -161,18 +198,21 @@ function openfolder(){
 }
 
 function save(){	
-	var data = [];	
+	//var data = {version:22, files:[]};
+	var scripts = [];
 	for (var index = 0; index < scriptTreeView.rowCount; index++) {
 		var script = scriptTreeView._data[index];
-		data.push(script);
+		//data.files.push(script);
+		scripts.push(script);
 	}	
-	var jsonstr = JSON.stringify(data);
-	
-	try{
-		util.FileUtils.write(scriptFile, jsonstr);
-	}catch(e){
-		Components.utils.reportError("firebugmonkey : save error. " + e);
-	}
+	util.Utils.saveSetting(scripts);
+//	var jsonstr = JSON.stringify(data);
+//	
+//	try{
+//		util.FileUtils.write(scriptFile, jsonstr);
+//	}catch(e){
+//		Components.utils.reportError("firebugmonkey : fault save " + FBM_SCRIPTLIST_FILE + " : "+ e);
+//	}
 }
 
 //////////////////////////////////////////////////////////////
@@ -194,6 +234,8 @@ function onDialogAccept(){
 	Application.prefs.setValue("extensions.firebugmonkey.option.openfolder.args", document.getElementById("openfolder-args").value);
 	
 	Application.prefs.setValue("extensions.firebugmonkey.option.enablexpcom", document.getElementById("enablexpcom").checked);
+	
+	Application.prefs.setValue("extensions.firebugmonkey.option.remove.confirm", document.getElementById("remove-confirm").checked);
 	
 	save();
 }
@@ -260,7 +302,8 @@ ScriptTreeView.prototype = {
     },
     getCellText: function(row, col) {
         switch (col.index) {
-        	case 0: return this._data[row].filename;
+        	//case 0: return this._data[row].filename;
+        	case 0: return this._data[row].fullpath;
         }
     },
     setTree: function(tree) {
@@ -277,7 +320,8 @@ ScriptTreeView.prototype = {
     setCellValue: function(row, col, value) {
     	switch (col.index) {
     		case 0:
-    			this._data[row].filename = value;
+    			//this._data[row].filename = value;
+    			this._data[row].fullpath = value;
     			break;
     		case 1: 
     			this._data[row].enable = value;
@@ -361,4 +405,21 @@ ScriptTreeView.prototype = {
 function showMessageBox(title, message) {
 	var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
     prompts.alert(window, title, message);
+};
+
+/***
+ * 
+ * @param {string} fullpath
+ * 
+ * @return {bool} if has fullpath, return true
+ */
+function hasItem(fullpath){
+	for (var index = 0; index < scriptTreeView.rowCount; index++) {
+		var script = scriptTreeView._data[index];
+		if(script.fullpath == fullpath){
+			return true;
+		}
+	}
+	
+	return false;
 };

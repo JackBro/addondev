@@ -14,7 +14,7 @@ FBL.ns(function () { with (FBL) {
 //Firebug.firebugmonkey.Script = function(url, scriptdir, filename, enbale){
 Firebug.firebugmonkey.Script = function(url, scriptdir, script){
 	
-	Components.utils.import("resource://fbm_modules/fileutils.js", this);	
+	Components.utils.import("resource://fbm_modules/utils.js", this);	
 	
 	this._url = url;
 	this._scriptdir = scriptdir;
@@ -93,13 +93,22 @@ Firebug.firebugmonkey.Script.prototype =
 //			this._scriptfile = this.FileUtils.getFile(this._selectfilepath);
 //		}
 		this._scriptfile = this.FileUtils.getFile(this._fullpath);
+		
+		//Application.console.log("this._scriptdir = " + this._scriptdir.path);
+		//Application.console.log("this._filename = " + this._filename);
+		
+		//this._scripttmpfile = this.FileUtils.getFile(
+		//		this.FileUtils.getFile(this._scriptdir, "tmp"),
+		//		this._filename);
+		this._scripttmpfile = this.FileUtils.getFile(this._scriptdir, this._filename);
 		this._scripturi = ioservice.newFileURI(this.FileUtils.getFile(this._scriptfile));
-		this._scripttmpfile = this.FileUtils.getFile(
-				this.FileUtils.getFile(this._scriptdir, "tmp"),
-				this._filename);
-		//Application.console.log("this._scripttmpfile = " + this._scripttmpfile.path);			
-				
+
+		//Application.console.log("this._scriptfile = " + this._scriptfile.path);
+						
 		this._scripttmpuri = ioservice.newFileURI(this.FileUtils.getFile(this._scripttmpfile));
+		
+		//Application.console.log("this._scripttmpfile = " + this._scripttmpfile.path);	
+		
 		this.source = this.FileUtils.getContent(this._scriptfile);
 		//Application.console.log("this._scriptfile src = " + this.source);	
 		this.parse();	
@@ -108,7 +117,7 @@ Firebug.firebugmonkey.Script.prototype =
 	parse : function(){	
 		var lines = this.source.match(/.+/g);
 		if(lines == null){
-			Application.console.log(this._scripturi.spec + " is empty");	
+			//Application.console.log(this._scripturi.spec + " is empty");	
 			return;
 		}
 	    var lnIdx = 0;
@@ -119,8 +128,10 @@ Firebug.firebugmonkey.Script.prototype =
 	    var resourceUrls = [];
 	
 
-	    while ((result = lines[lnIdx++])) {
-	      if (result.indexOf("// ==UserScript==") == 0) {
+	    while ((result = lines[lnIdx++])) {	
+	      //if (result.indexOf("// ==UserScript==") == 0) {
+	      if (result.match(/\/\/\s*==UserScript==/) != null) {
+
 	        foundMeta = true;
 	        break;
 	      }
@@ -129,11 +140,12 @@ Firebug.firebugmonkey.Script.prototype =
 	    //gather up meta lines
 	    if (foundMeta) {
 	      while ((result = lines[lnIdx++])) {
-	        if (result.indexOf("// ==/UserScript==") == 0) {
+	        //if (result.indexOf("// ==/UserScript==") == 0) {
+	        if (result.match(/\/\/\s*==UserScript==/) != null) {
 	          break;
 	        }
 	
-	        var match = result.match(/\/\/ \@(\S+)(?:\s+([^\n]+))?/);
+	        var match = result.match(/\/\/\s*\@(\S+)(?:\s+([^\n]+))?/);
 	        if (match === null) continue;
 	
 	        var header = match[1];
@@ -223,7 +235,7 @@ Firebug.firebugmonkey.Script.prototype =
 		for(let key in resourceUrls){
 			let url = resourceUrls[key].url;
 			let name = this._getLastSegment(url);
-			name = name.replace(/\?/g,'_');s
+			name = name.replace(/\?/g,'_');
 			let localfile = this.FileUtils.getFile(this._scriptfile.parent, name);
 			if(!localfile.exists()){
 				let res = this.FileUtils.getBinaryFileFromURI(url, localfile);
@@ -265,7 +277,7 @@ Firebug.firebugmonkey.Script.prototype =
 }
 
 Firebug.firebugmonkey.ScriptResource = function() {
-	Components.utils.import("resource://fbm_modules/fileutils.js", this);	
+	Components.utils.import("resource://fbm_modules/utils.js", this);	
 
 	this._name = null;	
 	this._file = null;

@@ -32,7 +32,7 @@ treechildren::-moz-tree-checkbox(checked) {
   min-width: 16px;
 }
 
-.delete {
+.remove {
   min-width: 16px;
 }
 

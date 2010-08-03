@@ -210,7 +210,7 @@ FBL.ns(function () { with (FBL) {
 			var fbm_unwrapObject =
 				'try {'
 				//+'Application.console.log("this.name = " +this.name);'
-				+'	if(Firebug.firebugmonkey_Model.isTargetFunction(arguments.callee.caller)){'
+				+'	if(Firebug.firebugmonkey.enable && Firebug.firebugmonkey_Model.isTargetFunction(arguments.callee.caller)){'
 				+'		for (var name in object) {'
 				+'			if (typeof(object[name]) == "xml" && object[name].toString().indexOf("<") != -1 && object[name].toString().indexOf(">") != -1){'
 				//+'				Application.console.log("object name = " +name + " : " + object[name]);'

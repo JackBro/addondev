@@ -11,7 +11,7 @@
 <!ENTITY firebugmonkey.preference.script.new "New">
 <!ENTITY firebugmonkey.preference.script.browse "Browse">
 <!ENTITY firebugmonkey.preference.script.edit "Edit">
-<!ENTITY firebugmonkey.preference.script.delete "Delete">
+<!ENTITY firebugmonkey.preference.script.remove "Remove">
 <!ENTITY firebugmonkey.preference.script.up "Up">
 <!ENTITY firebugmonkey.preference.script.down "Down">
 <!ENTITY firebugmonkey.preference.script.openfolder "Open script folder">
@@ -23,3 +23,4 @@
 <!ENTITY firebugmonkey.preference.openfolder.group "Open folder exe">
 <!ENTITY firebugmonkey.preference.openfolder.path "Path">
 <!ENTITY firebugmonkey.preference.openfolder.args "Arguments">
+<!ENTITY firebugmonkey.preference.remove.confirm "Show confirm dialog when remove item ">
