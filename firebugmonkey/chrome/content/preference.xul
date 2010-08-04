@@ -28,9 +28,17 @@
 		<stringbundle id="firebugmonkey-bundle" src="chrome://firebugmonkey/locale/firebugmonkey.properties" /> 
 	</stringbundleset> 	
 	
+	<script type="application/x-javascript"><![CDATA[
+  		// 初期化
+  		var observerService = Components.classes['@mozilla.org/observer-service;1'].getService(Components.interfaces.nsIObserverService);
+  		observerService.notifyObservers(null, 'charsetmenu-selected', 'other');
+	]]></script>
+
+	
 	<prefpane id="generalPane" label="&firebugmonkey.preference.scriptPane;" flex="1">
 		<groupbox orient="horizontal" flex="1">
 			<caption label="&firebugmonkey.preference.script.group;"/>
+			<vbox flex="1">
 			<hbox flex="1">
 					<tree id="scriptTree" flex="1" editable="true" ondblclick="editItem();">
 	    				<treecols>
@@ -73,6 +81,8 @@
 			    			id="button-down"
 			            	oncommand="moveItem(1);"/>
 					</hbox>
+					<spacer />
+					<checkbox id="remove-confirm" label="&firebugmonkey.preference.remove.confirm;" checked="true"/>
 					<spacer flex="1" />
 					<button class="openfbmscriptsfolder"
 			    		label="&firebugmonkey.preference.script.openfbmscriptsfolder;"
@@ -80,6 +90,8 @@
 			            oncommand="openfolder('fbmscripts');"/>
 					</vbox>
 			</hbox>
+			<description>&firebugmonkey.preference.encode.caption;</description>
+			</vbox>
 		</groupbox>
 		
 		<checkbox id="enablexpcom" label="&firebugmonkey.preference.script.ebablexpcom;"/>
@@ -128,14 +140,26 @@
     		</grid>
 		</groupbox>
 		<spacer/>
-		<vbox flex="1">
-			<checkbox id="remove-confirm" label="&firebugmonkey.preference.remove.confirm;" checked="true"/>
-		</vbox>
+		<groupbox orient="vertical">
+			<caption>
+		 		<checkbox id="use-encode" label="&firebugmonkey.preference.encode.use;" oncommand="update();" />
+			</caption>
+		 	<description>&firebugmonkey.preference.encode.detaicaption;</description>
+			<menulist id="form-encode">
+	    	<menupopup datasources="rdf:charset-menu" ref="NC:DecodersRoot">
+	    		<template>
+	      			<menuitem  uri="..." label="rdf:http://home.netscape.com/NC-rdf#Name" value="..."/>
+	    		</template>
+	    	</menupopup>
+	  	</menulist>
+	  	</groupbox>
 	</prefpane>
+	
 	<prefpane id="scriptTemplatePane" label="&firebugmonkey.preference.scriptTemplatePane;" flex="1">
-		<label control="your-name" value="Enter your name:"/>
+		<label value="Script Template"/>
 		<textbox flex="1" multiline="true" wrap="off" id="scripttemplate" value="John"/>
 	</prefpane>
+	
     <script type="application/x-javascript" src="chrome://firebugmonkey/content/preference.js" />
 </prefwindow>		
 

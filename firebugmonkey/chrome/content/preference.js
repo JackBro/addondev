@@ -1,6 +1,8 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
+const UConv = Cc["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Ci.nsIScriptableUnicodeConverter);
+
 
 var scriptTreeView = null;
 var editorFile = null;
@@ -31,6 +33,16 @@ function init() {
     document.getElementById("remove-confirm").checked = Application.prefs.getValue("extensions.firebugmonkey.option.remove.confirm", true);
     
     document.getElementById("scripttemplate").value = util.Utils.getScriptTemplate();
+    
+    document.getElementById("use-encode").checked = Application.prefs.getValue("extensions.firebugmonkey.option.encode.use", false);
+    document.getElementById("form-encode").value = Application.prefs.getValue("extensions.firebugmonkey.option.encode.from", null);
+
+    update();
+}
+
+function update(){
+	 var isencode = document.getElementById("use-encode").checked;
+	 document.getElementById("form-encode").disabled = !isencode;
 }
 
 function getStrbundleString(str){
@@ -110,7 +122,7 @@ function editItem(){
 	
 	var fullpath = scriptTreeView.getSelectionData.fullpath;
 	var args = document.getElementById("editor-args").value;
-	args = args.replace('%path%', fullpath);
+	args = args.replace('%path%', cnvEncode(fullpath));
 	var argary = args.split(' ');
 	
 	var editorPath= document.getElementById("editor-path").value;
@@ -148,14 +160,19 @@ function removeItem(){
 }
 
 function openfolder(){
+	
+	//var formencode = document.getElementById("form-encode").value;
+	//Application.console.log("formencode = " + formencode);
+	
 	var args = document.getElementById("openfolder-args").value;
 	if(arguments.length == 1 && arguments[0] == 'fbmscripts'){
-		args = args.replace('%path%', scriptDir.path);
+		args = args.replace('%path%', cnvEncode(scriptDir.path));
 	}else{
 		if(scriptTreeView.getSelectionData == null) return;
 		var file = util.FileUtils.getFile(scriptTreeView.getSelectionData.fullpath);
 		
-		args = args.replace('%path%', file.parent.path);	
+		//args = args.replace('%path%', file.parent.path);
+		args = args.replace('%path%', cnvEncode(file.parent.path));
 	}
 	
 	var argary = args.split(' ');
@@ -175,6 +192,16 @@ function save(){
 		scripts.push(script);
 	}	
 	util.Utils.saveSetting(scripts);
+}
+
+function cnvEncode(value){
+	var check = document.getElementById("use-encode").checked;
+	var encode = document.getElementById("form-encode").value;
+	if(check && encode!=null){
+		UConv.charset = document.getElementById("form-encode").value;
+		return UConv.ConvertFromUnicode(value);	
+	}
+	return value;
 }
 
 //////////////////////////////////////////////////////////////
@@ -199,6 +226,9 @@ function onDialogAccept(){
 	
 	Application.prefs.setValue("extensions.firebugmonkey.option.remove.confirm", document.getElementById("remove-confirm").checked);
 	
+    Application.prefs.setValue("extensions.firebugmonkey.option.encode.use", document.getElementById("use-encode").checked);
+    Application.prefs.setValue("extensions.firebugmonkey.option.encode.from", document.getElementById("form-encode").value);	
+	
 	save();
 }
 
@@ -214,7 +244,7 @@ var launchProgram = function(exePath, args){
 
         var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);
         process.init(file);
-        process.runw(false, args, args.length, {});
+        process.run(false, args, args.length, {});
        
     }catch(e){
         //Components.utils.reportError("launch error " + exc);

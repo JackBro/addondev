@@ -5,7 +5,7 @@
 <!ENTITY firebugmonkey.menu.about "About">
 <!ENTITY firebugmonkey.preference.scriptPane "Script">
 <!ENTITY firebugmonkey.preference.advancedPane "Advanced">
-<!ENTITY firebugmonkey.preference.scriptTemplatePane "Advanced">
+<!ENTITY firebugmonkey.preference.scriptTemplatePane "Template">
 <!ENTITY firebugmonkey.preference.script.group "Script">
 <!ENTITY firebugmonkey.preference.script.list.filename "FileName">
 <!ENTITY firebugmonkey.preference.script.list.enable "Enable">
@@ -26,3 +26,6 @@
 <!ENTITY firebugmonkey.preference.openfolder.path "Path">
 <!ENTITY firebugmonkey.preference.openfolder.args "Arguments">
 <!ENTITY firebugmonkey.preference.remove.confirm "Show confirm dialog when remove item">
+<!ENTITY firebugmonkey.preference.encode.caption "If fail when you edit or Open folder, see 'Encode path' in Advanced tab">
+<!ENTITY firebugmonkey.preference.encode.use "Encode path">
+<!ENTITY firebugmonkey.preference.encode.detaicaption "Passing encoded to the execution file when the edit and the folder are opened is passed. Please select the encoded character-code.">

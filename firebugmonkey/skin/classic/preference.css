@@ -3,12 +3,12 @@
 }
 
 radio[pane="generalPane"] {
-	-moz-image-region: rect(0px, 32px, 32px, 0px);
+	-moz-image-region: rect(0px, 128px, 32px, 96px);
 }
 
 radio[pane="generalPane"]:hover,
 radio[pane="generalPane"][selected="true"] {
-	-moz-image-region: rect(32px, 32px, 64px, 0px);
+	-moz-image-region: rect(32px, 128px, 64px, 96px);
 }
 
 radio[pane="advancedPane"] {
@@ -18,6 +18,15 @@ radio[pane="advancedPane"] {
 radio[pane="advancedPane"]:hover,
 radio[pane="advancedPane"][selected="true"] {
 	-moz-image-region: rect(32px, 224px, 64px, 192px);
+}
+
+radio[pane="scriptTemplatePane"] {
+	-moz-image-region: rect(0px, 32px, 32px, 0px);
+}
+
+radio[pane="scriptTemplatePane"]:hover,
+radio[pane="scriptTemplatePane"][selected="true"] {
+	-moz-image-region: rect(32px, 32px, 64px, 0px);
 }
 
 treechildren::-moz-tree-checkbox(checked) {
