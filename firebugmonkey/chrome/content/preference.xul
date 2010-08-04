@@ -29,7 +29,6 @@
 	</stringbundleset> 	
 	
 	<prefpane id="generalPane" label="&firebugmonkey.preference.scriptPane;" flex="1">
-		
 		<groupbox orient="horizontal" flex="1">
 			<caption label="&firebugmonkey.preference.script.group;"/>
 			<hbox flex="1">
@@ -49,6 +48,10 @@
 			        	label="&firebugmonkey.preference.script.browse;"
 			        	id="button-browse"
 			        	oncommand="browseFile();"/>
+			        <button class="openfolder"
+			        	label="&firebugmonkey.preference.script.openfolder;"
+			        	id="button-openfolder"
+			        	oncommand="openfolder();"/>
 					<button class="edit"
 			        	label="&firebugmonkey.preference.script.edit;"
 			        	id="button-edit"
@@ -69,12 +72,12 @@
 			    			label="&firebugmonkey.preference.script.down;"
 			    			id="button-down"
 			            	oncommand="moveItem(1);"/>
-					</hbox>	
+					</hbox>
 					<spacer flex="1" />
-					<button class="openfolder"
-			    		label="&firebugmonkey.preference.script.openfolder;"
-			    		id="button-openfolder"
-			            oncommand="openfolder();"/>
+					<button class="openfbmscriptsfolder"
+			    		label="&firebugmonkey.preference.script.openfbmscriptsfolder;"
+			    		id="button-openfbmscriptsfolder"
+			            oncommand="openfolder('fbmscripts');"/>
 					</vbox>
 			</hbox>
 		</groupbox>
@@ -129,7 +132,10 @@
 			<checkbox id="remove-confirm" label="&firebugmonkey.preference.remove.confirm;" checked="true"/>
 		</vbox>
 	</prefpane>
-	
+	<prefpane id="scriptTemplatePane" label="&firebugmonkey.preference.scriptTemplatePane;" flex="1">
+		<label control="your-name" value="Enter your name:"/>
+		<textbox flex="1" multiline="true" wrap="off" id="scripttemplate" value="John"/>
+	</prefpane>
     <script type="application/x-javascript" src="chrome://firebugmonkey/content/preference.js" />
 </prefwindow>		
 

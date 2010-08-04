@@ -1,36 +1,21 @@
 
 const Cc = Components.classes;
 const Ci = Components.interfaces;
-//const FBM_SCRIPT_DIR = "fbm_scripts";
-//const FBM_SCRIPTLIST_FILE = "fbm_scripts.json";
 
 var scriptTreeView = null;
 var editorFile = null;
 
 var scriptDir = null;
-var scriptFile = null;
 
 var util = {};
 
 var strbundle = null;
 
 function init() {	
-	
 	Components.utils.import("resource://fbm_modules/utils.js", util);
 	
-	//scriptDir = util.FileUtils.makeDir(util.FileUtils.getProfileDir(), util.Utils.FBM_SCRIPT_DIR);
 	scriptDir = util.Utils.FbmScriptDir;
-	//scriptFile = util.FileUtils.getFile(scriptDir, util.Utils.FBM_SCRIPTLIST_FILE);
-	
-	//Application.console.log("loadPref scriptDir= " + scriptDir.path);
-	var data = util.Utils.loadSetting();
-//	if(scriptFile.exists()){
-//		let jsonstr = util.FileUtils.getContent(scriptFile);
-//		let result = JSON.parse(jsonstr);
-//		for(let key in result){
-//			data.push(result[key]);
-//		}
-//	}	
+	var data = util.Utils.loadSetting();	
 	
 	scriptTreeView = new ScriptTreeView(data.files);
     document.getElementById("scriptTree").view = scriptTreeView;
@@ -44,6 +29,8 @@ function init() {
     document.getElementById("enablexpcom").checked = Application.prefs.getValue("extensions.firebugmonkey.option.enablexpcom", false);
     
     document.getElementById("remove-confirm").checked = Application.prefs.getValue("extensions.firebugmonkey.option.remove.confirm", true);
+    
+    document.getElementById("scripttemplate").value = util.Utils.getScriptTemplate();
 }
 
 function getStrbundleString(str){
@@ -53,8 +40,11 @@ function getStrbundleString(str){
 	return strbundle.getString(str);
 }
 
-function getScriptTemplete(){
-	return "";
+function getScriptTemplate(file){
+	var name = util.FileUtils.getFileNameExceptExt(file.leafName);
+	var tmplate = util.Utils.getScriptTemplate();
+
+	return tmplate.replace(/\{name\}/g, name);
 }
 
 //////////////////////////////////////////////////////////////
@@ -68,27 +58,6 @@ function moveItem(aUpDown) {
 }
 
 function newItem(){
-	
-//    let findfile=false;
-//    let ret;
-//    while(true){
-//    	findfile = false;
-//	    ret = window.prompt("Enter file name.", "", "");
-//	    if (!ret)
-//	        return;
-//	       
-//		for (var index = 0; index < scriptTreeView.rowCount; index++) {
-//			var script = scriptTreeView._data[index];
-//			if(script.filename == ret){
-//				findfile = true;
-//				break;
-//			}
-//		}
-//		if(findfile)
-//			alert(getStrbundleString("EnterOtherFilename"));
-//		else
-//			break;
-//    }
     try{
 	    var filePicker = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
 	    filePicker.appendFilter('JavaScript', '*.js');
@@ -96,16 +65,14 @@ function newItem(){
 	    filePicker.init(window, "save file.", filePicker.modeSave);
 	    if (filePicker.show() == filePicker.returnOK) {
 	        let newfile = filePicker.file;
-	        
 	        if(hasItem(newfile.path)){
 	        	showMessageBox("Info", getStrbundleString("HasFileMessage"));
 	        	return;
 	        }
 	        
 		    let dirname = util.FileUtils.getFileNameExceptExt(newfile.leafName);
-		    let dir = util.FileUtils.makeDir(scriptDir, dirname, true);
-		    //let script = util.FileUtils.getFile(dir, ret);    
-		    util.FileUtils.write(newfile, getScriptTemplete());
+		    let dir = util.FileUtils.makeDir(scriptDir, dirname, true);    
+		    util.FileUtils.write(newfile, getScriptTemplate(newfile));
 		    
 		    scriptTreeView.appendItem({dir:dir.leafName, filename:newfile.leafName, fullpath:newfile.path, enable:true});
 		    save();
@@ -139,27 +106,22 @@ function browseFile(){
 }
 
 function editItem(){	 
-//	var file;
-//	if(scriptTreeView.getSelectionData.selectfilepath){
-//		file = util.FileUtils.getFile(scriptTreeView.getSelectionData.selectfilepath);
-//	}else{
-//		file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.dir);
-//		file.append(scriptTreeView.getSelectionData.filename);
-//	}
-	//var file = util.FileUtils.getFile(scriptDir, scriptTreeView.getSelectionData.fullpath);
+	if(scriptTreeView.getSelectionData == null) return;
+	
 	var fullpath = scriptTreeView.getSelectionData.fullpath;
 	var args = document.getElementById("editor-args").value;
 	args = args.replace('%path%', fullpath);
 	var argary = args.split(' ');
 	
 	var editorPath= document.getElementById("editor-path").value;
-	if(!launchProgram(editorPath, argary)){
-		showMessageBox("Error", getStrbundleString("EditorNotFindMessage"));
+	
+	var result = launchProgram(editorPath, argary);
+	if(!result.res){
+		showMessageBox("Error", result.error);
 	}
 }
 
 function removeItem(){
-    
 	if(document.getElementById("remove-confirm").checked){
 		var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);		
 		//ok true
@@ -187,32 +149,32 @@ function removeItem(){
 
 function openfolder(){
 	var args = document.getElementById("openfolder-args").value;
-	args = args.replace('%path%', scriptDir.path);
+	if(arguments.length == 1 && arguments[0] == 'fbmscripts'){
+		args = args.replace('%path%', scriptDir.path);
+	}else{
+		if(scriptTreeView.getSelectionData == null) return;
+		var file = util.FileUtils.getFile(scriptTreeView.getSelectionData.fullpath);
+		
+		args = args.replace('%path%', file.parent.path);	
+	}
+	
 	var argary = args.split(' ');
 
 	var exepath = document.getElementById("openfolder-path").value;
 	
-	if(!launchProgram(exepath, argary)){
-		showMessageBox("Error", getStrbundleString("FolderNotFindMessage"));
+	var result = launchProgram(exepath, argary);
+	if(!result.res){
+		showMessageBox("Error", result.error);
 	}
 }
 
 function save(){	
-	//var data = {version:22, files:[]};
 	var scripts = [];
 	for (var index = 0; index < scriptTreeView.rowCount; index++) {
 		var script = scriptTreeView._data[index];
-		//data.files.push(script);
 		scripts.push(script);
 	}	
 	util.Utils.saveSetting(scripts);
-//	var jsonstr = JSON.stringify(data);
-//	
-//	try{
-//		util.FileUtils.write(scriptFile, jsonstr);
-//	}catch(e){
-//		Components.utils.reportError("firebugmonkey : fault save " + FBM_SCRIPTLIST_FILE + " : "+ e);
-//	}
 }
 
 //////////////////////////////////////////////////////////////
@@ -242,24 +204,25 @@ function onDialogAccept(){
 
 var launchProgram = function(exePath, args){
 	if (exePath == null || (exePath !=null && exePath.length == 0))
-		return false;
+		return {res:false, error:getStrbundleString("LaunchExeNotFindMessage")};
 	
     try {
         var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
         file.initWithPath(exePath);
         if (!file.exists())
-            return false;
-        
+            return {res:false, error:file.path + " : " + getStrbundleString("LaunchFileNotFindMessage")};
+
         var process = Cc["@mozilla.org/process/util;1"].createInstance(Ci.nsIProcess);
         process.init(file);
-        process.run(false, args, args.length, {});
+        process.runw(false, args, args.length, {});
        
-    }catch(exc){
-        Components.utils.reportError("launch error " + exc);
-        return false;
+    }catch(e){
+        //Components.utils.reportError("launch error " + exc);
+    	return {res:false, error:e};
     }
-    return true;
+    return {res:true, error:null};
 };
+
 
 ////////////////////////////////////////////////////////////////
 // Custom Tree View
@@ -333,9 +296,6 @@ ScriptTreeView.prototype = {
     performAction: function(action) {},
     performActionOnRow: function(action, row) {},
     performActionOnCell: function(action, row, col) {
-    	//Application.console.log("performActionOnCell row= " + row);
-    	//Application.console.log("performActionOnCell col= " + col);
-    	//Application.console.log("performActionOnCell action= " + action);
     },
     
     /**
@@ -423,3 +383,5 @@ function hasItem(fullpath){
 	
 	return false;
 };
+
+

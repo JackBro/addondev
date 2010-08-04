@@ -297,8 +297,10 @@ var FileUtils = {
 	 */
 	deleteFile:function(file, recursive){
 		if (file instanceof Components.interfaces.nsILocalFile){
-			Application.console.log("deleteFile = " + file.path);
-  			file.remove(recursive);
+			if(file.exists()){
+				//Application.console.log("deleteFile = " + file.path);
+  				file.remove(recursive);
+			}
 		}
 	},
 	
@@ -321,7 +323,7 @@ var FileUtils = {
 var Utils = {
 	FBM_SCRIPT_DIR:"fbm_scripts",
 	FBM_SCRIPTJSON:"fbm_scripts.json",
-	version:23,
+	version:22,
 	_FbmScriptDir:null,
 	
 	get FbmScriptDir(){
@@ -333,7 +335,7 @@ var Utils = {
 	
 	loadSetting:function(){
 		var file = FileUtils.getFile(this.FbmScriptDir, this.FBM_SCRIPTJSON);
-		var data = {version:23, files:[]};
+		var data = {version:this.version, files:[]};
 		if(file.exists()){
 			try{
 				var jsonstr = FileUtils.getContent(file);
@@ -378,6 +380,39 @@ var Utils = {
 		}catch(e){
 			Components.utils.reportError("firebugmonkey : fault save " + file.leafName + " : "+ e);
 		}		
+	},
+	
+	makeDefaultScriptTemplate:function(){
+		try{
+			var templatefile = FileUtils.getFile(this.FbmScriptDir, "scripttemplate");
+			if(!templatefile.exists()){
+				FileUtils.write(templatefile, Utils.getDefaultScriptTemplate());
+			}
+		}catch(e){
+			Components.utils.reportError("firebugmonkey : error make script template file : " + e);
+		}
+	},
+	
+	getDefaultScriptTemplate:function(){
+		return "// ==UserScript== \n" +
+		"// @name           {name} \n"+
+		"// @namespace      http://{name}/ \n"+
+		"// @description    script template \n" +
+		"// @include        * \n"
+		"// ==UserScript== \n"
+		;
+	},
+	
+	getScriptTemplate:function(){
+		try{
+			var templatefile = FileUtils.getFile(this.FbmScriptDir, "scripttemplate");
+			if(templatefile.exists()){
+				return FileUtils.getContent(templatefile);
+			}
+		}catch(e){
+			Components.utils.reportError("firebugmonkey : error make script template file : " + e);
+		}		
+		return getDefaultScriptTemplate();
 	}
 }
 

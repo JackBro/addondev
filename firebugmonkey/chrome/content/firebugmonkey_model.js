@@ -15,12 +15,20 @@ FBL.ns(function () { with (FBL) {
 		sourcemap:{},
 		
 		initialize: function() {	
-			this.stringBundle = null;
+			this.stringBundle = stringBundleService.createBundle("chrome://firebugmonkey/locale/firebugmonkey.properties");
 			this.SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
 			Firebug.firebugmonkey.init();
 			
-			//this.setPrefForDebug();
 			this.setFunctionForDebug();
+			
+			try{
+				Firebug.Firebugmonkey_ConsoleListener.init();
+				if(Firebug.firebugmonkey.enable){
+					Firebug.Firebugmonkey_ConsoleListener.registerListener();
+				}
+			}catch(exc){
+				Components.utils.reportError("Firebugmonkey : consoleListener init error  : " + exc);
+			}
 		},
 	
 		initializeUI: function(){
@@ -34,16 +42,6 @@ FBL.ns(function () { with (FBL) {
 		setPrefForDebug : function(){	
 			
 			var result = true;
-			//Firebug.filterSystemURLs = false;
-			//Firebug.showAllSourceFiles = true;
-			
-//			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);
-//			if(filterSystemURLs)
-//				Application.prefs.setValue("extensions.firebug.service.filterSystemURLs", false);
-//			
-//			var showAllSourceFiles = Application.prefs.getValue("extensions.firebug.service.showAllSourceFiles", false);
-//			if(!showAllSourceFiles)
-//				Application.prefs.setValue("extensions.firebug.service.showAllSourceFiles", true);
 			
 			var scriptenableSites = Application.prefs.getValue("extensions.firebug.script.enableSites", false);
 			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);	
@@ -51,9 +49,6 @@ FBL.ns(function () { with (FBL) {
 			
 			if(!scriptenableSites || filterSystemURLs || !showAllSourceFiles){
 				var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
-				if(this.stringBundle == null){
-				 	this.stringBundle = stringBundleService.createBundle("chrome://firebugmonkey/locale/firebugmonkey.properties");
-				}
 				var msg = this.stringBundle.GetStringFromName("SetPrefForFirebumonkeyDebug");
 				
 				//ok true
@@ -265,7 +260,6 @@ FBL.ns(function () { with (FBL) {
 	        		return Firebug.firebugmonkey_Model.fbmScript;
 	        	}	
 			}catch(e){
-				//Application.console.log("getFbmScriptSpecFromSandbox ERROR = " + e);
 				Components.utils.reportError("firebugmonkey : error getFbmScriptSpecFromSandbox " + e);
 			}
 		
@@ -311,36 +305,48 @@ FBL.ns(function () { with (FBL) {
 	  		openDialog("chrome://firebugmonkey/content/preference.xul", "Preferences", fu);	
 	  	},
 	  	
-	  	openDoc : function(){
-	  		var docurl = "http://orange.zero.jp/zbn39616.pine/addon/firebugmonkey/index.html";
+	  	openWebSite : function(){
+	  		var docurl = "http://code.google.com/p/addondev/";
 	  		getBrowser().addTab(docurl);
-	  		//var bundle = document.getElementById('firebugmonkey-bundle');
-	  		//var locate = bundle.getString("LOCATE");
 	  	},
 	  	
 	  	update : function(isenable){
 	  		Firebug.firebugmonkey.enable = !Firebug.firebugmonkey.enable; 		
 	  		Application.prefs.setValue("extensions.firebugmonkey.enable", Firebug.firebugmonkey.enable);
 	  		fbmStatusIcon.setAttribute("enable", Firebug.firebugmonkey.enable == true?"on":"off");
+	  		
+	  		if(Firebug.firebugmonkey.enable){
+	  			if(!Firebug.Firebugmonkey_ConsoleListener.isregster)
+	  				Firebug.Firebugmonkey_ConsoleListener.registerListener();
+	  		}else{
+	  			if(Firebug.Firebugmonkey_ConsoleListener.isregster)
+	  				Firebug.Firebugmonkey_ConsoleListener.unregisterListener();
+	  		}
 	  	}
 	});
 	
 	Firebug.Firebugmonkey_ConsoleListener = {
 		aConsoleService:null,
-		
+		isregster:false,
 		init : function(){
 			this.aConsoleService = Cc["@mozilla.org/consoleservice;1"].getService(Ci.nsIConsoleService);
 		},
 	    
 	    registerListener : function(){
+	    	//Application.console.log("register Firebugmonkey_ConsoleListener");
 	    	this.aConsoleService.registerListener(this); 
+	    	this.isregster = true;
 	    },
 	    
 	    unregisterListener : function(){
+	    	//Application.console.log("unregister Firebugmonkey_ConsoleListener");
 	    	this.aConsoleService.unregisterListener(this); 
+	    	this.isregster = false;
 	    },
 	    
 	    observe:function( aMessage ){
+	    	
+	    	//Application.console.log("observe = ");
 		    try{
 				if (!(aMessage instanceof Ci.nsIScriptError)) return;
 	
@@ -378,13 +384,6 @@ FBL.ns(function () { with (FBL) {
 	        return this;
 	    }
 	};
-
-	try{
-		Firebug.Firebugmonkey_ConsoleListener.init();
-		Firebug.Firebugmonkey_ConsoleListener.registerListener();
-	}catch(exc){
-		Components.utils.reportError("Firebugmonkey : consoleListener init error  : " + exc);
-	}
 
 	Firebug.registerModule(Firebug.firebugmonkey_Model); 
 

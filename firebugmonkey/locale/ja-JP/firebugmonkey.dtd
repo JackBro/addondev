@@ -5,16 +5,18 @@
 <!ENTITY firebugmonkey.menu.about "About">
 <!ENTITY firebugmonkey.preference.scriptPane "スクリプト">
 <!ENTITY firebugmonkey.preference.advancedPane "詳細">
-<!ENTITY firebugmonkey.preference.script.group "スクリプト">
+<!ENTITY firebugmonkey.preference.scriptTemplatePane "スクリプト">
+<!ENTITY firebugmonkey.preference.script.group "スクリプト(ダブルクリックで編集)">
 <!ENTITY firebugmonkey.preference.script.list.filename "ファイル名">
 <!ENTITY firebugmonkey.preference.script.list.enable "有効">
-<!ENTITY firebugmonkey.preference.script.new "新規">
-<!ENTITY firebugmonkey.preference.script.browse "選択">
+<!ENTITY firebugmonkey.preference.script.new "新規作成">
+<!ENTITY firebugmonkey.preference.script.browse "ファイル選択">
+<!ENTITY firebugmonkey.preference.script.openfolder "フォルダを開く">
 <!ENTITY firebugmonkey.preference.script.edit "編集">
 <!ENTITY firebugmonkey.preference.script.remove "削除">
 <!ENTITY firebugmonkey.preference.script.up "上へ">
 <!ENTITY firebugmonkey.preference.script.down "下へ">
-<!ENTITY firebugmonkey.preference.script.openfolder "スクリプトフォルダを開く">
+<!ENTITY firebugmonkey.preference.script.openfbmscriptsfolder "fbm_scriptsを開く">
 <!ENTITY firebugmonkey.preference.script.ebablexpcom "xpcomを使用可能にする">
 <!ENTITY firebugmonkey.preference.script.ebablexpcomatt "注意!! スクリプトでxpcomが使用可能になります">
 <!ENTITY firebugmonkey.preference.editor.group "編集で使用するエディタ">

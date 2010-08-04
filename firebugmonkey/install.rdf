@@ -28,7 +28,7 @@
 		</em:targetApplication>
 		
 		<em:name>Firebugmonkey</em:name>
-    	<em:description>You can debug greasemonkey script with Firebug.(recommended Firebug1.5.4)</em:description>
+    	<em:description>The debugging of the Greasemonkey script by Firebug is enabled.(recommended Firebug1.5.4)</em:description>
     	<em:creator>konkon</em:creator>
     	<em:iconURL>chrome://firebugmonkey/skin/firebugmonkey32.png</em:iconURL>
     	<em:homepageURL>http://code.google.com/p/addondev/</em:homepageURL>

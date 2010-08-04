@@ -8,10 +8,8 @@ FBL.ns(function () { with (FBL) {
 /**
  * @param string url target page 
  * @param nsIFile scriptdir 
- * @param string filename 
- * @param bool enbale 
+ * @param object script {dir,filename, fullpath, enable}
  */
-//Firebug.firebugmonkey.Script = function(url, scriptdir, filename, enbale){
 Firebug.firebugmonkey.Script = function(url, scriptdir, script){
 	
 	Components.utils.import("resource://fbm_modules/utils.js", this);	
@@ -88,18 +86,11 @@ Firebug.firebugmonkey.Script.prototype =
 	},
 	
 	init : function(){
-//		this._scriptfile = this.FileUtils.getFile(this._scriptdir, this._filename);
-//		if(this._selectfilepath != undefined){
-//			this._scriptfile = this.FileUtils.getFile(this._selectfilepath);
-//		}
 		this._scriptfile = this.FileUtils.getFile(this._fullpath);
 		
 		//Application.console.log("this._scriptdir = " + this._scriptdir.path);
 		//Application.console.log("this._filename = " + this._filename);
-		
-		//this._scripttmpfile = this.FileUtils.getFile(
-		//		this.FileUtils.getFile(this._scriptdir, "tmp"),
-		//		this._filename);
+
 		this._scripttmpfile = this.FileUtils.getFile(this._scriptdir, this._filename);
 		this._scripturi = ioservice.newFileURI(this.FileUtils.getFile(this._scriptfile));
 

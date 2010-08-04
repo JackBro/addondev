@@ -5,16 +5,18 @@
 <!ENTITY firebugmonkey.menu.about "About">
 <!ENTITY firebugmonkey.preference.scriptPane "Script">
 <!ENTITY firebugmonkey.preference.advancedPane "Advanced">
+<!ENTITY firebugmonkey.preference.scriptTemplatePane "Advanced">
 <!ENTITY firebugmonkey.preference.script.group "Script">
 <!ENTITY firebugmonkey.preference.script.list.filename "FileName">
 <!ENTITY firebugmonkey.preference.script.list.enable "Enable">
 <!ENTITY firebugmonkey.preference.script.new "New">
-<!ENTITY firebugmonkey.preference.script.browse "Browse">
+<!ENTITY firebugmonkey.preference.script.browse "Select file">
+<!ENTITY firebugmonkey.preference.script.openfolder "Open folder">
 <!ENTITY firebugmonkey.preference.script.edit "Edit">
 <!ENTITY firebugmonkey.preference.script.remove "Remove">
 <!ENTITY firebugmonkey.preference.script.up "Up">
 <!ENTITY firebugmonkey.preference.script.down "Down">
-<!ENTITY firebugmonkey.preference.script.openfolder "Open script folder">
+<!ENTITY firebugmonkey.preference.script.openfbmscriptsfolder "Open fbm_scripts">
 <!ENTITY firebugmonkey.preference.script.ebablexpcom "Enable xpcom">
 <!ENTITY firebugmonkey.preference.script.ebablexpcomatt "Attention!! you can use xpcom in script">
 <!ENTITY firebugmonkey.preference.editor.group "Editor">
@@ -23,4 +25,4 @@
 <!ENTITY firebugmonkey.preference.openfolder.group "Open folder exe">
 <!ENTITY firebugmonkey.preference.openfolder.path "Path">
 <!ENTITY firebugmonkey.preference.openfolder.args "Arguments">
-<!ENTITY firebugmonkey.preference.remove.confirm "Show confirm dialog when remove item ">
+<!ENTITY firebugmonkey.preference.remove.confirm "Show confirm dialog when remove item">

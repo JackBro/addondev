@@ -5,10 +5,6 @@ const Ci = Components.interfaces;
 
 const ioService = Cc["@mozilla.org/network/io-service;1"].createInstance(Ci.nsIIOService);
 
-//const SANDBOX_XUL_PATH = "chrome://firebugmonkey/content/sandbox.xul";
-//const FBM_SCRIPT_DIR = "fbm_scripts";
-//const FBM_SCRIPTLIST_FILE = "fbm_scripts.json";
-
 const fbmStatusIcon = $('firebugmonkeyStatusBarIcon');
 
 Firebug.firebugmonkey = {
@@ -19,6 +15,10 @@ Firebug.firebugmonkey = {
 	  	
 	init : function() {	
 		Components.utils.import("resource://fbm_modules/utils.js", this);
+		
+		var scriptdir = this.Utils.FbmScriptDir;
+			
+		this.Utils.makeDefaultScriptTemplate();
 	
   		this.enable = Application.prefs.getValue("extensions.firebugmonkey.enable", false);
   		fbmStatusIcon.setAttribute("enable", this.enable == true?"on":"off");
@@ -54,19 +54,8 @@ Firebug.firebugmonkey = {
 
 		if(!this.enable) return;
 
-		//var profiledir = this.FileUtils.getProfileDir(); 
-		//var scriptdir = this.FileUtils.makeDir(profiledir, this.Utils.FBM_SCRIPT_DIR);
 		var scriptdir = this.Utils.FbmScriptDir;
-//		var jsonfile = this.FileUtils.getFile(scriptdir, this.Utils.FBM_SCRIPTLIST_FILE);
-//		
-//		if(!jsonfile.exists()) 
-//		{
-//			Application.console.log("firebugmonkey : not find " + jsonfile.path);
-//			return;
-//		}
 
-		//let jsonstr = this.FileUtils.getContent(jsonfile);
-		//let result = JSON.parse(jsonstr);
 		let result = this.Utils.loadSetting();
 		if(result.files.length == 0) return;
 		
@@ -74,6 +63,8 @@ Firebug.firebugmonkey = {
 	 	this.GM_Scripthrefs.clear();
 	 	
 	 	var scripts = [];
+	 	
+	 	this.enablescripts =[];
 	 	this.sourcehrefs = [];
 
 	 	for(let key in files){	 		
@@ -102,8 +93,6 @@ Firebug.firebugmonkey = {
 	 	
 	 	this.enablescripts = (function() {
 		    function testMatch(script) {
-		    	//Application.console.log("script.enable = " + script.enable);
-
 		      return (script.enable == true || script.enable == "true") && script.matchesURL(e.target.URL);
 		    }
 	    	return scripts.filter(testMatch);
