@@ -5,9 +5,9 @@
 <!ENTITY firebugmonkey.menu.about "About">
 <!ENTITY firebugmonkey.preference.scriptPane "スクリプト">
 <!ENTITY firebugmonkey.preference.advancedPane "詳細">
-<!ENTITY firebugmonkey.preference.scriptTemplatePane "スクリプトテンプレート">
+<!ENTITY firebugmonkey.preference.scriptTemplatePane "テンプレート">
 <!ENTITY firebugmonkey.preference.script.group "スクリプト(ダブルクリックで編集)">
-<!ENTITY firebugmonkey.preference.script.list.filename "ファイル名">
+<!ENTITY firebugmonkey.preference.script.list.filename "ファイル">
 <!ENTITY firebugmonkey.preference.script.list.enable "有効">
 <!ENTITY firebugmonkey.preference.script.new "新規作成">
 <!ENTITY firebugmonkey.preference.script.browse "ファイル選択">
@@ -29,3 +29,4 @@
 <!ENTITY firebugmonkey.preference.encode.caption "編集やフォルダを開くときパスが文字化けして失敗する場合、詳細タブの「パスをエンコードする」を設定して下さい">
 <!ENTITY firebugmonkey.preference.encode.use "パスをエンコードする">
 <!ENTITY firebugmonkey.preference.encode.detaicaption "編集やフォルダを開くとき実行ファイルにパスをエンコードして渡します。エンコードする文字コードを選択して下さい(日本語windowsの場合, 日本語(Shift_JIS)を選択)。">
+<!ENTITY firebugmonkey.preference.script.template.setdefault "デフォルトに戻す">

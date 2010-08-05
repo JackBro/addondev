@@ -5,7 +5,7 @@
 
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>firebugmonkey@konkon.jp</em:id>
-		<em:version>0.2.2</em:version>
+		<em:version>0.3.0</em:version>
 		<em:optionsURL>chrome://firebugmonkey/content/preference.xul</em:optionsURL>
 		
 		<em:localized>

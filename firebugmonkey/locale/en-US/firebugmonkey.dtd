@@ -1,5 +1,5 @@
 <!ENTITY firebugmonkey.menu.tooltiptext "firebugmonkey">
-<!ENTITY firebugmonkey.menu.enabled "Enabled firebugmonkey">
+<!ENTITY firebugmonkey.menu.enabled "Enable firebugmonkey">
 <!ENTITY firebugmonkey.menu.doc "Document">
 <!ENTITY firebugmonkey.menu.preference "Script Manager">
 <!ENTITY firebugmonkey.menu.about "About">
@@ -7,7 +7,7 @@
 <!ENTITY firebugmonkey.preference.advancedPane "Advanced">
 <!ENTITY firebugmonkey.preference.scriptTemplatePane "Template">
 <!ENTITY firebugmonkey.preference.script.group "Script">
-<!ENTITY firebugmonkey.preference.script.list.filename "FileName">
+<!ENTITY firebugmonkey.preference.script.list.filename "File">
 <!ENTITY firebugmonkey.preference.script.list.enable "Enable">
 <!ENTITY firebugmonkey.preference.script.new "New">
 <!ENTITY firebugmonkey.preference.script.browse "Select file">
@@ -25,7 +25,8 @@
 <!ENTITY firebugmonkey.preference.openfolder.group "Open folder exe">
 <!ENTITY firebugmonkey.preference.openfolder.path "Path">
 <!ENTITY firebugmonkey.preference.openfolder.args "Arguments">
-<!ENTITY firebugmonkey.preference.remove.confirm "Show confirm dialog when remove item">
-<!ENTITY firebugmonkey.preference.encode.caption "If fail when you edit or Open folder, see 'Encode path' in Advanced tab">
+<!ENTITY firebugmonkey.preference.remove.confirm "Confirm remove">
+<!ENTITY firebugmonkey.preference.encode.caption "If fail when you edit or open folder, see 'Encode path' in Advanced tab">
 <!ENTITY firebugmonkey.preference.encode.use "Encode path">
 <!ENTITY firebugmonkey.preference.encode.detaicaption "Passing encoded to the execution file when the edit and the folder are opened is passed. Please select the encoded character-code.">
+<!ENTITY firebugmonkey.preference.script.template.setdefault "Set default">

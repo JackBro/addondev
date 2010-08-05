@@ -54,10 +54,26 @@ function getStrbundleString(str){
 
 function getScriptTemplate(file){
 	var name = util.FileUtils.getFileNameExceptExt(file.leafName);
-	var tmplate = util.Utils.getScriptTemplate();
+	//var tmplate = util.Utils.getScriptTemplate();
+	var tmplate = document.getElementById("scripttemplate").value;
 
 	return tmplate.replace(/\{name\}/g, name);
 }
+
+function setDefaultTemplate(){
+	document.getElementById("scripttemplate").value = util.Utils.getDefaultScriptTemplate();
+}
+
+function cnvEncode(value){
+	var check = document.getElementById("use-encode").checked;
+	var encode = document.getElementById("form-encode").value;
+	if(check && encode!=null){
+		UConv.charset = document.getElementById("form-encode").value;
+		return UConv.ConvertFromUnicode(value);	
+	}
+	return value;
+}
+
 
 //////////////////////////////////////////////////////////////
 // Script
@@ -194,15 +210,6 @@ function save(){
 	util.Utils.saveSetting(scripts);
 }
 
-function cnvEncode(value){
-	var check = document.getElementById("use-encode").checked;
-	var encode = document.getElementById("form-encode").value;
-	if(check && encode!=null){
-		UConv.charset = document.getElementById("form-encode").value;
-		return UConv.ConvertFromUnicode(value);	
-	}
-	return value;
-}
 
 //////////////////////////////////////////////////////////////
 //Editor
@@ -229,6 +236,8 @@ function onDialogAccept(){
     Application.prefs.setValue("extensions.firebugmonkey.option.encode.use", document.getElementById("use-encode").checked);
     Application.prefs.setValue("extensions.firebugmonkey.option.encode.from", document.getElementById("form-encode").value);	
 	
+    util.Utils.saveScriptTemplate(document.getElementById("scripttemplate").value);
+    
 	save();
 }
 

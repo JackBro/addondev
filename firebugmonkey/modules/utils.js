@@ -323,7 +323,8 @@ var FileUtils = {
 var Utils = {
 	FBM_SCRIPT_DIR:"fbm_scripts",
 	FBM_SCRIPTJSON:"fbm_scripts.json",
-	version:22,
+	version:30,
+	_scriptTemplateFile:null, 
 	_FbmScriptDir:null,
 	
 	get FbmScriptDir(){
@@ -333,17 +334,22 @@ var Utils = {
 		return this._FbmScriptDir;
 	},
 	
+	get FbmScriptTemplateFile(){
+		if(this._scriptTemplateFile == null){
+			this._scriptTemplateFile = FileUtils.getFile(this.FbmScriptDir, "scripttemplate");
+		}
+		return this._scriptTemplateFile;
+	},
+	
 	loadSetting:function(){
 		var file = FileUtils.getFile(this.FbmScriptDir, this.FBM_SCRIPTJSON);
 		var data = {version:this.version, files:[]};
 		if(file.exists()){
 			try{
 				var jsonstr = FileUtils.getContent(file);
-				//Application.console.log("loadSetting jsonstr = " + jsonstr);
 				var result = JSON.parse(jsonstr);
 	
-				if(result.version == undefined){ //min than 0.2.3
-					//Application.console.log("loadSetting result[version] == undefined");
+				if(result.version == undefined){
 					data.version = this.version;
 					var scriptDir = FileUtils.getFile(FileUtils.getProfileDir(), this.FBM_SCRIPT_DIR);
 					for(let key in result){	
@@ -359,9 +365,6 @@ var Utils = {
 					var jsonstr = JSON.stringify(data);
 					FileUtils.write(file, jsonstr);
 				}else{
-					//for(let key in result.files){
-					//	data.files.push(result[key]);
-					//}
 					data = result;
 				}
 			}catch(e){
@@ -384,7 +387,7 @@ var Utils = {
 	
 	makeDefaultScriptTemplate:function(){
 		try{
-			var templatefile = FileUtils.getFile(this.FbmScriptDir, "scripttemplate");
+			var templatefile = this.FbmScriptTemplateFile;
 			if(!templatefile.exists()){
 				FileUtils.write(templatefile, Utils.getDefaultScriptTemplate());
 			}
@@ -405,7 +408,7 @@ var Utils = {
 	
 	getScriptTemplate:function(){
 		try{
-			var templatefile = FileUtils.getFile(this.FbmScriptDir, "scripttemplate");
+			var templatefile = this.FbmScriptTemplateFile;
 			if(templatefile.exists()){
 				return FileUtils.getContent(templatefile);
 			}
@@ -413,6 +416,15 @@ var Utils = {
 			Components.utils.reportError("firebugmonkey : error make script template file : " + e);
 		}		
 		return getDefaultScriptTemplate();
+	},
+	
+	saveScriptTemplate:function(template){
+		try{
+			var templatefile = this.FbmScriptTemplateFile;
+			FileUtils.write(templatefile, template);
+		}catch(e){
+			Components.utils.reportError("firebugmonkey : error save script template file : " + e);
+		}
 	}
 }
 

@@ -156,7 +156,10 @@
 	</prefpane>
 	
 	<prefpane id="scriptTemplatePane" label="&firebugmonkey.preference.scriptTemplatePane;" flex="1">
-		<label value="Script Template"/>
+		<hbox>
+			<label value="Script Template"/>
+			<button label="&firebugmonkey.preference.script.template.setdefault;" oncommand="setDefaultTemplate();"/>
+		</hbox>
 		<textbox flex="1" multiline="true" wrap="off" id="scripttemplate" value="John"/>
 	</prefpane>
 	
