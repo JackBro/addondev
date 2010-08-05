@@ -24,11 +24,15 @@ namespace testfdb_cs
             InitializeComponent();
 
             AddTagMenuItem.Click += (sender, e) =>
-            {
-                
-                MessageBox.Show(
-                tagdb.insertTag
-
+            {    
+                InputForm input = new InputForm();
+                DialogResult res = input.ShowDialog(this);
+                if(res == DialogResult.OK){
+                    string tag = input.input;
+                    if (tag.Length > 0) {
+                        //tagdb.insertTag(new string[] { input.input });
+                    }
+                }
             };
 
             tagdb.DBFileName = "file.db";
