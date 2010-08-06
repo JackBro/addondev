@@ -18,6 +18,7 @@ namespace testfdb_cs
     public partial class MainForm : Form
     {
         private TagDB tagdb = new TagDB();
+        private Dictionary<TreeNode, string> nodemap = new Dictionary<TreeNode, string>();
 
         public MainForm()
         {
@@ -42,6 +43,10 @@ namespace testfdb_cs
             tagdb.Connection();
             tagdb.createTable();
 
+ 
+            TreeNode tagsnode = TagTreeView.Nodes["TagNode"].Nodes.Add("tags");
+            tagsnode.Tag = "tags";
+            nodemap.Add(tagsnode, "tags");
 
             string[] tags = tagdb.getAllTags();
             TreeNode node = TagTreeView.Nodes["TagNode"];
@@ -322,21 +327,87 @@ namespace testfdb_cs
             //}
         }
 
+        private List<FileData> getFileData() {
+        }
  
 
         private void TagTreeView_DragEnter(object sender, DragEventArgs e)
         {
-
+            e.Effect = DragDropEffects.All;
         }
 
         private void TagTreeView_DragDrop(object sender, DragEventArgs e)
         {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                var pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
+                TreeNode DestinationNode = ((TreeView)sender).GetNodeAt(pt);
 
+                if (DestinationNode != null) {
+
+                    //((TreeView)sender).SelectedNode = DestinationNode;
+                    string tasg = DestinationNode.Tag as string;
+                    if (tasg != null && nodemap.ContainsKey(DestinationNode)) {
+
+
+                        List<FileData> files = new List<FileData>();
+  
+                        Action<string> func = x => {
+                            String name = Path.GetFileName(x);
+                            string guid = Win32.getObjectID(x).ToString();
+                            FileData filedata = tagdb.selectFileData(guid);
+                            if (filedata == null) {
+                                filedata = new FileData(guid, name, new List<string>(), "");
+                            }
+                            files.Add(filedata);
+                        };
+
+                        string[] fullpaths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                        
+                        foreach (string fullpath in fullpaths) {
+
+                            //string strcmd = String.Format("INSERT INTO {0}(guid,name) VALUES('{1}', '{2}')",
+                            //    getFileDbName(), guid, filename);
+                            if (File.GetAttributes(fullpath) == FileAttributes.Directory) {
+                                DoIt(fullpath, func);
+                            }
+                            else {
+                                String filename = Path.GetFileName(fullpath);
+                                string guid = Win32.getObjectID(fullpath).ToString();
+                                //files.Add(fullpath);
+                                files.Add(new FileData(guid, filename, new List<string>(), ""));
+                            }
+
+                        }
+                        string[] oldtags = tagdb.getAllTags();
+                        RegisterForm reg = new RegisterForm();
+                        reg.FileDatas = files;
+                        reg.Tags = tagdb.getAllTags();
+                        reg.SetFileData();
+                        DialogResult res = reg.ShowDialog(this);
+                        if (res == DialogResult.OK) {
+                            tagdb.insertFileData(reg.FileDatas, reg.Tags.ToList<string>());
+                        }
+
+
+                    }
+                    else if (tasg != null) {
+
+                    }
+
+                }
+            }
         }
 
         private void TagTreeView_DragOver(object sender, DragEventArgs e)
         {
-            
+
+            var pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
+            TreeNode DestinationNode = ((TreeView)sender).GetNodeAt(pt);
+
+            if (DestinationNode != null) {
+                ((TreeView)sender).SelectedNode = DestinationNode;
+
+            } 
         }
 
         private void TagTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

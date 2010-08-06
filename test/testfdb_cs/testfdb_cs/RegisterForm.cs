@@ -23,8 +23,6 @@ namespace testfdb_cs
         {
             get
             {
-                string[] tags = TagTextBox.Text.Split(',');
-
                 var checkedtag = new List<string>();
                 for(int i=0;i<TagCheckedListBox.Items.Count; i++)
                 {
@@ -33,7 +31,7 @@ namespace testfdb_cs
                         checkedtag.Add((string)TagCheckedListBox.Items[i]);
                     }
                 }
-                return checkedtag.Union(tags).ToArray<string>();
+                return checkedtag.ToArray<string>();
             }
 
             set

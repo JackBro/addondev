@@ -47,6 +47,7 @@ FBL.ns(function () { with (FBL) {
 			var filterSystemURLs = Application.prefs.getValue("extensions.firebug.service.filterSystemURLs", true);	
 			var showAllSourceFiles = Application.prefs.getValue("extensions.firebug.service.showAllSourceFiles", false);
 			
+			//if(!scriptenableSites || filterSystemURLs){// || !showAllSourceFiles){
 			if(!scriptenableSites || filterSystemURLs || !showAllSourceFiles){
 				var prompts = Cc["@mozilla.org/embedcomp/prompt-service;1"].getService(Ci.nsIPromptService);
 				var msg = this.stringBundle.GetStringFromName("SetPrefForFirebumonkeyDebug");
@@ -162,7 +163,7 @@ FBL.ns(function () { with (FBL) {
 			      '$&' + fbm_onBreak
 			    )
 			  );
-			}
+			}		
 	     
 			Firebug.firebugmonkey_Model.fbmScript='';
 				 
@@ -214,7 +215,7 @@ FBL.ns(function () { with (FBL) {
 				+'		}'
 				+'	}'
 				+'} catch (exc) {'
-				+'	 Components.utils.reportError("firebugmonkey : error fbm_unwrapObject = " +exc);'
+				//+'	 Components.utils.reportError("firebugmonkey : error fbm_unwrapObject = " +exc);'
 				+'}';
 	
 			if ('unwrapObject' in FBL) {

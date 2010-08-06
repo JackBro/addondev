@@ -32,7 +32,6 @@
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.TagTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
@@ -68,14 +67,6 @@
             this.FileListView.UseCompatibleStateImageBehavior = false;
             this.FileListView.View = System.Windows.Forms.View.Details;
             // 
-            // TagTextBox
-            // 
-            this.TagTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TagTextBox.Location = new System.Drawing.Point(60, 3);
-            this.TagTextBox.Name = "TagTextBox";
-            this.TagTextBox.Size = new System.Drawing.Size(293, 19);
-            this.TagTextBox.TabIndex = 2;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -92,25 +83,24 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.CommentTextBox, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.TagCheckedListBox, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.TagTextBox, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.CommentTextBox, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.TagCheckedListBox, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(356, 191);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 108);
+            this.label2.Location = new System.Drawing.Point(3, 95);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(51, 12);
             this.label2.TabIndex = 6;
@@ -119,19 +109,19 @@
             // CommentTextBox
             // 
             this.CommentTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommentTextBox.Location = new System.Drawing.Point(60, 111);
+            this.CommentTextBox.Location = new System.Drawing.Point(60, 98);
             this.CommentTextBox.Multiline = true;
             this.CommentTextBox.Name = "CommentTextBox";
-            this.CommentTextBox.Size = new System.Drawing.Size(293, 77);
+            this.CommentTextBox.Size = new System.Drawing.Size(293, 90);
             this.CommentTextBox.TabIndex = 7;
             // 
             // TagCheckedListBox
             // 
             this.TagCheckedListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TagCheckedListBox.FormattingEnabled = true;
-            this.TagCheckedListBox.Location = new System.Drawing.Point(60, 28);
+            this.TagCheckedListBox.Location = new System.Drawing.Point(60, 3);
             this.TagCheckedListBox.Name = "TagCheckedListBox";
-            this.TagCheckedListBox.Size = new System.Drawing.Size(293, 74);
+            this.TagCheckedListBox.Size = new System.Drawing.Size(293, 88);
             this.TagCheckedListBox.TabIndex = 8;
             // 
             // splitContainer1
@@ -225,7 +215,6 @@
 
         private System.Windows.Forms.ListView FileListView;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox TagTextBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox CommentTextBox;
