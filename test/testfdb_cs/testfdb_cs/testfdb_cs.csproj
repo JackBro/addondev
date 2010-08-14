@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EB35BBB4-2073-4568-BCFA-619598EBAF79}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -61,9 +62,7 @@
     <Compile Include="DetailView.Designer.cs">
       <DependentUpon>DetailView.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileDataListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="FileData.cs" />
     <Compile Include="InputForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,11 +75,14 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListView\ListVewUserControl.cs">
+    <Compile Include="ListView\FileDataListVew.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ListView\ListVewUserControl.Designer.cs">
-      <DependentUpon>ListVewUserControl.cs</DependentUpon>
+    <Compile Include="ListView\FileDataListVew.Designer.cs">
+      <DependentUpon>FileDataListVew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.Query.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,8 +95,8 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ListView\ListVewUserControl.resx">
-      <DependentUpon>ListVewUserControl.cs</DependentUpon>
+    <EmbeddedResource Include="ListView\FileDataListVew.resx">
+      <DependentUpon>FileDataListVew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -123,6 +125,7 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SQLiteWrap.cs" />
     <Compile Include="TagDB.cs" />
     <Compile Include="Win32.cs" />
   </ItemGroup>

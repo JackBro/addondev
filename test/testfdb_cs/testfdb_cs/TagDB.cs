@@ -7,41 +7,6 @@ using System.Data.SQLite;
 
 namespace testfdb_cs
 {
-
-    public class FileData
-    {
-        public string guid;
-        public string name;
-        public List<string> tags;
-        public string comment;
-
-        public FileData(string guid, string name, List<string> tags, string comment)
-        {
-            this.guid = guid;
-            this.name = name;
-            this.tags = tags;
-            this.comment = comment;
-        }
-
-        public FileData(string guid, string name, string tags, string comment)
-        {
-            this.guid = guid;
-            this.name = name;
-            this.tags = parseTags(tags);
-            this.comment = comment;
-        }
-
-        public string getTagsConcat()
-        {
-            return String.Join(",", tags.ToArray<string>());
-        }
-
-        public static List<string> parseTags(string tags)
-        {
-            return tags.Split(new char[] { ',' }).ToList<string>();
-        }
-    }
-
     class TagDB
     {
         public delegate void tagsSelect(string guid, string name, string tags, string comment);
@@ -49,10 +14,19 @@ namespace testfdb_cs
 
         public string DBFileName{ get; set; }
 
+        /// <summary>
+        /// file data
+        /// </summary>
         public string FileTable{ get; set; }
-
+        
+        /// <summary>
+        /// file-tag
+        /// </summary>
         public string TaggedFileTable{ get; set; }
-
+        
+        /// <summary>
+        /// tag
+        /// </summary>
         public string TagTable { get; set; }
 
         private SQLiteConnection connection;
@@ -61,6 +35,10 @@ namespace testfdb_cs
 
         public TagDB()
         {
+            DBFileName = "file.db";
+            FileTable = "filetable";
+            TaggedFileTable = "taggedfiletable";
+            TagTable = "tagtable";
         }
 
         public void Connection()
@@ -95,12 +73,12 @@ namespace testfdb_cs
             {
                 if (!existTable(FileTable))
                 {
-                    cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, name TEXT, tags TEXT, comment TEXT)", FileTable);
+                    cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, name TEXT, comment TEXT)", FileTable);
                     cmd.ExecuteNonQuery();
                 }
                 if (!existTable(TaggedFileTable))
                 {
-                    cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, tag TEXT)", TaggedFileTable);
+                    cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT, tag TEXT)", TaggedFileTable);
                     cmd.ExecuteNonQuery();
                 }
 
@@ -178,9 +156,6 @@ namespace testfdb_cs
 
         private IEnumerable<string> unique(IEnumerable<string> tags)
         {
-
-
-
             foreach (string tag in tags)
             {
                 yield return tag;
@@ -222,6 +197,18 @@ namespace testfdb_cs
             commitTransaction();
         }
 
+        public void updateFileDataName(string guid, string name)
+        {
+            string strcmd = String.Format("UPDATE {0} SET name = '{1}' where guid = '{2}'", FileTable, name, guid);
+            cmd.CommandText = strcmd;
+            cmd.ExecuteNonQuery();
+        }
+        public void updateFileDataComment(string guid, string comment)
+        {
+            string strcmd = String.Format("UPDATE {0} SET comment = '{1}' where guid = '{2}'", FileTable, comment, guid);
+            cmd.CommandText = strcmd;
+            cmd.ExecuteNonQuery();
+        }
         //public void updateFile(string guid, string name)
         //{
         //    string strcmd = String.Format("UPDATE {0} SET name = '{1}' where guid = '{2}'", FileTableName, name, guid);
@@ -233,12 +220,7 @@ namespace testfdb_cs
         //{
         //}
 
-        //public void updateFile(string guid, string comment)
-        //{
-        //    string strcmd = String.Format("UPDATE {0} SET comment = '{1}' where guid = '{2}'", FileTableName, comment, guid);
-        //    cmd.CommandText = strcmd;
-        //    cmd.ExecuteNonQuery();
-        //}
+
 
         public void updateFile(string guid, FileData filedata)
         {
