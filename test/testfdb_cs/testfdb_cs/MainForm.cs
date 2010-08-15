@@ -16,7 +16,7 @@ namespace testfdb_cs
     {
         private DetailView detailview;
 
-        private TagDB tagdb = new TagDB();
+        //private TagDB tagdb = new TagDB();
       
         private Dictionary<TreeNode, string> nodemap = new Dictionary<TreeNode, string>();
         private Dictionary<TabPage, int> tabItemWidth = new Dictionary<TabPage, int>();
