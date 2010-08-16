@@ -62,7 +62,7 @@ namespace testfdb_cs
                 {
                     ExecuteQuery((cmd) =>
                     {
-                        cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT, tag TEXT)", TaggedFileTable);
+                        cmd.CommandText = String.Format("CREATE TABLE {0} (id TEXT PRIMARY KEY AUTOINCREMENT, guid TEXT, tag TEXT)", TaggedFileTable);
                         cmd.ExecuteNonQuery();
                     });
                 }

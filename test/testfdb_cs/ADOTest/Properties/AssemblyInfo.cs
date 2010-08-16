@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("testfdb_cs")]
+[assembly: AssemblyTitle("ADOTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("testfdb_cs")]
+[assembly: AssemblyProduct("ADOTest")]
 [assembly: AssemblyCopyright("Copyright © konkon 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 次の GUID は、このプロジェクトが COM に公開される場合の、typelib の ID です
-[assembly: Guid("e38bc454-706e-4452-a4b9-0bbe2f052731")]
+[assembly: Guid("6211611a-ebb2-4d36-989e-d0fc7a0bf24f")]
 
 // アセンブリのバージョン情報は、以下の 4 つの値で構成されています:
 //

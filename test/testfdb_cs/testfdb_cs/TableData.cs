@@ -5,14 +5,15 @@ using System.Text;
 
 namespace testfdb_cs
 {
-    public class FileData
+    public class TableData
     {
         public string guid;
         public string name;
+        public string ext;
         public List<string> tags;
         public string comment;
 
-        public FileData(string guid, string name, List<string> tags, string comment)
+        public TableData(string guid, string name, List<string> tags, string comment)
         {
             this.guid = guid;
             this.name = name;
@@ -20,7 +21,7 @@ namespace testfdb_cs
             this.comment = comment;
         }
 
-        public FileData(string guid, string name, string tags, string comment)
+        public TableData(string guid, string name, string tags, string comment)
         {
             this.guid = guid;
             this.name = name;

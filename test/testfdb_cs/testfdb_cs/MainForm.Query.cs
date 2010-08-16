@@ -7,8 +7,11 @@ namespace testfdb_cs
 {
     partial class MainForm
     {
-        private SQLiteWrap sqlitewrap = new SQLiteWrap();
+        private void init() {
 
+        }
+
+        private SQLiteWrap sqlitewrap = new SQLiteWrap();
 
         private bool hasFileData(string guid)
         {
@@ -79,11 +82,11 @@ namespace testfdb_cs
             return tags;
         }
 
-        private void insertFileData(List<FileData> filedatas, List<string> tags)
+        private void insertFileData(List<TableData> filedatas, List<string> tags)
         {
             sqlitewrap.ExecuteQuery((cmd) =>
             {
-                foreach (FileData file in filedatas)
+                foreach (TableData file in filedatas)
                 {
                     IEnumerable<string> newtags = file.tags.Union(tags).Except(file.tags.Intersect(tags));
                     file.tags = file.tags.Union(tags).ToList<string>();

@@ -16,7 +16,7 @@ namespace testfdb_cs
     {
         private DetailView detailview;
 
-        //private TagDB tagdb = new TagDB();
+        private TagDB tagdb = new TagDB();
       
         private Dictionary<TreeNode, string> nodemap = new Dictionary<TreeNode, string>();
         private Dictionary<TabPage, int> tabItemWidth = new Dictionary<TabPage, int>();
@@ -47,8 +47,8 @@ namespace testfdb_cs
                 }
             };
 
-            tagdb.Connection();
-            tagdb.createTable();
+            //tagdb.Connection();
+            //tagdb.createTable();
 
             sqlitewrap.Connection();
 
@@ -154,14 +154,14 @@ namespace testfdb_cs
             panel.Controls.Add(detailview);
         }
 
-        private void updataListviewItem(ListView listview, FileData filedata)
+        private void updataListviewItem(ListView listview, TableData filedata)
         {         
             foreach (int index in selectedIndexQueue)
             {
                 if (listview.SelectedItems.Count > index)
                 {
                     ListViewItem selecteditem = listview.SelectedItems[index];
-                    FileData selectedfiledata = selecteditem.Tag as FileData;
+                    TableData selectedfiledata = selecteditem.Tag as TableData;
                     if (selectedfiledata != null && filedata.guid == selectedfiledata.guid)
                     {
                         setItemData(selecteditem, filedata);
@@ -171,7 +171,7 @@ namespace testfdb_cs
             }
         }
 
-        private void setItemData(ListViewItem item, FileData filedata)
+        private void setItemData(ListViewItem item, TableData filedata)
         {
             item.SubItems[0].Text = filedata.name;
             item.SubItems[1].Text = filedata.getTagsConcat();
@@ -202,18 +202,18 @@ namespace testfdb_cs
             }
         }
 
-        private List<FileData> getFileData(string[] fullpaths)
+        private List<TableData> getFileData(string[] fullpaths)
         {
-            List<FileData> files = new List<FileData>();
+            List<TableData> files = new List<TableData>();
 
             Action<string> func = x =>
             {
                 String name = Path.GetFileName(x);
                 string guid = Win32.getObjectID(x).ToString();
-                FileData filedata = tagdb.selectFileData(guid);
+                TableData filedata = tagdb.selectFileData(guid);
                 if (filedata == null)
                 {
-                    filedata = new FileData(guid, name, new List<string>(), "");
+                    filedata = new TableData(guid, name, new List<string>(), "");
                 }
                 files.Add(filedata);
             };
@@ -228,14 +228,14 @@ namespace testfdb_cs
                 {
                     String filename = Path.GetFileName(fullpath);
                     string guid = Win32.getObjectID(fullpath).ToString();
-                    files.Add(new FileData(guid, filename, new List<string>(), ""));
+                    files.Add(new TableData(guid, filename, new List<string>(), ""));
                 }
 
             }
             return files;
         }
 
-        private void RegisterTagsComent(List<FileData> files)
+        private void RegisterTagsComent(List<TableData> files)
         {
             RegisterForm reg = new RegisterForm();
             reg.FileDatas = files;
@@ -264,7 +264,7 @@ namespace testfdb_cs
                     if (tasg != null){// && nodemap.ContainsKey(DestinationNode)) {
                         string[] fullpaths = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                        List<FileData> files = getFileData(fullpaths);
+                        List<TableData> files = getFileData(fullpaths);
 
                         tagdb.insertFileData(files, new List<string> { tasg });
                     }
@@ -295,7 +295,7 @@ namespace testfdb_cs
                     selectedIndexQueue.Enqueue(index);
 
                     ListViewItem item = listview.SelectedItems[0];
-                    FileData filedata = item.Tag as FileData;
+                    TableData filedata = item.Tag as TableData;
                     detailview.filedata = filedata;
                 }
             };
@@ -323,7 +323,7 @@ namespace testfdb_cs
             return listview;
         }
 
-        private ListViewItem CreateItem(FileData filedata)
+        private ListViewItem CreateItem(TableData filedata)
         {
             var item = new ListViewItem(new string[] { filedata.name, filedata.getTagsConcat(), filedata.comment });
             item.Tag = filedata;// filedata.guid;
@@ -331,7 +331,7 @@ namespace testfdb_cs
             return item;
         }
 
-        private void UpdateListView(ListView listview, List<FileData> filedatas)
+        private void UpdateListView(ListView listview, List<TableData> filedatas)
         {
             filedatas.ForEach(file =>
             {
@@ -340,7 +340,7 @@ namespace testfdb_cs
             });
         }
 
-        private void UpdateListView(ListView listview, List<FileData> filedatas, Func<FileData, bool> func)
+        private void UpdateListView(ListView listview, List<TableData> filedatas, Func<TableData, bool> func)
         {
             var filte = filedatas.FindAll(x => func(x));//x => x.Length == 5);
             filte.ForEach(file =>
@@ -350,7 +350,7 @@ namespace testfdb_cs
             });
         }
 
-        private TabPage OpenNewTab(List<FileData> filedatas, string text)
+        private TabPage OpenNewTab(List<TableData> filedatas, string text)
         {
             var listview = CreateListView();
             listview.Tag = filedatas;

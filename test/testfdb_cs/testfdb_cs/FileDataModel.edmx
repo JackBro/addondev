@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FileDataModel.Store" Alias="Self" Provider="System.Data.SQLite" ProviderManifestToken="ISO8601" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+        <EntityContainer Name="FileDataModelStoreContainer">
+          <EntitySet Name="FileTable" EntityType="FileDataModel.Store.FileTable" store:Type="Tables" />
+          <EntitySet Name="TagTable" EntityType="FileDataModel.Store.TagTable" store:Type="Tables" />
+          <EntitySet Name="TaggedFileTable" EntityType="FileDataModel.Store.TaggedFileTable" store:Type="Tables" />
+        </EntityContainer>
+        <EntityType Name="FileTable">
+          <Key>
+            <PropertyRef Name="guid" />
+          </Key>
+          <Property Name="guid" Type="nvarchar" Nullable="false" />
+          <Property Name="name" Type="nvarchar" Nullable="false" />
+          <Property Name="comment" Type="nvarchar" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TagTable">
+          <Key>
+            <PropertyRef Name="tag" />
+          </Key>
+          <Property Name="tag" Type="nvarchar" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TaggedFileTable">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="guid" Type="nvarchar" Nullable="false" />
+          <Property Name="tag" Type="nvarchar" Nullable="false" />
+          <Property Name="id" Type="integer" Nullable="false" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="FileDataModel" Alias="Self">
+        <EntityContainer Name="FileDataModelContainer" >
+          <EntitySet Name="FileTable" EntityType="FileDataModel.FileTable" />
+          <EntitySet Name="TagTable" EntityType="FileDataModel.TagTable" />
+          <EntitySet Name="TaggedFileTable" EntityType="FileDataModel.TaggedFileTable" /></EntityContainer>
+        <EntityType Name="FileTable">
+          <Key>
+            <PropertyRef Name="guid" /></Key>
+          <Property Name="guid" Type="String" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" />
+          <Property Name="comment" Type="String" Nullable="false" /></EntityType>
+        <EntityType Name="TagTable">
+          <Key>
+            <PropertyRef Name="tag" /></Key>
+          <Property Name="tag" Type="String" Nullable="false" /></EntityType>
+        <EntityType Name="TaggedFileTable">
+          <Key>
+            <PropertyRef Name="id" />
+            </Key>
+          <Property Name="guid" Type="String" Nullable="false" />
+          <Property Name="tag" Type="String" Nullable="false" />
+          <Property Name="id" Type="Int64" Nullable="false" />
+          </EntityType></Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS" Space="C-S">
+        <Alias Key="Model" Value="FileDataModel" />
+        <Alias Key="Target" Value="FileDataModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="FileDataModelContainer" StorageEntityContainer="FileDataModelStoreContainer">
+          <EntitySetMapping Name="FileTable">
+            <EntityTypeMapping TypeName="IsTypeOf(FileDataModel.FileTable)">
+              <MappingFragment StoreEntitySet="FileTable">
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="guid" ColumnName="guid" /></MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="TagTable">
+            <EntityTypeMapping TypeName="IsTypeOf(FileDataModel.TagTable)">
+              <MappingFragment StoreEntitySet="TagTable">
+                <ScalarProperty Name="tag" ColumnName="tag" /></MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="TaggedFileTable">
+            <EntityTypeMapping TypeName="IsTypeOf(FileDataModel.TaggedFileTable)">
+              <MappingFragment StoreEntitySet="TaggedFileTable">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="tag" ColumnName="tag" />
+                <ScalarProperty Name="guid" ColumnName="guid" /></MappingFragment></EntityTypeMapping></EntitySetMapping></EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2007/06/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="FileDataModel" >
+        <EntityTypeShape EntityType="FileDataModel.FileTable" Width="1.5" PointX="0.5" PointY="0.5" Height="1.5356249999999996" />
+        <EntityTypeShape EntityType="FileDataModel.TagTable" Width="1.5" PointX="2.375" PointY="0.5" Height="1.1710416666666674" />
+        <EntityTypeShape EntityType="FileDataModel.TaggedFileTable" Width="1.5" PointX="4.25" PointY="0.5" Height="1.535625" /></Diagram></edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -39,6 +39,9 @@ namespace testfdb_cs
             FileTable = "filetable";
             TaggedFileTable = "taggedfiletable";
             TagTable = "tagtable";
+
+            //System.IO.FileInfo fi = new System.IO.FileInfo(""); 
+            //fi.CreationTime
         }
 
         public void Connection()
@@ -162,11 +165,11 @@ namespace testfdb_cs
             }
         }
 
-        public void insertFileData(List<FileData> filedatas, List<string> addtags)
+        public void insertFileData(List<TableData> filedatas, List<string> addtags)
         {
             beginTransaction();
 
-            foreach(FileData file in filedatas)
+            foreach(TableData file in filedatas)
             {
                 IEnumerable<string> newtags = file.tags.Union(addtags).Except(file.tags.Intersect(addtags));
                 file.tags = file.tags.Union(addtags).ToList<string>();
@@ -222,7 +225,7 @@ namespace testfdb_cs
 
 
 
-        public void updateFile(string guid, FileData filedata)
+        public void updateFile(string guid, TableData filedata)
         {
             //string strcmd = String.Format("UPDATE {0} SET comment = '{1}' where guid = '{2}'", FileTableName, comment, guid);
             //cmd.CommandText = strcmd;
@@ -245,9 +248,9 @@ namespace testfdb_cs
         //    commitTransaction();
         //}
 
-        public List<FileData> selectFileData(string[] tags)
+        public List<TableData> selectFileData(string[] tags)
         {
-            List<FileData> filedatas = new List<FileData>();
+            List<TableData> filedatas = new List<TableData>();
 
             Func<string[], string[]> func = x =>
             {
@@ -277,7 +280,7 @@ namespace testfdb_cs
                     {
                         
                         //tagsSelectEvent((string)reader[0], (string)reader[1], (string)reader[2], (string)reader[3]);
-                        filedatas.Add(new FileData((string)reader[0], (string)reader[1], (string)reader[2], (string)reader[3]));
+                        filedatas.Add(new TableData((string)reader[0], (string)reader[1], (string)reader[2], (string)reader[3]));
                     }
                 }
             }
@@ -287,10 +290,10 @@ namespace testfdb_cs
             return filedatas;
         }
 
-        public FileData selectFileData(string guid)
+        public TableData selectFileData(string guid)
         {
 
-            FileData res = null;
+            TableData res = null;
 
             beginTransaction();
 
@@ -309,7 +312,7 @@ namespace testfdb_cs
             {
                 if (reader.Read())
                 {
-                    res = new FileData((string)reader[0], (string)reader[1], tags, (string)reader[3]);
+                    res = new TableData((string)reader[0], (string)reader[1], tags, (string)reader[3]);
                 }
             }
 
@@ -318,9 +321,9 @@ namespace testfdb_cs
             return res;
         }
 
-        public IList<FileData> selectFileData(List<string> names, List<string> words)
+        public IList<TableData> selectFileData(List<string> names, List<string> words)
         {
-            IList<FileData> files = new List<FileData>();
+            IList<TableData> files = new List<TableData>();
 
             List<string> selectconds = new List<string>();
             foreach(string name in names)
@@ -342,7 +345,7 @@ namespace testfdb_cs
             {
                 while (reader.Read())
                 {
-                    files.Add(new FileData((string)reader[0], (string)reader[1], (string)reader[2], (string)reader[3]));
+                    files.Add(new TableData((string)reader[0], (string)reader[1], (string)reader[2], (string)reader[3]));
                 }
             }
 

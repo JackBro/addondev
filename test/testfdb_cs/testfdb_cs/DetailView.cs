@@ -13,9 +13,9 @@ namespace testfdb_cs
     {
         public class MyEventArgs : EventArgs
         {
-            public FileData filedata;
+            public TableData filedata;
 
-            public MyEventArgs(FileData filedata)
+            public MyEventArgs(TableData filedata)
             {
                 this.filedata = filedata;
             }
@@ -25,7 +25,7 @@ namespace testfdb_cs
         public event EventHandler<MyEventArgs> OnChagedName;
         public event EventHandler<MyEventArgs> OnChagedComment;
 
-        private FileData _filedata;
+        private TableData _filedata;
 
         public DetailView()
         {
@@ -50,7 +50,7 @@ namespace testfdb_cs
             };
         }
 
-        public FileData filedata
+        public TableData filedata
         {
             set {
                _filedata = value;
