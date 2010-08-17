@@ -112,9 +112,13 @@ namespace testfdb_cs
 
         private void insertFileData(IEnumerable<FileTable> filetables, List<string> tags) {
             using (FileDataModelContainer db = new FileDataModelContainer()) {
-                //foreach (string fullpath in fullpaths) {
-                //    
-                //}
+                var query = from c in db.FileTable
+                            select c.TagTable;
+
+
+
+                //db.AttachTo("TagTable", );
+                //addTagPage,
                 //db.FileTable.Where(
             }
         }
