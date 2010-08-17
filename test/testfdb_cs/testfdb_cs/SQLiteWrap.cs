@@ -32,18 +32,21 @@ namespace testfdb_cs
         public SQLiteWrap()
         {
             DBFileName = "file.db";
-            FileTable = "filetable";
-            TaggedFileTable = "taggedfiletable";
-            TagTable = "tagtable";
+            FileTable = "FileTable";
+            TaggedFileTable = "TaggedFileTable";
+            TagTable = "TagTable";
         }
 
         public void Connection()
         {
             connection = new SQLiteConnection("Data Source=" + DBFileName);
-            if (connection == null)
-            {
+            if (connection != null) {
+                connection.Open();
+                connection.Close();
+
+                createTable();
             }
-            createTable();
+           
         }
 
         private void createTable()
@@ -54,7 +57,7 @@ namespace testfdb_cs
                 {
                     ExecuteQuery((cmd) =>
                     {
-                        cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, name TEXT, comment TEXT)", FileTable);
+                        cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, name TEXT, comment TEXT, createtime DATETIME)", FileTable);
                         cmd.ExecuteNonQuery();
                     });
                 }
@@ -62,7 +65,7 @@ namespace testfdb_cs
                 {
                     ExecuteQuery((cmd) =>
                     {
-                        cmd.CommandText = String.Format("CREATE TABLE {0} (id TEXT PRIMARY KEY AUTOINCREMENT, guid TEXT, tag TEXT)", TaggedFileTable);
+                        cmd.CommandText = String.Format("CREATE TABLE {0} (id INTEGER PRIMARY KEY AUTOINCREMENT, guid TEXT, tag TEXT)", TaggedFileTable);
                         cmd.ExecuteNonQuery();
                     });
                 }

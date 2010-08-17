@@ -4,17 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Data.SQLite;
 
+
 namespace ADOTest {
     class Program {
         static void Main(string[] args) {
             var connection = new SQLiteConnection("Data Source=" + "adotest.db");
             connection.Open();
             using (SQLiteCommand command = connection.CreateCommand()) {
-                command.CommandText = String.Format("CREATE TABLE {0} (ID int PRIMARY KEY, text TEXT)", "Table1");
+                //command.CommandText = String.Format("CREATE TABLE {0} (ID int PRIMARY KEY, text TEXT)", "Table1");
+                //command.ExecuteNonQuery();
+
+                command.CommandText = String.Format("CREATE TABLE {0} (ID binary(16) PRIMARY KEY, text TEXT)", "guidtable");
+                command.ExecuteNonQuery();
+
+                command.CommandText = String.Format("INSERT INTO {0}(ID,text) VALUES('{1}', '{2}')", "guidtable", Guid.NewGuid(), "test");
                 command.ExecuteNonQuery();
             }
             connection.Close();
-
 
             //using (TestModelContainer test = new TestModelContainer(@"metadata=res://*/Model1.csdl|res://*/Model1.ssdl|res://*/Model1.msl;provider=System.Data.SQLite;provider connection string='data source=""adotest.db""'"))
             using (TestModelContainer test = new TestModelContainer())
@@ -33,7 +39,7 @@ namespace ADOTest {
                 foreach (Table1 c in query) {
                     Console.WriteLine("query = " + c.ID);
                 }
-
+                
             }
         }
     }

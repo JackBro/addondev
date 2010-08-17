@@ -54,8 +54,8 @@ namespace testfdb_cs
 
         public void Dispose()
         {
-            cmd.Dispose();
-            connection.Close();
+            //cmd.Dispose();
+            //connection.Close();
         }
 
         private void beginTransaction()

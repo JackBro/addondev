@@ -209,6 +209,10 @@ namespace testfdb_cs
             Action<string> func = x =>
             {
                 String name = Path.GetFileName(x);
+                String ext = Path.GetExtension(x);
+                 
+                //FileInfo fileinfo = new FileInfo(x);
+                //fileinfo.CreationTime;
                 string guid = Win32.getObjectID(x).ToString();
                 TableData filedata = tagdb.selectFileData(guid);
                 if (filedata == null)

@@ -37,49 +37,86 @@ namespace testfdb_cs
 
         private IEnumerable<string> insertTags(IEnumerable<string> tags)
         {
+            //IEnumerable<string> newtags = null;
+            //sqlitewrap.ExecuteQuery((cmd) =>
+            //{
+            //    List<string> existtags = new List<string>();
+
+            //    cmd.CommandText = String.Format("SELECT DISTINCT tag FROM {0}", sqlitewrap.TagTable);
+            //    using (SQLiteDataReader reader = cmd.ExecuteReader())
+            //    {
+            //        while (reader.Read())
+            //        {
+            //            existtags.Add((string)reader[0]);
+            //        }
+            //    }
+
+            //    newtags = tags.Except(existtags);
+            //    foreach (string tag in newtags)
+            //    {
+            //        string strcmd = String.Format("INSERT INTO {0}(tag) VALUES('{1}')", sqlitewrap.TagTable, tag);
+            //        cmd.CommandText = strcmd;
+            //        cmd.ExecuteNonQuery();
+            //    }
+
+            //});
+
+            //return newtags;
+
             IEnumerable<string> newtags = null;
-            sqlitewrap.ExecuteQuery((cmd) =>
-            {
-                List<string> existtags = new List<string>();
+            using (FileDataModelContainer db = new FileDataModelContainer()) {
 
-                cmd.CommandText = String.Format("SELECT DISTINCT tag FROM {0}", sqlitewrap.TagTable);
-                using (SQLiteDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        existtags.Add((string)reader[0]);
-                    }
-                }
-
-                newtags = tags.Except(existtags);
-                foreach (string tag in newtags)
-                {
-                    string strcmd = String.Format("INSERT INTO {0}(tag) VALUES('{1}')", sqlitewrap.TagTable, tag);
-                    cmd.CommandText = strcmd;
-                    cmd.ExecuteNonQuery();
-                }
-
-            });
-
+                var query = from c in db.TagTable
+                            //where !tags.Contains(c.tag)
+                            select c.tag;
+                newtags = tags.Except(query).ToList();
+                foreach(string t in newtags){
+                    TagTable tabtable = new TagTable();
+                    tabtable.tag = t;
+                    db.AddToTagTable(tabtable);
+               }
+                db.SaveChanges();
+            }
             return newtags;
         }
 
         private IEnumerable<string> getAllTags()
         {
-            List<string> tags = new List<string>();
-            sqlitewrap.ExecuteQuery((cmd) =>
-            {
-                cmd.CommandText = String.Format("SELECT DISTINCT tag FROM {0}", sqlitewrap.TagTable);
-                using (SQLiteDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        tags.Add((string)reader[0]);
-                    }
-                }
-            });
+            //List<string> tags = new List<string>();
+            //sqlitewrap.ExecuteQuery((cmd) =>
+            //{
+            //    cmd.CommandText = String.Format("SELECT DISTINCT tag FROM {0}", sqlitewrap.TagTable);
+            //    using (SQLiteDataReader reader = cmd.ExecuteReader())
+            //    {
+            //        while (reader.Read())
+            //        {
+            //            tags.Add((string)reader[0]);
+            //        }
+            //    }
+            //});
+
+            //return tags;
+
+            List<string> tags;// = new List<string>();
+            using (FileDataModelContainer db = new FileDataModelContainer()) {
+                var query = from c in db.TagTable
+                            select c.tag;
+                tags = query.ToList<string>();
+                //foreach (TagTable tag in query) {
+                //    Console.WriteLine("query = " + tag.tag);
+                //}
+            }
 
             return tags;
+        }
+
+        private void insertFileData(IEnumerable<FileTable> filetables, List<string> tags) {
+            using (FileDataModelContainer db = new FileDataModelContainer()) {
+                //foreach (string fullpath in fullpaths) {
+                //    
+                //}
+                //db.FileTable.Where(
+            }
         }
 
         private void insertFileData(List<TableData> filedatas, List<string> tags)

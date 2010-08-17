@@ -9,9 +9,10 @@
 //------------------------------------------------------------------------------
 
 [assembly: global::System.Data.Objects.DataClasses.EdmSchemaAttribute()]
+[assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("FileDataModel", "FileTableTagTable", "FileTable", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(testfdb_cs.FileTable), "TagTable", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(testfdb_cs.TagTable))]
 
 // 元のファイル名:
-// 生成日: 2010/08/16 19:01:37
+// 生成日: 2010/08/17 17:39:41
 namespace testfdb_cs
 {
     
@@ -129,12 +130,14 @@ namespace testfdb_cs
         /// <param name="guid">guid の初期値。</param>
         /// <param name="name">name の初期値。</param>
         /// <param name="comment">comment の初期値。</param>
-        public static FileTable CreateFileTable(string guid, string name, string comment)
+        /// <param name="createtime">createtime の初期値。</param>
+        public static FileTable CreateFileTable(string guid, string name, string comment, global::System.DateTime createtime)
         {
             FileTable fileTable = new FileTable();
             fileTable.guid = guid;
             fileTable.name = name;
             fileTable.comment = comment;
+            fileTable.createtime = createtime;
             return fileTable;
         }
         /// <summary>
@@ -206,6 +209,66 @@ namespace testfdb_cs
         private string _comment;
         partial void OncommentChanging(string value);
         partial void OncommentChanged();
+        /// <summary>
+        /// スキーマのプロパティ createtime にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public global::System.DateTime createtime
+        {
+            get
+            {
+                return this._createtime;
+            }
+            set
+            {
+                this.OncreatetimeChanging(value);
+                this.ReportPropertyChanging("createtime");
+                this._createtime = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("createtime");
+                this.OncreatetimeChanged();
+            }
+        }
+        private global::System.DateTime _createtime;
+        partial void OncreatetimeChanging(global::System.DateTime value);
+        partial void OncreatetimeChanged();
+        /// <summary>
+        /// スキーマの TagTable にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("FileDataModel", "FileTableTagTable", "TagTable")]
+        [global::System.Xml.Serialization.XmlIgnoreAttribute()]
+        [global::System.Xml.Serialization.SoapIgnoreAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public TagTable TagTable
+        {
+            get
+            {
+                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<TagTable>("FileDataModel.FileTableTagTable", "TagTable").Value;
+            }
+            set
+            {
+                ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<TagTable>("FileDataModel.FileTableTagTable", "TagTable").Value = value;
+            }
+        }
+        /// <summary>
+        /// スキーマの TagTable にはコメントがありません。
+        /// </summary>
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public global::System.Data.Objects.DataClasses.EntityReference<TagTable> TagTableReference
+        {
+            get
+            {
+                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<TagTable>("FileDataModel.FileTableTagTable", "TagTable");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.InitializeRelatedReference<TagTable>("FileDataModel.FileTableTagTable", "TagTable", value);
+                }
+            }
+        }
     }
     /// <summary>
     /// スキーマの FileDataModel.TagTable にはコメントがありません。
@@ -251,6 +314,43 @@ namespace testfdb_cs
         private string _tag;
         partial void OntagChanging(string value);
         partial void OntagChanged();
+        /// <summary>
+        /// スキーマの FileTable にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("FileDataModel", "FileTableTagTable", "FileTable")]
+        [global::System.Xml.Serialization.XmlIgnoreAttribute()]
+        [global::System.Xml.Serialization.SoapIgnoreAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public FileTable FileTable
+        {
+            get
+            {
+                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<FileTable>("FileDataModel.FileTableTagTable", "FileTable").Value;
+            }
+            set
+            {
+                ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<FileTable>("FileDataModel.FileTableTagTable", "FileTable").Value = value;
+            }
+        }
+        /// <summary>
+        /// スキーマの FileTable にはコメントがありません。
+        /// </summary>
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public global::System.Data.Objects.DataClasses.EntityReference<FileTable> FileTableReference
+        {
+            get
+            {
+                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<FileTable>("FileDataModel.FileTableTagTable", "FileTable");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.InitializeRelatedReference<FileTable>("FileDataModel.FileTableTagTable", "FileTable", value);
+                }
+            }
+        }
     }
     /// <summary>
     /// スキーマの FileDataModel.TaggedFileTable にはコメントがありません。

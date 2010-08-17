@@ -17,6 +17,7 @@
           <Property Name="guid" Type="nvarchar" Nullable="false" />
           <Property Name="name" Type="nvarchar" Nullable="false" />
           <Property Name="comment" Type="nvarchar" Nullable="false" />
+          <Property Name="createtime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="TagTable">
           <Key>
@@ -28,9 +29,9 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
+          <Property Name="id" Type="integer" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="guid" Type="nvarchar" Nullable="false" />
           <Property Name="tag" Type="nvarchar" Nullable="false" />
-          <Property Name="id" Type="integer" Nullable="false" />
         </EntityType>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -39,17 +40,23 @@
         <EntityContainer Name="FileDataModelContainer" >
           <EntitySet Name="FileTable" EntityType="FileDataModel.FileTable" />
           <EntitySet Name="TagTable" EntityType="FileDataModel.TagTable" />
-          <EntitySet Name="TaggedFileTable" EntityType="FileDataModel.TaggedFileTable" /></EntityContainer>
+          <EntitySet Name="TaggedFileTable" EntityType="FileDataModel.TaggedFileTable" />
+          <AssociationSet Name="FileTableTagTable" Association="FileDataModel.FileTableTagTable">
+            <End Role="FileTable" EntitySet="FileTable" />
+            <End Role="TagTable" EntitySet="TagTable" /></AssociationSet></EntityContainer>
         <EntityType Name="FileTable">
           <Key>
             <PropertyRef Name="guid" /></Key>
           <Property Name="guid" Type="String" Nullable="false" />
           <Property Name="name" Type="String" Nullable="false" />
-          <Property Name="comment" Type="String" Nullable="false" /></EntityType>
+          <Property Name="comment" Type="String" Nullable="false" />
+          <Property Name="createtime" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="TagTable" Relationship="FileDataModel.FileTableTagTable" FromRole="FileTable" ToRole="TagTable" /></EntityType>
         <EntityType Name="TagTable">
           <Key>
             <PropertyRef Name="tag" /></Key>
-          <Property Name="tag" Type="String" Nullable="false" /></EntityType>
+          <Property Name="tag" Type="String" Nullable="false" />
+          <NavigationProperty Name="FileTable" Relationship="FileDataModel.FileTableTagTable" FromRole="TagTable" ToRole="FileTable" /></EntityType>
         <EntityType Name="TaggedFileTable">
           <Key>
             <PropertyRef Name="id" />
@@ -57,7 +64,10 @@
           <Property Name="guid" Type="String" Nullable="false" />
           <Property Name="tag" Type="String" Nullable="false" />
           <Property Name="id" Type="Int64" Nullable="false" />
-          </EntityType></Schema>
+          </EntityType>
+        <Association Name="FileTableTagTable">
+          <End Type="FileDataModel.FileTable" Role="FileTable" Multiplicity="1" />
+          <End Type="FileDataModel.TagTable" Role="TagTable" Multiplicity="1" /></Association></Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -68,6 +78,7 @@
           <EntitySetMapping Name="FileTable">
             <EntityTypeMapping TypeName="IsTypeOf(FileDataModel.FileTable)">
               <MappingFragment StoreEntitySet="FileTable">
+                <ScalarProperty Name="createtime" ColumnName="createtime" />
                 <ScalarProperty Name="comment" ColumnName="comment" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="guid" ColumnName="guid" /></MappingFragment></EntityTypeMapping></EntitySetMapping>
@@ -100,7 +111,10 @@
     <edmx:Diagrams>
       <Diagram Name="FileDataModel" >
         <EntityTypeShape EntityType="FileDataModel.FileTable" Width="1.5" PointX="0.5" PointY="0.5" Height="1.5356249999999996" />
-        <EntityTypeShape EntityType="FileDataModel.TagTable" Width="1.5" PointX="2.375" PointY="0.5" Height="1.1710416666666674" />
-        <EntityTypeShape EntityType="FileDataModel.TaggedFileTable" Width="1.5" PointX="4.25" PointY="0.5" Height="1.535625" /></Diagram></edmx:Diagrams>
+        <EntityTypeShape EntityType="FileDataModel.TagTable" Width="1.5" PointX="2.625" PointY="0.5" Height="1.3533333333333335" />
+        <EntityTypeShape EntityType="FileDataModel.TaggedFileTable" Width="1.5" PointX="4.25" PointY="0.5" Height="1.555625" />
+        <AssociationConnector Association="FileDataModel.FileTableTagTable">
+          <ConnectorPoint PointX="2" PointY="1.1766666666666668" />
+          <ConnectorPoint PointX="2.625" PointY="1.1766666666666668" /></AssociationConnector></Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
