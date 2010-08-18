@@ -11,7 +11,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmSchemaAttribute()]
 
 // 元のファイル名:
-// 生成日: 2010/08/16 17:13:21
+// 生成日: 2010/08/18 15:59:53
 namespace ADOTest
 {
     
@@ -61,11 +61,33 @@ namespace ADOTest
         }
         private global::System.Data.Objects.ObjectQuery<Table1> _Table1;
         /// <summary>
+        /// スキーマの Table2 にはコメントがありません。
+        /// </summary>
+        public global::System.Data.Objects.ObjectQuery<Table2> Table2
+        {
+            get
+            {
+                if ((this._Table2 == null))
+                {
+                    this._Table2 = base.CreateQuery<Table2>("[Table2]");
+                }
+                return this._Table2;
+            }
+        }
+        private global::System.Data.Objects.ObjectQuery<Table2> _Table2;
+        /// <summary>
         /// スキーマの Table1 にはコメントがありません。
         /// </summary>
         public void AddToTable1(Table1 table1)
         {
             base.AddObject("Table1", table1);
+        }
+        /// <summary>
+        /// スキーマの Table2 にはコメントがありません。
+        /// </summary>
+        public void AddToTable2(Table2 table2)
+        {
+            base.AddObject("Table2", table2);
         }
     }
     /// <summary>
@@ -137,5 +159,75 @@ namespace ADOTest
         private string _text;
         partial void OntextChanging(string value);
         partial void OntextChanged();
+    }
+    /// <summary>
+    /// スキーマの TestModel.Table2 にはコメントがありません。
+    /// </summary>
+    /// <KeyProperties>
+    /// ID
+    /// </KeyProperties>
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="TestModel", Name="Table2")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Serializable()]
+    public partial class Table2 : global::System.Data.Objects.DataClasses.EntityObject
+    {
+        /// <summary>
+        /// 新しい Table2 オブジェクトを作成します。
+        /// </summary>
+        /// <param name="id">ID の初期値。</param>
+        /// <param name="name">name の初期値。</param>
+        public static Table2 CreateTable2(long id, string name)
+        {
+            Table2 table2 = new Table2();
+            table2.ID = id;
+            table2.name = name;
+            return table2;
+        }
+        /// <summary>
+        /// スキーマのプロパティ ID にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public long ID
+        {
+            get
+            {
+                return this._ID;
+            }
+            set
+            {
+                this.OnIDChanging(value);
+                this.ReportPropertyChanging("ID");
+                this._ID = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("ID");
+                this.OnIDChanged();
+            }
+        }
+        private long _ID;
+        partial void OnIDChanging(long value);
+        partial void OnIDChanged();
+        /// <summary>
+        /// スキーマのプロパティ name にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public string name
+        {
+            get
+            {
+                return this._name;
+            }
+            set
+            {
+                this.OnnameChanging(value);
+                this.ReportPropertyChanging("name");
+                this._name = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
+                this.ReportPropertyChanged("name");
+                this.OnnameChanged();
+            }
+        }
+        private string _name;
+        partial void OnnameChanging(string value);
+        partial void OnnameChanged();
     }
 }

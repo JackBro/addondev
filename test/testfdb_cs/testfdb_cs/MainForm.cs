@@ -36,8 +36,8 @@ namespace testfdb_cs
                     string tag = input.input;
                     if (tag.Length > 0) {
                         //tagdb.insertTag(new string[] { input.input });
-                        IEnumerable<string> newtags = insertTags(new string[] { input.input });
-
+                        //IEnumerable<string> newtags = insertTags(new string[] { input.input });
+                        string[] newtags = tag.Split(' '); 
                         foreach (string newtag in newtags)
                         {
                             TreeNode tagnode = TagTreeView.Nodes["TagNode"].Nodes.Add(newtag);
@@ -268,9 +268,10 @@ namespace testfdb_cs
                     if (tasg != null){// && nodemap.ContainsKey(DestinationNode)) {
                         string[] fullpaths = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                        List<TableData> files = getFileData(fullpaths);
+                        //List<TableData> files = getFileData(fullpaths);
+                        //tagdb.insertFileData(files, new List<string> { tasg });
 
-                        tagdb.insertFileData(files, new List<string> { tasg });
+                        insertFileData(fullpaths, new List<string> { tasg });
                     }
                 }
             }
@@ -320,6 +321,10 @@ namespace testfdb_cs
             header3.Text = "comment";
             listview.Columns.Add(header3);
 
+            ColumnHeader header4 = new ColumnHeader();
+            header4.Text = "create time";
+            listview.Columns.Add(header4);
+
             listview.FullRowSelect = true;
 
             listview.Dock = DockStyle.Fill;
@@ -354,16 +359,16 @@ namespace testfdb_cs
             });
         }
 
-        private TabPage OpenNewTab(List<TableData> filedatas, string text)
+        private TabPage OpenNewTab(string text)
         {
             var listview = CreateListView();
-            listview.Tag = filedatas;
+            //listview.Tag = filedatas;
 
-            filedatas.ForEach(file =>
-            {
-                ListViewItem item = CreateItem(file);
-                listview.Items.Add(item);
-            });
+            //filedatas.ForEach(file =>
+            //{
+            //    ListViewItem item = CreateItem(file);
+            //    listview.Items.Add(item);
+            //});
 
             var tabcontrol = getTabControl();
             var newtabpage = addTagPage(tabcontrol, text);
@@ -402,18 +407,40 @@ namespace testfdb_cs
                     var listview = getActiveListView();
                     if (listview == null)
                     {
-                        OpenNewTab(tagdb.selectFileData(new string[] { (string)selnode.Tag }), (string)selnode.Tag);
+                        var selecttag = (string)selnode.Tag;
+                        var tabpage = OpenNewTab(selecttag);
+                        listview = tabListviewMap[tabpage];
+                        using (FileDataModelContainer db = new FileDataModelContainer()) {
+                            var query = from c in db.FileTable
+                                        where c.TagTable.Any(t => t.tag.Contains(selecttag))
+                                        select c;
+                            foreach (FileTable f in query) {
+                                string stag = String.Empty;
+
+                                var tagquery = from c in db.TagTable
+                                            where c.FileTable.filetableid == f.filetableid
+                                            select c;
+                                foreach (TagTable tb in tagquery) {
+                                    stag += tb.tag + " ";
+                                }
+
+                                var item = new ListViewItem(new string[] { f.name, stag, f.comment, f.createtime.ToLongTimeString() });
+                                item.Tag = f.guid;
+                                listview.Items.Add(item);
+                            }
+                        }
+                        //OpenNewTab(tagdb.selectFileData(new string[] { (string)selnode.Tag }), (string)selnode.Tag);
                     }
                     else
                     {
-                        getTabControl().SelectedTab.Text = (string)selnode.Tag;
-                        listview.Items.Clear();
-                        UpdateListView(listview, tagdb.selectFileData(new string[] { (string)selnode.Tag }));
+                        //getTabControl().SelectedTab.Text = (string)selnode.Tag;
+                        //listview.Items.Clear();
+                        //UpdateListView(listview, tagdb.selectFileData(new string[] { (string)selnode.Tag }));
                     }
                 }
                 else if (e.Button == MouseButtons.Middle)
                 {
-                    OpenNewTab(tagdb.selectFileData(new string[] { (string)selnode.Tag }), (string)selnode.Tag);
+                    //OpenNewTab(tagdb.selectFileData(new string[] { (string)selnode.Tag }), (string)selnode.Tag);
                 }
             } 
         }

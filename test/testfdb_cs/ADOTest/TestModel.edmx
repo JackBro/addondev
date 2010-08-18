@@ -7,6 +7,7 @@
     <Schema Namespace="TestModel.Store" Alias="Self" Provider="System.Data.SQLite" ProviderManifestToken="ISO8601" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
         <EntityContainer Name="TestModelStoreContainer">
           <EntitySet Name="Table1" EntityType="TestModel.Store.Table1" store:Type="Tables" />
+          <EntitySet Name="Table2" EntityType="TestModel.Store.Table2" store:Type="Tables" />
         </EntityContainer>
         <EntityType Name="Table1">
           <Key>
@@ -15,17 +16,34 @@
           <Property Name="ID" Type="integer" Nullable="false" />
           <Property Name="text" Type="nvarchar" Nullable="false" />
         </EntityType>
+        <EntityType Name="Table2">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" Nullable="false" />
+          <Property Name="name" Type="nvarchar" Nullable="false" />
+        </EntityType>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="TestModel" Alias="Self">
         <EntityContainer Name="TestModelContainer" >
-          <EntitySet Name="Table1" EntityType="TestModel.Table1" /></EntityContainer>
+          <EntitySet Name="Table1" EntityType="TestModel.Table1" />
+          <EntitySet Name="Table2" EntityType="TestModel.Table2" />
+          </EntityContainer>
         <EntityType Name="Table1">
           <Key>
             <PropertyRef Name="ID" /></Key>
           <Property Name="ID" Type="Int64" Nullable="false" />
-          <Property Name="text" Type="String" Nullable="false" /></EntityType></Schema>
+          <Property Name="text" Type="String" Nullable="false" />
+          </EntityType>
+        <EntityType Name="Table2">
+          <Key>
+            <PropertyRef Name="ID" /></Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" />
+          </EntityType>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -37,7 +55,14 @@
             <EntityTypeMapping TypeName="IsTypeOf(TestModel.Table1)">
               <MappingFragment StoreEntitySet="Table1">
                 <ScalarProperty Name="text" ColumnName="text" />
-                <ScalarProperty Name="ID" ColumnName="ID" /></MappingFragment></EntityTypeMapping></EntitySetMapping></EntityContainerMapping>
+                <ScalarProperty Name="ID" ColumnName="ID" /></MappingFragment>
+              </EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Table2">
+            <EntityTypeMapping TypeName="IsTypeOf(TestModel.Table2)">
+              <MappingFragment StoreEntitySet="Table2">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="ID" ColumnName="ID" /></MappingFragment></EntityTypeMapping></EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
@@ -56,6 +81,8 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram Name="TestModel" >
-        <EntityTypeShape EntityType="TestModel.Table1" Width="1.5" PointX="1" PointY="0.625" Height="1.3533333333333333" /></Diagram></edmx:Diagrams>
+        <EntityTypeShape EntityType="TestModel.Table1" Width="1.5" PointX="1" PointY="0.625" Height="1.3533333333333333" />
+        <EntityTypeShape EntityType="TestModel.Table2" Width="1.5" PointX="3.125" PointY="0.625" Height="1.3533333333333335" />
+        </Diagram></edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

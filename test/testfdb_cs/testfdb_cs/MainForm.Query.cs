@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using System.IO;
 
 namespace testfdb_cs
 {
@@ -101,7 +102,8 @@ namespace testfdb_cs
             using (FileDataModelContainer db = new FileDataModelContainer()) {
                 var query = from c in db.TagTable
                             select c.tag;
-                tags = query.ToList<string>();
+                //tags = query.ToList<string>();
+                tags = query.Distinct().ToList<string>();
                 //foreach (TagTable tag in query) {
                 //    Console.WriteLine("query = " + tag.tag);
                 //}
@@ -110,49 +112,114 @@ namespace testfdb_cs
             return tags;
         }
 
-        private void insertFileData(IEnumerable<FileTable> filetables, List<string> tags) {
+        private void insertFileData(IEnumerable<string> fullpaths, List<string> tags) {
             using (FileDataModelContainer db = new FileDataModelContainer()) {
-                var query = from c in db.FileTable
-                            select c.TagTable;
 
+                foreach (string fullpath in fullpaths) {
+                    string strguid = Win32.getObjectID(fullpath).ToString();
+                    var query = from c in db.FileTable
+                                where c.guid == strguid
+                                select c;
 
+                    if(query.Count() == 0){
+                        FileInfo fileinfo = new FileInfo(fullpath);
+                        //FileTable filetable = new FileTable(){
+                        //    guid=strguid, 
+                        //    name=fileinfo.Name, 
+                        //    ext=fileinfo.Extension,
+                        //    comment="", 
+                        //    createtime=fileinfo.CreationTime
+                        //};
 
-                //db.AttachTo("TagTable", );
-                //addTagPage,
-                //db.FileTable.Where(
-            }
-        }
+                        FileTable filetable = new FileTable();
+                            filetable.guid = strguid;
+                            filetable.name = fileinfo.Name;
+                            filetable.ext = fileinfo.Extension;
+                            filetable.comment = "";
+                            filetable.createtime = fileinfo.CreationTime;
+                        
+                        db.AddToFileTable(filetable);
+                        db.SaveChanges();
 
-        private void insertFileData(List<TableData> filedatas, List<string> tags)
-        {
-            sqlitewrap.ExecuteQuery((cmd) =>
-            {
-                foreach (TableData file in filedatas)
-                {
-                    IEnumerable<string> newtags = file.tags.Union(tags).Except(file.tags.Intersect(tags));
-                    file.tags = file.tags.Union(tags).ToList<string>();
+                        foreach (string tag in tags) {
+                            filetable.TagTable.Add(new TagTable() { tag = tag, FileTable = filetable });
+                        }
+                        //var fquery = from c in db.FileTable
+                        //            where c.guid == strguid
+                        //            select c;
+                        
+                        //foreach (FileTable f in fquery) {
+                        //db.AttachTo(filetable.EntityKey.EntitySetName, 
+                       //     new FileTable() { filetableid = filetable.filetableid });
+                       //     foreach (string tag in tags) {
+                        //        db.AddToTagTable(new TagTable() { tag = tag, FileTable = filetable });
+                        //    }
 
-                    if (hasFileData(file.guid))
-                    {
-                        //updateFile
-                    }
-                    else
-                    {
-                        cmd.CommandText = String.Format("INSERT INTO {0}(guid, name, tags, comment) VALUES('{1}', '{2}', '{3}', '{4}')",
-                            sqlitewrap.FileTable, file.guid, file.name, file.getTagsConcat(), file.comment);
-                        cmd.ExecuteNonQuery();
-                    }
-                    foreach (string tag in newtags)
-                    {
-                        if (!hasTaggedFileData(file.guid, tag))
-                        {
-                            cmd.CommandText = String.Format("INSERT INTO {0}(guid,tag) VALUES('{1}', '{2}')",
-                                sqlitewrap.TaggedFileTable, file.guid, tag);
-                            cmd.ExecuteNonQuery();
+                        //}
+                        //TagTable tagtable = new TagTable() { id = filetable.TagTable.id };
+                        //db.AttachTo("FileTable", new FileTable() { filetableid = filetable.filetableid });
+                        //foreach (string tag in tags) {
+                        //    db.AddToTagTable(new TagTable() { tag = tag, FileTable = filetable });
+                        //}
+
+                    }else{
+                        foreach (FileTable filetable in query) {
+
+                            //var queryt = from c in db.TagTable
+                            //             where c.FileTable.filetableid == filetable.filetableid
+                            //             select c.tag;
+                            foreach (string tag in tags) {
+                                //Console.WriteLine("tag = " + tag);
+                                filetable.TagTable.Add(new TagTable() { tag = tag, FileTable = filetable });
+                            }
+                            //db.AttachTo("FileTable", new FileTable() { filetableid = filetable.filetableid });
+                            //foreach (string tag in tags) {
+                            //    //db.AddToTagTable(new TagTable() { tag = tag, FileTable = filetable });
+                            //    filetable.TagTable.Add(new TagTable() { tag = tag, FileTable = filetable });
+                            //}
                         }
                     }
                 }
-            });
+
+                db.SaveChanges();
+
+                //db.AttachTo("FileTable", new FileTable() { filetableid = filetable.filetableid });
+                //foreach (string tag in tags) {
+                //    db.AddToTagTable(new TagTable() { tag = tag, FileTable = filetable });
+                //}
+            }
         }
+
+        //private void insertFileData(List<TableData> filedatas, List<string> tags)
+        //{
+        //    sqlitewrap.ExecuteQuery((cmd) =>
+        //    {
+        //        foreach (TableData file in filedatas)
+        //        {
+        //            IEnumerable<string> newtags = file.tags.Union(tags).Except(file.tags.Intersect(tags));
+        //            file.tags = file.tags.Union(tags).ToList<string>();
+
+        //            if (hasFileData(file.guid))
+        //            {
+        //                //updateFile
+        //            }
+        //            else
+        //            {
+        //                cmd.CommandText = String.Format("INSERT INTO {0}(guid, name, tags, comment) VALUES('{1}', '{2}', '{3}', '{4}')",
+        //                    sqlitewrap.FileTable, file.guid, file.name, file.getTagsConcat(), file.comment);
+        //                cmd.ExecuteNonQuery();
+        //            }
+        //            foreach (string tag in newtags)
+        //            {
+        //                if (!hasTaggedFileData(file.guid, tag))
+        //                {
+        //                    cmd.CommandText = String.Format("INSERT INTO {0}(guid,tag) VALUES('{1}', '{2}')",
+        //                        sqlitewrap.TaggedFileTable, file.guid, tag);
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //            }
+        //        }
+        //    });
+        //}
     }
 }

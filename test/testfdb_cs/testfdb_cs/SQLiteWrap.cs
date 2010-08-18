@@ -57,23 +57,23 @@ namespace testfdb_cs
                 {
                     ExecuteQuery((cmd) =>
                     {
-                        cmd.CommandText = String.Format("CREATE TABLE {0} (guid TEXT PRIMARY KEY, name TEXT, comment TEXT, createtime DATETIME)", FileTable);
+                        cmd.CommandText = String.Format("CREATE TABLE {0} (filetableid INTEGER PRIMARY KEY, guid TEXT, name TEXT, ext TEXT, comment TEXT, createtime DATETIME)", FileTable);
                         cmd.ExecuteNonQuery();
                     });
                 }
-                if (!existTable(TaggedFileTable))
-                {
-                    ExecuteQuery((cmd) =>
-                    {
-                        cmd.CommandText = String.Format("CREATE TABLE {0} (id INTEGER PRIMARY KEY AUTOINCREMENT, guid TEXT, tag TEXT)", TaggedFileTable);
-                        cmd.ExecuteNonQuery();
-                    });
-                }
+                //if (!existTable(TaggedFileTable))
+                //{
+                //    ExecuteQuery((cmd) =>
+                //    {
+                //        cmd.CommandText = String.Format("CREATE TABLE {0} (id INTEGER PRIMARY KEY, guid TEXT, tag TEXT)", TaggedFileTable);
+                //        cmd.ExecuteNonQuery();
+                //    });
+                //}
                 if (!existTable(TagTable))
                 {
                     ExecuteQuery((cmd) =>
                     {
-                        cmd.CommandText = String.Format("CREATE TABLE {0} (tag TEXT PRIMARY KEY)", TagTable);
+                        cmd.CommandText = String.Format("CREATE TABLE {0} (tagtableid INTEGER PRIMARY KEY, tag TEXT, filetableid INTEGER)", TagTable);
                         cmd.ExecuteNonQuery();
                     });
                 }

@@ -9,10 +9,10 @@
 //------------------------------------------------------------------------------
 
 [assembly: global::System.Data.Objects.DataClasses.EdmSchemaAttribute()]
-[assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("FileDataModel", "FileTableTagTable", "FileTable", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(testfdb_cs.FileTable), "TagTable", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(testfdb_cs.TagTable))]
+[assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("FileDataModel", "FileTableTagTable", "FileTable", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(testfdb_cs.FileTable), "TagTable", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(testfdb_cs.TagTable))]
 
 // 元のファイル名:
-// 生成日: 2010/08/17 17:39:41
+// 生成日: 2010/08/18 14:44:14
 namespace testfdb_cs
 {
     
@@ -77,21 +77,6 @@ namespace testfdb_cs
         }
         private global::System.Data.Objects.ObjectQuery<TagTable> _TagTable;
         /// <summary>
-        /// スキーマの TaggedFileTable にはコメントがありません。
-        /// </summary>
-        public global::System.Data.Objects.ObjectQuery<TaggedFileTable> TaggedFileTable
-        {
-            get
-            {
-                if ((this._TaggedFileTable == null))
-                {
-                    this._TaggedFileTable = base.CreateQuery<TaggedFileTable>("[TaggedFileTable]");
-                }
-                return this._TaggedFileTable;
-            }
-        }
-        private global::System.Data.Objects.ObjectQuery<TaggedFileTable> _TaggedFileTable;
-        /// <summary>
         /// スキーマの FileTable にはコメントがありません。
         /// </summary>
         public void AddToFileTable(FileTable fileTable)
@@ -105,19 +90,12 @@ namespace testfdb_cs
         {
             base.AddObject("TagTable", tagTable);
         }
-        /// <summary>
-        /// スキーマの TaggedFileTable にはコメントがありません。
-        /// </summary>
-        public void AddToTaggedFileTable(TaggedFileTable taggedFileTable)
-        {
-            base.AddObject("TaggedFileTable", taggedFileTable);
-        }
     }
     /// <summary>
     /// スキーマの FileDataModel.FileTable にはコメントがありません。
     /// </summary>
     /// <KeyProperties>
-    /// guid
+    /// filetableid
     /// </KeyProperties>
     [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="FileDataModel", Name="FileTable")]
     [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
@@ -127,23 +105,50 @@ namespace testfdb_cs
         /// <summary>
         /// 新しい FileTable オブジェクトを作成します。
         /// </summary>
+        /// <param name="filetableid">filetableid の初期値。</param>
         /// <param name="guid">guid の初期値。</param>
         /// <param name="name">name の初期値。</param>
+        /// <param name="ext">ext の初期値。</param>
         /// <param name="comment">comment の初期値。</param>
         /// <param name="createtime">createtime の初期値。</param>
-        public static FileTable CreateFileTable(string guid, string name, string comment, global::System.DateTime createtime)
+        public static FileTable CreateFileTable(long filetableid, string guid, string name, string ext, string comment, global::System.DateTime createtime)
         {
             FileTable fileTable = new FileTable();
+            fileTable.filetableid = filetableid;
             fileTable.guid = guid;
             fileTable.name = name;
+            fileTable.ext = ext;
             fileTable.comment = comment;
             fileTable.createtime = createtime;
             return fileTable;
         }
         /// <summary>
-        /// スキーマのプロパティ guid にはコメントがありません。
+        /// スキーマのプロパティ filetableid にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public long filetableid
+        {
+            get
+            {
+                return this._filetableid;
+            }
+            set
+            {
+                this.OnfiletableidChanging(value);
+                this.ReportPropertyChanging("filetableid");
+                this._filetableid = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("filetableid");
+                this.OnfiletableidChanged();
+            }
+        }
+        private long _filetableid;
+        partial void OnfiletableidChanging(long value);
+        partial void OnfiletableidChanged();
+        /// <summary>
+        /// スキーマのプロパティ guid にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         public string guid
         {
@@ -186,6 +191,29 @@ namespace testfdb_cs
         private string _name;
         partial void OnnameChanging(string value);
         partial void OnnameChanged();
+        /// <summary>
+        /// スキーマのプロパティ ext にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public string ext
+        {
+            get
+            {
+                return this._ext;
+            }
+            set
+            {
+                this.OnextChanging(value);
+                this.ReportPropertyChanging("ext");
+                this._ext = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
+                this.ReportPropertyChanged("ext");
+                this.OnextChanged();
+            }
+        }
+        private string _ext;
+        partial void OnextChanging(string value);
+        partial void OnextChanged();
         /// <summary>
         /// スキーマのプロパティ comment にはコメントがありません。
         /// </summary>
@@ -239,33 +267,17 @@ namespace testfdb_cs
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public TagTable TagTable
+        public global::System.Data.Objects.DataClasses.EntityCollection<TagTable> TagTable
         {
             get
             {
-                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<TagTable>("FileDataModel.FileTableTagTable", "TagTable").Value;
-            }
-            set
-            {
-                ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<TagTable>("FileDataModel.FileTableTagTable", "TagTable").Value = value;
-            }
-        }
-        /// <summary>
-        /// スキーマの TagTable にはコメントがありません。
-        /// </summary>
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<TagTable> TagTableReference
-        {
-            get
-            {
-                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<TagTable>("FileDataModel.FileTableTagTable", "TagTable");
+                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedCollection<TagTable>("FileDataModel.FileTableTagTable", "TagTable");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.InitializeRelatedReference<TagTable>("FileDataModel.FileTableTagTable", "TagTable", value);
+                    ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.InitializeRelatedCollection<TagTable>("FileDataModel.FileTableTagTable", "TagTable", value);
                 }
             }
         }
@@ -274,7 +286,7 @@ namespace testfdb_cs
     /// スキーマの FileDataModel.TagTable にはコメントがありません。
     /// </summary>
     /// <KeyProperties>
-    /// tag
+    /// tagtableid
     /// </KeyProperties>
     [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="FileDataModel", Name="TagTable")]
     [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
@@ -284,17 +296,42 @@ namespace testfdb_cs
         /// <summary>
         /// 新しい TagTable オブジェクトを作成します。
         /// </summary>
+        /// <param name="tagtableid">tagtableid の初期値。</param>
         /// <param name="tag">tag の初期値。</param>
-        public static TagTable CreateTagTable(string tag)
+        public static TagTable CreateTagTable(long tagtableid, string tag)
         {
             TagTable tagTable = new TagTable();
+            tagTable.tagtableid = tagtableid;
             tagTable.tag = tag;
             return tagTable;
         }
         /// <summary>
-        /// スキーマのプロパティ tag にはコメントがありません。
+        /// スキーマのプロパティ tagtableid にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public long tagtableid
+        {
+            get
+            {
+                return this._tagtableid;
+            }
+            set
+            {
+                this.OntagtableidChanging(value);
+                this.ReportPropertyChanging("tagtableid");
+                this._tagtableid = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("tagtableid");
+                this.OntagtableidChanged();
+            }
+        }
+        private long _tagtableid;
+        partial void OntagtableidChanging(long value);
+        partial void OntagtableidChanged();
+        /// <summary>
+        /// スキーマのプロパティ tag にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         public string tag
         {
@@ -351,100 +388,5 @@ namespace testfdb_cs
                 }
             }
         }
-    }
-    /// <summary>
-    /// スキーマの FileDataModel.TaggedFileTable にはコメントがありません。
-    /// </summary>
-    /// <KeyProperties>
-    /// id
-    /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="FileDataModel", Name="TaggedFileTable")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
-    [global::System.Serializable()]
-    public partial class TaggedFileTable : global::System.Data.Objects.DataClasses.EntityObject
-    {
-        /// <summary>
-        /// 新しい TaggedFileTable オブジェクトを作成します。
-        /// </summary>
-        /// <param name="guid">guid の初期値。</param>
-        /// <param name="tag">tag の初期値。</param>
-        /// <param name="id">id の初期値。</param>
-        public static TaggedFileTable CreateTaggedFileTable(string guid, string tag, long id)
-        {
-            TaggedFileTable taggedFileTable = new TaggedFileTable();
-            taggedFileTable.guid = guid;
-            taggedFileTable.tag = tag;
-            taggedFileTable.id = id;
-            return taggedFileTable;
-        }
-        /// <summary>
-        /// スキーマのプロパティ guid にはコメントがありません。
-        /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
-        [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public string guid
-        {
-            get
-            {
-                return this._guid;
-            }
-            set
-            {
-                this.OnguidChanging(value);
-                this.ReportPropertyChanging("guid");
-                this._guid = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
-                this.ReportPropertyChanged("guid");
-                this.OnguidChanged();
-            }
-        }
-        private string _guid;
-        partial void OnguidChanging(string value);
-        partial void OnguidChanged();
-        /// <summary>
-        /// スキーマのプロパティ tag にはコメントがありません。
-        /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
-        [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public string tag
-        {
-            get
-            {
-                return this._tag;
-            }
-            set
-            {
-                this.OntagChanging(value);
-                this.ReportPropertyChanging("tag");
-                this._tag = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
-                this.ReportPropertyChanged("tag");
-                this.OntagChanged();
-            }
-        }
-        private string _tag;
-        partial void OntagChanging(string value);
-        partial void OntagChanged();
-        /// <summary>
-        /// スキーマのプロパティ id にはコメントがありません。
-        /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public long id
-        {
-            get
-            {
-                return this._id;
-            }
-            set
-            {
-                this.OnidChanging(value);
-                this.ReportPropertyChanging("id");
-                this._id = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
-                this.ReportPropertyChanged("id");
-                this.OnidChanged();
-            }
-        }
-        private long _id;
-        partial void OnidChanging(long value);
-        partial void OnidChanged();
     }
 }
