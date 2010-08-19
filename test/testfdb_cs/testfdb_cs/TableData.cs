@@ -5,15 +5,16 @@ using System.Text;
 
 namespace testfdb_cs
 {
-    public class TableData
+    public class ItemData
     {
         public string guid;
         public string name;
         public string ext;
         public List<string> tags;
         public string comment;
+        public DateTime createtime;
 
-        public TableData(string guid, string name, List<string> tags, string comment)
+        public ItemData(string guid, string name, List<string> tags, string comment)
         {
             this.guid = guid;
             this.name = name;
@@ -21,7 +22,7 @@ namespace testfdb_cs
             this.comment = comment;
         }
 
-        public TableData(string guid, string name, string tags, string comment)
+        public ItemData(string guid, string name, string tags, string comment)
         {
             this.guid = guid;
             this.name = name;
