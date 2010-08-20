@@ -36,6 +36,9 @@
             treeNode2});
             this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewSplitContainer = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ListViewPanel = new System.Windows.Forms.Panel();
@@ -54,9 +57,6 @@
             this.AddTagMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.TabContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ListViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.OpenFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenuStrip.SuspendLayout();
@@ -90,6 +90,24 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // toolToolStripMenuItem
+            // 
+            this.toolToolStripMenuItem.Name = "toolToolStripMenuItem";
+            this.toolToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.toolToolStripMenuItem.Text = "Tool";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.helpToolStripMenuItem.Text = "Help";
             // 
             // ViewSplitContainer
             // 
@@ -234,6 +252,7 @@
             this.TagTreeView.ContextMenuStrip = this.TagTreeViewContextMenu;
             this.TagTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TagTreeView.HideSelection = false;
+            this.TagTreeView.Indent = 14;
             this.TagTreeView.Location = new System.Drawing.Point(0, 0);
             this.TagTreeView.Name = "TagTreeView";
             treeNode1.Name = "ノード0";
@@ -279,35 +298,17 @@
             this.TabContextMenu.Name = "TabContextMenu";
             this.TabContextMenu.Size = new System.Drawing.Size(61, 4);
             // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // toolToolStripMenuItem
-            // 
-            this.toolToolStripMenuItem.Name = "toolToolStripMenuItem";
-            this.toolToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.toolToolStripMenuItem.Text = "Tool";
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
             // ListViewContextMenu
             // 
             this.ListViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OpenFolderMenuItem});
             this.ListViewContextMenu.Name = "ListViewContextMenu";
-            this.ListViewContextMenu.Size = new System.Drawing.Size(153, 48);
+            this.ListViewContextMenu.Size = new System.Drawing.Size(133, 26);
             // 
             // OpenFolderMenuItem
             // 
             this.OpenFolderMenuItem.Name = "OpenFolderMenuItem";
-            this.OpenFolderMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.OpenFolderMenuItem.Size = new System.Drawing.Size(132, 22);
             this.OpenFolderMenuItem.Text = "Open Folder";
             // 
             // MainForm

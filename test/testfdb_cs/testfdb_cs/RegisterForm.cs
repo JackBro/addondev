@@ -44,7 +44,7 @@ namespace testfdb_cs
         }
 
         //private List<FileData> filedatas;
-        public List<ItemData> FileDatas {get;set;}
+        public List<TableData> FileDatas {get;set;}
         
 
         public RegisterForm()
@@ -54,7 +54,7 @@ namespace testfdb_cs
 
         public void SetFileData()
         {
-            foreach (ItemData filedata in FileDatas)
+            foreach (TableData filedata in FileDatas)
             {
                 ListViewItem item = new ListViewItem(new string[]{filedata.name, filedata.getTagsConcat(), filedata.comment});
                 FileListView.Items.Add(item);

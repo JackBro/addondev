@@ -5,7 +5,7 @@ using System.Text;
 
 namespace testfdb_cs
 {
-    public class ItemData
+    public class TableData
     {
         public string guid;
         public string name;
@@ -14,21 +14,22 @@ namespace testfdb_cs
         public string comment;
         public DateTime createtime;
 
-        public ItemData(string guid, string name, List<string> tags, string comment)
+        public TableData(string guid, string name, List<string> tags, string comment, DateTime createtime)
         {
             this.guid = guid;
             this.name = name;
             this.tags = tags;
             this.comment = comment;
+            this.createtime = createtime;
         }
 
-        public ItemData(string guid, string name, string tags, string comment)
-        {
-            this.guid = guid;
-            this.name = name;
-            this.tags = parseTags(tags);
-            this.comment = comment;
-        }
+        //public TableData(string guid, string name, string tags, string comment)
+        //{
+        //    this.guid = guid;
+        //    this.name = name;
+        //    this.tags = parseTags(tags);
+        //    this.comment = comment;
+        //}
 
         public string getTagsConcat()
         {

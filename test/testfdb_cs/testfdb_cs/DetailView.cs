@@ -26,7 +26,7 @@ namespace testfdb_cs
         public event EventHandler<MyEventArgs> OnChagedName;
         public event EventHandler<MyEventArgs> OnChagedComment;
 
-        //private TableData _filedata;
+        private TableData _filedata;
         private string guid;
         private string name;
         private string comment;
@@ -35,29 +35,31 @@ namespace testfdb_cs
             InitializeComponent();
 
             NameTextBox.LostFocus += delegate{
-                if (FileName != null && FileName != this.name && OnChagedName != null){
-                    OnChagedName(this, new MyEventArgs(this.guid, "name", FileName));
+                if (_filedata != null && FileName != this.name && OnChagedName != null) {
+                    OnChagedName(this, new MyEventArgs(_filedata.guid, "name", FileName));
+                    _filedata.name = FileName;
                 }
             };
 
             CommnetTextBox.LostFocus += delegate
             {
-                if (Comment != null && Comment != this.comment && OnChagedComment != null)
+                if (_filedata != null && Comment != this.comment && OnChagedComment != null)
                 {
-                    OnChagedComment(this, new MyEventArgs(this.guid, "comment", Comment));
+                    OnChagedComment(this, new MyEventArgs(_filedata.guid, "comment", Comment));
+                    _filedata.comment = Comment;
                 }              
             };
         }
 
-        //public TableData filedata
-        //{
-        //    set {
-        //       _filedata = value;
-        //       NameTextBox.Text = _filedata.name;
-        //       TagsTextBox.Text = _filedata.getTagsConcat();
-        //       CommnetTextBox.Text = _filedata.comment;
-        //    }
-        //}
+        public TableData Data {
+            set {
+                _filedata = value;
+                FileName = _filedata.name;
+                Tags = String.Join("", _filedata.tags.ToArray<string>());
+                Comment = _filedata.comment;
+            }
+        }
+
         public string Guid {
             get { return this.guid; }
             set {

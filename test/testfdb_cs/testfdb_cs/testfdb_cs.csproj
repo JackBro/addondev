@@ -74,6 +74,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FileDataModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="FileListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TableData.cs" />
     <Compile Include="InputForm.cs">
       <SubType>Form</SubType>
@@ -86,12 +89,6 @@
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ListView\FileDataListVew.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ListView\FileDataListVew.Designer.cs">
-      <DependentUpon>FileDataListVew.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.Query.cs">
       <SubType>Form</SubType>
@@ -106,9 +103,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ListView\FileDataListVew.resx">
-      <DependentUpon>FileDataListVew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
