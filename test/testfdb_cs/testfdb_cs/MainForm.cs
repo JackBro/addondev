@@ -187,6 +187,18 @@ namespace testfdb_cs
             //        }
             //        return false;
             //    });
+                using (FileDataModelContainer db = new FileDataModelContainer())
+                {
+                    var query = from c in db.FileTable
+                                where c.guid == args.guid
+                                select c;
+                    foreach (FileTable ftable in query)
+                    {
+                        ftable.name = args.data;
+                    }
+
+                    db.SaveChanges();
+                }
             };
             detailview.OnChagedComment += (sender, args) =>
             {
@@ -196,6 +208,18 @@ namespace testfdb_cs
 
             //    //tagdb.updateFileDataComment(args.filedata.guid, args.filedata.comment);
             //    updataListviewItem(getActiveListView(), args.data);
+                using (FileDataModelContainer db = new FileDataModelContainer())
+                {
+                    var query = from c in db.FileTable
+                                where c.guid == args.guid
+                                select c;
+                    foreach (FileTable ftable in query)
+                    {
+                        ftable.comment = args.data;
+                    }
+
+                    db.SaveChanges();
+                }
             };
             detailview.Dock = DockStyle.Fill;
             panel.Controls.Add(detailview);
@@ -337,6 +361,10 @@ namespace testfdb_cs
         {
             //ListView listview = new ListView();
             var listview = new FileListView<TableData>();
+            listview.Name = "listview";
+            listview.HideSelection = false;
+            listview.View = View.Details;
+
 
             listview.LabelFunc = (data, name) => {
                 string ret = string.Empty;
@@ -358,24 +386,6 @@ namespace testfdb_cs
             };
 
 
-            listview.SelectedIndexChanged += (object sender, EventArgs e) => {
-                if (listview.SelectedIndices.Count > 0) {
-                    var index = listview.SelectedIndices[0];
-                    selectedIndexQueue.Enqueue(index);
-
-                    ListViewItem item = listview.SelectedItems[0];
-                    detailview.Data = listview.getSelectItemData().ElementAt(0);
-                    //detailview.FileName = item.SubItems["name"].Text;
-                    //detailview.Tags = item.SubItems["tags"].Text;
-                    //detailview.Comment = item.SubItems["comment"].Text;
-
-                }
-            };
-
-            listview.HideSelection = false;
-            listview.Name = "listview";
-
-            listview.View = View.Details;
             ColumnHeader header1 = new ColumnHeader();
             header1.Name = "name";
             header1.Text = "name";
@@ -405,36 +415,46 @@ namespace testfdb_cs
             listview.ContextMenuStrip = ListViewContextMenu;
 
             listview.Dock = DockStyle.Fill;
+            listview.VirtualItemsSelectionRangeChanged += (sender, e) =>
+            {
+                int i = 0;
+            };
+            listview.ItemSelectionChanged += (sender, e) =>
+            {
+               
+                if (listview.mySel.Count > 0)
+                {
+                    selectedIndexQueue.Enqueue(listview.mySel[0]);
+                    if (selectedIndexQueue.Count > 2)
+                    {
+                        selectedIndexQueue.Dequeue();
+                    }
+
+                    ListViewItem item = listview.myCol[listview.mySel[0]];
+                    detailview.Data = listview.getData(item);
+                    //detailview.Data = listview.getSelectItemData().ElementAt(item.Index);
+                }
+            };
+
+
+            //listview.SelectedIndexChanged += (object sender, EventArgs e) =>
+            //{
+            //    if (listview.SelectedIndices.Count > 0)
+            //    {
+            //        var index = listview.SelectedIndices[0];
+            //        selectedIndexQueue.Enqueue(index);
+
+            //        ListViewItem item = listview.SelectedItems[0];
+            //        detailview.Data = listview.getSelectItemData().ElementAt(0);
+            //        //detailview.FileName = item.SubItems["name"].Text;
+            //        //detailview.Tags = item.SubItems["tags"].Text;
+            //        //detailview.Comment = item.SubItems["comment"].Text;
+
+            //    }
+            //};
 
             return listview;
         }
-
-        //private ListViewItem CreateItem(TableData filedata)
-        //{
-        //    var item = new ListViewItem(new string[] { filedata.name, filedata.getTagsConcat(), filedata.comment });
-        //    item.Tag = filedata;// filedata.guid;
-
-        //    return item;
-        //}
-
-        //private void UpdateListView(ListView listview, List<TableData> filedatas)
-        //{
-        //    filedatas.ForEach(file =>
-        //    {
-        //        ListViewItem item = CreateItem(file);
-        //        listview.Items.Add(item);
-        //    });
-        //}
-
-        //private void UpdateListView(ListView listview, List<TableData> filedatas, Func<TableData, bool> func)
-        //{
-        //    var filte = filedatas.FindAll(x => func(x));//x => x.Length == 5);
-        //    filte.ForEach(file =>
-        //    {
-        //        ListViewItem item = CreateItem(file);
-        //        listview.Items.Add(item);
-        //    });
-        //}
 
         private TabPage OpenNewTab(string text)
         {

@@ -38,32 +38,6 @@ namespace testfdb_cs
 
         private IEnumerable<string> insertTags(IEnumerable<string> tags)
         {
-            //IEnumerable<string> newtags = null;
-            //sqlitewrap.ExecuteQuery((cmd) =>
-            //{
-            //    List<string> existtags = new List<string>();
-
-            //    cmd.CommandText = String.Format("SELECT DISTINCT tag FROM {0}", sqlitewrap.TagTable);
-            //    using (SQLiteDataReader reader = cmd.ExecuteReader())
-            //    {
-            //        while (reader.Read())
-            //        {
-            //            existtags.Add((string)reader[0]);
-            //        }
-            //    }
-
-            //    newtags = tags.Except(existtags);
-            //    foreach (string tag in newtags)
-            //    {
-            //        string strcmd = String.Format("INSERT INTO {0}(tag) VALUES('{1}')", sqlitewrap.TagTable, tag);
-            //        cmd.CommandText = strcmd;
-            //        cmd.ExecuteNonQuery();
-            //    }
-
-            //});
-
-            //return newtags;
-
             IEnumerable<string> newtags = null;
             using (FileDataModelContainer db = new FileDataModelContainer()) {
 
@@ -83,22 +57,7 @@ namespace testfdb_cs
 
         private IEnumerable<string> getAllTags()
         {
-            //List<string> tags = new List<string>();
-            //sqlitewrap.ExecuteQuery((cmd) =>
-            //{
-            //    cmd.CommandText = String.Format("SELECT DISTINCT tag FROM {0}", sqlitewrap.TagTable);
-            //    using (SQLiteDataReader reader = cmd.ExecuteReader())
-            //    {
-            //        while (reader.Read())
-            //        {
-            //            tags.Add((string)reader[0]);
-            //        }
-            //    }
-            //});
-
-            //return tags;
-
-            List<string> tags;// = new List<string>();
+            List<string> tags;
             using (FileDataModelContainer db = new FileDataModelContainer()) {
                 var query = from c in db.TagTable
                             select c.tag;
@@ -190,36 +149,9 @@ namespace testfdb_cs
             }
         }
 
-        //private void insertFileData(List<TableData> filedatas, List<string> tags)
-        //{
-        //    sqlitewrap.ExecuteQuery((cmd) =>
-        //    {
-        //        foreach (TableData file in filedatas)
-        //        {
-        //            IEnumerable<string> newtags = file.tags.Union(tags).Except(file.tags.Intersect(tags));
-        //            file.tags = file.tags.Union(tags).ToList<string>();
+        private void update()
+        {
 
-        //            if (hasFileData(file.guid))
-        //            {
-        //                //updateFile
-        //            }
-        //            else
-        //            {
-        //                cmd.CommandText = String.Format("INSERT INTO {0}(guid, name, tags, comment) VALUES('{1}', '{2}', '{3}', '{4}')",
-        //                    sqlitewrap.FileTable, file.guid, file.name, file.getTagsConcat(), file.comment);
-        //                cmd.ExecuteNonQuery();
-        //            }
-        //            foreach (string tag in newtags)
-        //            {
-        //                if (!hasTaggedFileData(file.guid, tag))
-        //                {
-        //                    cmd.CommandText = String.Format("INSERT INTO {0}(guid,tag) VALUES('{1}', '{2}')",
-        //                        sqlitewrap.TaggedFileTable, file.guid, tag);
-        //                    cmd.ExecuteNonQuery();
-        //                }
-        //            }
-        //        }
-        //    });
-        //}
+        }
     }
 }
