@@ -11,6 +11,7 @@ using System.IO;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Collections;
+using System.Linq.Expressions;
 
 namespace testfdb_cs
 {
@@ -127,21 +128,84 @@ namespace testfdb_cs
                     var listview = tabListviewMap[tabpage];
                     if (text.IndexOf(",") == -1)
                     {
+                        var values = text.Split(' ', '　');
+
                         var datas = new List<TableData>();
+
                         using (FileDataModelContainer db = new FileDataModelContainer()) {
                             //db.FileTable.Where(c => c.ext == "ok").Select(s => s);
+                            //var query = from c in db.FileTable
+                            //            where c.comment.Contains(text) || c.name.Contains(text) || c.TagTable.Any(t => t.tag.Contains(text))
+                            //            select c;
+                            //foreach (FileTable f in query) {
+                            //    string stag = String.Empty;
+
+                            //    var tagquery = from c in db.TagTable
+                            //                   where c.FileTable.filetableid == f.filetableid
+                            //                   select c.tag;
+
+                            //    datas.Add(new TableData(f.guid, f.name, f.size, f.ext, tagquery.ToList<string>(), f.comment, f.creationtime, f.lastwritetime));
+                            //}
+                            string[] targets = {"name","comment","ext"};
                             var query = from c in db.FileTable
-                                        where c.comment.Contains(text) || c.name.Contains(text) || c.TagTable.Any(t => t.tag.Contains(text))
                                         select c;
-                            foreach (FileTable f in query) {
-                                string stag = String.Empty;
+                            var contains = typeof(string).GetMethod("Contains");
+                            var paramExpr = Expression.Parameter(typeof(FileTable), "c");
+                            Expression mainExpr = null;
+                            
+                            foreach (string target in targets)
+                            {
+                                Expression bodyExpr = null;
+                                foreach (var o in values)
+                                {
+                                    if (o.Length == 0) continue;
 
-                                var tagquery = from c in db.TagTable
-                                               where c.FileTable.filetableid == f.filetableid
-                                               select c.tag;
+                                    if (bodyExpr == null)
+                                    {
+                                        // d.FileName.Contains("値")のコードと等価
+                                        bodyExpr = Expression.Call(
+                                            Expression.Property(paramExpr, target), contains, Expression.Constant(o)
+                                        );
 
-                                datas.Add(new TableData(f.guid, f.name, f.size, f.ext, tagquery.ToList<string>(), f.comment, f.creationtime, f.lastwritetime));
+                                    }
+                                    else
+                                    {
+                                        // 既に式があればOR演算する
+                                        bodyExpr = Expression.AndAlso(
+                                            bodyExpr,
+                                            Expression.Call(
+                                                Expression.Property(paramExpr, target), contains, Expression.Constant(o)
+                                            )
+                                        );
+                                    }
+                                }
+                                if (mainExpr == null)
+                                {
+                                    mainExpr = bodyExpr;
+                                }
+                                else
+                                {
+                                    mainExpr = Expression.OrElse(mainExpr, bodyExpr);
+                                }
                             }
+
+                            if(values.Length != 0){
+
+                                var res = query.Where(Expression.Lambda<Func<FileTable, bool>>(mainExpr, paramExpr));
+
+                                foreach (FileTable f in res)
+                                {
+                                    string stag = String.Empty;
+
+                                    var tagquery = from c in db.TagTable
+                                                   where c.FileTable.filetableid == f.filetableid
+                                                   select c.tag;
+
+                                    datas.Add(new TableData(f.guid, f.name, f.size, f.ext, tagquery.ToList<string>(), f.comment, f.creationtime, f.lastwritetime));
+                                }
+
+                            }
+
                         }
 
                         FileListView<TableData> filelistview = listview as FileListView<TableData>;
@@ -191,8 +255,6 @@ namespace testfdb_cs
         private void setDetailView()
         {
             var panel = ViewSplitContainer.Panel2;
-
-
 
             detailview = new DetailView();
             detailview.OnChagedName += (sender, args) =>
@@ -244,12 +306,6 @@ namespace testfdb_cs
                         selecteditem.SubItems[listview.Columns[key].Index].Text = data;
                         break;
                     }
-                    //TableData selectedfiledaif (selectedfiledata != null && filedata.guid == selectedfiledata.guid)ta = selecteditem.Tag as TableData;
-                    //if (selectedfiledata != null && filedata.guid == selectedfiledata.guid)
-                    //{
-                    //    setItemData(selecteditem, filedata);
-                    //    break;
-                    //}
                 }
             }
         }
@@ -343,9 +399,6 @@ namespace testfdb_cs
                     string tasg = DestinationNode.Tag as string;
                     if (tasg != null){// && nodemap.ContainsKey(DestinationNode)) {
                         string[] fullpaths = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-                        //List<TableData> files = getFileData(fullpaths);
-                        //tagdb.insertFileData(files, new List<string> { tasg });
 
                         insertFileData(fullpaths, new List<string> { tasg });
                     }
