@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.NameLabel = new System.Windows.Forms.Label();
             this.TagsLabel = new System.Windows.Forms.Label();
             this.NameTextBox = new System.Windows.Forms.TextBox();
             this.TagsTextBox = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.CommnetTextBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -53,19 +53,11 @@
             this.panel1.Size = new System.Drawing.Size(409, 50);
             this.panel1.TabIndex = 0;
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.CommnetTextBox);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 50);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(409, 229);
-            this.panel2.TabIndex = 1;
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.Control;
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -85,6 +77,7 @@
             // NameLabel
             // 
             this.NameLabel.AutoSize = true;
+            this.NameLabel.BackColor = System.Drawing.SystemColors.Control;
             this.NameLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NameLabel.Location = new System.Drawing.Point(3, 0);
             this.NameLabel.Name = "NameLabel";
@@ -96,6 +89,7 @@
             // TagsLabel
             // 
             this.TagsLabel.AutoSize = true;
+            this.TagsLabel.BackColor = System.Drawing.SystemColors.Control;
             this.TagsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TagsLabel.Location = new System.Drawing.Point(3, 25);
             this.TagsLabel.Name = "TagsLabel";
@@ -104,23 +98,32 @@
             this.TagsLabel.Text = "Tags";
             this.TagsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // textBox1
+            // NameTextBox
             // 
             this.NameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.NameTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NameTextBox.Location = new System.Drawing.Point(43, 3);
-            this.NameTextBox.Name = "textBox1";
+            this.NameTextBox.Name = "NameTextBox";
             this.NameTextBox.Size = new System.Drawing.Size(363, 19);
             this.NameTextBox.TabIndex = 2;
             // 
-            // textBox2
+            // TagsTextBox
             // 
             this.TagsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TagsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TagsTextBox.Location = new System.Drawing.Point(43, 28);
-            this.TagsTextBox.Name = "textBox2";
+            this.TagsTextBox.Name = "TagsTextBox";
             this.TagsTextBox.Size = new System.Drawing.Size(363, 19);
             this.TagsTextBox.TabIndex = 3;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.CommnetTextBox);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 50);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(409, 229);
+            this.panel2.TabIndex = 1;
             // 
             // CommnetTextBox
             // 
@@ -142,10 +145,10 @@
             this.Size = new System.Drawing.Size(409, 279);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

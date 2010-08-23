@@ -56,7 +56,7 @@ namespace testfdb_cs
         {
             foreach (TableData filedata in FileDatas)
             {
-                ListViewItem item = new ListViewItem(new string[]{filedata.name, filedata.getTagsConcat(), filedata.comment});
+                ListViewItem item = new ListViewItem(new string[]{filedata.name, filedata.TagsToString(), filedata.comment});
                 FileListView.Items.Add(item);
             }
         }

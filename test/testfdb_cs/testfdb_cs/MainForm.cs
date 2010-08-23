@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Collections;
 
 namespace testfdb_cs
 {
@@ -84,7 +85,8 @@ namespace testfdb_cs
             //tagdb.Connection();
             //tagdb.createTable();
 
-            sqlitewrap.Connection();
+            //sqlitewrap.Connection();
+            createTable();
 
             //string[] tags = tagdb.getAllTags();
             IEnumerable<string> tags = getAllTags();
@@ -120,9 +122,31 @@ namespace testfdb_cs
                 {
                     e.Handled = true;
                     string text = SearchComboBox.Text;
+
+                    var tabpage = OpenNewTab(text);
+                    var listview = tabListviewMap[tabpage];
                     if (text.IndexOf(",") == -1)
                     {
+                        var datas = new List<TableData>();
+                        using (FileDataModelContainer db = new FileDataModelContainer()) {
+                            //db.FileTable.Where(c => c.ext == "ok").Select(s => s);
+                            var query = from c in db.FileTable
+                                        where c.comment.Contains(text) || c.name.Contains(text) || c.TagTable.Any(t => t.tag.Contains(text))
+                                        select c;
+                            foreach (FileTable f in query) {
+                                string stag = String.Empty;
 
+                                var tagquery = from c in db.TagTable
+                                               where c.FileTable.filetableid == f.filetableid
+                                               select c.tag;
+
+                                datas.Add(new TableData(f.guid, f.name, f.size, f.ext, tagquery.ToList<string>(), f.comment, f.creationtime, f.lastwritetime));
+                            }
+                        }
+
+                        FileListView<TableData> filelistview = listview as FileListView<TableData>;
+                        filelistview.inputData(datas);
+                        filelistview.setitem();
                     }
                     else
                     {
@@ -174,19 +198,7 @@ namespace testfdb_cs
             detailview.OnChagedName += (sender, args) =>
             {
                 updataListviewItem(getActiveListView(), args.guid, args.key, args.data);
-            //    var listview = getActiveListView();
-            //    if (listview == null) return;
 
-            //    //tagdb.updateFileDataName(args.filedata.guid, args.filedata.name);
-            //    updataListviewItem(getActiveListView(), (guid, item)=>{
-            //        if (guid == args.guid) {
-            //            item.SubItems[0].Text = filedata.name;
-            //            item.SubItems[1].Text = filedata.getTagsConcat();
-            //            item.SubItems[2].Text = filedata.comment;
-            //            return true;
-            //        }
-            //        return false;
-            //    });
                 using (FileDataModelContainer db = new FileDataModelContainer())
                 {
                     var query = from c in db.FileTable
@@ -203,11 +215,7 @@ namespace testfdb_cs
             detailview.OnChagedComment += (sender, args) =>
             {
                 updataListviewItem(getActiveListView(), args.guid, args.key, args.data);
-            //    var listview = getActiveListView();
-            //    if (listview == null) return;
 
-            //    //tagdb.updateFileDataComment(args.filedata.guid, args.filedata.comment);
-            //    updataListviewItem(getActiveListView(), args.data);
                 using (FileDataModelContainer db = new FileDataModelContainer())
                 {
                     var query = from c in db.FileTable
@@ -357,14 +365,51 @@ namespace testfdb_cs
 
         private Queue<int> selectedIndexQueue = new Queue<int>(2);
 
+
         private FileListView<TableData> CreateListView()
         {
-            //ListView listview = new ListView();
             var listview = new FileListView<TableData>();
             listview.Name = "listview";
             listview.HideSelection = false;
             listview.View = View.Details;
+            listview.FullRowSelect = true;
+            listview.ContextMenuStrip = ListViewContextMenu;
+            listview.Dock = DockStyle.Fill;
 
+            ColumnHeader headerName = new ColumnHeader();
+            headerName.Name = "name";
+            headerName.Text = "name";
+            listview.Columns.Add(headerName);
+
+            ColumnHeader headerSize = new ColumnHeader();
+            headerSize.Name = "size";
+            headerSize.Text = "size";
+            listview.Columns.Add(headerSize);
+
+            ColumnHeader headerExt = new ColumnHeader();
+            headerExt.Name = "ext";
+            headerExt.Text = "ext";
+            listview.Columns.Add(headerExt);
+
+            ColumnHeader headerTags = new ColumnHeader();
+            headerTags.Name = "tags";
+            headerTags.Text = "tags";
+            listview.Columns.Add(headerTags);
+
+            ColumnHeader headerComment = new ColumnHeader();
+            headerComment.Name = "comment";
+            headerComment.Text = "comment";
+            listview.Columns.Add(headerComment);
+
+            ColumnHeader headerCreationTime = new ColumnHeader();
+            headerCreationTime.Name = "creationtime";
+            headerCreationTime.Text = "creationtime";
+            listview.Columns.Add(headerCreationTime);
+
+            ColumnHeader headerLastWriteTime = new ColumnHeader();
+            headerLastWriteTime.Name = "lastwritetime";
+            headerLastWriteTime.Text = "lastwritetime";
+            listview.Columns.Add(headerLastWriteTime);
 
             listview.LabelFunc = (data, name) => {
                 string ret = string.Empty;
@@ -372,53 +417,28 @@ namespace testfdb_cs
                     case "name":
                         ret = data.name;
                         break;
+                    case "ext":
+                        ret = data.ext;
+                        break;
+                    case "size":
+                        ret = data.size.ToString();
+                        break;
                     case "tags":
-                        ret = String.Join(" " , data.tags.ToArray<string>());
+                        ret = data.TagsToString();
                         break;
                     case "comment":
                         ret = data.comment;
                         break;
-                    case "createtime":
-                        ret = data.createtime.ToLongTimeString();
+                    case "creationtime":
+                        ret = data.creationtime.ToString("yyyy/MM/dd HH:mm:ss");
+                        break;
+                    case "lastwritetime":
+                        ret = data.lastwritetime.ToString("yyyy/MM/dd HH:mm:ss");
                         break;
                 }
                 return ret;
             };
 
-
-            ColumnHeader header1 = new ColumnHeader();
-            header1.Name = "name";
-            header1.Text = "name";
-            listview.Columns.Add(header1);
-
-            ColumnHeader header2 = new ColumnHeader();
-            header2.Name = "tags";
-            header2.Text = "tags";
-            listview.Columns.Add(header2);
-
-            ColumnHeader header3 = new ColumnHeader();
-            header3.Name = "comment";
-            header3.Text = "comment";
-            listview.Columns.Add(header3);
-
-            ColumnHeader header4 = new ColumnHeader();
-            header4.Name = "createtime";
-            header4.Text = "create time";
-            listview.Columns.Add(header4);
-
-            //listview.Columns.Add("name", "name");
-            //listview.Columns.Add("tags", "tags");
-            //listview.Columns.Add("comment", "comment");
-            //listview.Columns.Add("createtime", "create time");
-
-            listview.FullRowSelect = true;
-            listview.ContextMenuStrip = ListViewContextMenu;
-
-            listview.Dock = DockStyle.Fill;
-            listview.VirtualItemsSelectionRangeChanged += (sender, e) =>
-            {
-                int i = 0;
-            };
             listview.ItemSelectionChanged += (sender, e) =>
             {
                
@@ -432,26 +452,39 @@ namespace testfdb_cs
 
                     ListViewItem item = listview.myCol[listview.mySel[0]];
                     detailview.Data = listview.getData(item);
-                    //detailview.Data = listview.getSelectItemData().ElementAt(item.Index);
                 }
             };
 
+            listview.listViewItemComparer.SortFunc = (x, y, columindex) => {
+                int result = 0;
+                string columname = listview.Columns[columindex].Name;
+                switch (columname) {
+                    case "name":
+                        result = string.Compare(x.name, y.name);
+                        break;
+                    case "size":
+                        result = x.size-y.size>0?1:-1;
+                        break;
+                    case "ext":
+                        result = string.Compare(x.ext, y.ext);
+                        break;
+                    case "comment":
+                        result = string.Compare(x.comment, y.comment);
+                        break;
+                    //case "tags":
+                    //    result = string.Compare(x.tags, y.tags);
+                    //    break;
+                    case "creationtime":
+                        result = DateTime.Compare(x.creationtime, y.creationtime);
+                        break;
+                    case "lastwritetime":
+                        result = DateTime.Compare(x.lastwritetime, y.lastwritetime);
+                        break;
+                }
+                return result;
+            };
 
-            //listview.SelectedIndexChanged += (object sender, EventArgs e) =>
-            //{
-            //    if (listview.SelectedIndices.Count > 0)
-            //    {
-            //        var index = listview.SelectedIndices[0];
-            //        selectedIndexQueue.Enqueue(index);
 
-            //        ListViewItem item = listview.SelectedItems[0];
-            //        detailview.Data = listview.getSelectItemData().ElementAt(0);
-            //        //detailview.FileName = item.SubItems["name"].Text;
-            //        //detailview.Tags = item.SubItems["tags"].Text;
-            //        //detailview.Comment = item.SubItems["comment"].Text;
-
-            //    }
-            //};
 
             return listview;
         }
@@ -459,13 +492,6 @@ namespace testfdb_cs
         private TabPage OpenNewTab(string text)
         {
             var listview = CreateListView();
-            //listview.Tag = filedatas;
-
-            //filedatas.ForEach(file =>
-            //{
-            //    ListViewItem item = CreateItem(file);
-            //    listview.Items.Add(item);
-            //});
 
             var tabcontrol = getTabControl();
             var newtabpage = addTagPage(tabcontrol, text);
@@ -524,7 +550,7 @@ namespace testfdb_cs
 
                     var datas = new List<TableData>();
                     using (FileDataModelContainer db = new FileDataModelContainer()) {
-
+                        //db.FileTable.Where(c => c.ext == "ok").Select(s => s);
                         var query = from c in db.FileTable
                                     where c.TagTable.Any(t => t.tag.Contains(selecttag))
                                     select c;
@@ -534,8 +560,8 @@ namespace testfdb_cs
                             var tagquery = from c in db.TagTable
                                            where c.FileTable.filetableid == f.filetableid
                                            select c.tag;
-
-                            datas.Add(new TableData(f.guid, f.name, tagquery.ToList<string>(), f.comment, f.createtime));
+                            
+                            datas.Add(new TableData(f.guid, f.name, f.size, f.ext, tagquery.ToList<string>(), f.comment, f.creationtime, f.lastwritetime));
                         }
                     }
 

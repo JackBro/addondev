@@ -12,7 +12,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("FileDataModel", "FileTableTagTable", "FileTable", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(testfdb_cs.FileTable), "TagTable", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(testfdb_cs.TagTable))]
 
 // 元のファイル名:
-// 生成日: 2010/08/18 14:44:14
+// 生成日: 2010/08/23 15:20:20
 namespace testfdb_cs
 {
     
@@ -110,8 +110,10 @@ namespace testfdb_cs
         /// <param name="name">name の初期値。</param>
         /// <param name="ext">ext の初期値。</param>
         /// <param name="comment">comment の初期値。</param>
-        /// <param name="createtime">createtime の初期値。</param>
-        public static FileTable CreateFileTable(long filetableid, string guid, string name, string ext, string comment, global::System.DateTime createtime)
+        /// <param name="creationtime">creationtime の初期値。</param>
+        /// <param name="lastwritetime">lastwritetime の初期値。</param>
+        /// <param name="size">size の初期値。</param>
+        public static FileTable CreateFileTable(long filetableid, string guid, string name, string ext, string comment, global::System.DateTime creationtime, global::System.DateTime lastwritetime, long size)
         {
             FileTable fileTable = new FileTable();
             fileTable.filetableid = filetableid;
@@ -119,7 +121,9 @@ namespace testfdb_cs
             fileTable.name = name;
             fileTable.ext = ext;
             fileTable.comment = comment;
-            fileTable.createtime = createtime;
+            fileTable.creationtime = creationtime;
+            fileTable.lastwritetime = lastwritetime;
+            fileTable.size = size;
             return fileTable;
         }
         /// <summary>
@@ -238,28 +242,74 @@ namespace testfdb_cs
         partial void OncommentChanging(string value);
         partial void OncommentChanged();
         /// <summary>
-        /// スキーマのプロパティ createtime にはコメントがありません。
+        /// スキーマのプロパティ creationtime にはコメントがありません。
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.DateTime createtime
+        public global::System.DateTime creationtime
         {
             get
             {
-                return this._createtime;
+                return this._creationtime;
             }
             set
             {
-                this.OncreatetimeChanging(value);
-                this.ReportPropertyChanging("createtime");
-                this._createtime = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
-                this.ReportPropertyChanged("createtime");
-                this.OncreatetimeChanged();
+                this.OncreationtimeChanging(value);
+                this.ReportPropertyChanging("creationtime");
+                this._creationtime = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("creationtime");
+                this.OncreationtimeChanged();
             }
         }
-        private global::System.DateTime _createtime;
-        partial void OncreatetimeChanging(global::System.DateTime value);
-        partial void OncreatetimeChanged();
+        private global::System.DateTime _creationtime;
+        partial void OncreationtimeChanging(global::System.DateTime value);
+        partial void OncreationtimeChanged();
+        /// <summary>
+        /// スキーマのプロパティ lastwritetime にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public global::System.DateTime lastwritetime
+        {
+            get
+            {
+                return this._lastwritetime;
+            }
+            set
+            {
+                this.OnlastwritetimeChanging(value);
+                this.ReportPropertyChanging("lastwritetime");
+                this._lastwritetime = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("lastwritetime");
+                this.OnlastwritetimeChanged();
+            }
+        }
+        private global::System.DateTime _lastwritetime;
+        partial void OnlastwritetimeChanging(global::System.DateTime value);
+        partial void OnlastwritetimeChanged();
+        /// <summary>
+        /// スキーマのプロパティ size にはコメントがありません。
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public long size
+        {
+            get
+            {
+                return this._size;
+            }
+            set
+            {
+                this.OnsizeChanging(value);
+                this.ReportPropertyChanging("size");
+                this._size = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("size");
+                this.OnsizeChanged();
+            }
+        }
+        private long _size;
+        partial void OnsizeChanging(long value);
+        partial void OnsizeChanged();
         /// <summary>
         /// スキーマの TagTable にはコメントがありません。
         /// </summary>

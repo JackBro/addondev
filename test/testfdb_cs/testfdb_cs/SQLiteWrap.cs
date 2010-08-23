@@ -20,11 +20,6 @@ namespace testfdb_cs
         public string FileTable { get; set; }
 
         /// <summary>
-        /// file-tag
-        /// </summary>
-        public string TaggedFileTable { get; set; }
-
-        /// <summary>
         /// tag
         /// </summary>
         public string TagTable { get; set; }
@@ -33,7 +28,6 @@ namespace testfdb_cs
         {
             DBFileName = "file.db";
             FileTable = "FileTable";
-            TaggedFileTable = "TaggedFileTable";
             TagTable = "TagTable";
         }
 
@@ -57,18 +51,10 @@ namespace testfdb_cs
                 {
                     ExecuteQuery((cmd) =>
                     {
-                        cmd.CommandText = String.Format("CREATE TABLE {0} (filetableid INTEGER PRIMARY KEY, guid TEXT, name TEXT, ext TEXT, comment TEXT, createtime DATETIME)", FileTable);
+                        cmd.CommandText = String.Format("CREATE TABLE {0} (filetableid INTEGER PRIMARY KEY, guid TEXT, name TEXT, size INTEGER, ext TEXT, comment TEXT, creationtime DATETIME, lastwritetime DATETIME)", FileTable);
                         cmd.ExecuteNonQuery();
                     });
                 }
-                //if (!existTable(TaggedFileTable))
-                //{
-                //    ExecuteQuery((cmd) =>
-                //    {
-                //        cmd.CommandText = String.Format("CREATE TABLE {0} (id INTEGER PRIMARY KEY, guid TEXT, tag TEXT)", TaggedFileTable);
-                //        cmd.ExecuteNonQuery();
-                //    });
-                //}
                 if (!existTable(TagTable))
                 {
                     ExecuteQuery((cmd) =>
@@ -90,8 +76,6 @@ namespace testfdb_cs
             });
             return !(cnt == 0);
         }
-
-
 
         private void beginTransaction()
         {

@@ -3,10 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace testfdb_cs {
+
+
+    class ListViewItemComparer<T> : IComparer<T> {
+
+        public SortOrder Order { get; set; }
+        public int ColumnIndex { get; set; }
+
+        public Func<T, T, int, int> SortFunc { get; set; }
+
+        #region IComparer<T> メンバ
+
+        public int Compare(T x, T y) {
+            //ListViewItem itemx = x as ListViewItem;
+            //ListViewItem itemy = y as ListViewItem;
+            int result = SortFunc(x, y, ColumnIndex);
+            if (Order == SortOrder.Descending) {
+                result = -result;
+            }
+            return result;
+        }
+
+        #endregion
+    }
+
     class FileListView<T>:ListView {
-        private IEnumerable<T> datas;
+        private List<T> datas;
         //private ListViewItemCollection itemCollection;
         private Dictionary<T, ListViewItem> dataMap;
 
@@ -15,15 +40,28 @@ namespace testfdb_cs {
 
         public Func<T, string, string> LabelFunc { get; set; }
 
-        public FileListView()
-        {
+        public Func<T, int, int> SortFunc { get; set; }
+
+        public ListViewItemComparer<T> listViewItemComparer { get; set; }
+
+        public FileListView() {
             dataMap = new Dictionary<T, ListViewItem>();
-            
-            this.VirtualMode = true;
-            this.RetrieveVirtualItem += new RetrieveVirtualItemEventHandler(FileListView_RetrieveVirtualItem);
 
             myCol = new ListView.ListViewItemCollection(this);
             mySel = new ListView.SelectedIndexCollection(this);
+           
+            this.VirtualMode = true;
+            this.RetrieveVirtualItem += new RetrieveVirtualItemEventHandler(FileListView_RetrieveVirtualItem);
+           
+            listViewItemComparer = new ListViewItemComparer<T>();
+            listViewItemComparer.Order = SortOrder.Ascending;
+            this.ColumnClick += (sender, e) => {
+                listViewItemComparer.ColumnIndex = e.Column;
+                listViewItemComparer.Order = listViewItemComparer.Order == SortOrder.Descending ? SortOrder.Ascending : SortOrder.Descending;
+                datas.Sort(listViewItemComparer);
+                this.Refresh();
+            };
+
         }
 
         void FileListView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
@@ -54,7 +92,7 @@ namespace testfdb_cs {
             }
         }
 
-        public void inputData(IEnumerable<T> datas) {
+        public void inputData(List<T> datas) {
             this.datas = datas;
             this.VirtualListSize = this.datas.Count();
         }
@@ -98,8 +136,9 @@ namespace testfdb_cs {
 
         public IEnumerable<T> getSelectItemData(){
             List<T> selectdatas = new List<T>();
-            foreach(ListViewItem item in SelectedItems){
-                selectdatas.Add((T)item.Tag);
+
+            foreach (int index in mySel) {
+                selectdatas.Add(datas[index]);
             }
             return selectdatas;
         }

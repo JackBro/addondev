@@ -181,7 +181,7 @@ namespace testfdb_cs
                 else
                 {
                     string strcmd = String.Format("INSERT INTO {0}(guid, name, tags, comment) VALUES('{1}', '{2}', '{3}', '{4}')",
-                        FileTable, file.guid, file.name, file.getTagsConcat(), file.comment);
+                        FileTable, file.guid, file.name, file.TagsToString(), file.comment);
                     cmd.CommandText = strcmd;
                     cmd.ExecuteNonQuery();
                 }

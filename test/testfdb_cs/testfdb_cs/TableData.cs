@@ -9,18 +9,23 @@ namespace testfdb_cs
     {
         public string guid;
         public string name;
+        public long size;
         public string ext;
         public List<string> tags;
         public string comment;
-        public DateTime createtime;
+        public DateTime creationtime;
+        public DateTime lastwritetime;
 
-        public TableData(string guid, string name, List<string> tags, string comment, DateTime createtime)
+        public TableData(string guid, string name, long size, string ext, List<string> tags, string comment, DateTime creationtime, DateTime lastwritetime)
         {
             this.guid = guid;
             this.name = name;
+            this.size = size;
+            this.ext = ext;
             this.tags = tags;
             this.comment = comment;
-            this.createtime = createtime;
+            this.creationtime = creationtime;
+            this.lastwritetime = lastwritetime;
         }
 
         //public TableData(string guid, string name, string tags, string comment)
@@ -31,14 +36,14 @@ namespace testfdb_cs
         //    this.comment = comment;
         //}
 
-        public string getTagsConcat()
+        public string TagsToString()
         {
             return String.Join(" ", tags.ToArray<string>());
         }
 
-        public static List<string> parseTags(string tags)
-        {
-            return tags.Split(new char[] { ' ' }).ToList<string>();
-        }
+        //public static List<string> parseTags(string tags)
+        //{
+        //    return tags.Split(new char[] { ' ' }).ToList<string>();
+        //}
     }
 }

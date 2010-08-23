@@ -14,11 +14,13 @@
             <PropertyRef Name="filetableid" />
           </Key>
           <Property Name="filetableid" Type="integer" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="guid" Type="nvarchar" />
+          <Property Name="guid" Type="nvarchar" Nullable="false" />
           <Property Name="name" Type="nvarchar" />
+          <Property Name="size" Type="integer" Nullable="false" />
           <Property Name="ext" Type="nvarchar" />
           <Property Name="comment" Type="nvarchar" />
-          <Property Name="createtime" Type="datetime" />
+          <Property Name="creationtime" Type="datetime" Nullable="false" />
+          <Property Name="lastwritetime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="TagTable">
           <Key>
@@ -48,9 +50,10 @@
           <Property Name="name" Type="String" Nullable="false" />
           <Property Name="ext" Type="String" Nullable="false" />
           <Property Name="comment" Type="String" Nullable="false" />
-          <Property Name="createtime" Type="DateTime" Nullable="false" />
           <NavigationProperty Name="TagTable" Relationship="FileDataModel.FileTableTagTable" FromRole="FileTable" ToRole="TagTable" />
-          </EntityType>
+          <Property Name="creationtime" Type="DateTime" Nullable="false" />
+          <Property Name="lastwritetime" Type="DateTime" Nullable="false" />
+          <Property Name="size" Type="Int64" Nullable="false" /></EntityType>
         <EntityType Name="TagTable" Abstract="false">
           <Key>
             <PropertyRef Name="tagtableid" />
@@ -74,8 +77,10 @@
           <EntitySetMapping Name="FileTable">
             <EntityTypeMapping TypeName="IsTypeOf(FileDataModel.FileTable)">
               <MappingFragment StoreEntitySet="FileTable">
+                <ScalarProperty Name="size" ColumnName="size" />
+                <ScalarProperty Name="lastwritetime" ColumnName="lastwritetime" />
+                <ScalarProperty Name="creationtime" ColumnName="creationtime" />
                 <ScalarProperty Name="filetableid" ColumnName="filetableid" />
-                <ScalarProperty Name="createtime" ColumnName="createtime" />
                 <ScalarProperty Name="comment" ColumnName="comment" />
                 <ScalarProperty Name="ext" ColumnName="ext" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -113,7 +118,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram Name="FileDataModel" >
-        <EntityTypeShape EntityType="FileDataModel.FileTable" Width="1.5" PointX="0.75" PointY="0.75" Height="2.264791666666667" />
+        <EntityTypeShape EntityType="FileDataModel.FileTable" Width="1.5" PointX="0.75" PointY="0.75" Height="2.4470833333333339" />
         <EntityTypeShape EntityType="FileDataModel.TagTable" Width="1.5" PointX="3.25" PointY="1" Height="1.535625" />
         <AssociationConnector Association="FileDataModel.FileTableTagTable">
           <ConnectorPoint PointX="2.25" PointY="1.7678125" />

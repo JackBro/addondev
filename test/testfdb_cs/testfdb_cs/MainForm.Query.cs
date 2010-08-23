@@ -3,37 +3,42 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.IO;
+using System.Data.Common;
 
 namespace testfdb_cs
 {
     partial class MainForm
     {
-        private void init() {
 
-        }
+        private string DBFileName = "file.db";
+
+        /// <summary>
+        /// file data
+        /// </summary>
+        public string FileTableName = "FileTable";
+
+        /// <summary>
+        /// tag
+        /// </summary>
+        public string TagTableName = "TagTable";
 
         private SQLiteWrap sqlitewrap = new SQLiteWrap();
 
-        private bool hasFileData(string guid)
-        {
-            Int64 cnt =0;
-            sqlitewrap.ExecuteQuery((cmd) =>
-            {
-                cmd.CommandText = String.Format("SELECT COUNT(*) FROM {0} WHERE guid = '{1}'", sqlitewrap.FileTable, guid);
-                cnt = (Int64)cmd.ExecuteScalar();
-            });
-            return !(cnt == 0);
-        }
+        private void createTable() {
+            if (new FileInfo(DBFileName).Exists) return;
 
-        private bool hasTaggedFileData(string guid, string tag)
-        {
-            Int64 cnt =0;
-            sqlitewrap.ExecuteQuery((cmd) =>
-            {
-                cmd.CommandText = String.Format("SELECT COUNT(*) FROM {1} WHERE guid = '{0}' AND tag = '{2}'", guid, sqlitewrap.TaggedFileTable, tag);
-                cnt = (Int64)cmd.ExecuteScalar();
-            });
-            return !(cnt == 0);
+            DbConnection cnn;
+            using (cnn = new SQLiteConnection()) {
+                cnn.ConnectionString = "Data Source=" + DBFileName;
+                cnn.Open();
+                using (DbCommand cmd = cnn.CreateCommand()) {
+                    cmd.CommandText = String.Format("CREATE TABLE {0} (filetableid INTEGER PRIMARY KEY, guid TEXT, name TEXT, size INTEGER, ext TEXT, comment TEXT, creationtime DATETIME, lastwritetime DATETIME)", FileTableName);
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = String.Format("CREATE TABLE {0} (tagtableid INTEGER PRIMARY KEY, tag TEXT, filetableid INTEGER)", TagTableName);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         private IEnumerable<string> insertTags(IEnumerable<string> tags)
@@ -93,9 +98,11 @@ namespace testfdb_cs
                         FileTable filetable = new FileTable();
                             filetable.guid = strguid;
                             filetable.name = fileinfo.Name;
+                            filetable.size = fileinfo.Length;
                             filetable.ext = fileinfo.Extension;
                             filetable.comment = "";
-                            filetable.createtime = fileinfo.CreationTime;
+                            filetable.creationtime = fileinfo.CreationTime;
+                            filetable.lastwritetime = fileinfo.LastWriteTime;
                         
                         db.AddToFileTable(filetable);
                         db.SaveChanges();
@@ -141,11 +148,6 @@ namespace testfdb_cs
                 }
 
                 db.SaveChanges();
-
-                //db.AttachTo("FileTable", new FileTable() { filetableid = filetable.filetableid });
-                //foreach (string tag in tags) {
-                //    db.AddToTagTable(new TagTable() { tag = tag, FileTable = filetable });
-                //}
             }
         }
 
