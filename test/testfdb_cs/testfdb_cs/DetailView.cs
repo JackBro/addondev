@@ -55,7 +55,7 @@ namespace testfdb_cs
             set {
                 _filedata = value;
                 FileName = _filedata.name;
-                Tags = String.Join("", _filedata.tags.ToArray<string>());
+                Tags = String.Join(" ", _filedata.tags.ToArray<string>());
                 Comment = _filedata.comment;
             }
         }
