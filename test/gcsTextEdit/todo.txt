@@ -1,0 +1,25 @@
+search
+replace
+underline
+wavline
+solidline
+keybind
+copy
+paste
+cut
+selrect
+selall
+select Highlighter
+ime pos
+home
+end
+delete
+prop text
+prop wrap
+prop readonly
+prop showline
+prop showZsp
+prop showTab
+prop showReturn
+prop font
+sel word
