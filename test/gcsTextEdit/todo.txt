@@ -1,3 +1,6 @@
+http://structurededitor.codeplex.com/
+http://azuki.sourceforge.jp/
+
 search
 replace
 underline
