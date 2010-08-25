@@ -2,41 +2,58 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace AsControls
 {
+    public enum EditorAction {
+        Copy,
+        Paste,
+        Delete,
+        BackSpace,
+        Undo,
+        Redo,
+        Up,
+        Down,
+        Right,
+        Left,
+        Home,
+        PageUp,
+        PageDown
+    }
+
     public class KeyMap
     {
-        private Dictionary<string, string> keyToFuncNameDic;
-        private Dictionary<string, Action<object>> funcNameToFunctinDic;
+        private Dictionary<Keys, EditorAction> keyToFuncNameDic;
+        private Dictionary<EditorAction, Action<object>> funcNameToFunctinDic;
 
         public KeyMap()
         {
-            keyToFuncNameDic = new Dictionary<string, string>();
-            funcNameToFunctinDic = new Dictionary<string, Action<object>>();
+            keyToFuncNameDic = new Dictionary<Keys, EditorAction>();
+            funcNameToFunctinDic = new Dictionary<EditorAction, Action<object>>();
         }
 
-        public void SetFunc(string funcName, Action<object> func)
+        public void SetFunc(EditorAction action, Action<object> func)
         {
-            funcNameToFunctinDic.Add(funcName, func);
+            funcNameToFunctinDic.Add(action, func);
         }
 
-        public void SetKey(string key, string funcName)
+        public void SetKey(Keys key, EditorAction action)
         {
-            keyToFuncNameDic.Add(key, funcName);
+            keyToFuncNameDic.Add(key, action);
         }
 
-        public Boolean ContainsFunction(string key)
+        public Boolean ContainsFunction(Keys key)
         {
             return keyToFuncNameDic.ContainsKey(key);
         }
 
-        public Action<object> getFunction(string key)
+        public Action<object> getFunction(Keys key)
         {
             if (keyToFuncNameDic.ContainsKey(key))
             {
-                string funcname = keyToFuncNameDic[key];
-                return funcNameToFunctinDic[funcname];
+                EditorAction editaction = keyToFuncNameDic[key];
+                return funcNameToFunctinDic[editaction];
             }
             return null;
         }

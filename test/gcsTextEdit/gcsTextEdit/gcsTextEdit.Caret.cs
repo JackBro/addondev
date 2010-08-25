@@ -197,16 +197,18 @@ namespace AsControls
             Del();
         }
 
-        public void Del(CaretInfo s, CaretInfo e)
+        public void Del(CaretInfo c, CaretInfo s)
         {
             //// 選択状態なら cur_ ～ sel_ を削除
             //// でなければ、 cur_ ～ rightOf(cur_) を削除
             //DPos dp = (cur == sel ? doc.rightOf(cur_) : (DPos)sel_);
             //if (cur_ != dp)
             //    doc_.Execute(Delete(cur_, dp));
-            CaretInfo dp = (s == e ? CaretRight(1) : new CaretInfo(e));
-            string buff;
-            doc.Delete(s, dp, out buff);
+            CaretInfo dp = (c == s ? CaretRight(1) : new CaretInfo(s));
+            if (c != dp) {
+                string buff;
+                doc.Delete(c, dp, out buff);
+            }
         }
 
         public void Del()

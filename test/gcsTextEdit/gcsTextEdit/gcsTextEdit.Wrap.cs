@@ -89,6 +89,9 @@ namespace AsControls
             if (doResize)
             {
                 //DoResize(true);
+                if (wrapType == WrapType.WindowWidth) {
+                    ReWrapAll();
+                }
             }
             else
             {

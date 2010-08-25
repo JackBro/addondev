@@ -148,7 +148,6 @@ namespace AsControls
                font,
                new Point(X, Y),
                color,
-               //Color.Purple,
                TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
         }
 
@@ -311,7 +310,7 @@ namespace AsControls
                     wcs = wc;
 
                     // 選択範囲だったら反転
-                    if (v.SYB <= ytop && ytop <= v.SYE)
+                    if (v.SYB <= ytop && ytop <= v.SYE && !isdropfile)
                     {
                         //Inv(a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
                         //            a.top == v.SYE ? v.SXE : (v.XBASE + x), p);

@@ -51,7 +51,7 @@ namespace AsControls
 
         VScrollBar vScrollBar;
         int vpage = 0;
-        int udScr_tl_;   // 一番上に表示される論理行のTLine_Index
+        int udScr_tl_;  //一番上に表示される論理行のTLine_Index
         int udScr_vrl_; //一番上に表示される表示行のVRLine_Index
 
         HScrollBar hScrollBar;
@@ -63,10 +63,9 @@ namespace AsControls
 
         WrapType wrapType;
         Boolean showNumLine = false;
-        KeyMap keyMap;
 
-        public KeyMap KeyMap
-        {
+        KeyMap keyMap;
+        public KeyMap KeyMap {
             set { keyMap = value; }
         }
 
@@ -200,22 +199,17 @@ namespace AsControls
             this.HandleDestroyed += new EventHandler(AsTextEdit_HandleDestroyed);
 
             keyMap = new KeyMap();
-            keyMap.SetFunc("cmd_Undo", delegate(object obj)
-            {
-                if (doc.UndoManager.CanUndo)
-                {
+            keyMap.SetFunc("cmd_Undo", delegate(object obj) {
+                if (doc.UndoManager.CanUndo) {
                     doc.UndoManager.Undo();
                 }
             });
-            keyMap.SetFunc("cmd_Redo", delegate(object obj)
-            {
-                if (doc.UndoManager.CanRedo)
-                {
+            keyMap.SetFunc("cmd_Redo", delegate(object obj) {
+                if (doc.UndoManager.CanRedo) {
                     doc.UndoManager.Redo();
                 }
             });
-            keyMap.SetFunc("cmd_Paste", delegate(object obj)
-            {
+            keyMap.SetFunc("cmd_Paste", delegate(object obj) {
                 this.Paste();
             });
 
@@ -278,7 +272,7 @@ namespace AsControls
         protected override void WndProc(ref Message m)
         {
             if(imeComposition !=null)
-                imeComposition.Ime(m);
+                imeComposition.Ime(m, vPos.X, vPos.Y);
 
             base.WndProc(ref m);
         }
@@ -669,7 +663,7 @@ namespace AsControls
                     //base.Invalidate();
                     break;
                 case Keys.Delete:
-
+                    Del();
                     break;
                 case Keys.Right:
                     ConvDPosToVPos(CaretRight(1), ref cur);
@@ -987,6 +981,7 @@ namespace AsControls
 
         protected override void OnDragDrop(DragEventArgs drgevent)
         {
+            isdropfile = false;
             ldowm = false;
             cur.CopyTo(ref sel);
 
@@ -994,6 +989,7 @@ namespace AsControls
             {
 
                 string[] files = (string[])drgevent.Data.GetData(DataFormats.FileDrop, false);
+                
             }
             else if (drgevent.Data.GetDataPresent(typeof(string)))
             {
@@ -1038,7 +1034,7 @@ namespace AsControls
                 }
             }
             //base.OnDragDrop(drgevent);
-            
+
         }
 
         protected override void OnDragOver(DragEventArgs drgevent)
@@ -1054,11 +1050,13 @@ namespace AsControls
             base.Invalidate();
         }
 
+        private bool isdropfile = false;
         protected override void OnDragEnter(DragEventArgs drgevent)
         {
             if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 drgevent.Effect = DragDropEffects.Copy;
+                isdropfile = true;
             }
             else if (drgevent.Data.GetDataPresent(DataFormats.UnicodeText)
                 || drgevent.Data.GetDataPresent(DataFormats.Text))
@@ -1072,7 +1070,7 @@ namespace AsControls
             base.OnDragEnter(drgevent);
         }
 
-        public void SearchText(string sh)
+        public bool SearchText(string sh)
         {
             Search search = new Search(this.doc);
             search.searchstr = sh;
@@ -1085,7 +1083,10 @@ namespace AsControls
                 ConvDPosToVPos(end, ref sel);
                 CaretMove(true);
                 base.Invalidate();
+                return true;
             }
+
+            return false;
         }
 
         public void Home()

@@ -57,7 +57,7 @@ namespace AsControls
         {
             highlighter = new Highlighter();
             //highlighter.Add(@"//.*", TokenType.TXT, Color.Green);
-            highlighter.Add(@"\[\[.*\]\]", TokenType.TXT, Color.Red);
+            highlighter.Add(@"\[\[.*\]\]", TokenType.CLICKABLE, Color.Red);
             //highlighter.Add(@">>\w*", TokenType.CLICKABLE, Color.Blue);
             //highlighter.Add(@"file:///\S*", TokenType.CLICKABLE, Color.Blue);
 

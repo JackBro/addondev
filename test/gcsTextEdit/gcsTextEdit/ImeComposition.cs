@@ -19,6 +19,32 @@ namespace AsControls
         [DllImport("Imm32.dll")]
         private static extern bool ImmReleaseContext(IntPtr hWnd, int hIMC);
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Point {
+            public int x;
+            public int y;
+        }
+        [StructLayout(LayoutKind.Explicit)]
+        public struct Rect {
+            [FieldOffset(0)]
+            public int left;
+            [FieldOffset(4)]
+            public int top;
+            [FieldOffset(8)]
+            public int right;
+            [FieldOffset(12)]
+            public int bottom;
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        public struct COMPOSITIONFORM {
+            public int dwStyle;
+            public Point ptCurrentPos;
+            public Rect rcArea;
+        }
+
+        [DllImport("imm32.dll")]
+        public static extern int ImmSetCompositionWindow(int hIMC, ref COMPOSITIONFORM lpCompositionForm);
+
         public class ImeCompositionEventArgs : System.EventArgs
         {
             private string str;
@@ -56,6 +82,9 @@ namespace AsControls
         // IME入力中文字取得に使用する値(1バイトカタカナ)
         private const int GCS_COMPREADSTR = 0x0001;
 
+        private const int CFS_POINT = 0x0002;
+        private const int WM_IME_STARTCOMPOSITION = 0x010D;
+
         private Control control;
 
         public ImeComposition(Control control)
@@ -63,7 +92,7 @@ namespace AsControls
             this.control = control;
         }
 
-        public void Ime(Message m)
+        public void Ime(Message m, int x, int y)
         {
             //// 変換確定(1バイトカタカナ)
             //if (ImeCompositedKata != null && m.Msg == WM_IME_COMPOSITION)
@@ -101,16 +130,26 @@ namespace AsControls
                     ImmGetCompositionString(hIMC, GCS_RESULTSTR, str, str.Capacity);
                     ImmReleaseContext(this.control.Handle, hIMC);
 
-                    if (ImeCompositedHira != null)
-                    {
+                    //if (ImeCompositedHira != null)
+                    //{
                         // 環境によって文字コードが違うので、それにあわせる
                         byte[] tmp1 = System.Text.Encoding.Default.GetBytes(str.ToString());
                         byte[] tmp2 = new byte[strLen];
                         Array.Copy(tmp1, 0, tmp2, 0, strLen);
                         ImeCompositedHira(this,
                             new ImeCompositionEventArgs(System.Text.Encoding.Default.GetString(tmp2)));
-                    }
+                    //}
                 }
+            } else if (ImeCompositedHira != null && m.Msg == WM_IME_STARTCOMPOSITION) {
+                int hIMC = ImmGetContext(this.control.Handle);
+                COMPOSITIONFORM cf = new COMPOSITIONFORM();
+                cf.dwStyle = CFS_POINT;
+                cf.ptCurrentPos = new Point();
+                cf.ptCurrentPos.x = x;
+                cf.ptCurrentPos.y = y;
+                int res = ImmSetCompositionWindow(hIMC, ref cf);
+
+                ImmReleaseContext(this.control.Handle, hIMC);
             }
         }
 

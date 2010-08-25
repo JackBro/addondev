@@ -69,6 +69,7 @@
     <Compile Include="Document\IText.cs" />
     <Compile Include="Document\Line.cs" />
     <Compile Include="Highlighter\Highlighter.cs" />
+    <Compile Include="ITextEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="Setting.cs" />

@@ -73,5 +73,12 @@ namespace AsControls
         {
             return (s.tl > e.tl || (s.tl == e.tl && s.ad >= e.ad));
         }
+
+        //public override bool Equals(object obj) {
+        //    CaretInfo caret = obj as CaretInfo;
+        //    if (caret == null) return false;
+
+        //    return (caret.ad == ad && caret.rl == rl && caret.rx == rx && caret.tl == tl && caret.vl == vl && caret.vx == vx);
+        //}
     }
 }
