@@ -24,6 +24,12 @@ namespace test
             csedit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
             csedit.GotFocus += new EventHandler(csedit_GotFocus);
+
+            csedit.KeyBind.setAction(Keys.Control | Keys.V, (editor) =>
+            {
+                editor.Paste();
+            });
+
             panel1.Controls.Add(csedit);
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
@@ -39,6 +45,8 @@ namespace test
 //";
             csedit.Text = @"12345
 title>HOGE</title>";
+
+            csedit.Text = @"1234567890";
 
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
@@ -107,7 +115,9 @@ title>HOGE</title>";
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            int offset = csedit.offset;
+            int i = 0;
+            csedit.Insert(2, 3, "repl");
         }
 
         private void searchToolStripMenuItem1_Click(object sender, EventArgs e)

@@ -7,20 +7,17 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-namespace AsControls
-{
-    public enum WrapType
-    {
+namespace AsControls {
+    public enum WrapType {
         Non,
         WindowWidth
     }
 
     public delegate Action<object, WrapType> WrapModeChangeEventHandler(object sender, WrapType wrapMode);
 
-    public partial class gcsTextEdit : Control
-    {
-        private class ViewRect
-        {
+    public partial class gcsTextEdit : Control, ITextEditor {
+        
+        private class ViewRect {
             public Rectangle rc;
             public int XBASE;      // 一番左の文字のx座標
             public int XMIN;       // テキスト再描画範囲左端
@@ -33,12 +30,11 @@ namespace AsControls
 
             public int NumLineLeft;
 
-            public ViewRect()
-            {
+            public ViewRect() {
                 rc = new Rectangle();
-                YMIN =0;
-                YMAX =0;
-                TLMIN =0;
+                YMIN = 0;
+                YMAX = 0;
+                TLMIN = 0;
                 SXB = SXE = SYB = SYE = 0;
 
                 NumLineLeft = 0;
@@ -51,6 +47,7 @@ namespace AsControls
 
         VScrollBar vScrollBar;
         int vpage = 0;
+
         int udScr_tl_;  //一番上に表示される論理行のTLine_Index
         int udScr_vrl_; //一番上に表示される表示行のVRLine_Index
 
@@ -64,22 +61,14 @@ namespace AsControls
         WrapType wrapType;
         Boolean showNumLine = false;
 
-        KeyMap keyMap;
-        public KeyMap KeyMap {
-            set { keyMap = value; }
-        }
+        public KeyMap KeyBind { get; set; }
 
-        public int ViewWidth
-        {
-            get 
-            {
-                if (wrapType == WrapType.Non)
-                {
+        public int ViewWidth {
+            get {
+                if (wrapType == WrapType.Non) {
                     return int.MaxValue;
-                }
-                else
-                {
-                    if (this.Width - (vRect.NumLineLeft+ vScrollBar.Width) < 0)
+                } else {
+                    if (this.Width - (vRect.NumLineLeft + vScrollBar.Width) < 0)
                         return 0;
 
                     return this.Width - (vRect.NumLineLeft + vScrollBar.Width);
@@ -87,70 +76,62 @@ namespace AsControls
             }
         }
 
-        public int ViewHeight
-        {
-            get 
-            {
+        public int ViewHeight {
+            get {
                 if (this.Height - hScrollBar.Height < 0)
                     return 0;
 
-                return this.Height- hScrollBar.Height; 
+                return this.Height - hScrollBar.Height;
             }
         }
 
-        public int ViewLineHeight
-        {
+        public int ViewLineHeight {
             get { return lineHeight; }
         }
 
-        public new Font Font
-        {
+        public new Font Font {
             get { return base.Font; }
-            set 
-            {
+            set {
                 base.Font = value;
                 initDraw();
             }
         }
 
-        public WrapType Wrap
-        {
+        public WrapType Wrap {
             get { return wrapType; }
-            set 
-            {
+            set {
                 wrapType = value;
-                //if (wrapType == WrapType.WindowWidth)
-                //{
-                    ReWrapAll();
-                //}
+                ReWrapAll();
             }
         }
 
-        public new string Text
-        {
-            set 
-            { 
+        public new string Text {
+            set {
+                this.doc.Clear();
+                //InitCaret();
+                //initWrap();
+                //udScr_tl_ = 0;
+                //udScr_vrl_ = 0;
+                //hpage = 0;
+                //vpage = 0;
+                Initialize();
 
                 Input(value);
             }
 
-            get
-            {
+            get {
                 return this.doc.ToString();
             }
         }
 
-        public Document Document
-        {
+        private Document Document {
             get { return this.doc; }
-            set 
-            {
-                if (doc != null)
-                {
+            set {
+                if (doc != null) {
                     doc.TextUpdateEvent -= doc_TextUpdateEvent;
                 }
                 doc = value;
-                doc.TextUpdateEvent +=new TextUpdateEventHandler(doc_TextUpdateEvent);
+                doc.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
                 //initWrap();
                 //ReWrapAll();
                 //string sss = doc.ToString();
@@ -159,8 +140,7 @@ namespace AsControls
             }
         }
 
-        public gcsTextEdit()
-        {
+        public gcsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
             wrapType = WrapType.WindowWidth;
@@ -169,21 +149,18 @@ namespace AsControls
 
             doc = new Document();
             doc.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
-            //this.Document = new Document();
 
             initDraw();
-            initWrap();
+            //initWrap();
 
-            udScr_tl_ = 0;
-            udScr_vrl_ = 0;
+            //udScr_tl_ = 0;
+            //udScr_vrl_ = 0;
 
             vScrollBar = new VScrollBar();
-            //vScrollBar.Minimum = 0;
             vScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
             this.Controls.Add(vScrollBar);
 
             hScrollBar = new HScrollBar();
-            //hScrollBar.Minimum = 0;
             hScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
             this.Controls.Add(hScrollBar);
 
@@ -198,63 +175,65 @@ namespace AsControls
 
             this.HandleDestroyed += new EventHandler(AsTextEdit_HandleDestroyed);
 
-            keyMap = new KeyMap();
-            keyMap.SetFunc("cmd_Undo", delegate(object obj) {
-                if (doc.UndoManager.CanUndo) {
-                    doc.UndoManager.Undo();
-                }
-            });
-            keyMap.SetFunc("cmd_Redo", delegate(object obj) {
-                if (doc.UndoManager.CanRedo) {
-                    doc.UndoManager.Redo();
-                }
-            });
-            keyMap.SetFunc("cmd_Paste", delegate(object obj) {
-                this.Paste();
-            });
-
-            keyMap.SetKey("Control+Z", "cmd_Undo");
-            keyMap.SetKey("Control+V", "cmd_Paste");
+            KeyBind = new KeyMap();
+            //KeyBind.SetAction("cmd_Undo", delegate(object obj)
+            //{
+            //    if (doc.UndoManager.CanUndo) {
+            //        doc.UndoManager.Undo();
+            //    }
+            //});
+            //keyMap.SetAction("cmd_Redo", delegate(object obj)
+            //{
+            //    if (doc.UndoManager.CanRedo) {
+            //        doc.UndoManager.Redo();
+            //    }
+            //});
+            //keyMap.SetAction("cmd_Paste", delegate(object obj)
+            //{
+            //    this.Paste();
+            //});
 
             base.AllowDrop = true;
+
+            Initialize();
         }
 
-        void doc_TextUpdateEvent(CaretInfo s, CaretInfo e, CaretInfo e2)
-        {
+        public void Initialize() {
+            doc.Clear();
+            InitCaret();
+            initWrap();
+            udScr_tl_ = 0;
+            udScr_vrl_ = 0;
+        }
+
+        void doc_TextUpdateEvent(CaretInfo s, CaretInfo e, CaretInfo e2) {
             UpDate(s, e, e2);
-            //UpDate(new CaretInfo(s), new CaretInfo(e), new CaretInfo(e2));
             on_text_update();
             base.Invalidate();
         }
 
-        void AsTextEdit_HandleDestroyed(object sender, EventArgs e)
-        {
+        void AsTextEdit_HandleDestroyed(object sender, EventArgs e) {
             deleteDraw();
         }
 
-        void imeComposition_ImeCompositedKata(object sender, ImeComposition.ImeCompositionEventArgs e)
-        {
+        void imeComposition_ImeCompositedKata(object sender, ImeComposition.ImeCompositionEventArgs e) {
             Input(e.InputString);
         }
 
-        void imeComposition_ImeCompositedHira(object sender, ImeComposition.ImeCompositionEventArgs e)
-        {
+        void imeComposition_ImeCompositedHira(object sender, ImeComposition.ImeCompositionEventArgs e) {
             Input(e.InputString);
             base.Invalidate();
         }
 
-        public new void Dispose()
-        {
+        public new void Dispose() {
             Dispose(true);
 
             // システムにfinalize呼ばなくてもいいよ～って教える
             GC.SuppressFinalize(this);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
                 //Console.WriteLine("MyObject::Dispose マネージドなリソース開放");
             }
             //Console.WriteLine("MyObject::Dispose アンマネージドなリソース開放");
@@ -264,21 +243,18 @@ namespace AsControls
             base.Dispose(disposing);
         }
 
-        ~gcsTextEdit()
-        {
+        ~gcsTextEdit() {
             Dispose(false);
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            if(imeComposition !=null)
+        protected override void WndProc(ref Message m) {
+            if (imeComposition != null)
                 imeComposition.Ime(m, vPos.X, vPos.Y);
 
             base.WndProc(ref m);
         }
 
-        protected override void OnMouseWheel(MouseEventArgs e)
-        {
+        protected override void OnMouseWheel(MouseEventArgs e) {
             base.OnMouseWheel(e);
             int dy = -e.Delta / 120;
 
@@ -289,11 +265,10 @@ namespace AsControls
             base.Invalidate();
         }
 
-        protected override void OnSizeChanged(EventArgs e)
-        {
+        protected override void OnSizeChanged(EventArgs e) {
             base.OnSizeChanged(e);
 
-            int oo=wrapList.Count;
+            int oo = wrapList.Count;
 
             //initWrap();
             ReWrapAll();
@@ -312,22 +287,17 @@ namespace AsControls
             ReSetScrollInfo();
         }
 
-        void ScrollBar_Scroll(object sender, ScrollEventArgs e)
-        {
+        void ScrollBar_Scroll(object sender, ScrollEventArgs e) {
             int d = e.NewValue - e.OldValue;
-            if (d != 0)
-            {
-                if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
-                {
+            if (d != 0) {
+                if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll) {
                     ScrollView(d, 0, true);
 
                     int x = 0;
                     x = -(hScrollBar.Value + d);
                     x += cur.vx;
                     vPos.X = x;
-                }
-                else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-                {
+                } else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll) {
                     ScUpDown(d);
 
                     int x = vRect.NumLineLeft;
@@ -343,8 +313,7 @@ namespace AsControls
             }
         }
 
-        private void ScUpDown(int dy)
-        {
+        private void ScUpDown(int dy) {
             // １．udScr_.nPos + dy が正常範囲に収まるように補正
             if (vScrollBar.Value + dy < 0)
                 dy = -vScrollBar.Value;
@@ -361,9 +330,7 @@ namespace AsControls
                 // ジャンプ先論理行の行頭へDash!
                 while (rl < 0)
                     rl += GetvlCnt(--tl);
-            }
-            else if (dy > 0)
-            {
+            } else if (dy > 0) {
                 // ジャンプ先論理行の行頭へDash!
                 while (rl > 0)
                     rl -= GetvlCnt(tl++);
@@ -387,25 +354,20 @@ namespace AsControls
             vScrollBar.Value += dy;
         }
 
-        public void GetOrigin(ref int x, ref int y)
-        {
+        public void GetOrigin(ref int x, ref int y) {
             x = vRect.NumLineLeft - hScrollBar.Value;
             y = -vScrollBar.Value * lineHeight;
         }
 
-        private void GetDrawPosInfo(ref ViewRect v)
-        {
+        private void GetDrawPosInfo(ref ViewRect v) {
             int H = lineHeight;
 
             int most_under = (vlNum_ - vScrollBar.Value) * H;
-            if (most_under <= v.rc.Top)
-            {
+            if (most_under <= v.rc.Top) {
                 v.YMIN = v.rc.Top;
                 v.YMAX = most_under;
-            }
-            else
-            {
-                int y = - udScr_vrl_;
+            } else {
+                int y = -udScr_vrl_;
                 int tl = udScr_tl_;
                 int top = v.rc.Top / H;
 
@@ -426,8 +388,8 @@ namespace AsControls
             }
 
             // 選択範囲
-		    //v.SXB = v.SXE = v.SYB = v.SYE = 0x7fffffff;
-		    //const VPos *bg, *ed;
+            //v.SXB = v.SXE = v.SYB = v.SYE = 0x7fffffff;
+            //const VPos *bg, *ed;
             //if( cur_.getCurPos( &bg, &ed ) )
             //{
             //    v.SXB = bg->vx - rlScr_.nPos + left();
@@ -438,15 +400,12 @@ namespace AsControls
 
             v.SXB = v.SXE = v.SYB = v.SYE = int.MaxValue;
             CaretInfo bg, ed;
-            if (dostart)
-            {
+            if (dostart) {
                 v.SXB = sels.vx - hScrollBar.Value + v.NumLineLeft;
                 v.SXE = sele.vx - hScrollBar.Value + v.NumLineLeft;
                 v.SYB = (sels.vl - vScrollBar.Value) * H;
-                v.SYE = (sele.vl - vScrollBar.Value) * H;              
-            }
-            else if (getCurPos(out bg, out ed))
-            {
+                v.SYE = (sele.vl - vScrollBar.Value) * H;
+            } else if (getCurPos(out bg, out ed)) {
                 //v.SXB = bg.vx - rlScr_.nPos + left();
                 //v.SXE = ed.vx - rlScr_.nPos + left();
                 //v.SXB = bg.vx;
@@ -460,16 +419,14 @@ namespace AsControls
 
         }
 
-        public void on_text_update()
-        {
+        public void on_text_update() {
             ReSetScrollInfo();
             ScrollTo(cur);
             UpdateCaretPos();
             cur.CopyTo(ref sel);
         }
 
-        public void ReSetScrollInfo()
-        {
+        public void ReSetScrollInfo() {
             int cx = this.Width - (vRect.NumLineLeft + vScrollBar.Width);
             if (cx < 0) return;
             hpage = cx + 1;
@@ -490,25 +447,22 @@ namespace AsControls
             vScrollBar.Maximum = vlNum_ + vpage - 2;
         }
 
-        public void ScrollView(int dx, int dy, bool update)
-        {
-            	if( dx != 0 )
-                {
-		            // 範囲チェック
-		            if( hScrollBar.Value+dx < 0 )
-			            dx = -hScrollBar.Value;
-                    else if (hScrollBar.Maximum - hpage < hScrollBar.Value + dx)
-                        dx = hScrollBar.Maximum - hpage - hScrollBar.Value + 1;
+        public void ScrollView(int dx, int dy, bool update) {
+            if (dx != 0) {
+                // 範囲チェック
+                if (hScrollBar.Value + dx < 0)
+                    dx = -hScrollBar.Value;
+                else if (hScrollBar.Maximum - hpage < hScrollBar.Value + dx)
+                    dx = hScrollBar.Maximum - hpage - hScrollBar.Value + 1;
 
-		            //rlScr_.nPos += dx;
-		            //::SetScrollInfo( hwnd_, SB_HORZ, &rlScr_, TRUE );
-                    hScrollBar.Value += dx;
-		            dx = -dx;
-                    base.Invalidate();
-                }
+                //rlScr_.nPos += dx;
+                //::SetScrollInfo( hwnd_, SB_HORZ, &rlScr_, TRUE );
+                hScrollBar.Value += dx;
+                dx = -dx;
+                base.Invalidate();
+            }
 
-            if (dy != 0)
-            {
+            if (dy != 0) {
                 // 範囲チェック…は前処理で終わってる。
 
                 vScrollBar.Value += dy;
@@ -518,16 +472,12 @@ namespace AsControls
             }
         }
 
-        public void ScrollTo(CaretInfo vp)
-        {
+        public void ScrollTo(CaretInfo vp) {
             // 横フォーカス
             int dx = 0;
-            if (vp.vx < hScrollBar.Value)
-            {
+            if (vp.vx < hScrollBar.Value) {
                 dx = vp.vx - hScrollBar.Value;
-            }
-            else
-            {
+            } else {
                 //const int W = cvs_.getPainter().W();
                 //if (rlScr_.nPos + (signed)(rlScr_.nPage - W) <= vp.vx)
                 //    dx = vp.vx - (rlScr_.nPos + rlScr_.nPage) + W;
@@ -551,8 +501,7 @@ namespace AsControls
             if (dy != 0) UpDown(dy, true);
         }
 
-        public void UpDown(int dy, bool thumb)
-        {
+        public void UpDown(int dy, bool thumb) {
             // １．udScr_.nPos + dy が正常範囲に収まるように補正
             if (vScrollBar.Value + dy < 0)
                 dy = -vScrollBar.Value;
@@ -561,8 +510,7 @@ namespace AsControls
             if (dy == 0)
                 return;
 
-            if (true)
-            {
+            if (true) {
                 int rl = dy + udScr_vrl_;
                 int tl = udScr_tl_;
 
@@ -571,8 +519,7 @@ namespace AsControls
                     // ジャンプ先論理行の行頭へDash!
                     while (rl < 0)
                         rl += GetvlCnt(--tl);
-                }
-                else if (dy > 0) // 下へ進む場合
+                } else if (dy > 0) // 下へ進む場合
                 {
                     // ジャンプ先論理行の行頭へDash!
                     while (rl > 0)
@@ -587,16 +534,13 @@ namespace AsControls
             ScrollView(0, dy, true);
         }
 
-        public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp)
-        {
+        public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp) {
             CaretInfo dummyPos = null;
             this.ConvDPosToVPos(dp, ref vp, ref dummyPos);
         }
 
-        public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp, ref CaretInfo basePos)
-        {
-            if (object.Equals(basePos, null))
-            {
+        public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp, ref CaretInfo basePos) {
+            if (object.Equals(basePos, null)) {
                 basePos = new CaretInfo();
             }
 
@@ -612,8 +556,7 @@ namespace AsControls
                 do
                     vl -= wrapList[--tl].wrap.Count;
                 while (tl > dp.tl);
-            }
-            else if (tl < dp.tl) // 目的地が基準より下にある場合
+            } else if (tl < dp.tl) // 目的地が基準より下にある場合
             {
                 do
                     vl += wrapList[tl++].wrap.Count;
@@ -636,19 +579,15 @@ namespace AsControls
             vp.rx = vp.vx = vx;
         }
 
-        protected override void OnKeyPress(KeyPressEventArgs e)
-        {
-            if (IsInputChar(e.KeyChar) && this.ImeMode == ImeMode.Off)
-            {
+        protected override void OnKeyPress(KeyPressEventArgs e) {
+            if (IsInputChar(e.KeyChar) && this.ImeMode == ImeMode.Off) {
                 Input(e.KeyChar.ToString());
                 e.Handled = true;
             }
         }
 
-        protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
+        protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e) {
+            switch (e.KeyCode) {
                 case Keys.Enter:
                     //string ss = e.KeyValue.;
                     Input("\r\n");
@@ -693,6 +632,8 @@ namespace AsControls
                 //    return base.IsInputKey(keyData);
             }
 
+            KeyBind.getAction(e.Modifiers | e.KeyCode)(this);
+
             //if (e.Control && e.KeyCode == Keys.V)
             //{
             //    string vv = e.Modifiers.ToString() + "+" + e.KeyCode.ToString();
@@ -711,29 +652,27 @@ namespace AsControls
             //}
             //else if (e.Control && e.KeyCode == Keys.Z)
             //string k = e.Modifiers.ToString() + "+" + e.KeyCode.ToString();
-            if (e.Modifiers != Keys.None)
-            {
-                string k = e.Modifiers.ToString() + "+" + e.KeyCode.ToString();
-                if (keyMap.ContainsFunction(k))
-                {
-                    keyMap.getFunction(k)(this);
-                }
-            }
+
+            //if (e.Modifiers != Keys.None)
+            //{
+            //    string k = e.Modifiers.ToString() + "+" + e.KeyCode.ToString();
+            //    if (keyMap.ContainsFunction(k))
+            //    {
+            //        keyMap.getFunction(k)(this);
+            //    }
+            //}
             base.OnPreviewKeyDown(e);
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
+        protected override void OnKeyUp(KeyEventArgs e) {
             base.OnKeyUp(e);
         }
 
-        protected override bool ProcessDialogKey(Keys keyData)
-        {
+        protected override bool ProcessDialogKey(Keys keyData) {
             return false;
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
+        protected override void OnPaint(PaintEventArgs e) {
             //base.OnPaint(e);
 
             GetDrawPosInfo(ref vRect);
@@ -744,37 +683,30 @@ namespace AsControls
                 drawLNA(e.Graphics, vRect);
         }
 
-        protected override bool IsInputChar(char charCode)
-        {
+        protected override bool IsInputChar(char charCode) {
             //return (!char.IsControl(charCode)) || (charCode == '\t');
             return !char.IsControl(charCode);
         }
 
         private Boolean ldowm = false;
         private CaretInfo sels, sele;
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
+        protected override void OnMouseDown(MouseEventArgs e) {
             Focus();
 
-            if (e.Button == MouseButtons.Left)
-            {
-                if (cur != sel)
-                {
+            if (e.Button == MouseButtons.Left) {
+                if (cur != sel) {
                     CaretInfo c = new CaretInfo();
                     GetVPos(e.X, e.Y, ref c);
 
-                    if (Insel(c))
-                    {
+                    if (Insel(c)) {
                         ldowm = true;
                         dostart = true;
 
                         sels = new CaretInfo(cur);
                         sele = new CaretInfo(sel);
                         CorrectPos(ref sels, ref sele);
-                        
-                    }
-                    else
-                    {
+
+                    } else {
                         GetVPos(e.X, e.Y, ref cur);
 
                         int ad = cur.ad;
@@ -790,9 +722,7 @@ namespace AsControls
                         ldowm = true;
                         dostart = false;
                     }
-                }
-                else
-                {
+                } else {
                     GetVPos(e.X, e.Y, ref cur);
 
                     //int ad = cur.ad;
@@ -809,62 +739,46 @@ namespace AsControls
                     dostart = false;
                 }
             }
-            base.OnMouseDown(e);          
+            base.OnMouseDown(e);
         }
 
-        private void CorrectPos(ref CaretInfo s, ref CaretInfo e)
-        {
+        private void CorrectPos(ref CaretInfo s, ref CaretInfo e) {
             // 必ずs<=eになるように修正
-            if (s > e)
-            {
+            if (s > e) {
                 int tmp;
                 tmp = s.ad; s.ad = e.ad; e.ad = tmp;
                 tmp = s.tl; s.tl = e.tl; e.tl = tmp;
             }
         }
 
-        private Boolean Insel(CaretInfo caret)
-        {
-            if (cur < sel)
-            {
-                if (cur <= caret && caret <= sel)
-                {
+        private Boolean Insel(CaretInfo caret) {
+            if (cur < sel) {
+                if (cur <= caret && caret <= sel) {
                     return true;
                 }
-            }
-            else if (cur > sel)
-            {
-                if (sel <= caret && caret <= cur)
-                {
+            } else if (cur > sel) {
+                if (sel <= caret && caret <= cur) {
                     return true;
                 }
             }
             return false;
         }
 
-        private Boolean Insel(CaretInfo caret, CaretInfo selStart, CaretInfo selEnd)
-        {
-            if (selStart < selEnd)
-            {
-                if (selStart <= caret && caret <= selEnd)
-                {
+        private Boolean Insel(CaretInfo caret, CaretInfo selStart, CaretInfo selEnd) {
+            if (selStart < selEnd) {
+                if (selStart <= caret && caret <= selEnd) {
                     return true;
                 }
-            }
-            else if (selStart > selEnd)
-            {
-                if (selEnd <= caret && caret <= selStart)
-                {
+            } else if (selStart > selEnd) {
+                if (selEnd <= caret && caret <= selStart) {
                     return true;
                 }
             }
             return false;
         }
 
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            if (dostart)
-            {
+        protected override void OnMouseUp(MouseEventArgs e) {
+            if (dostart) {
                 GetVPos(e.X, e.Y, ref cur);
                 UpdateCaretPos();
                 cur.CopyTo(ref sel);
@@ -877,11 +791,9 @@ namespace AsControls
             base.OnMouseUp(e);
         }
         Boolean dostart = false;
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
+        protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
-            if (ldowm)
-            {
+            if (ldowm) {
                 //if (cur == sel)
                 //{
                 //    Point p = this.PointToClient(MousePosition);
@@ -889,13 +801,10 @@ namespace AsControls
                 //    CaretMove(true);
                 //    this.Invalidate();
                 //}
-                if (dostart)
-                {
+                if (dostart) {
                     //dostart = true;
                     DoDragDrop("test", DragDropEffects.Move);
-                }
-                else
-                {
+                } else {
                     Point p = this.PointToClient(MousePosition);
                     GetVPos(p.X, p.Y, ref cur);
                     CaretMove(true);
@@ -904,123 +813,103 @@ namespace AsControls
             }
         }
 
-        protected override void OnMouseEnter(EventArgs e)
-        {
+        protected override void OnMouseEnter(EventArgs e) {
             Cursor = Cursors.IBeam;
             base.OnMouseEnter(e);
         }
 
-        protected override void OnMouseLeave(EventArgs e)
-        {
+        protected override void OnMouseLeave(EventArgs e) {
             Cursor = Cursors.Default;
             base.OnMouseLeave(e);
         }
 
-        public void GetVPos(int x, int y, ref CaretInfo curPos)
-        {
+        public void GetVPos(int x, int y, ref CaretInfo curPos) {
             // x座標補正
             x = x - vRect.NumLineLeft + hScrollBar.Value;
 
             int tl = udScr_tl_;
-	        int vl =  vScrollBar.Value - udScr_vrl_;
+            int vl = vScrollBar.Value - udScr_vrl_;
             int rl = y / lineHeight + udScr_vrl_;
-	        if( rl >= 0 ) // View上端より下の場合、下方向を調べる
-                while (tl < doc.LineList.Count && GetvlCnt(tl) <= rl)
-		        {
+            if (rl >= 0) // View上端より下の場合、下方向を調べる
+                while (tl < doc.LineList.Count && GetvlCnt(tl) <= rl) {
                     vl += GetvlCnt(tl);
                     rl -= GetvlCnt(tl);
-			        ++tl;
-		        }
-	        else           // View上端より上の場合、上方向を調べる
-		        while( 0<=tl && rl<0 )
-		        {
+                    ++tl;
+                } else           // View上端より上の場合、上方向を調べる
+                while (0 <= tl && rl < 0) {
                     vl -= GetvlCnt(tl);
                     rl += GetvlCnt(tl);
-			        --tl;
-		        }
+                    --tl;
+                }
 
             if (tl == doc.LineList.Count) // EOFより下に行ってしまう場合の補正
 	        {
-		        --tl;
+                --tl;
                 vl -= GetvlCnt(tl);
                 rl = GetvlCnt(tl) - 1;
-	        }
-	        else if( tl == -1 ) // ファイル頭より上に行ってしまう場合の補正
+            } else if (tl == -1) // ファイル頭より上に行ってしまう場合の補正
 	        {
-		        tl = vl = rl = 0;
-	        }
+                tl = vl = rl = 0;
+            }
 
-	        curPos.tl = tl;
-	        curPos.vl = vl + rl;
-	        curPos.rl = rl;
- 
-            if( rl < GetvlCnt(tl) )
-	        {
+            curPos.tl = tl;
+            curPos.vl = vl + rl;
+            curPos.rl = rl;
+
+            if (rl < GetvlCnt(tl)) {
                 IBuffer buf = doc.LineList[tl].Text;
                 int adend = wrapList[tl].wrap[rl];
                 int ad = (rl == 0 ? 0 : wrapList[tl].wrap[rl - 1]);
                 int vx = (rl == 0 ? 0 : CalcStringWidth(buf, ad++, 1));
 
-		        while( ad<adend )
-		        {
+                while (ad < adend) {
                     int nvx = vx + CalcStringWidth(buf, ad, 1);
-			        if( x+2 < nvx )
-				        break;
-			        vx = nvx;
-			        ++ad;
-		        }
+                    if (x + 2 < nvx)
+                        break;
+                    vx = nvx;
+                    ++ad;
+                }
 
                 curPos.ad = ad;
                 curPos.rx = curPos.vx = vx;
-	        }
-	        else
-	        {
+            } else {
                 curPos.ad = curPos.rx = curPos.vx = 0;
-	        }
+            }
         }
 
-        protected override void OnDragDrop(DragEventArgs drgevent)
-        {
+        protected override void OnDragDrop(DragEventArgs drgevent) {
             isdropfile = false;
             ldowm = false;
             cur.CopyTo(ref sel);
 
-            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
-            {
+            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop)) {
 
                 string[] files = (string[])drgevent.Data.GetData(DataFormats.FileDrop, false);
-                
-            }
-            else if (drgevent.Data.GetDataPresent(typeof(string)))
-            {
+
+            } else if (drgevent.Data.GetDataPresent(typeof(string))) {
                 dostart = false;
-                if (!Insel(cur, sels, sele))
-                {
+                if (!Insel(cur, sels, sele)) {
                     string ss = (string)drgevent.Data.GetData(DataFormats.UnicodeText);
                     ss = GetText(sels, sele).ToString();
 
-                    if (cur < sels)
-                    {
+                    if (cur < sels) {
                         Input(ss);
                         CaretInfo s = new CaretInfo(cur);
                         Del(sels, sele);
                         s.CopyTo(ref cur);
                         cur.CopyTo(ref sel);
-                    }
-                    else if(cur > sele)
-                    {
+                    } else if (cur > sele) {
                         Input(ss);
                         CaretInfo s = new CaretInfo(cur);
                         int nn = vlNum_;
-                        int t = sels.tl-sele.tl;
+                        int t = sels.tl - sele.tl;
                         int dad = sele.ad - sels.ad;
                         Del(sels, sele);
 
-                        if (s.tl == cur.tl)
-                        {
+                        if (s.tl == cur.tl) {
                             s.ad -= dad;
                         }
-                        s.vl += vlNum_-nn;
+                        s.vl += vlNum_ - nn;
                         s.tl += t;
 
                         ConvDPosToVPos(s, ref cur, ref s);
@@ -1028,7 +917,7 @@ namespace AsControls
                         //s.CopyTo(ref cur);
                         cur.CopyTo(ref sel);
 
-                        
+
                     }
                     UpdateCaretPos();
                 }
@@ -1037,8 +926,7 @@ namespace AsControls
 
         }
 
-        protected override void OnDragOver(DragEventArgs drgevent)
-        {
+        protected override void OnDragOver(DragEventArgs drgevent) {
             if (!Focused)
                 Focus();
 
@@ -1051,34 +939,26 @@ namespace AsControls
         }
 
         private bool isdropfile = false;
-        protected override void OnDragEnter(DragEventArgs drgevent)
-        {
-            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
-            {
+        protected override void OnDragEnter(DragEventArgs drgevent) {
+            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop)) {
                 drgevent.Effect = DragDropEffects.Copy;
                 isdropfile = true;
-            }
-            else if (drgevent.Data.GetDataPresent(DataFormats.UnicodeText)
-                || drgevent.Data.GetDataPresent(DataFormats.Text))
-            {
+            } else if (drgevent.Data.GetDataPresent(DataFormats.UnicodeText)
+                || drgevent.Data.GetDataPresent(DataFormats.Text)) {
                 drgevent.Effect = DragDropEffects.Move;
-            }
-            else
-            {
+            } else {
                 drgevent.Effect = DragDropEffects.None;
             }
             base.OnDragEnter(drgevent);
         }
 
-        public bool SearchText(string sh)
-        {
+        public bool SearchText(string sh) {
             Search search = new Search(this.doc);
             search.searchstr = sh;
             CaretInfo bgn = new CaretInfo(cur);
             CaretInfo end = new CaretInfo(cur);
 
-            if (search.FindNext(cur, ref bgn, ref end))
-            {
+            if (search.FindNext(cur, ref bgn, ref end)) {
                 ConvDPosToVPos(bgn, ref cur);
                 ConvDPosToVPos(end, ref sel);
                 CaretMove(true);
@@ -1089,16 +969,12 @@ namespace AsControls
             return false;
         }
 
-        public void Home()
-        {
+        public void Home() {
             CaretInfo np = new CaretInfo();
-		    if( cur.rl == 0 )
-            {
-			    np.tl = cur.tl;
-                np.vl = cur.vl-cur.rl;
-            }
-		    else
-            {
+            if (cur.rl == 0) {
+                np.tl = cur.tl;
+                np.vl = cur.vl - cur.rl;
+            } else {
                 CaretInfo np2 = new CaretInfo();
                 np2.tl = cur.tl;
                 np2.ad = wrapList[cur.tl].wrap[cur.rl - 1];
@@ -1109,33 +985,39 @@ namespace AsControls
             CaretMove(true);
         }
 
-        public void End()
-        {
+        public void End() {
 
         }
 
-        public void Clear()
-        {
+        public void Clear() {
 
         }
 
-        public void Copy()
-        {
+        public void Copy() {
 
         }
 
-        public void Cut()
-        {
+        public void Cut() {
             string buff;
             doc.Delete(cur, sel, out buff);
             Clipboard.SetText(buff);
         }
 
-        public void Paste()
-        {
+        //public void Paste()
+        //{
+        //    string t = Clipboard.GetText();
+        //    Input(t);
+        //    base.Invalidate();
+        //}
+
+        #region ITextEditor メンバ
+
+        public void Paste() {
             string t = Clipboard.GetText();
             Input(t);
             base.Invalidate();
         }
+
+        #endregion
     }
 }

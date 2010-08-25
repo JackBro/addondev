@@ -6,56 +6,48 @@ using System.Windows.Forms;
 
 namespace AsControls
 {
-    public enum EditorAction {
-        Copy,
-        Paste,
-        Delete,
-        BackSpace,
-        Undo,
-        Redo,
-        Up,
-        Down,
-        Right,
-        Left,
-        Home,
-        PageUp,
-        PageDown
-    }
-
     public class KeyMap
     {
-        private Dictionary<Keys, EditorAction> keyToFuncNameDic;
-        private Dictionary<EditorAction, Action<object>> funcNameToFunctinDic;
+        private Action<ITextEditor> NullAction;
+        private Dictionary<Keys, Action<ITextEditor>> EditorActionMap;
+        //private Dictionary<EditorAction, Action<object>> funcNameToFunctinDic;
 
         public KeyMap()
         {
-            keyToFuncNameDic = new Dictionary<Keys, EditorAction>();
-            funcNameToFunctinDic = new Dictionary<EditorAction, Action<object>>();
+            EditorActionMap = new Dictionary<Keys, Action<ITextEditor>>();
+            NullAction = (editor) =>{};
+            //funcNameToFunctinDic = new Dictionary<EditorAction, Action<object>>();
         }
 
-        public void SetFunc(EditorAction action, Action<object> func)
+        //public void SetFunc(EditorAction action, Action<object> func)
+        //{
+        //    funcNameToFunctinDic.Add(action, func);
+        //}
+
+
+        public void setAction(Keys key, Action<ITextEditor> action)
         {
-            funcNameToFunctinDic.Add(action, func);
+            EditorActionMap.Add(key, action);
         }
 
-        public void SetKey(Keys key, EditorAction action)
-        {
-            keyToFuncNameDic.Add(key, action);
-        }
+        //public void SetKey(Keys key, EditorAction action)
+        //{
+        //    keyToFuncNameDic.Add(key, action);
+        //}
 
-        public Boolean ContainsFunction(Keys key)
-        {
-            return keyToFuncNameDic.ContainsKey(key);
-        }
+        //public Boolean ContainsFunction(Keys key)
+        //{
+        //    return keyToFuncNameDic.ContainsKey(key);
+        //}
 
-        public Action<object> getFunction(Keys key)
+        public Action<ITextEditor> getAction(Keys key)
         {
-            if (keyToFuncNameDic.ContainsKey(key))
+            if (EditorActionMap.ContainsKey(key))
             {
-                EditorAction editaction = keyToFuncNameDic[key];
-                return funcNameToFunctinDic[editaction];
+                //EditorAction editaction = keyToFuncNameDic[key];
+                return EditorActionMap[key];
             }
-            return null;
+            return NullAction;
         }
     }
 }

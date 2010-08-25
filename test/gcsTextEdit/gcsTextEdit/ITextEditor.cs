@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace AsControls {
-    interface ITextEditor {
-
+    public interface ITextEditor {
+        void Paste();
     }
 }

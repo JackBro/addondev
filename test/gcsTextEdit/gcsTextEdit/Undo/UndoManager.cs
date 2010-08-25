@@ -158,6 +158,11 @@ namespace AsControls
         Stack<IUndoCommand> undostack = new Stack<IUndoCommand>();
         Stack<IUndoCommand> redostack = new Stack<IUndoCommand>();
 
+        public void Clear() {
+            undostack.Clear();
+            redostack.Clear();
+        }
+
         public Boolean CanUndo
         {
             get { return undostack.Count > 0 ? true : false; }
@@ -170,8 +175,9 @@ namespace AsControls
 
         public void Undo()
         {
-            if (undostack.Count == 0)
-                throw new InvalidOperationException();
+            if (!CanUndo) return;
+            //if (undostack.Count == 0)
+            //    throw new InvalidOperationException();
 
             IUndoCommand uedit = undostack.Pop();
             redostack.Push(uedit);
@@ -180,8 +186,9 @@ namespace AsControls
 
         public void Redo()
         {
-            if (redostack.Count == 0)
-                throw new InvalidOperationException();
+            if (!CanRedo) return;
+            //if (redostack.Count == 0)
+            //    throw new InvalidOperationException();
 
             IUndoCommand uedit = redostack.Pop();
             undostack.Push(uedit);

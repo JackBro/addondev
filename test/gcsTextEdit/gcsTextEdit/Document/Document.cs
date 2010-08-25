@@ -7,54 +7,46 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
-namespace AsControls
-{
+namespace AsControls {
 
     public delegate Action<object> ChangeScrollEventHandler(object sender);
-    //public delegate Action<object> TextUpdateEventHandler(object sender);
-    //UpDate(ref cur, ref cur, ref e);
-    //public delegate void TextUpdateEventHandler(CaretInfo s, CaretInfo e, CaretInfo e2);
 
-    public class Document : IDocument
-    {
+    public class Document : IDocument {
         //public event TextUpdateEventHandler TextUpdateEvent = null;
-        
+
         //private AsTextEdit EditView;
         public List<Line> LineList;
 
         Highlighter highlighter;
 
-        public Highlighter Highlighter
-        {
+        public Highlighter Highlighter {
             get { return highlighter; }
-            set 
-            {
+            set {
                 highlighter = value;
-
             }
         }
 
-        public int tlNum
-        {
-            get 
-            {
+        public int tlNum {
+            get {
                 return LineList.Count;
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             StringBuilder str = new StringBuilder();
-            for (int i = 0; i < LineList.Count; i++)
-            {
+            for (int i = 0; i < LineList.Count; i++) {
                 str.AppendLine(LineList[i].Text.ToString());
             }
             return str.ToString();
         }
 
-        //public Document(AsTextEdit Edit)
-        public Document()
-        {
+        public void Clear() {
+            LineList.Clear();
+            LineList.Add(new Line(string.Empty));
+            undoManager.Clear();
+        }
+        
+        public Document() {
             highlighter = new Highlighter();
             //highlighter.Add(@"//.*", TokenType.TXT, Color.Green);
             highlighter.Add(@"\[\[.*\]\]", TokenType.CLICKABLE, Color.Red);
@@ -65,21 +57,17 @@ namespace AsControls
             LineList.Add(new Line(string.Empty));
         }
 
-        public Boolean LastLine(int linenum)
-        {
-            return linenum == LineList.Count-1 ? true : false;
+        public Boolean LastLine(int linenum) {
+            return linenum == LineList.Count - 1 ? true : false;
         }
 
-        private void MultiParse(int startrl, int endrl)
-        {
-            for (int i = startrl; i <= endrl; i++ )
-            {
+        private void MultiParse(int startrl, int endrl) {
+            for (int i = startrl; i <= endrl; i++) {
                 highlighter.Parse(LineList[i].Text, LineList[i].AttributeList);
             }
         }
 
-        private void Insert(CaretInfo s, ref CaretInfo e, string text)
-        {
+        private void Insert(CaretInfo s, ref CaretInfo e, string text) {
             e.ad = s.ad;
             e.tl = s.tl;
 
@@ -90,18 +78,15 @@ namespace AsControls
             StringInfo sinfo = new StringInfo(test[0]);
             e.ad += sinfo.LengthInTextElements;
 
-            if (test.Length > 1)
-            {
-                for (int i = 1; i < test.Length; i++)
-                {
+            if (test.Length > 1) {
+                for (int i = 1; i < test.Length; i++) {
                     e.tl++;
                     LineList.Insert(e.tl, new Line(test[i]));
                 }
                 StringInfo sinfo2 = new StringInfo(test[test.Length - 1]);
                 textlen = sinfo2.LengthInTextElements;
-                
-                if (LineList[s.tl].Length - e.ad > 0)
-                {
+
+                if (LineList[s.tl].Length - e.ad > 0) {
                     int slen = LineList[s.tl].Length;
                     LineList[e.tl].Text.Append(LineList[s.tl].Text.Substring(e.ad, slen - e.ad).ToString());
                     LineList[s.tl].Text.Remove(e.ad);
@@ -114,18 +99,14 @@ namespace AsControls
             //upd();
         }
 
-        private void Delete(ref CaretInfo s, ref CaretInfo e, out string buff)
-        {
+        private void Delete(ref CaretInfo s, ref CaretInfo e, out string buff) {
             CorrectPos(ref s, ref e);
             buff = string.Empty;
-            if (s.tl == e.tl)
-            {
+            if (s.tl == e.tl) {
                 Line linfo = LineList[s.tl];
                 buff = linfo.Text.Substring(s.ad, e.ad - s.ad).ToString();
                 linfo.Text.Remove(s.ad, e.ad - s.ad);
-            }
-            else
-            {
+            } else {
                 //// 先頭行の後ろを削除
                 //text_[s.tl].RemoveToTail(s.ad);
                 //// 終了行の残り部分をくっつける
@@ -134,15 +115,13 @@ namespace AsControls
                 //text_.RemoveAt(s.tl + 1, e.tl - s.tl);
 
                 string remtext = LineList[s.tl].Text.ToString();
-                if (s.ad < LineList[s.tl].Text.Length)
-                {
+                if (s.ad < LineList[s.tl].Text.Length) {
                     buff = LineList[s.tl].Text.Substring(s.ad).ToString();
                     remtext = LineList[s.tl].Text.Substring(0, s.ad).ToString();
-                    
+
                 }
-                for (int i = s.tl + 1; i < e.tl - s.tl; i++)
-                {
-                    buff += "\r\n"+ LineList[i].Text.ToString();
+                for (int i = s.tl + 1; i < e.tl - s.tl; i++) {
+                    buff += "\r\n" + LineList[i].Text.ToString();
                 }
                 string mm = (LineList[e.tl].Text.IsEmpty ? string.Empty : LineList[e.tl].Text.Substring(0, e.ad).ToString());
                 buff += "\r\n" + mm;
@@ -152,14 +131,13 @@ namespace AsControls
                 //string mm2=LineList[e.tl].Text.Substring(e.ad, len-e.ad).ToString();
                 string mm2 = (LineList[e.tl].Text.IsEmpty ? string.Empty : LineList[e.tl].Text.Substring(0, len - e.ad).ToString());
                 LineList[s.tl].SetText(remtext + mm2);
-                LineList.RemoveRange(s.tl+1, e.tl-s.tl);
+                LineList.RemoveRange(s.tl + 1, e.tl - s.tl);
             }
 
             highlighter.Parse(LineList[s.tl].Text, LineList[s.tl].AttributeList);
         }
 
-        private void Replace(ref CaretInfo s, ref CaretInfo e, ref CaretInfo e2, out string oldValue, string newValue)
-        {
+        private void Replace(ref CaretInfo s, ref CaretInfo e, ref CaretInfo e2, out string oldValue, string newValue) {
 
             // string buff;
             // CaretInfo dp = new CaretInfo(sel);
@@ -189,15 +167,13 @@ namespace AsControls
             //MultiParse(s.tl, e2.tl);
         }
 
-        private void CorrectPos(ref CaretInfo s, ref CaretInfo e)
-        {
+        private void CorrectPos(ref CaretInfo s, ref CaretInfo e) {
             // 必ずs<=eになるように修正
-	        if( s > e )
-	        {
-		        int tmp;
+            if (s > e) {
+                int tmp;
                 tmp = s.ad; s.ad = e.ad; e.ad = tmp;
-                tmp = s.tl;  s.tl = e.tl; e.tl = tmp;
-	        }
+                tmp = s.tl; s.tl = e.tl; e.tl = tmp;
+            }
         }
 
         //public 
@@ -205,53 +181,43 @@ namespace AsControls
         #region IDocument メンバ
         public event TextUpdateEventHandler TextUpdateEvent;
         private UndoManager undoManager = new UndoManager();
-        public UndoManager UndoManager
-        {
+        public UndoManager UndoManager {
             get { return undoManager; }
         }
 
-        public void Insert(CaretInfo s, CaretInfo e, string text)
-        {
+        public void Insert(CaretInfo s, CaretInfo e, string text) {
             Insert(s, ref e, text);
 
-            if (UndoManager.AcceptChanges)
-            {
+            if (UndoManager.AcceptChanges) {
                 UndoManager.Push(new UndoInsert(this, s, e, text));
             }
-            if (TextUpdateEvent != null)
-            {
+            if (TextUpdateEvent != null) {
                 TextUpdateEvent(new CaretInfo(s), new CaretInfo(s), e);
             }
         }
 
-        public void Delete(CaretInfo s, CaretInfo e, out string deltext)
-        {
+        public void Delete(CaretInfo s, CaretInfo e, out string deltext) {
             string buff;
             Delete(ref s, ref e, out buff);
-            deltext =buff;
- 
-            if (UndoManager.AcceptChanges)
-            {
+            deltext = buff;
+
+            if (UndoManager.AcceptChanges) {
                 UndoManager.Push(new UndoDelete(this, s, s, buff));
             }
-            if (TextUpdateEvent != null)
-            {
+            if (TextUpdateEvent != null) {
                 TextUpdateEvent(new CaretInfo(s), e, new CaretInfo(s));
             }
         }
 
-        public void Replace(CaretInfo s, CaretInfo e, string newValue)
-        {
+        public void Replace(CaretInfo s, CaretInfo e, string newValue) {
             string oldvalue;
             CaretInfo e2 = new CaretInfo();
             Replace(ref s, ref e, ref e2, out oldvalue, newValue);
 
-            if (UndoManager.AcceptChanges)
-            {
+            if (UndoManager.AcceptChanges) {
                 UndoManager.Push(new UndoReplace(this, s, e, e2, oldvalue, newValue));
             }
-            if (TextUpdateEvent != null)
-            {
+            if (TextUpdateEvent != null) {
                 TextUpdateEvent(new CaretInfo(s), e, new CaretInfo(e2));
             }
         }

@@ -8,9 +8,42 @@ namespace AsControls
 {
     partial class gcsTextEdit
     {
-        public CaretInfo cur = new CaretInfo();
-        public CaretInfo sel = new CaretInfo();
-        public Point vPos = new Point();
+        public CaretInfo cur;// = new CaretInfo();
+        public CaretInfo sel;// = new CaretInfo();
+        public Point vPos;// = new Point();
+
+        public void InitCaret() {
+            cur = new CaretInfo();
+            sel = new CaretInfo();
+            vPos = new Point();
+        }
+
+        public int offset {
+            get {
+                return cur.ad;
+            }
+        }
+
+        public void Insert(int start, int end, string text) {
+            int diff = start - offset;
+            int enddiff = end - offset;
+            CaretInfo startcaret = new CaretInfo(cur);
+            //cur.CopyTo(ref startcaret);
+            CaretInfo endcaret = new CaretInfo(cur);
+            //cur.CopyTo(ref endcaret); 
+            if (diff > 0) {   
+                ConvDPosToVPos(CaretRight(diff), ref startcaret);
+            } else if(diff < 0){
+                ConvDPosToVPos(CaretLeft(Math.Abs(diff)), ref startcaret);
+            }
+            if (enddiff > 0) {
+                ConvDPosToVPos(CaretRight(enddiff), ref endcaret);
+            } else if (enddiff < 0) {
+                ConvDPosToVPos(CaretLeft(Math.Abs(enddiff)), ref endcaret);
+            }
+
+            Input(startcaret, endcaret, text);
+        }
 
         public void UpdateCaretPos()
         {
@@ -38,9 +71,17 @@ namespace AsControls
             UpdateCaretPos();
         }
 
-        public CaretInfo CaretLeft(int offset)
+        public CaretInfo CaretLeft(int len) {
+            CaretInfo caret = new CaretInfo(cur);
+            for (int i = 0; i < len; i++) {
+                caret = CaretLeft(caret);
+            }
+            return caret;
+        }
+
+        public CaretInfo CaretLeft(CaretInfo caret)
         {
-            CaretInfo nPos = new CaretInfo(cur);
+            CaretInfo nPos = new CaretInfo(caret);
 
             if (nPos.ad == 0)//&& lineManager.LineInfoList.Count - 1 > rPos.Y)
             {
@@ -59,13 +100,22 @@ namespace AsControls
             return nPos;
         }
 
-        public CaretInfo CaretRight(int offset)
+        public CaretInfo CaretRight(int len) {
+            CaretInfo curet = new CaretInfo(cur);
+            for (int i = 0; i < len; i++) {
+                curet = CaretRight(curet);
+            }
+            return curet;
+        }
+
+        public CaretInfo CaretRight(CaretInfo caret)
         {
-            CaretInfo nPos = new CaretInfo(cur);
+            CaretInfo nPos = new CaretInfo(caret);
             int len = doc.LineList[nPos.tl].Length;
             if (nPos.ad == len)//&& lineManager.LineInfoList.Count - 1 > rPos.Y)
             {
                 if (nPos.tl < doc.LineList.Count - 1)
+                //if (nPos.tl < doc.LineList.Count)
                 {
                     nPos.tl++;
                     nPos.ad = 0;
