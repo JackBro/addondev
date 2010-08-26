@@ -34,11 +34,11 @@ namespace AsControls {
 
         public int tln {
             get {
-                int len = 0;
-                for (int i = 0; i < LineList.Count; i++) {
-                    len += LineList[i].Text.Length;
-                }
-                return len;
+                //int len = 0;
+                //for (int i = 0; i < LineList.Count; i++) {
+                //    len += LineList[i].Text.Length;
+                //}
+                return LineList.Count;
             }
         }
 

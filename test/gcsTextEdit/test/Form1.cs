@@ -12,7 +12,7 @@ namespace test
     public partial class Form1 : Form
     {
         private AsControls.gcsTextEdit csedit = new AsControls.gcsTextEdit();
-        private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
+        //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
         public Form1()
         {
             InitializeComponent();
@@ -29,6 +29,18 @@ namespace test
             {
                 editor.Paste();
             });
+            wrapOToolStripMenuItem.Click += (sender, e) => {
+                wrapOToolStripMenuItem.Checked = !wrapOToolStripMenuItem.Checked;
+                wrapOffToolStripMenuItem.Checked = !wrapOToolStripMenuItem.Checked;
+
+
+            };
+
+            wrapOffToolStripMenuItem.Checked = true;
+            wrapOffToolStripMenuItem.Click += (sender, e) => {
+                wrapOffToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
+                wrapOToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
+            };
 
             panel1.Controls.Add(csedit);
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";

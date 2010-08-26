@@ -27,6 +27,16 @@ namespace AsControls
             }
         }
 
+        public void ResetPos() {
+            // 設定変更などに対応
+            ConvDPosToVPos(cur, ref cur);
+            ConvDPosToVPos(sel, ref sel);
+            UpdateCaretPos();
+            //if (caret_->isAlive())
+            //    view_.ScrollTo(cur_);
+            ScrollTo(cur);
+        }
+
         public void UpdateCaretPos() {
             int x = 0;
             int y = 0;
@@ -199,6 +209,8 @@ namespace AsControls
             ConvDPosToVPos(e2, ref cur, ref search_base);
             cur.CopyTo(ref sel);
         }
+
+        Redraw
 
         public void Insert(int start, int end, string text) {
             int _offset = offset;

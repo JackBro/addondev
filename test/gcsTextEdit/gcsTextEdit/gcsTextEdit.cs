@@ -284,9 +284,9 @@ namespace AsControls {
 
             ReSetScrollInfo();
 
-            vScrollBar.Value = tl2vl(udScr_tl_);
-            //udScr_tl_ = tl;
-            udScr_vrl_ = 0;
+            ForceScrollTo(udScr_tl_);
+
+            ResetPos();
 
             base.OnSizeChanged(e);
             base.Invalidate();
@@ -300,6 +300,12 @@ namespace AsControls {
             for (int i = 0; i < tl; ++i)
                 vl += GetvlCnt(i);
             return vl;
+        }
+
+        void ForceScrollTo(int tl) {
+            vScrollBar.Value = tl2vl(udScr_tl_);
+            udScr_tl_ = tl;
+            udScr_vrl_ = 0;
         }
 
         void ScrollBar_Scroll(object sender, ScrollEventArgs e) {
