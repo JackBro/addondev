@@ -32,6 +32,16 @@ namespace AsControls {
             }
         }
 
+        public int tln {
+            get {
+                int len = 0;
+                for (int i = 0; i < LineList.Count; i++) {
+                    len += LineList[i].Text.Length;
+                }
+                return len;
+            }
+        }
+
         public override string ToString() {
             StringBuilder str = new StringBuilder();
             for (int i = 0; i < LineList.Count; i++) {
@@ -175,8 +185,6 @@ namespace AsControls {
                 tmp = s.tl; s.tl = e.tl; e.tl = tmp;
             }
         }
-
-        //public 
 
         #region IDocument メンバ
         public event TextUpdateEventHandler TextUpdateEvent;

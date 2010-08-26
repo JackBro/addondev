@@ -143,12 +143,13 @@ namespace AsControls
 
         private void drawText(Graphics g, string text, Font font, Color color, int X, int Y)
         {
+            
             TextRenderer.DrawText(g,
                text,
                font,
                new Point(X, Y),
                color,
-               TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
+               TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
         }
 
         private void drawUnderLine(Graphics g, IBuffer text, Font font, Color color, int X, int Y)
@@ -285,7 +286,6 @@ namespace AsControls
                         switch (attributeInfoList[sindex].Token)
                         {
                             case TokenType.TXT:
-                                //v.XBASE = 16;
                                 drawText(g, fs.ToString(), Font, c, lx + v.XBASE, ytop);
                                 break;
                             case TokenType.CLICKABLE:

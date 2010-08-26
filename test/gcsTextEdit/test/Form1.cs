@@ -43,10 +43,11 @@ namespace test
 //</body>
 //</html>
 //";
-            csedit.Text = @"12345
-title>HOGE</title>";
+//            csedit.Text = @"12345
+//title>HOGE</title>";
 
-            csedit.Text = @"1234567890";
+            csedit.Text = @"1234567890
+mmmmmmmmmmmmmmmmmmmmmmmmmm";
 
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
@@ -117,7 +118,7 @@ title>HOGE</title>";
         {
             int offset = csedit.offset;
             int i = 0;
-            csedit.Insert(2, 3, "repl");
+            csedit.Insert(12, 15, "repl");
         }
 
         private void searchToolStripMenuItem1_Click(object sender, EventArgs e)

@@ -6,8 +6,7 @@ using System.Drawing;
 
 namespace AsControls
 {
-    partial class gcsTextEdit
-    {
+    partial class gcsTextEdit {
         public CaretInfo cur;// = new CaretInfo();
         public CaretInfo sel;// = new CaretInfo();
         public Point vPos;// = new Point();
@@ -20,33 +19,15 @@ namespace AsControls
 
         public int offset {
             get {
-                return cur.ad;
+                int pos = 0;
+                for (int i = 0; i < cur.tl; i++) {
+                    pos += doc.LineList[i].Length+1;
+                }
+                return pos + cur.ad;
             }
         }
 
-        public void Insert(int start, int end, string text) {
-            int diff = start - offset;
-            int enddiff = end - offset;
-            CaretInfo startcaret = new CaretInfo(cur);
-            //cur.CopyTo(ref startcaret);
-            CaretInfo endcaret = new CaretInfo(cur);
-            //cur.CopyTo(ref endcaret); 
-            if (diff > 0) {   
-                ConvDPosToVPos(CaretRight(diff), ref startcaret);
-            } else if(diff < 0){
-                ConvDPosToVPos(CaretLeft(Math.Abs(diff)), ref startcaret);
-            }
-            if (enddiff > 0) {
-                ConvDPosToVPos(CaretRight(enddiff), ref endcaret);
-            } else if (enddiff < 0) {
-                ConvDPosToVPos(CaretLeft(Math.Abs(enddiff)), ref endcaret);
-            }
-
-            Input(startcaret, endcaret, text);
-        }
-
-        public void UpdateCaretPos()
-        {
+        public void UpdateCaretPos() {
             int x = 0;
             int y = 0;
             GetOrigin(ref x, ref y);
@@ -57,80 +38,94 @@ namespace AsControls
             this.vPos.Y = y;
         }
 
-        public void CaretMove(Boolean select)
-        {
-            if (select)
-            {
+        public void CaretMove(Boolean select) {
+            if (select) {
                 int te = sel.tl;
             }
-            else
-            {
+            else {
                 cur.CopyTo(ref sel);
             }
             ScrollTo(cur);
             UpdateCaretPos();
         }
 
-        public CaretInfo CaretLeft(int len) {
+        public CaretInfo CaretLeft(int value) {
             CaretInfo caret = new CaretInfo(cur);
-            for (int i = 0; i < len; i++) {
-                caret = CaretLeft(caret);
+            //for (int i = 0; i < value; i++) {
+            //    caret = CaretLeft(caret);
+            //}
+            //return caret;
+            for (int i = 0; i < value; i++) {
+              if (caret.ad == 0){
+                    if (caret.tl > 0) {
+                        caret.tl--;
+                        int len = doc.LineList[caret.tl].Length;
+                        caret.ad = len;
+                    }
+                }
+                else {
+                    caret.ad--;
+                }
             }
             return caret;
         }
 
-        public CaretInfo CaretLeft(CaretInfo caret)
-        {
-            CaretInfo nPos = new CaretInfo(caret);
+        //public CaretInfo CaretLeft(CaretInfo caret) {
+        //    CaretInfo nPos = new CaretInfo(caret);
+        //    if (nPos.ad == 0)//&& lineManager.LineInfoList.Count - 1 > rPos.Y)
+        //    {
+        //        if (nPos.tl > 0) {
+        //            nPos.tl--;
+        //            int len = doc.LineList[nPos.tl].Length;
+        //            nPos.ad = len;
+        //        }
+        //    }
+        //    else {
+        //        nPos.ad--;
+        //    }
+        //    return nPos;
+        //}
 
-            if (nPos.ad == 0)//&& lineManager.LineInfoList.Count - 1 > rPos.Y)
-            {
-                if (nPos.tl > 0)
-                {
-                    nPos.tl--;
-                    int len = doc.LineList[nPos.tl].Length;
-                    nPos.ad = len;
+        public CaretInfo CaretRight(int value) {
+            CaretInfo caret = new CaretInfo(cur);
+            //for (int i = 0; i < value; i++) {
+            //    caret = CaretRight(caret);
+            //}
+            //return caret;
+            for (int i = 0; i < value; i++) {
+                int len = doc.LineList[caret.tl].Length;
+                if (caret.ad == len){
+                    if (caret.tl < doc.LineList.Count - 1) {
+                        caret.tl++;
+                        caret.ad = 0;
+                    }
+                }
+                else {
+                    caret.ad++;
                 }
             }
-            else
-            {
-                nPos.ad--;
-            }
-
-            return nPos;
+            return caret;
         }
 
-        public CaretInfo CaretRight(int len) {
-            CaretInfo curet = new CaretInfo(cur);
-            for (int i = 0; i < len; i++) {
-                curet = CaretRight(curet);
-            }
-            return curet;
-        }
+        //public CaretInfo CaretRight(CaretInfo caret) {
+        //    CaretInfo nPos = new CaretInfo(caret);
+        //    int len = doc.LineList[nPos.tl].Length;
+        //    if (nPos.ad == len)//&& lineManager.LineInfoList.Count - 1 > rPos.Y)
+        //    {
+        //        if (nPos.tl < doc.LineList.Count - 1)
+        //        //if (nPos.tl < doc.LineList.Count)
+        //        {
+        //            nPos.tl++;
+        //            nPos.ad = 0;
+        //        }
+        //    }
+        //    else {
+        //        nPos.ad++;
+        //    }
+        //    return nPos;
+        //}
 
-        public CaretInfo CaretRight(CaretInfo caret)
-        {
-            CaretInfo nPos = new CaretInfo(caret);
-            int len = doc.LineList[nPos.tl].Length;
-            if (nPos.ad == len)//&& lineManager.LineInfoList.Count - 1 > rPos.Y)
-            {
-                if (nPos.tl < doc.LineList.Count - 1)
-                //if (nPos.tl < doc.LineList.Count)
-                {
-                    nPos.tl++;
-                    nPos.ad = 0;
-                }
-            }
-            else
-            {
-                nPos.ad++;
-            }
-
-            return nPos;
-        }
-
-        public void Ud(int dy, Boolean select)
-        {
+        public void Ud(int dy, Boolean select) {
             // はみ出す場合は、先頭行/終端行で止まるように制限
             CaretInfo np = new CaretInfo(cur);
             int viewvln = vlNum_;
@@ -142,15 +137,13 @@ namespace AsControls
             np.vl += dy;
             np.rl += dy;
 
-            if (dy < 0)
-            {
+            if (dy < 0) {
                 // ジャンプ先論理行の行頭へDash!
                 while (np.rl < 0)
                     np.rl += GetvlCnt(--np.tl);
 
             }
-            else if (dy > 0)
-            {
+            else if (dy > 0) {
                 // ジャンプ先論理行の行頭へDash!
                 while (np.rl > 0)
                     np.rl -= GetvlCnt(np.tl++);
@@ -163,8 +156,7 @@ namespace AsControls
 
             int wrapindex = wrapList[np.tl].wrap[np.rl];
 
-            while (np.vx < np.rx && np.ad < wrapindex)
-            {
+            while (np.vx < np.rx && np.ad < wrapindex) {
                 int newvx = np.vx + CalcStringWidth(doc.LineList[np.tl].Text, np.ad, 1);
                 if (newvx > np.rx)
                     break;
@@ -177,8 +169,7 @@ namespace AsControls
             CaretMove(select);
         }
 
-        public Boolean getCurPos(out CaretInfo start, out CaretInfo end)
-        {
+        public Boolean getCurPos(out CaretInfo start, out CaretInfo end) {
             start = end = cur;
             if (cur == sel)
                 return false;
@@ -190,22 +181,18 @@ namespace AsControls
             return true;
         }
 
-        public void UpDate(CaretInfo s, CaretInfo e, CaretInfo e2)
-        {
+        public void UpDate(CaretInfo s, CaretInfo e, CaretInfo e2) {
             TextUpDate(s, e, e2);
 
             CaretInfo search_base = null;
 
-            if (s == cur && e == sel)
-            {
+            if (s == cur && e == sel) {
                 search_base = cur;
             }
-            else if (s == sel && e == cur)
-            {
+            else if (s == sel && e == cur) {
                 search_base = sel;
             }
-            else
-            {
+            else {
 
             }
 
@@ -213,42 +200,59 @@ namespace AsControls
             cur.CopyTo(ref sel);
         }
 
-        public void Input(CaretInfo s, CaretInfo e, string text)
-        {
-            if (s == e)
-            {
+        public void Insert(int start, int end, string text) {
+            int _offset = offset;
+            int diff = start - _offset;
+            int enddiff = end - _offset;
+
+            CaretInfo startcaret = new CaretInfo(cur);
+            CaretInfo endcaret = new CaretInfo(cur);
+
+            if (diff > 0) {
+                ConvDPosToVPos(CaretRight(diff), ref startcaret);
+            }
+            else if (diff < 0) {
+                ConvDPosToVPos(CaretLeft(Math.Abs(diff)), ref startcaret);
+            }
+            if (enddiff > 0) {
+                ConvDPosToVPos(CaretRight(enddiff), ref endcaret);
+            }
+            else if (enddiff < 0) {
+                ConvDPosToVPos(CaretLeft(Math.Abs(enddiff)), ref endcaret);
+            }
+
+            Input(startcaret, endcaret, text);
+        }
+
+        public void Input(CaretInfo s, CaretInfo e, string text) {
+            if (s == e) {
                 CaretInfo ce = new CaretInfo();
                 doc.Insert(cur, ce, text);
             }
-            else
-            {
+            else {
                 doc.Replace(s, e, text);
             }
         }
 
-        public void Input(string text)
-        {
+        public void Input(string text) {
             Input(cur, sel, text);
         }
 
-        public void DelBack()
-        {
+        public void DelBack() {
             // 選択状態なら BackSpace == Delete
             // でなければ、 BackSpace == Left + Delete (手抜き
-            if (cur == sel)
-            {
+            if (cur == sel) {
                 if (cur.tl == 0 && cur.ad == 0)
                     return;
 
                 //Left(false, false);
-                ConvDPosToVPos(CaretLeft(-1), ref cur);
+                ConvDPosToVPos(CaretLeft(1), ref cur);
                 CaretMove(false);
             }
             Del();
         }
 
-        public void Del(CaretInfo c, CaretInfo s)
-        {
+        public void Del(CaretInfo c, CaretInfo s) {
             //// 選択状態なら cur_ ～ sel_ を削除
             //// でなければ、 cur_ ～ rightOf(cur_) を削除
             //DPos dp = (cur == sel ? doc.rightOf(cur_) : (DPos)sel_);
@@ -261,43 +265,38 @@ namespace AsControls
             }
         }
 
-        public void Del()
-        {
+        public void Del() {
             Del(cur, sel);
         }
 
-        public IBuffer GetText(CaretInfo s, CaretInfo e)
-        {
-            if( s.tl == e.tl )
-            {
-		        // 一行だけの場合
-		        //text_[s.tl].CopyAt( s.ad, e.ad-s.ad, buf );
-		        //buf[e.ad-s.ad] = L'\0';
-                return doc.LineList[s.tl].Text.Substring(s.ad, e.ad-s.ad);
+        public IBuffer GetText(CaretInfo s, CaretInfo e) {
+            if (s.tl == e.tl) {
+                // 一行だけの場合
+                //text_[s.tl].CopyAt( s.ad, e.ad-s.ad, buf );
+                //buf[e.ad-s.ad] = L'\0';
+                return doc.LineList[s.tl].Text.Substring(s.ad, e.ad - s.ad);
             }
-	        else
-	        {
-		        // 先頭行の後ろをコピー
-		        //buf += text_[s.tl].CopyToTail( s.ad, buf );
-		        //*buf++ = L'\r', *buf++ = L'\n';
+            else {
+                // 先頭行の後ろをコピー
+                //buf += text_[s.tl].CopyToTail( s.ad, buf );
+                //*buf++ = L'\r', *buf++ = L'\n';
                 IBuffer buf = doc.LineList[s.tl].Text.Substring(s.ad);
                 buf.Append("\r\n");
 
-		        // 途中をコピー
+                // 途中をコピー
                 //for( ulong i=s.tl+1; i<e.tl; i++ )
                 //{
                 //    buf += text_[i].CopyToTail( 0, buf );
                 //    *buf++ = L'\r', *buf++ = L'\n';
                 //}
-                for( int i=s.tl+1; i<e.tl; i++ )
-                {
+                for (int i = s.tl + 1; i < e.tl; i++) {
                     buf.Append(doc.LineList[i].Text.ToString());
                     buf.Append("\r\n");
                 }
 
-		        // 終了行の先頭をコピー
-		        //buf += text_[e.tl].CopyAt( 0, e.ad, buf );
-		        //*buf = L'\0';
+                // 終了行の先頭をコピー
+                //buf += text_[e.tl].CopyAt( 0, e.ad, buf );
+                //*buf = L'\0';
                 buf.Append(doc.LineList[e.tl].Text.Substring(0, e.ad).ToString());
 
                 return buf;

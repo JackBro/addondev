@@ -266,12 +266,10 @@ namespace AsControls {
         }
 
         protected override void OnSizeChanged(EventArgs e) {
-            base.OnSizeChanged(e);
-
-            int oo = wrapList.Count;
 
             //initWrap();
             ReWrapAll();
+            UpdateTextCx();
 
             vScrollBar.Left = this.Width - vScrollBar.Width;
             vScrollBar.Top = 0;
@@ -285,6 +283,23 @@ namespace AsControls {
             scPanel.Top = hScrollBar.Top;
 
             ReSetScrollInfo();
+
+            vScrollBar.Value = tl2vl(udScr_tl_);
+            //udScr_tl_ = tl;
+            udScr_vrl_ = 0;
+
+            base.OnSizeChanged(e);
+            base.Invalidate();
+        }
+
+        int tl2vl(int tl) {
+            if (vlNum_ == doc.tln)
+                return tl;
+
+            int vl = 0;
+            for (int i = 0; i < tl; ++i)
+                vl += GetvlCnt(i);
+            return vl;
         }
 
         void ScrollBar_Scroll(object sender, ScrollEventArgs e) {
