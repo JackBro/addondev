@@ -48,7 +48,7 @@ namespace AsControls
             this.vPos.Y = y;
         }
 
-        public void CaretMove(Boolean select) {
+        public void MoveTo(Boolean select) {
             if (select) {
                 int te = sel.tl;
             }
@@ -176,7 +176,7 @@ namespace AsControls
 
             np.CopyTo(ref cur);
             UpdateCaretPos();
-            CaretMove(select);
+            MoveTo(select);
         }
 
         public Boolean getCurPos(out CaretInfo start, out CaretInfo end) {
@@ -210,7 +210,9 @@ namespace AsControls
             cur.CopyTo(ref sel);
         }
 
-        Redraw
+        public void Redraw(VPos s, VPos e) {
+
+        }
 
         public void Insert(int start, int end, string text) {
             int _offset = offset;
@@ -259,7 +261,7 @@ namespace AsControls
 
                 //Left(false, false);
                 ConvDPosToVPos(CaretLeft(1), ref cur);
-                CaretMove(false);
+                MoveTo(false);
             }
             Del();
         }

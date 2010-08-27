@@ -7,6 +7,14 @@ namespace AsControls
 {
     public partial class gcsTextEdit
     {
+        public class WLine : List<int> {
+	        public int width{
+                get{return this[0]; }
+                set{this[0] = value;}
+            }
+            public int rln() { return this.Count - 1; }
+        }
+
         public class WrapInfo
         {
             public List<int> wrap;
@@ -19,7 +27,7 @@ namespace AsControls
             }
         }
 
-        public List<WrapInfo> wrapList;
+        //public List<WrapInfo> wrapList;
         private int vlNum_;
         public int textCx_;
 
@@ -28,10 +36,17 @@ namespace AsControls
             get { return vlNum_; }
         }
 
+        public List<WLine> wrap_ ;
+        //@{ 一行の表示行数 //@}
+        int rln(int tl) { return wrap_[tl].rln(); }
+        
+
         private void initWrap()
         {
-            wrapList = new List<WrapInfo>();
-            wrapList.Add(new WrapInfo());
+            //wrapList = new List<WrapInfo>();
+            //wrapList.Add(new WrapInfo());
+
+            wrap_ = new List<WLine>();
 
             vlNum_ = 1;
             textCx_ = 0;

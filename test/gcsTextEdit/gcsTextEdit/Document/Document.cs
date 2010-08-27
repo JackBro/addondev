@@ -17,6 +17,9 @@ namespace AsControls {
         //private AsTextEdit EditView;
         public List<Line> LineList;
 
+        //
+        private List<Line> text_;
+
         Highlighter highlighter;
 
         public Highlighter Highlighter {
@@ -32,14 +35,18 @@ namespace AsControls {
             }
         }
 
-        public int tln {
-            get {
-                //int len = 0;
-                //for (int i = 0; i < LineList.Count; i++) {
-                //    len += LineList[i].Text.Length;
-                //}
-                return LineList.Count;
-            }
+        //
+        public ulong tln () { return (ulong)LineList.Count; }
+        //
+        public ulong len(ulong i) {
+            return (ulong)LineList[(int)i].Length;
+        }
+        //
+        public string tl(ulong i) {
+            return text_[(int)i].Text.ToString();
+        }
+        public IBuffer tl(int i) {
+            return text_[i].Text;
         }
 
         public override string ToString() {

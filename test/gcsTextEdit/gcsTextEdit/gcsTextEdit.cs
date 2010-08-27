@@ -8,10 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace AsControls {
-    public enum WrapType {
-        Non,
-        WindowWidth
-    }
+
 
     public delegate Action<object, WrapType> WrapModeChangeEventHandler(object sender, WrapType wrapMode);
 
@@ -139,6 +136,22 @@ namespace AsControls {
                 ResizeWrapList(doc.tlNum);
             }
         }
+
+        //
+        private Canvas cvs_;
+	    public Rectangle zone()  { return cvs_.zone; }
+        public int left()   { return cvs_.zone.Left; }
+	    public int right()  { return cvs_.zone.Right; }
+	    public int bottom() { return cvs_.zone.Bottom; }
+        public int lna()    { return cvs_.zone.Left; }
+        public int cx()     { return cvs_.zone.Right - cvs_.zone.Left; }
+        public int cxAll()  { return cvs_.zone.Right; }
+        public int cy()     { return cvs_.zone.Bottom; }
+
+        //
+        private Document doc_;
+        //
+        public Painter fnt { get { return cvs_.getPainter(); } }
 
         public gcsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
@@ -493,26 +506,57 @@ namespace AsControls {
             }
         }
 
-        public void ScrollTo(CaretInfo vp) {
+        //public void ScrollTo(CaretInfo vp) {
+        //    // 横フォーカス
+        //    int dx = 0;
+        //    if (vp.vx < hScrollBar.Value) {
+        //        dx = vp.vx - hScrollBar.Value;
+        //    } else {
+        //        //const int W = cvs_.getPainter().W();
+        //        //if (rlScr_.nPos + (signed)(rlScr_.nPage - W) <= vp.vx)
+        //        //    dx = vp.vx - (rlScr_.nPos + rlScr_.nPage) + W;
+
+        //        //tmp
+        //        const int W = 12;
+        //        if (hScrollBar.Value + (hpage - W) <= vp.vx)
+        //            dx = vp.vx - (hScrollBar.Value + hpage) + W;
+        //    }
+
+        //    // 縦フォーカス
+        //    int dy = 0;
+        //    if (vp.vl < vScrollBar.Value)
+        //        dy = vp.vl - vScrollBar.Value;
+        //    else if (vScrollBar.Value + (vpage - 1) <= vp.vl)
+        //        dy = vp.vl - (vScrollBar.Value + vpage) + 2;
+
+
+        //    if (dx != 0) ScrollView(dx, 0, true);
+        //    //if (dy != 0) UpDown(dy, dx == 0);
+        //    if (dy != 0) UpDown(dy, true);
+        //}
+
+        public void ScrollTo(VPos vp) {
             // 横フォーカス
             int dx = 0;
             if (vp.vx < hScrollBar.Value) {
                 dx = vp.vx - hScrollBar.Value;
-            } else {
-                //const int W = cvs_.getPainter().W();
-                //if (rlScr_.nPos + (signed)(rlScr_.nPage - W) <= vp.vx)
-                //    dx = vp.vx - (rlScr_.nPos + rlScr_.nPage) + W;
+            }
+            else {
+                const int W = cvs_.getPainter().W();
+                if (hScrollBar.Value + (hScrollBar.nPage - W) <= vp.vx)
+                    dx = vp.vx - (hScrollBar.Value + hScrollBar.nPage) + W;
 
-                //tmp
-                const int W = 12;
-                if (hScrollBar.Value + (hpage - W) <= vp.vx)
-                    dx = vp.vx - (hScrollBar.Value + hpage) + W;
+                ////tmp
+                //const int W = 12;
+                //if (hScrollBar.Value + (hpage - W) <= vp.vx)
+                //    dx = vp.vx - (hScrollBar.Value + hpage) + W;
             }
 
             // 縦フォーカス
             int dy = 0;
+            //ulong vnPos = (ulong)vScrollBar.Value;
             if (vp.vl < vScrollBar.Value)
-                dy = vp.vl - vScrollBar.Value;
+                dy = (int)(vp.vl - vScrollBar.Value);
             else if (vScrollBar.Value + (vpage - 1) <= vp.vl)
                 dy = vp.vl - (vScrollBar.Value + vpage) + 2;
 
@@ -555,43 +599,101 @@ namespace AsControls {
             ScrollView(0, dy, true);
         }
 
-        public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp) {
-            CaretInfo dummyPos = null;
-            this.ConvDPosToVPos(dp, ref vp, ref dummyPos);
-        }
+        //public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp) {
+        //    CaretInfo dummyPos = null;
+        //    this.ConvDPosToVPos(dp, ref vp, ref dummyPos);
+        //}
 
-        public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp, ref CaretInfo basePos) {
-            if (object.Equals(basePos, null)) {
-                basePos = new CaretInfo();
+        //public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp, ref CaretInfo basePos) {
+        //    if (object.Equals(basePos, null)) {
+        //        basePos = new CaretInfo();
+        //    }
+
+        //    // とりあえずbase行頭の値を入れておく
+        //    int vl = basePos.vl - basePos.rl;
+        //    int rl = 0;
+        //    int vx;
+
+        //    // vlを合わせる
+        //    int tl = basePos.tl;
+        //    if (tl > dp.tl)      // 目的地が基準より上にある場合
+        //    {
+        //        do
+        //            vl -= wrapList[--tl].wrap.Count;
+        //        while (tl > dp.tl);
+        //    } else if (tl < dp.tl) // 目的地が基準より下にある場合
+        //    {
+        //        do
+        //            vl += wrapList[tl++].wrap.Count;
+        //        while (tl < dp.tl);
+        //    }
+
+        //    // rlを合わせる
+        //    int stt = 0;
+        //    while (wrapList[tl].wrap[rl] < dp.ad)
+        //        stt = wrapList[tl].wrap[rl++];
+        //    vl += rl;
+
+        //    // x座標計算
+        //    vx = CalcStringWidth(doc.LineList[tl].Text, stt, dp.ad - stt);
+
+        //    vp.tl = dp.tl;
+        //    vp.ad = dp.ad;
+        //    vp.vl = vl;
+        //    vp.rl = rl;
+        //    vp.rx = vp.vx = vx;
+        //}
+
+
+        //
+        VPos dummyVPos = null;
+        public void ConvDPosToVPos(DPos dp, ref VPos vp) {
+            ConvDPosToVPos(dp, ref vp, ref dummyVPos);
+        }
+        //
+        public void ConvDPosToVPos(DPos dp, ref VPos vp, ref VPos basevp) {
+
+            // 補正
+            dp.tl = Math.Min(dp.tl, doc_.tln() - 1);
+            dp.ad = Math.Min(dp.ad, doc_.len(dp.tl));
+
+            VPos topPos = new VPos();
+            if (basevp == null) {
+                basevp = topPos;
             }
 
             // とりあえずbase行頭の値を入れておく
-            int vl = basePos.vl - basePos.rl;
-            int rl = 0;
+            ulong vl = basevp.vl - basevp.rl;
+            ulong rl = 0;
             int vx;
 
+            // 違う行だった場合
             // vlを合わせる
-            int tl = basePos.tl;
-            if (tl > dp.tl)      // 目的地が基準より上にある場合
-            {
-                do
-                    vl -= wrapList[--tl].wrap.Count;
-                while (tl > dp.tl);
-            } else if (tl < dp.tl) // 目的地が基準より下にある場合
-            {
-                do
-                    vl += wrapList[tl++].wrap.Count;
-                while (tl < dp.tl);
+            ulong tl = basevp.tl;
+            if (tl > dp.tl) {      // 目的地が基準より上にある場合
+                do {
+                    vl -= rln(--tl);
+                } while (tl > dp.tl);
+            }
+            else if (tl < dp.tl) { // 目的地が基準より下にある場合
+                do {
+                    vl += rln(tl++);// wrapList[tl++].wrap.Count;
+                } while (tl < dp.tl);
             }
 
             // rlを合わせる
-            int stt = 0;
-            while (wrapList[tl].wrap[rl] < dp.ad)
-                stt = wrapList[tl].wrap[rl++];
+            ulong stt = 0;
+            //while (wrapList[tl].wrap[rl] < dp.ad)
+            //    stt = wrapList[tl].wrap[rl++];
+            while (wrap_[(int)tl][(int)rl + 1] < dp.ad)
+                stt = wrap_[(int)tl][(int)++rl];
             vl += rl;
 
             // x座標計算
-            vx = CalcStringWidth(doc.LineList[tl].Text, stt, dp.ad - stt);
+            ///vx = CalcStringWidth(doc.LineList[tl].Text, stt, dp.ad - stt);
+
+            vx = CalcStringWidth(doc_.tl((int)tl), (int)stt, (int)(dp.ad - stt));
+            //vx = CalcLineWidth(doc_.tl(tl), stt, dp.ad - stt);
 
             vp.tl = dp.tl;
             vp.ad = dp.ad;
@@ -599,6 +701,20 @@ namespace AsControls {
             vp.rl = rl;
             vp.rx = vp.vx = vx;
         }
+        //
+        //private ulong CalcLineWidth(string txt, ulong len) {
+        //    // 行を折り返さずに書いたときの横幅を計算する
+        //    // ほとんどの行が折り返し無しで表示されるテキストの場合、
+        //    // この値を計算しておくことで、処理の高速化が可能。
+        //    const Painter& p = cvs_.getPainter();
+        //    ulong w=0;
+        //    for( ulong i=0; i<len; ++i )
+        //        if( txt[i] == L'\t' )
+        //            w = p.nextTab(w);
+        //        else
+        //            w += p.W( &txt[i] );
+        //    return w;
+        //}
 
         protected override void OnKeyPress(KeyPressEventArgs e) {
             if (IsInputChar(e.KeyChar) && this.ImeMode == ImeMode.Off) {
@@ -627,22 +743,22 @@ namespace AsControls {
                     break;
                 case Keys.Right:
                     ConvDPosToVPos(CaretRight(1), ref cur);
-                    CaretMove(e.Shift);
+                    MoveTo(e.Shift);
                     base.Invalidate();
                     break;
                 case Keys.Left:
                     ConvDPosToVPos(CaretLeft(1), ref cur);
-                    CaretMove(e.Shift);
+                    MoveTo(e.Shift);
                     base.Invalidate();
                     break;
                 case Keys.Down:
                     Ud(1, e.Shift);
-                    CaretMove(e.Shift);
+                    MoveTo(e.Shift);
                     base.Invalidate();
                     break;
                 case Keys.Up:
                     Ud(-1, e.Shift);
-                    CaretMove(e.Shift);
+                    MoveTo(e.Shift);
                     base.Invalidate();
                     break;
                 case Keys.Home:
@@ -828,7 +944,7 @@ namespace AsControls {
                 } else {
                     Point p = this.PointToClient(MousePosition);
                     GetVPos(p.X, p.Y, ref cur);
-                    CaretMove(true);
+                    MoveTo(true);
                     this.Invalidate();
                 }
             }
@@ -982,7 +1098,7 @@ namespace AsControls {
             if (search.FindNext(cur, ref bgn, ref end)) {
                 ConvDPosToVPos(bgn, ref cur);
                 ConvDPosToVPos(end, ref sel);
-                CaretMove(true);
+                MoveTo(true);
                 base.Invalidate();
                 return true;
             }
@@ -1003,7 +1119,7 @@ namespace AsControls {
             }
 
             ConvDPosToVPos(np, ref cur);
-            CaretMove(true);
+            MoveTo(true);
         }
 
         public void End() {

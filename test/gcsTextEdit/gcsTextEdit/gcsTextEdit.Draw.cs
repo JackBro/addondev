@@ -197,8 +197,6 @@ namespace AsControls
         Brush bb = new SolidBrush(Color.White);
         private void drawLNA(Graphics g, ViewRect v)
         {
-
-
             if (v.rc.Top < v.YMAX)
             {
                 Rectangle rc = new Rectangle(0, 0, v.NumLineLeft-2, v.YMAX);
