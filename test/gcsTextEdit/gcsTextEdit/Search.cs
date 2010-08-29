@@ -15,23 +15,23 @@ namespace AsControls
             this.doc = doc;
         }
 
-        public Boolean FindNext(CaretInfo s, ref CaretInfo beg, ref CaretInfo end)
+        public Boolean FindNext(VPos s, ref VPos beg, ref VPos end)
         {
-            int start = s.ad;
-            for (int i = s.tl; i < doc.tlNum; i++)
-            {
-                string str = doc.LineList[i].Text.ToString();
-                int index = str.IndexOf(searchstr, start);
-                start = 0;
-                if (index >=0)
-                {
-                    beg.tl = end.tl = i;
-                    beg.ad = index;
-                    end.ad = beg.ad + searchstr.Length;
+            //int start = s.ad;
+            //for (int i = s.tl; i < doc.tlNum; i++)
+            //{
+            //    string str = doc.LineList[i].Text.ToString();
+            //    int index = str.IndexOf(searchstr, start);
+            //    start = 0;
+            //    if (index >=0)
+            //    {
+            //        beg.tl = end.tl = i;
+            //        beg.ad = index;
+            //        end.ad = beg.ad + searchstr.Length;
 
-                    return true;
-                }
-            }
+            //        return true;
+            //    }
+            //}
 
             return false;
         }

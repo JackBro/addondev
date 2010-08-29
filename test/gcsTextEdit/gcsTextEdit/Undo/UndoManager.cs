@@ -7,17 +7,17 @@ namespace AsControls
     public class UndoDelete : IUndoCommand
     {
         IDocument document;
-        CaretInfo s, e;
+        VPos s, e;
         string text;
 
-        public UndoDelete(IDocument document, CaretInfo s, CaretInfo e, string text)
+        public UndoDelete(IDocument document, VPos s, VPos e, string text)
         {
             this.document = document;
-            this.s = new CaretInfo();
+            this.s = new VPos();
             this.s.ad = s.ad;
             this.s.tl = s.tl;
 
-            this.e = new CaretInfo();
+            this.e = new VPos();
             this.e.ad = e.ad;
             this.e.tl = e.tl;
 
@@ -51,21 +51,21 @@ namespace AsControls
     public class UndoInsert : IUndoCommand
     {
         IDocument document;
-        CaretInfo s, e;
+        VPos s, e;
         string text;
 
-        public UndoInsert(IDocument document, CaretInfo s, CaretInfo e, string text)
+        public UndoInsert(IDocument document, VPos s, VPos e, string text)
         {
             this.document = document;
             //s.CopyTo(ref this.s);
             //e.CopyTo(ref this.e);
             //this.s = new CursorPos(s);
             //this.e = new CursorPos(e);
-            this.s = new CaretInfo();
+            this.s = new VPos();
             this.s.ad = s.ad;
             this.s.tl = s.tl;
 
-            this.e = new CaretInfo();
+            this.e = new VPos();
             this.e.ad = e.ad;
             this.e.tl = e.tl;
 
@@ -97,22 +97,22 @@ namespace AsControls
     public class UndoReplace : IUndoCommand
     {
         IDocument document;
-        CaretInfo s, e, e2;
+        VPos s, e, e2;
         string oldValue, newValue;
 
-        public UndoReplace(IDocument document, CaretInfo s, CaretInfo e, CaretInfo e2, string oldValue, string newValue)
+        public UndoReplace(IDocument document, VPos s, VPos e, VPos e2, string oldValue, string newValue)
         {
             this.document = document;
 
-            this.s = new CaretInfo();
+            //this.s = new VPos();
             this.s.ad = s.ad;
             this.s.tl = s.tl;
 
-            this.e = new CaretInfo();
+            //this.e = new VPos();
             this.e.ad = e.ad;
             this.e.tl = e.tl;
 
-            this.e2 = new CaretInfo();
+            //this.e2 = new VPos();
             this.e2.ad = e2.ad;
             this.e2.tl = e2.tl;
 

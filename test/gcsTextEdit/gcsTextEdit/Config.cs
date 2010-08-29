@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing;
 
 namespace AsControls {
-    class Config {
+    public class Config {
         private Font font;
 
         public Font Font { get { return font; } }
@@ -16,6 +16,13 @@ namespace AsControls {
                 font = null;
             }
             font = new Font(fontname, fontsize);
+        }
+        public void setFont(Font font) {
+            if (this.font != null) {
+                this.font.Dispose();
+                this.font = null;
+            }
+            this.font = font;
         }
 
         public Config() {

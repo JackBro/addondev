@@ -59,7 +59,8 @@ namespace test
 //title>HOGE</title>";
 
             csedit.Text = @"1234567890
-mmmmmmmmmmmmmmmmmmmmmmmmmm";
+mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+TTTTTTTTTTTTgg";
 
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
@@ -98,7 +99,7 @@ mmmmmmmmmmmmmmmmmmmmmmmmmm";
 
         private void searchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            csedit.SearchText("title");
+            //csedit.SearchText("title");
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -128,9 +129,9 @@ mmmmmmmmmmmmmmmmmmmmmmmmmm";
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int offset = csedit.offset;
-            int i = 0;
-            csedit.Insert(12, 15, "repl");
+            //int offset = csedit.offset;
+            //int i = 0;
+            //csedit.Insert(12, 15, "repl");
         }
 
         private void searchToolStripMenuItem1_Click(object sender, EventArgs e)

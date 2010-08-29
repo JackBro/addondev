@@ -51,6 +51,9 @@
   <ItemGroup>
     <Compile Include="Canvas.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Control\GcsScrollBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="gcsTextEdit.Caret.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -60,10 +63,13 @@
     <Compile Include="gcsTextEdit.Draw.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="gcsTextEdit.Scroll.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="gcsTextEdit.Wrap.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CaretInfo.cs" />
+    <Compile Include="Cursor.cs" />
     <Compile Include="Document\Document.cs" />
     <Compile Include="Document\IDocument.cs" />
     <Compile Include="Highlighter\IHighlighter.cs" />
@@ -79,6 +85,7 @@
     <Compile Include="Document\TextBuffer.cs" />
     <Compile Include="Undo\IUndoCommand.cs" />
     <Compile Include="Undo\UndoManager.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="Win32API.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

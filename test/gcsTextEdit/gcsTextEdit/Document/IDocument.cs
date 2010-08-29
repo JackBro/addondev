@@ -15,7 +15,7 @@ namespace AsControls
     //    void Delete(CaretInfo s, CaretInfo e);
     //}
 
-    public delegate void TextUpdateEventHandler(CaretInfo s, CaretInfo e, CaretInfo e2);
+    public delegate void TextUpdateEventHandler(VPos s, VPos e, VPos e2);
     public interface IDocument
     {
         event TextUpdateEventHandler TextUpdateEvent;
@@ -23,8 +23,8 @@ namespace AsControls
         {
             get;
         }
-        void Insert(CaretInfo s, CaretInfo e, string value);
-        void Delete(CaretInfo s, CaretInfo e, out string value);
-        void Replace(CaretInfo s, CaretInfo e, string newValue);
+        void Insert(VPos s, VPos e, string value);
+        void Delete(VPos s, VPos e, out string value);
+        void Replace(VPos s, VPos e, string newValue);
     }
 }

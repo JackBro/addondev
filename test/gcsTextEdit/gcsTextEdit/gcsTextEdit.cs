@@ -9,102 +9,94 @@ using System.Text.RegularExpressions;
 
 namespace AsControls {
 
-
     public delegate Action<object, WrapType> WrapModeChangeEventHandler(object sender, WrapType wrapMode);
 
     public partial class gcsTextEdit : Control, ITextEditor {
         
-        private class ViewRect {
+        private class VDrawInfo {
             public Rectangle rc;
             public int XBASE;      // 一番左の文字のx座標
             public int XMIN;       // テキスト再描画範囲左端
             public int XMAX;       // テキスト再描画範囲右端
-            public int YMIN;
-            public int YMAX;
-            public int TLMIN;
+            public int YMIN;       // テキスト再描画範囲上端
+            public int YMAX;       // テキスト再描画範囲下端
+            public int TLMIN;      // テキスト再描画範囲上端論理行番号
             public int SXB, SXE;   // 選択範囲のx座標
             public int SYB, SYE;   // 選択範囲のy座標
 
-            public int NumLineLeft;
-
-            public ViewRect() {
+            public VDrawInfo() {
                 rc = new Rectangle();
                 YMIN = 0;
                 YMAX = 0;
                 TLMIN = 0;
                 SXB = SXE = SYB = SYE = 0;
-
-                NumLineLeft = 0;
             }
         }
 
-        Document doc;
+        VDrawInfo vRect = new VDrawInfo();
 
-        ViewRect vRect = new ViewRect();
-
-        VScrollBar vScrollBar;
-        int vpage = 0;
+        VGcsScrollBar vScrollBar;
+        //int vpage = 0;
+        HGcsScrollBar hScrollBar;
+        //int hpage = 0;
 
         int udScr_tl_;  //一番上に表示される論理行のTLine_Index
         int udScr_vrl_; //一番上に表示される表示行のVRLine_Index
 
-        HScrollBar hScrollBar;
-        int hpage = 0;
 
-        Panel scPanel = new Panel();
+        //Panel scPanel = new Panel();
 
         ImeComposition imeComposition;
 
-        WrapType wrapType;
-        Boolean showNumLine = false;
+        //WrapType wrapType;
+        //Boolean showNumLine = false;
 
         public KeyMap KeyBind { get; set; }
 
-        public int ViewWidth {
-            get {
-                if (wrapType == WrapType.Non) {
-                    return int.MaxValue;
-                } else {
-                    if (this.Width - (vRect.NumLineLeft + vScrollBar.Width) < 0)
-                        return 0;
+        //public int ViewWidth {
+        //    get {
+        //        if (wrapType == WrapType.Non) {
+        //            return int.MaxValue;
+        //        } else {
+        //            if (this.Width - (vRect.NumLineLeft + vScrollBar.Width) < 0)
+        //                return 0;
+        //            return this.Width - (vRect.NumLineLeft + vScrollBar.Width);
+        //        }
+        //    }
+        //}
 
-                    return this.Width - (vRect.NumLineLeft + vScrollBar.Width);
-                }
-            }
-        }
+        //public int ViewHeight {
+        //    get {
+        //        if (this.Height - hScrollBar.Height < 0)
+        //            return 0;
 
-        public int ViewHeight {
-            get {
-                if (this.Height - hScrollBar.Height < 0)
-                    return 0;
+        //        return this.Height - hScrollBar.Height;
+        //    }
+        //}
 
-                return this.Height - hScrollBar.Height;
-            }
-        }
+        //public int ViewLineHeight {
+        //    get { return lineHeight; }
+        //}
 
-        public int ViewLineHeight {
-            get { return lineHeight; }
-        }
+        //public new Font Font {
+        //    get { return base.Font; }
+        //    set {
+        //        base.Font = value;
+        //        initDraw();
+        //    }
+        //}
 
-        public new Font Font {
-            get { return base.Font; }
-            set {
-                base.Font = value;
-                initDraw();
-            }
-        }
-
-        public WrapType Wrap {
-            get { return wrapType; }
-            set {
-                wrapType = value;
-                ReWrapAll();
-            }
-        }
+        //public WrapType Wrap {
+        //    get { return wrapType; }
+        //    set {
+        //        wrapType = value;
+        //        //ReWrapAll();
+        //    }
+        //}
 
         public new string Text {
             set {
-                this.doc.Clear();
+                this.doc_.Clear();
                 //InitCaret();
                 //initWrap();
                 //udScr_tl_ = 0;
@@ -112,74 +104,98 @@ namespace AsControls {
                 //hpage = 0;
                 //vpage = 0;
                 Initialize();
-
-                Input(value);
+                cur_.Input(value, value.Length);
             }
 
             get {
-                return this.doc.ToString();
+                return this.doc_.ToString();
             }
         }
 
-        private Document Document {
-            get { return this.doc; }
-            set {
-                if (doc != null) {
-                    doc.TextUpdateEvent -= doc_TextUpdateEvent;
-                }
-                doc = value;
-                doc.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
-                //initWrap();
-                //ReWrapAll();
-                //string sss = doc.ToString();
-                //Input(sss);
-                ResizeWrapList(doc.tlNum);
-            }
-        }
+        //private Document Document {
+        //    get { return this.doc; }
+        //    set {
+        //        if (doc != null) {
+        //            doc.TextUpdateEvent -= doc_TextUpdateEvent;
+        //        }
+        //        doc = value;
+        //        doc.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
+        //        //initWrap();
+        //        //ReWrapAll();
+        //        //string sss = doc.ToString();
+        //        //Input(sss);
+        //        ResizeWrapList(doc.tlNum);
+        //    }
+        //}
 
         //
         private Canvas cvs_;
-	    public Rectangle zone()  { return cvs_.zone; }
-        public int left()   { return cvs_.zone.Left; }
-	    public int right()  { return cvs_.zone.Right; }
-	    public int bottom() { return cvs_.zone.Bottom; }
-        public int lna()    { return cvs_.zone.Left; }
-        public int cx()     { return cvs_.zone.Right - cvs_.zone.Left; }
-        public int cxAll()  { return cvs_.zone.Right; }
-        public int cy()     { return cvs_.zone.Bottom; }
+	    public Rectangle zone()  { return cvs_.zone(); }
+        //public int left() { return cvs_.zone().Left; }
+        //public int right() { return cvs_.zone().Right - vScrollBar.Width; }
+        //public int bottom() { return cvs_.zone().Bottom - hScrollBar.Height; }
+        //public int lna() { return cvs_.zone().Left; }
+        //public int cx() { return cvs_.zone().Right - cvs_.zone().Left - vScrollBar.Width; }
+        //public int cxAll() { return cvs_.zone().Right; }
+        //public int cy() { return cvs_.zone().Bottom - hScrollBar.Height; }
 
+        public int left() { return cvs_.zone().Left; }
+        public int right() { return cvs_.zone().Right; }
+        public int bottom() { return cvs_.zone().Bottom; }
+        public int lna() { return cvs_.zone().Left; }
+        public int cx() { return cvs_.zone().Right - cvs_.zone().Left; }
+        public int cxAll() { return cvs_.zone().Right; }
+        public int cy() { return cvs_.zone().Bottom; }
         //
         private Document doc_;
         //
-        public Painter fnt { get { return cvs_.getPainter(); } }
+        public Painter fnt() { return cvs_.getPainter(); }
+        //
+        private Cursor cur_;
+        //
+        public enum ReDrawType {
+            LNAREA, // 行番号ゾーンのみ
+            LINE,   // 変更のあった一行のみ
+            AFTER,  // 変更のあった行以下全部
+            ALL     // 全画面
+        }
 
         public gcsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
-            wrapType = WrapType.WindowWidth;
+            //wrapType = WrapType.WindowWidth;
             //wrapType = WrapType.Non;
-            showNumLine = true;
+            //showNumLine = true;
 
-            doc = new Document();
-            doc.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
+            doc_ = new Document();
+            doc_.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
+            //
+            Config config = new Config();
+            //config.setFontInfo(this.Font.Name, this.Font.Size);
+            config.setFont(this.Font);
+            cvs_ = new Canvas(this, config);
+            cur_ = new Cursor(this, doc_, new Caret(this.Handle));
+            base.AllowDrop = true;
 
-            initDraw();
+            //initDraw();
             //initWrap();
 
             //udScr_tl_ = 0;
             //udScr_vrl_ = 0;
 
-            vScrollBar = new VScrollBar();
+            vScrollBar = new VGcsScrollBar();
             vScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
+            vScrollBar.Dock = DockStyle.Right;
             this.Controls.Add(vScrollBar);
 
-            hScrollBar = new HScrollBar();
+            hScrollBar = new HGcsScrollBar();
             hScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
+            hScrollBar.Dock = DockStyle.Bottom;
             this.Controls.Add(hScrollBar);
 
-            scPanel.BackColor = this.BackColor;
-            scPanel.Size = new Size(hScrollBar.Height, vScrollBar.Width);
-            this.Controls.Add(scPanel);
+            //scPanel.BackColor = this.BackColor;
+            //scPanel.Size = new Size(hScrollBar.Height, vScrollBar.Width);
+            //this.Controls.Add(scPanel);
 
             this.ImeMode = ImeMode.Off;
             imeComposition = new ImeComposition(this);
@@ -187,6 +203,15 @@ namespace AsControls {
             imeComposition.ImeCompositedKata += new ImeComposition.ImeCompositionEventHandler(imeComposition_ImeCompositedKata);
 
             this.HandleDestroyed += new EventHandler(AsTextEdit_HandleDestroyed);
+            this.LostFocus += (sender, e) => {
+                cur_.on_killfocus();
+            };
+            this.GotFocus += (sender, e) => {
+                cur_.on_setfocus();
+            };
+            this.KeyDown += (sender, e) => {
+                
+            };
 
             KeyBind = new KeyMap();
             //KeyBind.SetAction("cmd_Undo", delegate(object obj)
@@ -206,36 +231,41 @@ namespace AsControls {
             //    this.Paste();
             //});
 
-            base.AllowDrop = true;
-
             Initialize();
         }
 
         public void Initialize() {
-            doc.Clear();
-            InitCaret();
-            initWrap();
+            //doc.Clear();
+            //InitCaret();
+            //initWrap();
+            wrap_ = new List<WLine>();
+
+            // 適当に折り返し情報初期化
+            InsertMulti(0, doc_.tln() - 1);
+
             udScr_tl_ = 0;
             udScr_vrl_ = 0;
+            ReSetScrollInfo();
         }
 
-        void doc_TextUpdateEvent(CaretInfo s, CaretInfo e, CaretInfo e2) {
-            UpDate(s, e, e2);
-            on_text_update();
-            base.Invalidate();
+        void doc_TextUpdateEvent(VPos s, VPos e, VPos e2) {
+            //UpDate(s, e, e2);
+            on_text_update(s, e, e2, true, true);
+            
+            //base.Invalidate();
         }
 
         void AsTextEdit_HandleDestroyed(object sender, EventArgs e) {
-            deleteDraw();
+            //deleteDraw();
         }
 
         void imeComposition_ImeCompositedKata(object sender, ImeComposition.ImeCompositionEventArgs e) {
-            Input(e.InputString);
+            //Input(e.InputString);
         }
 
         void imeComposition_ImeCompositedHira(object sender, ImeComposition.ImeCompositionEventArgs e) {
-            Input(e.InputString);
-            base.Invalidate();
+            //Input(e.InputString);
+            //base.Invalidate();
         }
 
         public new void Dispose() {
@@ -252,7 +282,7 @@ namespace AsControls {
             //Console.WriteLine("MyObject::Dispose アンマネージドなリソース開放");
             //painter.Dispose();
             //deleteDraw();
-
+            cvs_.Dispose();
             base.Dispose(disposing);
         }
 
@@ -261,8 +291,8 @@ namespace AsControls {
         }
 
         protected override void WndProc(ref Message m) {
-            if (imeComposition != null)
-                imeComposition.Ime(m, vPos.X, vPos.Y);
+            //if (imeComposition != null)
+            //    imeComposition.Ime(m, vPos.X, vPos.Y);
 
             base.WndProc(ref m);
         }
@@ -270,241 +300,161 @@ namespace AsControls {
         protected override void OnMouseWheel(MouseEventArgs e) {
             base.OnMouseWheel(e);
             int dy = -e.Delta / 120;
-
-            ScUpDown(dy);
-            UpdateCaretPos();
-
-
-            base.Invalidate();
+            //ScUpDown(dy);
+            //UpdateCaretPos();
+            //base.Invalidate();
+            UpDown(dy * 3, false);
         }
 
         protected override void OnSizeChanged(EventArgs e) {
 
-            //initWrap();
-            ReWrapAll();
-            UpdateTextCx();
+            ////initWrap();
+            //ReWrapAll();
+            //UpdateTextCx();
 
-            vScrollBar.Left = this.Width - vScrollBar.Width;
-            vScrollBar.Top = 0;
-            vScrollBar.Height = this.Height - hScrollBar.Height;
+            //vScrollBar.Left = this.Width - vScrollBar.Width;
+            //vScrollBar.Top = 0;
+            //vScrollBar.Height = this.Height - hScrollBar.Height;
 
-            hScrollBar.Left = 0;
-            hScrollBar.Top = this.Height - hScrollBar.Height;
-            hScrollBar.Width = this.Width - vScrollBar.Width;
+            //hScrollBar.Left = 0;
+            //hScrollBar.Top = this.Height - hScrollBar.Height;
+            //hScrollBar.Width = this.Width - vScrollBar.Width;
 
-            scPanel.Left = vScrollBar.Left;
-            scPanel.Top = hScrollBar.Top;
+            //scPanel.Left = vScrollBar.Left;
+            //scPanel.Top = hScrollBar.Top;
 
-            ReSetScrollInfo();
+            //ReSetScrollInfo();
 
-            ForceScrollTo(udScr_tl_);
+            //ForceScrollTo(udScr_tl_);
 
-            ResetPos();
+            //ResetPos();
 
             base.OnSizeChanged(e);
-            base.Invalidate();
+
+            DoResize(cvs_.on_view_resize(this.ClientSize.Width, this.ClientSize.Height));
+            //base.Invalidate();
         }
 
-        int tl2vl(int tl) {
-            if (vlNum_ == doc.tln)
-                return tl;
+        //int tl2vl(int tl) {
+        //    if (vlNum_ == doc.tln)
+        //        return tl;
 
-            int vl = 0;
-            for (int i = 0; i < tl; ++i)
-                vl += GetvlCnt(i);
-            return vl;
-        }
+        //    int vl = 0;
+        //    for (int i = 0; i < tl; ++i)
+        //        vl += GetvlCnt(i);
+        //    return vl;
+        //}
 
-        void ForceScrollTo(int tl) {
-            vScrollBar.Value = tl2vl(udScr_tl_);
-            udScr_tl_ = tl;
-            udScr_vrl_ = 0;
-        }
+        //void ForceScrollTo(int tl) {
+        //    vScrollBar.Value = tl2vl(udScr_tl_);
+        //    udScr_tl_ = tl;
+        //    udScr_vrl_ = 0;
+        //}
 
-        void ScrollBar_Scroll(object sender, ScrollEventArgs e) {
-            int d = e.NewValue - e.OldValue;
-            if (d != 0) {
-                if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll) {
-                    ScrollView(d, 0, true);
+        //void ScrollBar_Scroll(object sender, ScrollEventArgs e) {
+        //    int d = e.NewValue - e.OldValue;
+        //    if (d != 0) {
+        //        if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll) {
+        //            ScrollView(d, 0, true);
 
-                    int x = 0;
-                    x = -(hScrollBar.Value + d);
-                    x += cur.vx;
-                    vPos.X = x;
-                } else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll) {
-                    ScUpDown(d);
+        //            int x = 0;
+        //            x = -(hScrollBar.Value + d);
+        //            x += cur.vx;
+        //            vPos.X = x;
+        //        } else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll) {
+        //            ScUpDown(d);
 
-                    int x = vRect.NumLineLeft;
-                    int y = 0;
-                    //y = -(vScrollBar.Value + d) * lineHeight;
-                    y = -(vScrollBar.Value) * lineHeight;
-                    x += cur.vx;
-                    y += cur.vl * ViewLineHeight;
-                    vPos.X = x;
-                    vPos.Y = y;
-                }
-                base.Invalidate();
-            }
-        }
+        //            int x = vRect.NumLineLeft;
+        //            int y = 0;
+        //            //y = -(vScrollBar.Value + d) * lineHeight;
+        //            y = -(vScrollBar.Value) * lineHeight;
+        //            x += cur.vx;
+        //            y += cur.vl * ViewLineHeight;
+        //            vPos.X = x;
+        //            vPos.Y = y;
+        //        }
+        //        base.Invalidate();
+        //    }
+        //}
 
-        private void ScUpDown(int dy) {
-            // １．udScr_.nPos + dy が正常範囲に収まるように補正
-            if (vScrollBar.Value + dy < 0)
-                dy = -vScrollBar.Value;
-            else if (vScrollBar.Maximum + 1 - vpage < vScrollBar.Value + dy)
-                dy = vScrollBar.Maximum + 1 - vpage - vScrollBar.Value;
-            if (dy == 0)
-                return;
+        //private void ScUpDown(int dy) {
+        //    // １．udScr_.nPos + dy が正常範囲に収まるように補正
+        //    if (vScrollBar.Value + dy < 0)
+        //        dy = -vScrollBar.Value;
+        //    else if (vScrollBar.Maximum + 1 - vpage < vScrollBar.Value + dy)
+        //        dy = vScrollBar.Maximum + 1 - vpage - vScrollBar.Value;
+        //    if (dy == 0)
+        //        return;
 
-            int rl = dy + udScr_vrl_;
-            int tl = udScr_tl_;
+        //    int rl = dy + udScr_vrl_;
+        //    int tl = udScr_tl_;
 
-            if (dy < 0) // 上へ戻る場合
-            {
-                // ジャンプ先論理行の行頭へDash!
-                while (rl < 0)
-                    rl += GetvlCnt(--tl);
-            } else if (dy > 0) {
-                // ジャンプ先論理行の行頭へDash!
-                while (rl > 0)
-                    rl -= GetvlCnt(tl++);
-                if (rl < 0)
-                    rl += GetvlCnt(--tl); //行き過ぎ修正
-            }
-            udScr_tl_ = tl;
-            udScr_vrl_ = rl;
+        //    if (dy < 0) // 上へ戻る場合
+        //    {
+        //        // ジャンプ先論理行の行頭へDash!
+        //        while (rl < 0)
+        //            rl += GetvlCnt(--tl);
+        //    } else if (dy > 0) {
+        //        // ジャンプ先論理行の行頭へDash!
+        //        while (rl > 0)
+        //            rl -= GetvlCnt(tl++);
+        //        if (rl < 0)
+        //            rl += GetvlCnt(--tl); //行き過ぎ修正
+        //    }
+        //    udScr_tl_ = tl;
+        //    udScr_vrl_ = rl;
 
-            int y = -udScr_vrl_;
-            tl = udScr_tl_;
-            //int top = v.rc.top / H;
-            //while (y + (signed)rln(tl) <= top)
-            //    y += rln(tl++);
+        //    int y = -udScr_vrl_;
+        //    tl = udScr_tl_;
+        //    //int top = v.rc.top / H;
+        //    //while (y + (signed)rln(tl) <= top)
+        //    //    y += rln(tl++);
 
-            // 縦座標
-            vRect.YMIN = y * lineHeight;
-            vRect.YMAX = this.Height;
-            vRect.TLMIN = tl;
+        //    // 縦座標
+        //    vRect.YMIN = y * lineHeight;
+        //    vRect.YMAX = this.Height;
+        //    vRect.TLMIN = tl;
 
-            vScrollBar.Value += dy;
-        }
+        //    vScrollBar.Value += dy;
+        //}
 
+        //
         public void GetOrigin(ref int x, ref int y) {
-            x = vRect.NumLineLeft - hScrollBar.Value;
-            y = -vScrollBar.Value * lineHeight;
+            //x = vRect.NumLineLeft - hScrollBar.Value;
+            //y = -vScrollBar.Value * lineHeight;
+            x = left() - hScrollBar.Value;
+            y = -vScrollBar.Value * cvs_.getPainter().H();
         }
 
-        private void GetDrawPosInfo(ref ViewRect v) {
-            int H = lineHeight;
+        //public void on_text_update() {
+        //    //ReSetScrollInfo();
+        //    //ScrollTo(cur);
+        //    //UpdateCaretPos();
+        //    //cur.CopyTo(ref sel);
+        //}
 
-            int most_under = (vlNum_ - vScrollBar.Value) * H;
-            if (most_under <= v.rc.Top) {
-                v.YMIN = v.rc.Top;
-                v.YMAX = most_under;
-            } else {
-                int y = -udScr_vrl_;
-                int tl = udScr_tl_;
-                int top = v.rc.Top / H;
+        //public void ReSetScrollInfo() {
+        //    int cx = this.Width - (vRect.NumLineLeft + vScrollBar.Width);
+        //    if (cx < 0) return;
+        //    hpage = cx + 1;
 
-                while (y + wrapList[tl].wrap.Count <= top)
-                    y += wrapList[tl++].wrap.Count;
+        //    //rlScr_.nPage = cx + 1;
+        //    //rlScr_.nMax = Max(textCx_ + 3, cx);
+        //    //rlScr_.nPos = Min<int>(rlScr_.nPos, rlScr_.nMax - rlScr_.nPage + 1);
+
+        //    hScrollBar.SmallChange = 1;
+        //    hScrollBar.LargeChange = hpage;
+        //    hScrollBar.Maximum = Math.Max(textCx_ + 3, cx);
+        //    hScrollBar.Value = Math.Min(hScrollBar.Value, hScrollBar.Maximum - hpage + 1);
+
+        //    int cy = ViewHeight;
+        //    vpage = cy / lineHeight + 1;
+        //    vScrollBar.SmallChange = 1;
+        //    vScrollBar.LargeChange = vpage;
+        //    vScrollBar.Maximum = vlNum_ + vpage - 2;
+        //}
 
 
-                // 縦座標
-                v.YMIN = y * H;
-                //v.YMAX = Math.Min(v.rc.Bottom, most_under);
-                v.YMAX = Math.Min(ViewHeight, most_under);
-                v.TLMIN = tl;
-
-                // 横座標                
-                v.XBASE = v.NumLineLeft - hScrollBar.Value;
-                v.XMIN = v.rc.Left - v.XBASE;
-                v.XMAX = v.rc.Right - v.XBASE;
-            }
-
-            // 選択範囲
-            //v.SXB = v.SXE = v.SYB = v.SYE = 0x7fffffff;
-            //const VPos *bg, *ed;
-            //if( cur_.getCurPos( &bg, &ed ) )
-            //{
-            //    v.SXB = bg->vx - rlScr_.nPos + left();
-            //    v.SXE = ed->vx - rlScr_.nPos + left();
-            //    v.SYB = (bg->vl - udScr_.nPos) * H;
-            //    v.SYE = (ed->vl - udScr_.nPos) * H;
-            //}
-
-            v.SXB = v.SXE = v.SYB = v.SYE = int.MaxValue;
-            CaretInfo bg, ed;
-            if (dostart) {
-                v.SXB = sels.vx - hScrollBar.Value + v.NumLineLeft;
-                v.SXE = sele.vx - hScrollBar.Value + v.NumLineLeft;
-                v.SYB = (sels.vl - vScrollBar.Value) * H;
-                v.SYE = (sele.vl - vScrollBar.Value) * H;
-            } else if (getCurPos(out bg, out ed)) {
-                //v.SXB = bg.vx - rlScr_.nPos + left();
-                //v.SXE = ed.vx - rlScr_.nPos + left();
-                //v.SXB = bg.vx;
-                //v.SXE = ed.vx;
-
-                v.SXB = bg.vx - hScrollBar.Value + v.NumLineLeft;
-                v.SXE = ed.vx - hScrollBar.Value + v.NumLineLeft;
-                v.SYB = (bg.vl - vScrollBar.Value) * H;
-                v.SYE = (ed.vl - vScrollBar.Value) * H;
-            }
-
-        }
-
-        public void on_text_update() {
-            ReSetScrollInfo();
-            ScrollTo(cur);
-            UpdateCaretPos();
-            cur.CopyTo(ref sel);
-        }
-
-        public void ReSetScrollInfo() {
-            int cx = this.Width - (vRect.NumLineLeft + vScrollBar.Width);
-            if (cx < 0) return;
-            hpage = cx + 1;
-
-            //rlScr_.nPage = cx + 1;
-            //rlScr_.nMax = Max(textCx_ + 3, cx);
-            //rlScr_.nPos = Min<int>(rlScr_.nPos, rlScr_.nMax - rlScr_.nPage + 1);
-
-            hScrollBar.SmallChange = 1;
-            hScrollBar.LargeChange = hpage;
-            hScrollBar.Maximum = Math.Max(textCx_ + 3, cx);
-            hScrollBar.Value = Math.Min(hScrollBar.Value, hScrollBar.Maximum - hpage + 1);
-
-            int cy = ViewHeight;
-            vpage = cy / lineHeight + 1;
-            vScrollBar.SmallChange = 1;
-            vScrollBar.LargeChange = vpage;
-            vScrollBar.Maximum = vlNum_ + vpage - 2;
-        }
-
-        public void ScrollView(int dx, int dy, bool update) {
-            if (dx != 0) {
-                // 範囲チェック
-                if (hScrollBar.Value + dx < 0)
-                    dx = -hScrollBar.Value;
-                else if (hScrollBar.Maximum - hpage < hScrollBar.Value + dx)
-                    dx = hScrollBar.Maximum - hpage - hScrollBar.Value + 1;
-
-                //rlScr_.nPos += dx;
-                //::SetScrollInfo( hwnd_, SB_HORZ, &rlScr_, TRUE );
-                hScrollBar.Value += dx;
-                dx = -dx;
-                base.Invalidate();
-            }
-
-            if (dy != 0) {
-                // 範囲チェック…は前処理で終わってる。
-
-                vScrollBar.Value += dy;
-                //::SetScrollInfo( hwnd_, SB_VERT, &udScr_, TRUE );
-                //dy *= -H;
-                base.Invalidate();
-            }
-        }
 
         //public void ScrollTo(CaretInfo vp) {
         //    // 横フォーカス
@@ -535,119 +485,74 @@ namespace AsControls {
         //    if (dy != 0) UpDown(dy, true);
         //}
 
-        public void ScrollTo(VPos vp) {
-            // 横フォーカス
-            int dx = 0;
-            if (vp.vx < hScrollBar.Value) {
-                dx = vp.vx - hScrollBar.Value;
-            }
-            else {
-                const int W = cvs_.getPainter().W();
-                if (hScrollBar.Value + (hScrollBar.nPage - W) <= vp.vx)
-                    dx = vp.vx - (hScrollBar.Value + hScrollBar.nPage) + W;
+        //public void ScrollTo(VPos vp) {
+        //    // 横フォーカス
+        //    int dx = 0;
+        //    if (vp.vx < hScrollBar.Value) {
+        //        dx = vp.vx - hScrollBar.Value;
+        //    }
+        //    else {
+        //        int W = cvs_.getPainter().W();
+        //        if (hScrollBar.Value + (hScrollBar.nPage - W) <= vp.vx)
+        //            dx = vp.vx - (hScrollBar.Value + hScrollBar.nPage) + W;
 
-                ////tmp
-                //const int W = 12;
-                //if (hScrollBar.Value + (hpage - W) <= vp.vx)
-                //    dx = vp.vx - (hScrollBar.Value + hpage) + W;
-            }
-
-            // 縦フォーカス
-            int dy = 0;
-            //ulong vnPos = (ulong)vScrollBar.Value;
-            if (vp.vl < vScrollBar.Value)
-                dy = (int)(vp.vl - vScrollBar.Value);
-            else if (vScrollBar.Value + (vpage - 1) <= vp.vl)
-                dy = vp.vl - (vScrollBar.Value + vpage) + 2;
-
-
-            if (dx != 0) ScrollView(dx, 0, true);
-            //if (dy != 0) UpDown(dy, dx == 0);
-            if (dy != 0) UpDown(dy, true);
-        }
-
-        public void UpDown(int dy, bool thumb) {
-            // １．udScr_.nPos + dy が正常範囲に収まるように補正
-            if (vScrollBar.Value + dy < 0)
-                dy = -vScrollBar.Value;
-            else if (vScrollBar.Maximum + 1 - vpage < vScrollBar.Value + dy)
-                dy = vScrollBar.Maximum + 1 - vpage - vScrollBar.Value;
-            if (dy == 0)
-                return;
-
-            if (true) {
-                int rl = dy + udScr_vrl_;
-                int tl = udScr_tl_;
-
-                if (dy < 0) // 上へ戻る場合
-                {
-                    // ジャンプ先論理行の行頭へDash!
-                    while (rl < 0)
-                        rl += GetvlCnt(--tl);
-                } else if (dy > 0) // 下へ進む場合
-                {
-                    // ジャンプ先論理行の行頭へDash!
-                    while (rl > 0)
-                        rl -= GetvlCnt(tl++);
-                    if (rl < 0)
-                        rl += GetvlCnt(--tl); //行き過ぎ修正
-                }
-                udScr_tl_ = tl;
-                udScr_vrl_ = rl;
-            }
-
-            ScrollView(0, dy, true);
-        }
-
-        //public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp) {
-        //    CaretInfo dummyPos = null;
-        //    this.ConvDPosToVPos(dp, ref vp, ref dummyPos);
-        //}
-
-        //public void ConvDPosToVPos(CaretInfo dp, ref CaretInfo vp, ref CaretInfo basePos) {
-        //    if (object.Equals(basePos, null)) {
-        //        basePos = new CaretInfo();
+        //        ////tmp
+        //        //const int W = 12;
+        //        //if (hScrollBar.Value + (hpage - W) <= vp.vx)
+        //        //    dx = vp.vx - (hScrollBar.Value + hpage) + W;
         //    }
 
-        //    // とりあえずbase行頭の値を入れておく
-        //    int vl = basePos.vl - basePos.rl;
-        //    int rl = 0;
-        //    int vx;
+        //    // 縦フォーカス
+        //    int dy = 0;
+        //    //ulong vnPos = (ulong)vScrollBar.Value;
+        //    if (vp.vl < vScrollBar.Value)
+        //        dy = (int)(vp.vl - vScrollBar.Value);
+        //    else if (vScrollBar.Value + (vpage - 1) <= vp.vl)
+        //        dy = vp.vl - (vScrollBar.Value + vpage) + 2;
 
-        //    // vlを合わせる
-        //    int tl = basePos.tl;
-        //    if (tl > dp.tl)      // 目的地が基準より上にある場合
-        //    {
-        //        do
-        //            vl -= wrapList[--tl].wrap.Count;
-        //        while (tl > dp.tl);
-        //    } else if (tl < dp.tl) // 目的地が基準より下にある場合
-        //    {
-        //        do
-        //            vl += wrapList[tl++].wrap.Count;
-        //        while (tl < dp.tl);
-        //    }
 
-        //    // rlを合わせる
-        //    int stt = 0;
-        //    while (wrapList[tl].wrap[rl] < dp.ad)
-        //        stt = wrapList[tl].wrap[rl++];
-        //    vl += rl;
-
-        //    // x座標計算
-        //    vx = CalcStringWidth(doc.LineList[tl].Text, stt, dp.ad - stt);
-
-        //    vp.tl = dp.tl;
-        //    vp.ad = dp.ad;
-        //    vp.vl = vl;
-        //    vp.rl = rl;
-        //    vp.rx = vp.vx = vx;
+        //    if (dx != 0) ScrollView(dx, 0, true);
+        //    //if (dy != 0) UpDown(dy, dx == 0);
+        //    if (dy != 0) UpDown(dy, true);
         //}
 
+        //public void UpDown(int dy, bool thumb) {
+        //    // １．udScr_.nPos + dy が正常範囲に収まるように補正
+        //    if (vScrollBar.Value + dy < 0)
+        //        dy = -vScrollBar.Value;
+        //    else if (vScrollBar.Maximum + 1 - vpage < vScrollBar.Value + dy)
+        //        dy = vScrollBar.Maximum + 1 - vpage - vScrollBar.Value;
+        //    if (dy == 0)
+        //        return;
+
+        //    if (true) {
+        //        int rl = dy + udScr_vrl_;
+        //        int tl = udScr_tl_;
+
+        //        if (dy < 0) // 上へ戻る場合
+        //        {
+        //            // ジャンプ先論理行の行頭へDash!
+        //            while (rl < 0)
+        //                rl += GetvlCnt(--tl);
+        //        } else if (dy > 0) // 下へ進む場合
+        //        {
+        //            // ジャンプ先論理行の行頭へDash!
+        //            while (rl > 0)
+        //                rl -= GetvlCnt(tl++);
+        //            if (rl < 0)
+        //                rl += GetvlCnt(--tl); //行き過ぎ修正
+        //        }
+        //        udScr_tl_ = tl;
+        //        udScr_vrl_ = rl;
+        //    }
+
+        //    ScrollView(0, dy, true);
+        //}
 
         //
-        VPos dummyVPos = null;
+        VPos dummyVPos = new VPos();
         public void ConvDPosToVPos(DPos dp, ref VPos vp) {
+            dummyVPos.ad = -1;
             ConvDPosToVPos(dp, ref vp, ref dummyVPos);
         }
         //
@@ -658,18 +563,19 @@ namespace AsControls {
             dp.ad = Math.Min(dp.ad, doc_.len(dp.tl));
 
             VPos topPos = new VPos();
-            if (basevp == null) {
+            //if (basevp == null) {
+            if (basevp.ad <0) {
                 basevp = topPos;
             }
 
             // とりあえずbase行頭の値を入れておく
-            ulong vl = basevp.vl - basevp.rl;
-            ulong rl = 0;
+            int vl = basevp.vl - basevp.rl;
+            int rl = 0;
             int vx;
 
             // 違う行だった場合
             // vlを合わせる
-            ulong tl = basevp.tl;
+            int tl = basevp.tl;
             if (tl > dp.tl) {      // 目的地が基準より上にある場合
                 do {
                     vl -= rln(--tl);
@@ -682,17 +588,18 @@ namespace AsControls {
             }
 
             // rlを合わせる
-            ulong stt = 0;
+            int stt = 0;
             //while (wrapList[tl].wrap[rl] < dp.ad)
             //    stt = wrapList[tl].wrap[rl++];
-            while (wrap_[(int)tl][(int)rl + 1] < dp.ad)
-                stt = wrap_[(int)tl][(int)++rl];
+            while (wrap_[tl][rl + 1] < dp.ad)
+                stt = wrap_[tl][++rl];
             vl += rl;
 
             // x座標計算
             ///vx = CalcStringWidth(doc.LineList[tl].Text, stt, dp.ad - stt);
 
-            vx = CalcStringWidth(doc_.tl((int)tl), (int)stt, (int)(dp.ad - stt));
+            //vx = fnt().CalcStringWidth(doc_.tl(tl), stt, (dp.ad - stt));
+            vx = stt==(dp.ad - stt)?0:fnt().CalcStringWidth(doc_.tl(tl).Substring(stt, (dp.ad - stt)).ToString()); //TODO
             //vx = CalcLineWidth(doc_.tl(tl), stt, dp.ad - stt);
 
             vp.tl = dp.tl;
@@ -702,102 +609,85 @@ namespace AsControls {
             vp.rx = vp.vx = vx;
         }
         //
-        //private ulong CalcLineWidth(string txt, ulong len) {
-        //    // 行を折り返さずに書いたときの横幅を計算する
-        //    // ほとんどの行が折り返し無しで表示されるテキストの場合、
-        //    // この値を計算しておくことで、処理の高速化が可能。
-        //    const Painter& p = cvs_.getPainter();
-        //    ulong w=0;
-        //    for( ulong i=0; i<len; ++i )
-        //        if( txt[i] == L'\t' )
-        //            w = p.nextTab(w);
-        //        else
-        //            w += p.W( &txt[i] );
-        //    return w;
-        //}
+        public int GetLastWidth(int tl) {
+            if (rln(tl) == 1)
+                return wrap_[tl][0];
+
+            int beg = rlend(tl, rln(tl) - 2);
+            string text = doc_.tl(tl).Substring(beg).ToString();
+            return CalcLineWidth(text, doc_.len(tl) - beg);
+        }
+
+        //
+        private int CalcLineWidth(string txt, int len) {
+            // 行を折り返さずに書いたときの横幅を計算する
+            // ほとんどの行が折り返し無しで表示されるテキストの場合、
+            // この値を計算しておくことで、処理の高速化が可能。
+            Painter p = cvs_.getPainter();
+            int w=0;
+            for( int i=0; i<len; ++i )
+                if( txt[i] == '\t' )
+                    w = p.nextTab(w);
+                else
+                    w += p.W( txt[i] );
+            return w;
+        }
 
         protected override void OnKeyPress(KeyPressEventArgs e) {
             if (IsInputChar(e.KeyChar) && this.ImeMode == ImeMode.Off) {
-                Input(e.KeyChar.ToString());
+                //Input(e.KeyChar.ToString());
+                cur_.InputChar(e.KeyChar);
                 e.Handled = true;
             }
         }
 
         protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e) {
-            switch (e.KeyCode) {
-                case Keys.Enter:
-                    //string ss = e.KeyValue.;
-                    Input("\r\n");
-                    //base.Invalidate();
-                    break;
-                case Keys.Tab:
-                    Input("\t");
-                    //base.Invalidate();
-                    break;
-                case Keys.Back:
-                    DelBack();
-                    //base.Invalidate();
-                    break;
-                case Keys.Delete:
-                    Del();
-                    break;
-                case Keys.Right:
-                    ConvDPosToVPos(CaretRight(1), ref cur);
-                    MoveTo(e.Shift);
-                    base.Invalidate();
-                    break;
-                case Keys.Left:
-                    ConvDPosToVPos(CaretLeft(1), ref cur);
-                    MoveTo(e.Shift);
-                    base.Invalidate();
-                    break;
-                case Keys.Down:
-                    Ud(1, e.Shift);
-                    MoveTo(e.Shift);
-                    base.Invalidate();
-                    break;
-                case Keys.Up:
-                    Ud(-1, e.Shift);
-                    MoveTo(e.Shift);
-                    base.Invalidate();
-                    break;
-                case Keys.Home:
-                    Home();
-                    base.Invalidate();
-                    break;
-                //default:
-                //    return base.IsInputKey(keyData);
-            }
+            //switch (e.KeyCode) {
+            //    case Keys.Enter:
+            //        //string ss = e.KeyValue.;
+            //        Input("\r\n");
+            //        //base.Invalidate();
+            //        break;
+            //    case Keys.Tab:
+            //        Input("\t");
+            //        //base.Invalidate();
+            //        break;
+            //    case Keys.Back:
+            //        DelBack();
+            //        //base.Invalidate();
+            //        break;
+            //    case Keys.Delete:
+            //        Del();
+            //        break;
+            //    case Keys.Right:
+            //        ConvDPosToVPos(CaretRight(1), ref cur);
+            //        MoveTo(e.Shift);
+            //        base.Invalidate();
+            //        break;
+            //    case Keys.Left:
+            //        ConvDPosToVPos(CaretLeft(1), ref cur);
+            //        MoveTo(e.Shift);
+            //        base.Invalidate();
+            //        break;
+            //    case Keys.Down:
+            //        Ud(1, e.Shift);
+            //        MoveTo(e.Shift);
+            //        base.Invalidate();
+            //        break;
+            //    case Keys.Up:
+            //        Ud(-1, e.Shift);
+            //        MoveTo(e.Shift);
+            //        base.Invalidate();
+            //        break;
+            //    case Keys.Home:
+            //        Home();
+            //        base.Invalidate();
+            //        break;
+            //    //default:
+            //    //    return base.IsInputKey(keyData);
+            //}
 
             KeyBind.getAction(e.Modifiers | e.KeyCode)(this);
-
-            //if (e.Control && e.KeyCode == Keys.V)
-            //{
-            //    string vv = e.Modifiers.ToString() + "+" + e.KeyCode.ToString();
-
-            //    string t = Clipboard.GetText();
-            //    //doc.InsertString(cursorInfo.curPos, t, ref cursorInfo.curPos);
-            //    //ConvPos(cursorInfo.curPos, ref cursorInfo.curPos);
-            //    //cursorInfo.UpdateCaretPos();
-
-            //    //CursorPos baseCurPos = new CursorPos(cursorInfo.cur);
-            //    //doc.Insert(cursorInfo.cur, ref baseCurPos, t);
-            //    //ConvDPosToVPos(baseCurPos, ref cursorInfo.cur);
-            //    //on_text_update();
-            //    Input(t);
-            //    base.Invalidate();
-            //}
-            //else if (e.Control && e.KeyCode == Keys.Z)
-            //string k = e.Modifiers.ToString() + "+" + e.KeyCode.ToString();
-
-            //if (e.Modifiers != Keys.None)
-            //{
-            //    string k = e.Modifiers.ToString() + "+" + e.KeyCode.ToString();
-            //    if (keyMap.ContainsFunction(k))
-            //    {
-            //        keyMap.getFunction(k)(this);
-            //    }
-            //}
             base.OnPreviewKeyDown(e);
         }
 
@@ -809,257 +699,232 @@ namespace AsControls {
             return false;
         }
 
+        //
         protected override void OnPaint(PaintEventArgs e) {
             //base.OnPaint(e);
 
+            //GetDrawPosInfo(ref vRect);
+
+            //drawDoc(e.Graphics, vRect);
+            //drawCaret(e.Graphics, vPos.X, vPos.Y);
+            //if (showNumLine)
+            //    drawLNA(e.Graphics, vRect);
+            
+            Painter p = cvs_.getPainter();
+            vRect.rc = e.ClipRectangle;
             GetDrawPosInfo(ref vRect);
 
-            drawDoc(e.Graphics, vRect);
-            drawCaret(e.Graphics, vPos.X, vPos.Y);
-            if (showNumLine)
-                drawLNA(e.Graphics, vRect);
+            if (e.ClipRectangle.Right <= lna()) {
+                // case A: 行番号表示域のみ更新
+                DrawLNA(e.Graphics, vRect, p);
+            } else if (lna() <= e.ClipRectangle.Left) {
+                // case B: テキスト表示域のみ更新
+                DrawTXT(e.Graphics, vRect, p);
+            } else {
+                // case C: 両方更新
+                DrawLNA(e.Graphics, vRect, p);
+                //p.SetClip(cvs_.zone());
+                DrawTXT(e.Graphics, vRect, p);
+                //p.ClearClip();
+            }
+
         }
 
         protected override bool IsInputChar(char charCode) {
             //return (!char.IsControl(charCode)) || (charCode == '\t');
+            if (charCode == '\r' || charCode == '\t') return true;
             return !char.IsControl(charCode);
         }
 
         private Boolean ldowm = false;
-        private CaretInfo sels, sele;
+        //private CaretInfo sels, sele;
         protected override void OnMouseDown(MouseEventArgs e) {
             Focus();
-
             if (e.Button == MouseButtons.Left) {
-                if (cur != sel) {
-                    CaretInfo c = new CaretInfo();
-                    GetVPos(e.X, e.Y, ref c);
+                //if (cur_.isSelectText()) {
+                //
+                //} else {
+                    cur_.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
+                //}
+                //if (cur != sel) {
+                //    CaretInfo c = new CaretInfo();
+                //    GetVPos(e.X, e.Y, ref c);
 
-                    if (Insel(c)) {
-                        ldowm = true;
-                        dostart = true;
+                //    if (Insel(c)) {
+                //        ldowm = true;
+                //        dostart = true;
 
-                        sels = new CaretInfo(cur);
-                        sele = new CaretInfo(sel);
-                        CorrectPos(ref sels, ref sele);
+                //        sels = new CaretInfo(cur);
+                //        sele = new CaretInfo(sel);
+                //        CorrectPos(ref sels, ref sele);
 
-                    } else {
-                        GetVPos(e.X, e.Y, ref cur);
+                //    } else {
+                //        GetVPos(e.X, e.Y, ref cur);
 
-                        int ad = cur.ad;
-                        int tl = cur.tl;
+                //        int ad = cur.ad;
+                //        int tl = cur.tl;
 
-                        ScrollTo(cur);
-                        UpdateCaretPos();
+                //        ScrollTo(cur);
+                //        UpdateCaretPos();
 
-                        cur.CopyTo(ref sel);
+                //        cur.CopyTo(ref sel);
 
-                        base.Invalidate();
+                //        base.Invalidate();
 
-                        ldowm = true;
-                        dostart = false;
-                    }
-                } else {
-                    GetVPos(e.X, e.Y, ref cur);
+                //        ldowm = true;
+                //        dostart = false;
+                //    }
+                //} else {
+                //    GetVPos(e.X, e.Y, ref cur);
 
-                    //int ad = cur.ad;
-                    //int tl = cur.tl;
+                //    //int ad = cur.ad;
+                //    //int tl = cur.tl;
 
-                    ScrollTo(cur);
-                    UpdateCaretPos();
+                //    ScrollTo(cur);
+                //    UpdateCaretPos();
 
-                    cur.CopyTo(ref sel);
+                //    cur.CopyTo(ref sel);
 
-                    base.Invalidate();
+                //    base.Invalidate();
 
-                    ldowm = true;
-                    dostart = false;
-                }
+                //    ldowm = true;
+                //    dostart = false;
+                //}
             }
             base.OnMouseDown(e);
         }
 
-        private void CorrectPos(ref CaretInfo s, ref CaretInfo e) {
-            // 必ずs<=eになるように修正
-            if (s > e) {
-                int tmp;
-                tmp = s.ad; s.ad = e.ad; e.ad = tmp;
-                tmp = s.tl; s.tl = e.tl; e.tl = tmp;
-            }
-        }
-
-        private Boolean Insel(CaretInfo caret) {
-            if (cur < sel) {
-                if (cur <= caret && caret <= sel) {
-                    return true;
-                }
-            } else if (cur > sel) {
-                if (sel <= caret && caret <= cur) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private Boolean Insel(CaretInfo caret, CaretInfo selStart, CaretInfo selEnd) {
-            if (selStart < selEnd) {
-                if (selStart <= caret && caret <= selEnd) {
-                    return true;
-                }
-            } else if (selStart > selEnd) {
-                if (selEnd <= caret && caret <= selStart) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e) {
-            if (dostart) {
-                GetVPos(e.X, e.Y, ref cur);
-                UpdateCaretPos();
-                cur.CopyTo(ref sel);
-
-                base.Invalidate();
-            }
-            ldowm = false;
-            dostart = false;
-
-            base.OnMouseUp(e);
-        }
         Boolean dostart = false;
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
-            if (ldowm) {
-                //if (cur == sel)
-                //{
-                //    Point p = this.PointToClient(MousePosition);
-                //    GetVPos(p.X, p.Y, ref cur);
-                //    CaretMove(true);
-                //    this.Invalidate();
-                //}
-                if (dostart) {
-                    //dostart = true;
-                    DoDragDrop("test", DragDropEffects.Move);
-                } else {
-                    Point p = this.PointToClient(MousePosition);
-                    GetVPos(p.X, p.Y, ref cur);
-                    MoveTo(true);
-                    this.Invalidate();
-                }
-            }
+            //if (ldowm) {
+            //    //if (cur == sel)
+            //    //{
+            //    //    Point p = this.PointToClient(MousePosition);
+            //    //    GetVPos(p.X, p.Y, ref cur);
+            //    //    CaretMove(true);
+            //    //    this.Invalidate();
+            //    //}
+            //    if (dostart) {
+            //        //dostart = true;
+            //        DoDragDrop("test", DragDropEffects.Move);
+            //    } else {
+            //        Point p = this.PointToClient(MousePosition);
+            //        GetVPos(p.X, p.Y, ref cur);
+            //        MoveTo(true);
+            //        this.Invalidate();
+            //    }
+            //}
         }
 
+        protected override void OnMouseUp(MouseEventArgs e) {
+            //if (dostart) {
+            //    GetVPos(e.X, e.Y, ref cur);
+            //    UpdateCaretPos();
+            //    cur.CopyTo(ref sel);
+
+            //    base.Invalidate();
+            //}
+            //ldowm = false;
+            //dostart = false;
+
+            base.OnMouseUp(e);
+        }
+ 
+
         protected override void OnMouseEnter(EventArgs e) {
-            Cursor = Cursors.IBeam;
+            //Cursor = Cursors.IBeam;
             base.OnMouseEnter(e);
         }
 
         protected override void OnMouseLeave(EventArgs e) {
-            Cursor = Cursors.Default;
+            //Cursor = Cursors.Default;
             base.OnMouseLeave(e);
         }
 
-        public void GetVPos(int x, int y, ref CaretInfo curPos) {
-            // x座標補正
-            x = x - vRect.NumLineLeft + hScrollBar.Value;
+        //private void CorrectPos(ref CaretInfo s, ref CaretInfo e) {
+        //    // 必ずs<=eになるように修正
+        //    if (s > e) {
+        //        int tmp;
+        //        tmp = s.ad; s.ad = e.ad; e.ad = tmp;
+        //        tmp = s.tl; s.tl = e.tl; e.tl = tmp;
+        //    }
+        //}
 
-            int tl = udScr_tl_;
-            int vl = vScrollBar.Value - udScr_vrl_;
-            int rl = y / lineHeight + udScr_vrl_;
-            if (rl >= 0) // View上端より下の場合、下方向を調べる
-                while (tl < doc.LineList.Count && GetvlCnt(tl) <= rl) {
-                    vl += GetvlCnt(tl);
-                    rl -= GetvlCnt(tl);
-                    ++tl;
-                } else           // View上端より上の場合、上方向を調べる
-                while (0 <= tl && rl < 0) {
-                    vl -= GetvlCnt(tl);
-                    rl += GetvlCnt(tl);
-                    --tl;
-                }
+        //private Boolean Insel(CaretInfo caret) {
+        //    if (cur < sel) {
+        //        if (cur <= caret && caret <= sel) {
+        //            return true;
+        //        }
+        //    } else if (cur > sel) {
+        //        if (sel <= caret && caret <= cur) {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
-            if (tl == doc.LineList.Count) // EOFより下に行ってしまう場合の補正
-	        {
-                --tl;
-                vl -= GetvlCnt(tl);
-                rl = GetvlCnt(tl) - 1;
-            } else if (tl == -1) // ファイル頭より上に行ってしまう場合の補正
-	        {
-                tl = vl = rl = 0;
-            }
+        //private Boolean Insel(CaretInfo caret, CaretInfo selStart, CaretInfo selEnd) {
+        //    if (selStart < selEnd) {
+        //        if (selStart <= caret && caret <= selEnd) {
+        //            return true;
+        //        }
+        //    } else if (selStart > selEnd) {
+        //        if (selEnd <= caret && caret <= selStart) {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
-            curPos.tl = tl;
-            curPos.vl = vl + rl;
-            curPos.rl = rl;
-
-            if (rl < GetvlCnt(tl)) {
-                IBuffer buf = doc.LineList[tl].Text;
-                int adend = wrapList[tl].wrap[rl];
-                int ad = (rl == 0 ? 0 : wrapList[tl].wrap[rl - 1]);
-                int vx = (rl == 0 ? 0 : CalcStringWidth(buf, ad++, 1));
-
-                while (ad < adend) {
-                    int nvx = vx + CalcStringWidth(buf, ad, 1);
-                    if (x + 2 < nvx)
-                        break;
-                    vx = nvx;
-                    ++ad;
-                }
-
-                curPos.ad = ad;
-                curPos.rx = curPos.vx = vx;
-            } else {
-                curPos.ad = curPos.rx = curPos.vx = 0;
-            }
-        }
+        
 
         protected override void OnDragDrop(DragEventArgs drgevent) {
-            isdropfile = false;
-            ldowm = false;
-            cur.CopyTo(ref sel);
+            //isdropfile = false;
+            //ldowm = false;
+            //cur.CopyTo(ref sel);
 
-            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop)) {
+            //if (drgevent.Data.GetDataPresent(DataFormats.FileDrop)) {
 
-                string[] files = (string[])drgevent.Data.GetData(DataFormats.FileDrop, false);
+            //    string[] files = (string[])drgevent.Data.GetData(DataFormats.FileDrop, false);
 
-            } else if (drgevent.Data.GetDataPresent(typeof(string))) {
-                dostart = false;
-                if (!Insel(cur, sels, sele)) {
-                    string ss = (string)drgevent.Data.GetData(DataFormats.UnicodeText);
-                    ss = GetText(sels, sele).ToString();
+            //} else if (drgevent.Data.GetDataPresent(typeof(string))) {
+            //    dostart = false;
+            //    if (!Insel(cur, sels, sele)) {
+            //        string ss = (string)drgevent.Data.GetData(DataFormats.UnicodeText);
+            //        ss = GetText(sels, sele).ToString();
 
-                    if (cur < sels) {
-                        Input(ss);
-                        CaretInfo s = new CaretInfo(cur);
-                        Del(sels, sele);
-                        s.CopyTo(ref cur);
-                        cur.CopyTo(ref sel);
-                    } else if (cur > sele) {
-                        Input(ss);
-                        CaretInfo s = new CaretInfo(cur);
-                        int nn = vlNum_;
-                        int t = sels.tl - sele.tl;
-                        int dad = sele.ad - sels.ad;
-                        Del(sels, sele);
+            //        if (cur < sels) {
+            //            Input(ss);
+            //            CaretInfo s = new CaretInfo(cur);
+            //            Del(sels, sele);
+            //            s.CopyTo(ref cur);
+            //            cur.CopyTo(ref sel);
+            //        } else if (cur > sele) {
+            //            Input(ss);
+            //            CaretInfo s = new CaretInfo(cur);
+            //            int nn = vlNum_;
+            //            int t = sels.tl - sele.tl;
+            //            int dad = sele.ad - sels.ad;
+            //            Del(sels, sele);
 
-                        if (s.tl == cur.tl) {
-                            s.ad -= dad;
-                        }
-                        s.vl += vlNum_ - nn;
-                        s.tl += t;
+            //            if (s.tl == cur.tl) {
+            //                s.ad -= dad;
+            //            }
+            //            s.vl += vlNum_ - nn;
+            //            s.tl += t;
 
-                        ConvDPosToVPos(s, ref cur, ref s);
+            //            ConvDPosToVPos(s, ref cur, ref s);
 
-                        //s.CopyTo(ref cur);
-                        cur.CopyTo(ref sel);
+            //            //s.CopyTo(ref cur);
+            //            cur.CopyTo(ref sel);
 
 
-                    }
-                    UpdateCaretPos();
-                }
-            }
-            //base.OnDragDrop(drgevent);
+            //        }
+            //        UpdateCaretPos();
+            //    }
+            //}
+            base.OnDragDrop(drgevent);
 
         }
 
@@ -1067,11 +932,11 @@ namespace AsControls {
             if (!Focused)
                 Focus();
 
-            //base.OnDragOver(drgevent);
-            Point p = this.PointToClient(new Point(drgevent.X, drgevent.Y));
-            GetVPos(p.X, p.Y, ref cur);
-            ScrollTo(cur);
-            UpdateCaretPos();
+            ////base.OnDragOver(drgevent);
+            //Point p = this.PointToClient(new Point(drgevent.X, drgevent.Y));
+            //GetVPos(p.X, p.Y, ref cur);
+            //ScrollTo(cur);
+            //UpdateCaretPos();
             base.Invalidate();
         }
 
@@ -1089,56 +954,27 @@ namespace AsControls {
             base.OnDragEnter(drgevent);
         }
 
-        public bool SearchText(string sh) {
-            Search search = new Search(this.doc);
-            search.searchstr = sh;
-            CaretInfo bgn = new CaretInfo(cur);
-            CaretInfo end = new CaretInfo(cur);
+        //public bool SearchText(string sh) {
+        //    Search search = new Search(this.doc);
+        //    search.searchstr = sh;
+        //    CaretInfo bgn = new CaretInfo(cur);
+        //    CaretInfo end = new CaretInfo(cur);
 
-            if (search.FindNext(cur, ref bgn, ref end)) {
-                ConvDPosToVPos(bgn, ref cur);
-                ConvDPosToVPos(end, ref sel);
-                MoveTo(true);
-                base.Invalidate();
-                return true;
-            }
+        //    if (search.FindNext(cur, ref bgn, ref end)) {
+        //        ConvDPosToVPos(bgn, ref cur);
+        //        ConvDPosToVPos(end, ref sel);
+        //        MoveTo(true);
+        //        base.Invalidate();
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
-            return false;
-        }
-
-        public void Home() {
-            CaretInfo np = new CaretInfo();
-            if (cur.rl == 0) {
-                np.tl = cur.tl;
-                np.vl = cur.vl - cur.rl;
-            } else {
-                CaretInfo np2 = new CaretInfo();
-                np2.tl = cur.tl;
-                np2.ad = wrapList[cur.tl].wrap[cur.rl - 1];
-                ConvDPosToVPos(np2, ref np, ref cur);
-            }
-
-            ConvDPosToVPos(np, ref cur);
-            MoveTo(true);
-        }
-
-        public void End() {
-
-        }
-
-        public void Clear() {
-
-        }
-
-        public void Copy() {
-
-        }
-
-        public void Cut() {
-            string buff;
-            doc.Delete(cur, sel, out buff);
-            Clipboard.SetText(buff);
-        }
+        //public void Cut() {
+        //    string buff;
+        //    doc.Delete(cur, sel, out buff);
+        //    Clipboard.SetText(buff);
+        //}
 
         //public void Paste()
         //{
@@ -1150,11 +986,47 @@ namespace AsControls {
         #region ITextEditor メンバ
 
         public void Paste() {
-            string t = Clipboard.GetText();
-            Input(t);
-            base.Invalidate();
+            //string t = Clipboard.GetText();
+            //Input(t);
+            //base.Invalidate();
         }
 
         #endregion
+
+        //
+        //-------------------------------------------------------------------------
+        // 再描画したい範囲を Invalidate する。
+        //-------------------------------------------------------------------------
+        void ReDraw( ReDrawType r, DPos s )
+        {
+	        // まずスクロールバーを更新
+	        //UpdateScrollBar();
+
+	        switch( r ){
+                case ReDrawType.ALL: // 全画面
+		        //::InvalidateRect( hwnd_, NULL, FALSE );
+                this.Invalidate(false);
+                break;
+
+                case ReDrawType.LNAREA: // 行番号表示域のみ
+		        if( lna() > 0 )
+		        {
+			        Rectangle rc = new Rectangle(0, 0, lna(), bottom());
+			        //::InvalidateRect( hwnd_, &rc, FALSE );
+                    this.Invalidate(rc, false);
+		        }
+		        break;
+
+                case ReDrawType.LINE: // 指定した行の後半
+                case ReDrawType.AFTER: // 指定した行以下全部
+		        //{
+			        DPos st = ( s.ad==0 ? s : doc_.leftOf(s,true) );
+                    InvalidateView(st, r == ReDrawType.AFTER);
+		        //}
+                break;
+	        }
+        }
+        //
+
     }
 }
