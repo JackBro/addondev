@@ -316,5 +316,13 @@ namespace AsControls
         //        return buf;
         //    }
         //}
+        internal Rectangle getClientRect() {
+            //return this.ClientRectangle;
+            //throw new NotImplementedException();
+            Rectangle crect = this.ClientRectangle;
+            ////Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height-hScrollBar.Height));
+            Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height - hScrollBar.Height));
+            return rec;
+        }
     }
 }

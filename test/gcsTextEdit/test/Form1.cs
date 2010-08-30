@@ -58,7 +58,7 @@ namespace test
 //            csedit.Text = @"12345
 //title>HOGE</title>";
 
-            csedit.Text = @"1234567890
+            csedit.Text = @"123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
 mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 TTTTTTTTTTTTgg";
 

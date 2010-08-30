@@ -28,16 +28,32 @@ namespace AsControls {
 	    public int wrapWidth() { return wrapWidth_; }
 
         int figNum_; // 行番号の桁数
-
+        private gcsTextEdit view;
         public Canvas(gcsTextEdit view, Config config) {
             txtZone_ = view.ClientRectangle;
+            //txtZone_ = new Rectangle();
             showLN = true;
             wrapType = WrapType.Non;
-            //wrapType = WrapType.Window;
-            txtZone_ = view.ClientRectangle;
+            wrapType = WrapType.Window;
+            //txtZone_ = view.ClientRectangle;
             font_ = new Painter(view.Handle, config);
             wrapWidth_ = 0xfffffff;
+            //wrapWidth_ = view.cx() - 3; //TODO
             //wrapWidth_ = 100;
+            this.view = view;
+            //TODO wrap
+            view.SizeChanged += (sender, e) => {
+
+            };
+
+            //view.VisibleChanged += new EventHandler(view_VisibleChanged);
+        }
+
+        void view_VisibleChanged(object sender, EventArgs e) {
+            if (view.Visible) {
+                txtZone_ = view.getClientRect();
+                view.VisibleChanged -= view_VisibleChanged;
+            }
         }
 
         public Painter getPainter() {
@@ -67,11 +83,15 @@ namespace AsControls {
                 //    txtZone_.Left = 0; // 行番号ゾーンがデカすぎるときは表示しない
                 
                int left = (1 + figNum_) * font_.F();
-               if (left + font_.W() >= txtZone_.Right)
+               if (left + font_.W() >= txtZone_.Right) {
                    left = 0; // 行番号ゾーンがデカすぎるときは表示しない
+                   //txtZone_ = new Rectangle(new Point(left, txtZone_.Top), new Size(view.cx(), txtZone_.Size.Height));
+               }
 
                if (left != txtZone_.Left)
-                   txtZone_ = new Rectangle(new Point(left, txtZone_.Top), txtZone_.Size);
+                   //txtZone_ = new Rectangle(new Point(left, txtZone_.Top), txtZone_.Size);
+                   //TODO wrap
+                   txtZone_ = new Rectangle(new Point(left, txtZone_.Top), new Size(view.cx() - 3 , txtZone_.Size.Height));
 	        }
 	        else
 	        {
@@ -90,7 +110,8 @@ namespace AsControls {
                     wrapWidth_ = 0xfffffff;
 		        break;
             case WrapType.Window:
-		        wrapWidth_ = txtZone_.Right - txtZone_.Left - 3;
+                wrapWidth_ = txtZone_.Right - txtZone_.Left - 3 - 16; //TODO wrap
+                //wrapWidth_ = view.cx()-3; //TODO
 		        break; //Caretの分-3補正
             default:
             //    wrapWidth_ = wrapType_ * font_->W();
@@ -114,9 +135,11 @@ namespace AsControls {
 
         public bool on_view_resize( int cx, int cy )
         {
+            //TODO wrap
 	        //txtZone_.right  = cx;
 	        //txtZone_.bottom = cy;
-            txtZone_ = new Rectangle(txtZone_.Left, txtZone_.Top, cx, cy);
+            txtZone_ = new Rectangle(txtZone_.Left, txtZone_.Top, cx - txtZone_.Left, cy - txtZone_.Top);
+            //txtZone_ = new Rectangle(txtZone_.Left, txtZone_.Top, cx - 18, cy - 18);
 
 	        CalcLNAreaWidth();
 	        if( wrapType == WrapType.Window )

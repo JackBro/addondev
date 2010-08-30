@@ -189,9 +189,9 @@ namespace AsControls {
             e.ad = s.ad;
             e.tl = s.tl;
 
-            if (s.Equals(e)) {
-                int i = 0;
-            }
+            //if (s.Equals(e)) {
+            //    int i = 0;
+            //}
 
             int lineLen = 0;
 

@@ -71,6 +71,7 @@ namespace AsControls {
             //Win32API.ReleaseDC
             //widthTableMap_ = new Dictionary<char, int>();
             config_ = config;
+            fint_ = config_.Font.ToHfont();
 
             widthTable_ = new int[65536];
             int s = (int)' ';
@@ -79,7 +80,8 @@ namespace AsControls {
             for(int i=s; i<=e; i++){
                 //int w2 = getStringWidth(((char)i).ToString());
                 //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
-                Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
+                //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
+                w = CalcStringWidth(((char)i).ToString());
                 widthTable_[i] = w;
             }
             widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
@@ -93,7 +95,6 @@ namespace AsControls {
 
             height_ = (int)(config.Font.GetHeight() + 0.5f);
 
-            fint_ = config_.Font.ToHfont();
             //Win32API.TEXTMETRIC tm;
             //////using (Graphics g = this.CreateGraphics()) {
             //Win32API.GetTextMetrics(dc_, out tm);
@@ -154,8 +155,8 @@ namespace AsControls {
                config_.Font,
                new Point(X, Y),
                c,
-                //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
-                TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
+                TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+                //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
 
         }
 

@@ -26,6 +26,7 @@ namespace AsControls {
         public bool ReSetScrollInfo()
         {
 	        int prevRlPos = hScrollBar.Value;
+            //Rectangle rec = cvs_.zone();
 	        int cx = cvs_.zone().Right - cvs_.zone().Left;
 	        int cy = cvs_.zone().Bottom;
 
@@ -33,18 +34,26 @@ namespace AsControls {
         //	rlScr_.nPage = cx + 1;
         //	rlScr_.nMax  = Max( textCx_, cx );
         //	rlScr_.nPos  = Min<int>( rlScr_.nPos, rlScr_.nMax-rlScr_.nPage+1 );
+            hScrollBar.Left = 0;
+            hScrollBar.Top = this.Height - hScrollBar.Height;
+            hScrollBar.Width = this.Width - vScrollBar.Width;
             hScrollBar.nPage = cx + 1;
             //hScrollBar.Maximum = Math.Max(textCx_ + 3, cx);
             hScrollBar.Maximum = Math.Max(textCx_, cx);
             hScrollBar.Value = Math.Min(hScrollBar.Value, hScrollBar.Maximum - hScrollBar.nPage + 1);
             hScrollBar.SmallChange = 1;
+            hScrollBar.SmallChange = fnt().W()+1; //TODO
             hScrollBar.LargeChange = hScrollBar.nPage;
 
 	        // 縦はnPageとnMaxはとりあえず補正
 	        // nPosは場合によって直し方が異なるので別ルーチンにて
+            vScrollBar.Left = this.Width - vScrollBar.Width;
+            vScrollBar.Top = 0;
+            vScrollBar.Height = this.Height - hScrollBar.Height;
             vScrollBar.nPage = cy / cvs_.getPainter().H() + 1;
             vScrollBar.Maximum = vln() + vScrollBar.nPage - 2;
             vScrollBar.SmallChange = 1;
+            //vScrollBar.SmallChange = cvs_.getPainter().H();
             vScrollBar.LargeChange = vScrollBar.nPage;
 	        
             // 横スクロールが起きたらtrue
@@ -141,16 +150,17 @@ namespace AsControls {
 		        else if( hScrollBar.Maximum-hScrollBar.nPage < hScrollBar.Value+dx ) 
 			        dx = hScrollBar.Maximum-hScrollBar.nPage-hScrollBar.Value+1;
 
-		        hScrollBar.Value += dx;
+		        //hScrollBar.Value += dx;
 		        //::SetScrollInfo( hwnd_, SB_HORZ, &rlScr_, TRUE );
-		        dx = -dx;
+		        //dx = -dx;
 	        }
 	        if( dy != 0 ){
 		        // 範囲チェック…は前処理で終わってる。
 
-		        vScrollBar.Value += dy;
+		        //vScrollBar.Value += dy;
 		        //::SetScrollInfo( hwnd_, SB_VERT, &udScr_, TRUE );
-		        dy *= -H;
+		        //dy *= -H;
+                //dy *= H;
 	        }
 
 	        if( dx!=0 || dy!=0 ){
@@ -172,25 +182,28 @@ namespace AsControls {
 			        if( update ){
 				        // 縦スクロールは高速化したいので一工夫
 				        if( dy != 0 ){
-					        // 再描画の必要な領域を自分で計算
-					        Rectangle rc = new Rectangle (0,0,right(),bottom());
-					        if( dy < 0 ){
-                                //rc.Top  = rc.Bottom + dy;
-                                rc = new Rectangle(rc.Left, rc.Bottom + dy, rc.Width, rc.Height);
-                            }else{
-                                //rc.Bottom = dy;
-                                rc = new Rectangle(rc.Left, rc.Top, rc.Width, dy);
-                            }
-
+                            //// 再描画の必要な領域を自分で計算
+                            //Rectangle rc = new Rectangle (0,0,right(),bottom());
+                            ////dy *= H;
+                            //if( dy < 0 ){
+                            //    //rc.Top  = rc.Bottom + dy;
+                            //    rc = new Rectangle(rc.Left, rc.Bottom + dy, rc.Width, rc.Height);
+                            //}else{
+                            //    //rc.Bottom = dy;
+                            //    rc = new Rectangle(rc.Left, rc.Top, rc.Width, dy);
+                            //}
 					        // インテリマウスの中ボタンクリックによる
 					        // オートスクロール用カーソルの下の部分を先に描く
 					        // ２回に分けることで、小さな矩形部分二つで済むので高速
 					        //::ValidateRect( hwnd_, &rc );
 					        //::UpdateWindow( hwnd_ );
 					        //::InvalidateRect( hwnd_, &rc, FALSE );
-                            this.Invalidate(rc, false);
+                            
+                            //this.Invalidate(rc, false);
+                            
 				        }
 				        //::UpdateWindow( hwnd_ );
+                        this.Invalidate(false); //TODO
 			        }
 		        }
 	        }
@@ -469,8 +482,10 @@ namespace AsControls {
 
                 // 横座標
                 v.XBASE = left() - hScrollBar.Value;
+                //v.XBASE = left() - hScrollBar.Value/fnt().W();
                 v.XMIN = v.rc.Left - v.XBASE;
-                v.XMAX = v.rc.Right - v.XBASE;
+                v.XMAX = v.rc.Right - v.XBASE; //TODO
+                //v.XMAX = v.rc.Right - v.XBASE -vScrollBar.Width;
 
                 // 選択範囲
                 v.SXB = v.SXE = v.SYB = v.SYE = 0x7fffffff;

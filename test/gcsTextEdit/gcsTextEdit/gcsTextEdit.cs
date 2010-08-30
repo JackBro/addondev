@@ -139,6 +139,7 @@ namespace AsControls {
         //public int cxAll() { return cvs_.zone().Right; }
         //public int cy() { return cvs_.zone().Bottom - hScrollBar.Height; }
 
+        //TODO
         public int left() { return cvs_.zone().Left; }
         public int right() { return cvs_.zone().Right; }
         public int bottom() { return cvs_.zone().Bottom; }
@@ -167,15 +168,7 @@ namespace AsControls {
             //wrapType = WrapType.Non;
             //showNumLine = true;
 
-            doc_ = new Document();
-            doc_.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
-            //
-            Config config = new Config();
-            //config.setFontInfo(this.Font.Name, this.Font.Size);
-            config.setFont(this.Font);
-            cvs_ = new Canvas(this, config);
-            cur_ = new Cursor(this, doc_, new Caret(this.Handle));
-            base.AllowDrop = true;
+
 
             //initDraw();
             //initWrap();
@@ -185,12 +178,12 @@ namespace AsControls {
 
             vScrollBar = new VGcsScrollBar();
             vScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
-            vScrollBar.Dock = DockStyle.Right;
+            //vScrollBar.Dock = DockStyle.Right;
             this.Controls.Add(vScrollBar);
 
             hScrollBar = new HGcsScrollBar();
             hScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
-            hScrollBar.Dock = DockStyle.Bottom;
+            //hScrollBar.Dock = DockStyle.Bottom;
             this.Controls.Add(hScrollBar);
 
             //scPanel.BackColor = this.BackColor;
@@ -214,6 +207,17 @@ namespace AsControls {
             };
 
             KeyBind = new KeyMap();
+
+            doc_ = new Document();
+            doc_.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
+            //
+            Config config = new Config();
+            //config.setFontInfo(this.Font.Name, this.Font.Size);
+            config.setFont(this.Font);
+            cvs_ = new Canvas(this, config);
+            cur_ = new Cursor(this, doc_, new Caret(this.Handle));
+            base.AllowDrop = true;
+
             //KeyBind.SetAction("cmd_Undo", delegate(object obj)
             //{
             //    if (doc.UndoManager.CanUndo) {
@@ -719,12 +723,12 @@ namespace AsControls {
                 DrawLNA(e.Graphics, vRect, p);
             } else if (lna() <= e.ClipRectangle.Left) {
                 // case B: テキスト表示域のみ更新
-                DrawTXT(e.Graphics, vRect, p);
+                DrawTXT2(e.Graphics, vRect, p);
             } else {
                 // case C: 両方更新
                 DrawLNA(e.Graphics, vRect, p);
                 //p.SetClip(cvs_.zone());
-                DrawTXT(e.Graphics, vRect, p);
+                DrawTXT2(e.Graphics, vRect, p);
                 //p.ClearClip();
             }
 
