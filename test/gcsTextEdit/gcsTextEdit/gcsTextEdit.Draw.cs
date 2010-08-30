@@ -176,7 +176,7 @@ namespace AsControls
                     //y += p.H() * rln(i);
                     //g.DrawString(n.ToString(), this.Font, ppp, edge, y, sf);
                     //g.DrawString(n.ToString(), this.Font, ppp, edge, y, sf);
-                    p.DrawText(g, n.ToString(), Color.Black, edge, y);
+                    p.DrawLineNum(g, n.ToString(), Color.Black, edge, y);
                     y += p.H() * rln(i);
                 }
             }
@@ -395,7 +395,9 @@ namespace AsControls
                     //if( v.SYB<=a.top && a.top<=v.SYE )
                     //    Inv( a.top, a.top==v.SYB?v.SXB:(v.XBASE),
                     //                a.top==v.SYE?v.SXE:(v.XBASE+x), p );
-
+                    if (v.SYB <= aTop && aTop <= v.SYE)
+                        Inv(g, aTop, aTop == v.SYB ? v.SXB : (v.XBASE),
+                                    aTop == v.SYE ? v.SXE : (v.XBASE + x), p);
                     // 行末より後ろの余白を背景色塗
                     if( x<v.XMAX )
                     {
@@ -429,6 +431,14 @@ namespace AsControls
                 //a.Bottom = v.rc.Bottom;
                 //p.Fill( a );
             }
+        }
+
+        private void Inv(Graphics g, int y, int xb, int xe, Painter p )
+        {
+            var rc = new Rectangle(
+                Math.Max(left(), xb), y,
+                Math.Min(right(), xe), y + p.H() - 1);
+	        p.Invert(g, rc );
         }
 
         //private void drawDoc(Graphics g, VDrawInfo v)

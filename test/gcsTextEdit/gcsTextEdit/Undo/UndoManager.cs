@@ -104,15 +104,15 @@ namespace AsControls
         {
             this.document = document;
 
-            //this.s = new VPos();
+            this.s = new VPos();
             this.s.ad = s.ad;
             this.s.tl = s.tl;
 
-            //this.e = new VPos();
+            this.e = new VPos();
             this.e.ad = e.ad;
             this.e.tl = e.tl;
 
-            //this.e2 = new VPos();
+            this.e2 = new VPos();
             this.e2.ad = e2.ad;
             this.e2.tl = e2.tl;
 

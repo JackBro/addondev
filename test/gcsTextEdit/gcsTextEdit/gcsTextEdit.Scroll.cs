@@ -55,6 +55,11 @@ namespace AsControls {
             vScrollBar.SmallChange = 1;
             //vScrollBar.SmallChange = cvs_.getPainter().H();
             vScrollBar.LargeChange = vScrollBar.nPage;
+
+            //EditorPanel.Top = 0;
+            //EditorPanel.Left = 0;
+            //EditorPanel.Width = this.Width - vScrollBar.Width;
+            //EditorPanel.Height = this.Height - hScrollBar.Height;
 	        
             // 横スクロールが起きたらtrue
             return (prevRlPos != hScrollBar.Value);
@@ -290,7 +295,8 @@ namespace AsControls {
                 dy = vp.vl - (vScrollBar.Value + vScrollBar.nPage) + 2;
 
 	        // スクロール
-	        if( dy!=0 )	UpDown( dy, dx==0 );
+	        if( dy!=0 )	
+                UpDown( dy, dx==0 );
 	        if( dx!=0 )	ScrollView( dx, 0, true );
         }
 

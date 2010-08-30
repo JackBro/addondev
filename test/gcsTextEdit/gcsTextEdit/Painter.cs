@@ -38,7 +38,9 @@ namespace AsControls {
         //@{ 次のタブ揃え位置を計算 //@}
         private int T() { return widthTable_[ '\t' ]; }
 	    public int nextTab(int x) { int t=T(); return ((x+4)/t+1)*t; }
-
+        
+        private StringFormat sf = new StringFormat();
+        //
 
         public int W(char ch ) // 1.08 サロゲートペア回避
 		{
@@ -94,6 +96,7 @@ namespace AsControls {
             }
 
             height_ = (int)(config.Font.GetHeight() + 0.5f);
+            sf.Alignment = StringAlignment.Center;
 
             //Win32API.TEXTMETRIC tm;
             //////using (Graphics g = this.CreateGraphics()) {
@@ -133,7 +136,7 @@ namespace AsControls {
         }
 
         public void DrawLine(Graphics g, int x1, int y1, int x2, int y2) {
-            g.DrawLine(numPen, x1, y1, x2, x2);
+            g.DrawLine(numPen, x1, y1, x2, y2);
         }
 
         public void DrawZen(Graphics g, int X, int Y, int len) {
@@ -147,7 +150,9 @@ namespace AsControls {
                 g.DrawString(">", config_.Font, tabbrush, X + i * T(), Y);
             }
         }
-
+        public void DrawLineNum(Graphics g, string text, Color c, int X, int Y) {
+            g.DrawString(text, config_.Font, TextBrush, new Point(X, Y), sf);
+        }
         public void DrawText(Graphics g, string text, Color c, int X, int Y) {
             //g.DrawString(text, config_.Font, TextBrush, new Point(X, Y));
             TextRenderer.DrawText(g,

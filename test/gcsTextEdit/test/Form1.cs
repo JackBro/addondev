@@ -60,7 +60,27 @@ namespace test
 
             csedit.Text = @"123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
 mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-TTTTTTTTTTTTgg";
+TTTTTTTTTTTTgg
+ffffffffffffffffff
+hhhhhhhhhhhhhh
+kkkkkkkkkkkkkkkk
+kkkkkkkkkkkkkkkk
+kkkkkkkkkkkkkkkkk
+llllllllllllllllllll
+fffffffffffffffff
+eeeeeeeeeeeeeeeeeeeee
+r
+r
+r
+r
+r
+r
+
+ryyyyyyyyyyyyyyyyyyyyyyyyy
+yy
+yyy
+y
+yy";
 
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;

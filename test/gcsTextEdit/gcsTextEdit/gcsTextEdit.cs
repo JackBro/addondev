@@ -44,7 +44,7 @@ namespace AsControls {
         int udScr_vrl_; //一番上に表示される表示行のVRLine_Index
 
 
-        //Panel scPanel = new Panel();
+        //Panel EditorPanel = new Panel();
 
         ImeComposition imeComposition;
 
@@ -164,6 +164,12 @@ namespace AsControls {
         public gcsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
+            //EditorPanel = new Panel();
+            ////EditorPanel.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+            //EditorPanel.BackColor = this.BackColor;
+            ////EditorPanel.Size = new Size(hScrollBar.Height, vScrollBar.Width);
+            //this.Controls.Add(EditorPanel);
+
             //wrapType = WrapType.WindowWidth;
             //wrapType = WrapType.Non;
             //showNumLine = true;
@@ -205,6 +211,7 @@ namespace AsControls {
             this.KeyDown += (sender, e) => {
                 
             };
+            this.VisibleChanged += new EventHandler(gcsTextEdit_VisibleChanged);
 
             KeyBind = new KeyMap();
 
@@ -238,6 +245,13 @@ namespace AsControls {
             Initialize();
         }
 
+        void gcsTextEdit_VisibleChanged(object sender, EventArgs e) {
+            if (this.Visible) {
+                DoResize(cvs_.on_view_resize(this.ClientSize.Width - vScrollBar.Width, this.ClientSize.Height - hScrollBar.Height));
+                this.VisibleChanged -= gcsTextEdit_VisibleChanged;
+            }
+        }
+
         public void Initialize() {
             //doc.Clear();
             //InitCaret();
@@ -250,6 +264,26 @@ namespace AsControls {
             udScr_tl_ = 0;
             udScr_vrl_ = 0;
             ReSetScrollInfo();
+        }
+
+        //public new Rectangle ClientRectangle {
+        //    get {
+        //        int w = base.ClientRectangle.Width - vScrollBar.Width;
+        //        int h = base.ClientRectangle.Height - hScrollBar.Height;
+
+        //        Rectangle rec = new Rectangle(base.ClientRectangle.Location, new Size(w < 0 ? 0 : w, h < 0 ? 0 : h));
+        //        //return base.ClientRectangle;
+        //        return rec;
+        //    }
+        //}
+
+        internal Rectangle getClientRect() {
+            return this.ClientRectangle;
+            //throw new NotImplementedException();
+            //Rectangle crect = this.ClientRectangle;
+            ////Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height-hScrollBar.Height));
+            //Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height - hScrollBar.Height));
+            //return EditorPanel.ClientRectangle;
         }
 
         void doc_TextUpdateEvent(VPos s, VPos e, VPos e2) {
@@ -335,9 +369,16 @@ namespace AsControls {
 
             base.OnSizeChanged(e);
 
-            DoResize(cvs_.on_view_resize(this.ClientSize.Width, this.ClientSize.Height));
+            DoResize(cvs_.on_view_resize(this.ClientSize.Width-vScrollBar.Width, this.ClientSize.Height-hScrollBar.Height));
+            //DoResize(cvs_.on_view_resize(this.ClientSize.Width, this.ClientSize.Height));
             //base.Invalidate();
         }
+
+        //public new Size ClientSize {
+        //    get {
+        //        return new Size(base.ClientSize.Width - vScrollBar.Width, base.ClientSize.Height - hScrollBar.Height);
+        //    }
+        //}
 
         //int tl2vl(int tl) {
         //    if (vlNum_ == doc.tln)
@@ -642,6 +683,9 @@ namespace AsControls {
                 //Input(e.KeyChar.ToString());
                 cur_.InputChar(e.KeyChar);
                 e.Handled = true;
+            }else if(e.KeyChar == '\r' ){
+                cur_.Input("\r\n", 2);
+                e.Handled = true;
             }
         }
 
@@ -736,7 +780,7 @@ namespace AsControls {
 
         protected override bool IsInputChar(char charCode) {
             //return (!char.IsControl(charCode)) || (charCode == '\t');
-            if (charCode == '\r' || charCode == '\t') return true;
+            if (charCode == '\t') return true;
             return !char.IsControl(charCode);
         }
 

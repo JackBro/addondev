@@ -146,9 +146,6 @@ namespace AsControls {
             }
         }
 
-        
-
-
         private void Insert(ref VPos s, ref VPos e, string text) {
             //// 位置補正
             //DPos cs = s as DPos;
@@ -226,40 +223,74 @@ namespace AsControls {
         }
 
         private void Delete(ref VPos s, ref VPos e, out string buff) {
+            //CorrectPos(ref s, ref e);
+            //buff = string.Empty;
+            //if (s.tl == e.tl) {
+            //    Line linfo = text_[s.tl];
+            //    buff = linfo.Text.Substring(s.ad, e.ad - s.ad).ToString();
+            //    linfo.Text.Remove(s.ad, e.ad - s.ad);
+            //} else {
+            //    //// 先頭行の後ろを削除
+            //    //text_[s.tl].RemoveToTail(s.ad);
+            //    //// 終了行の残り部分をくっつける
+            //    //text_[s.tl].InsertToTail(tl(e.tl) + e.ad, len(e.tl) - e.ad);
+            //    //// いらん行を削除
+            //    //text_.RemoveAt(s.tl + 1, e.tl - s.tl);
+
+            //    string remtext = text_[s.tl].Text.ToString();
+            //    if (s.ad < text_[s.tl].Text.Length) {
+            //        buff = text_[s.tl].Text.Substring(s.ad).ToString();
+            //        remtext = text_[s.tl].Text.Substring(0, s.ad).ToString();
+
+            //    }
+            //    for (int i = s.tl + 1; i < e.tl - s.tl; i++) {
+            //        buff += "\r\n" + text_[i].Text.ToString();
+            //    }
+            //    string mm = (text_[e.tl].Text.IsEmpty ? string.Empty : text_[e.tl].Text.Substring(0, e.ad).ToString());
+            //    buff += "\r\n" + mm;
+
+            //    //LineList[s.tl].SetText(remtext + mm);
+            //    int len = text_[e.tl].Text.Length;
+            //    //string mm2=LineList[e.tl].Text.Substring(e.ad, len-e.ad).ToString();
+            //    string mm2 = (text_[e.tl].Text.IsEmpty ? string.Empty : text_[e.tl].Text.Substring(0, len - e.ad).ToString());
+            //    text_[s.tl].SetText(remtext + mm2);
+            //    text_.RemoveRange(s.tl + 1, e.tl - s.tl);
+            //}
+
+            //highlighter.Parse(text_[s.tl].Text, text_[s.tl].AttributeList);
+
+            // 位置補正
+            CorrectPos(ref s);
+            CorrectPos(ref e);
             CorrectPos(ref s, ref e);
-            buff = string.Empty;
+
+            // 削除される量をカウント
+            int undosiz = getRangeLength(s, e);
+
+            // Undo操作用バッファ確保
+            //undobuf = new unicode[undosiz + 1];
+            //getText(undobuf, s, e);
+            buff = getText(s, e);
+
+            // 削除る
             if (s.tl == e.tl) {
-                Line linfo = text_[s.tl];
-                buff = linfo.Text.Substring(s.ad, e.ad - s.ad).ToString();
-                linfo.Text.Remove(s.ad, e.ad - s.ad);
+                // 一行内削除
+                //text_[s.tl].RemoveAt(s.ad, e.ad - s.ad);
+                text_[s.tl].Text.Remove(s.ad, e.ad - s.ad);
             } else {
-                //// 先頭行の後ろを削除
+                // 先頭行の後ろを削除
                 //text_[s.tl].RemoveToTail(s.ad);
-                //// 終了行の残り部分をくっつける
+                text_[s.tl].Text.Remove(s.ad);
+                // 終了行の残り部分をくっつける
                 //text_[s.tl].InsertToTail(tl(e.tl) + e.ad, len(e.tl) - e.ad);
-                //// いらん行を削除
+                string val = tl(e.tl).Substring(e.ad, len(e.tl) - e.ad).ToString();
+                text_[s.tl].Text.Append(val);
+                // いらん行を削除
                 //text_.RemoveAt(s.tl + 1, e.tl - s.tl);
-
-                string remtext = text_[s.tl].Text.ToString();
-                if (s.ad < text_[s.tl].Text.Length) {
-                    buff = text_[s.tl].Text.Substring(s.ad).ToString();
-                    remtext = text_[s.tl].Text.Substring(0, s.ad).ToString();
-
-                }
-                for (int i = s.tl + 1; i < e.tl - s.tl; i++) {
-                    buff += "\r\n" + text_[i].Text.ToString();
-                }
-                string mm = (text_[e.tl].Text.IsEmpty ? string.Empty : text_[e.tl].Text.Substring(0, e.ad).ToString());
-                buff += "\r\n" + mm;
-
-                //LineList[s.tl].SetText(remtext + mm);
-                int len = text_[e.tl].Text.Length;
-                //string mm2=LineList[e.tl].Text.Substring(e.ad, len-e.ad).ToString();
-                string mm2 = (text_[e.tl].Text.IsEmpty ? string.Empty : text_[e.tl].Text.Substring(0, len - e.ad).ToString());
-                text_[s.tl].SetText(remtext + mm2);
                 text_.RemoveRange(s.tl + 1, e.tl - s.tl);
             }
 
+            // 再解析
             highlighter.Parse(text_[s.tl].Text, text_[s.tl].AttributeList);
         }
 
@@ -290,7 +321,13 @@ namespace AsControls {
             //CaretInfo e2 = new CaretInfo();
             Insert(ref s, ref e2, newValue);
 
-            //MultiParse(s.tl, e2.tl);
+            MultiParse(s.tl, e2.tl);
+        }
+
+        private void CorrectPos(ref VPos pos) {
+            // 正常範囲に収まるように修正
+            pos.tl = Math.Min(pos.tl, tln() - 1);
+            pos.ad = Math.Min(pos.ad, len(pos.tl));
         }
 
         private void CorrectPos(ref DPos pos) {
@@ -300,6 +337,15 @@ namespace AsControls {
         }
 
         private void CorrectPos(ref VPos s, ref VPos e) {
+            // 必ずs<=eになるように修正
+            if (s > e) {
+                int tmp;
+                tmp = s.ad; s.ad = e.ad; e.ad = tmp;
+                tmp = s.tl; s.tl = e.tl; e.tl = tmp;
+            }
+        }
+
+        private void CorrectPos(ref DPos s, ref DPos e) {
             // 必ずs<=eになるように修正
             if (s > e) {
                 int tmp;
@@ -318,6 +364,60 @@ namespace AsControls {
             return line.Split(separater, StringSplitOptions.None);
         }
 
+        //-------------------------------------------------------------------------
+        // 挿入・削除等の作業用関数群
+        //-------------------------------------------------------------------------
+
+        int getRangeLength( DPos s, DPos e )
+        {
+	        // とりあえず全部足す
+	        int ans=0, tl=s.tl, te=e.tl;
+	        for( ; tl<=te; ++tl )
+		        ans += len(tl);
+	        // 先頭行の分を引く
+	        ans -= s.ad;
+	        // 最終行の分を引く
+	        ans -= len(te) - e.ad;
+	        // 改行コード(CRLF)の分を加える
+	        ans += (e.tl-s.tl) * 2;
+	        // おしまい
+	        return ans;
+        }
+
+        string getText(DPos s, DPos e )
+        {
+            IBuffer buff;
+	        if( s.tl == e.tl )
+	        {
+		        // 一行だけの場合
+		        //text_[s.tl].CopyAt( s.ad, e.ad-s.ad, buf );
+		        //buf[e.ad-s.ad] = L'\0';
+                buff = text_[s.tl].Text.Substring( s.ad, e.ad-s.ad);
+	        }
+	        else
+	        {
+                buff = new LineBuffer("");
+		        // 先頭行の後ろをコピー
+		        //buf += text_[s.tl].CopyToTail( s.ad, buf );
+		        //*buf++ = '\r', *buf++ = '\n';
+                buff.Append(text_[s.tl].Text.Substring(s.ad).ToString());
+                buff.Append("\r\n");
+		        // 途中をコピー
+		        for( int i=s.tl+1; i<e.tl; i++ )
+		        {
+			        //buf += text_[i].CopyToTail( 0, buf );
+			        //*buf++ = '\r', *buf++ = '\n';
+                    buff.Append(text_[i].Text.Substring(0).ToString());
+                    buff.Append("\r\n");
+		        }
+		        // 終了行の先頭をコピー
+		        //buf += text_[e.tl].CopyAt( 0, e.ad, buf );
+		        //*buf = L'\0';
+                buff.Append(text_[e.tl].Text.Substring(0, e.ad).ToString());
+	        }
+
+            return buff.ToString();
+        }
         #region IDocument メンバ
         public event TextUpdateEventHandler TextUpdateEvent;
         private UndoManager undoManager = new UndoManager();

@@ -30,7 +30,7 @@ namespace AsControls {
         int figNum_; // 行番号の桁数
         private gcsTextEdit view;
         public Canvas(gcsTextEdit view, Config config) {
-            txtZone_ = view.ClientRectangle;
+            txtZone_ = view.getClientRect();
             //txtZone_ = new Rectangle();
             showLN = true;
             wrapType = WrapType.Non;
@@ -89,9 +89,9 @@ namespace AsControls {
                }
 
                if (left != txtZone_.Left)
-                   //txtZone_ = new Rectangle(new Point(left, txtZone_.Top), txtZone_.Size);
+                   txtZone_ = new Rectangle(new Point(left, txtZone_.Top), txtZone_.Size);
                    //TODO wrap
-                   txtZone_ = new Rectangle(new Point(left, txtZone_.Top), new Size(view.cx() - 3 , txtZone_.Size.Height));
+                   //txtZone_ = new Rectangle(new Point(left, txtZone_.Top), new Size(view.cx() - 3 , txtZone_.Size.Height));
 	        }
 	        else
 	        {
@@ -110,7 +110,7 @@ namespace AsControls {
                     wrapWidth_ = 0xfffffff;
 		        break;
             case WrapType.Window:
-                wrapWidth_ = txtZone_.Right - txtZone_.Left - 3 - 16; //TODO wrap
+                wrapWidth_ = txtZone_.Right - txtZone_.Left - 3; //TODO wrap
                 //wrapWidth_ = view.cx()-3; //TODO
 		        break; //Caretの分-3補正
             default:

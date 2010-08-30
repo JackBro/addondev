@@ -251,7 +251,8 @@ namespace AsControls
 	        {
                 //view_.Invalidate();
 
-                Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
+                //Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
+                Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
                 //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
                 view_.Invalidate(rc, false);
                 Rectangle re = new Rectangle(LFT, Math.Max(TOP, ep.Y), Math.Min(RHT, ep.X), Math.Min(BTM, ep.Y + view_.fnt().H()));

@@ -54,9 +54,6 @@
     <Compile Include="Control\GcsScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="gcsTextEdit.Caret.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="gcsTextEdit.cs">
       <SubType>Component</SubType>
     </Compile>
