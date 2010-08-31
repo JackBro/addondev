@@ -288,37 +288,40 @@ namespace AsControls
         }
 
         private void DrawTXT2(Graphics g, VDrawInfo v, Painter p) {
+            //g.FillRectangle(bb, v.rc);
             // 定数１
         //	const int   TAB = p.T();
             int H = p.H();
             int TLM = doc_.tln()-1;
 
             // 作業用変数１
-            Rectangle  a = new Rectangle( 0, v.YMIN, 0, v.YMIN+p.H() );
+            Win32API.RECT a = new Win32API.RECT { left = 0, top = v.YMIN, right = 0, bottom=v.YMIN + p.H() };
+            //Rectangle  a = new Rectangle( 0, v.YMIN, 0, v.YMIN+p.H() );
+            //Rectangle a = new Rectangle(0, 0,,v.YMIN);
             int clr = -1;
             int   x, x2;
             int i, i2;
 
-            int aTop = a.Top;
-            int aBottom = a.Bottom;
+            //int aTop = a.Top;
+            //int aBottom = a.Bottom;
             // 論理行単位のLoop
-            for( int tl=v.TLMIN; aTop<v.YMAX; ++tl )
+            for( int tl=v.TLMIN; a.top<v.YMAX; ++tl )
             {
                 // 定数２
                 string str = doc_.tl(tl).ToString();
                 //const uchar*   flg = doc_.pl(tl);
-                int rYMAX = Math.Min( v.YMAX, aTop+rln(tl)*H );
+                int rYMAX = Math.Min(v.YMAX, a.top + rln(tl) * H);
 
                 // 作業用変数２
                 int stt=0, end, t, n;
 
                 // 表示行単位のLoop
-                for( int rl=0; aTop<rYMAX; ++rl,aTop+=H,aBottom+=H,stt=end )
+                for (int rl = 0; a.top < rYMAX; ++rl, a.top += H, a.bottom += H, stt = end)
                 //for (int rl = 0; a.Top < rYMAX; rl++, aTop += H, aBottom += H, stt = end)
                 {
                     // 作業用変数３
                     end = rlend(tl,rl);
-                    if( aBottom<=v.YMIN )
+                    if( a.bottom<=v.YMIN )
                         continue;
 
                     // テキストデータ描画
@@ -357,9 +360,10 @@ namespace AsControls
                         }
 
                         // 背景塗りつぶし
-                        //a.Left  = x + v.XBASE;
-                        //a.Right = x2 + v.XBASE;
+                        a.left  = x + v.XBASE;
+                        a.right = x2 + v.XBASE;
                         //p.Fill( a );
+                        g.FillRectangle(bb, a.left, a.top, a.right-a.left, a.bottom-a.top);
 
                         // 描画
                         //switch( str[i] )
@@ -388,22 +392,23 @@ namespace AsControls
                         //    // 何故だか２度描きしないとうまくいかん…
                         //    break;
                         //}
-                        p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, aTop);
+                        p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, a.top);
                     }
 
                     // 選択範囲だったら反転
                     //if( v.SYB<=a.top && a.top<=v.SYE )
                     //    Inv( a.top, a.top==v.SYB?v.SXB:(v.XBASE),
                     //                a.top==v.SYE?v.SXE:(v.XBASE+x), p );
-                    if (v.SYB <= aTop && aTop <= v.SYE)
-                        Inv(g, aTop, aTop == v.SYB ? v.SXB : (v.XBASE),
-                                    aTop == v.SYE ? v.SXE : (v.XBASE + x), p);
+                    if (v.SYB <= a.top && a.top <= v.SYE)
+                        Inv(g, a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
+                                    a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
                     // 行末より後ろの余白を背景色塗
                     if( x<v.XMAX )
                     {
-                        //a.left = v.XBASE + Math.Max( v.XMIN, x );
-                        //a.right= v.XBASE + v.XMAX;
+                        a.left = v.XBASE + Math.Max( v.XMIN, x );
+                        a.right= v.XBASE + v.XMAX;
                         //p.Fill( a );
+                        g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
                     }
                 }
 
@@ -424,12 +429,13 @@ namespace AsControls
             }
 
             // EOF後余白を背景色塗
-            if( a.Top < v.rc.Bottom )
+            if (a.top < v.rc.Bottom)
             {
-                //a.Left   = v.rc.Left;
-                //a.Right  = v.rc.Right;
-                //a.Bottom = v.rc.Bottom;
+                a.left   = v.rc.Left;
+                a.right  = v.rc.Right;
+                a.bottom = v.rc.Bottom;
                 //p.Fill( a );
+                g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
             }
         }
 

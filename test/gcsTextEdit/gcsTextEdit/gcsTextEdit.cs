@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace AsControls {
 
@@ -243,6 +244,13 @@ namespace AsControls {
             //});
 
             Initialize();
+
+
+            Parser.Parser p = new Parser.Parser();
+            //p.init();
+            var res = p.parseLine("test//test");
+            int i = 0;
+
         }
 
         void gcsTextEdit_VisibleChanged(object sender, EventArgs e) {
@@ -331,7 +339,7 @@ namespace AsControls {
         protected override void WndProc(ref Message m) {
             //if (imeComposition != null)
             //    imeComposition.Ime(m, vPos.X, vPos.Y);
-
+            
             base.WndProc(ref m);
         }
 
@@ -749,7 +757,7 @@ namespace AsControls {
 
         //
         protected override void OnPaint(PaintEventArgs e) {
-            //base.OnPaint(e);
+            base.OnPaint(e);
 
             //GetDrawPosInfo(ref vRect);
 
@@ -771,9 +779,11 @@ namespace AsControls {
             } else {
                 // case C: 両方更新
                 DrawLNA(e.Graphics, vRect, p);
-                //p.SetClip(cvs_.zone());
+                p.SetClip(cvs_.zone());
                 DrawTXT2(e.Graphics, vRect, p);
-                //p.ClearClip();
+                p.ClearClip();
+
+                
             }
 
         }
@@ -1031,15 +1041,6 @@ namespace AsControls {
         //    base.Invalidate();
         //}
 
-        #region ITextEditor メンバ
-
-        public void Paste() {
-            //string t = Clipboard.GetText();
-            //Input(t);
-            //base.Invalidate();
-        }
-
-        #endregion
 
         //
         //-------------------------------------------------------------------------
@@ -1076,5 +1077,47 @@ namespace AsControls {
         }
         //
 
+
+        #region ITextEditor メンバ
+
+        public void Copy() {
+            throw new NotImplementedException();
+        }
+
+        public void Cut() {
+            throw new NotImplementedException();
+        }
+
+        public void Paste() {
+            //string t = Clipboard.GetText();
+            //Input(t);
+            //base.Invalidate();
+        }
+
+        public void BackSpace() {
+            throw new NotImplementedException();
+        }
+
+        public void Delete() {
+            throw new NotImplementedException();
+        }
+
+        public void Up() {
+            throw new NotImplementedException();
+        }
+
+        public void Down() {
+            throw new NotImplementedException();
+        }
+
+        public new void Left() {
+            throw new NotImplementedException();
+        }
+
+        public new void Right() {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

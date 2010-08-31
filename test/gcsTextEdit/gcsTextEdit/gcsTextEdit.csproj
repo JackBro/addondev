@@ -76,6 +76,8 @@
     <Compile Include="Highlighter\Highlighter.cs" />
     <Compile Include="ITextEditor.cs" />
     <Compile Include="Painter.cs" />
+    <Compile Include="Parser\Lexer.cs" />
+    <Compile Include="Parser\Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="Setting.cs" />

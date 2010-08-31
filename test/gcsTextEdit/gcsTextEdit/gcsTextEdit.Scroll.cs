@@ -102,7 +102,8 @@ namespace AsControls {
                 } else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll) {
                     //ScUpDown(d);
                     bool thumb = e.Type == ScrollEventType.LargeDecrement || e.Type == ScrollEventType.LargeIncrement;
-                    UpDown(d, thumb);
+                    //UpDown(d, thumb);
+                    UpDown(d, false); //TODO scroll
 
                     //int x = vRect.NumLineLeft;
                     //int y = 0;
@@ -205,10 +206,12 @@ namespace AsControls {
 					        //::InvalidateRect( hwnd_, &rc, FALSE );
                             
                             //this.Invalidate(rc, false);
+                            this.Invalidate(false);
                             
 				        }
-				        //::UpdateWindow( hwnd_ );
-                        this.Invalidate(false); //TODO
+				        //::UpdateWindow( hwnd_ );       
+                        this.Update(); //TODO scroll
+                        
 			        }
 		        }
 	        }
@@ -248,10 +251,12 @@ namespace AsControls {
                 CalcLineWidth(text, dp.ad - rb) - hScrollBar.Value);
 	        if( xb < right() )
 	        {
-		        //Rectangle rc=new Rectangle(xb,yb,right(),yb+H);
-                Rectangle rc = new Rectangle(0, yb, right(), yb + H);
+                //TODO scroll
+		        Rectangle rc=new Rectangle(xb,yb,right(),yb+H);
+                //Rectangle rc = new Rectangle(xb, 0, right(), yb + H);
 		        //::InvalidateRect( hwnd_, &rc, FALSE );
                 this.Invalidate(rc, false);
+                //this.Invalidate(false);
 	        }
 
 	        // 残り
@@ -296,7 +301,8 @@ namespace AsControls {
 
 	        // スクロール
 	        if( dy!=0 )	
-                UpDown( dy, dx==0 );
+                //UpDown( dy, dx==0 ); //TODO scroll
+                UpDown(dy, false);
 	        if( dx!=0 )	ScrollView( dx, 0, true );
         }
 

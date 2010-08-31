@@ -5,9 +5,14 @@ using System.Text;
 
 namespace AsControls {
     public interface ITextEditor {
-        //void Cut();
+        void Copy();
+        void Cut();
         void Paste();
-        //void BackSpace();
-        //void Delete();
+        void BackSpace();
+        void Delete();
+        void Up();
+        void Down();
+        void Left();
+        void Right();
     }
 }

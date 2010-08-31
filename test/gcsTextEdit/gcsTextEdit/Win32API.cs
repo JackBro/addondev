@@ -26,6 +26,14 @@ namespace AsControls
             public Int32 width, height;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT {
+            public Int32 left;
+            public Int32 top;
+            public Int32 right;
+            public Int32 bottom;
+        }
+
         //[DllImport("gdi32", CharSet = CharSet.Unicode)]
         //public unsafe static extern Int32 GetTextExtentExPointW(IntPtr hdc, string text, int textLen, int maxWidth, int* out_fitLength, int* out_x, SIZE* out_size);
 
@@ -89,5 +97,11 @@ namespace AsControls
         //
         [DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
         public static extern bool GetTextMetrics(IntPtr hdc, out TEXTMETRIC lptm);
+
+        [DllImport("gdi32")]
+        public static extern int IntersectClipRect(IntPtr hDC, int X1, int Y1, int X2, int Y2);
+
+        [DllImport("gdi32.dll")]
+        public static extern int SelectClipRgn(IntPtr hdc, IntPtr hrgn);
     }
 }

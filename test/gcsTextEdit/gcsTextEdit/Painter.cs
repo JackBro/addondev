@@ -246,6 +246,14 @@ namespace AsControls {
             return size;
         }
 
+        public void SetClip(Rectangle rc ){
+            Win32API.IntersectClipRect(dc_, rc.Left, rc.Top, rc.Right, rc.Bottom);
+        }
+
+        public void ClearClip()
+        {
+            Win32API.SelectClipRgn(dc_, IntPtr.Zero);
+        }
 
         #region IDisposable メンバ
 
