@@ -194,7 +194,25 @@ namespace AsControls.Parser {
                 tok = TokenType.EOS;
                 return false;
             }
+            switch (c) {
+                case ' ':
+                    break;
 
+                case '　':
+                    break;
+
+                case '\t':
+                    break;
+                    
+                default:
+                    if (Char.IsSymbol((char)c)) {
+
+                    } else {
+
+                    }
+                    break;
+
+            }
             lexSymbol(c.ToString());
             
             return true;
