@@ -289,7 +289,7 @@ namespace AsControls
             }	        
         }
 
-        private Bitmap image = new Bitmap("test.jpg");
+        private Bitmap image = new Bitmap("test.png");
         private void DrawTXT2(Graphics g, VDrawInfo v, Painter p) {
             //AutoScrollOffset= new Point(AutoScrollOffset.X,AutoScrollOffset.Y+ 10);
 
@@ -368,7 +368,7 @@ namespace AsControls
                         a.left  = x + v.XBASE;
                         a.right = x2 + v.XBASE;
                         //p.Fill( a );
-                        g.FillRectangle(bb, a.left, a.top, a.right-a.left, a.bottom-a.top);
+                        //g.FillRectangle(bb, a.left, a.top, a.right-a.left, a.bottom-a.top);
 
                         // 描画
                         //switch( str[i] )
@@ -401,6 +401,7 @@ namespace AsControls
                             g.DrawImage(image, x + v.XBASE, a.top);
                         }
                         p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, a.top);
+
                     }
 
                     // 選択範囲だったら反転
@@ -443,7 +444,7 @@ namespace AsControls
                 a.right  = v.rc.Right;
                 a.bottom = v.rc.Bottom;
                 //p.Fill( a );
-                g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
+                //g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
             }
         }
 
@@ -454,6 +455,8 @@ namespace AsControls
                 Math.Min(right(), xe), y + p.H() - 1);
 	        p.Invert(g, rc );
         }
+
+        private void Draw
 
         //private void drawDoc(Graphics g, VDrawInfo v)
         //{

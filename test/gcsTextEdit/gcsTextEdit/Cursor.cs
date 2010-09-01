@@ -233,7 +233,7 @@ namespace AsControls
                 ep.Y = sp.Y;
                 sp.Y = tmp;               
             }
-	        ep.X+=2;
+	        //ep.X+=2;
 
 	        //// 手抜き16bitチェック入り…
 	        int LFT = view_.left();
@@ -243,7 +243,8 @@ namespace AsControls
 
 	        if( sp.Y == ep.Y )
 	        {
-		        Rectangle rc = new Rectangle(Math.Max(LFT,sp.X), sp.Y, Math.Min(RHT,ep.X), sp.Y+view_.fnt().H());
+		        //Rectangle rc = new Rectangle(Math.Max(LFT,sp.X), sp.Y, Math.Min(RHT,ep.X), sp.Y+view_.fnt().H());
+                Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), sp.Y, Math.Min(RHT, ep.X - sp.X), view_.fnt().H());
                 view_.Invalidate(rc, false);
 		        //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
 	        }
@@ -511,7 +512,8 @@ namespace AsControls
 	        if( !shift )
 	        {
 		        // これまでの選択範囲をクリア
-		        Redraw( cur_, sel_ );
+                //if(cur_ != sel_)
+		            Redraw( cur_, sel_ );
 
 		        // 行番号ゾーンのクリックだったら、行選択モードに
 		        lineSelectMode_ = ( x < view_.lna()-view_.fnt().F() );

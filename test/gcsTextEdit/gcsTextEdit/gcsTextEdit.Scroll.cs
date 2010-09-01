@@ -184,6 +184,7 @@ namespace AsControls {
                     hScrollBar.Value += dx;
                     vScrollBar.Value += dy;
 
+                    //this.AutoScrollPosition = new Point(this.AutoScrollPosition.X + dy, this.AutoScrollPosition.Y + dy);
 			        // 即時再描画？
 			        if( update ){
 				        // 縦スクロールは高速化したいので一工夫

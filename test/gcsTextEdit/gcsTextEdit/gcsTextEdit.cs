@@ -174,7 +174,7 @@ namespace AsControls {
             //wrapType = WrapType.WindowWidth;
             //wrapType = WrapType.Non;
             //showNumLine = true;
-
+            //AutoScroll = true;
 
 
             //initDraw();
