@@ -8,7 +8,7 @@ namespace AsControls.Parser {
     class Parser {
 
         private Lexer lex;
-        private TokenType token=TokenType.NONE;
+        private TokenType token;//=TokenType.NONE;
 
         private void getToken() {
             if (lex.advance()) {
@@ -24,7 +24,7 @@ namespace AsControls.Parser {
         }
 
         public void init() {
-            lex.AddAttribute(new SingleLineAttribute("//", Color.Red, false, false));
+            //lex.AddAttribute(new SingleLineAttribute("//", Color.Red, false, false));
         }
 
         public List<Attribute> parseLine(string line){
@@ -36,9 +36,9 @@ namespace AsControls.Parser {
 		    //getToken();
 		    while (token != TokenType.EOS) {
 				getToken();
-                if (token == TokenType.ATTR) {
-                    attrs.Add(lex.getAttribute());
-                }
+                //if (token == TokenType.ATTR) {
+                //    attrs.Add(lex.getAttribute());
+                //}
 		    }
             return attrs;
 	    }

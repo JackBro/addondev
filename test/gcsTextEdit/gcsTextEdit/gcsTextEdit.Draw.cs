@@ -8,8 +8,10 @@ using System.Globalization;
 
 namespace AsControls
 {
+    public delegate void DrawEventHandler(Graphics g, string line, int x,int y);
     public partial class gcsTextEdit
     {
+        event DrawEventHandler DrawEventHandler;
        // private IntPtr hdc;
        // private IntPtr hfont;
 
@@ -287,7 +289,10 @@ namespace AsControls
             }	        
         }
 
+        private Bitmap image = new Bitmap("test.jpg");
         private void DrawTXT2(Graphics g, VDrawInfo v, Painter p) {
+            //AutoScrollOffset= new Point(AutoScrollOffset.X,AutoScrollOffset.Y+ 10);
+
             //g.FillRectangle(bb, v.rc);
             // 定数１
         //	const int   TAB = p.T();
@@ -358,7 +363,7 @@ namespace AsControls
                             while( v.XMIN<x )
                                 x -= p.W( str[--i] );
                         }
-
+ 
                         // 背景塗りつぶし
                         a.left  = x + v.XBASE;
                         a.right = x2 + v.XBASE;
@@ -392,6 +397,9 @@ namespace AsControls
                         //    // 何故だか２度描きしないとうまくいかん…
                         //    break;
                         //}
+                        if (str.Contains("img")) {
+                            g.DrawImage(image, x + v.XBASE, a.top);
+                        }
                         p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, a.top);
                     }
 
@@ -408,7 +416,7 @@ namespace AsControls
                         a.left = v.XBASE + Math.Max( v.XMIN, x );
                         a.right= v.XBASE + v.XMAX;
                         //p.Fill( a );
-                        g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
+                        //g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
                     }
                 }
 

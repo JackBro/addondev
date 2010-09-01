@@ -8,17 +8,11 @@ namespace AsControls.Parser {
 
 
     enum TokenType {
-        EOS, // 普通の字
-        NONE,
-        ATTR //クリッカブル
-    }
-
-    enum AttrType {
+        EOS,
         TAB, // Tab
         WSP, // 半角スペース
         ZSP, // 全角スペース
         TXT, // 普通の字
-        CLICKABLE //クリッカブル
     }
 
     class WordInfo
@@ -26,7 +20,6 @@ namespace AsControls.Parser {
         public Color color;
         public Boolean Bold;
         public Boolean UnderLine;
-        public AttrType type;
     }
 
     abstract class Attribute {
@@ -34,13 +27,14 @@ namespace AsControls.Parser {
         public int len;
         public Color forecolor;
         public Boolean bold;
+        public Boolean clickable;
         public Boolean underline;
-        public AttrType type;
 
         public abstract string getWord();
     }
 
-    class LineAttribute :Attribute{
+    //[[..]]end
+    class EncloseAttribute :Attribute{
         public string start;
         public string end;
 
@@ -48,7 +42,54 @@ namespace AsControls.Parser {
             return start;
         }
 
-        public LineAttribute(Color forecolor, bool bold, bool underline) {
+        public EncloseAttribute(Color forecolor, bool bold, bool underline) {
+            this.forecolor = forecolor;
+            this.bold = bold;
+            this.underline = underline;
+        }
+
+        public EncloseAttribute(EncloseAttribute attr) {
+            start = attr.start;
+            end = attr.end;
+            forecolor = attr.forecolor;
+            bold = attr.bold;
+            underline = attr.underline;
+        }
+    }
+
+    // //. ..\nend
+    class EndLineAttribute :Attribute{
+        public string start;
+        public int len;
+        public override string getWord() {
+            return start;
+        }
+
+        public EndLineAttribute(string start, Color forecolor, bool bold, bool underline) {
+            this.start = start;
+            this.forecolor = forecolor;
+            this.bold = bold;
+            this.underline = underline;
+        }
+
+        public EndLineAttribute(EndLineAttribute attr) {
+            start = attr.start;
+            forecolor = attr.forecolor;
+            bold = attr.bold;
+            underline = attr.underline;
+        }
+    }
+
+    // >>.. end
+    class LineAttribute : Attribute {
+        public string start;
+        public int len;
+        public override string getWord() {
+            return start;
+        }
+
+        public LineAttribute(string start, Color forecolor, bool bold, bool underline) {
+            this.start = start;
             this.forecolor = forecolor;
             this.bold = bold;
             this.underline = underline;
@@ -56,54 +97,9 @@ namespace AsControls.Parser {
 
         public LineAttribute(LineAttribute attr) {
             start = attr.start;
-            end = attr.end;
             forecolor = attr.forecolor;
             bold = attr.bold;
             underline = attr.underline;
-            type = attr.type;
-        }
-    }
-
-    class SingleLineAttribute :Attribute{
-        public string start;
-        public override string getWord() {
-            return start;
-        }
-
-        public SingleLineAttribute(string start, Color forecolor, bool bold, bool underline) {
-            this.start = start;
-            this.forecolor = forecolor;
-            this.bold = bold;
-            this.underline = underline;
-        }
-
-        public SingleLineAttribute(SingleLineAttribute attr) {
-            start = attr.start;
-            forecolor = attr.forecolor;
-            bold = attr.bold;
-            underline = attr.underline;
-            type = attr.type;
-        }
-    }
-
-    class WordAttribute :Attribute{
-        public string word;
-        public override string getWord() {
-            return word;
-        }
-
-        public WordAttribute(Color forecolor, bool bold, bool underline) {
-            this.forecolor = forecolor;
-            this.bold = bold;
-            this.underline = underline;
-        }
-
-        public WordAttribute(WordAttribute attr) {
-            word = attr.word;
-            forecolor = attr.forecolor;
-            bold = attr.bold;
-            underline = attr.underline;
-            type = attr.type;
         }
     }
 
@@ -164,10 +160,12 @@ namespace AsControls.Parser {
 
         private Attribute resultAttr;
 
-        private Dictionary<String, Attribute> reserved = new Dictionary<String, Attribute>();
+        private Dictionary<String, LineAttribute> LineattrDic = new Dictionary<String, LineAttribute>();
+        //private Dictionary<String, SingleLineAttribute> SingleLineattrDic = new Dictionary<String, SingleLineAttribute>();
+        //private Dictionary<String, KeywordAttribute> keywordattrDic = new Dictionary<String, KeywordAttribute>();
 
         public void AddAttribute(Attribute attr) {
-            reserved.Add(attr.getWord(), attr);
+            //keywordattrDic.Add(attr.getWord(), attr as KeywordAttribute);
         }
 
         public Attribute getAttribute() {
@@ -188,7 +186,7 @@ namespace AsControls.Parser {
 
         public bool advance() {
             //skipWhiteSpace();
-            tok = TokenType.NONE;
+            //tok = TokenType.NONE;
             char? c = reader.read();
             if (c == null) {
                 tok = TokenType.EOS;
@@ -198,7 +196,8 @@ namespace AsControls.Parser {
                 case ' ':
                     break;
 
-                case '　':
+                //case '　':
+                case (char)0x3000:
                     break;
 
                 case '\t':
@@ -208,7 +207,7 @@ namespace AsControls.Parser {
                     if (Char.IsSymbol((char)c)) {
 
                     } else {
-
+                        
                     }
                     break;
 
@@ -231,89 +230,89 @@ namespace AsControls.Parser {
         }
 
         private void lexSymbol(string initstr) {
-            offset = reader.offset();
+            //offset = reader.offset();
 
-            //tok = TokenType.SYMBOL;
-            StringBuilder buf = new StringBuilder();
-            if (initstr != null) buf.Append(initstr);
+            ////tok = TokenType.SYMBOL;
+            //StringBuilder buf = new StringBuilder();
+            //if (initstr != null) buf.Append(initstr);
 
-            if(reserved.ContainsKey(buf.ToString())){
-                var attr = reserved[buf.ToString()];
-                if(attr is LineAttribute){
-                    string end = (attr as LineAttribute).end;
-                    string src = reader.src;
-                    int index = src.IndexOf(end, offset);
-                    if (index >= 0) {
-                        attr.ad = offset;
-                        attr.len = index - offset + end.Length;
-                        reader.setoffset(offset + index - offset + end.Length);
-                        tok = TokenType.ATTR;
+            //if(reserved.ContainsKey(buf.ToString())){
+            //    var attr = reserved[buf.ToString()];
+            //    if(attr is LineAttribute){
+            //        string end = (attr as LineAttribute).end;
+            //        string src = reader.src;
+            //        int index = src.IndexOf(end, offset);
+            //        if (index >= 0) {
+            //            attr.ad = offset;
+            //            attr.len = index - offset + end.Length;
+            //            reader.setoffset(offset + index - offset + end.Length);
+            //            tok = TokenType.ATTR;
 
-                        resultAttr = new LineAttribute(attr as LineAttribute);
+            //            resultAttr = new LineAttribute(attr as LineAttribute);
 
-                    }
-                }else{
-                    attr.ad = offset;
+            //        }
+            //    }else{
+            //        attr.ad = offset;
                     
 
-                    tok = TokenType.ATTR;
-                    if (attr is SingleLineAttribute) {
-                        resultAttr = new SingleLineAttribute(attr as SingleLineAttribute);
-                        attr.len = reader.src.Length - offset;
-                    }
-                    else {
-                        resultAttr = new WordAttribute(attr as WordAttribute);
-                        attr.len = attr.getWord().Length;
-                    }
+            //        tok = TokenType.ATTR;
+            //        if (attr is SingleLineAttribute) {
+            //            resultAttr = new SingleLineAttribute(attr as SingleLineAttribute);
+            //            attr.len = reader.src.Length - offset;
+            //        }
+            //        else {
+            //            resultAttr = new KeywordAttribute(attr as KeywordAttribute);
+            //            attr.len = attr.getWord().Length;
+            //        }
 
-                    reader.setoffset(offset + attr.len + 1);
-                }
-                return;
-            }
+            //        reader.setoffset(offset + attr.len + 1);
+            //    }
+            //    return;
+            //}
 
-            while (true) {
-                char? c = reader.read();
-                if (c==null) {
-                    // throw new Exception("ファイルの終わりに到達しました。");
-                    tok = TokenType.EOS;
-                    break;
-                }
-                buf.Append((char)c);
+            //while (true) {
+            //    char? c = reader.read();
+            //    if (c==null) {
+            //        // throw new Exception("ファイルの終わりに到達しました。");
+            //        tok = TokenType.EOS;
+            //        break;
+            //    }
+            //    buf.Append((char)c);
 
-                if (reserved.ContainsKey(buf.ToString())) {
-                    var attr = reserved[buf.ToString()];
-                    if (attr is LineAttribute) {
-                        string end = (attr as LineAttribute).end;
-                        string src = reader.src;
-                        int index = src.IndexOf(end, offset);
-                        if (index >= 0) {
-                            attr.ad = offset;
-                            attr.len = index - offset + end.Length;
-                            reader.setoffset(offset + index - offset + end.Length);
-                            tok = TokenType.ATTR;
+            //    if (reserved.ContainsKey(buf.ToString())) {
+            //        var attr = reserved[buf.ToString()];
+            //        if (attr is LineAttribute) {
+            //            string end = (attr as LineAttribute).end;
+            //            string src = reader.src;
+            //            int index = src.IndexOf(end, offset);
+            //            if (index >= 0) {
+            //                attr.ad = offset;
+            //                attr.len = index - offset + end.Length;
+            //                reader.setoffset(offset + index - offset + end.Length);
+            //                tok = TokenType.ATTR;
 
-                            resultAttr = new LineAttribute(attr as LineAttribute);
-                        }
-                    }
-                    else {
-                        attr.ad = offset;
+            //                resultAttr = new LineAttribute(attr as LineAttribute);
+            //            }
+            //        }
+            //        else {
+            //            attr.ad = offset;
 
 
-                        tok = TokenType.ATTR;
-                        if (attr is SingleLineAttribute) {
-                            resultAttr = new SingleLineAttribute(attr as SingleLineAttribute);
-                            attr.len = reader.src.Length - offset;
-                        }
-                        else {
-                            resultAttr = new WordAttribute(attr as WordAttribute);
-                            attr.len = attr.getWord().Length;
-                        }
+            //            tok = TokenType.ATTR;
+            //            if (attr is SingleLineAttribute) {
+            //                resultAttr = new SingleLineAttribute(attr as SingleLineAttribute);
+            //                attr.len = reader.src.Length - offset;
+            //            }
+            //            else {
+            //                resultAttr = new KeywordAttribute(attr as KeywordAttribute);
+            //                attr.len = attr.getWord().Length;
+            //            }
 
-                        reader.setoffset(offset + attr.len + 1);
-                    }
-                    return;
-                }
-            }
+            //            reader.setoffset(offset + attr.len + 1);
+            //        }
+            //        return;
+            //    }
+            //}
         }
 
     }
