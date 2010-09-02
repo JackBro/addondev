@@ -56,9 +56,20 @@ namespace AsControls
         public int vln() { return vlNum_; }
 
         //@{ 一行の表示行数 //@}
+        /// <summary>
+        /// 一行の表示行数
+        /// </summary>
+        /// <param name="tl"></param>
+        /// <returns></returns>
         public int rln(int tl) { return wrap_[tl].rln(); }
         
         //@{ 折り返し位置 //@}
+        /// <summary>
+        /// 折り返し位置
+        /// </summary>
+        /// <param name="tl"></param>
+        /// <param name="rl"></param>
+        /// <returns></returns>
         public int rlend(int tl, int rl) { 
             return wrap_[tl][rl + 1]; 
         }

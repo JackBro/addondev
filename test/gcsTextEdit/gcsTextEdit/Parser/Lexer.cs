@@ -7,128 +7,184 @@ using System.Drawing;
 namespace AsControls.Parser {
 
 
+    //enum TokenType {
+    //    EOS,
+    //    TAB, // Tab
+    //    WSP, // 半角スペース
+    //    ZSP, // 全角スペース
+    //    TXT, // 普通の字
+    //    EncloseAttr,
+    //    EndLineAttr,
+    //    LineAttr,
+    //    ImageAttr
+    //}
+
+    public class Attribute {
+        public readonly Color color;
+        public readonly bool islink;
+        public readonly bool isbold;
+        public readonly bool isunderline;
+
+        public Attribute(Color color, bool islink, bool isbold, bool isunderline) {
+            this.color = color;
+            this.islink = islink;
+            this.isbold = isbold;
+            this.isunderline = isunderline;
+        }
+    }
+
     enum TokenType {
         EOS,
-        TAB, // Tab
-        WSP, // 半角スペース
-        ZSP, // 全角スペース
         TXT, // 普通の字
+        Enclose,
+        EndLine,
+        Line,
+        Image
     }
 
-    class WordInfo
-    {
-        public Color color;
-        public Boolean Bold;
-        public Boolean UnderLine;
-    }
 
-    abstract class Attribute {
-        public int ad;
-        public int len;
-        public Color forecolor;
-        public Boolean bold;
-        public Boolean clickable;
-        public Boolean underline;
+    //class WordInfo
+    //{
+    //    public Color color;
+    //    public Boolean Bold;
+    //    public Boolean UnderLine;
+    //}
 
-        public abstract string getWord();
+    //abstract class Attribute {
+    //    public int ad;
+    //    public int len;
+    //    public Color forecolor;
+    //    public Boolean bold;
+    //    public Boolean clickable;
+    //    public Boolean underline;
+
+    //    public abstract string getWord();
+    //    public abstract int exer(Lexer lex);
+    //}
+
+
+    abstract class Element {
+        public Attribute attr;
+        public TokenType token;
+        public string start { get; set; }
+        public abstract int exer(Lexer lex);
     }
 
     //[[..]]end
-    class EncloseAttribute :Attribute{
-        public string start;
+    class EncloseElement :Element{
         public string end;
-
-        public override string getWord() {
-            return start;
+        public EncloseElement() {
+            token = TokenType.Enclose;
+        }
+        public EncloseElement(string start, string end, Attribute attr) {
+            this.start = start;
+            this.end = end;
+            this.attr = attr;
+            token = TokenType.Enclose;
         }
 
-        public EncloseAttribute(Color forecolor, bool bold, bool underline) {
-            this.forecolor = forecolor;
-            this.bold = bold;
-            this.underline = underline;
-        }
-
-        public EncloseAttribute(EncloseAttribute attr) {
-            start = attr.start;
-            end = attr.end;
-            forecolor = attr.forecolor;
-            bold = attr.bold;
-            underline = attr.underline;
+        public override int exer(Lexer lex) {
+            //throw new NotImplementedException();
+            int offset = lex.reader.offset();
+            int endindex = lex.reader.Src.IndexOf(end, offset);
+            return endindex;
         }
     }
 
     // //. ..\nend
-    class EndLineAttribute :Attribute{
-        public string start;
-        public int len;
-        public override string getWord() {
-            return start;
-        }
+    class EndLineElement :Element{
 
-        public EndLineAttribute(string start, Color forecolor, bool bold, bool underline) {
+        public EndLineElement(string start, Attribute attr) {
             this.start = start;
-            this.forecolor = forecolor;
-            this.bold = bold;
-            this.underline = underline;
+            this.attr = attr;
+            token = TokenType.EndLine;
         }
-
-        public EndLineAttribute(EndLineAttribute attr) {
-            start = attr.start;
-            forecolor = attr.forecolor;
-            bold = attr.bold;
-            underline = attr.underline;
+        public override int exer(Lexer lex) {
+            //throw new NotImplementedException();
+            int offset = lex.reader.offset();
+            return lex.reader.Src.Length;
         }
     }
 
     // >>.. end
-    class LineAttribute : Attribute {
-        public string start;
-        public int len;
-        public override string getWord() {
-            return start;
-        }
+    class LineElement : Element {
+        private Char[] c = new char[3];
 
-        public LineAttribute(string start, Color forecolor, bool bold, bool underline) {
+        public LineElement(string start, Attribute attr) {
             this.start = start;
-            this.forecolor = forecolor;
-            this.bold = bold;
-            this.underline = underline;
+            this.attr = attr;
+            token = TokenType.Line;
+            c[0] = '\t';
+            c[1] = ' ';
+            c[2] = '　';
         }
-
-        public LineAttribute(LineAttribute attr) {
-            start = attr.start;
-            forecolor = attr.forecolor;
-            bold = attr.bold;
-            underline = attr.underline;
+        public override int exer(Lexer lex) {
+            //throw new NotImplementedException();
+            int offset = lex.reader.offset();
+            string src = lex.reader.Src;
+            int endindex = src.IndexOfAny(c, offset);
+            //int index = lex.reader.src.Length - offset;
+            if (endindex < 0) {
+                endindex = src.Length;
+            }
+            else {
+                endindex = src.Length - endindex;
+            }
+            return endindex;
         }
     }
 
-    class Highlight {
-        public int ad;
-        public int len;
-        public Color forecolor;
-        public WordInfo info;
+    //##name
+    class ImageElement : EncloseElement {
+
+        public Size size;
+
+        public ImageElement(string start, string end, Attribute attr) {
+            this.start = start;
+            this.end = end;
+            this.attr = attr;
+            token = TokenType.Image;
+        }
     }
+
+    //class Highlight {
+    //    public int ad;
+    //    public int len;
+    //    public Color forecolor;
+    //    public WordInfo info;
+    //}
 
 
     class LexerReader {
         private bool unget_p = false;
-        private Char? ch;
+        private int ch;
         private int cnt;
-        public string src { get; set; }
+        private string src;
+        public string Src {
+            get { return src; }
+            set{
+                this.src = value;
+                cnt = 0;
+                unget_p = false;
+            } 
+        }
 
         public LexerReader(string src) {
             this.src = src;
             cnt = 0;
         }
 
-        public char? read() {
+        public LexerReader() {
+            cnt = 0;
+        }
+
+        public int read() {
             if (unget_p) {
                 unget_p = false;
             }
             else {
                 if (cnt > src.Length - 1) {
-                    ch = null;
+                    ch = -1;
                 }
                 else {
                     ch = src[cnt];
@@ -154,41 +210,53 @@ namespace AsControls.Parser {
     class Lexer {
 
         private TokenType tok;
-        private String val;
+        private String value;
         public LexerReader reader;
-        private int offset;
+        //private int offset;
 
-        private Attribute resultAttr;
+        private Element resultAttr;
 
-        private Dictionary<String, LineAttribute> LineattrDic = new Dictionary<String, LineAttribute>();
+        private Dictionary<String, Element> elemDic = new Dictionary<String, Element>();
         //private Dictionary<String, SingleLineAttribute> SingleLineattrDic = new Dictionary<String, SingleLineAttribute>();
         //private Dictionary<String, KeywordAttribute> keywordattrDic = new Dictionary<String, KeywordAttribute>();
 
-        public void AddAttribute(Attribute attr) {
-            //keywordattrDic.Add(attr.getWord(), attr as KeywordAttribute);
+        public void AddElement(Element elem) {
+            elemDic.Add(elem.start, elem);
         }
 
-        public Attribute getAttribute() {
+        public Element getAttribute() {
             return resultAttr;
         }
 
-        public TokenType token() {
-            return tok;
+        public TokenType token {
+            get { return tok; }
         }
 
         public Lexer(string src) {
             reader = new LexerReader(src);
         }
 
-        public string value() {
-            return val;
+        public Lexer() {
+            reader = new LexerReader();
+        }
+
+        public string Value {
+            get { return value; }
+        }
+
+        public int Offset {
+            get {
+                return reader.offset();
+            }
         }
 
         public bool advance() {
             //skipWhiteSpace();
-            //tok = TokenType.NONE;
-            char? c = reader.read();
-            if (c == null) {
+            resultAttr = null;
+            tok = TokenType.TXT;
+
+            int c = reader.read();
+            if (c == -1) {
                 tok = TokenType.EOS;
                 return false;
             }
@@ -197,31 +265,34 @@ namespace AsControls.Parser {
                     break;
 
                 //case '　':
-                case (char)0x3000:
+                case 0x3000:
                     break;
 
                 case '\t':
                     break;
-                    
-                default:
-                    if (Char.IsSymbol((char)c)) {
 
+                default:
+                    if( (c>=33 && c<=47)
+                        || (c >= 58 && c <= 74)
+                        || (c >= 91 && c <= 96)
+                        || (c >= 123 && c <= 126)){
+
+                    //if (Char.IsSymbol((char)c)) {
+                        lexSymbol(((char)c).ToString());
                     } else {
                         
                     }
                     break;
 
             }
-            lexSymbol(c.ToString());
-            
             return true;
         }
 
         private void skipWhiteSpace() {
-            char? c = reader.read();
+            int c = reader.read();
             char ch = (char)c;
 
-            while ((c != null)
+            while ((c != -1)
                     && (Char.IsWhiteSpace(ch) || (ch == '\t') || (ch == '\n') || (ch == '\r'))) {
                 c = reader.read();
                 ch = (char)c;
@@ -233,8 +304,8 @@ namespace AsControls.Parser {
             //offset = reader.offset();
 
             ////tok = TokenType.SYMBOL;
-            //StringBuilder buf = new StringBuilder();
-            //if (initstr != null) buf.Append(initstr);
+            StringBuilder buf = new StringBuilder();
+            if (initstr != null) buf.Append(initstr);
 
             //if(reserved.ContainsKey(buf.ToString())){
             //    var attr = reserved[buf.ToString()];
@@ -270,14 +341,33 @@ namespace AsControls.Parser {
             //    return;
             //}
 
-            //while (true) {
-            //    char? c = reader.read();
-            //    if (c==null) {
-            //        // throw new Exception("ファイルの終わりに到達しました。");
-            //        tok = TokenType.EOS;
-            //        break;
-            //    }
-            //    buf.Append((char)c);
+            while (true) {
+
+                if (elemDic.ContainsKey(buf.ToString())) {
+                    int offset = reader.offset();
+                    Element elem = elemDic[buf.ToString()];
+                    int index = elem.exer(this);
+                    if (index < 0) {
+                        reader.setoffset(reader.offset() + elem.start.Length + 1);
+                        return;
+                    }
+
+                    resultAttr = elem;
+                    value = reader.Src.Substring(offset, index - offset);
+                    tok = elem.token;
+
+                    reader.setoffset(index);
+
+                    return;
+                }
+
+                int c = reader.read();
+                if (c == -1) {
+                    // throw new Exception("ファイルの終わりに到達しました。");
+                    tok = TokenType.EOS;
+                    break;
+                }
+                buf.Append((char)c);
 
             //    if (reserved.ContainsKey(buf.ToString())) {
             //        var attr = reserved[buf.ToString()];
@@ -312,7 +402,7 @@ namespace AsControls.Parser {
             //        }
             //        return;
             //    }
-            //}
+            }
         }
 
     }

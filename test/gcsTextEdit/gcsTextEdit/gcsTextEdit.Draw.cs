@@ -456,122 +456,177 @@ namespace AsControls
 	        p.Invert(g, rc );
         }
 
-        private void Draw
+        private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
+            //g.FillRectangle(bb, v.rc);
+            // 定数１
+            //	const int   TAB = p.T();
+            int H = p.H();
+            int TLM = doc_.tln() - 1;
 
-        //private void drawDoc(Graphics g, VDrawInfo v)
-        //{
-        //    int ytop = v.YMIN;
-        //    int ybuttom = ytop + ViewHeight;
+            // 作業用変数１
+            Win32API.RECT a = new Win32API.RECT { left = 0, top = v.YMIN, right = 0, bottom = v.YMIN + p.H() };
+            //Rectangle  a = new Rectangle( 0, v.YMIN, 0, v.YMIN+p.H() );
+            //Rectangle a = new Rectangle(0, 0,,v.YMIN);
+            int clr = -1;
+            int x, x2;
+            int i, i2;
 
-        //    for (int i = v.TLMIN; ytop < v.YMAX; i++)
-        //    {
-        //        int lx = 0;
-        //        IBuffer buf = doc.LineList[i].Text;
-        //        List<AttributeInfo> attributeInfoList = doc.LineList[i].AttributeList;
-        //        if (attributeInfoList.Count == 0)
-        //        {
-        //            if (doc.LastLine(i))
-        //            {
-        //            }
-        //            else
-        //            {
-        //                drawReturn(g, lx + vRect.XBASE, ytop);
-        //            }
-        //            ytop += lineHeight;
-        //            continue;
-        //        }
+            Color color = Color.Black;
+            Attribute attr;
 
-        //        int wcs = 0;
-        //        int sindex = 0;
+            //int aTop = a.Top;
+            //int aBottom = a.Bottom;
+            // 論理行単位のLoop
+            for (int tl = v.TLMIN; a.top < v.YMAX; ++tl) {
 
-        //        int rYMAX = Math.Min(v.YMAX, ytop + GetvlCnt(i) * lineHeight);
 
-        //        for (int j = 0; ytop < rYMAX; j++, ytop += lineHeight)
-        //        {
-        //            int wc = 0;// doc.wrapInfo[i].wrap[j];
-        //            IBuffer text = null;
-        //            wc = wrapList[i].wrap[j];
-        //            text = buf.Substring(wcs, wc - wcs);
+                var ruls = doc_.Rules(tl);
+                if (ruls.Count > 0) {
+                    if (ruls[0].ad > 0) {
 
-        //            lx = 0;
-        //            IBuffer fs;
-        //            while (true)
-        //            {
-        //                int len = attributeInfoList[sindex].len;
-        //                Color c = attributeInfoList[sindex].forecolor;
+                    }
+                    else {
+                        color = ruls[0].attr.color;
+                    }
+                }
+                else {
+                }
 
-        //                if (sindex + len > wc)
-        //                {
-        //                    fs = text.Substring(sindex - wcs, wc - sindex);
-        //                    len = fs.Length;
-        //                }
-        //                else
-        //                {
-        //                    fs = text.Substring(sindex - wcs, len);
-        //                }
+                // 定数２
+                string str = doc_.tl(tl).ToString();
+                //const uchar*   flg = doc_.pl(tl);
+                int rYMAX = Math.Min(v.YMAX, a.top + rln(tl) * H);
 
-        //                switch (attributeInfoList[sindex].Token)
-        //                {
-        //                    case TokenType.TXT:
-        //                        drawText(g, fs.ToString(), Font, c, lx + v.XBASE, ytop);
-        //                        break;
-        //                    case TokenType.CLICKABLE:
-        //                        drawText(g, fs.ToString(), Font, c, lx + v.XBASE, ytop);
-        //                        drawUnderLine(g, fs, Font, c, lx + v.XBASE, ytop);
-        //                        break;
-        //                    case TokenType.TAB:
-        //                        drawTab(g, lx + v.XBASE, ytop, len);
-        //                        break;
-        //                    case TokenType.ZSP:
-        //                        drawZen(g, lx + v.XBASE, ytop, len);
-        //                        break;
-        //                }
+                // 作業用変数２
+                int stt = 0, end, t, n;
 
-        //                sindex += len;
-        //                lx += CalcStringWidth(fs);
-        //                if (sindex >= wc)
-        //                {
-        //                    break;
-        //                }
-        //            }
-        //            wcs = wc;
+                // 表示行単位のLoop
+                for (int rl = 0; a.top < rYMAX; ++rl, a.top += H, a.bottom += H, stt = end)
+                {
+                    //if(ruls[rl].ad
+                    color = ruls[rl].attr.color;
 
-        //            // 選択範囲だったら反転
-        //            if (v.SYB <= ytop && ytop <= v.SYE && !isdropfile)
-        //            {
-        //                //Inv(a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
-        //                //            a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
-        //                //inline void ViewImpl::Inv( int y, int xb, int xe, Painter& p )
-        //                //{
-        //                //    RECT rc = {
-        //                //        Max( left(),  xb ), y,
-        //                //        Min( right(), xe ), y+p.H()-1
-        //                //    };
-        //                //    p.Invert( rc );
-        //                //}
+                    // 作業用変数３
+                    end = rlend(tl, rl);
+                    if (a.bottom <= v.YMIN)
+                        continue;
 
-        //                //LONG left;
-        //                //LONG top;
-        //                //LONG right;
-        //                //LONG bottom;
-        //                int le = ytop == v.SYB ? v.SXB : v.XBASE;
-        //                int to = ytop;
-        //                int ri = ytop == v.SYE ? v.SXE : (v.XBASE + CalcStringWidth(text));
-        //                int bo = ytop + lineHeight;
-        //                Rectangle rect = new Rectangle(le, to, ri, bo);
-        //                Invert(g, rect);
-        //            }
-        //        }
+                    // テキストデータ描画
+                    for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
 
-        //        if (doc_.LastLine(i))
-        //        {
 
-        //        }
-        //        else
-        //        {
-        //            drawReturn(g, lx + vRect.XBASE, ytop - lineHeight);
-        //        }
-        //    }
-        //}
+
+                        // n := 次のTokenの頭
+                        //t = (flg[i]>>5);
+                        t = 0;
+                        n = i + t;
+                        if (n >= end)
+                            n = end;
+                        else if (t == 7 || t == 0)
+                            //while( n<end && (flg[n]>>5)==0 )
+                            while (n < end)
+                                ++n;
+
+                        // x2, i2 := このTokenの右端
+                        i2++;
+                        x2 = (str[i] == '\t' ? p.nextTab(x2) : x2 + p.W(str[i]));
+                        //	if( x2 <= v.XMIN )
+                        //		x=x2, i=i2;
+                        while (i2 < n && x2 <= v.XMAX)
+                            x2 += p.W(str[i2++]);
+
+                        // 再描画すべき範囲と重なっていない
+                        if (x2 <= v.XMIN)
+                            continue;
+
+                        // x, i := このトークンの左端
+                        if (x < v.XMIN) {
+                            // tabの分が戻りすぎ？
+                            x = x2; i = i2;
+                            while (v.XMIN < x)
+                                x -= p.W(str[--i]);
+                        }
+
+                        // 背景塗りつぶし
+                        a.left = x + v.XBASE;
+                        a.right = x2 + v.XBASE;
+                        //p.Fill( a );
+                        //g.FillRectangle(bb, a.left, a.top, a.right-a.left, a.bottom-a.top);
+
+                        // 描画
+                        //switch( str[i] )
+                        //{
+                        //case '\t':
+                        //    if( p.sc(scTAB) )
+                        //    {
+                        //        p.SetColor( clr=CTL );
+                        //        for( ; i<i2; ++i, x=p.nextTab(x) )
+                        //            p.CharOut( L'>', x+v.XBASE, a.top );
+                        //    }
+                        //    break;
+                        //case ' ':
+                        //    if( p.sc(scHSP) )
+                        //        p.DrawHSP( x+v.XBASE, a.top, i2-i );
+                        //    break;
+                        //    case '　'://0x3000://L'　':
+                        //    if( p.sc(scZSP) )
+                        //        p.DrawZSP( x+v.XBASE, a.top, i2-i );
+                        //    break;
+                        //default:
+                        //    if( clr != (flg[i]&3) )
+                        //        p.SetColor( clr=(flg[i]&3) );
+                        //    p.StringOut( str+i, i2-i, x+v.XBASE, a.top );
+                        //    //p.StringOut( str+i, i2-i, x+v.XBASE, a.top );
+                        //    // 何故だか２度描きしないとうまくいかん…
+                        //    break;
+                        //}
+                        if (str.Contains("img")) {
+                            g.DrawImage(image, x + v.XBASE, a.top);
+                        }
+                        p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, a.top);
+
+                    }
+
+                    // 選択範囲だったら反転
+                    //if( v.SYB<=a.top && a.top<=v.SYE )
+                    //    Inv( a.top, a.top==v.SYB?v.SXB:(v.XBASE),
+                    //                a.top==v.SYE?v.SXE:(v.XBASE+x), p );
+                    if (v.SYB <= a.top && a.top <= v.SYE)
+                        Inv(g, a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
+                                    a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                    // 行末より後ろの余白を背景色塗
+                    if (x < v.XMAX) {
+                        a.left = v.XBASE + Math.Max(v.XMIN, x);
+                        a.right = v.XBASE + v.XMAX;
+                        //p.Fill( a );
+                        //g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
+                    }
+                }
+
+                //// 行末記号描画反転
+                //SpecialChars sc = (tl==TLM ? scEOF : scEOL);
+                //if( i==doc_.len(tl) && -32768<x+v.XBASE )
+                //{
+                //    if( p.sc(sc) )
+                //    {
+                //        static const unicode* const sstr[] = { L"[EOF]", L"/" };
+                //        static const int slen[] = { 5, 1 };
+                //        p.SetColor( clr=CTL );
+                //        p.StringOut( sstr[sc], slen[sc], x+v.XBASE, a.top-H );
+                //    }
+                //    if( v.SYB<a.top && a.top<=v.SYE && sc==scEOL )
+                //        Inv( a.top-H, x+v.XBASE, x+v.XBASE+p.Wc('/'), p );
+                //}
+            }
+
+            // EOF後余白を背景色塗
+            if (a.top < v.rc.Bottom) {
+                a.left = v.rc.Left;
+                a.right = v.rc.Right;
+                a.bottom = v.rc.Bottom;
+                //p.Fill( a );
+                //g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
+            }
+        }
     }
 }

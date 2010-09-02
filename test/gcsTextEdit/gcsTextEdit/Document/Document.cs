@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using AsControls.Parser;
 
 namespace AsControls {
 
@@ -21,6 +22,9 @@ namespace AsControls {
         private List<Line> text_;
 
         Highlighter highlighter;
+
+        private gcsTextEdit edit;
+        Parser.Parser parser;
 
         public Highlighter Highlighter {
             get { return highlighter; }
@@ -55,6 +59,10 @@ namespace AsControls {
             return text_[i].AttributeList;
         }
 
+        public List<Rule> Rules(int i) {
+            return text_[i].Rules;
+        }
+
         public override string ToString() {
             StringBuilder str = new StringBuilder();
             for (int i = 0; i < text_.Count; i++) {
@@ -77,6 +85,8 @@ namespace AsControls {
             highlighter.Add(@"\[\[.*\]\]", TokenType.CLICKABLE, Color.Red);
             //highlighter.Add(@">>\w*", TokenType.CLICKABLE, Color.Blue);
             //highlighter.Add(@"file:///\S*", TokenType.CLICKABLE, Color.Blue);
+
+            parser = new AsControls.Parser.Parser();
 
             //LineList = new List<Line>();
             //LineList.Add(new Line(string.Empty));
@@ -143,6 +153,31 @@ namespace AsControls {
         private void MultiParse(int startrl, int endrl) {
             for (int i = startrl; i <= endrl; i++) {
                 highlighter.Parse(text_[i].Text, text_[i].AttributeList);
+            }
+            for (int i = startrl; i <= endrl; i++) {
+                var rules = parser.parseLine(text_[i].Text.ToString());
+
+                for(int ir=0; ir<rules.Count; ir++){
+                //foreach(var rule in rules){
+                    var rule = rules[ir];
+                    int ad = rule.ad;
+                    int len = rule.len;
+                    for(int i2=0; i2<edit.rln(i); i2++){
+                        int pos = edit.rlend(i, i2);
+                        if (ad + len > pos) {
+                            rule.len -= (ad + len - pos);
+                            Rule newrule = new Rule();
+                            newrule.ad = pos;
+                            newrule.len = len - rule.len;
+                            newrule.attr = rule.attr;
+                            rules.Insert(ir ,newrule);
+                            //break;
+                        }
+                    }
+                   
+                }
+                text_[i].Rules = rules;
+                
             }
         }
 

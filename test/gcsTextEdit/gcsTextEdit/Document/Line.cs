@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AsControls.Parser;
 
 namespace AsControls
 {
@@ -9,6 +10,12 @@ namespace AsControls
     {
         private IBuffer text;
         private List<AttributeInfo> attributeInfoList;
+        private List<Rule> rules;
+
+        public List<Rule> Rules {
+            get { return rules; }
+            set { rules = value; }
+        }
 
         public List<AttributeInfo> AttributeList
         {
@@ -34,6 +41,8 @@ namespace AsControls
             {
                 attributeInfoList.Add(new AttributeInfo());
             }
+
+            rules = new List<Rule>();
         }
 
         public void SetText(string text)
@@ -45,6 +54,8 @@ namespace AsControls
             {
                 attributeInfoList.Add(new AttributeInfo());
             }
+
+            rules.Clear();
         }
     }
 }

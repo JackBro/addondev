@@ -246,10 +246,10 @@ namespace AsControls {
             Initialize();
 
 
-            //Parser.Parser p = new Parser.Parser();
+            Parser.Parser p = new Parser.Parser();
             //p.init();
-            //var res = p.parseLine("test//test");
-            //int i = 0;
+            var res = p.parseLine("test[[OK]]test");
+            int i = 0;
 
         }
 
