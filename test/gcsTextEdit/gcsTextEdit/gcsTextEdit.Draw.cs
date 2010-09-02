@@ -500,16 +500,44 @@ namespace AsControls
                 // 作業用変数２
                 int stt = 0, end, t, n;
 
+
+                int attri = 0;
+                int nextlen = 0;
                 // 表示行単位のLoop
                 for (int rl = 0; a.top < rYMAX; ++rl, a.top += H, a.bottom += H, stt = end)
                 {
                     //if(ruls[rl].ad
-                    color = ruls[rl].attr.color;
 
+                    
                     // 作業用変数３
                     end = rlend(tl, rl);
                     if (a.bottom <= v.YMIN)
                         continue;
+
+
+
+                    // テキストデータ描画
+                    for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
+
+                        int attrindex = ruls[attri].ad;
+                        int attrlen = ruls[attri].len;
+                        color = ruls[attri].attr.color;
+
+                        if (attrindex + attrlen <= end) {
+                            string s = str.Substring(attrindex, attrlen);
+                            p.DrawText(g, s, color, x + v.XBASE, a.top);
+                            nextlen = 0;
+                            x += p.CalcStringWidth(s);
+                            attri++;
+                        } else {
+                            //over
+                            string s = str.Substring(attrindex, end - attrindex);
+                            p.DrawText(g, s, color, x + v.XBASE, a.top);
+                            nextlen = attrlen - (end - attrindex);
+                            x += p.CalcStringWidth(s);
+                        }
+                    }
+
 
                     // テキストデータ描画
                     for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
