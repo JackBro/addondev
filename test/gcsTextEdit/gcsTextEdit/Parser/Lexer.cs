@@ -42,32 +42,23 @@ namespace AsControls.Parser {
         Image
     }
 
-
-    //class WordInfo
-    //{
-    //    public Color color;
-    //    public Boolean Bold;
-    //    public Boolean UnderLine;
-    //}
-
-    //abstract class Attribute {
-    //    public int ad;
-    //    public int len;
-    //    public Color forecolor;
-    //    public Boolean bold;
-    //    public Boolean clickable;
-    //    public Boolean underline;
-
-    //    public abstract string getWord();
-    //    public abstract int exer(Lexer lex);
-    //}
-
-
     abstract class Element {
         public Attribute attr;
         public TokenType token;
         public string start { get; set; }
         public abstract int exer(Lexer lex);
+    }
+
+    class TextElement : Element {
+        public TextElement(Attribute attr) {
+            this.attr = attr;
+            this.token = TokenType.TXT;
+        }
+
+        public override int exer(Lexer lex) {
+            //throw new NotImplementedException();
+            return 0;
+        }
     }
 
     //[[..]]end
@@ -86,7 +77,7 @@ namespace AsControls.Parser {
         public override int exer(Lexer lex) {
             //throw new NotImplementedException();
             int offset = lex.reader.offset();
-            int endindex = lex.reader.Src.IndexOf(end, offset);
+            int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
             return endindex;
         }
     }
@@ -147,14 +138,6 @@ namespace AsControls.Parser {
         }
     }
 
-    //class Highlight {
-    //    public int ad;
-    //    public int len;
-    //    public Color forecolor;
-    //    public WordInfo info;
-    //}
-
-
     class LexerReader {
         private bool unget_p = false;
         private int ch;
@@ -164,6 +147,7 @@ namespace AsControls.Parser {
             get { return src; }
             set{
                 this.src = value;
+                ch = 0;
                 cnt = 0;
                 unget_p = false;
             } 
@@ -207,15 +191,23 @@ namespace AsControls.Parser {
         }
     }
 
+    //delegate void TokenEventHandler(object sender, int start, int len, Element e);
+
     class Lexer {
+
+        //public event TokenEventHandler tokenEventHandler = null;
+
 
         private TokenType tok;
         private String value;
         public LexerReader reader;
         //private int offset;
 
-        private Element resultAttr;
+        private Element resultElement;
 
+        //private int preoffset=0;
+
+        private Element defaultElement;
         private Dictionary<String, Element> elemDic = new Dictionary<String, Element>();
         //private Dictionary<String, SingleLineAttribute> SingleLineattrDic = new Dictionary<String, SingleLineAttribute>();
         //private Dictionary<String, KeywordAttribute> keywordattrDic = new Dictionary<String, KeywordAttribute>();
@@ -224,8 +216,28 @@ namespace AsControls.Parser {
             elemDic.Add(elem.start, elem);
         }
 
-        public Element getAttribute() {
-            return resultAttr;
+        public void AddDefaultElement(Element elem) {
+            defaultElement = elem;
+        }
+
+        public Element getElement() {
+            return resultElement;
+        }
+
+        public string Src {
+            get { return reader.Src; }
+            set {
+                //preoffset = 0;
+                if (reader == null) {
+                    reader = new LexerReader(value);
+                }
+                else {
+                    reader.Src = value;
+                    //reader.setoffset(0);
+                    tok = TokenType.TXT;
+                    value = null;
+                }
+            }
         }
 
         public TokenType token {
@@ -233,6 +245,7 @@ namespace AsControls.Parser {
         }
 
         public Lexer(string src) {
+
             reader = new LexerReader(src);
         }
 
@@ -252,7 +265,7 @@ namespace AsControls.Parser {
 
         public bool advance() {
             //skipWhiteSpace();
-            resultAttr = null;
+            //resultAttr = null;
             tok = TokenType.TXT;
 
             int c = reader.read();
@@ -300,6 +313,24 @@ namespace AsControls.Parser {
             reader.unread((char)c);
         }
 
+        //private void lexText(string initstr) {
+        //    StringBuilder buf = new StringBuilder();
+        //    if (initstr != null) buf.Append(initstr);
+
+        //    while (true) {
+        //        if (elemDic.ContainsKey(buf.ToString())) {
+
+        //        }
+
+        //        int c = reader.read();
+        //        if (c == -1) {
+        //            tok = TokenType.EOS;
+        //            break;
+        //        }
+        //        buf.Append((char)c);
+        //    }
+        //}
+
         private void lexSymbol(string initstr) {
             //offset = reader.offset();
 
@@ -307,101 +338,45 @@ namespace AsControls.Parser {
             StringBuilder buf = new StringBuilder();
             if (initstr != null) buf.Append(initstr);
 
-            //if(reserved.ContainsKey(buf.ToString())){
-            //    var attr = reserved[buf.ToString()];
-            //    if(attr is LineAttribute){
-            //        string end = (attr as LineAttribute).end;
-            //        string src = reader.src;
-            //        int index = src.IndexOf(end, offset);
-            //        if (index >= 0) {
-            //            attr.ad = offset;
-            //            attr.len = index - offset + end.Length;
-            //            reader.setoffset(offset + index - offset + end.Length);
-            //            tok = TokenType.ATTR;
-
-            //            resultAttr = new LineAttribute(attr as LineAttribute);
-
-            //        }
-            //    }else{
-            //        attr.ad = offset;
-                    
-
-            //        tok = TokenType.ATTR;
-            //        if (attr is SingleLineAttribute) {
-            //            resultAttr = new SingleLineAttribute(attr as SingleLineAttribute);
-            //            attr.len = reader.src.Length - offset;
-            //        }
-            //        else {
-            //            resultAttr = new KeywordAttribute(attr as KeywordAttribute);
-            //            attr.len = attr.getWord().Length;
-            //        }
-
-            //        reader.setoffset(offset + attr.len + 1);
-            //    }
-            //    return;
-            //}
-
             while (true) {
 
                 if (elemDic.ContainsKey(buf.ToString())) {
-                    int offset = reader.offset();
+                    
                     Element elem = elemDic[buf.ToString()];
+                    int offset = reader.offset()-elem.start.Length;
+
                     int index = elem.exer(this);
                     if (index < 0) {
-                        reader.setoffset(reader.offset() + elem.start.Length + 1);
+                        reader.setoffset(reader.offset() + 1);
                         return;
                     }
 
-                    resultAttr = elem;
+                    //if (preoffset != offset) {
+                    //    tok = TokenType.TXT;
+                    //    value = reader.Src.Substring(preoffset, offset - preoffset);
+                    //    if (tokenEventHandler != null) {
+                    //        tokenEventHandler(this, preoffset, offset - preoffset, defaultElement);
+                    //    }
+                    //}
+
                     value = reader.Src.Substring(offset, index - offset);
                     tok = elem.token;
-
+                    resultElement = elem;
+                    //if (tokenEventHandler != null) {
+                    //    tokenEventHandler(this, offset, index - offset, elem);
+                    //}
                     reader.setoffset(index);
 
+                    //preoffset = offset;
                     return;
                 }
 
                 int c = reader.read();
                 if (c == -1) {
-                    // throw new Exception("ファイルの終わりに到達しました。");
                     tok = TokenType.EOS;
                     break;
                 }
                 buf.Append((char)c);
-
-            //    if (reserved.ContainsKey(buf.ToString())) {
-            //        var attr = reserved[buf.ToString()];
-            //        if (attr is LineAttribute) {
-            //            string end = (attr as LineAttribute).end;
-            //            string src = reader.src;
-            //            int index = src.IndexOf(end, offset);
-            //            if (index >= 0) {
-            //                attr.ad = offset;
-            //                attr.len = index - offset + end.Length;
-            //                reader.setoffset(offset + index - offset + end.Length);
-            //                tok = TokenType.ATTR;
-
-            //                resultAttr = new LineAttribute(attr as LineAttribute);
-            //            }
-            //        }
-            //        else {
-            //            attr.ad = offset;
-
-
-            //            tok = TokenType.ATTR;
-            //            if (attr is SingleLineAttribute) {
-            //                resultAttr = new SingleLineAttribute(attr as SingleLineAttribute);
-            //                attr.len = reader.src.Length - offset;
-            //            }
-            //            else {
-            //                resultAttr = new KeywordAttribute(attr as KeywordAttribute);
-            //                attr.len = attr.getWord().Length;
-            //            }
-
-            //            reader.setoffset(offset + attr.len + 1);
-            //        }
-            //        return;
-            //    }
             }
         }
 

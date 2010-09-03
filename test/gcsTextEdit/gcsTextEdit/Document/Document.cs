@@ -151,33 +151,12 @@ namespace AsControls {
         }
 
         private void MultiParse(int startrl, int endrl) {
-            for (int i = startrl; i <= endrl; i++) {
-                highlighter.Parse(text_[i].Text, text_[i].AttributeList);
-            }
+            //for (int i = startrl; i <= endrl; i++) {
+            //    highlighter.Parse(text_[i].Text, text_[i].AttributeList);
+            //}
             for (int i = startrl; i <= endrl; i++) {
                 var rules = parser.parseLine(text_[i].Text.ToString());
-
-                for(int ir=0; ir<rules.Count; ir++){
-                //foreach(var rule in rules){
-                    var rule = rules[ir];
-                    int ad = rule.ad;
-                    int len = rule.len;
-                    for(int i2=0; i2<edit.rln(i); i2++){
-                        int pos = edit.rlend(i, i2);
-                        if (ad + len > pos) {
-                            rule.len -= (ad + len - pos);
-                            Rule newrule = new Rule();
-                            newrule.ad = pos;
-                            newrule.len = len - rule.len;
-                            newrule.attr = rule.attr;
-                            rules.Insert(ir ,newrule);
-                            //break;
-                        }
-                    }
-                   
-                }
                 text_[i].Rules = rules;
-                
             }
         }
 

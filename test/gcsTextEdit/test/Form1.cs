@@ -45,43 +45,32 @@ namespace test
             panel1.Controls.Add(csedit);
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
-//            csedit.Text = @"<html>
-//<head>
-//<meta http-equiv=""content-type"" content=""text/html; charset=UTF-8"">
-//	<title>HOGE</title>
-//</head>
-//<body>
-//:)
-//</body>
-//</html>
-//";
-//            csedit.Text = @"12345
-//title>HOGE</title>";
 
-            csedit.Text = @"123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
-mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-TTTTTTTTTTTTgg
-ffffffffffffffffff
-hhhhhhhhhhhhhh
-kkkkkkkkkkkkkkkk
-kkkkkkkkkkkkkkkk
-kkkkkkkkkkkkkkkkk
-llllllllllllllllllll
-fffffffffffffffff
-eeeeeeeeeeeeeeeeeeeee
-r
-r
-r
-r
-r
-r
+//            csedit.Text = @"123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+//mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+//TTTTTTTTTTTTgg
+//ffffffffffffffffff
+//hhhhhhhhhhhhhh
+//kkkkkkkkkkkkkkkk
+//kkkkkkkkkkkkkkkk
+//kkkkkkkkkkkkkkkkk
+//llllllllllllllllllll
+//fffffffffffffffff
+//eeeeeeeeeeeeeeeeeeeee
+//r
+//r
+//r
+//r
+//r
+//r
+//
+//ryyyyyyyyyyyyyyyyyyyyyyyyy
+//yy
+//yyy
+//y
+//yy";
 
-ryyyyyyyyyyyyyyyyyyyyyyyyy
-yy
-yyy
-y
-yy";
-
+            csedit.Text = "test[[123]]1234";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;

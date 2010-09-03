@@ -456,6 +456,7 @@ namespace AsControls
 	        p.Invert(g, rc );
         }
 
+        private char[] ch = { '\t', ' ', '　' };
         private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
             //g.FillRectangle(bb, v.rc);
             // 定数１
@@ -480,17 +481,7 @@ namespace AsControls
             for (int tl = v.TLMIN; a.top < v.YMAX; ++tl) {
 
 
-                var ruls = doc_.Rules(tl);
-                if (ruls.Count > 0) {
-                    if (ruls[0].ad > 0) {
 
-                    }
-                    else {
-                        color = ruls[0].attr.color;
-                    }
-                }
-                else {
-                }
 
                 // 定数２
                 string str = doc_.tl(tl).ToString();
@@ -503,6 +494,12 @@ namespace AsControls
 
                 int attri = 0;
                 int nextlen = 0;
+
+                var ruls = doc_.Rules(tl);
+                int attrindex = ruls[attri].ad;
+                int attrlen = ruls[attri].len;
+                color = ruls[attri].attr.color;
+
                 // 表示行単位のLoop
                 for (int rl = 0; a.top < rYMAX; ++rl, a.top += H, a.bottom += H, stt = end)
                 {
@@ -515,105 +512,124 @@ namespace AsControls
                         continue;
 
 
-
                     // テキストデータ描画
-                    for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
+                    //for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
+                    for (x = 0, i=stt; x <= v.XMAX && i < end; ) {
 
-                        int attrindex = ruls[attri].ad;
-                        int attrlen = ruls[attri].len;
-                        color = ruls[attri].attr.color;
 
-                        if (attrindex + attrlen <= end) {
+                        nextlen = end - (attrindex + attrlen);
+                        //nextlen = end - attrindex;
+                        if (nextlen >= 0) {
+
                             string s = str.Substring(attrindex, attrlen);
+
+
                             p.DrawText(g, s, color, x + v.XBASE, a.top);
-                            nextlen = 0;
+
                             x += p.CalcStringWidth(s);
-                            attri++;
-                        } else {
+                            i += s.Length;
+                            stt = i;
+
+                            if (nextlen > 0) {
+                                attri++;
+                                attrindex = ruls[attri].ad;
+                                attrlen = ruls[attri].len;
+                                color = ruls[attri].attr.color;
+                            }
+                        }
+                        else {
                             //over
                             string s = str.Substring(attrindex, end - attrindex);
+                            //string s = str.Substring(attrindex, end);
                             p.DrawText(g, s, color, x + v.XBASE, a.top);
-                            nextlen = attrlen - (end - attrindex);
+                            //nextlen = attrlen - (end - attrindex);
                             x += p.CalcStringWidth(s);
+                            i += s.Length;
+                            stt = i;
+
+                            attrlen -= s.Length; //(end - attrindex);
+                            attrindex = end;
+
+                            //attrlen = attrlen - end;
+
                         }
+
+
                     }
 
 
-                    // テキストデータ描画
-                    for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
+                    //// テキストデータ描画
+                    //for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
+                    //    // n := 次のTokenの頭
+                    //    //t = (flg[i]>>5);
+                    //    t = 0;
+                    //    n = i + t;
+                    //    if (n >= end)
+                    //        n = end;
+                    //    else if (t == 7 || t == 0)
+                    //        //while( n<end && (flg[n]>>5)==0 )
+                    //        while (n < end)
+                    //            ++n;
 
+                    //    // x2, i2 := このTokenの右端
+                    //    i2++;
+                    //    x2 = (str[i] == '\t' ? p.nextTab(x2) : x2 + p.W(str[i]));
+                    //    //	if( x2 <= v.XMIN )
+                    //    //		x=x2, i=i2;
+                    //    while (i2 < n && x2 <= v.XMAX)
+                    //        x2 += p.W(str[i2++]);
 
+                    //    // 再描画すべき範囲と重なっていない
+                    //    if (x2 <= v.XMIN)
+                    //        continue;
 
-                        // n := 次のTokenの頭
-                        //t = (flg[i]>>5);
-                        t = 0;
-                        n = i + t;
-                        if (n >= end)
-                            n = end;
-                        else if (t == 7 || t == 0)
-                            //while( n<end && (flg[n]>>5)==0 )
-                            while (n < end)
-                                ++n;
+                    //    // x, i := このトークンの左端
+                    //    if (x < v.XMIN) {
+                    //        // tabの分が戻りすぎ？
+                    //        x = x2; i = i2;
+                    //        while (v.XMIN < x)
+                    //            x -= p.W(str[--i]);
+                    //    }
 
-                        // x2, i2 := このTokenの右端
-                        i2++;
-                        x2 = (str[i] == '\t' ? p.nextTab(x2) : x2 + p.W(str[i]));
-                        //	if( x2 <= v.XMIN )
-                        //		x=x2, i=i2;
-                        while (i2 < n && x2 <= v.XMAX)
-                            x2 += p.W(str[i2++]);
+                    //    // 背景塗りつぶし
+                    //    a.left = x + v.XBASE;
+                    //    a.right = x2 + v.XBASE;
+                    //    //p.Fill( a );
+                    //    //g.FillRectangle(bb, a.left, a.top, a.right-a.left, a.bottom-a.top);
 
-                        // 再描画すべき範囲と重なっていない
-                        if (x2 <= v.XMIN)
-                            continue;
+                    //    // 描画
+                    //    //switch( str[i] )
+                    //    //{
+                    //    //case '\t':
+                    //    //    if( p.sc(scTAB) )
+                    //    //    {
+                    //    //        p.SetColor( clr=CTL );
+                    //    //        for( ; i<i2; ++i, x=p.nextTab(x) )
+                    //    //            p.CharOut( L'>', x+v.XBASE, a.top );
+                    //    //    }
+                    //    //    break;
+                    //    //case ' ':
+                    //    //    if( p.sc(scHSP) )
+                    //    //        p.DrawHSP( x+v.XBASE, a.top, i2-i );
+                    //    //    break;
+                    //    //case '　'://0x3000://L'　':
+                    //    //    if( p.sc(scZSP) )
+                    //    //        p.DrawZSP( x+v.XBASE, a.top, i2-i );
+                    //    //    break;
+                    //    //default:
+                    //    //    if( clr != (flg[i]&3) )
+                    //    //        p.SetColor( clr=(flg[i]&3) );
+                    //    //    p.StringOut( str+i, i2-i, x+v.XBASE, a.top );
+                    //    //    //p.StringOut( str+i, i2-i, x+v.XBASE, a.top );
+                    //    //    // 何故だか２度描きしないとうまくいかん…
+                    //    //    break;
+                    //    //}
+                    //    if (str.Contains("img")) {
+                    //        g.DrawImage(image, x + v.XBASE, a.top);
+                    //    }
+                    //    p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, a.top);
 
-                        // x, i := このトークンの左端
-                        if (x < v.XMIN) {
-                            // tabの分が戻りすぎ？
-                            x = x2; i = i2;
-                            while (v.XMIN < x)
-                                x -= p.W(str[--i]);
-                        }
-
-                        // 背景塗りつぶし
-                        a.left = x + v.XBASE;
-                        a.right = x2 + v.XBASE;
-                        //p.Fill( a );
-                        //g.FillRectangle(bb, a.left, a.top, a.right-a.left, a.bottom-a.top);
-
-                        // 描画
-                        //switch( str[i] )
-                        //{
-                        //case '\t':
-                        //    if( p.sc(scTAB) )
-                        //    {
-                        //        p.SetColor( clr=CTL );
-                        //        for( ; i<i2; ++i, x=p.nextTab(x) )
-                        //            p.CharOut( L'>', x+v.XBASE, a.top );
-                        //    }
-                        //    break;
-                        //case ' ':
-                        //    if( p.sc(scHSP) )
-                        //        p.DrawHSP( x+v.XBASE, a.top, i2-i );
-                        //    break;
-                        //    case '　'://0x3000://L'　':
-                        //    if( p.sc(scZSP) )
-                        //        p.DrawZSP( x+v.XBASE, a.top, i2-i );
-                        //    break;
-                        //default:
-                        //    if( clr != (flg[i]&3) )
-                        //        p.SetColor( clr=(flg[i]&3) );
-                        //    p.StringOut( str+i, i2-i, x+v.XBASE, a.top );
-                        //    //p.StringOut( str+i, i2-i, x+v.XBASE, a.top );
-                        //    // 何故だか２度描きしないとうまくいかん…
-                        //    break;
-                        //}
-                        if (str.Contains("img")) {
-                            g.DrawImage(image, x + v.XBASE, a.top);
-                        }
-                        p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, a.top);
-
-                    }
+                    //}
 
                     // 選択範囲だったら反転
                     //if( v.SYB<=a.top && a.top<=v.SYE )

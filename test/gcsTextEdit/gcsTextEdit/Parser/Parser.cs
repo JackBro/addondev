@@ -21,6 +21,11 @@ namespace AsControls.Parser {
         private Lexer lex;
         private TokenType token;//=TokenType.NONE;
 
+        List<Rule> rules;
+        //int offset;
+
+        Attribute defaultAttr;
+
         private void getToken() {
             if (lex.advance()) {
                 token = lex.token;
@@ -36,28 +41,41 @@ namespace AsControls.Parser {
         }
 
         public void init() {
-            token = TokenType.TXT;
-            Attribute attr = new Attribute(Color.Red, false, false, false);
-            lex.AddElement(new EncloseElement("[[", "]]", attr));
+            lex.AddElement(new EncloseElement("[[", "]]", new Attribute(Color.Red, false, false, false)));
+
+            lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false)));
+
+            defaultAttr = new Attribute(Color.Black, false, false, false);
+            lex.AddDefaultElement(new TextElement(defaultAttr));
+
+            //lex.tokenEventHandler += (sender, start, len, e) => {
+            //    rules.Add(new Rule { ad = start, len = len, attr = e.attr });
+            //};
         }
 
         public List<Rule> parseLine(string line) {
-            lex.reader.Src = line;
+            token = TokenType.TXT;
+            //int lexoffset = 0;
+
+            //lex.reader.Src = line;
+            lex.Src = line;
             //lex = new Lexer(line);
             //init();
 
-            List<Rule> rules = new List<Rule>();
+            //List<Rule> rules = new List<Rule>();
+            rules = new List<Rule>();
             //lex = new Lexer(line);
 		    //getToken();
 		    while (token != TokenType.EOS) {
-                int offset = lex.Offset;
+                //offset = lex.Offset;
 				getToken();
-                switch(token){
+                switch (token) {
                     case TokenType.Enclose:
-                        rules.Add(new Rule { ad = offset, len=lex.Value.Length, attr=lex.getAttribute().attr });
+                        rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
                         break;
 
                     case TokenType.EndLine:
+                        rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
                         break;
 
                     case TokenType.Line:
@@ -70,6 +88,31 @@ namespace AsControls.Parser {
                 //    attrs.Add(lex.getAttribute());
                 //}
 		    }
+
+            if (rules.Count > 0) {
+
+                var lastrule = rules[rules.Count - 1];
+                if (lastrule.ad + lastrule.len < line.Length) {
+                    rules.Add(new Rule { ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
+                }
+
+                int index = 0;
+                for (int i = 0; i < rules.Count; i++) {
+
+                    if (rules[i].ad - index > 0) {
+                        rules.Add(new Rule { ad = index, len = rules[i].ad - index, attr = defaultAttr });
+                    }
+                    index = rules[i].ad + rules[i].len;
+                }
+
+                rules.Sort((x, y) => {
+                    return x.ad < y.ad ? -1 : 1;
+                });
+            }
+            else {
+                rules.Add(new Rule { ad = 0, len = line.Length, attr = defaultAttr });
+            }
+
             return rules;
 	    }
     }

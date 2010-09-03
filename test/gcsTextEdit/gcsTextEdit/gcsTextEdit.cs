@@ -775,12 +775,12 @@ namespace AsControls {
                 DrawLNA(e.Graphics, vRect, p);
             } else if (lna() <= e.ClipRectangle.Left) {
                 // case B: テキスト表示域のみ更新
-                DrawTXT2(e.Graphics, vRect, p);
+                DrawTXT3(e.Graphics, vRect, p);
             } else {
                 // case C: 両方更新
                 DrawLNA(e.Graphics, vRect, p);
                 p.SetClip(cvs_.zone());
-                DrawTXT2(e.Graphics, vRect, p);
+                DrawTXT3(e.Graphics, vRect, p);
                 p.ClearClip();
 
                 
