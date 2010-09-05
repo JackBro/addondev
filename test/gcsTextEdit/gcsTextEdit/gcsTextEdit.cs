@@ -245,12 +245,11 @@ namespace AsControls {
 
             Initialize();
 
-
-            Parser.Parser p = new Parser.Parser();
-            //p.init();
-            var res = p.parseLine("test[[OK]]test");
-            int i = 0;
-
+            //IEnumerable<string> mm = parse("test[[123]]  12\t34\t  \t\t \t \t  test");
+            //foreach (var item in parse("test[[123]]  12\t34\t")) {
+            //    Console.WriteLine("vitem=" + item);
+            //}
+            //int i=0;
         }
 
         void gcsTextEdit_VisibleChanged(object sender, EventArgs e) {
@@ -687,7 +686,8 @@ namespace AsControls {
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e) {
-            if (IsInputChar(e.KeyChar) && this.ImeMode == ImeMode.Off) {
+            //if (IsInputChar(e.KeyChar) && this.ImeMode == ImeMode.Off) {
+            if (IsInputChar(e.KeyChar)) {
                 //Input(e.KeyChar.ToString());
                 cur_.InputChar(e.KeyChar);
                 e.Handled = true;
@@ -695,6 +695,7 @@ namespace AsControls {
                 cur_.Input("\r\n", 2);
                 e.Handled = true;
             }
+            //base.OnKeyPress(e);
         }
 
         protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e) {

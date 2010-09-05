@@ -30,18 +30,23 @@ namespace AsControls {
         public int H() { return height_; }
 
         //@{ 標準文字幅(pixel) //@}
-        public int W() { return widthTable_[(int)'x']; }
+        public int W() { return widthTable_['x']; }
 
         //@{ 数字幅(pixel) //@}
 	    public int F() { return figWidth_; }
 
         //@{ 次のタブ揃え位置を計算 //@}
-        private int T() { return widthTable_[ '\t' ]; }
+        public int T() { return widthTable_['\t']; }
 	    public int nextTab(int x) { int t=T(); return ((x+4)/t+1)*t; }
         
         private StringFormat sf = new StringFormat();
         //
-
+        //public int Wc( char ch )
+        //{
+        //    if( widthTable_[ ch ] == -1 )
+        //        ::GetCharWidthW( dc_, ch, ch, widthTable_+ch );
+        //    return widthTable_[ ch ];
+        //}
         public int W(char ch ) // 1.08 サロゲートペア回避
 		{
 			//unicode ch = *pch;
@@ -83,10 +88,16 @@ namespace AsControls {
                 //int w2 = getStringWidth(((char)i).ToString());
                 //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
                 //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
-                w = CalcStringWidth(((char)i).ToString());
+                w = CalcStringWidth(((char)i));
                 widthTable_[i] = w;
             }
+
             widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
+            widthTable_['\x3000'] = CalcStringWidth('\x3000');
+
+           int cw =  CalcStringWidth(' '.ToString());
+           int cw2 = CalcStringWidth('　'.ToString());
+           int cw3 = CalcStringWidth('\t'.ToString());
 
             // 数字の最大幅を計算
             figWidth_ = 0;
@@ -139,9 +150,35 @@ namespace AsControls {
             g.DrawLine(numPen, x1, y1, x2, y2);
         }
 
-        public void DrawZen(Graphics g, int X, int Y, int len) {
-            for (int i = 0; i < len; i++) {
-                g.DrawRectangle(numPen, X + i * widthTable_[' '] + 2, Y + 2, widthTable_[' '] - 4, H() - 4);
+        public void DrawHSP(Graphics g, int x, int y, int times )
+        {
+            // 半角スペース記号(ホチキスの芯型)を描く
+            int w=W(' ');
+            int h=H();
+            Point[] pt = {
+                new Point(x    , y+h-4 ),
+                new Point( x    , y+h-2 ),
+                new Point( x+w-3, y+h-2 ),
+                new Point( x+w-3, y+h-5 )
+            };
+            while( times-->0 )
+            {
+                if( 0 <= pt[3].X )
+                    g.DrawPolygon(numPen, pt);
+                pt[0].X += w;
+                pt[1].X += w;
+                pt[2].X += w;
+                pt[3].X += w;
+            }
+        }
+
+        public void DrawZen(Graphics g, int X, int Y, int times) {
+            for (int i = 0; i < times; i++) {
+                //g.DrawRectangle(numPen, X + i * widthTable_[' '] + 2, Y + 2, widthTable_[' '] - 4, H() - 4);
+                g.DrawRectangle(numPen, X + i * W('\x3000') + 2, Y + 2, W('\x3000') - 4, H() - 4);
+                //int w = W(' ')*2 - 4;
+                //int h = H() - 4;
+                //g.DrawRectangle(numPen, 30, 30, 30,30);
             }
         }
 
@@ -192,6 +229,26 @@ namespace AsControls {
         //    return w;
         //}
 
+        public int CalcStringWidth(char c) {
+            int fit;
+            int w = 0;
+
+            switch (c) {
+                case ' ':
+                case '\x3000': //0x3000://L'　':
+                    w = GetTextExtend(c.ToString(), int.MaxValue, out fit).width;
+                    break;
+                case '\t':
+                    w += T();
+                    break;
+                default:
+                    w = GetTextExtend(c.ToString(), int.MaxValue, out fit).width;
+                    break;
+            }
+            return w;
+        }
+
+        private static char[] cs = { '\t' };
         public int CalcStringWidth(string text) {
             //////return this.CalcStringWidth(text, 0, text.Length);
             //int w = 0;
@@ -200,9 +257,69 @@ namespace AsControls {
             //    w += this.W(text[i]);
             //}
             //return w;
+
+            //int fit;
+            //Win32API.SIZE size = GetTextExtend(text, int.MaxValue, out fit);
+            //return size.width;
+
             int fit;
-            Win32API.SIZE size = GetTextExtend(text, int.MaxValue, out fit);
-            return size.width;
+            int w = 0;
+
+            if(text.LastIndexOfAny(cs)==-1){
+                w = GetTextExtend(text, int.MaxValue, out fit).width;
+                return w;
+            }
+
+            foreach (var s in parse(text, cs)) {
+                switch (s[0]) {
+                    //case ' ':
+                    //    w += W(' ')*s.Length;
+                    //    break;
+                    //case '\x3000': //0x3000://L'　':
+                    //    w += W('\x3000') * s.Length;
+                    //    break;
+                    case '\t':
+                        w += T() * s.Length;//p.CalcStringWidth(s[ci].ToString());
+                        break;
+                    default:
+                        w += GetTextExtend(s, int.MaxValue, out fit).width;
+                        break;
+                }                
+            }
+
+            return w;
+        }
+
+       
+
+        public static IEnumerable<string> parse(string src, char[] sc) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < src.Length; i++) {
+
+                if (sc.Contains(src[i])) {
+                    if (sb.Length > 0) {
+                        yield return sb.ToString();
+                        sb.Remove(0, sb.Length);
+                    }
+
+                    char c = src[i];
+                    while (i < src.Length && c == src[i]) {
+                        sb.Append(src[i]);
+                        i++;
+                    }
+                    if (i < src.Length) {
+                        i--;
+                    }
+                    yield return sb.ToString();
+                    sb.Remove(0, sb.Length);
+
+                } else {
+                    sb.Append(src[i]);
+                }
+            }
+            if (sb.Length > 0) {
+                yield return sb.ToString();
+            }
         }
 
         //public int CalcCharWidth(Char c) {

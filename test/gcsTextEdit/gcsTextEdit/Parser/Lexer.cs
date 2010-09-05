@@ -39,7 +39,8 @@ namespace AsControls.Parser {
         Enclose,
         EndLine,
         Line,
-        Image
+        Image,
+        Keyword
     }
 
     abstract class Element {
@@ -77,6 +78,10 @@ namespace AsControls.Parser {
         public override int exer(Lexer lex) {
             //throw new NotImplementedException();
             int offset = lex.reader.offset();
+            int index = lex.reader.Src.IndexOf(end, offset);
+            
+            if (index < 0) return index;
+
             int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
             return endindex;
         }
@@ -125,6 +130,19 @@ namespace AsControls.Parser {
         }
     }
 
+    class KeywordElement : Element {
+        public KeywordElement(string start, Attribute attr) {
+            this.start = start;
+            this.attr = attr;
+            token = TokenType.Keyword;
+        }
+
+        public override int exer(Lexer lex) {
+            throw new NotImplementedException();
+        }
+    }
+
+
     //##name
     class ImageElement : EncloseElement {
 
@@ -137,6 +155,7 @@ namespace AsControls.Parser {
             token = TokenType.Image;
         }
     }
+
 
     class LexerReader {
         private bool unget_p = false;

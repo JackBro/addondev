@@ -184,110 +184,110 @@ namespace AsControls
             }
         }
 
-        private void DrawTXT(Graphics g, VDrawInfo v, Painter p) {
-            int ytop = v.YMIN;
-            int ybuttom = ytop + v.YMAX;
+        //private void DrawTXT(Graphics g, VDrawInfo v, Painter p) {
+        //    int ytop = v.YMIN;
+        //    int ybuttom = ytop + v.YMAX;
 
-            for (int i = v.TLMIN; ytop < v.YMAX; i++) {
-                int lx = 0;
-                IBuffer buf = doc_.tl(i);
-                List<AttributeInfo> attributeInfoList = doc_.AttributeList(i);
-                if (attributeInfoList.Count == 0) {
-                    if (doc_.LastLine(i)) {
-                    } else {
-                        p.DrawReturn(g, lx + v.XBASE, ytop);
-                    }
-                    ytop +=p.H();
-                    continue;
-                }
+        //    for (int i = v.TLMIN; ytop < v.YMAX; i++) {
+        //        int lx = 0;
+        //        IBuffer buf = doc_.tl(i);
+        //        List<AttributeInfo> attributeInfoList = doc_.AttributeList(i);
+        //        if (attributeInfoList.Count == 0) {
+        //            if (doc_.LastLine(i)) {
+        //            } else {
+        //                p.DrawReturn(g, lx + v.XBASE, ytop);
+        //            }
+        //            ytop +=p.H();
+        //            continue;
+        //        }
 
-                int wcs = 0;
-                //int wcs = hScrollBar.Value/fnt().W(); //Math.Abs(v.XBASE) / p.H();
-                int sindex = 0;
+        //        int wcs = 0;
+        //        //int wcs = hScrollBar.Value/fnt().W(); //Math.Abs(v.XBASE) / p.H();
+        //        int sindex = 0;
 
-                int rYMAX = Math.Min(v.YMAX, ytop + rln(i) * p.H());
+        //        int rYMAX = Math.Min(v.YMAX, ytop + rln(i) * p.H());
 
-                for (int j = 0; ytop < rYMAX; j++, ytop += p.H()) {
-                    int wc = 0;// doc.wrapInfo[i].wrap[j];
-                    IBuffer text = null;
-                    //wc = rlend(i,j);// wrapList[i].wrap[j];
-                    wc = rlend(i, j);// wrapList[i].wrap[j];
-                    text = buf.Substring(wcs, wc - wcs);
+        //        for (int j = 0; ytop < rYMAX; j++, ytop += p.H()) {
+        //            int wc = 0;// doc.wrapInfo[i].wrap[j];
+        //            IBuffer text = null;
+        //            //wc = rlend(i,j);// wrapList[i].wrap[j];
+        //            wc = rlend(i, j);// wrapList[i].wrap[j];
+        //            text = buf.Substring(wcs, wc - wcs);
 
-                    lx = 0; //折り返しでx位置リセット
-                    IBuffer fs;
-                    while (true) {
-                        int len = attributeInfoList[sindex].len;
-                        Color c = attributeInfoList[sindex].forecolor;
+        //            lx = 0; //折り返しでx位置リセット
+        //            IBuffer fs;
+        //            while (true) {
+        //                int len = attributeInfoList[sindex].len;
+        //                Color c = attributeInfoList[sindex].forecolor;
 
-                        if (sindex + len > wc) {
-                            fs = text.Substring(sindex - wcs, wc - sindex);
-                            len = fs.Length;
-                        } else {
-                            fs = text.Substring(sindex - wcs, len);
-                        }
+        //                if (sindex + len > wc) {
+        //                    fs = text.Substring(sindex - wcs, wc - sindex);
+        //                    len = fs.Length;
+        //                } else {
+        //                    fs = text.Substring(sindex - wcs, len);
+        //                }
 
-                        switch (attributeInfoList[sindex].Token) {
-                            case TokenType.TXT:
-                                //drawText(g, fs.ToString(), Font, c, lx + v.XBASE, ytop-2);
-                                p.DrawText(g, fs.ToString(), c, lx + v.XBASE, ytop);
-                                break;
-                            case TokenType.CLICKABLE:
-                                //drawText(g, fs.ToString(), Font, c, lx + v.XBASE, ytop);
-                                p.DrawText(g, fs.ToString(), c, lx + v.XBASE, ytop);
-                                //drawUnderLine(g, fs, Font, c, lx + v.XBASE, ytop);
-                                break;
-                            case TokenType.TAB:
-                                p.DrawTab(g, lx + v.XBASE, ytop, len);
-                                break;
-                            case TokenType.ZSP:
-                                p.DrawZen(g, lx + v.XBASE, ytop, len);
-                                break;
-                        }
+        //                switch (attributeInfoList[sindex].Token) {
+        //                    case TokenType.TXT:
+        //                        //drawText(g, fs.ToString(), Font, c, lx + v.XBASE, ytop-2);
+        //                        p.DrawText(g, fs.ToString(), c, lx + v.XBASE, ytop);
+        //                        break;
+        //                    case TokenType.CLICKABLE:
+        //                        //drawText(g, fs.ToString(), Font, c, lx + v.XBASE, ytop);
+        //                        p.DrawText(g, fs.ToString(), c, lx + v.XBASE, ytop);
+        //                        //drawUnderLine(g, fs, Font, c, lx + v.XBASE, ytop);
+        //                        break;
+        //                    case TokenType.TAB:
+        //                        p.DrawTab(g, lx + v.XBASE, ytop, len);
+        //                        break;
+        //                    case TokenType.ZSP:
+        //                        p.DrawZen(g, lx + v.XBASE, ytop, len);
+        //                        break;
+        //                }
 
-                        sindex += len;
-                        lx += p.CalcStringWidth(fs.ToString()); //TODO
-                        if (sindex >= wc) {
-                            break;
-                        }
-                    }
-                    wcs = wc;
+        //                sindex += len;
+        //                lx += p.CalcStringWidth(fs.ToString()); //TODO
+        //                if (sindex >= wc) {
+        //                    break;
+        //                }
+        //            }
+        //            wcs = wc;
 
-                    // 選択範囲だったら反転
-                    if (v.SYB <= ytop && ytop <= v.SYE && !isdropfile) {
-                        //Inv(a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
-                        //            a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
-                        //inline void ViewImpl::Inv( int y, int xb, int xe, Painter& p )
-                        //{
-                        //    RECT rc = {
-                        //        Max( left(),  xb ), y,
-                        //        Min( right(), xe ), y+p.H()-1
-                        //    };
-                        //    p.Invert( rc );
-                        //}
+        //            // 選択範囲だったら反転
+        //            if (v.SYB <= ytop && ytop <= v.SYE && !isdropfile) {
+        //                //Inv(a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
+        //                //            a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+        //                //inline void ViewImpl::Inv( int y, int xb, int xe, Painter& p )
+        //                //{
+        //                //    RECT rc = {
+        //                //        Max( left(),  xb ), y,
+        //                //        Min( right(), xe ), y+p.H()-1
+        //                //    };
+        //                //    p.Invert( rc );
+        //                //}
 
-                        //LONG left;
-                        //LONG top;
-                        //LONG right;
-                        //LONG bottom;
-                        int le = ytop == v.SYB ? v.SXB : v.XBASE;
-                        int to = ytop;
-                        //int ri = ytop == v.SYE ? v.SXE : (v.XBASE + p.CalcStringWidth(text));
-                        int ri = ytop == v.SYE ? v.SXE : (v.XBASE + p.CalcStringWidth(text.ToString())); //TODO
-                        int bo = ytop + p.H();
-                        Rectangle rect = new Rectangle(le, to, ri, bo);
-                        p.Invert(g, rect);
-                    }
-                }
+        //                //LONG left;
+        //                //LONG top;
+        //                //LONG right;
+        //                //LONG bottom;
+        //                int le = ytop == v.SYB ? v.SXB : v.XBASE;
+        //                int to = ytop;
+        //                //int ri = ytop == v.SYE ? v.SXE : (v.XBASE + p.CalcStringWidth(text));
+        //                int ri = ytop == v.SYE ? v.SXE : (v.XBASE + p.CalcStringWidth(text.ToString())); //TODO
+        //                int bo = ytop + p.H();
+        //                Rectangle rect = new Rectangle(le, to, ri, bo);
+        //                p.Invert(g, rect);
+        //            }
+        //        }
 
-                if (doc_.LastLine(i)) {
+        //        if (doc_.LastLine(i)) {
 
-                } else {
-                    //p.drawReturn(g, lx + vRect.XBASE, ytop - p.H());
-                    p.DrawReturn(g, lx + v.XBASE, ytop - p.H());
-                }
-            }	        
-        }
+        //        } else {
+        //            //p.drawReturn(g, lx + vRect.XBASE, ytop - p.H());
+        //            p.DrawReturn(g, lx + v.XBASE, ytop - p.H());
+        //        }
+        //    }	        
+        //}
 
         private Bitmap image = new Bitmap("test.png");
         private void DrawTXT2(Graphics g, VDrawInfo v, Painter p) {
@@ -456,7 +456,8 @@ namespace AsControls
 	        p.Invert(g, rc );
         }
 
-        private char[] ch = { '\t', ' ', '　' };
+        private static char[] cs = { '\t', ' ', '\x3000' };
+
         private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
             //g.FillRectangle(bb, v.rc);
             // 定数１
@@ -468,23 +469,22 @@ namespace AsControls
             Win32API.RECT a = new Win32API.RECT { left = 0, top = v.YMIN, right = 0, bottom = v.YMIN + p.H() };
             //Rectangle  a = new Rectangle( 0, v.YMIN, 0, v.YMIN+p.H() );
             //Rectangle a = new Rectangle(0, 0,,v.YMIN);
-            int clr = -1;
+            //int clr = -1;
             int x, x2;
             int i, i2;
 
             Color color = Color.Black;
-            Attribute attr;
+            //Attribute attr;
 
             //int aTop = a.Top;
             //int aBottom = a.Bottom;
             // 論理行単位のLoop
             for (int tl = v.TLMIN; a.top < v.YMAX; ++tl) {
 
-
-
-
                 // 定数２
                 string str = doc_.tl(tl).ToString();
+                //if (str.Length == 0) break;
+
                 //const uchar*   flg = doc_.pl(tl);
                 int rYMAX = Math.Min(v.YMAX, a.top + rln(tl) * H);
 
@@ -523,11 +523,38 @@ namespace AsControls
 
                             string s = str.Substring(attrindex, attrlen);
 
+                            i2 = 0;
+                            int ci = s.IndexOfAny(cs, i2);
+                            if (ci < 0) {
+                                p.DrawText(g, s, color, x + v.XBASE, a.top);
+                                x += p.CalcStringWidth(s);
+                                i += s.Length;
+                                stt = i;
+                            } else {
+                                foreach (var ps in Painter.parse(s, cs)) {
+                                    switch (ps[0]) {
+                                        case ' ':
+                                            p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
+                                            x += p.CalcStringWidth(ps);
+                                            break;
+                                        case '\x3000': //0x3000://L'　':
+                                            p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
+                                            x += p.CalcStringWidth(ps);
+                                            break;
+                                        case '\t':
+                                            p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
+                                            x += p.T() * ps.Length;//p.CalcStringWidth(s[ci].ToString());
+                                            break;
+                                        default:
+                                            //string s2 = s.Substring(i2, ci - i2);
+                                            p.DrawText(g, ps, color, x + v.XBASE, a.top);
+                                            x += p.CalcStringWidth(ps);
+                                            break;
+                                    }
+                                    i += ps.Length;
+                                }
+                            }
 
-                            p.DrawText(g, s, color, x + v.XBASE, a.top);
-
-                            x += p.CalcStringWidth(s);
-                            i += s.Length;
                             stt = i;
 
                             if (nextlen > 0) {

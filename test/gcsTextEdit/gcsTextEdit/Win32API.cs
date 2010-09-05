@@ -45,6 +45,7 @@ namespace AsControls
         public static extern bool GetTextExtentExPointW(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string lpszStr,
            int cchString, int nMaxExtent, out int lpnFit, int[] alpDx, out SIZE lpSize);
 
+
         [DllImport("gdi32", CharSet = CharSet.Unicode)]
         public unsafe static extern Int32 GetCharWidthW(IntPtr hdc, int iFirstChar, int iLastChar, ref int w);
 

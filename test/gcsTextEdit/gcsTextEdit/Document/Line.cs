@@ -9,7 +9,7 @@ namespace AsControls
     public class Line
     {
         private IBuffer text;
-        private List<AttributeInfo> attributeInfoList;
+        //private List<AttributeInfo> attributeInfoList;
         private List<Rule> rules;
 
         public List<Rule> Rules {
@@ -17,10 +17,10 @@ namespace AsControls
             set { rules = value; }
         }
 
-        public List<AttributeInfo> AttributeList
-        {
-            get { return this.attributeInfoList; }
-        }
+        //public List<AttributeInfo> AttributeList
+        //{
+        //    get { return this.attributeInfoList; }
+        //}
 
         public IBuffer Text
         {
@@ -36,11 +36,11 @@ namespace AsControls
         {
             this.text = new LineBuffer(text);
 
-            attributeInfoList = new List<AttributeInfo>();
-            for (int i = 0; i < this.text.Length; i++)
-            {
-                attributeInfoList.Add(new AttributeInfo());
-            }
+            //attributeInfoList = new List<AttributeInfo>();
+            //for (int i = 0; i < this.text.Length; i++)
+            //{
+            //    attributeInfoList.Add(new AttributeInfo());
+            //}
 
             rules = new List<Rule>();
         }
@@ -49,11 +49,11 @@ namespace AsControls
         {
             this.text = new LineBuffer(text);
 
-            attributeInfoList.Clear();
-            for (int i = 0; i < this.text.Length; i++)
-            {
-                attributeInfoList.Add(new AttributeInfo());
-            }
+            //attributeInfoList.Clear();
+            //for (int i = 0; i < this.text.Length; i++)
+            //{
+            //    attributeInfoList.Add(new AttributeInfo());
+            //}
 
             rules.Clear();
         }

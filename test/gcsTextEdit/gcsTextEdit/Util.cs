@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AsControls {
     public static class Util {
@@ -20,6 +21,18 @@ namespace AsControls {
 
         public static VPos Min(VPos x, VPos y) {
             return (x<y ? x : y);
+        }
+
+        public static bool IsHiragana(string str) {
+            return Regex.IsMatch(str, @"^\p{IsHiragana}*$");
+        }
+
+        public static bool IsKatakana(string str) {
+            return Regex.IsMatch(str, @"^\p{IsKatakana}*$");
+        }
+
+        public static bool IsKanji(string str) {
+            return Regex.IsMatch(str, @"^\p{IsCJKUnifiedIdeographs}*$");
         }
     }
 }

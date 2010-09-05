@@ -247,13 +247,15 @@ namespace AsControls {
 	        // １行目を再描画
 	        int rb = (r==0 ? 0 : rlend(dp.tl,r-1));
             string text = doc_.tl(dp.tl).Substring(rb).ToString();
-	        int xb = left() + Math.Max( 0,
-		        //CalcLineWidth(doc_.tl(dp.tl)+rb, dp.ad-rb) -rlScr_.nPos );
-                CalcLineWidth(text, dp.ad - rb) - hScrollBar.Value);
+	        //int xb = left() + Math.Max( 0,
+		    //    //CalcLineWidth(doc_.tl(dp.tl)+rb, dp.ad-rb) -rlScr_.nPos );
+            //    CalcLineWidth(text, dp.ad - rb) - hScrollBar.Value);
+            int xb = left();
 	        if( xb < right() )
 	        {
                 //TODO scroll
-		        Rectangle rc=new Rectangle(xb,yb,right(),yb+H);
+		        //Rectangle rc=new Rectangle(xb,yb,right(),yb+H);
+                Rectangle rc = new Rectangle(xb, yb, right(), H);
                 //Rectangle rc = new Rectangle(xb, 0, right(), yb + H);
 		        //::InvalidateRect( hwnd_, &rc, FALSE );
                 this.Invalidate(rc, false);
