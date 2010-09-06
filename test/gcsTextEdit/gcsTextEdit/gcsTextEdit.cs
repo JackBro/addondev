@@ -11,9 +11,32 @@ using System.Threading;
 namespace AsControls {
 
     public delegate Action<object, WrapType> WrapModeChangeEventHandler(object sender, WrapType wrapMode);
+    //public delegate void LinkClickEventHandler(object sender, CEventArgs e);
+
+    public class LinkClickEventArgs : EventArgs {
+        private Point location;
+        public string Link { get; private set; }
+        public MouseButtons Button { get; private set; }
+        public int Clicks { get; private set; }
+        public int X { get { return Location.X; } private set { location.X = value; } }
+        public int Y { get { return Location.Y; } private set { location.Y = value; } }
+        public Point Location { get { return location; } private set { location = value; } }
+        public int Delta { get; private set; }
+
+        public LinkClickEventArgs(MouseEventArgs e, string link)
+        {
+            Button = e.Button;
+            Clicks = e.Clicks;
+            Location = e.Location;
+            Delta = e.Delta;
+            Link = link;
+        }
+    }
 
     public partial class gcsTextEdit : Control, ITextEditor {
-        
+
+        public event EventHandler<LinkClickEventArgs> LinkClickEventHandler;
+
         private class VDrawInfo {
             public Rectangle rc;
             public int XBASE;      // 一番左の文字のx座標
@@ -37,63 +60,16 @@ namespace AsControls {
         VDrawInfo vRect = new VDrawInfo();
 
         VGcsScrollBar vScrollBar;
-        //int vpage = 0;
         HGcsScrollBar hScrollBar;
-        //int hpage = 0;
 
         int udScr_tl_;  //一番上に表示される論理行のTLine_Index
         int udScr_vrl_; //一番上に表示される表示行のVRLine_Index
 
 
-        //Panel EditorPanel = new Panel();
-
         ImeComposition imeComposition;
-
-        //WrapType wrapType;
-        //Boolean showNumLine = false;
 
         public KeyMap KeyBind { get; set; }
 
-        //public int ViewWidth {
-        //    get {
-        //        if (wrapType == WrapType.Non) {
-        //            return int.MaxValue;
-        //        } else {
-        //            if (this.Width - (vRect.NumLineLeft + vScrollBar.Width) < 0)
-        //                return 0;
-        //            return this.Width - (vRect.NumLineLeft + vScrollBar.Width);
-        //        }
-        //    }
-        //}
-
-        //public int ViewHeight {
-        //    get {
-        //        if (this.Height - hScrollBar.Height < 0)
-        //            return 0;
-
-        //        return this.Height - hScrollBar.Height;
-        //    }
-        //}
-
-        //public int ViewLineHeight {
-        //    get { return lineHeight; }
-        //}
-
-        //public new Font Font {
-        //    get { return base.Font; }
-        //    set {
-        //        base.Font = value;
-        //        initDraw();
-        //    }
-        //}
-
-        //public WrapType Wrap {
-        //    get { return wrapType; }
-        //    set {
-        //        wrapType = value;
-        //        //ReWrapAll();
-        //    }
-        //}
 
         public new string Text {
             set {
@@ -199,8 +175,8 @@ namespace AsControls {
 
             this.ImeMode = ImeMode.Off;
             imeComposition = new ImeComposition(this);
-            imeComposition.ImeCompositedHira += new ImeComposition.ImeCompositionEventHandler(imeComposition_ImeCompositedHira);
-            imeComposition.ImeCompositedKata += new ImeComposition.ImeCompositionEventHandler(imeComposition_ImeCompositedKata);
+            imeComposition.ImeCompositedHira += new ImeComposition.ImeEventHandler(imeComposition_ImeCompositedHira);
+            imeComposition.ImeCompositedKata += new ImeComposition.ImeEventHandler(imeComposition_ImeCompositedKata);
 
             this.HandleDestroyed += new EventHandler(AsTextEdit_HandleDestroyed);
             this.LostFocus += (sender, e) => {
@@ -213,6 +189,21 @@ namespace AsControls {
                 
             };
             this.VisibleChanged += new EventHandler(gcsTextEdit_VisibleChanged);
+
+            this.MouseClick += (sender, e) => {
+                if (LinkClickEventHandler != null) {
+                    VPos vs, ve;
+                    cur_.getCurPos(out vs, out ve);
+                    var rules = doc_.Rules(vs.tl);
+                    foreach (var rule in rules) {
+                        if (rule.attr.islink && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
+                            string link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
+                            LinkClickEventHandler(this, new LinkClickEventArgs(e, link));
+                            break;
+                        }
+                    }
+                }
+            };
 
             KeyBind = new KeyMap();
 
@@ -244,12 +235,6 @@ namespace AsControls {
             //});
 
             Initialize();
-
-            //IEnumerable<string> mm = parse("test[[123]]  12\t34\t  \t\t \t \t  test");
-            //foreach (var item in parse("test[[123]]  12\t34\t")) {
-            //    Console.WriteLine("vitem=" + item);
-            //}
-            //int i=0;
         }
 
         void gcsTextEdit_VisibleChanged(object sender, EventArgs e) {
@@ -272,17 +257,6 @@ namespace AsControls {
             udScr_vrl_ = 0;
             ReSetScrollInfo();
         }
-
-        //public new Rectangle ClientRectangle {
-        //    get {
-        //        int w = base.ClientRectangle.Width - vScrollBar.Width;
-        //        int h = base.ClientRectangle.Height - hScrollBar.Height;
-
-        //        Rectangle rec = new Rectangle(base.ClientRectangle.Location, new Size(w < 0 ? 0 : w, h < 0 ? 0 : h));
-        //        //return base.ClientRectangle;
-        //        return rec;
-        //    }
-        //}
 
         internal Rectangle getClientRect() {
             return this.ClientRectangle;
@@ -376,99 +350,13 @@ namespace AsControls {
 
             base.OnSizeChanged(e);
 
-            DoResize(cvs_.on_view_resize(this.ClientSize.Width-vScrollBar.Width, this.ClientSize.Height-hScrollBar.Height));
+            int w = this.ClientSize.Width - vScrollBar.Width;
+            int h = this.ClientSize.Height - hScrollBar.Height;
+            if (w <= 0 || h <= 0) return;
+            DoResize(cvs_.on_view_resize(w, h));
             //DoResize(cvs_.on_view_resize(this.ClientSize.Width, this.ClientSize.Height));
             //base.Invalidate();
         }
-
-        //public new Size ClientSize {
-        //    get {
-        //        return new Size(base.ClientSize.Width - vScrollBar.Width, base.ClientSize.Height - hScrollBar.Height);
-        //    }
-        //}
-
-        //int tl2vl(int tl) {
-        //    if (vlNum_ == doc.tln)
-        //        return tl;
-
-        //    int vl = 0;
-        //    for (int i = 0; i < tl; ++i)
-        //        vl += GetvlCnt(i);
-        //    return vl;
-        //}
-
-        //void ForceScrollTo(int tl) {
-        //    vScrollBar.Value = tl2vl(udScr_tl_);
-        //    udScr_tl_ = tl;
-        //    udScr_vrl_ = 0;
-        //}
-
-        //void ScrollBar_Scroll(object sender, ScrollEventArgs e) {
-        //    int d = e.NewValue - e.OldValue;
-        //    if (d != 0) {
-        //        if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll) {
-        //            ScrollView(d, 0, true);
-
-        //            int x = 0;
-        //            x = -(hScrollBar.Value + d);
-        //            x += cur.vx;
-        //            vPos.X = x;
-        //        } else if (e.ScrollOrientation == ScrollOrientation.VerticalScroll) {
-        //            ScUpDown(d);
-
-        //            int x = vRect.NumLineLeft;
-        //            int y = 0;
-        //            //y = -(vScrollBar.Value + d) * lineHeight;
-        //            y = -(vScrollBar.Value) * lineHeight;
-        //            x += cur.vx;
-        //            y += cur.vl * ViewLineHeight;
-        //            vPos.X = x;
-        //            vPos.Y = y;
-        //        }
-        //        base.Invalidate();
-        //    }
-        //}
-
-        //private void ScUpDown(int dy) {
-        //    // １．udScr_.nPos + dy が正常範囲に収まるように補正
-        //    if (vScrollBar.Value + dy < 0)
-        //        dy = -vScrollBar.Value;
-        //    else if (vScrollBar.Maximum + 1 - vpage < vScrollBar.Value + dy)
-        //        dy = vScrollBar.Maximum + 1 - vpage - vScrollBar.Value;
-        //    if (dy == 0)
-        //        return;
-
-        //    int rl = dy + udScr_vrl_;
-        //    int tl = udScr_tl_;
-
-        //    if (dy < 0) // 上へ戻る場合
-        //    {
-        //        // ジャンプ先論理行の行頭へDash!
-        //        while (rl < 0)
-        //            rl += GetvlCnt(--tl);
-        //    } else if (dy > 0) {
-        //        // ジャンプ先論理行の行頭へDash!
-        //        while (rl > 0)
-        //            rl -= GetvlCnt(tl++);
-        //        if (rl < 0)
-        //            rl += GetvlCnt(--tl); //行き過ぎ修正
-        //    }
-        //    udScr_tl_ = tl;
-        //    udScr_vrl_ = rl;
-
-        //    int y = -udScr_vrl_;
-        //    tl = udScr_tl_;
-        //    //int top = v.rc.top / H;
-        //    //while (y + (signed)rln(tl) <= top)
-        //    //    y += rln(tl++);
-
-        //    // 縦座標
-        //    vRect.YMIN = y * lineHeight;
-        //    vRect.YMAX = this.Height;
-        //    vRect.TLMIN = tl;
-
-        //    vScrollBar.Value += dy;
-        //}
 
         //
         public void GetOrigin(ref int x, ref int y) {
@@ -477,129 +365,6 @@ namespace AsControls {
             x = left() - hScrollBar.Value;
             y = -vScrollBar.Value * cvs_.getPainter().H();
         }
-
-        //public void on_text_update() {
-        //    //ReSetScrollInfo();
-        //    //ScrollTo(cur);
-        //    //UpdateCaretPos();
-        //    //cur.CopyTo(ref sel);
-        //}
-
-        //public void ReSetScrollInfo() {
-        //    int cx = this.Width - (vRect.NumLineLeft + vScrollBar.Width);
-        //    if (cx < 0) return;
-        //    hpage = cx + 1;
-
-        //    //rlScr_.nPage = cx + 1;
-        //    //rlScr_.nMax = Max(textCx_ + 3, cx);
-        //    //rlScr_.nPos = Min<int>(rlScr_.nPos, rlScr_.nMax - rlScr_.nPage + 1);
-
-        //    hScrollBar.SmallChange = 1;
-        //    hScrollBar.LargeChange = hpage;
-        //    hScrollBar.Maximum = Math.Max(textCx_ + 3, cx);
-        //    hScrollBar.Value = Math.Min(hScrollBar.Value, hScrollBar.Maximum - hpage + 1);
-
-        //    int cy = ViewHeight;
-        //    vpage = cy / lineHeight + 1;
-        //    vScrollBar.SmallChange = 1;
-        //    vScrollBar.LargeChange = vpage;
-        //    vScrollBar.Maximum = vlNum_ + vpage - 2;
-        //}
-
-
-
-        //public void ScrollTo(CaretInfo vp) {
-        //    // 横フォーカス
-        //    int dx = 0;
-        //    if (vp.vx < hScrollBar.Value) {
-        //        dx = vp.vx - hScrollBar.Value;
-        //    } else {
-        //        //const int W = cvs_.getPainter().W();
-        //        //if (rlScr_.nPos + (signed)(rlScr_.nPage - W) <= vp.vx)
-        //        //    dx = vp.vx - (rlScr_.nPos + rlScr_.nPage) + W;
-
-        //        //tmp
-        //        const int W = 12;
-        //        if (hScrollBar.Value + (hpage - W) <= vp.vx)
-        //            dx = vp.vx - (hScrollBar.Value + hpage) + W;
-        //    }
-
-        //    // 縦フォーカス
-        //    int dy = 0;
-        //    if (vp.vl < vScrollBar.Value)
-        //        dy = vp.vl - vScrollBar.Value;
-        //    else if (vScrollBar.Value + (vpage - 1) <= vp.vl)
-        //        dy = vp.vl - (vScrollBar.Value + vpage) + 2;
-
-
-        //    if (dx != 0) ScrollView(dx, 0, true);
-        //    //if (dy != 0) UpDown(dy, dx == 0);
-        //    if (dy != 0) UpDown(dy, true);
-        //}
-
-        //public void ScrollTo(VPos vp) {
-        //    // 横フォーカス
-        //    int dx = 0;
-        //    if (vp.vx < hScrollBar.Value) {
-        //        dx = vp.vx - hScrollBar.Value;
-        //    }
-        //    else {
-        //        int W = cvs_.getPainter().W();
-        //        if (hScrollBar.Value + (hScrollBar.nPage - W) <= vp.vx)
-        //            dx = vp.vx - (hScrollBar.Value + hScrollBar.nPage) + W;
-
-        //        ////tmp
-        //        //const int W = 12;
-        //        //if (hScrollBar.Value + (hpage - W) <= vp.vx)
-        //        //    dx = vp.vx - (hScrollBar.Value + hpage) + W;
-        //    }
-
-        //    // 縦フォーカス
-        //    int dy = 0;
-        //    //ulong vnPos = (ulong)vScrollBar.Value;
-        //    if (vp.vl < vScrollBar.Value)
-        //        dy = (int)(vp.vl - vScrollBar.Value);
-        //    else if (vScrollBar.Value + (vpage - 1) <= vp.vl)
-        //        dy = vp.vl - (vScrollBar.Value + vpage) + 2;
-
-
-        //    if (dx != 0) ScrollView(dx, 0, true);
-        //    //if (dy != 0) UpDown(dy, dx == 0);
-        //    if (dy != 0) UpDown(dy, true);
-        //}
-
-        //public void UpDown(int dy, bool thumb) {
-        //    // １．udScr_.nPos + dy が正常範囲に収まるように補正
-        //    if (vScrollBar.Value + dy < 0)
-        //        dy = -vScrollBar.Value;
-        //    else if (vScrollBar.Maximum + 1 - vpage < vScrollBar.Value + dy)
-        //        dy = vScrollBar.Maximum + 1 - vpage - vScrollBar.Value;
-        //    if (dy == 0)
-        //        return;
-
-        //    if (true) {
-        //        int rl = dy + udScr_vrl_;
-        //        int tl = udScr_tl_;
-
-        //        if (dy < 0) // 上へ戻る場合
-        //        {
-        //            // ジャンプ先論理行の行頭へDash!
-        //            while (rl < 0)
-        //                rl += GetvlCnt(--tl);
-        //        } else if (dy > 0) // 下へ進む場合
-        //        {
-        //            // ジャンプ先論理行の行頭へDash!
-        //            while (rl > 0)
-        //                rl -= GetvlCnt(tl++);
-        //            if (rl < 0)
-        //                rl += GetvlCnt(--tl); //行き過ぎ修正
-        //        }
-        //        udScr_tl_ = tl;
-        //        udScr_vrl_ = rl;
-        //    }
-
-        //    ScrollView(0, dy, true);
-        //}
 
         //
         VPos dummyVPos = new VPos();
@@ -688,7 +453,6 @@ namespace AsControls {
         protected override void OnKeyPress(KeyPressEventArgs e) {
             //if (IsInputChar(e.KeyChar) && this.ImeMode == ImeMode.Off) {
             if (IsInputChar(e.KeyChar)) {
-                //Input(e.KeyChar.ToString());
                 cur_.InputChar(e.KeyChar);
                 e.Handled = true;
             }else if(e.KeyChar == '\r' ){
@@ -759,13 +523,6 @@ namespace AsControls {
         //
         protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e);
-
-            //GetDrawPosInfo(ref vRect);
-
-            //drawDoc(e.Graphics, vRect);
-            //drawCaret(e.Graphics, vPos.X, vPos.Y);
-            //if (showNumLine)
-            //    drawLNA(e.Graphics, vRect);
             
             Painter p = cvs_.getPainter();
             vRect.rc = e.ClipRectangle;
@@ -783,10 +540,7 @@ namespace AsControls {
                 p.SetClip(cvs_.zone());
                 DrawTXT3(e.Graphics, vRect, p);
                 p.ClearClip();
-
-                
             }
-
         }
 
         protected override bool IsInputChar(char charCode) {
@@ -796,7 +550,6 @@ namespace AsControls {
         }
 
         private Boolean ldowm = false;
-        //private CaretInfo sels, sele;
         protected override void OnMouseDown(MouseEventArgs e) {
             Focus();
             if (e.Button == MouseButtons.Left) {
@@ -899,44 +652,7 @@ namespace AsControls {
         protected override void OnMouseLeave(EventArgs e) {
             //Cursor = Cursors.Default;
             base.OnMouseLeave(e);
-        }
-
-        //private void CorrectPos(ref CaretInfo s, ref CaretInfo e) {
-        //    // 必ずs<=eになるように修正
-        //    if (s > e) {
-        //        int tmp;
-        //        tmp = s.ad; s.ad = e.ad; e.ad = tmp;
-        //        tmp = s.tl; s.tl = e.tl; e.tl = tmp;
-        //    }
-        //}
-
-        //private Boolean Insel(CaretInfo caret) {
-        //    if (cur < sel) {
-        //        if (cur <= caret && caret <= sel) {
-        //            return true;
-        //        }
-        //    } else if (cur > sel) {
-        //        if (sel <= caret && caret <= cur) {
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
-
-        //private Boolean Insel(CaretInfo caret, CaretInfo selStart, CaretInfo selEnd) {
-        //    if (selStart < selEnd) {
-        //        if (selStart <= caret && caret <= selEnd) {
-        //            return true;
-        //        }
-        //    } else if (selStart > selEnd) {
-        //        if (selEnd <= caret && caret <= selStart) {
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
-
-        
+        }        
 
         protected override void OnDragDrop(DragEventArgs drgevent) {
             //isdropfile = false;
@@ -1013,36 +729,6 @@ namespace AsControls {
             base.OnDragEnter(drgevent);
         }
 
-        //public bool SearchText(string sh) {
-        //    Search search = new Search(this.doc);
-        //    search.searchstr = sh;
-        //    CaretInfo bgn = new CaretInfo(cur);
-        //    CaretInfo end = new CaretInfo(cur);
-
-        //    if (search.FindNext(cur, ref bgn, ref end)) {
-        //        ConvDPosToVPos(bgn, ref cur);
-        //        ConvDPosToVPos(end, ref sel);
-        //        MoveTo(true);
-        //        base.Invalidate();
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        //public void Cut() {
-        //    string buff;
-        //    doc.Delete(cur, sel, out buff);
-        //    Clipboard.SetText(buff);
-        //}
-
-        //public void Paste()
-        //{
-        //    string t = Clipboard.GetText();
-        //    Input(t);
-        //    base.Invalidate();
-        //}
-
-
         //
         //-------------------------------------------------------------------------
         // 再描画したい範囲を Invalidate する。
@@ -1113,6 +799,7 @@ namespace AsControls {
 
         public new void Left() {
             throw new NotImplementedException();
+            cur_.Left(
         }
 
         public new void Right() {

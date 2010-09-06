@@ -87,10 +87,20 @@ namespace AsControls {
                 //    --s;
                 //return DPos(dp.tl, s);
 
-                string f = tl(dp.tl).ToString();
-                int s = dp.ad - 1;
-                while ( 0 < s && f[s] != ' ')
+                //string f = tl(dp.tl).ToString();
+                //int s = dp.ad - 1;
+                //while ( 0 < s && f[s] != ' ')
+                //    --s;
+                //return new DPos(dp.tl, s);
+
+                var f = text_[dp.tl].Text;
+                var s = dp.ad-1;
+                Util.CharType ctype = Util.getCharType(f[s]);
+                while (0 < s && Util.getCharType(f[s]) == ctype)
                     --s;
+
+                //s++;
+                s = s != 0 ? ++s : s;
                 return new DPos(dp.tl, s);
             }
         }
@@ -110,17 +120,26 @@ namespace AsControls {
                 return new DPos(dp.tl, dp.ad + 1);
             } else {
                 //TODO 行の途中で、普通に１単語進む場合
-                string f = tl(dp.tl).ToString();
+                //const uchar* f = pl(dp.tl);
+                //const ulong e = len(dp.tl);
+                //ulong s = dp.ad;
+                //const ulong t = (f[s] >> 5);
+                //s += t;
+                //if (s >= e)
+                //    s = e;
+                //else if (t == 7 || t == 0)
+                //    while ((f[s] >> 5) == 0 && s < e)
+                //        ++s;
+                //return DPos(dp.tl, s);
+
+                var f = text_[dp.tl].Text;
                 int e = len(dp.tl);
                 int s = dp.ad;
-                int t = (f[s] >> 5);
-                s += t;
-                if (s >= e)
-                    s = e;
-                else if (t == 7 || t == 0)
-                    while ((f[s] >> 5) == 0 && s < e)
+                Util.CharType ctype = Util.getCharType(f[s]);
+                while (s < e && Util.getCharType(f[s]) == ctype )
                         ++s;
-
+                //s--;
+                s = s != e ? --s : s;
                 return new DPos(dp.tl, s);
             }
         }
@@ -130,9 +149,6 @@ namespace AsControls {
         }
 
         private void MultiParse(int startrl, int endrl) {
-            //for (int i = startrl; i <= endrl; i++) {
-            //    highlighter.Parse(text_[i].Text, text_[i].AttributeList);
-            //}
             for (int i = startrl; i <= endrl; i++) {
                 var rules = parser.parseLine(text_[i].Text.ToString());
                 text_[i].Rules = rules;
@@ -146,10 +162,6 @@ namespace AsControls {
 
             e.ad = s.ad;
             e.tl = s.tl;
-
-            //if (s.Equals(e)) {
-            //    int i = 0;
-            //}
 
             int lineLen = 0;
 
@@ -324,7 +336,7 @@ namespace AsControls {
 
 
         //TODO wordStartOf
-        DPos wordStartOf(DPos dp )
+        public DPos wordStartOf(DPos dp )
         {
 	        if( dp.ad == 0 )
 	        {
@@ -335,14 +347,22 @@ namespace AsControls {
 	        {
                 
 		        // 行の途中
-		        const uchar* f = pl(dp.tl);
-			          ulong  s = dp.ad;
-		        while( (f[s]>>5)==0 && 0<=s )
-			        --s;
-		        return DPos( dp.tl, s );
+                //const uchar* f = pl(dp.tl);
+                //      ulong  s = dp.ad;
+                //while( (f[s]>>5)==0 && 0<=s )
+                //    --s;
+                //return DPos( dp.tl, s );
 
-                string f = text_[dp.tl].Text[dp.ad].ToString();
-                
+                var f = text_[dp.tl].Text;
+                int s = dp.ad;
+                Util.CharType ctype = Util.getCharType(f[s]);
+                while (0 < s && Util.getCharType(f[s]) == ctype) {
+                    char cc = f[s];
+                    --s;
+                }
+                //s++;
+                s = s != 0 ? ++s : s;
+                return new DPos(dp.tl, s);
 	        }
         }
 

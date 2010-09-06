@@ -18,7 +18,7 @@ namespace AsControls
             get;
         }
 
-        string this[int i]
+        char this[int i]
         {
             get;
         }

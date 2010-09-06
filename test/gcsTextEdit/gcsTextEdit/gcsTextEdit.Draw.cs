@@ -523,8 +523,7 @@ namespace AsControls
 
                             string s = str.Substring(attrindex, attrlen);
 
-                            i2 = 0;
-                            int ci = s.IndexOfAny(cs, i2);
+                            int ci = s.IndexOfAny(cs, 0);
                             if (ci < 0) {
                                 p.DrawText(g, s, color, x + v.XBASE, a.top);
                                 x += p.CalcStringWidth(s);
@@ -563,8 +562,14 @@ namespace AsControls
                                 attrlen = ruls[attri].len;
                                 color = ruls[attri].attr.color;
                             }
-                        }
-                        else {
+                            if (rln(tl) > 0 && nextlen == 0 && i == end && attri < ruls.Count-1) {
+                                attri++;
+                                attrindex = ruls[attri].ad;
+                                attrlen = ruls[attri].len;
+                                color = ruls[attri].attr.color;
+                            }
+
+                        } else {
                             //over
                             string s = str.Substring(attrindex, end - attrindex);
                             //string s = str.Substring(attrindex, end);
@@ -578,12 +583,10 @@ namespace AsControls
                             attrindex = end;
 
                             //attrlen = attrlen - end;
-
                         }
 
 
                     }
-
 
                     //// テキストデータ描画
                     //for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {

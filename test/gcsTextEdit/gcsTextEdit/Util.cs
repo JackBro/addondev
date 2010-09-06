@@ -23,6 +23,14 @@ namespace AsControls {
             return (x<y ? x : y);
         }
 
+        //public static bool IsSeparator(string str) {
+        //    return Regex.IsMatch(str, "^[a-zA-Z]+$");
+        //}
+
+        public static bool IsAlphabet(string str) {
+            return Regex.IsMatch(str, "^[a-zA-Z]+$");
+        }
+
         public static bool IsHiragana(string str) {
             return Regex.IsMatch(str, @"^\p{IsHiragana}*$");
         }
@@ -33,6 +41,33 @@ namespace AsControls {
 
         public static bool IsKanji(string str) {
             return Regex.IsMatch(str, @"^\p{IsCJKUnifiedIdeographs}*$");
+        }
+
+
+        public static CharType getCharType(char c) {
+            string str = c.ToString();
+            if (Char.IsDigit(c)) return CharType.Digit;
+            if (IsAlphabet(str)) return CharType.Alphabet;
+            if (IsHiragana(str)) return CharType.Hiragana;
+            if (IsKatakana(str)) return CharType.Katakana;
+            if (IsKanji(str)) return CharType.Kanji;
+            if (c == '\t') return CharType.Tab;
+            if (c == ' ') return CharType.WSHan;
+            if (c == '\x3000') return CharType.WSZen;
+
+            return CharType.Unknown;
+        }
+
+        public enum CharType {
+            Unknown,
+            Digit,
+            Alphabet,
+            Hiragana,
+            Katakana,
+            Kanji,
+            Tab,
+            WSHan,
+            WSZen
         }
     }
 }

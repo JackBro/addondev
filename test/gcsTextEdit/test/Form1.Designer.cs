@@ -42,6 +42,7 @@
             this.searchToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.fontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,7 +111,8 @@
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.wrapOToolStripMenuItem,
-            this.wrapOffToolStripMenuItem});
+            this.wrapOffToolStripMenuItem,
+            this.fontToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.viewToolStripMenuItem.Text = "view";
@@ -118,13 +120,13 @@
             // wrapOToolStripMenuItem
             // 
             this.wrapOToolStripMenuItem.Name = "wrapOToolStripMenuItem";
-            this.wrapOToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.wrapOToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.wrapOToolStripMenuItem.Text = "wrap on";
             // 
             // wrapOffToolStripMenuItem
             // 
             this.wrapOffToolStripMenuItem.Name = "wrapOffToolStripMenuItem";
-            this.wrapOffToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.wrapOffToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.wrapOffToolStripMenuItem.Text = "wrap off";
             // 
             // searchToolStripMenuItem2
@@ -156,6 +158,12 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(392, 349);
             this.panel1.TabIndex = 1;
+            // 
+            // fontToolStripMenuItem
+            // 
+            this.fontToolStripMenuItem.Name = "fontToolStripMenuItem";
+            this.fontToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fontToolStripMenuItem.Text = "font";
             // 
             // Form1
             // 
@@ -192,6 +200,7 @@
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fontToolStripMenuItem;
 
     }
 }

@@ -29,13 +29,22 @@ namespace AsControls {
         private int height_;
         public int H() { return height_; }
 
-        //@{ 標準文字幅(pixel) //@}
+        /// <summary>
+        /// 標準文字幅(pixel)
+        /// </summary>
+        /// <returns></returns>
         public int W() { return widthTable_['x']; }
 
-        //@{ 数字幅(pixel) //@}
+        /// <summary>
+        /// 数字幅(pixel)
+        /// </summary>
+        /// <returns></returns>
 	    public int F() { return figWidth_; }
 
-        //@{ 次のタブ揃え位置を計算 //@}
+        /// <summary>
+        /// 次のタブ揃え位置を計算
+        /// </summary>
+        /// <returns></returns>
         public int T() { return widthTable_['\t']; }
 	    public int nextTab(int x) { int t=T(); return ((x+4)/t+1)*t; }
         
@@ -95,9 +104,9 @@ namespace AsControls {
             widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
             widthTable_['\x3000'] = CalcStringWidth('\x3000');
 
-           int cw =  CalcStringWidth(' '.ToString());
-           int cw2 = CalcStringWidth('　'.ToString());
-           int cw3 = CalcStringWidth('\t'.ToString());
+           //int cw =  CalcStringWidth(' '.ToString());
+           //int cw2 = CalcStringWidth('　'.ToString());
+           //int cw3 = CalcStringWidth('\t'.ToString());
 
             // 数字の最大幅を計算
             figWidth_ = 0;

@@ -41,7 +41,7 @@ namespace AsControls.Parser {
         }
 
         public void init() {
-            lex.AddElement(new EncloseElement("[[", "]]", new Attribute(Color.Red, false, false, false)));
+            lex.AddElement(new EncloseElement("[[", "]]", new Attribute(Color.Red, true, false, false)));
 
             lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false)));
 
@@ -96,18 +96,22 @@ namespace AsControls.Parser {
                     rules.Add(new Rule { ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
                 }
 
+                List<Rule> defaultRules =new List<Rule>();
                 int index = 0;
                 for (int i = 0; i < rules.Count; i++) {
 
                     if (rules[i].ad - index > 0) {
-                        rules.Add(new Rule { ad = index, len = rules[i].ad - index, attr = defaultAttr });
+                        defaultRules.Add(new Rule { ad = index, len = rules[i].ad - index, attr = defaultAttr });
                     }
                     index = rules[i].ad + rules[i].len;
                 }
 
-                rules.Sort((x, y) => {
-                    return x.ad < y.ad ? -1 : 1;
-                });
+                if (defaultRules.Count > 0) {
+                    rules.AddRange(defaultRules);
+                    rules.Sort((x, y) => {
+                        return x.ad < y.ad ? -1 : 1;
+                    });
+                }
             }
             else {
                 rules.Add(new Rule { ad = 0, len = line.Length, attr = defaultAttr });

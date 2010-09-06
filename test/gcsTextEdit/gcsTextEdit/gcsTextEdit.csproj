@@ -69,11 +69,9 @@
     <Compile Include="Cursor.cs" />
     <Compile Include="Document\Document.cs" />
     <Compile Include="Document\IDocument.cs" />
-    <Compile Include="Highlighter\IHighlighter.cs" />
     <Compile Include="ImeComposition.cs" />
     <Compile Include="Document\IText.cs" />
     <Compile Include="Document\Line.cs" />
-    <Compile Include="Highlighter\Highlighter.cs" />
     <Compile Include="ITextEditor.cs" />
     <Compile Include="Painter.cs" />
     <Compile Include="Parser\Lexer.cs" />
@@ -86,6 +84,9 @@
     <Compile Include="Undo\UndoManager.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Win32API.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="memo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

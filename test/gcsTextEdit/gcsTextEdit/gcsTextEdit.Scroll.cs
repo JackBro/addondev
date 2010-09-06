@@ -66,13 +66,6 @@ namespace AsControls {
         }
         //
         int tl2vl(int tl) {
-            //if (vlNum_ == doc.tln)
-            //    return tl;
-
-            //int vl = 0;
-            //for (int i = 0; i < tl; ++i)
-            //    vl += GetvlCnt(i);
-            //return vl;
             if (vln() == doc_.tln())
                 return tl;
 
@@ -119,28 +112,6 @@ namespace AsControls {
         }
 
         public void ScrollView(int dx, int dy, bool update) {
-            //if (dx != 0) {
-            //    // 範囲チェック
-            //    if (hScrollBar.Value + dx < 0)
-            //        dx = -hScrollBar.Value;
-            //    else if (hScrollBar.Maximum - hpage < hScrollBar.Value + dx)
-            //        dx = hScrollBar.Maximum - hpage - hScrollBar.Value + 1;
-
-            //    //rlScr_.nPos += dx;
-            //    //::SetScrollInfo( hwnd_, SB_HORZ, &rlScr_, TRUE );
-            //    hScrollBar.Value += dx;
-            //    dx = -dx;
-            //    base.Invalidate();
-            //}
-
-            //if (dy != 0) {
-            //    // 範囲チェック…は前処理で終わってる。
-
-            //    vScrollBar.Value += dy;
-            //    //::SetScrollInfo( hwnd_, SB_VERT, &udScr_, TRUE );
-            //    //dy *= -H;
-            //    base.Invalidate();
-            //}
             
             // スクロール開始通知
 	        cur_.on_scroll_begin();
@@ -420,63 +391,6 @@ namespace AsControls {
 
         //
         private void GetDrawPosInfo(ref VDrawInfo v) {
-            //int H = lineHeight;
-
-            //int most_under = (vlNum_ - vScrollBar.Value) * H;
-            //if (most_under <= v.rc.Top) {
-            //    v.YMIN = v.rc.Top;
-            //    v.YMAX = most_under;
-            //} else {
-            //    int y = -udScr_vrl_;
-            //    int tl = udScr_tl_;
-            //    int top = v.rc.Top / H;
-
-            //    while (y + wrapList[tl].wrap.Count <= top)
-            //        y += wrapList[tl++].wrap.Count;
-
-
-            //    // 縦座標
-            //    v.YMIN = y * H;
-            //    //v.YMAX = Math.Min(v.rc.Bottom, most_under);
-            //    v.YMAX = Math.Min(ViewHeight, most_under);
-            //    v.TLMIN = tl;
-
-            //    // 横座標                
-            //    v.XBASE = v.NumLineLeft - hScrollBar.Value;
-            //    v.XMIN = v.rc.Left - v.XBASE;
-            //    v.XMAX = v.rc.Right - v.XBASE;
-            //}
-
-            //// 選択範囲
-            ////v.SXB = v.SXE = v.SYB = v.SYE = 0x7fffffff;
-            ////const VPos *bg, *ed;
-            ////if( cur_.getCurPos( &bg, &ed ) )
-            ////{
-            ////    v.SXB = bg->vx - rlScr_.nPos + left();
-            ////    v.SXE = ed->vx - rlScr_.nPos + left();
-            ////    v.SYB = (bg->vl - udScr_.nPos) * H;
-            ////    v.SYE = (ed->vl - udScr_.nPos) * H;
-            ////}
-
-            //v.SXB = v.SXE = v.SYB = v.SYE = int.MaxValue;
-            //CaretInfo bg, ed;
-            //if (dostart) {
-            //    v.SXB = sels.vx - hScrollBar.Value + v.NumLineLeft;
-            //    v.SXE = sele.vx - hScrollBar.Value + v.NumLineLeft;
-            //    v.SYB = (sels.vl - vScrollBar.Value) * H;
-            //    v.SYE = (sele.vl - vScrollBar.Value) * H;
-            //} else if (getCurPos(out bg, out ed)) {
-            //    //v.SXB = bg.vx - rlScr_.nPos + left();
-            //    //v.SXE = ed.vx - rlScr_.nPos + left();
-            //    //v.SXB = bg.vx;
-            //    //v.SXE = ed.vx;
-
-            //    v.SXB = bg.vx - hScrollBar.Value + v.NumLineLeft;
-            //    v.SXE = ed.vx - hScrollBar.Value + v.NumLineLeft;
-            //    v.SYB = (bg.vl - vScrollBar.Value) * H;
-            //    v.SYE = (ed.vl - vScrollBar.Value) * H;
-            //}
-
             int H = cvs_.getPainter().H();
 
             int most_under = (vln() - vScrollBar.Value) * H;

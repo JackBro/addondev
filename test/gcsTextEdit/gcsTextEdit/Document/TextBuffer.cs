@@ -32,11 +32,11 @@ namespace AsControls
 
         #region ILineBuffer メンバ
 
-        public string this[int i]
+        public char this[int i]
         {
             get
             {
-                return stringInfo.SubstringByTextElements(i, 1);
+                return stringInfo.SubstringByTextElements(i, 1)[0];
             }
         }
 

@@ -185,6 +185,17 @@ namespace AsControls
             this.view_.MouseLeave += (sender, e) => {
                 
             };
+            this.view_.MouseDoubleClick += (sender, e) => {
+                // 行番号ゾーンの場合は特に何もしない
+                if (view_.lna() - view_.fnt().F() < e.X)
+                    // 行末の場合も特に何もしない
+                    if (cur_.ad != doc_.len(cur_.tl)) {
+                        VPos np = new VPos();
+                        view_.ConvDPosToVPos(doc_.wordStartOf(cur_),  ref np, ref cur_);
+                        MoveTo(np, false);
+                        Right(true, true);
+                    }
+            };
         }
 
         public void MoveCur(DPos dp, bool select) {
@@ -202,7 +213,7 @@ namespace AsControls
                 // 選択解除される範囲を再描画
                 if (cur_ != sel_)
                     Redraw(cur_, sel_);
-                sel_.Copy(cur_);
+                sel_.Copy(vp);
             }
 
             //TODO
@@ -609,8 +620,6 @@ namespace AsControls
 	        }
 	        UpdateCaretPos();
         }
-
-        //
 
     }
 

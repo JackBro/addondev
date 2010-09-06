@@ -64,12 +64,12 @@ namespace AsControls
             }
         }
 
-        public delegate void ImeCompositionEventHandler(object sender, ImeCompositionEventArgs e);
+        public delegate void ImeEventHandler(object sender, ImeCompositionEventArgs e);
 
-        public event ImeCompositionEventHandler ImeCompositionHira = null;
-        public event ImeCompositionEventHandler ImeCompositionKata = null;
-        public event ImeCompositionEventHandler ImeCompositedHira = null;
-        public event ImeCompositionEventHandler ImeCompositedKata = null;
+        public event ImeEventHandler ImeCompositionHira = null;
+        public event ImeEventHandler ImeCompositionKata = null;
+        public event ImeEventHandler ImeCompositedHira = null;
+        public event ImeEventHandler ImeCompositedKata = null;
 
         // IMEでキーが押されたかのフラグ
         private const int WM_IME_COMPOSITION = 0x010F;

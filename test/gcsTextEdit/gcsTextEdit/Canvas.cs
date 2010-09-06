@@ -42,19 +42,18 @@ namespace AsControls {
             //wrapWidth_ = 100;
             this.view = view;
             //TODO wrap
-            view.SizeChanged += (sender, e) => {
-
-            };
+            //view.SizeChanged += (sender, e) => {
+            //};
 
             //view.VisibleChanged += new EventHandler(view_VisibleChanged);
         }
 
-        void view_VisibleChanged(object sender, EventArgs e) {
-            if (view.Visible) {
-                txtZone_ = view.getClientRect();
-                view.VisibleChanged -= view_VisibleChanged;
-            }
-        }
+        //void view_VisibleChanged(object sender, EventArgs e) {
+        //    if (view.Visible) {
+        //        txtZone_ = view.getClientRect();
+        //        view.VisibleChanged -= view_VisibleChanged;
+        //    }
+        //}
 
         public Painter getPainter() {
             return font_;
@@ -81,7 +80,7 @@ namespace AsControls {
                 //txtZone_.Left = (1 + figNum_) * font_.F();
                 //if (txtZone_.Left + font_.W() >= txtZone_.Right)
                 //    txtZone_.Left = 0; // 行番号ゾーンがデカすぎるときは表示しない
-                
+                if (figNum_ == 0) figNum_ = 2; //TODO
                int left = (1 + figNum_) * font_.F();
                if (left + font_.W() >= txtZone_.Right) {
                    left = 0; // 行番号ゾーンがデカすぎるときは表示しない

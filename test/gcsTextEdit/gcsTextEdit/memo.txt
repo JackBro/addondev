@@ -1,5 +1,4 @@
-http://www.atmarkit.co.jp/fdotnet/practprog/wisearch02/wisearch02_03.html
-
+﻿http://www.atmarkit.co.jp/fdotnet/practprog/wisearch02/wisearch02_03.html
 http://structurededitor.codeplex.com/
 http://azuki.sourceforge.jp/
 
@@ -14,7 +13,6 @@ paste
 cut
 selrect
 selall
-select Highlighter
 ime pos
 home
 end
