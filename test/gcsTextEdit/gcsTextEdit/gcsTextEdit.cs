@@ -782,28 +782,27 @@ namespace AsControls {
         }
 
         public void BackSpace() {
-            throw new NotImplementedException();
+            cur_.DelBack();
         }
 
         public void Delete() {
             throw new NotImplementedException();
         }
 
-        public void Up() {
-            throw new NotImplementedException();
+        public void Up(bool wide, bool select) {
+            cur_.Up(wide, select);
         }
 
-        public void Down() {
-            throw new NotImplementedException();
+        public void Down(bool wide, bool select) {
+            cur_.Down(wide, select);
         }
 
-        public new void Left() {
-            throw new NotImplementedException();
-            cur_.Left(
+        public new void Left(bool wide, bool select) {
+            cur_.Left(wide, select);
         }
 
-        public new void Right() {
-            throw new NotImplementedException();
+        public new void Right(bool wide, bool select) {
+            cur_.Right(wide, select);
         }
 
         #endregion

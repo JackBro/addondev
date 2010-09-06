@@ -40,7 +40,8 @@ namespace AsControls.Parser {
         EndLine,
         Line,
         Image,
-        Keyword
+        Keyword,
+        Number
     }
 
     abstract class Element {
@@ -48,6 +49,8 @@ namespace AsControls.Parser {
         public TokenType token;
         public string start { get; set; }
         public abstract int exer(Lexer lex);
+        public int startIndex;
+        public int len;
     }
 
     class TextElement : Element {
@@ -138,7 +141,8 @@ namespace AsControls.Parser {
         }
 
         public override int exer(Lexer lex) {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return lex.reader.offset();
         }
     }
 
@@ -197,7 +201,7 @@ namespace AsControls.Parser {
             return ch;
         }
 
-        public void unread(char c) {
+        public void unread(int c) {
             unget_p = true;
         }
 
@@ -210,12 +214,8 @@ namespace AsControls.Parser {
         }
     }
 
-    //delegate void TokenEventHandler(object sender, int start, int len, Element e);
 
     class Lexer {
-
-        //public event TokenEventHandler tokenEventHandler = null;
-
 
         private TokenType tok;
         private String value;
@@ -228,11 +228,24 @@ namespace AsControls.Parser {
 
         private Element defaultElement;
         private Dictionary<String, Element> elemDic = new Dictionary<String, Element>();
+        private Dictionary<String, Element> keyWordElemDic = new Dictionary<String, Element>();
         //private Dictionary<String, SingleLineAttribute> SingleLineattrDic = new Dictionary<String, SingleLineAttribute>();
         //private Dictionary<String, KeywordAttribute> keywordattrDic = new Dictionary<String, KeywordAttribute>();
 
+        private string fkeys;
+
         public void AddElement(Element elem) {
-            elemDic.Add(elem.start, elem);
+            if (elem is KeywordElement) {
+                keyWordElemDic.Add(elem.start, elem);
+            } else {
+                elemDic.Add(elem.start, elem);
+            }
+
+            string key=string.Empty;
+            foreach (var item in elemDic.Values) {
+                key += item.start[0];
+            }
+            fkeys = key;
         }
 
         public void AddDefaultElement(Element elem) {
@@ -304,15 +317,34 @@ namespace AsControls.Parser {
                     break;
 
                 default:
-                    if( (c>=33 && c<=47)
-                        || (c >= 58 && c <= 74)
-                        || (c >= 91 && c <= 96)
-                        || (c >= 123 && c <= 126)){
+                    //if( (c>=33 && c<=47)
+                    //    || (c >= 58 && c <= 74)
+                    //    || (c >= 91 && c <= 96)
+                    //    || (c >= 123 && c <= 126)){
 
-                    //if (Char.IsSymbol((char)c)) {
-                        lexSymbol(((char)c).ToString());
-                    } else {
-                        
+                    ////if (Char.IsSymbol((char)c)) {
+                    //    reader.unread(c);
+                    //    //lexSymbol(((char)c).ToString());
+                    //    lexSymbol();
+                    //} else if (Char.IsDigit((char)c)) {
+                    //    reader.unread(c);
+                    //    lexDigit();
+
+                    //} else {
+                    //    reader.unread(c);
+                    //    lexKeyWord();
+                    //}
+                    if (Char.IsDigit((char)c)) {
+                        reader.unread(c);
+                        lexDigit();
+                    } else if(Util.isIdentifierPart((char)c)){
+                        reader.unread(c);
+                        lexKeyWord();
+                    } else if(fkeys.Contains((char)c)){
+                        //if (Char.IsSymbol((char)c)) {
+                        reader.unread(c);
+                        //lexSymbol(((char)c).ToString());
+                        lexSymbol();
                     }
                     break;
 
@@ -332,67 +364,90 @@ namespace AsControls.Parser {
             reader.unread((char)c);
         }
 
-        //private void lexText(string initstr) {
-        //    StringBuilder buf = new StringBuilder();
-        //    if (initstr != null) buf.Append(initstr);
+        private void lexDigit() {
+            int num = 0;
+            while (true) {
+                int c = reader.read();
+                if (c < 0) {
+                    break;
+                }
+                if (!Char.IsDigit((char)c)) {
+                    reader.unread(c);
+                    break;
+                }
+                num = (num * 10) + (c - '0');
+            }
+            value = num.ToString();
+            tok = TokenType.Number;		
+        }	
 
-        //    while (true) {
-        //        if (elemDic.ContainsKey(buf.ToString())) {
-
-        //        }
-
-        //        int c = reader.read();
-        //        if (c == -1) {
-        //            tok = TokenType.EOS;
-        //            break;
-        //        }
-        //        buf.Append((char)c);
-        //    }
-        //}
-
-        private void lexSymbol(string initstr) {
+        private void lexKeyWord() {
             //offset = reader.offset();
+            int offset = reader.offset()-1;
 
-            ////tok = TokenType.SYMBOL;
+            //tok = TokenType.Keyword;
             StringBuilder buf = new StringBuilder();
-            if (initstr != null) buf.Append(initstr);
+            while (true) {
+                int c = reader.read();
+                if (c < 0) {
+                    // throw new Exception("ファイルの終わりに到達しました。");
+                    //tok = TokenType.EOS;
+                    break;
+                }
+                if (!Util.isIdentifierPart((char)c)) {
+                    reader.unread(c);
+                    break;
+                }
+                buf.Append((char)c);
+            }
+            String s = buf.ToString();
+            value = s;
 
+            if (keyWordElemDic.ContainsKey(s)) {
+                //reader.setoffset(offset);
+                //int offset = reader.offset() - value.Length;
+                tok = TokenType.Keyword;
+                var elem = keyWordElemDic[s];
+                elem.startIndex = offset;
+                elem.len = value.Length;
+                resultElement = elem;
+            }
+        }
+
+        //private void lexSymbol(string initstr) {
+        private void lexSymbol() {
+            StringBuilder buf = new StringBuilder();
+            //if (initstr != null) buf.Append(initstr);
+            int offset = reader.offset()-1;
             while (true) {
 
                 if (elemDic.ContainsKey(buf.ToString())) {
                     
                     Element elem = elemDic[buf.ToString()];
-                    int offset = reader.offset()-elem.start.Length;
+                    //int offset = reader.offset()-elem.start.Length;
 
                     int index = elem.exer(this);
                     if (index < 0) {
-                        reader.setoffset(reader.offset() + 1);
+                        //int ii = reader.offset();
+                        reader.setoffset(reader.offset()+1);
+                        reader.unread(' ');
                         return;
                     }
-
-                    //if (preoffset != offset) {
-                    //    tok = TokenType.TXT;
-                    //    value = reader.Src.Substring(preoffset, offset - preoffset);
-                    //    if (tokenEventHandler != null) {
-                    //        tokenEventHandler(this, preoffset, offset - preoffset, defaultElement);
-                    //    }
-                    //}
-
+                    //int offset = reader.offset() - value.Length;
                     value = reader.Src.Substring(offset, index - offset);
+                    elem.startIndex = offset;
+                    elem.len = value.Length;
                     tok = elem.token;
                     resultElement = elem;
-                    //if (tokenEventHandler != null) {
-                    //    tokenEventHandler(this, offset, index - offset, elem);
-                    //}
+                    int offse = reader.offset();
                     reader.setoffset(index);
-
-                    //preoffset = offset;
+                    //reader.unread(' ');
                     return;
                 }
 
                 int c = reader.read();
                 if (c == -1) {
-                    tok = TokenType.EOS;
+                    //tok = TokenType.EOS;
                     break;
                 }
                 buf.Append((char)c);

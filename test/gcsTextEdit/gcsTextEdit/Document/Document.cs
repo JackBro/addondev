@@ -139,7 +139,7 @@ namespace AsControls {
                 while (s < e && Util.getCharType(f[s]) == ctype )
                         ++s;
                 //s--;
-                s = s != e ? --s : s;
+                //s = s != e ? --s : s;
                 return new DPos(dp.tl, s);
             }
         }
@@ -229,6 +229,7 @@ namespace AsControls {
 
             // 再解析
             //highlighter.Parse(text_[s.tl].Text, text_[s.tl].AttributeList);
+            MultiParse(s.tl, e.tl);
         }
 
         private void Replace(ref VPos s, ref VPos e, ref VPos e2, out string oldValue, string newValue) {
@@ -357,7 +358,7 @@ namespace AsControls {
                 int s = dp.ad;
                 Util.CharType ctype = Util.getCharType(f[s]);
                 while (0 < s && Util.getCharType(f[s]) == ctype) {
-                    char cc = f[s];
+                    //char cc = f[s];
                     --s;
                 }
                 //s++;

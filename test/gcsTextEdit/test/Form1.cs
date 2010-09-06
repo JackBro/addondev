@@ -30,6 +30,38 @@ namespace test
                 editor.Paste();
             });
 
+            csedit.KeyBind.setAction(Keys.Back, (editor) => {
+                editor.BackSpace();
+            });
+
+            csedit.KeyBind.setAction(Keys.Up, (editor) => {
+                editor.Up(false, false);
+            });
+            csedit.KeyBind.setAction(Keys.Shift | Keys.Up, (editor) => {
+                editor.Up(false, true);
+            });
+
+            csedit.KeyBind.setAction(Keys.Down, (editor) => {
+                editor.Down(false, false);
+            });
+            csedit.KeyBind.setAction(Keys.Shift | Keys.Down, (editor) => {
+                editor.Down(false, true);
+            });
+
+            csedit.KeyBind.setAction(Keys.Left, (editor) => {
+                editor.Left(false, false);
+            });
+            csedit.KeyBind.setAction(Keys.Shift | Keys.Left, (editor) => {
+                editor.Left(false, true);
+            });
+
+            csedit.KeyBind.setAction(Keys.Right, (editor) => {
+                editor.Right(false, false);
+            });
+            csedit.KeyBind.setAction(Keys.Shift | Keys.Right, (editor) => {
+                editor.Right(false, true);
+            });
+
             //csedit.LinkClickEventHandler += (sender, e) => {
             //    MessageBox.Show(e.Link);
             //};
@@ -75,7 +107,7 @@ namespace test
 //y
 //yy";
 
-            csedit.Text = @"test[[123]]1234dd";
+            csedit.Text = @"test[[123]]456dd";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;

@@ -487,7 +487,34 @@ namespace AsControls
             Input(str.ToString(), 1);
         }
 
+        public void DelBack()
+        {
+	        // 選択状態なら BackSpace == Delete
+	        // でなければ、 BackSpace == Left + Delete (手抜き
+	        if( cur_ == sel_ )
+	        {
+		        if( cur_.tl==0 && cur_.ad==0 )
+			        return;
+		        Left( false, false );
+	        }
+	        Del();
+        }
 
+        public void Del()
+        {
+	        // 選択状態なら cur_ ～ sel_ を削除
+	        // でなければ、 cur_ ～ rightOf(cur_) を削除
+	        DPos dp = (cur_==sel_ ? doc_.rightOf(cur_, false) : (DPos)sel_ );
+	        if( cur_ != dp ){
+                string del;
+		        //doc_.Execute( Delete( cur_, dp ) );
+                //doc_.Delete(new DPos(cur_.tl, cur_.ad), new DPos(dp.tl, dp.ad), out del);
+                VPos vp = new VPos();
+                vp.ad = dp.ad;
+                vp.tl = dp.tl;
+                doc_.Delete(cur_, vp, out del);
+            }
+        }
 
         //-------------------------------------------------------------------------
         // Viewからの指令を処理

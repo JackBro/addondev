@@ -11,7 +11,7 @@ namespace AsControls {
         Window
     }
 
-    public class Canvas :IDisposable{
+    internal class Canvas : IDisposable {
 
         private Rectangle txtZone_;
         private Painter font_; // 描画用オブジェクト

@@ -58,6 +58,18 @@ namespace AsControls {
             return CharType.Unknown;
         }
 
+        public static bool isIdentifierPart(char c) {
+            string str = c.ToString();
+            if (Char.IsDigit(c) || Char.IsControl(c)) return false;
+            if ((c >= 33 && c <= 47)
+                || (c >= 58 && c <= 74)
+                || (c >= 91 && c <= 96)
+                || (c >= 123 && c <= 126)) return false;
+            if (c == '\t' || c == ' ' || c == '\x3000') return false;
+
+            return true;
+        }
+
         public enum CharType {
             Unknown,
             Digit,

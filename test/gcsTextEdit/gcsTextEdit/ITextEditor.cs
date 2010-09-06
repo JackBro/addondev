@@ -10,9 +10,9 @@ namespace AsControls {
         void Paste();
         void BackSpace();
         void Delete();
-        void Up();
-        void Down();
-        void Left();
-        void Right();
+        void Up(bool wide, bool select);
+        void Down(bool wide, bool select);
+        void Left(bool wide, bool select);
+        void Right(bool wide, bool select);
     }
 }

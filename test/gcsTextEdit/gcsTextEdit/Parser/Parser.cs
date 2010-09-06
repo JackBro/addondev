@@ -6,10 +6,6 @@ using System.Drawing;
 
 namespace AsControls.Parser {
 
-    enum AttributeType {
-
-    }
-
     public class Rule {
         public int ad;
         public int len;
@@ -19,10 +15,9 @@ namespace AsControls.Parser {
     class Parser {
 
         private Lexer lex;
-        private TokenType token;//=TokenType.NONE;
+        private TokenType token;
 
         List<Rule> rules;
-        //int offset;
 
         Attribute defaultAttr;
 
@@ -41,6 +36,9 @@ namespace AsControls.Parser {
         }
 
         public void init() {
+
+            lex.AddElement(new KeywordElement("test", new Attribute(Color.DarkGray, false, false, false)));
+
             lex.AddElement(new EncloseElement("[[", "]]", new Attribute(Color.Red, true, false, false)));
 
             lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false)));
@@ -71,22 +69,31 @@ namespace AsControls.Parser {
 				getToken();
                 switch (token) {
                     case TokenType.Enclose:
-                        rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-                        break;
-
                     case TokenType.EndLine:
-                        rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-                        break;
-
                     case TokenType.Line:
-                        break;
-
                     case TokenType.Image:
+                    case TokenType.Keyword:
+                        var elem = lex.getElement();
+                        rules.Add(new Rule { ad = elem.startIndex, len = elem.len, attr = elem.attr });
                         break;
+                    //case TokenType.Enclose:
+                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
+                    //    break;
+
+                    //case TokenType.EndLine:
+                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
+                    //    break;
+
+                    //case TokenType.Line:
+                    //    break;
+
+                    //case TokenType.Image:
+                    //    break;
+
+                    //case TokenType.Keyword:
+                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
+                    //    break;
                 }
-                //if (token == TokenType.ATTR) {
-                //    attrs.Add(lex.getAttribute());
-                //}
 		    }
 
             if (rules.Count > 0) {

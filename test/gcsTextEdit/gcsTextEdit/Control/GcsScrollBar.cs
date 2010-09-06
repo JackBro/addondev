@@ -5,14 +5,14 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace AsControls {
-    public class HGcsScrollBar : HScrollBar {
+    internal class HGcsScrollBar : HScrollBar {
         public int nPage {
             get;
             set;
         }
     }
 
-    public class VGcsScrollBar : VScrollBar {
+    internal class VGcsScrollBar : VScrollBar {
         public int nPage {
             get;
             set;
