@@ -11,7 +11,7 @@ namespace AsControls
     public delegate void DrawEventHandler(Graphics g, string line, int x,int y);
     public partial class gcsTextEdit
     {
-        event DrawEventHandler DrawEventHandler;
+       public event DrawEventHandler DrawEventHandler;
        // private IntPtr hdc;
        // private IntPtr hfont;
 
@@ -289,7 +289,7 @@ namespace AsControls
         //    }	        
         //}
 
-        private Bitmap image = new Bitmap("test.png");
+        //private Bitmap image = new Bitmap("test.png");
         private void DrawTXT2(Graphics g, VDrawInfo v, Painter p) {
             //AutoScrollOffset= new Point(AutoScrollOffset.X,AutoScrollOffset.Y+ 10);
 
@@ -398,7 +398,7 @@ namespace AsControls
                         //    break;
                         //}
                         if (str.Contains("img")) {
-                            g.DrawImage(image, x + v.XBASE, a.top);
+                            //g.DrawImage(image, x + v.XBASE, a.top);
                         }
                         p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, a.top);
 
@@ -456,6 +456,26 @@ namespace AsControls
 	        p.Invert(g, rc );
         }
 
+        private tuple l(int utl, int vrl) {
+            int upsize=1000;
+            Painter p = cvs_.getPainter();
+            int H=p.H();
+            int rn=0;
+            int start = vrl > 0 ? utl - 1 : utl;
+            for (; start >= 0; start--) {
+
+                rn+=rln(start);
+                if (upsize - rn * H <= 0) {
+                    break;
+                }
+                //upsize -= rln(start) * H;
+            }
+            
+            //return start;
+            var tuple = new { tl = start, trn = rn };
+            return tuple;
+        }
+
         private static char[] cs = { '\t', ' ', '\x3000' };
 
         private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
@@ -465,8 +485,19 @@ namespace AsControls
             int H = p.H();
             int TLM = doc_.tln() - 1;
 
+            
+            //TODO tmp scroll
+            //int tmpYMIN = v.YMIN;
+            //int tmpTLMIN = v.TLMIN;
+            //v.YMIN = -(v.TLMIN) * H;
+            //v.TLMIN = 0;//doc_.tln()
+            var tuple = l(udScr_tl_, udScr_vrl_);
+            int tmpYMIN = -(tuple.trn + udScr_vrl_ * H);
+            int tmpTLMIN = tuple.tl;
+
             // 作業用変数１
-            Win32API.RECT a = new Win32API.RECT { left = 0, top = v.YMIN, right = 0, bottom = v.YMIN + p.H() };
+            //Win32API.RECT a = new Win32API.RECT { left = 0, top = v.YMIN, right = 0, bottom = v.YMIN + p.H() };
+            Win32API.RECT a = new Win32API.RECT { left = 0, top = tmpYMIN, right = 0, bottom = tmpYMIN + p.H() };
             //Rectangle  a = new Rectangle( 0, v.YMIN, 0, v.YMIN+p.H() );
             //Rectangle a = new Rectangle(0, 0,,v.YMIN);
             //int clr = -1;
@@ -479,7 +510,7 @@ namespace AsControls
             //int aTop = a.Top;
             //int aBottom = a.Bottom;
             // 論理行単位のLoop
-            for (int tl = v.TLMIN; a.top < v.YMAX; ++tl) {
+            for (int tl = tmpTLMIN; a.top < v.YMAX; ++tl) {
 
                 // 定数２
                 string str = doc_.tl(tl).ToString();
@@ -508,7 +539,7 @@ namespace AsControls
                     
                     // 作業用変数３
                     end = rlend(tl, rl);
-                    if (a.bottom <= v.YMIN)
+                    if (a.bottom <= tmpYMIN)
                         continue;
 
 
@@ -526,6 +557,9 @@ namespace AsControls
                             int ci = s.IndexOfAny(cs, 0);
                             if (ci < 0) {
                                 p.DrawText(g, s, color, x + v.XBASE, a.top);
+                                if (ruls[attri].attr.isimage && i==ruls[attri].ad && DrawEventHandler != null) {
+                                    DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x, a.top+H);
+                                }
                                 x += p.CalcStringWidth(s);
                                 i += s.Length;
                                 stt = i;
@@ -701,6 +735,9 @@ namespace AsControls
                 //p.Fill( a );
                 //g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
             }
+
+            //v.YMIN = tmpYMIN;
+            //v.TLMIN = tmpTLMIN;
         }
     }
 }

@@ -284,7 +284,7 @@ namespace AsControls {
         // 挿入・削除等の作業用関数群
         //-------------------------------------------------------------------------
 
-        int getRangeLength( DPos s, DPos e )
+        public int getRangeLength( DPos s, DPos e )
         {
 	        // とりあえず全部足す
 	        int ans=0, tl=s.tl, te=e.tl;
@@ -300,7 +300,7 @@ namespace AsControls {
 	        return ans;
         }
 
-        string getText(DPos s, DPos e )
+        public string getText(DPos s, DPos e)
         {
             IBuffer buff;
 	        if( s.tl == e.tl )

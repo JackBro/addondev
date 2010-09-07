@@ -11,6 +11,7 @@ namespace test
 {
     public partial class Form1 : Form
     {
+        private Bitmap image = new Bitmap("test.png");
         private AsControls.gcsTextEdit csedit = new AsControls.gcsTextEdit();
         //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
         public Form1()
@@ -25,14 +26,14 @@ namespace test
             //csedit.Height = this.Height / 2;
             csedit.GotFocus += new EventHandler(csedit_GotFocus);
 
-            csedit.KeyBind.setAction(Keys.Control | Keys.V, (editor) =>
-            {
-                editor.Paste();
-            });
 
             csedit.KeyBind.setAction(Keys.Back, (editor) => {
                 editor.BackSpace();
             });
+
+            csedit.DrawEventHandler += (g, line, x, y) => {
+                g.DrawImage(image, new Point(x, y));
+            };
 
             csedit.KeyBind.setAction(Keys.Up, (editor) => {
                 editor.Up(false, false);
@@ -60,6 +61,16 @@ namespace test
             });
             csedit.KeyBind.setAction(Keys.Shift | Keys.Right, (editor) => {
                 editor.Right(false, true);
+            });
+
+            csedit.KeyBind.setAction(Keys.Control | Keys.C, (editor) => {
+                editor.Copy();
+            });
+            csedit.KeyBind.setAction(Keys.Control | Keys.X, (editor) => {
+                editor.Cut();
+            });
+            csedit.KeyBind.setAction(Keys.Control | Keys.V, (editor) => {
+                editor.Paste();
             });
 
             //csedit.LinkClickEventHandler += (sender, e) => {

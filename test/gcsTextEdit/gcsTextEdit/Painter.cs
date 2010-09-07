@@ -59,7 +59,8 @@ namespace AsControls {
         public int W(char ch ) // 1.08 サロゲートペア回避
 		{
 			//unicode ch = *pch;
-			if( widthTable_[ ch ] == -1 )
+			//if( widthTable_[ ch ] == -1 )
+            if (widthTable_[ch] == 0)
 			{
                 if (Util.isHighSurrogate(ch))
 				{
@@ -104,7 +105,7 @@ namespace AsControls {
             widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
             widthTable_['\x3000'] = CalcStringWidth('\x3000');
 
-           //int cw =  CalcStringWidth(' '.ToString());
+           //int cw =  CalcStringWidth('あ');
            //int cw2 = CalcStringWidth('　'.ToString());
            //int cw3 = CalcStringWidth('\t'.ToString());
 
@@ -165,7 +166,7 @@ namespace AsControls {
             int w=W(' ');
             int h=H();
             Point[] pt = {
-                new Point(x    , y+h-4 ),
+                new Point( x    , y+h-4 ),
                 new Point( x    , y+h-2 ),
                 new Point( x+w-3, y+h-2 ),
                 new Point( x+w-3, y+h-5 )

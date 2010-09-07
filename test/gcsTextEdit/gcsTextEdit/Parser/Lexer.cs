@@ -6,30 +6,22 @@ using System.Drawing;
 
 namespace AsControls.Parser {
 
-
-    //enum TokenType {
-    //    EOS,
-    //    TAB, // Tab
-    //    WSP, // 半角スペース
-    //    ZSP, // 全角スペース
-    //    TXT, // 普通の字
-    //    EncloseAttr,
-    //    EndLineAttr,
-    //    LineAttr,
-    //    ImageAttr
-    //}
-
     public class Attribute {
         public readonly Color color;
         public readonly bool islink;
+        public readonly bool isimage;
         public readonly bool isbold;
         public readonly bool isunderline;
 
-        public Attribute(Color color, bool islink, bool isbold, bool isunderline) {
+        public Attribute(Color color, bool islink, bool isimage, bool isbold, bool isunderline) {
             this.color = color;
             this.islink = islink;
+            this.isimage = isimage;
             this.isbold = isbold;
             this.isunderline = isunderline;
+        }
+        public Attribute(Color color) {
+            this.color = color;
         }
     }
 
@@ -79,7 +71,6 @@ namespace AsControls.Parser {
         }
 
         public override int exer(Lexer lex) {
-            //throw new NotImplementedException();
             int offset = lex.reader.offset();
             int index = lex.reader.Src.IndexOf(end, offset);
             
@@ -141,7 +132,6 @@ namespace AsControls.Parser {
         }
 
         public override int exer(Lexer lex) {
-            //throw new NotImplementedException();
             return lex.reader.offset();
         }
     }

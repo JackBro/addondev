@@ -62,11 +62,17 @@ namespace AsControls {
         VGcsScrollBar vScrollBar;
         HGcsScrollBar hScrollBar;
 
-        int udScr_tl_;  //一番上に表示される論理行のTLine_Index
-        int udScr_vrl_; //一番上に表示される表示行のVRLine_Index
+        /// <summary>
+        /// 一番上に表示される論理行のTLine_Index
+        /// </summary>
+        int udScr_tl_;
+        /// <summary>
+        /// 一番上に表示される表示行のVRLine_Index
+        /// </summary>
+        int udScr_vrl_;
 
 
-        ImeComposition imeComposition;
+        Ime imeComposition;
 
         public KeyMap KeyBind { get; set; }
 
@@ -174,9 +180,9 @@ namespace AsControls {
             //this.Controls.Add(scPanel);
 
             this.ImeMode = ImeMode.Off;
-            imeComposition = new ImeComposition(this);
-            imeComposition.ImeCompositedHira += new ImeComposition.ImeEventHandler(imeComposition_ImeCompositedHira);
-            imeComposition.ImeCompositedKata += new ImeComposition.ImeEventHandler(imeComposition_ImeCompositedKata);
+            imeComposition = new Ime(this);
+            imeComposition.ImeCompositedHira += new Ime.ImeEventHandler(imeComposition_ImeCompositedHira);
+            imeComposition.ImeCompositedKata += new Ime.ImeEventHandler(imeComposition_ImeCompositedKata);
 
             this.HandleDestroyed += new EventHandler(AsTextEdit_HandleDestroyed);
             this.LostFocus += (sender, e) => {
@@ -278,11 +284,11 @@ namespace AsControls {
             //deleteDraw();
         }
 
-        void imeComposition_ImeCompositedKata(object sender, ImeComposition.ImeCompositionEventArgs e) {
+        void imeComposition_ImeCompositedKata(object sender, Ime.ImeCompositionEventArgs e) {
             //Input(e.InputString);
         }
 
-        void imeComposition_ImeCompositedHira(object sender, ImeComposition.ImeCompositionEventArgs e) {
+        void imeComposition_ImeCompositedHira(object sender, Ime.ImeCompositionEventArgs e) {
             //Input(e.InputString);
             //base.Invalidate();
         }
@@ -310,9 +316,26 @@ namespace AsControls {
         }
 
         protected override void WndProc(ref Message m) {
-            //if (imeComposition != null)
-            //    imeComposition.Ime(m, vPos.X, vPos.Y);
-            
+            if (imeComposition != null) {
+                //imeComposition.Ime(m, 0, 0);
+                if (imeComposition.isImeComposition(m)) {
+                    imeComposition.ImeComposition(m);
+                }
+                else if (imeComposition.isStartcomposition(m)) {
+                    // メンバ変数の値を元に、実際にCaretを動かす処理
+                    int x = 0;
+                    int y = 0; ;
+                    GetOrigin(ref x, ref y);
+                    x += cur_.Cur.vx;
+                    y += cur_.Cur.vl * fnt().H();
+
+                    // 行番号ゾーンにCaretがあっても困るので左に追いやる
+                    if (0 < x && x < left())
+                        x = -left();
+
+                    imeComposition.ImeStartcomposition(m, x, y);
+                }
+            }
             base.WndProc(ref m);
         }
 
@@ -441,13 +464,16 @@ namespace AsControls {
             // ほとんどの行が折り返し無しで表示されるテキストの場合、
             // この値を計算しておくことで、処理の高速化が可能。
             Painter p = cvs_.getPainter();
-            int w=0;
-            for( int i=0; i<len; ++i )
-                if( txt[i] == '\t' )
+            int w = 0;
+            for (int i = 0; i < len; ++i)
+                if (txt[i] == '\t')
                     w = p.nextTab(w);
                 else
-                    w += p.W( txt[i] );
+                    w += p.W(txt[i]);
             return w;
+
+            //Painter p = cvs_.getPainter();
+            //return p.CalcStringWidth(txt);
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e) {
@@ -549,13 +575,16 @@ namespace AsControls {
             return !char.IsControl(charCode);
         }
 
+
+
         private Boolean ldowm = false;
         protected override void OnMouseDown(MouseEventArgs e) {
             Focus();
             if (e.Button == MouseButtons.Left) {
                 //if (cur_.isSelectText()) {
-                //
-                //} else {
+                //    //DoDragDrop("", DragDropEffects.Move);
+                //}
+                //else {
                     cur_.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
                 //}
                 //if (cur != sel) {
@@ -606,6 +635,21 @@ namespace AsControls {
             base.OnMouseDown(e);
         }
 
+
+        protected override void OnMouseUp(MouseEventArgs e) {
+            //if (dostart) {
+            //    GetVPos(e.X, e.Y, ref cur);
+            //    UpdateCaretPos();
+            //    cur.CopyTo(ref sel);
+
+            //    base.Invalidate();
+            //}
+            //ldowm = false;
+            //dostart = false;
+
+            base.OnMouseUp(e);
+        }
+
         Boolean dostart = false;
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
@@ -629,19 +673,6 @@ namespace AsControls {
             //}
         }
 
-        protected override void OnMouseUp(MouseEventArgs e) {
-            //if (dostart) {
-            //    GetVPos(e.X, e.Y, ref cur);
-            //    UpdateCaretPos();
-            //    cur.CopyTo(ref sel);
-
-            //    base.Invalidate();
-            //}
-            //ldowm = false;
-            //dostart = false;
-
-            base.OnMouseUp(e);
-        }
  
 
         protected override void OnMouseEnter(EventArgs e) {
@@ -703,10 +734,10 @@ namespace AsControls {
 
         }
 
-        protected override void OnDragOver(DragEventArgs drgevent) {
+        protected override void OnDragOver(DragEventArgs e) {
             if (!Focused)
                 Focus();
-
+            
             ////base.OnDragOver(drgevent);
             //Point p = this.PointToClient(new Point(drgevent.X, drgevent.Y));
             //GetVPos(p.X, p.Y, ref cur);
@@ -716,17 +747,17 @@ namespace AsControls {
         }
 
         private bool isdropfile = false;
-        protected override void OnDragEnter(DragEventArgs drgevent) {
-            if (drgevent.Data.GetDataPresent(DataFormats.FileDrop)) {
-                drgevent.Effect = DragDropEffects.Copy;
+        protected override void OnDragEnter(DragEventArgs e) {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                e.Effect = DragDropEffects.Copy;
                 isdropfile = true;
-            } else if (drgevent.Data.GetDataPresent(DataFormats.UnicodeText)
-                || drgevent.Data.GetDataPresent(DataFormats.Text)) {
-                drgevent.Effect = DragDropEffects.Move;
+            } else if (e.Data.GetDataPresent(DataFormats.UnicodeText)
+                || e.Data.GetDataPresent(DataFormats.Text)) {
+                e.Effect = DragDropEffects.Move;
             } else {
-                drgevent.Effect = DragDropEffects.None;
+                e.Effect = DragDropEffects.None;
             }
-            base.OnDragEnter(drgevent);
+            base.OnDragEnter(e);
         }
 
         //
@@ -768,17 +799,16 @@ namespace AsControls {
         #region ITextEditor メンバ
 
         public void Copy() {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            cur_.Copy();
         }
 
         public void Cut() {
-            throw new NotImplementedException();
+            cur_.Cut();
         }
 
         public void Paste() {
-            //string t = Clipboard.GetText();
-            //Input(t);
-            //base.Invalidate();
+            cur_.Paste();
         }
 
         public void BackSpace() {

@@ -37,13 +37,15 @@ namespace AsControls.Parser {
 
         public void init() {
 
-            lex.AddElement(new KeywordElement("test", new Attribute(Color.DarkGray, false, false, false)));
+            lex.AddElement(new KeywordElement("test", new Attribute(Color.DarkGray, false, false, false, false)));
 
-            lex.AddElement(new EncloseElement("[[", "]]", new Attribute(Color.Red, true, false, false)));
+            //lex.AddElement(new EncloseElement("[[", "]]", new Attribute(Color.Red, true, false, false, false)));
 
-            lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false)));
+            lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false, false)));
 
-            defaultAttr = new Attribute(Color.Black, false, false, false);
+            lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
+
+            defaultAttr = new Attribute(Color.Black, false, false, false, false);
             lex.AddDefaultElement(new TextElement(defaultAttr));
 
             //lex.tokenEventHandler += (sender, start, len, e) => {

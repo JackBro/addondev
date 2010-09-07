@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace AsControls
 {
@@ -140,6 +141,10 @@ namespace AsControls
 
         private bool lineSelectMode_; // 行選択モード？
         private int dragX_, dragY_;
+
+        public VPos Cur {
+            get { return cur_; }
+        }
 
         public bool isSelectText() {
             return !(cur_ == sel_);
@@ -648,6 +653,42 @@ namespace AsControls
 	        UpdateCaretPos();
         }
 
+        
+        //-------------------------------------------------------------------------
+        // クリップボード処理
+        //-------------------------------------------------------------------------
+        public void Cut()
+        {
+	        if( cur_ != sel_ )
+	        {
+		        // コピーして削除
+		        Copy();
+		        Del();
+	        }
+        }
+
+        public void Copy()
+        {
+	        if( cur_==sel_ )
+		        return;
+
+            DPos dm = new DPos(cur_.tl, cur_.ad);
+            DPos dM = new DPos(sel_.tl, sel_.ad);
+            if (cur_ > sel_) {
+                Clipboard.SetText(doc_.getText(dM, dm));
+            }
+            else {
+                Clipboard.SetText(doc_.getText(dm, dM));
+            }
+        }
+
+        public void Paste()
+        {
+            string text = Clipboard.GetText();
+            if (text != null) {
+                doc_.Replace(cur_, sel_, text);
+            }
+        }
     }
 
 

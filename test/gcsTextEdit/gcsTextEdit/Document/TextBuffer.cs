@@ -72,7 +72,8 @@ namespace AsControls
 
         public IBuffer Substring(int startIndex, int count)
         {
-           
+           if(count == 0) return new LineBuffer("");
+
             return new LineBuffer(stringInfo.SubstringByTextElements(startIndex, count));
         }
 
