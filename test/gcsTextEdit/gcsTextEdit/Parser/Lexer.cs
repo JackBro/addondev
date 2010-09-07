@@ -33,6 +33,7 @@ namespace AsControls.Parser {
         Line,
         Image,
         Keyword,
+        Element,
         Number
     }
 

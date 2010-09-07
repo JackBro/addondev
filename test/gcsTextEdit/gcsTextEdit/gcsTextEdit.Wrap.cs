@@ -26,7 +26,6 @@ namespace AsControls
 
         public List<WLine> wrap_ ;
 
-
         /// <summary>
         /// 全表示行数
         /// </summary>
@@ -57,17 +56,19 @@ namespace AsControls
         /// <returns></returns>
 	    bool wrapexists() { return doc_.tln() != vln(); }
 
-
+        /// <summary>
+        /// 指定した分だけ新しく行情報を追加。
+        /// ＆折り返し情報もきちんと計算
+        /// </summary>
+        /// <param name="ti_s"></param>
+        /// <param name="ti_e"></param>
+        /// <returns>
+        /// 1: "折り返しあり" or "この行が横に一番長くなった"
+        /// 0: "この行以外のどこかが最長"
+        /// 詳しくは ReWrapSingle() を見よ。
+        /// </returns>
         public int InsertMulti( int ti_s, int ti_e )
         {
-	        // 指定した分だけ新しく行情報を追加。
-	        // ＆折り返し情報もきちんと計算
-	        //
-	        // 返値は
-	        //   1: "折り返しあり" or "この行が横に一番長くなった"
-	        //   0: "この行以外のどこかが最長"
-	        // 詳しくは ReWrapSingle() を見よ。
-
 	        int dy=0, cx=0;
 	        for( int i=ti_s; i<=ti_e; ++i )
 	        {
@@ -99,7 +100,7 @@ namespace AsControls
 	        vlNum_ += dy;
 
 	        // 折り返しなしだと総横幅の更新が必要
-	        if( cvs_.wrapType == WrapType.Non )
+	        if( cvs_.wrapType == WrapType.NonWrap )
 	        {
 		        if( textCx_ <= cx )
 		        {
@@ -111,16 +112,18 @@ namespace AsControls
 	        return 1;
         }
 
-        //
+        /// <summary>
+        /// 指定した範囲の行情報を削除
+        /// </summary>
+        /// <param name="ti_s"></param>
+        /// <param name="ti_e"></param>
+        /// <returns>
+        /// 1: "折り返しあり" or "この行以外のどこかが最長"
+        /// 0: "さっきまでこの行は最長だったが短くなっちゃった"
+        /// 詳しくは ReWrapSingle() を見よ。
+        /// </returns>
         public int DeleteMulti( int ti_s, int ti_e )
         {
-	        // 指定した範囲の行情報を削除
-	        //
-	        // 返値は
-	        //   1: "折り返しあり" or "この行以外のどこかが最長"
-	        //   0: "さっきまでこの行は最長だったが短くなっちゃった"
-	        // 詳しくは ReWrapSingle() を見よ。
-
 	        bool  widthChanged = false;
 	        int dy = 0;
 
@@ -139,7 +142,7 @@ namespace AsControls
 	        vlNum_ -= dy;
 
 	        // 折り返しなしだと総横幅の更新が必要
-	        return ( cvs_.wrapType==WrapType.Non && widthChanged ) ? 0 : 1;
+	        return ( cvs_.wrapType==WrapType.NonWrap && widthChanged ) ? 0 : 1;
         }
 
 
@@ -162,8 +165,7 @@ namespace AsControls
         }
 
         //
-        public void on_text_update
-	        ( DPos s, DPos e, DPos e2, bool bAft, bool mCur )
+        public void on_text_update( DPos s, DPos e, DPos e2, bool bAft, bool mCur )
         {
 	        // まず、折り返し位置再計算
 
@@ -211,7 +213,7 @@ namespace AsControls
 
         private void UpdateTextCx()
         {
-            if (cvs_.wrapType == WrapType.Non) {
+            if (cvs_.wrapType == WrapType.NonWrap) {
                 // 折り返しなしなら、数えてみないと横幅はわからない
                 int cx = 0;
                 for (int i = 0, ie = doc_.tln(); i < ie; ++i)
@@ -250,22 +252,20 @@ namespace AsControls
             vlNum_ = vln;
         }
 
-        //
-        int ReWrapSingle( DPos s )
-        {
-	        // 指定した一行のみ折り返しを修正。
-	        //
-	        // 返値は
-	        //   2: "折り返しあり" or "この行が横に一番長くなった"
-	        //   1: "この行以外のどこかが最長"
-	        //   0: "さっきまでこの行は最長だったが短くなっちゃった"
-	        // で、上位ルーチンにm_TextCx修正の必要性を伝える。
-	        //
-	        // 昔は再描画範囲の計算のために、表示行数の変化を返していたが、
-	        // これは上位ルーチン側で vln() を比較すれば済むし、
-	        // むしろその方が効率的であるため廃止した。
-
-
+        /// <summary>
+        /// 指定した一行のみ折り返しを修正。
+        /// 昔は再描画範囲の計算のために、表示行数の変化を返していたが、
+        /// これは上位ルーチン側で vln() を比較すれば済むし、
+        /// むしろその方が効率的であるため廃止した。
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns>
+        /// 2: "折り返しあり" or "この行が横に一番長くなった"
+        /// 1: "この行以外のどこかが最長"
+        /// 0: "さっきまでこの行は最長だったが短くなっちゃった"
+        /// で、上位ルーチンにm_TextCx修正の必要性を伝える。
+        /// </returns>
+        int ReWrapSingle( DPos s ){
 	        // 旧情報保存
 	        WLine wl            = wrap_[s.tl];
 	        int oldVRNum = wl.rln();
@@ -297,7 +297,7 @@ namespace AsControls
 
 	        // 折り返しなしだと総横幅の更新が必要
 	        //if( cvs_.wrapType() == NOWRAP )
-            if (cvs_.wrapType == WrapType.Non)
+            if (cvs_.wrapType == WrapType.NonWrap)
 		        if( textCx_ <= wl.width )
 		        {
 			        textCx_ = wl.width;

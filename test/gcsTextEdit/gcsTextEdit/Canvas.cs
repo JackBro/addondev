@@ -7,40 +7,60 @@ using System.Drawing;
 namespace AsControls {
 
     public enum WrapType {
-        Non,
-        Window
+        NonWrap,
+        WindowWidth
     }
 
     internal class Canvas : IDisposable {
 
         private Rectangle txtZone_;
-        private Painter font_; // 描画用オブジェクト
-        private int wrapWidth_; // 折り返し幅(pixel)
 
-        //@{ [行番号を表示するか否か] //@}
+        /// <summary>
+        /// 描画用オブジェクト
+        /// </summary>
+        private Painter font_;
+ 
+        /// <summary>
+        /// 折り返し幅(pixel)
+        /// </summary>
+        private int wrapWidth_;
+
+        /// <summary>
+        /// 行番号を表示するか否か
+        /// </summary>
 	    public bool showLN { get; set; }
         public WrapType wrapType { get; set; }
 
-        //@{ 表示領域の位置(pixel) //@}
+        /// <summary>
+        /// 表示領域の位置(pixel)
+        /// </summary>
+        /// <returns></returns>
         public Rectangle zone() { return txtZone_; }
 
-        //@{ 折り返し幅(pixel) //@}
+        /// <summary>
+        /// 折り返し幅(pixel) 
+        /// </summary>
+        /// <returns></returns>
 	    public int wrapWidth() { return wrapWidth_; }
 
-        int figNum_; // 行番号の桁数
-        private gcsTextEdit view;
+        /// <summary>
+        /// 行番号の桁数
+        /// </summary>
+        int figNum_;
+
+        //private gcsTextEdit view;
         public Canvas(gcsTextEdit view, Config config) {
             txtZone_ = view.getClientRect();
             //txtZone_ = new Rectangle();
             showLN = true;
-            wrapType = WrapType.Non;
-            wrapType = WrapType.Window;
+            wrapType = WrapType.NonWrap;
+            wrapType = WrapType.WindowWidth;
             //txtZone_ = view.ClientRectangle;
             font_ = new Painter(view.Handle, config);
             wrapWidth_ = 0xfffffff;
             //wrapWidth_ = view.cx() - 3; //TODO
             //wrapWidth_ = 100;
-            this.view = view;
+            //this.view = view;
             //TODO wrap
             //view.SizeChanged += (sender, e) => {
             //};
@@ -65,7 +85,7 @@ namespace AsControls {
 
 	        if( CalcLNAreaWidth() )
 	        {
-                if (wrapType == WrapType.Window)
+                if (wrapType == WrapType.WindowWidth)
 			        CalcWrapWidth();
 		        return true;
 	        }
@@ -105,10 +125,10 @@ namespace AsControls {
         {
 	        switch( wrapType )
 	        {
-	        case WrapType.Non:
+	        case WrapType.NonWrap:
                     wrapWidth_ = 0xfffffff;
 		        break;
-            case WrapType.Window:
+            case WrapType.WindowWidth:
                 wrapWidth_ = txtZone_.Right - txtZone_.Left - 3; //TODO wrap
                 //wrapWidth_ = view.cx()-3; //TODO
 		        break; //Caretの分-3補正
@@ -141,7 +161,7 @@ namespace AsControls {
             //txtZone_ = new Rectangle(txtZone_.Left, txtZone_.Top, cx - 18, cy - 18);
 
 	        CalcLNAreaWidth();
-	        if( wrapType == WrapType.Window )
+	        if( wrapType == WrapType.WindowWidth )
 	        {
 		        CalcWrapWidth();
 		        return true;

@@ -138,10 +138,22 @@ namespace AsControls {
         private Cursor cur_;
         //
         public enum ReDrawType {
-            LNAREA, // 行番号ゾーンのみ
-            LINE,   // 変更のあった一行のみ
-            AFTER,  // 変更のあった行以下全部
-            ALL     // 全画面
+            /// <summary>
+            /// 行番号ゾーンのみ
+            /// </summary>
+            LNAREA,
+            /// <summary>
+            /// 変更のあった一行のみ
+            /// </summary>
+            LINE,
+            /// <summary>
+            /// 変更のあった行以下全部
+            /// </summary>
+            AFTER,
+            /// <summary>
+            /// 全画面
+            /// </summary>
+            ALL 
         }
 
         public gcsTextEdit() {
@@ -799,7 +811,6 @@ namespace AsControls {
         #region ITextEditor メンバ
 
         public void Copy() {
-            //throw new NotImplementedException();
             cur_.Copy();
         }
 
@@ -816,7 +827,7 @@ namespace AsControls {
         }
 
         public void Delete() {
-            throw new NotImplementedException();
+            cur_.Del();
         }
 
         public void Up(bool wide, bool select) {
@@ -835,6 +846,14 @@ namespace AsControls {
             cur_.Right(wide, select);
         }
 
+        public void Home(bool wide, bool select) {
+            cur_.Home(wide, select);
+        }
+
+        public void End(bool wide, bool select) {
+            cur_.End(wide, select);
+        }
+        
         #endregion
     }
 }

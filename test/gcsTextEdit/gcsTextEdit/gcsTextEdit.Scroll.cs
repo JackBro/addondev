@@ -23,6 +23,10 @@ namespace AsControls {
         // delta: 0～view.fnt.H()
         // pos:   0～max-page (topの行番号)
 
+        /// <summary>
+        /// スクロールバー計算ルーチン
+        /// </summary>
+        /// <returns></returns>
         public bool ReSetScrollInfo()
         {
 	        int prevRlPos = hScrollBar.Value;

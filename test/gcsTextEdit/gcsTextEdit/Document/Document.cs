@@ -52,16 +52,9 @@ namespace AsControls {
         }
         
         public Document() {
-            //highlighter = new Highlighter();
-            //highlighter.Add(@"//.*", TokenType.TXT, Color.Green);
-            //highlighter.Add(@"\[\[.*\]\]", TokenType.CLICKABLE, Color.Red);
-            //highlighter.Add(@">>\w*", TokenType.CLICKABLE, Color.Blue);
-            //highlighter.Add(@"file:///\S*", TokenType.CLICKABLE, Color.Blue);
 
             parser = new AsControls.Parser.Parser();
 
-            //LineList = new List<Line>();
-            //LineList.Add(new Line(string.Empty));
             text_ = new List<Line>();
             text_.Add( new Line("") ); // 最初は一行だけ
         }
@@ -87,19 +80,12 @@ namespace AsControls {
                 //    --s;
                 //return DPos(dp.tl, s);
 
-                //string f = tl(dp.tl).ToString();
-                //int s = dp.ad - 1;
-                //while ( 0 < s && f[s] != ' ')
-                //    --s;
-                //return new DPos(dp.tl, s);
-
                 var f = text_[dp.tl].Text;
                 var s = dp.ad-1;
                 Util.CharType ctype = Util.getCharType(f[s]);
                 while (0 < s && Util.getCharType(f[s]) == ctype)
                     --s;
 
-                //s++;
                 s = s != 0 ? ++s : s;
                 return new DPos(dp.tl, s);
             }
@@ -138,7 +124,7 @@ namespace AsControls {
                 Util.CharType ctype = Util.getCharType(f[s]);
                 while (s < e && Util.getCharType(f[s]) == ctype )
                         ++s;
-                //s--;
+
                 //s = s != e ? --s : s;
                 return new DPos(dp.tl, s);
             }
@@ -358,7 +344,6 @@ namespace AsControls {
                 int s = dp.ad;
                 Util.CharType ctype = Util.getCharType(f[s]);
                 while (0 < s && Util.getCharType(f[s]) == ctype) {
-                    //char cc = f[s];
                     --s;
                 }
                 //s++;

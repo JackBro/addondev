@@ -73,6 +73,11 @@ namespace test
                 editor.Paste();
             });
 
+            csedit.KeyBind.setAction(Keys.Control | Keys.A, (editor) => {
+                editor.Home(true, false);
+                editor.End(true, true);
+            });
+
             //csedit.LinkClickEventHandler += (sender, e) => {
             //    MessageBox.Show(e.Link);
             //};

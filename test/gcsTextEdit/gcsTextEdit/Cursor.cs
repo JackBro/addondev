@@ -53,8 +53,15 @@ namespace AsControls
 
     //
     public class DPos {
-        public int ad { get; set; } //@{ バッファ中のアドレス (0～ ) //@}
-        public int tl { get; set; } //@{ 論理行番号 (0～ ) //@}
+        /// <summary>
+        /// バッファ中のアドレス (0～ )
+        /// </summary>
+        public int ad { get; set; }
+
+        /// <summary>
+        /// 論理行番号 (0～ )
+        /// </summary>
+        public int tl { get; set; }
 
         public DPos() { }
         public DPos( int tl, int ad) {
@@ -95,12 +102,26 @@ namespace AsControls
 
     //
     public class VPos : DPos {
-        public int vl { get; set; } // VLine-Index
-        public int rl { get; set; } // RLine-Index
-        public int vx { get; set; } // スクロールを考慮しない仮想スクリーン上のx座標(pixel) 
-        public int rx { get; set; } // 文字の並びに左右されてないx座標(pixel)
-                                    //   == 長い行のしっぽから短い行に [↑] で移動して
-                                    //   == その後 [↓] で戻れるようなアレです。
+        /// <summary>
+        /// VLine-Index
+        /// </summary>
+        public int vl { get; set; }
+
+        /// <summary>
+        /// RLine-Index
+        /// </summary>
+        public int rl { get; set; } 
+
+        /// <summary>
+        /// スクロールを考慮しない仮想スクリーン上のx座標(pixel) 
+        /// </summary>
+        public int vx { get; set; }
+
+        /// <summary>
+        /// 文字の並びに左右されてないx座標(pixel)
+        /// 長い行のしっぽから短い行に [↑] で移動してその後 [↓] で戻れるようなアレです。
+        /// </summary>
+        public int rx { get; set; }
 
         public void Copy(VPos src) {
             tl = src.tl;
@@ -135,11 +156,26 @@ namespace AsControls
         private gcsTextEdit view_;
         private Caret caret_;
 
-        private VPos cur_;  // カーソル位置
-        private VPos sel_;  // 選択時の軸足位置
-        private bool bIns_; // 挿入モード？
+        /// <summary>
+        /// カーソル位置
+        /// </summary>
+        private VPos cur_;
 
-        private bool lineSelectMode_; // 行選択モード？
+        /// <summary>
+        /// 選択時の軸足位置
+        /// </summary>
+        private VPos sel_;
+
+        /// <summary>
+        /// 挿入モード？
+        /// </summary>
+        private bool bIns_; 
+
+        /// <summary>
+        /// 行選択モード？
+        /// </summary>
+        private bool lineSelectMode_;
+
         private int dragX_, dragY_;
 
         public VPos Cur {
@@ -220,11 +256,6 @@ namespace AsControls
                     Redraw(cur_, sel_);
                 sel_.Copy(vp);
             }
-
-            //TODO
-            //if (cur_.Equals(vp)) {
-            //    int i = 0; 
-            //}
 
             cur_.Copy(vp);
             UpdateCaretPos();
@@ -527,6 +558,7 @@ namespace AsControls
 
         public void on_setfocus()
         {
+            //TODO caret
             caret_.Create(view_.fnt().H(),
                 //(bIns_ ? 2 : view_.fnt().W()), view_.fnt().LogFont() );
                 2);

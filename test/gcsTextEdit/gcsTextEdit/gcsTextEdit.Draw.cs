@@ -456,13 +456,14 @@ namespace AsControls
 	        p.Invert(g, rc );
         }
 
-        private tuple l(int utl, int vrl) {
+        private Tuple<int, int> l(int utl, int vrl) {
             int upsize=1000;
             Painter p = cvs_.getPainter();
             int H=p.H();
             int rn=0;
             int start = vrl > 0 ? utl - 1 : utl;
-            for (; start >= 0; start--) {
+            start = start < 0 ? 0 : start;
+            for (; start > 0; start--) {
 
                 rn+=rln(start);
                 if (upsize - rn * H <= 0) {
@@ -472,8 +473,7 @@ namespace AsControls
             }
             
             //return start;
-            var tuple = new { tl = start, trn = rn };
-            return tuple;
+            return new Tuple<int, int>(start, rn );
         }
 
         private static char[] cs = { '\t', ' ', '\x3000' };
@@ -492,8 +492,8 @@ namespace AsControls
             //v.YMIN = -(v.TLMIN) * H;
             //v.TLMIN = 0;//doc_.tln()
             var tuple = l(udScr_tl_, udScr_vrl_);
-            int tmpYMIN = -(tuple.trn + udScr_vrl_ * H);
-            int tmpTLMIN = tuple.tl;
+            int tmpYMIN = -(tuple.t2 + udScr_vrl_) * H;
+            int tmpTLMIN = tuple.t1;
 
             // 作業用変数１
             //Win32API.RECT a = new Win32API.RECT { left = 0, top = v.YMIN, right = 0, bottom = v.YMIN + p.H() };
@@ -558,7 +558,7 @@ namespace AsControls
                             if (ci < 0) {
                                 p.DrawText(g, s, color, x + v.XBASE, a.top);
                                 if (ruls[attri].attr.isimage && i==ruls[attri].ad && DrawEventHandler != null) {
-                                    DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x, a.top+H);
+                                    DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
                                 }
                                 x += p.CalcStringWidth(s);
                                 i += s.Length;
@@ -581,6 +581,9 @@ namespace AsControls
                                         default:
                                             //string s2 = s.Substring(i2, ci - i2);
                                             p.DrawText(g, ps, color, x + v.XBASE, a.top);
+                                            if (ruls[attri].attr.isimage && i == ruls[attri].ad && DrawEventHandler != null) {
+                                                DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
+                                            }
                                             x += p.CalcStringWidth(ps);
                                             break;
                                     }
@@ -608,6 +611,9 @@ namespace AsControls
                             string s = str.Substring(attrindex, end - attrindex);
                             //string s = str.Substring(attrindex, end);
                             p.DrawText(g, s, color, x + v.XBASE, a.top);
+                            if (ruls[attri].attr.isimage && i == ruls[attri].ad && DrawEventHandler != null) {
+                                DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
+                            }
                             //nextlen = attrlen - (end - attrindex);
                             x += p.CalcStringWidth(s);
                             i += s.Length;

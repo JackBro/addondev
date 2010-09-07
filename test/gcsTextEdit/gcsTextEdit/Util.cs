@@ -5,6 +5,17 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AsControls {
+
+    public class Tuple<T1, T2> {
+        public T1 t1;
+        public T2 t2;
+
+        public Tuple(T1 t1, T2 t2) {
+            this.t1 = t1;
+            this.t2 = t2;
+        }
+    }
+    
     public static class Util {
 
         public static bool isHighSurrogate(char ch) {
@@ -22,10 +33,6 @@ namespace AsControls {
         public static VPos Min(VPos x, VPos y) {
             return (x<y ? x : y);
         }
-
-        //public static bool IsSeparator(string str) {
-        //    return Regex.IsMatch(str, "^[a-zA-Z]+$");
-        //}
 
         public static bool IsAlphabet(string str) {
             return Regex.IsMatch(str, "^[a-zA-Z]+$");

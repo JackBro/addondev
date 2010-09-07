@@ -8,15 +8,8 @@ underline
 wavline
 solidline
 keybind
-copy
-paste
-cut
 selrect
 selall
-ime pos
-home
-end
-delete
 prop text
 prop wrap
 prop readonly
