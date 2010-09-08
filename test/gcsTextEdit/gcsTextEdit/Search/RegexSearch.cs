@@ -5,6 +5,10 @@ using System.Text;
 
 namespace AsControls {
     class RegexSearch : ISearch {
+
+        public RegexSearch() {
+        }
+
         #region ISearch メンバ
 
         public bool Search(string str, int len, int stt, ref int mbg, ref int med) {
