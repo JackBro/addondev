@@ -20,15 +20,26 @@ namespace AsControls {
         Parser.Parser parser;
 
 
-        //
+        /// <summary>
+        /// テキストの行数
+        /// </summary>
+        /// <returns></returns>
         public int tln () {
             return text_.Count; //LineList.Count;
         }
-        //
+        /// <summary>
+        /// i行目のテキストの長さ取得
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
         public int len(int i) {
             return text_[i].Length;
         }
-        //
+        /// <summary>
+        /// i行目のテキストの取得
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
         public IBuffer tl(int i) {
             return text_[i].Text;
         }

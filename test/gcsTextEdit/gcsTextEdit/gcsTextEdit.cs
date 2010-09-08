@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace AsControls {
 
-    public delegate Action<object, WrapType> WrapModeChangeEventHandler(object sender, WrapType wrapMode);
+    //public delegate Action<object, WrapType> WrapModeChangeEventHandler(object sender, WrapType wrapMode);
     //public delegate void LinkClickEventHandler(object sender, CEventArgs e);
 
     public class LinkClickEventArgs : EventArgs {
@@ -132,10 +132,17 @@ namespace AsControls {
         public int cy() { return cvs_.zone().Bottom; }
         //
         private Document doc_;
+        public Document Document {
+            get { return this.doc_; }
+        }
         //
         public Painter fnt() { return cvs_.getPainter(); }
         //
         private Cursor cur_;
+
+        public Cursor cursor {
+            get { return cur_; }
+        }
         //
         public enum ReDrawType {
             /// <summary>
@@ -193,10 +200,10 @@ namespace AsControls {
 
             this.ImeMode = ImeMode.Off;
             imeComposition = new Ime(this);
-            imeComposition.ImeCompositedHira += new Ime.ImeEventHandler(imeComposition_ImeCompositedHira);
-            imeComposition.ImeCompositedKata += new Ime.ImeEventHandler(imeComposition_ImeCompositedKata);
+            //imeComposition.ImeCompositedHira += new Ime.ImeEventHandler(imeComposition_ImeCompositedHira);
+            //imeComposition.ImeCompositedKata += new Ime.ImeEventHandler(imeComposition_ImeCompositedKata);
 
-            this.HandleDestroyed += new EventHandler(AsTextEdit_HandleDestroyed);
+            //this.HandleDestroyed += new EventHandler(AsTextEdit_HandleDestroyed);
             this.LostFocus += (sender, e) => {
                 cur_.on_killfocus();
             };
@@ -233,7 +240,7 @@ namespace AsControls {
             config.setFont(this.Font);
             cvs_ = new Canvas(this, config);
             cur_ = new Cursor(this, doc_, new Caret(this.Handle));
-            base.AllowDrop = true;
+            //base.AllowDrop = true;
 
             //KeyBind.SetAction("cmd_Undo", delegate(object obj)
             //{
@@ -292,19 +299,6 @@ namespace AsControls {
             //base.Invalidate();
         }
 
-        void AsTextEdit_HandleDestroyed(object sender, EventArgs e) {
-            //deleteDraw();
-        }
-
-        void imeComposition_ImeCompositedKata(object sender, Ime.ImeCompositionEventArgs e) {
-            //Input(e.InputString);
-        }
-
-        void imeComposition_ImeCompositedHira(object sender, Ime.ImeCompositionEventArgs e) {
-            //Input(e.InputString);
-            //base.Invalidate();
-        }
-
         public new void Dispose() {
             Dispose(true);
 
@@ -354,9 +348,6 @@ namespace AsControls {
         protected override void OnMouseWheel(MouseEventArgs e) {
             base.OnMouseWheel(e);
             int dy = -e.Delta / 120;
-            //ScUpDown(dy);
-            //UpdateCaretPos();
-            //base.Invalidate();
             UpDown(dy * 3, false);
         }
 
@@ -501,51 +492,6 @@ namespace AsControls {
         }
 
         protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e) {
-            //switch (e.KeyCode) {
-            //    case Keys.Enter:
-            //        //string ss = e.KeyValue.;
-            //        Input("\r\n");
-            //        //base.Invalidate();
-            //        break;
-            //    case Keys.Tab:
-            //        Input("\t");
-            //        //base.Invalidate();
-            //        break;
-            //    case Keys.Back:
-            //        DelBack();
-            //        //base.Invalidate();
-            //        break;
-            //    case Keys.Delete:
-            //        Del();
-            //        break;
-            //    case Keys.Right:
-            //        ConvDPosToVPos(CaretRight(1), ref cur);
-            //        MoveTo(e.Shift);
-            //        base.Invalidate();
-            //        break;
-            //    case Keys.Left:
-            //        ConvDPosToVPos(CaretLeft(1), ref cur);
-            //        MoveTo(e.Shift);
-            //        base.Invalidate();
-            //        break;
-            //    case Keys.Down:
-            //        Ud(1, e.Shift);
-            //        MoveTo(e.Shift);
-            //        base.Invalidate();
-            //        break;
-            //    case Keys.Up:
-            //        Ud(-1, e.Shift);
-            //        MoveTo(e.Shift);
-            //        base.Invalidate();
-            //        break;
-            //    case Keys.Home:
-            //        Home();
-            //        base.Invalidate();
-            //        break;
-            //    //default:
-            //    //    return base.IsInputKey(keyData);
-            //}
-
             KeyBind.getAction(e.Modifiers | e.KeyCode)(this);
             base.OnPreviewKeyDown(e);
         }
@@ -685,8 +631,6 @@ namespace AsControls {
             //}
         }
 
- 
-
         protected override void OnMouseEnter(EventArgs e) {
             //Cursor = Cursors.IBeam;
             base.OnMouseEnter(e);
@@ -805,7 +749,6 @@ namespace AsControls {
                 break;
 	        }
         }
-        //
 
 
         #region ITextEditor メンバ
