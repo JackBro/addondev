@@ -19,10 +19,10 @@ namespace AsControls {
         void Home(bool wide, bool select);
         void End(bool wide, bool select);
 
-        //bool CanUndo();
-        //bool CanRedo();
-        //void Undo();
-        //void Redo();
+        bool CanUndo();
+        bool CanRedo();
+        void Undo();
+        void Redo();
 
         //string getSelectText();
 

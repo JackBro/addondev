@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace AsControls
 {
-    public interface IBuffer
+    public interface IText
     {
         int Length
         {
@@ -27,8 +27,8 @@ namespace AsControls
         void Insert(int startIndex, string value);
         void Remove(int startIndex, int count);
         void Remove(int startIndex);
-        IBuffer Substring(int startIndex, int count);
-        IBuffer Substring(int startIndex);
+        IText Substring(int startIndex, int count);
+        IText Substring(int startIndex);
         void Replace(string oldValue, string newValue);
     }
 }

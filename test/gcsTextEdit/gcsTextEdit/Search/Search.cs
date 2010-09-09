@@ -125,7 +125,8 @@ namespace AsControls
                     //) );
 
                     //edit.Document.Replace(b, e, replstr);
-                    edit.Document.Replace(new VPos(b), new VPos(e), replstr);
+                    //edit.Document.Replace(new VPos(b), new VPos(e), replstr);
+                    edit.Document.Execute(new Replace(b, e, replstr));
 			        //replStr_.FreeWCMem( ustr );
 
                     if (FindNextFromImpl(new DPos(b.tl, b.ad + replstr.Length), ref b, ref e))

@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace AsControls {
-    interface ICommand {
-        event TextUpdateEventHandler TextUpdate;
+    public interface ICommand {
         ICommand Execute(Document doc);
     }
 }

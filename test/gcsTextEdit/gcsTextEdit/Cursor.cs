@@ -207,9 +207,9 @@ namespace AsControls
 
             state = State.none;
 
-            this.doc_.TextUpdateEvent += (s, e, e2) => {
-                this.on_text_update(s, e, e2, true);
-            };
+            //this.doc_.TextUpdateEvent += (s, e, e2) => {
+            //    this.on_text_update(s, e, e2, true);
+            //};
 
             this.view_.PreviewKeyDown += (sender, e) => {
 
@@ -382,7 +382,7 @@ namespace AsControls
             }
 
             // x座標決定にかかる
-            IBuffer str = doc_.tl(np.tl);
+            IText str = doc_.tl(np.tl);
 
             // 右寄せになってる。不自然？
             np.ad = (np.rl == 0 ? 0 : view_.rlend(np.tl, np.rl - 1) + 1);
@@ -519,10 +519,11 @@ namespace AsControls
             if (cur_ == sel_)
                 //doc_.Execute( Insert( cur_, str, len ) );
                 //doc_.Insert(cur_, sel_, str);
-                doc_.Insert(cur_, sel_, str);
+                doc_.Execute(new Insert(cur_,str));
             else
                 //doc_.Execute(Replace(cur_, sel_, str, len));
-                doc_.Replace(cur_, sel_, str);
+                //doc_.Replace(cur_, sel_, str);
+                doc_.Execute(new Replace(cur_, sel_, str));
         }
 
         public void Input( char str, int len )
@@ -559,7 +560,8 @@ namespace AsControls
                 VPos vp = new VPos();
                 vp.ad = dp.ad;
                 vp.tl = dp.tl;
-                doc_.Delete(cur_, vp, out del);
+                //doc_.Delete(cur_, vp, out del);
+                doc_.Execute(new Delete(cur_, dp));
             }
         }
 
@@ -729,7 +731,8 @@ namespace AsControls
         {
             string text = Clipboard.GetText();
             if (text != null) {
-                doc_.Replace(cur_, sel_, text);
+                //doc_.Replace(cur_, sel_, text);
+                doc_.Execute(new Replace(cur_, sel_, text));
             }
         }
     }

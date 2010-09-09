@@ -10,9 +10,12 @@ using AsControls.Parser;
 
 namespace AsControls {
 
-    //public delegate Action<object> ChangeScrollEventHandler(object sender);
+    //public class Document : IDocument {
+    public class Document {
+        public event TextUpdateEventHandler TextUpdate;
 
-    public class Document : IDocument {
+        //private UndoManager undoManager;
+        public UndoManager UndoManager { get; private set; }
 
         //
         private List<Line> text_;
@@ -40,7 +43,7 @@ namespace AsControls {
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
-        public IBuffer tl(int i) {
+        public IText tl(int i) {
             return text_[i].Text;
         }
 
@@ -59,15 +62,20 @@ namespace AsControls {
         public void Clear() {
             text_.Clear();
             text_.Add(new Line(""));
-            undoManager.Clear();
+            UndoManager.Refresh();
         }
         
         public Document() {
 
             parser = new AsControls.Parser.Parser();
+            UndoManager = new UndoManager(this);
 
             text_ = new List<Line>();
             text_.Add( new Line("") ); // 最初は一行だけ
+        }
+
+        public void Fire_TEXTUPDATE(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd) {
+            TextUpdate(s, e, e2, reparsed, nmlcmd);
         }
 
         public DPos leftOf(DPos dp, bool wide) {
@@ -147,8 +155,10 @@ namespace AsControls {
 
         private bool ReParse(int startrl, int endrl) {
             for (int i = startrl; i <= endrl; i++) {
-                var rules = parser.parseLine(text_[i].Text.ToString());
-                text_[i].Rules = rules;
+                if (text_.Count > i) {
+                    var rules = parser.parseLine(text_[i].Text.ToString());
+                    text_[i].Rules = rules;
+                }
             }
 
             return false;
@@ -233,13 +243,11 @@ namespace AsControls {
             return ReParse(s.tl, e.tl);
         }
 
-        private void Replace(ref VPos s, ref VPos e, ref VPos e2, out string oldValue, string newValue) {
-
-            Delete(ref s, ref e, out oldValue);
-            Insert(ref s, ref e2, newValue);
-
-            ReParse(s.tl, e2.tl);
-        }
+        //private void Replace(ref VPos s, ref VPos e, ref VPos e2, out string oldValue, string newValue) {
+        //    Delete(ref s, ref e, out oldValue);
+        //    Insert(ref s, ref e2, newValue);
+        //    ReParse(s.tl, e2.tl);
+        //}
 
         private void CorrectPos(ref VPos pos) {
             // 正常範囲に収まるように修正
@@ -303,7 +311,7 @@ namespace AsControls {
 
         public string getText(DPos s, DPos e)
         {
-            IBuffer buff;
+            IText buff;
 	        if( s.tl == e.tl )
 	        {
 		        // 一行だけの場合
@@ -372,53 +380,55 @@ namespace AsControls {
             //urdo_.NewlyExec(cmd, doc_);
             //if (b != urdo_.isModified())
             //    Fire_MODIFYFLAGCHANGE();
+            var c = cmd.Execute(this);
+            UndoManager.Invoke(c);
 
         }
 
-        #region IDocument メンバ
-        public event TextUpdateEventHandler TextUpdateEvent;
-        private UndoManager undoManager = new UndoManager();
-        public UndoManager UndoManager {
-            get { return undoManager; }
-        }
+        //#region IDocument メンバ
+        //public event TextUpdateEventHandler TextUpdateEvent;
+        //private UndoManager undoManager = new UndoManager();
+        //public UndoManager UndoManager {
+        //    get { return undoManager; }
+        //}
 
-        public void Insert(VPos s, VPos e, string text) {
-            Insert(ref s, ref e, text);
+        //public void Insert(VPos s, VPos e, string text) {
+        //    Insert(ref s, ref e, text);
 
-            if (UndoManager.AcceptChanges) {
-                UndoManager.Push(new UndoInsert(this, s, e, text));
-            }
-            if (TextUpdateEvent != null) {
-                TextUpdateEvent(new VPos(s), new VPos(s), e);
-            }
-        }
+        //    if (UndoManager.AcceptChanges) {
+        //        UndoManager.Push(new UndoInsert(this, s, e, text));
+        //    }
+        //    if (TextUpdateEvent != null) {
+        //        TextUpdateEvent(new VPos(s), new VPos(s), e);
+        //    }
+        //}
 
-        public void Delete(VPos s, VPos e, out string deltext) {
-            string buff;
-            Delete(ref s, ref e, out buff);
-            deltext = buff;
+        //public void Delete(VPos s, VPos e, out string deltext) {
+        //    string buff;
+        //    Delete(ref s, ref e, out buff);
+        //    deltext = buff;
 
-            if (UndoManager.AcceptChanges) {
-                UndoManager.Push(new UndoDelete(this, s, s, buff));
-            }
-            if (TextUpdateEvent != null) {
-                TextUpdateEvent(new VPos(s), e, new VPos(s));
-            }
-        }
+        //    if (UndoManager.AcceptChanges) {
+        //        UndoManager.Push(new UndoDelete(this, s, s, buff));
+        //    }
+        //    if (TextUpdateEvent != null) {
+        //        TextUpdateEvent(new VPos(s), e, new VPos(s));
+        //    }
+        //}
 
-        public void Replace(VPos s, VPos e, string newValue) {
-            string oldvalue;
-            VPos e2 = new VPos();
-            Replace(ref s, ref e, ref e2, out oldvalue, newValue);
+        //public void Replace(VPos s, VPos e, string newValue) {
+        //    string oldvalue;
+        //    VPos e2 = new VPos();
+        //    Replace(ref s, ref e, ref e2, out oldvalue, newValue);
 
-            if (UndoManager.AcceptChanges) {
-                UndoManager.Push(new UndoReplace(this, s, e, e2, oldvalue, newValue));
-            }
-            if (TextUpdateEvent != null) {
-                TextUpdateEvent(new VPos(s), e, new VPos(e2));
-            }
-        }
+        //    if (UndoManager.AcceptChanges) {
+        //        UndoManager.Push(new UndoReplace(this, s, e, e2, oldvalue, newValue));
+        //    }
+        //    if (TextUpdateEvent != null) {
+        //        TextUpdateEvent(new VPos(s), e, new VPos(e2));
+        //    }
+        //}
 
-        #endregion
+        //#endregion
     }
 }

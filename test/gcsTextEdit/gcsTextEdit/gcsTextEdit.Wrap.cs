@@ -381,7 +381,7 @@ namespace AsControls
 
             // 次に、横位置を計算
             if (rl < wrap_[tl].rln()) {
-                IBuffer buf = doc_.tl(tl);
+                IText buf = doc_.tl(tl);
                 int adend = rlend(tl, rl);
                 int ad = (rl == 0 ? 0 : rlend(tl, rl - 1));
                 int vx = (rl == 0 ? 0 : fnt().CalcStringWidth(buf.Substring(ad++, 1).ToString())); //TODO

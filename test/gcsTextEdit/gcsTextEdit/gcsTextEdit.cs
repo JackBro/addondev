@@ -244,7 +244,10 @@ namespace AsControls {
             KeyBind = new KeyMap();
 
             doc_ = new Document();
-            doc_.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
+            //doc_.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
+            doc_.TextUpdate += (s, e, e2, reparsed, nmlcmd) => {
+                on_text_update(s, e, e2, reparsed, nmlcmd);
+            };
             //
             Config config = new Config();
             //config.setFontInfo(this.Font.Name, this.Font.Size);
@@ -296,19 +299,23 @@ namespace AsControls {
 
         internal Rectangle getClientRect() {
             return this.ClientRectangle;
-            //throw new NotImplementedException();
+            ////throw new NotImplementedException();
             //Rectangle crect = this.ClientRectangle;
-            ////Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height-hScrollBar.Height));
-            //Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height - hScrollBar.Height));
-            //return EditorPanel.ClientRectangle;
+            //////Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height-hScrollBar.Height));
+            //int w = crect.Width - vScrollBar.Width;
+            //int h = crect.Height - hScrollBar.Height;
+            //w = w > 0 ? w : 0;
+            //h = h > 0 ? h : 0;
+            //Size size = new Size(w, h);
+            //Rectangle rec = new Rectangle(crect.Location, size);
+            //return rec;
         }
 
-        void doc_TextUpdateEvent(VPos s, VPos e, VPos e2) {
-            //UpDate(s, e, e2);
-            on_text_update(s, e, e2, true, true);
-            
-            //base.Invalidate();
-        }
+        //void doc_TextUpdateEvent(VPos s, VPos e, VPos e2) {
+        //    //UpDate(s, e, e2);
+        //    on_text_update(s, e, e2, true, true);       
+        //    //base.Invalidate();
+        //}
 
         public new void Dispose() {
             Dispose(true);
@@ -521,6 +528,11 @@ namespace AsControls {
             
             Painter p = cvs_.getPainter();
             vRect.rc = e.ClipRectangle;
+            
+            //Size size = new Size(e.ClipRectangle.Width-16,e.ClipRectangle.Height );
+            //vRect.rc = new Rectangle(e.ClipRectangle.Location, size);
+            //e.Graphics.SetClip(new Rectangle(new Point(0,0), size));
+
             GetDrawPosInfo(ref vRect);
 
             if (e.ClipRectangle.Right <= lna()) {
@@ -532,9 +544,9 @@ namespace AsControls {
             } else {
                 // case C: 両方更新
                 DrawLNA(e.Graphics, vRect, p);
-                p.SetClip(cvs_.zone());
+                //p.SetClip(cvs_.zone());
                 DrawTXT3(e.Graphics, vRect, p);
-                p.ClearClip();
+                //p.ClearClip();
             }
         }
 
@@ -807,7 +819,23 @@ namespace AsControls {
         public void End(bool wide, bool select) {
             cur_.End(wide, select);
         }
-        
+
+        public bool CanUndo() {
+            throw new NotImplementedException();
+        }
+
+        public bool CanRedo() {
+            throw new NotImplementedException();
+        }
+
+        public void Undo() {
+            doc_.UndoManager.Undo();
+        }
+
+        public void Redo() {
+            doc_.UndoManager.Redo();
+        }
+
         #endregion
     }
 }

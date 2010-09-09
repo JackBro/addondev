@@ -78,6 +78,14 @@ namespace test
                 editor.End(true, true);
             });
 
+            csedit.KeyBind.setAction(Keys.Control | Keys.Z, (editor) => {
+                editor.Undo();
+            });
+
+            csedit.KeyBind.setAction(Keys.Control | Keys.Y, (editor) => {
+                editor.Redo();
+            });
+
             //csedit.LinkClickEventHandler += (sender, e) => {
             //    MessageBox.Show(e.Link);
             //};

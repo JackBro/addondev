@@ -59,16 +59,16 @@ namespace AsControls {
             vScrollBar.SmallChange = 1;
             //vScrollBar.SmallChange = cvs_.getPainter().H();
             vScrollBar.LargeChange = vScrollBar.nPage;
-
-            //EditorPanel.Top = 0;
-            //EditorPanel.Left = 0;
-            //EditorPanel.Width = this.Width - vScrollBar.Width;
-            //EditorPanel.Height = this.Height - hScrollBar.Height;
 	        
             // 横スクロールが起きたらtrue
             return (prevRlPos != hScrollBar.Value);
         }
-        //
+
+        /// <summary>
+        /// 論理行から表示行数を取得
+        /// </summary>
+        /// <param name="tl"></param>
+        /// <returns></returns>
         int tl2vl(int tl) {
             if (vln() == doc_.tln())
                 return tl;
@@ -78,6 +78,7 @@ namespace AsControls {
                 vl += rln(i);
             return vl;
         }
+
         //
         void ForceScrollTo(int tl) {
             vScrollBar.Value = tl2vl(tl);

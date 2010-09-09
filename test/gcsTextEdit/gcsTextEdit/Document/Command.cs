@@ -15,7 +15,6 @@ namespace AsControls {
         }
 
         #region ICommand メンバ
-        public event TextUpdateEventHandler TextUpdate;
 
         public ICommand Execute(Document doc) {
 
@@ -26,7 +25,7 @@ namespace AsControls {
 
             // イベント発火
             //doc.Fire_TEXTUPDATE(s, s, e, aa, true);
-            TextUpdate(s, s, e, aa, true);
+            doc.Fire_TEXTUPDATE(s, s, e, aa, true);
 
             // 逆操作オブジェクトを返す
             return new Delete(s, e);
@@ -45,8 +44,6 @@ namespace AsControls {
         }
 
         #region ICommand メンバ
-
-        public event TextUpdateEventHandler TextUpdate;
 
         public ICommand Execute(Document doc) {
             //DocImpl & di = d.impl();
@@ -67,6 +64,8 @@ namespace AsControls {
             DPos s = new DPos(stt_);
             DPos e = new DPos(end_);
             bool aa = doc.DeletingOperation(ref s, ref e, out buf);
+            //TextUpdate(s, e, s, aa, true);
+            doc.Fire_TEXTUPDATE(s, e, s, aa, true);
 
             return new Insert(s, buf);
         }
@@ -86,8 +85,6 @@ namespace AsControls {
         }
 
         #region ICommand メンバ
-
-        public event TextUpdateEventHandler TextUpdate;
 
         public ICommand Execute(Document doc) {
             //DocImpl & di = d.impl();
@@ -115,6 +112,8 @@ namespace AsControls {
 
             DPos e2 = new DPos();
             aa = (doc.InsertingOperation(ref s, buf_, ref e2) || aa);
+
+            doc.Fire_TEXTUPDATE(s, e, e2, aa, true);
 
             return new Replace(s, e2, buf);
         }

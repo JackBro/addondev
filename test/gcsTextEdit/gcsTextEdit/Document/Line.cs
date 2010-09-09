@@ -8,15 +8,17 @@ namespace AsControls
 {
     public class Line
     {
-        private IBuffer text;
+        private IText text;
         private List<Rule> rules;
+        public bool IsBlockOnly { get; set; }
+        public bool IsImageExist { get; set; }
 
         public List<Rule> Rules {
             get { return rules; }
             set { rules = value; }
         }
 
-        public IBuffer Text
+        public IText Text
         {
             get { return text; }
         }
