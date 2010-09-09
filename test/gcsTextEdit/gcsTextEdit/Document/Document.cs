@@ -156,7 +156,7 @@ namespace AsControls {
         private bool ReParse(int startrl, int endrl) {
             for (int i = startrl; i <= endrl; i++) {
                 if (text_.Count > i) {
-                    var rules = parser.parseLine(text_[i].Text.ToString());
+                    var rules = parser.Parse(text_[i].Text.ToString());
                     text_[i].Rules = rules;
                 }
             }

@@ -53,7 +53,7 @@ namespace AsControls.Parser {
             //};
         }
 
-        public List<Rule> parseLine(string line) {
+        public List<Rule> Parse(string line) {
             token = TokenType.TXT;
             //int lexoffset = 0;
 

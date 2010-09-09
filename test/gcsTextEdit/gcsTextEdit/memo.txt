@@ -11,9 +11,7 @@ replace
 underline
 wavline
 solidline
-keybind
 selrect
-selall
 prop text
 prop wrap
 prop readonly

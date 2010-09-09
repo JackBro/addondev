@@ -125,19 +125,6 @@ namespace AsControls.Parser {
         }
     }
 
-    class KeywordElement : Element {
-        public KeywordElement(string start, Attribute attr) {
-            this.start = start;
-            this.attr = attr;
-            token = TokenType.Keyword;
-        }
-
-        public override int exer(Lexer lex) {
-            return lex.reader.offset();
-        }
-    }
-
-
     //##name
     class ImageElement : EncloseElement {
 
@@ -148,6 +135,22 @@ namespace AsControls.Parser {
             this.end = end;
             this.attr = attr;
             token = TokenType.Image;
+        }
+    }
+
+    class BlockElement : Element {
+
+    }
+
+    class KeywordElement : Element {
+        public KeywordElement(string start, Attribute attr) {
+            this.start = start;
+            this.attr = attr;
+            token = TokenType.Keyword;
+        }
+
+        public override int exer(Lexer lex) {
+            return lex.reader.offset();
         }
     }
 

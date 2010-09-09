@@ -469,10 +469,8 @@ namespace AsControls
                 if (upsize - rn * H <= 0) {
                     break;
                 }
-                //upsize -= rln(start) * H;
             }
             
-            //return start;
             return new Tuple<int, int>(start, rn );
         }
 
