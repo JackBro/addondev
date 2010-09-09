@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace AsControls {
-    interface ISearch {
+    public interface ISearch {
 
         /// <summary>
         /// 検索を行う

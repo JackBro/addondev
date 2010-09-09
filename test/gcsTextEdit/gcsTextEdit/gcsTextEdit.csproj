@@ -54,6 +54,8 @@
     <Compile Include="Control\GcsScrollBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Document\ICommand.cs" />
+    <Compile Include="Document\Command.cs" />
     <Compile Include="gcsTextEdit.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -77,6 +79,7 @@
     <Compile Include="Parser\Lexer.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\NormalSearch.cs" />
     <Compile Include="Search\Search.cs" />
     <Compile Include="Search\ISearch.cs" />
     <Compile Include="Search\RegexSearch.cs" />

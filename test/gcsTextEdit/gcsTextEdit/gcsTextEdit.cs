@@ -13,6 +13,17 @@ namespace AsControls {
     //public delegate Action<object, WrapType> WrapModeChangeEventHandler(object sender, WrapType wrapMode);
     //public delegate void LinkClickEventHandler(object sender, CEventArgs e);
 
+    /// <summary>
+    /// テキスト内容が変更されたときに発生
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="s">変更範囲の先頭</param>
+    /// <param name="e">変更範囲の終端(前)</param>
+    /// <param name="e2">変更範囲の終端(後)</param>
+    /// <param name="reparsed">e2より後ろのコメントアウト状態が変化していたらtrue</param>
+    /// <param name="nmlcmd">挿入/削除/置換ならtrue、ファイル開き/全置換ならfalse</param>
+    public delegate void TextUpdateEventHandler(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd );
+
     public class LinkClickEventArgs : EventArgs {
         private Point location;
         public string Link { get; private set; }

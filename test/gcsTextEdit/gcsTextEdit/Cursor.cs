@@ -65,8 +65,12 @@ namespace AsControls
 
         public DPos() { }
         public DPos( int tl, int ad) {
-            this.ad = ad;
             this.tl = tl;
+            this.ad = ad;
+        }
+        public DPos(DPos dp) {
+            this.tl = dp.tl;
+            this.ad = dp.ad;
         }
 
         public override bool Equals(object obj) {
@@ -133,13 +137,18 @@ namespace AsControls
         }
         
         public VPos() {
-            ad = 0; tl = 0;
+            tl = 0; ad = 0; 
             vl = 0; rl = 0; vx = 0; rx = 0; 
         }
 
         public VPos(VPos vp) {
-            ad = vp.ad; tl = vp.tl;
+            tl = vp.tl; ad = vp.ad;
             vl = vp.vl; rl = vp.rl; vx = vp.vx; rx = vp.rx;
+        }
+
+        public VPos(DPos dp) {
+            tl = dp.tl; ad = dp.ad; 
+            vl = 0; rl = 0; vx = 0; rx = 0; 
         }
     }
 
@@ -294,6 +303,7 @@ namespace AsControls
                 Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), sp.Y, Math.Min(RHT, ep.X - sp.X), view_.fnt().H());
                 view_.Invalidate(rc, false);
 		        //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
+                Console.WriteLine("Rectangle sp.Y == ep.Y");
 	        }
 	        else
 	        {
@@ -508,6 +518,7 @@ namespace AsControls
         {
             if (cur_ == sel_)
                 //doc_.Execute( Insert( cur_, str, len ) );
+                //doc_.Insert(cur_, sel_, str);
                 doc_.Insert(cur_, sel_, str);
             else
                 //doc_.Execute(Replace(cur_, sel_, str, len));

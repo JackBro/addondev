@@ -202,5 +202,15 @@ namespace AsControls
                 undostack.Push(command);
             }
         }
+
+        public bool Invoke(ICommand command) {
+        }
+
+        public void Undo() {
+        }
+        public void Redo() {
+        }
+        public void Refresh() {
+        }
     }
 }

@@ -10,7 +10,7 @@ using AsControls.Parser;
 
 namespace AsControls {
 
-    public delegate Action<object> ChangeScrollEventHandler(object sender);
+    //public delegate Action<object> ChangeScrollEventHandler(object sender);
 
     public class Document : IDocument {
 
@@ -145,25 +145,28 @@ namespace AsControls {
             return linenum == text_.Count - 1 ? true : false;
         }
 
-        private void MultiParse(int startrl, int endrl) {
+        private bool ReParse(int startrl, int endrl) {
             for (int i = startrl; i <= endrl; i++) {
                 var rules = parser.parseLine(text_[i].Text.ToString());
                 text_[i].Rules = rules;
             }
+
+            return false;
         }
 
-        private void Insert(ref VPos s, ref VPos e, string text) {
+        //private void Insert(ref VPos s, ref VPos e, string text) {
+        public bool InsertingOperation(ref DPos s, string text, ref DPos e) {
             // 位置補正
-            DPos cs = s as DPos;
-            CorrectPos(ref cs);
+            //DPos cs = s as DPos;
+            CorrectPos(ref s);
 
             e.ad = s.ad;
             e.tl = s.tl;
 
-            int lineLen = 0;
-
-            // 一行目…
             string[] lines = SplitLine(text);
+
+            int lineLen = 0;
+            // 一行目…
             text_[e.tl].Text.Insert(e.ad, lines[0]);
             lineLen = lines[0].Length;
             e.ad += lineLen;
@@ -189,10 +192,11 @@ namespace AsControls {
                 e.ad = lineLen;
             }
 
-            MultiParse(s.tl, e.tl);
+            return ReParse(s.tl, e.tl);
         }
 
-        private void Delete(ref VPos s, ref VPos e, out string buff) {
+        //private void Delete(ref VPos s, ref VPos e, out string buff) {
+        public bool DeletingOperation(ref DPos s, ref DPos e, out string undobuf){
             // 位置補正
             CorrectPos(ref s);
             CorrectPos(ref e);
@@ -204,7 +208,7 @@ namespace AsControls {
             // Undo操作用バッファ確保
             //undobuf = new unicode[undosiz + 1];
             //getText(undobuf, s, e);
-            buff = getText(s, e);
+            undobuf = getText(s, e);
 
             // 削除る
             if (s.tl == e.tl) {
@@ -226,7 +230,7 @@ namespace AsControls {
 
             // 再解析
             //highlighter.Parse(text_[s.tl].Text, text_[s.tl].AttributeList);
-            MultiParse(s.tl, e.tl);
+            return ReParse(s.tl, e.tl);
         }
 
         private void Replace(ref VPos s, ref VPos e, ref VPos e2, out string oldValue, string newValue) {
@@ -234,7 +238,7 @@ namespace AsControls {
             Delete(ref s, ref e, out oldValue);
             Insert(ref s, ref e2, newValue);
 
-            MultiParse(s.tl, e2.tl);
+            ReParse(s.tl, e2.tl);
         }
 
         private void CorrectPos(ref VPos pos) {
@@ -361,6 +365,14 @@ namespace AsControls {
                 s = s != 0 ? ++s : s;
                 return new DPos(dp.tl, s);
 	        }
+        }
+
+        public void Execute(ICommand cmd) {
+            //bool b = urdo_.isModified();
+            //urdo_.NewlyExec(cmd, doc_);
+            //if (b != urdo_.isModified())
+            //    Fire_MODIFYFLAGCHANGE();
+
         }
 
         #region IDocument メンバ
