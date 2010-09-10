@@ -11,7 +11,7 @@ namespace AsControls
         private IText text;
         private List<Rule> rules;
         public bool IsBlockOnly { get; set; }
-        public bool IsImageExist { get; set; }
+        //public bool IsImageExist { get; set; }
 
         public List<Rule> Rules {
             get { return rules; }

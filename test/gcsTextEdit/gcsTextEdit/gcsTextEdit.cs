@@ -10,9 +10,6 @@ using System.Threading;
 
 namespace AsControls {
 
-    //public delegate Action<object, WrapType> WrapModeChangeEventHandler(object sender, WrapType wrapMode);
-    //public delegate void LinkClickEventHandler(object sender, CEventArgs e);
-
     /// <summary>
     /// テキスト内容が変更されたときに発生
     /// </summary>
@@ -46,7 +43,7 @@ namespace AsControls {
 
     public partial class gcsTextEdit : Control, ITextEditor {
 
-        public event EventHandler<LinkClickEventArgs> LinkClickEventHandler;
+        public event EventHandler<LinkClickEventArgs> LinkClick;
 
         private class VDrawInfo {
             public Rectangle rc;
@@ -155,7 +152,7 @@ namespace AsControls {
             get { return cur_; }
         }
         //
-        public enum ReDrawType {
+        internal enum ReDrawType {
             /// <summary>
             /// 行番号ゾーンのみ
             /// </summary>
@@ -174,6 +171,16 @@ namespace AsControls {
             ALL 
         }
 
+
+        //public new Color BackColor {
+        //    get { return base.BackColor; }
+        //    set { }
+        //}
+
+        //public new Font Font {
+        //    get { return base.Font; }
+        //}
+
         public gcsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
@@ -188,7 +195,7 @@ namespace AsControls {
             //showNumLine = true;
             //AutoScroll = true;
 
-
+           
             //initDraw();
             //initWrap();
 
@@ -227,14 +234,14 @@ namespace AsControls {
             this.VisibleChanged += new EventHandler(gcsTextEdit_VisibleChanged);
 
             this.MouseClick += (sender, e) => {
-                if (LinkClickEventHandler != null) {
+                if (LinkClick != null) {
                     VPos vs, ve;
                     cur_.getCurPos(out vs, out ve);
                     var rules = doc_.Rules(vs.tl);
                     foreach (var rule in rules) {
                         if (rule.attr.islink && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
                             string link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
-                            LinkClickEventHandler(this, new LinkClickEventArgs(e, link));
+                            LinkClick(this, new LinkClickEventArgs(e, link));
                             break;
                         }
                     }

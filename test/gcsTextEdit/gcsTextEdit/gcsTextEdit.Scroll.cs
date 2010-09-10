@@ -331,7 +331,7 @@ namespace AsControls {
 	        ScrollView( 0, dy, !thumb );
         }
 
-        public ReDrawType TextUpdate_ScrollBar( DPos s, DPos e, DPos e2 ){
+        internal ReDrawType TextUpdate_ScrollBar( DPos s, DPos e, DPos e2 ){
             int prevUdMax = vScrollBar.Maximum;
 	        bool rlScrolled = ReSetScrollInfo();
             int vl_dif = (vScrollBar.Maximum - prevUdMax);

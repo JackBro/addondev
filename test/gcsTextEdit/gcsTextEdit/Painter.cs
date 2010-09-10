@@ -13,18 +13,18 @@ namespace AsControls {
 
         private IntPtr dc_;
         private IntPtr hwnd_;
-        //private Font font_;
         private Config config_;
 
         private Pen numPen;
         private Brush tabbrush;
         private Brush TextBrush = new SolidBrush(Color.Black);
+        private IntPtr hfont_;
 
-        private IntPtr fint_;
         private int[] widthTable_;
-        //private Dictionary<char, int> widthTableMap_;
-        
-        public int figWidth_;
+
+        private int figWidth_;
+
+        private StringFormat sf = new StringFormat();
 
         private int height_;
         public int H() { return height_; }
@@ -48,7 +48,6 @@ namespace AsControls {
         public int T() { return widthTable_['\t']; }
 	    public int nextTab(int x) { int t=T(); return ((x+4)/t+1)*t; }
         
-        private StringFormat sf = new StringFormat();
         //
         //public int Wc( char ch )
         //{
@@ -56,31 +55,6 @@ namespace AsControls {
         //        ::GetCharWidthW( dc_, ch, ch, widthTable_+ch );
         //    return widthTable_[ ch ];
         //}
-        public int W(char ch ) // 1.08 サロゲートペア回避
-		{
-			//unicode ch = *pch;
-			//if( widthTable_[ ch ] == -1 )
-            if (widthTable_[ch] == 0)
-			{
-                if (Util.isHighSurrogate(ch))
-				{
-                    //Win32API.SIZE sz = new Win32API.SIZE();
-                    //if (Win32API.GetTextExtentPoint32W(dc_, ch.ToString(), 2, ref sz)!=0)
-                    //    return sz.width;
-                    //int w = 0;
-                    //Win32API.GetCharWidthW( dc_, ch, ch, ref w );
-                    //return w;
-                    return CalcStringWidth(ch.ToString());
-				}
-                //int w2 = 0;
-                //Win32API.GetCharWidthW(dc_, ch, ch, ref w2);
-                //widthTable_[ch] = w2;
-
-                int w2 = CalcStringWidth(ch.ToString());
-                widthTable_[ch] = w2;
-			}
-			return widthTable_[ ch ];
-		}
 
         public Painter(IntPtr hwnd, Config config) {
             hwnd_ = hwnd;
@@ -88,7 +62,7 @@ namespace AsControls {
             //Win32API.ReleaseDC
             //widthTableMap_ = new Dictionary<char, int>();
             config_ = config;
-            fint_ = config_.Font.ToHfont();
+            hfont_ = config_.Font.ToHfont();
 
             widthTable_ = new int[65536];
             int s = (int)' ';
@@ -154,6 +128,58 @@ namespace AsControls {
 
             numPen = new Pen(Color.Gray);
             tabbrush = new SolidBrush(Color.Blue);
+        }
+
+        #region IDisposable メンバ
+
+        public void Dispose() {
+            //numPen.Dispose();
+            //tabbrush.Dispose();
+            DeleteObj(numPen);
+            DeleteObj(tabbrush);
+
+            //Marshal.FreeHGlobal(widthPtr);
+            Win32API.ReleaseDC(hwnd_, dc_);
+
+            DeleteObject(hfont_);
+        }
+
+        #endregion
+
+        private void DeleteObject(IntPtr ptr) {
+            if (ptr != IntPtr.Zero) {
+                Win32API.DeleteObject(ptr);
+            }
+        }
+
+        private void DeleteObj(IDisposable obj) {
+            if (obj != null) {
+                obj.Dispose();
+            }
+        }
+
+        public int W(char ch) // 1.08 サロゲートペア回避
+        {
+            //unicode ch = *pch;
+            //if( widthTable_[ ch ] == -1 )
+            if (widthTable_[ch] == 0) {
+                if (Util.isHighSurrogate(ch)) {
+                    //Win32API.SIZE sz = new Win32API.SIZE();
+                    //if (Win32API.GetTextExtentPoint32W(dc_, ch.ToString(), 2, ref sz)!=0)
+                    //    return sz.width;
+                    //int w = 0;
+                    //Win32API.GetCharWidthW( dc_, ch, ch, ref w );
+                    //return w;
+                    return CalcStringWidth(ch.ToString());
+                }
+                //int w2 = 0;
+                //Win32API.GetCharWidthW(dc_, ch, ch, ref w2);
+                //widthTable_[ch] = w2;
+
+                int w2 = CalcStringWidth(ch.ToString());
+                widthTable_[ch] = w2;
+            }
+            return widthTable_[ch];
         }
 
         public void DrawLine(Graphics g, int x1, int y1, int x2, int y2) {
@@ -365,7 +391,7 @@ namespace AsControls {
         //    }
         //}
         private Win32API.SIZE GetTextExtend(string str, int maxwidth, out int fit) {
-            IntPtr OldFont = Win32API.SelectObject(dc_, fint_); //TODO
+            IntPtr OldFont = Win32API.SelectObject(dc_, hfont_); //TODO
             //IntPtr OldFont = Win32API.SelectObject(dc_, config_.Font.ToHfont());
             Win32API.SIZE size = new Win32API.SIZE();
             Win32API.GetTextExtentExPointW(dc_, str, str.Length, maxwidth, out fit, null, out size);
@@ -382,15 +408,6 @@ namespace AsControls {
             Win32API.SelectClipRgn(dc_, IntPtr.Zero);
         }
 
-        #region IDisposable メンバ
 
-        public void Dispose() {
-            numPen.Dispose();
-            tabbrush.Dispose();
-            //Marshal.FreeHGlobal(widthPtr);
-            Win32API.ReleaseDC(hwnd_, dc_);
-        }
-
-        #endregion
     }
 }

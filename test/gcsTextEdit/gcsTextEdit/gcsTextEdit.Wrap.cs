@@ -207,7 +207,13 @@ namespace AsControls
 	        {
 		        if( e.tl != e2.tl ) // 行番号領域再描画の必要があるとき
 			        ReDraw( ReDrawType.LNAREA, null );
-		        ReDraw( t, s );
+
+                //TODO DrawEventHandler
+                if(DrawEventHandler != null){
+                    ReDraw(ReDrawType.AFTER, s);
+                }else{
+		            ReDraw( t, s );
+                }
 	        }
         }
 

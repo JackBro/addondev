@@ -27,13 +27,16 @@ namespace test
             csedit.GotFocus += new EventHandler(csedit_GotFocus);
 
 
-            csedit.KeyBind.setAction(Keys.Back, (editor) => {
-                editor.BackSpace();
-            });
-
             csedit.DrawEventHandler += (g, line, x, y) => {
                 g.DrawImage(image, new Point(x, y));
             };
+
+            csedit.KeyBind.setAction(Keys.Back, (editor) => {
+                editor.BackSpace();
+            });
+            csedit.KeyBind.setAction(Keys.Delete, (editor) => {
+                editor.Delete();
+            });
 
             csedit.KeyBind.setAction(Keys.Up, (editor) => {
                 editor.Up(false, false);

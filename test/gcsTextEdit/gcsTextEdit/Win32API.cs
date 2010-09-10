@@ -15,6 +15,10 @@ namespace AsControls
         [DllImport("user32")]
         public static extern Int32 ReleaseDC(IntPtr hWnd, IntPtr dc);
 
+        [DllImport("GDI32.dll")]
+        public static extern bool DeleteObject(IntPtr objectHandle); 
+
+
         [DllImport("gdi32.dll", EntryPoint = "SelectObject")]
         public static extern IntPtr SelectObject(
             IntPtr hdc,

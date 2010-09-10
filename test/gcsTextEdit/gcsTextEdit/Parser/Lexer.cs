@@ -138,9 +138,9 @@ namespace AsControls.Parser {
         }
     }
 
-    class BlockElement : Element {
+    //class BlockElement : Element {
 
-    }
+    //}
 
     class KeywordElement : Element {
         public KeywordElement(string start, Attribute attr) {

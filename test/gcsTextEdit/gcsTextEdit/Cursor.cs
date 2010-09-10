@@ -303,7 +303,7 @@ namespace AsControls
                 Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), sp.Y, Math.Min(RHT, ep.X - sp.X), view_.fnt().H());
                 view_.Invalidate(rc, false);
 		        //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
-                Console.WriteLine("Rectangle sp.Y == ep.Y");
+                //Console.WriteLine("Rectangle sp.Y == ep.Y");
 	        }
 	        else
 	        {
@@ -554,7 +554,7 @@ namespace AsControls
 	        // でなければ、 cur_ ～ rightOf(cur_) を削除
 	        DPos dp = (cur_==sel_ ? doc_.rightOf(cur_, false) : (DPos)sel_ );
 	        if( cur_ != dp ){
-                string del;
+                //string del;
 		        //doc_.Execute( Delete( cur_, dp ) );
                 //doc_.Delete(new DPos(cur_.tl, cur_.ad), new DPos(dp.tl, dp.ad), out del);
                 VPos vp = new VPos();
