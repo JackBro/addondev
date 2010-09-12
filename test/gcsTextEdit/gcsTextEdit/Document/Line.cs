@@ -6,12 +6,17 @@ using AsControls.Parser;
 
 namespace AsControls
 {
+    public enum BlockType {
+
+    }
+
     public class Line
     {
         private IText text;
         private List<Rule> rules;
         public bool IsBlockOnly { get; set; }
         //public bool IsImageExist { get; set; }
+        public string p;
 
         public List<Rule> Rules {
             get { return rules; }
@@ -30,6 +35,7 @@ namespace AsControls
 
         public Line(string text)
         {
+            p = string.Empty;
             this.text = new LineBuffer(text);
             rules = new List<Rule>();
         }
