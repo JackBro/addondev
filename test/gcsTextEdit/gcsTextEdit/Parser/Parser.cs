@@ -12,6 +12,20 @@ namespace AsControls.Parser {
         public Attribute attr;
     }
 
+
+    enum BlockState {
+        start,
+        end,
+        start_end,
+        all,
+        no
+    }
+
+    class Block {
+        public BlockState state;
+        public EncloseElement elem;
+    }
+
     public class LexerMap{
         public string start;
         public string end;
@@ -48,9 +62,9 @@ namespace AsControls.Parser {
             
             lex.AddElement(new KeywordElement("test", new Attribute(Color.DarkGray, false, false, false, false)));
 
-            //lex.AddElement(new EncloseElement("[[", "]]", new Attribute(Color.Red, true, false, false, false)));
+            lex.AddElement(new EncloseElement("/*", "*/", new Attribute(Color.Red, true, false, false, false)));
 
-            lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false, false)));
+            //lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false, false)));
 
             lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
 
@@ -65,24 +79,25 @@ namespace AsControls.Parser {
         public void Parse(int s, int e, List<Line> lines) {
 
             int i;
-            string cmt = lines[s].p;
+            Block block = lines[s].Block;
 
             for (i = s; i < e; i++) {
-                if(Lexers.ContainsKey(lines[i].Text.ToString())){
+                block = Parse(lines[i], block);
+                //if(Lexers.ContainsKey(lines[i].Text.ToString())){
 
-                } else if (EndLexers.ContainsKey(lines[i].Text.ToString())) {
+                //} else if (EndLexers.ContainsKey(lines[i].Text.ToString())) {
 
-                } else {
-                    lines[s].p = string.Empty;
-                }
+                //} else {
+                //    lines[s].p = string.Empty;
+                //}
             }
 
         }
 
-        public List<Rule> Parse(string line, Lexer lex) {
+        public Block Parse(Line line, Block b) {
             token = TokenType.TXT;
 
-            lex.Src = line;
+            lex.Src = line.ToString();
 
             //List<Rule> rules = new List<Rule>();
             rules = new List<Rule>();
@@ -147,6 +162,7 @@ namespace AsControls.Parser {
                 rules.Add(new Rule { ad = 0, len = line.Length, attr = defaultAttr });
             }
 
+            line.Rules = rules; 
             return rules;
         }
 

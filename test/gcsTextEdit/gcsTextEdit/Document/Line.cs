@@ -6,9 +6,7 @@ using AsControls.Parser;
 
 namespace AsControls
 {
-    public enum BlockType {
 
-    }
 
     public class Line
     {
@@ -16,7 +14,8 @@ namespace AsControls
         private List<Rule> rules;
         public bool IsBlockOnly { get; set; }
         //public bool IsImageExist { get; set; }
-        public string p;
+        //public string p;
+        public Block Block { get; set; }
 
         public List<Rule> Rules {
             get { return rules; }

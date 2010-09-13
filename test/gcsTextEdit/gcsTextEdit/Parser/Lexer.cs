@@ -195,7 +195,7 @@ namespace AsControls.Parser {
             return ch;
         }
 
-        public void unread(int c) {
+        public void unread() {
             unget_p = true;
         }
 
@@ -223,23 +223,54 @@ namespace AsControls.Parser {
         private Element defaultElement;
         private Dictionary<String, Element> elemDic = new Dictionary<String, Element>();
         private Dictionary<String, Element> keyWordElemDic = new Dictionary<String, Element>();
+
+
+        private Dictionary<String, EncloseElement> encelemDic = new Dictionary<String, EncloseElement>();
+
+        private Dictionary<String, EncloseElement> encendelemDic = new Dictionary<String, EncloseElement>();
         //private Dictionary<String, SingleLineAttribute> SingleLineattrDic = new Dictionary<String, SingleLineAttribute>();
         //private Dictionary<String, KeywordAttribute> keywordattrDic = new Dictionary<String, KeywordAttribute>();
 
         private string fkeys;
 
+        private string fCncEndkeys = string.Empty;
+
+        //public void AddElement(Element elem) {
+        //    if (elem is KeywordElement) {
+        //        keyWordElemDic.Add(elem.start, elem);
+        //    } else {
+        //        elemDic.Add(elem.start, elem);
+        //    }
+
+        //    string key=string.Empty;
+        //    foreach (var item in elemDic.Values) {
+        //        key += item.start[0];
+        //    }
+        //    fkeys = key;
+        //}
+
         public void AddElement(Element elem) {
             if (elem is KeywordElement) {
                 keyWordElemDic.Add(elem.start, elem);
-            } else {
+            }
+            else if (elem is EncloseElement) {
+                encelemDic.Add(elem.start, (EncloseElement)elem);
+                encendelemDic.Add(((EncloseElement)elem).end, (EncloseElement)elem);
+            }else{
                 elemDic.Add(elem.start, elem);
             }
 
-            string key=string.Empty;
+            string key = string.Empty;
             foreach (var item in elemDic.Values) {
                 key += item.start[0];
             }
             fkeys = key;
+
+            key = string.Empty;
+            foreach (var item in encendelemDic.Values) {
+                key += item.end[0];
+            }
+            fCncEndkeys = key;
         }
 
         public void AddDefaultElement(Element elem) {
@@ -289,6 +320,11 @@ namespace AsControls.Parser {
             }
         }
 
+        public Block Block {
+            get;
+            set;
+        }
+
         public bool advance() {
             //skipWhiteSpace();
             //resultAttr = null;
@@ -329,16 +365,84 @@ namespace AsControls.Parser {
                     //    lexKeyWord();
                     //}
                     if (Char.IsDigit((char)c)) {
-                        reader.unread(c);
+                        reader.unread();
                         lexDigit();
                     } else if(Util.isIdentifierPart((char)c)){
-                        reader.unread(c);
+                        reader.unread();
                         lexKeyWord();
                     } else if(fkeys.Contains((char)c)){
                         //if (Char.IsSymbol((char)c)) {
-                        reader.unread(c);
+                        reader.unread();
                         //lexSymbol(((char)c).ToString());
                         lexSymbol();
+                    }
+                    break;
+
+            }
+            return true;
+        }
+
+        public bool advance(Block block) {
+            //skipWhiteSpace();
+            //resultAttr = null;
+            tok = TokenType.TXT;
+
+            int c = reader.read();
+            if (c == -1) {
+                tok = TokenType.EOS;
+                return false;
+            }
+            switch (c) {
+                case ' ':
+                    break;
+
+                //case '　':
+                case 0x3000:
+                    break;
+
+                case '\t':
+                    break;
+
+                default:
+                    if (block.state == BlockState.all || block.state == BlockState.start) {
+                        if (fCncEndkeys.Contains((char)c)) {
+                            //if (Char.IsSymbol((char)c)) {
+                            reader.unread();
+                            //lexSymbol(((char)c).ToString());
+                            Block = EncEndlexSymbol(block);
+                        }
+                    } else {
+                        //if( (c>=33 && c<=47)
+                        //    || (c >= 58 && c <= 74)
+                        //    || (c >= 91 && c <= 96)
+                        //    || (c >= 123 && c <= 126)){
+
+                        ////if (Char.IsSymbol((char)c)) {
+                        //    reader.unread(c);
+                        //    //lexSymbol(((char)c).ToString());
+                        //    lexSymbol();
+                        //} else if (Char.IsDigit((char)c)) {
+                        //    reader.unread(c);
+                        //    lexDigit();
+
+                        //} else {
+                        //    reader.unread(c);
+                        //    lexKeyWord();
+                        //}
+                        if (Char.IsDigit((char)c)) {
+                            reader.unread();
+                            lexDigit();
+                        }
+                        else if (Util.isIdentifierPart((char)c)) {
+                            reader.unread();
+                            lexKeyWord();
+                        }
+                        else if (fkeys.Contains((char)c)) {
+                            //if (Char.IsSymbol((char)c)) {
+                            reader.unread();
+                            //lexSymbol(((char)c).ToString());
+                            lexSymbol();
+                        }
                     }
                     break;
 
@@ -355,7 +459,7 @@ namespace AsControls.Parser {
                 c = reader.read();
                 ch = (char)c;
             }
-            reader.unread((char)c);
+            reader.unread();
         }
 
         private void lexDigit() {
@@ -366,7 +470,7 @@ namespace AsControls.Parser {
                     break;
                 }
                 if (!Char.IsDigit((char)c)) {
-                    reader.unread(c);
+                    reader.unread();
                     break;
                 }
                 num = (num * 10) + (c - '0');
@@ -389,7 +493,7 @@ namespace AsControls.Parser {
                     break;
                 }
                 if (!Util.isIdentifierPart((char)c)) {
-                    reader.unread(c);
+                    reader.unread();
                     break;
                 }
                 buf.Append((char)c);
@@ -408,7 +512,6 @@ namespace AsControls.Parser {
             }
         }
 
-        //private void lexSymbol(string initstr) {
         private void lexSymbol() {
             StringBuilder buf = new StringBuilder();
             //if (initstr != null) buf.Append(initstr);
@@ -419,12 +522,13 @@ namespace AsControls.Parser {
                     
                     Element elem = elemDic[buf.ToString()];
                     //int offset = reader.offset()-elem.start.Length;
+                    Block = new Block { elem = null, state = BlockState.no };
 
                     int index = elem.exer(this);
                     if (index < 0) {
                         //int ii = reader.offset();
                         reader.setoffset(reader.offset()+1);
-                        reader.unread(' ');
+                        reader.unread();
                         return;
                     }
                     //int offset = reader.offset() - value.Length;
@@ -436,6 +540,35 @@ namespace AsControls.Parser {
                     int offse = reader.offset();
                     reader.setoffset(index);
                     //reader.unread(' ');
+                    
+                    return;
+                }
+                else if (encelemDic.ContainsKey(buf.ToString())) {
+                    var elem = encelemDic[buf.ToString()];
+
+                    int index = elem.exer(this);
+                    if (index < 0) {
+                        //int ii = reader.offset();
+                        //reader.setoffset(reader.offset() + 1);
+                        //reader.unread();
+                        reader.setoffset(reader.Src.Length);
+                        reader.unread();
+                        Block = new Block { elem = elem, state = BlockState.start };
+
+                        return;
+                    }
+                    //int offset = reader.offset() - value.Length;
+                    value = reader.Src.Substring(offset, index - offset);
+                    elem.startIndex = offset;
+                    elem.len = value.Length;
+                    tok = elem.token;
+                    resultElement = elem;
+                    int offse = reader.offset();
+                    reader.setoffset(index);
+                    //reader.unread(' ');
+
+                    Block = new Block { elem = elem, state = BlockState.start_end };
+
                     return;
                 }
 
@@ -446,6 +579,40 @@ namespace AsControls.Parser {
                 }
                 buf.Append((char)c);
             }
+        }
+
+        private Block EncEndlexSymbol(Block block) {
+            StringBuilder buf = new StringBuilder();
+            //if (initstr != null) buf.Append(initstr);
+            int offset = reader.offset() - 1;
+            while (true) {
+
+                if (encendelemDic.ContainsKey(buf.ToString()) && block.elem.end == buf.ToString()) {
+
+                    EncloseElement elem = encendelemDic[buf.ToString()];
+                    //int offset = reader.offset()-elem.start.Length;
+
+                    //int offset = reader.offset() - value.Length;
+                    value = reader.Src.Substring(0, reader.offset());
+                    elem.startIndex = 0;
+                    elem.len = value.Length;
+                    tok = elem.token;
+                    resultElement = elem;
+                    int offse = reader.offset();
+                    reader.setoffset(offse+1);
+                    //reader.unread(' ');
+
+                    return new Block { elem = elem, state= BlockState.end };
+                }
+
+                int c = reader.read();
+                if (c == -1) {
+                    //tok = TokenType.EOS;
+                    break;
+                }
+                buf.Append((char)c);
+            }
+            return new Block { elem = block.elem, state = BlockState.all };
         }
 
     }
