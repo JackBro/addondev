@@ -34,7 +34,8 @@ namespace AsControls
 
         public Line(string text)
         {
-            p = string.Empty;
+            //p = string.Empty;
+            Block = new Block();
             this.text = new LineBuffer(text);
             rules = new List<Rule>();
         }

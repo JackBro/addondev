@@ -13,7 +13,7 @@ namespace AsControls.Parser {
     }
 
 
-    enum BlockState {
+    public enum BlockState {
         start,
         end,
         start_end,
@@ -21,16 +21,20 @@ namespace AsControls.Parser {
         no
     }
 
-    class Block {
+    public class Block {
         public BlockState state;
         public EncloseElement elem;
+
+        public Block() {
+            state = BlockState.no;
+        }
     }
 
-    public class LexerMap{
-        public string start;
-        public string end;
-        public Lexer lexer;
-    }
+    //public class LexerMap{
+    //    public string start;
+    //    public string end;
+    //    public Lexer lexer;
+    //}
 
     class Parser {
 
@@ -53,6 +57,14 @@ namespace AsControls.Parser {
             }
         }
 
+        private void getToken(Block block) {
+            if (lex.advance(block)) {
+                token = lex.token;
+            } else {
+                token = TokenType.EOS;
+            }
+        }
+
         public Parser() {
             lex = new Lexer();
             init();
@@ -66,7 +78,7 @@ namespace AsControls.Parser {
 
             //lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false, false)));
 
-            lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
+            //lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
 
             defaultAttr = new Attribute(Color.Black, false, false, false, false);
             lex.AddDefaultElement(new TextElement(defaultAttr));
@@ -81,7 +93,8 @@ namespace AsControls.Parser {
             int i;
             Block block = lines[s].Block;
 
-            for (i = s; i < e; i++) {
+            // まずは変更範囲を再解析
+            for (i = s; i <= e; i++) {
                 block = Parse(lines[i], block);
                 //if(Lexers.ContainsKey(lines[i].Text.ToString())){
 
@@ -92,12 +105,14 @@ namespace AsControls.Parser {
                 //}
             }
 
+
+
         }
 
         public Block Parse(Line line, Block b) {
             token = TokenType.TXT;
 
-            lex.Src = line.ToString();
+            lex.Src = line.Text.ToString();
 
             //List<Rule> rules = new List<Rule>();
             rules = new List<Rule>();
@@ -105,15 +120,20 @@ namespace AsControls.Parser {
             //getToken();
             while (token != TokenType.EOS) {
                 //offset = lex.Offset;
-                getToken();
+                getToken(b);
                 switch (token) {
                     case TokenType.Enclose:
                     case TokenType.EndLine:
                     case TokenType.Line:
                     case TokenType.Image:
                     case TokenType.Keyword:
+
                         var elem = lex.getElement();
                         rules.Add(new Rule { ad = elem.startIndex, len = elem.len, attr = elem.attr });
+                        if (lex.Block.state == BlockState.end) {
+                            //lex.Block.state = BlockState.no;
+                        }
+
                         break;
                     //case TokenType.Enclose:
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
@@ -161,9 +181,10 @@ namespace AsControls.Parser {
             } else {
                 rules.Add(new Rule { ad = 0, len = line.Length, attr = defaultAttr });
             }
-
+            line.Block = lex.Block;
             line.Rules = rules; 
-            return rules;
+            //return rules;
+            return lex.Block;
         }
 
         public List<Rule> Parse(string line) {

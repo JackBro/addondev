@@ -154,14 +154,36 @@ namespace AsControls {
         }
 
         private bool ReParse(int startrl, int endrl) {
-            for (int i = startrl; i <= endrl; i++) {
-                if (text_.Count > i) {
-                    var rules = parser.Parse(text_[i].Text.ToString());
-                    text_[i].Rules = rules;
-                }
+            //parser.Parse(startrl, endrl, text_);
+
+
+            //for (int i = startrl; i <= endrl; i++) {
+            //    if (text_.Count > i) {
+            //        var rules = parser.Parse(text_[i].Text.ToString());
+            //        text_[i].Rules = rules;
+            //    }
+            //}
+
+            int i;
+            Block block = text_[startrl].Block;
+            
+            // まずは変更範囲を再解析
+            for (i = startrl; i <= endrl; ++i) {
+                block = parser.Parse(text_[i], block);
             }
 
-            return false;
+            // コメントアウト状態に変化がなかったらここでお終い。
+            if (i == tln() || text_[i].Block.state == block.state)
+                return false;
+
+            // 例えば、/* が入力された場合などは、下の方の行まで
+            // コメントアウト状態の変化を伝達する必要がある。
+            //do
+            //    cmt = text_[i++].TransitCmt(cmt);
+            //while (i < tln() && text_[i].isLineHeadCmt() != cmt);
+            return true;
+
+            //return false;
         }
 
         //private void Insert(ref VPos s, ref VPos e, string text) {

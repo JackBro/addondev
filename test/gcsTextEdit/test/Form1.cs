@@ -134,7 +134,9 @@ namespace test
 //y
 //yy";
 
-            csedit.Text = @"test[[123]]456dd";
+            csedit.Text = @"/*
+mmmmmmmmmmmmm
+*/";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;
