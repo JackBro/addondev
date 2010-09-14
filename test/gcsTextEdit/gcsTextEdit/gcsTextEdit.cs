@@ -19,7 +19,7 @@ namespace AsControls {
     /// <param name="e2">変更範囲の終端(後)</param>
     /// <param name="reparsed">e2より後ろのコメントアウト状態が変化していたらtrue</param>
     /// <param name="nmlcmd">挿入/削除/置換ならtrue、ファイル開き/全置換ならfalse</param>
-    public delegate void TextUpdateEventHandler(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd );
+    internal delegate void TextUpdateEventHandler(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd);
 
     public class LinkClickEventArgs : EventArgs {
         private Point location;
@@ -65,7 +65,7 @@ namespace AsControls {
             }
         }
 
-        VDrawInfo vRect = new VDrawInfo();
+        private VDrawInfo vRect = new VDrawInfo();
 
         VGcsScrollBar vScrollBar;
         HGcsScrollBar hScrollBar;
@@ -131,20 +131,20 @@ namespace AsControls {
         //public int cy() { return cvs_.zone().Bottom - hScrollBar.Height; }
 
         //TODO
-        public int left() { return cvs_.zone().Left; }
-        public int right() { return cvs_.zone().Right; }
-        public int bottom() { return cvs_.zone().Bottom; }
-        public int lna() { return cvs_.zone().Left; }
-        public int cx() { return cvs_.zone().Right - cvs_.zone().Left; }
-        public int cxAll() { return cvs_.zone().Right; }
-        public int cy() { return cvs_.zone().Bottom; }
+        internal int left() { return cvs_.zone().Left; }
+        internal int right() { return cvs_.zone().Right; }
+        internal int bottom() { return cvs_.zone().Bottom; }
+        internal int lna() { return cvs_.zone().Left; }
+        internal int cx() { return cvs_.zone().Right - cvs_.zone().Left; }
+        internal int cxAll() { return cvs_.zone().Right; }
+        internal int cy() { return cvs_.zone().Bottom; }
         //
         private Document doc_;
         public Document Document {
             get { return this.doc_; }
         }
         //
-        public Painter fnt() { return cvs_.getPainter(); }
+        internal Painter fnt() { return cvs_.getPainter(); }
         //
         private Cursor cur_;
 
@@ -177,9 +177,13 @@ namespace AsControls {
         //    set { }
         //}
 
-        //public new Font Font {
-        //    get { return base.Font; }
-        //}
+        public new Font Font {
+            get { return base.Font; }
+            set { 
+                base.Font = value; 
+
+            }
+        }
 
         public gcsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);

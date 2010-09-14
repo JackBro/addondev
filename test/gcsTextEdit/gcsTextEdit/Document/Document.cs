@@ -12,7 +12,7 @@ namespace AsControls {
 
     //public class Document : IDocument {
     public class Document {
-        public event TextUpdateEventHandler TextUpdate;
+        internal event TextUpdateEventHandler TextUpdate;
 
         //private UndoManager undoManager;
         public UndoManager UndoManager { get; private set; }
@@ -68,17 +68,18 @@ namespace AsControls {
         public Document() {
 
             parser = new AsControls.Parser.Parser();
+
             UndoManager = new UndoManager(this);
 
             text_ = new List<Line>();
             text_.Add( new Line("") ); // 最初は一行だけ
         }
 
-        public void Fire_TEXTUPDATE(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd) {
+        internal void Fire_TEXTUPDATE(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd) {
             TextUpdate(s, e, e2, reparsed, nmlcmd);
         }
 
-        public DPos leftOf(DPos dp, bool wide) {
+        internal DPos leftOf(DPos dp, bool wide) {
             if (dp.ad == 0) {
                 // 行の先頭だが、ファイルの先頭ではない場合
                 // 一つ前の行の行末へ
@@ -109,7 +110,7 @@ namespace AsControls {
                 return new DPos(dp.tl, s);
             }
         }
-        public DPos rightOf(DPos dp, bool wide) {
+        internal DPos rightOf(DPos dp, bool wide) {
             if (dp.ad == len(dp.tl)) {
                 // 行末だが、ファイルの終わりではない場合
                 // 一つ後の行の先頭へ
@@ -149,7 +150,7 @@ namespace AsControls {
             }
         }
 
-        public Boolean LastLine(int linenum) {
+        internal Boolean LastLine(int linenum) {
             return linenum == text_.Count - 1 ? true : false;
         }
 
@@ -200,7 +201,7 @@ namespace AsControls {
         }
 
         //private void Insert(ref VPos s, ref VPos e, string text) {
-        public bool InsertingOperation(ref DPos s, string text, ref DPos e) {
+        internal bool InsertingOperation(ref DPos s, string text, ref DPos e) {
             // 位置補正
             //DPos cs = s as DPos;
             CorrectPos(ref s);
@@ -241,7 +242,7 @@ namespace AsControls {
         }
 
         //private void Delete(ref VPos s, ref VPos e, out string buff) {
-        public bool DeletingOperation(ref DPos s, ref DPos e, out string undobuf){
+        internal bool DeletingOperation(ref DPos s, ref DPos e, out string undobuf) {
             // 位置補正
             CorrectPos(ref s);
             CorrectPos(ref e);
@@ -277,12 +278,6 @@ namespace AsControls {
             //highlighter.Parse(text_[s.tl].Text, text_[s.tl].AttributeList);
             return ReParse(s.tl, e.tl);
         }
-
-        //private void Replace(ref VPos s, ref VPos e, ref VPos e2, out string oldValue, string newValue) {
-        //    Delete(ref s, ref e, out oldValue);
-        //    Insert(ref s, ref e2, newValue);
-        //    ReParse(s.tl, e2.tl);
-        //}
 
         private void CorrectPos(ref VPos pos) {
             // 正常範囲に収まるように修正
@@ -328,7 +323,7 @@ namespace AsControls {
         // 挿入・削除等の作業用関数群
         //-------------------------------------------------------------------------
 
-        public int getRangeLength( DPos s, DPos e )
+        internal int getRangeLength(DPos s, DPos e)
         {
 	        // とりあえず全部足す
 	        int ans=0, tl=s.tl, te=e.tl;
@@ -344,7 +339,7 @@ namespace AsControls {
 	        return ans;
         }
 
-        public string getText(DPos s, DPos e)
+        internal string getText(DPos s, DPos e)
         {
             IText buff;
 	        if( s.tl == e.tl )
@@ -381,7 +376,7 @@ namespace AsControls {
 
 
         //TODO wordStartOf
-        public DPos wordStartOf(DPos dp )
+        internal DPos wordStartOf(DPos dp)
         {
 	        if( dp.ad == 0 )
 	        {
@@ -410,7 +405,7 @@ namespace AsControls {
 	        }
         }
 
-        public void Execute(ICommand cmd) {
+        internal void Execute(ICommand cmd) {
             //bool b = urdo_.isModified();
             //urdo_.NewlyExec(cmd, doc_);
             //if (b != urdo_.isModified())

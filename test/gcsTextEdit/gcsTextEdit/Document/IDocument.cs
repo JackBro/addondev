@@ -16,7 +16,7 @@ namespace AsControls
     //}
 
     //public delegate void TextUpdateEventHandler(VPos s, VPos e, VPos e2);
-    public interface IDocument
+    internal interface IDocument
     {
         event TextUpdateEventHandler TextUpdateEvent;
         UndoManager UndoManager

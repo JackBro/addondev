@@ -42,8 +42,8 @@ namespace AsControls.Parser {
 
         List<Rule> rules;
 
-        private Dictionary<string, Lexer> Lexers;
-        private Dictionary<string, string> EndLexers;
+        //private Dictionary<string, Lexer> Lexers;
+        //private Dictionary<string, string> EndLexers;
 
         Attribute defaultAttr;
 
@@ -85,26 +85,23 @@ namespace AsControls.Parser {
             lex.AddDefaultElement(new TextElement(defaultAttr));
         }
 
-        public void Parse(int s, int e, List<Line> lines) {
+        //public void Parse(int s, int e, List<Line> lines) {
 
-            int i;
-            Block block = lines[s].Block;
+        //    int i;
+        //    Block block = lines[s].Block;
 
-            // まずは変更範囲を再解析
-            for (i = s; i <= e; i++) {
-                block = Parse(lines[i], block);
-                //if(Lexers.ContainsKey(lines[i].Text.ToString())){
+        //    // まずは変更範囲を再解析
+        //    for (i = s; i <= e; i++) {
+        //        block = Parse(lines[i], block);
+        //        //if(Lexers.ContainsKey(lines[i].Text.ToString())){
 
-                //} else if (EndLexers.ContainsKey(lines[i].Text.ToString())) {
+        //        //} else if (EndLexers.ContainsKey(lines[i].Text.ToString())) {
 
-                //} else {
-                //    lines[s].p = string.Empty;
-                //}
-            }
-
-
-
-        }
+        //        //} else {
+        //        //    lines[s].p = string.Empty;
+        //        //}
+        //    }
+        //}
 
         public Block Parse(Line line, Block b) {
             line.Block.state = b.state;
@@ -113,7 +110,6 @@ namespace AsControls.Parser {
 
             lex.Src = line.Text.ToString();
 
-            //List<Rule> rules = new List<Rule>();
             rules = new List<Rule>();
             //lex = new Lexer(line);
             //getToken();

@@ -12,80 +12,80 @@ namespace test
     public partial class Form1 : Form
     {
         private Bitmap image = new Bitmap("test.png");
-        private AsControls.gcsTextEdit csedit = new AsControls.gcsTextEdit();
+        private AsControls.gcsTextEdit edit = new AsControls.gcsTextEdit();
         //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
         public Form1()
         {
             InitializeComponent();
             //this.KeyPreview = true;
-            csedit.Name = "1";
-            csedit.BackColor = Color.White;
-            csedit.Font = this.Font;
+            edit.Name = "1";
+            edit.BackColor = Color.White;
+            edit.Font = this.Font;
             //csedit.Dock = DockStyle.Top;
-            csedit.Dock = DockStyle.Fill;
+            edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
-            csedit.GotFocus += new EventHandler(csedit_GotFocus);
+            edit.GotFocus += new EventHandler(csedit_GotFocus);
 
 
-            csedit.DrawEventHandler += (g, line, x, y) => {
+            edit.DrawEventHandler += (g, line, x, y) => {
                 g.DrawImage(image, new Point(x, y));
             };
 
-            csedit.KeyBind.setAction(Keys.Back, (editor) => {
+            edit.KeyBind.setAction(Keys.Back, (editor) => {
                 editor.BackSpace();
             });
-            csedit.KeyBind.setAction(Keys.Delete, (editor) => {
+            edit.KeyBind.setAction(Keys.Delete, (editor) => {
                 editor.Delete();
             });
 
-            csedit.KeyBind.setAction(Keys.Up, (editor) => {
+            edit.KeyBind.setAction(Keys.Up, (editor) => {
                 editor.Up(false, false);
             });
-            csedit.KeyBind.setAction(Keys.Shift | Keys.Up, (editor) => {
+            edit.KeyBind.setAction(Keys.Shift | Keys.Up, (editor) => {
                 editor.Up(false, true);
             });
 
-            csedit.KeyBind.setAction(Keys.Down, (editor) => {
+            edit.KeyBind.setAction(Keys.Down, (editor) => {
                 editor.Down(false, false);
             });
-            csedit.KeyBind.setAction(Keys.Shift | Keys.Down, (editor) => {
+            edit.KeyBind.setAction(Keys.Shift | Keys.Down, (editor) => {
                 editor.Down(false, true);
             });
 
-            csedit.KeyBind.setAction(Keys.Left, (editor) => {
+            edit.KeyBind.setAction(Keys.Left, (editor) => {
                 editor.Left(false, false);
             });
-            csedit.KeyBind.setAction(Keys.Shift | Keys.Left, (editor) => {
+            edit.KeyBind.setAction(Keys.Shift | Keys.Left, (editor) => {
                 editor.Left(false, true);
             });
 
-            csedit.KeyBind.setAction(Keys.Right, (editor) => {
+            edit.KeyBind.setAction(Keys.Right, (editor) => {
                 editor.Right(false, false);
             });
-            csedit.KeyBind.setAction(Keys.Shift | Keys.Right, (editor) => {
+            edit.KeyBind.setAction(Keys.Shift | Keys.Right, (editor) => {
                 editor.Right(false, true);
             });
 
-            csedit.KeyBind.setAction(Keys.Control | Keys.C, (editor) => {
+            edit.KeyBind.setAction(Keys.Control | Keys.C, (editor) => {
                 editor.Copy();
             });
-            csedit.KeyBind.setAction(Keys.Control | Keys.X, (editor) => {
+            edit.KeyBind.setAction(Keys.Control | Keys.X, (editor) => {
                 editor.Cut();
             });
-            csedit.KeyBind.setAction(Keys.Control | Keys.V, (editor) => {
+            edit.KeyBind.setAction(Keys.Control | Keys.V, (editor) => {
                 editor.Paste();
             });
 
-            csedit.KeyBind.setAction(Keys.Control | Keys.A, (editor) => {
+            edit.KeyBind.setAction(Keys.Control | Keys.A, (editor) => {
                 editor.Home(true, false);
                 editor.End(true, true);
             });
 
-            csedit.KeyBind.setAction(Keys.Control | Keys.Z, (editor) => {
+            edit.KeyBind.setAction(Keys.Control | Keys.Z, (editor) => {
                 editor.Undo();
             });
 
-            csedit.KeyBind.setAction(Keys.Control | Keys.Y, (editor) => {
+            edit.KeyBind.setAction(Keys.Control | Keys.Y, (editor) => {
                 editor.Redo();
             });
 
@@ -106,7 +106,7 @@ namespace test
                 wrapOToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
             };
 
-            panel1.Controls.Add(csedit);
+            panel1.Controls.Add(edit);
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
 
@@ -139,7 +139,7 @@ namespace test
 //*/
 //";
 
-            csedit.Text = @"'mmmmmmmmmmmmm'
+            edit.Text = @"'mmmmmmmmmmmmm'
 /*
 mmmmmmmmmmmmm
 */
@@ -219,6 +219,15 @@ mmmmmmmmmmmmm
         private void searchToolStripMenuItem1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void fontToolStripMenuItem_Click(object sender, EventArgs e) {
+            using (FontDialog fd = new FontDialog()) {
+                var res = fd.ShowDialog(this);
+                if (res == DialogResult.OK) {
+                    edit.Font = fd.Font;
+                }
+            }
         }
     }
 }
