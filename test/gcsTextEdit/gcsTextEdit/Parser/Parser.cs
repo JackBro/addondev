@@ -12,7 +12,6 @@ namespace AsControls.Parser {
         public Attribute attr;
     }
 
-
     public enum BlockState {
         start,
         end,
@@ -74,18 +73,16 @@ namespace AsControls.Parser {
             
             lex.AddElement(new KeywordElement("test", new Attribute(Color.DarkGray, false, false, false, false)));
 
-            lex.AddElement(new EncloseElement("/*", "*/", new Attribute(Color.Red, true, false, false, false)));
+            lex.AddElement(new EncloseElement("/*", "*/", new Attribute(Color.Green, true, false, false, false)));
 
-            //lex.AddElement(new EndLineElement("//", new Attribute(Color.DarkGreen, false, false, false, false)));
+            lex.AddElement(new EncloseElement("'", "'", new Attribute(Color.Brown, false, false, false, false)));
+
+            lex.AddElement(new EndLineElement("//", new Attribute(Color.LightBlue, false, false, false, false)));
 
             //lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
 
             defaultAttr = new Attribute(Color.Black, false, false, false, false);
             lex.AddDefaultElement(new TextElement(defaultAttr));
-
-            //lex.tokenEventHandler += (sender, start, len, e) => {
-            //    rules.Add(new Rule { ad = start, len = len, attr = e.attr });
-            //};
         }
 
         public void Parse(int s, int e, List<Line> lines) {
@@ -110,6 +107,8 @@ namespace AsControls.Parser {
         }
 
         public Block Parse(Line line, Block b) {
+            line.Block.state = b.state;
+
             token = TokenType.TXT;
 
             lex.Src = line.Text.ToString();
@@ -181,10 +180,30 @@ namespace AsControls.Parser {
             } else {
                 rules.Add(new Rule { ad = 0, len = line.Length, attr = defaultAttr });
             }
-            line.Block = lex.Block;
+            line.Block.elem = lex.Block.elem;
             line.Rules = rules; 
             //return rules;
-            return lex.Block;
+            Block next = new Block();
+            next.elem =lex.Block.elem;
+
+            //line.Block.state = lex.Block.state;
+
+            if (lex.Block.state == BlockState.end) {
+                next.state = BlockState.no;
+                //next.elem.attr = defaultAttr;
+            }
+            else if(lex.Block.state == BlockState.start){
+                next.state = BlockState.all;
+            }
+            else if (lex.Block.state == BlockState.start_end) {
+                next.state = BlockState.no;
+                //next.elem.attr = defaultAttr;
+            }
+            else {
+                next.state = lex.Block.state;
+            }
+            
+            return next;//lex.Block;
         }
 
         public List<Rule> Parse(string line) {

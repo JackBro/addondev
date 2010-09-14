@@ -228,8 +228,6 @@ namespace AsControls.Parser {
         private Dictionary<String, EncloseElement> encelemDic = new Dictionary<String, EncloseElement>();
 
         private Dictionary<String, EncloseElement> encendelemDic = new Dictionary<String, EncloseElement>();
-        //private Dictionary<String, SingleLineAttribute> SingleLineattrDic = new Dictionary<String, SingleLineAttribute>();
-        //private Dictionary<String, KeywordAttribute> keywordattrDic = new Dictionary<String, KeywordAttribute>();
 
         private string fkeys = string.Empty;
 
@@ -257,26 +255,35 @@ namespace AsControls.Parser {
                 encelemDic.Add(elem.start, (EncloseElement)elem);
                 encendelemDic.Add(((EncloseElement)elem).end, (EncloseElement)elem);
 
-                string key = string.Empty;
+                //string key = string.Empty;
                 foreach (var item in encendelemDic.Values) {
-                    key += item.end[0];
+                    //key += item.end[0];
+                    if (!fCncEndkeys.Contains(item.end[0])) {
+                        fCncEndkeys += item.end[0];
+                    }
                 }
-                fCncEndkeys = key;
+                //fCncEndkeys = key;
 
-                key = string.Empty;
+                //key = string.Empty;
                 foreach (var item in encelemDic.Values) {
-                    key += item.start[0];
+                    if (!fkeys.Contains(item.start[0])) {
+                        fkeys += item.start[0];
+                    }
+                    //key += item.start[0];
                 }
-                fkeys = key;
+                //fkeys = key;
 
             }else{
                 elemDic.Add(elem.start, elem);
 
-                string key = string.Empty;
+                //string key = string.Empty;
                 foreach (var item in elemDic.Values) {
-                    key += item.start[0];
+                    //key += item.start[0];
+                    if (!fkeys.Contains(item.start[0])) {
+                        fkeys += item.start[0];
+                    }
                 }
-                fkeys = key;
+                //fkeys = key;
             }
         }
 
@@ -583,7 +590,7 @@ namespace AsControls.Parser {
                         resultElement = elem;
 
                         reader.setoffset(reader.Src.Length);
-                        reader.unread();
+                        //reader.unread();
 
                         return;
                     }
@@ -605,6 +612,7 @@ namespace AsControls.Parser {
                 int c = reader.read();
                 if (c == -1) {
                     //tok = TokenType.EOS;
+                    Block = new Block { elem = null, state = BlockState.no };
                     break;
                 }
                 buf.Append((char)c);

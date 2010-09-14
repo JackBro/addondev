@@ -134,9 +134,16 @@ namespace test
 //y
 //yy";
 
-            csedit.Text = @"/*
+//            csedit.Text = @"/*
+//mmmmmmmmmmmmm
+//*/
+//";
+
+            csedit.Text = @"'mmmmmmmmmmmmm'
+/*
 mmmmmmmmmmmmm
-*/";
+*/
+";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;

@@ -169,7 +169,11 @@ namespace AsControls {
             
             // まずは変更範囲を再解析
             for (i = startrl; i <= endrl; ++i) {
+
                 block = parser.Parse(text_[i], block);
+                if (block.state == BlockState.end) {
+                    //block.state = BlockState.no;
+                }
             }
 
             // コメントアウト状態に変化がなかったらここでお終い。
@@ -181,6 +185,15 @@ namespace AsControls {
             //do
             //    cmt = text_[i++].TransitCmt(cmt);
             //while (i < tln() && text_[i].isLineHeadCmt() != cmt);
+            int ii = tln();
+            BlockState state = block.state;
+            Line line;// = text_[i];
+            do {
+                line = text_[i];
+                state = line.Block.state;
+                block = parser.Parse(line, block);
+                i++;
+            } while (i < tln() && line.Block.state != state);
             return true;
 
             //return false;
