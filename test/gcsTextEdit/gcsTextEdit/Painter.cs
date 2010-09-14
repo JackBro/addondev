@@ -18,9 +18,10 @@ namespace AsControls {
         private Pen numPen;
         private Brush tabbrush;
         private Brush TextBrush = new SolidBrush(Color.Black);
-        private IntPtr hfont_;
+        
 
         private int[] widthTable_;
+        private Dictionary<char, int> widthMap;
 
         private int figWidth_;
 
@@ -33,7 +34,8 @@ namespace AsControls {
         /// 標準文字幅(pixel)
         /// </summary>
         /// <returns></returns>
-        public int W() { return widthTable_['x']; }
+        //public int W() { return widthTable_['x']; }
+        public int W() { return this.widthMap['x']; }
 
         /// <summary>
         /// 数字幅(pixel)
@@ -55,6 +57,26 @@ namespace AsControls {
         //        ::GetCharWidthW( dc_, ch, ch, widthTable_+ch );
         //    return widthTable_[ ch ];
         //}
+        private int tabNum;
+
+        [DefaultValue(4)]
+        public int TabNum {
+            get { return tabNum; }
+            set {
+                this.tabNum = value;
+                
+            }
+        }
+
+        private IntPtr hfont_;
+        private Font font;
+        public Font Font {
+            get { return this.font; }
+            set {
+                this.font = value;
+
+            }
+        }
 
         public Painter(IntPtr hwnd, Config config) {
             hwnd_ = hwnd;
@@ -79,10 +101,6 @@ namespace AsControls {
             widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
             widthTable_['\x3000'] = CalcStringWidth('\x3000');
 
-           //int cw =  CalcStringWidth('あ');
-           //int cw2 = CalcStringWidth('　'.ToString());
-           //int cw3 = CalcStringWidth('\t'.ToString());
-
             // 数字の最大幅を計算
             figWidth_ = 0;
             for (int ch = '0'; ch <= '9'; ++ch) {
@@ -92,6 +110,25 @@ namespace AsControls {
 
             height_ = (int)(config.Font.GetHeight() + 0.5f);
             sf.Alignment = StringAlignment.Center;
+
+            widthMap = new Dictionary<char, int>();
+            widthMap.Add('x', CalcStringWidth('x'));
+            widthMap.Add('\t', W() * Math.Max(1, TabNum));
+            widthMap.Add('\x3000', CalcStringWidth('\x3000'));
+
+            // 数字の最大幅を計算
+            figWidth_ = 0;
+            for (int i = 0; i <= 9; i++) {
+                //int w2 = getStringWidth(((char)i).ToString());
+                //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
+                //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
+                char num = (char)i;
+                int numw = CalcStringWidth(num);
+                widthMap.Add(num, numw);
+                if (figWidth_ < numw) {
+                    figWidth_ = numw;
+                }
+            }
 
             //Win32API.TEXTMETRIC tm;
             //////using (Graphics g = this.CreateGraphics()) {
@@ -129,6 +166,8 @@ namespace AsControls {
             numPen = new Pen(Color.Gray);
             tabbrush = new SolidBrush(Color.Blue);
         }
+
+        public void 
 
         #region IDisposable メンバ
 
@@ -250,7 +289,6 @@ namespace AsControls {
         ////
         //public int CalcStringWidth(IBuffer text, int startIndex, int count) {
         //    IntPtr oldFont = Win32API.SelectObject(dc_, config_.Font.ToHfont());
-
         //    int w = 0;
         //    int len = startIndex + count;
         //    for (int i = startIndex; i < len; i++) {
@@ -260,7 +298,6 @@ namespace AsControls {
         //            w += getStringWidth(text[i]);
         //        }
         //    }
-
         //    Win32API.SelectObject(dc_, oldFont);
         //    return w;
         //}
@@ -275,7 +312,7 @@ namespace AsControls {
                     w = GetTextExtend(c.ToString(), int.MaxValue, out fit).width;
                     break;
                 case '\t':
-                    w += T();
+                    w = T();
                     break;
                 default:
                     w = GetTextExtend(c.ToString(), int.MaxValue, out fit).width;
@@ -327,7 +364,6 @@ namespace AsControls {
         }
 
        
-
         public static IEnumerable<string> parse(string src, char[] sc) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < src.Length; i++) {

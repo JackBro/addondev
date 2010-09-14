@@ -67,23 +67,69 @@ namespace AsControls {
 
         private VDrawInfo vRect = new VDrawInfo();
 
-        VGcsScrollBar vScrollBar;
-        HGcsScrollBar hScrollBar;
+        private VGcsScrollBar vScrollBar;
+        private HGcsScrollBar hScrollBar;
 
         /// <summary>
         /// 一番上に表示される論理行のTLine_Index
         /// </summary>
-        int udScr_tl_;
+        private int udScr_tl_;
         /// <summary>
         /// 一番上に表示される表示行のVRLine_Index
         /// </summary>
-        int udScr_vrl_;
+        private int udScr_vrl_;
 
 
-        Ime imeComposition;
+        private Ime imeComposition;
 
         public KeyMap KeyBind { get; set; }
 
+        public new Color BackColor {
+            get { return base.BackColor; }
+            set { }
+        }
+
+        public Color ForeColor {
+            get { return base.ForeColor; }
+            set { }
+        }
+
+        public new Font Font {
+            get { return base.Font; }
+            set {
+                base.Font = value;
+
+            }
+        }
+
+        public int TabNum {
+            get { return  fnt().}
+        }
+
+        public Color LineNumber {
+        }
+
+        public Color LineNumberBackColor {
+        }
+
+        public Color LineNumberLine {
+
+        }
+
+        public Color SpecialCharColor {
+        }
+
+        public bool ShowReturn {
+        }
+
+        public bool ShowTab {
+        }
+
+        public bool ShowWhiteSpace {
+        }
+
+        public bool ShowZenWhiteSpace {
+        }
 
         public new string Text {
             set {
@@ -169,20 +215,6 @@ namespace AsControls {
             /// 全画面
             /// </summary>
             ALL 
-        }
-
-
-        //public new Color BackColor {
-        //    get { return base.BackColor; }
-        //    set { }
-        //}
-
-        public new Font Font {
-            get { return base.Font; }
-            set { 
-                base.Font = value; 
-
-            }
         }
 
         public gcsTextEdit() {
