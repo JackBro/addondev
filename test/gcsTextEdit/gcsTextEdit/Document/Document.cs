@@ -276,7 +276,8 @@ namespace AsControls {
 
             // 再解析
             //highlighter.Parse(text_[s.tl].Text, text_[s.tl].AttributeList);
-            return ReParse(s.tl, e.tl);
+            //return ReParse(s.tl, e.tl);
+            return ReParse(s.tl, s.tl);
         }
 
         private void CorrectPos(ref VPos pos) {

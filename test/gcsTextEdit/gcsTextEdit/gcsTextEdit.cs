@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.ComponentModel;
 
 namespace AsControls {
 
@@ -84,52 +85,63 @@ namespace AsControls {
 
         public KeyMap KeyBind { get; set; }
 
-        public new Color BackColor {
-            get { return base.BackColor; }
-            set { }
-        }
+        //public new Color BackColor {
+        //    get { return base.BackColor; }
+        //    set { }
+        //}
 
-        public Color ForeColor {
-            get { return base.ForeColor; }
-            set { }
-        }
+        //public Color ForeColor {
+        //    get { return base.ForeColor; }
+        //    set { 
+
+        //    }
+        //}
 
         public new Font Font {
             get { return base.Font; }
             set {
                 base.Font = value;
-
+                fnt().Font = value;
             }
         }
 
-        public int TabNum {
-            get { return  fnt().}
+        public int TabWidth {
+            get { return fnt().TabWidth; }
+            set { fnt().TabWidth = value; }
         }
 
-        public Color LineNumber {
+        public Color LineNumberForeColor {
+            get { return fnt().LineNumberForeColor; }
+            set { fnt().LineNumberForeColor = value; }
         }
 
         public Color LineNumberBackColor {
+            get { return fnt().LineNumberBackColor; }
+            set { fnt().LineNumberBackColor = value; }
         }
 
-        public Color LineNumberLine {
+        public Color LineNumberLineColor {
+            get { return fnt().LineNumberLineColor; }
+            set { fnt().LineNumberLineColor = value; }
 
         }
 
-        public Color SpecialCharColor {
+        public Color SpecialCharForeColor {
+            get { return fnt().SpecialCharForeColor; }
+            set { fnt().SpecialCharForeColor = value; }
         }
 
-        public bool ShowReturn {
-        }
+        [DefaultValue(false)]
+        public bool ShowReturn { get; set; }
 
-        public bool ShowTab {
-        }
+        [DefaultValue(false)]
+        public bool ShowTab { get; set; }
 
-        public bool ShowWhiteSpace {
-        }
+        [DefaultValue(false)]
+        public bool ShowWhiteSpace { get; set; }
 
-        public bool ShowZenWhiteSpace {
-        }
+        [DefaultValue(false)]
+        public bool ShowZenWhiteSpace { get; set; }
 
         public new string Text {
             set {
@@ -294,8 +306,14 @@ namespace AsControls {
             //
             Config config = new Config();
             //config.setFontInfo(this.Font.Name, this.Font.Size);
-            config.setFont(this.Font);
-            cvs_ = new Canvas(this, config);
+            //config.setFont(this.Font);
+            //cvs_ = new Canvas(this, config);
+            cvs_ = new Canvas(this, this.Font);
+            fnt().LineNumberForeColor = this.ForeColor;
+            fnt().LineNumberBackColor = this.BackColor;
+            fnt().LineNumberLineColor = this.ForeColor;
+            fnt().SpecialCharForeColor = Color.Gray;
+
             cur_ = new Cursor(this, doc_, new Caret(this.Handle));
             //base.AllowDrop = true;
 

@@ -13,15 +13,47 @@ namespace AsControls {
 
         private IntPtr dc_;
         private IntPtr hwnd_;
-        private Config config_;
+        //private Config config_;
 
-        private Pen numPen;
-        private Brush tabbrush;
-        private Brush TextBrush = new SolidBrush(Color.Black);
-        
+        //private Brush tabbrush;
+        //private Brush TextBrush = new SolidBrush(Color.Black);
 
-        private int[] widthTable_;
-        private Dictionary<char, int> widthMap;
+        private Brush lineNumberBrush;
+        private Color lineNumberColor;
+        public Color LineNumberForeColor {
+            get { return this.lineNumberColor; }
+            set {
+                this.lineNumberColor = value;
+                DeleteObj(this.lineNumberBrush);
+                this.lineNumberBrush = new SolidBrush(value);
+            }
+        }
+
+        private Pen lineNumberLinePen;
+        public Color LineNumberLineColor {
+            get { return lineNumberLinePen.Color; }
+            set {
+                DeleteObj(this.lineNumberLinePen);
+                this.lineNumberLinePen = new Pen(value);
+            }
+        }
+
+        public Color LineNumberBackColor {
+            get;
+            set;
+        }
+
+        private Pen specialCharPen;
+        public Color SpecialCharForeColor {
+            get { return specialCharPen.Color; }
+            set {
+                DeleteObj(this.specialCharPen);
+                this.specialCharPen = new Pen(value);
+            }
+        }
+
+        //private int[] widthTable_;
+        private Dictionary<char, int> widthMap = new Dictionary<char, int>();
 
         private int figWidth_;
 
@@ -47,7 +79,8 @@ namespace AsControls {
         /// 次のタブ揃え位置を計算
         /// </summary>
         /// <returns></returns>
-        public int T() { return widthTable_['\t']; }
+        //public int T() { return widthTable_['\t']; }
+        public int T() { return widthMap['\t']; }
 	    public int nextTab(int x) { int t=T(); return ((x+4)/t+1)*t; }
         
         //
@@ -57,14 +90,14 @@ namespace AsControls {
         //        ::GetCharWidthW( dc_, ch, ch, widthTable_+ch );
         //    return widthTable_[ ch ];
         //}
-        private int tabNum;
+
+        private int tabWidth;
 
         [DefaultValue(4)]
-        public int TabNum {
-            get { return tabNum; }
+        public int TabWidth {
+            get { return tabWidth; }
             set {
-                this.tabNum = value;
-                
+                this.tabWidth = value;      
             }
         }
 
@@ -74,109 +107,104 @@ namespace AsControls {
             get { return this.font; }
             set {
                 this.font = value;
-
+                DeleteObject(hfont_);
+                this.hfont_= value.ToHfont();
             }
         }
 
-        public Painter(IntPtr hwnd, Config config) {
+        //public Painter(IntPtr hwnd, Config config) {
+        public Painter(IntPtr hwnd, Font font) {
             hwnd_ = hwnd;
             dc_ = Win32API.GetDC(hwnd_);
-            //Win32API.ReleaseDC
-            //widthTableMap_ = new Dictionary<char, int>();
-            config_ = config;
-            hfont_ = config_.Font.ToHfont();
 
-            widthTable_ = new int[65536];
-            int s = (int)' ';
-            int e = (int)'~';
-            int w = 0;
-            for(int i=s; i<=e; i++){
-                //int w2 = getStringWidth(((char)i).ToString());
-                //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
-                //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
-                w = CalcStringWidth(((char)i));
-                widthTable_[i] = w;
-            }
+            this.Font = font;
 
-            widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
-            widthTable_['\x3000'] = CalcStringWidth('\x3000');
-
-            // 数字の最大幅を計算
-            figWidth_ = 0;
-            for (int ch = '0'; ch <= '9'; ++ch) {
-                if (figWidth_ < widthTable_[ch])
-                    figWidth_ = widthTable_[ch];
-            }
-
-            height_ = (int)(config.Font.GetHeight() + 0.5f);
             sf.Alignment = StringAlignment.Center;
 
-            widthMap = new Dictionary<char, int>();
+            TabWidth = 4;
+
+            init();
+
+            //config_ = config;
+            //hfont_ = config_.Font.ToHfont();
+
+            //widthTable_ = new int[65536];
+            //int s = (int)' ';
+            //int e = (int)'~';
+            //int w = 0;
+            //for(int i=s; i<=e; i++){
+            //    //int w2 = getStringWidth(((char)i).ToString());
+            //    //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
+            //    //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
+            //    w = CalcStringWidth(((char)i));
+            //    widthTable_[i] = w;
+            //}
+
+            //widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
+            //widthTable_['\x3000'] = CalcStringWidth('\x3000');
+
+            //// 数字の最大幅を計算
+            //figWidth_ = 0;
+            //for (int ch = '0'; ch <= '9'; ++ch) {
+            //    if (figWidth_ < widthTable_[ch])
+            //        figWidth_ = widthTable_[ch];
+            //}
+
+            //height_ = (int)(config.Font.GetHeight() + 0.5f);
+            //sf.Alignment = StringAlignment.Center;
+
+            //widthMap = new Dictionary<char, int>();
+            //widthMap.Add('x', CalcStringWidth('x'));
+            //widthMap.Add('\t', W() * Math.Max(1, TabWidth));
+            //widthMap.Add('\x3000', CalcStringWidth('\x3000'));
+
+            //// 数字の最大幅を計算
+            //figWidth_ = 0;
+            //for (int i = 0; i <= 9; i++) {
+            //    //int w2 = getStringWidth(((char)i).ToString());
+            //    //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
+            //    //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
+            //    char num = (char)i;
+            //    int numw = CalcStringWidth(num);
+            //    widthMap.Add(num, numw);
+            //    if (figWidth_ < numw) {
+            //        figWidth_ = numw;
+            //    }
+            //}
+
+            //numPen = new Pen(Color.Gray);
+            //tabbrush = new SolidBrush(Color.Blue);
+
+
+        }
+
+        public void init() {
+
+            height_ = (int)(this.Font.GetHeight() + 0.5f)+3;
+            
+            widthMap.Clear();
             widthMap.Add('x', CalcStringWidth('x'));
-            widthMap.Add('\t', W() * Math.Max(1, TabNum));
+            widthMap.Add('\t', W() * Math.Max(1, TabWidth));
             widthMap.Add('\x3000', CalcStringWidth('\x3000'));
 
             // 数字の最大幅を計算
             figWidth_ = 0;
-            for (int i = 0; i <= 9; i++) {
-                //int w2 = getStringWidth(((char)i).ToString());
-                //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
-                //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
-                char num = (char)i;
-                int numw = CalcStringWidth(num);
-                widthMap.Add(num, numw);
+            for (char ch = '0'; ch <= '9'; ++ch) {
+                //char num = (char)i;
+                int numw = CalcStringWidth(ch);
+                widthMap.Add(ch, numw);
                 if (figWidth_ < numw) {
                     figWidth_ = numw;
                 }
             }
-
-            //Win32API.TEXTMETRIC tm;
-            //////using (Graphics g = this.CreateGraphics()) {
-            //Win32API.GetTextMetrics(dc_, out tm);
-            //////}
-            //height_ = tm.tmHeight; //This is what you want.
-            //int kk = 0;
-            //widthPtr = Marshal.AllocHGlobal(65536*sizeof(int));
-            //int ret = Win32API.GetCharWidth32(dc_, ' ', '~', widthPtr + ' ');
-            //if (ret != 0) {
-            //    if (widthPtr != IntPtr.Zero) {
-            //        Marshal.Copy(widthPtr, widthTable_, 0, 65535);
-            //        //int start = (int)' ';
-            //        //int end = (int)'~';
-            //        //for(int i=start;i < end; i++ ){
-
-            //        //}
-
-            //        widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
-
-            //        // 数字の最大幅を計算
-            //        figWidth_ = 0;
-            //        for (int ch = '0'; ch <= '9'; ++ch) {
-            //            if (figWidth_ < widthTable_[ch])
-            //                figWidth_ = widthTable_[ch];
-            //        }
-
-            //        height_ = (int)(config.Font.GetHeight() + 0.5f);
-            //    }
-            //} else {
-            //    Dispose();
-            //    throw new Win32Exception(Marshal.GetLastWin32Error());
-            //}
-
-            numPen = new Pen(Color.Gray);
-            tabbrush = new SolidBrush(Color.Blue);
         }
-
-        public void 
 
         #region IDisposable メンバ
 
         public void Dispose() {
-            //numPen.Dispose();
-            //tabbrush.Dispose();
-            DeleteObj(numPen);
-            DeleteObj(tabbrush);
-
+            DeleteObj(lineNumberBrush);
+            DeleteObj(lineNumberLinePen);
+            DeleteObj(specialCharPen);
             //Marshal.FreeHGlobal(widthPtr);
             Win32API.ReleaseDC(hwnd_, dc_);
 
@@ -199,30 +227,42 @@ namespace AsControls {
 
         public int W(char ch) // 1.08 サロゲートペア回避
         {
-            //unicode ch = *pch;
-            //if( widthTable_[ ch ] == -1 )
-            if (widthTable_[ch] == 0) {
-                if (Util.isHighSurrogate(ch)) {
-                    //Win32API.SIZE sz = new Win32API.SIZE();
-                    //if (Win32API.GetTextExtentPoint32W(dc_, ch.ToString(), 2, ref sz)!=0)
-                    //    return sz.width;
-                    //int w = 0;
-                    //Win32API.GetCharWidthW( dc_, ch, ch, ref w );
-                    //return w;
-                    return CalcStringWidth(ch.ToString());
-                }
-                //int w2 = 0;
-                //Win32API.GetCharWidthW(dc_, ch, ch, ref w2);
-                //widthTable_[ch] = w2;
+            ////unicode ch = *pch;
+            ////if( widthTable_[ ch ] == -1 )
+            //if (widthTable_[ch] == 0) {
+            //    if (Char.IsHighSurrogate(ch)) {
+            //        //Win32API.SIZE sz = new Win32API.SIZE();
+            //        //if (Win32API.GetTextExtentPoint32W(dc_, ch.ToString(), 2, ref sz)!=0)
+            //        //    return sz.width;
+            //        //int w = 0;
+            //        //Win32API.GetCharWidthW( dc_, ch, ch, ref w );
+            //        //return w;
+            //        return CalcStringWidth(ch.ToString());
+            //    }
+            //    //int w2 = 0;
+            //    //Win32API.GetCharWidthW(dc_, ch, ch, ref w2);
+            //    //widthTable_[ch] = w2;
 
-                int w2 = CalcStringWidth(ch.ToString());
-                widthTable_[ch] = w2;
+            //    int w2 = CalcStringWidth(ch.ToString());
+            //    widthTable_[ch] = w2;
+            //}
+            //return widthTable_[ch];
+
+            if (!widthMap.ContainsKey(ch)) {
+                if (Char.IsHighSurrogate(ch)) {
+                    return CalcStringWidth(ch);
+                }
+                widthMap.Add(ch, CalcStringWidth(ch));
             }
-            return widthTable_[ch];
+            return widthMap[ch];
+        }
+
+        public void DrawLine(Graphics g, Pen pen, int x1, int y1, int x2, int y2) {
+            g.DrawLine(pen, x1, y1, x2, y2);
         }
 
         public void DrawLine(Graphics g, int x1, int y1, int x2, int y2) {
-            g.DrawLine(numPen, x1, y1, x2, y2);
+            g.DrawLine(lineNumberLinePen, x1, y1, x2, y2);
         }
 
         public void DrawHSP(Graphics g, int x, int y, int times )
@@ -239,7 +279,7 @@ namespace AsControls {
             while( times-->0 )
             {
                 if( 0 <= pt[3].X )
-                    g.DrawPolygon(numPen, pt);
+                    g.DrawPolygon(specialCharPen, pt);
                 pt[0].X += w;
                 pt[1].X += w;
                 pt[2].X += w;
@@ -250,7 +290,7 @@ namespace AsControls {
         public void DrawZen(Graphics g, int X, int Y, int times) {
             for (int i = 0; i < times; i++) {
                 //g.DrawRectangle(numPen, X + i * widthTable_[' '] + 2, Y + 2, widthTable_[' '] - 4, H() - 4);
-                g.DrawRectangle(numPen, X + i * W('\x3000') + 2, Y + 2, W('\x3000') - 4, H() - 4);
+                g.DrawRectangle(specialCharPen, X + i * W('\x3000') + 2, Y + 2, W('\x3000') - 4, H() - 4);
                 //int w = W(' ')*2 - 4;
                 //int h = H() - 4;
                 //g.DrawRectangle(numPen, 30, 30, 30,30);
@@ -259,17 +299,37 @@ namespace AsControls {
 
         public void DrawTab(Graphics g, int X, int Y, int len) {
             for (int i = 0; i < len; i++) {
-                g.DrawString(">", config_.Font, tabbrush, X + i * T(), Y);
+                //g.DrawString(">", config_.Font, tabbrush, X + i * T(), Y);
             }
         }
+
+        private Point[] returnPt1 = { new Point(), new Point() };
+        private Point[] returnPt2 = { new Point(), new Point(), new Point() };
+        public void DrawReturn(Graphics g, int X, int Y) {
+            //g.DrawString("↓", config_.Font, tabbrush, X - 2, Y);
+            returnPt1[0].X = X+2;
+            returnPt1[0].Y = Y-2;
+            returnPt1[1].X = X+2 ;
+            returnPt1[1].Y = Y - H()/2-2;
+            g.DrawPolygon(specialCharPen, returnPt1);
+
+            returnPt2[0].X = X+2;
+            returnPt2[0].Y = Y - 2;
+            returnPt2[1].X = X + 2;
+            returnPt2[1].Y = Y;
+            returnPt2[2].X = X + 4;
+            returnPt2[2].Y = Y - 2;
+            g.DrawPolygon(specialCharPen, returnPt2);
+        }
+
         public void DrawLineNum(Graphics g, string text, Color c, int X, int Y) {
-            g.DrawString(text, config_.Font, TextBrush, new Point(X, Y), sf);
+            g.DrawString(text, this.Font, lineNumberBrush, new Point(X, Y), sf);
         }
         public void DrawText(Graphics g, string text, Color c, int X, int Y) {
             //g.DrawString(text, config_.Font, TextBrush, new Point(X, Y));
             TextRenderer.DrawText(g,
                text,
-               config_.Font,
+               this.Font,
                new Point(X, Y),
                c,
                 TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
@@ -277,9 +337,7 @@ namespace AsControls {
 
         }
 
-        public void DrawReturn(Graphics g, int X, int Y) {
-            g.DrawString("↓", config_.Font, tabbrush, X - 2, Y);
-        }
+ 
 
         public void Invert(Graphics g, Rectangle rect) {
             Win32API.InvertRect(g.GetHdc(), ref rect);
@@ -443,7 +501,5 @@ namespace AsControls {
         {
             Win32API.SelectClipRgn(dc_, IntPtr.Zero);
         }
-
-
     }
 }

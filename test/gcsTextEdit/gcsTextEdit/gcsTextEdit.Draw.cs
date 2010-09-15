@@ -267,8 +267,8 @@ namespace AsControls
             //Rectangle  a = new Rectangle( 0, v.YMIN, 0, v.YMIN+p.H() );
             //Rectangle a = new Rectangle(0, 0,,v.YMIN);
             //int clr = -1;
-            int x;//, x2;
-            int i;//, i2;
+            int x=0;//, x2;
+            int i=0;//, i2;
 
             Color color = Color.Black;
             //Attribute attr;
@@ -391,82 +391,7 @@ namespace AsControls
 
                             //attrlen = attrlen - end;
                         }
-
-
                     }
-
-                    //// テキストデータ描画
-                    //for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
-                    //    // n := 次のTokenの頭
-                    //    //t = (flg[i]>>5);
-                    //    t = 0;
-                    //    n = i + t;
-                    //    if (n >= end)
-                    //        n = end;
-                    //    else if (t == 7 || t == 0)
-                    //        //while( n<end && (flg[n]>>5)==0 )
-                    //        while (n < end)
-                    //            ++n;
-
-                    //    // x2, i2 := このTokenの右端
-                    //    i2++;
-                    //    x2 = (str[i] == '\t' ? p.nextTab(x2) : x2 + p.W(str[i]));
-                    //    //	if( x2 <= v.XMIN )
-                    //    //		x=x2, i=i2;
-                    //    while (i2 < n && x2 <= v.XMAX)
-                    //        x2 += p.W(str[i2++]);
-
-                    //    // 再描画すべき範囲と重なっていない
-                    //    if (x2 <= v.XMIN)
-                    //        continue;
-
-                    //    // x, i := このトークンの左端
-                    //    if (x < v.XMIN) {
-                    //        // tabの分が戻りすぎ？
-                    //        x = x2; i = i2;
-                    //        while (v.XMIN < x)
-                    //            x -= p.W(str[--i]);
-                    //    }
-
-                    //    // 背景塗りつぶし
-                    //    a.left = x + v.XBASE;
-                    //    a.right = x2 + v.XBASE;
-                    //    //p.Fill( a );
-                    //    //g.FillRectangle(bb, a.left, a.top, a.right-a.left, a.bottom-a.top);
-
-                    //    // 描画
-                    //    //switch( str[i] )
-                    //    //{
-                    //    //case '\t':
-                    //    //    if( p.sc(scTAB) )
-                    //    //    {
-                    //    //        p.SetColor( clr=CTL );
-                    //    //        for( ; i<i2; ++i, x=p.nextTab(x) )
-                    //    //            p.CharOut( L'>', x+v.XBASE, a.top );
-                    //    //    }
-                    //    //    break;
-                    //    //case ' ':
-                    //    //    if( p.sc(scHSP) )
-                    //    //        p.DrawHSP( x+v.XBASE, a.top, i2-i );
-                    //    //    break;
-                    //    //case '　'://0x3000://L'　':
-                    //    //    if( p.sc(scZSP) )
-                    //    //        p.DrawZSP( x+v.XBASE, a.top, i2-i );
-                    //    //    break;
-                    //    //default:
-                    //    //    if( clr != (flg[i]&3) )
-                    //    //        p.SetColor( clr=(flg[i]&3) );
-                    //    //    p.StringOut( str+i, i2-i, x+v.XBASE, a.top );
-                    //    //    //p.StringOut( str+i, i2-i, x+v.XBASE, a.top );
-                    //    //    // 何故だか２度描きしないとうまくいかん…
-                    //    //    break;
-                    //    //}
-                    //    if (str.Contains("img")) {
-                    //        g.DrawImage(image, x + v.XBASE, a.top);
-                    //    }
-                    //    p.DrawText(g, str.Substring(i, i2 - i), Color.Black, x + v.XBASE, a.top);
-
-                    //}
 
                     // 選択範囲だったら反転
                     //if( v.SYB<=a.top && a.top<=v.SYE )
@@ -482,6 +407,9 @@ namespace AsControls
                         //p.Fill( a );
                         //g.FillRectangle(bb, a.left, a.top, a.right - a.left, a.bottom - a.top);
                     }
+
+
+
                 }
 
                 //// 行末記号描画反転
@@ -498,6 +426,17 @@ namespace AsControls
                 //    if( v.SYB<a.top && a.top<=v.SYE && sc==scEOL )
                 //        Inv( a.top-H, x+v.XBASE, x+v.XBASE+p.Wc('/'), p );
                 //}
+                if( i==doc_.len(tl) && -32768<x+v.XBASE ){
+                    if (ShowReturn && tl != TLM) {
+                        //static const unicode* const sstr[] = { L"[EOF]", L"/" };
+                        //static const int slen[] = { 5, 1 };
+                        //p.SetColor( clr=CTL );
+                        //p.StringOut( sstr[sc], slen[sc], x+v.XBASE, a.top-H );
+                        p.DrawReturn(g, x + v.XBASE, a.top-H);
+                    }
+                    //if (v.SYB < a.top && a.top <= v.SYE && ShowReturn)
+                    //    Inv(g, a.top, x+v.XBASE, x+v.XBASE+p.W(), p );
+                }
             }
 
             // EOF後余白を背景色塗

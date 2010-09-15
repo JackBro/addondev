@@ -128,7 +128,7 @@ namespace AsControls.Parser {
                         if (lex.Block.state == BlockState.end) {
                             //lex.Block.state = BlockState.no;
                         }
-
+                        //b.state = lex.Block.state;
                         break;
                     //case TokenType.Enclose:
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
@@ -176,12 +176,15 @@ namespace AsControls.Parser {
             } else {
                 rules.Add(new Rule { ad = 0, len = line.Length, attr = defaultAttr });
             }
-            line.Block.elem = lex.Block.elem;
+
             line.Rules = rules; 
             //return rules;
             Block next = new Block();
-            next.elem =lex.Block.elem;
 
+            if (lex.Block.elem != null) {
+                line.Block.elem = lex.Block.elem;
+                next.elem = lex.Block.elem;
+            }
             //line.Block.state = lex.Block.state;
 
             if (lex.Block.state == BlockState.end) {

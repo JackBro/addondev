@@ -408,26 +408,21 @@ namespace AsControls.Parser {
             }
             switch (c) {
                 case ' ':
-                    break;
-
-                //case '　':
                 case 0x3000:
-                    break;
-
                 case '\t':
-                    break;
 
                 default:
-                    if (block.state == BlockState.all || block.state == BlockState.start || block.state == BlockState.end) {
+                    //if (block.state == BlockState.all || block.state == BlockState.start || block.state == BlockState.end) {
+                    if (block.state == BlockState.all || block.state == BlockState.start) {
                         //if (fCncEndkeys.Contains((char)c)) {
-                        if(Src.IndexOf(block.elem.end)>=0){
+                        if(Src.IndexOf(block.elem.end, Offset-1)>=0){
 
                             var enelem = encelemDic[block.elem.start];
 
                             //if (Char.IsSymbol((char)c)) {
-                            int index = Src.IndexOf(block.elem.end);
+                            int index = Src.IndexOf(block.elem.end, Offset-1);
                             //reader.unread();
-                            reader.setoffset(index+block.elem.end.Length+1);
+                            reader.setoffset(index+block.elem.end.Length);
                             //lexSymbol(((char)c).ToString());
                             //Block = EncEndlexSymbol(block);
                             enelem.startIndex = 0;
@@ -440,10 +435,11 @@ namespace AsControls.Parser {
                             //}else{
                                 Block = new Block { elem = enelem, state= BlockState.end };
                             //}
-                        } else {
-                             var enelem = encelemDic[block.elem.start];
+                        }
+                        else if (Offset - 1 == 0) {
+                            var enelem = encelemDic[block.elem.start];
 
-                            Block = new Block{ elem= block.elem, state= BlockState.all};
+                            Block = new Block { elem = block.elem, state = BlockState.all };
                             reader.setoffset(Src.Length);
                             enelem.startIndex = 0;
                             enelem.len = Src.Length;
@@ -451,7 +447,25 @@ namespace AsControls.Parser {
                             resultElement = enelem;
 
                             Block = new Block { elem = enelem, state = BlockState.all };
-   
+
+                        }
+                        else {
+                            if (Char.IsDigit((char)c)) {
+                                reader.unread();
+                                lexDigit();
+                                Block = new Block();
+                            }
+                            else if (Util.isIdentifierPart((char)c)) {
+                                reader.unread();
+                                lexKeyWord();
+                                Block = new Block();
+                            }
+                            else if (fkeys.Contains((char)c)) {
+                                //if (Char.IsSymbol((char)c)) {
+                                reader.unread();
+                                //lexSymbol(((char)c).ToString());
+                                lexSymbol();
+                            }
                         }
                     //}else if(block.state == BlockState.end){
 
@@ -557,7 +571,7 @@ namespace AsControls.Parser {
                     int index = elem.exer(this);
                     if (index < 0) {
                         //int ii = reader.offset();
-                        reader.setoffset(reader.offset()+1);
+                        reader.setoffset(reader.offset());
                         reader.unread();
                         return;
                     }
@@ -637,7 +651,7 @@ namespace AsControls.Parser {
                     tok = elem.token;
                     resultElement = elem;
                     int offse = reader.offset();
-                    reader.setoffset(offse+1);
+                    reader.setoffset(offse);
                     //reader.unread(' ');
 
                     return new Block { elem = elem, state= BlockState.end };

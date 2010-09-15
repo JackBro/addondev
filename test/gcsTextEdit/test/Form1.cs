@@ -21,6 +21,7 @@ namespace test
             edit.Name = "1";
             edit.BackColor = Color.White;
             edit.Font = this.Font;
+            edit.ShowReturn = true;
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
@@ -139,8 +140,7 @@ namespace test
 //*/
 //";
 
-            edit.Text = @"'mmmmmmmmmmmmm'
-/*
+            edit.Text = @"/*
 mmmmmmmmmmmmm
 */
 ";
