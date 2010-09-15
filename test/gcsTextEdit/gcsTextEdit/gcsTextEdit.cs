@@ -102,6 +102,7 @@ namespace AsControls {
             set {
                 base.Font = value;
                 fnt().Font = value;
+                fnt().init(); //TODO fnt().init();
             }
         }
 

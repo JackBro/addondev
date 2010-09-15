@@ -167,7 +167,8 @@ namespace AsControls {
 
             int i;
             Block block = text_[startrl].Block;
-            
+            //BlockState state = block.state;
+            //string end = block.elem == null ? string.Empty : block.elem.end;
             // まずは変更範囲を再解析
             for (i = startrl; i <= endrl; ++i) {
 
@@ -176,28 +177,60 @@ namespace AsControls {
                     //block.state = BlockState.no;
                 }
             }
-
+           
             // コメントアウト状態に変化がなかったらここでお終い。
             if (i == tln() || text_[i].Block.state == block.state)
                 return false;
 
+            BlockState state = block.state;
+            string end = block.elem == null ? string.Empty : block.elem.end;
             // 例えば、/* が入力された場合などは、下の方の行まで
             // コメントアウト状態の変化を伝達する必要がある。
             //do
             //    cmt = text_[i++].TransitCmt(cmt);
             //while (i < tln() && text_[i].isLineHeadCmt() != cmt);
             int ii = tln();
-            BlockState state = block.state;
+            //BlockState state = text_[i].Block.state;// block.state;
+            //BlockState state = block.state;
+            //string end = block.elem.end;
+            EncloseElement elem2;
             Line line;// = text_[i];
             do {
                 line = text_[i];
-                state = line.Block.state;
+                //state = line.Block.state;
+                elem2 = line.Block.elem;
                 block = parser.Parse(line, block);
                 i++;
-            } while (i < tln() && line.Block.state != state);
+            //} while (i < tln() && line.Block.state != state);
+            }
+            //while (i < tln() && (elem2.end != end));
+            while (i < tln() && !diff(state, line.Block.state));
+            // while (i < tln());
             return true;
 
             //return false;
+        }
+
+        private bool diff(BlockState s1, BlockState s2) {
+
+            if (s1 == BlockState.no) {
+                if (s2 != BlockState.no) return false;
+            }else {
+                if (s2 == BlockState.no) return true;
+            }
+
+            //if (s1 == BlockState.all || s1 == BlockState.start) {
+            //    if (s2 == BlockState.all || s2 == BlockState.start) {
+            //        return true;
+            //    }
+            //}
+            //if (s1 == BlockState.end || s1 == BlockState.start_end || s1 == BlockState.no) {
+            //    if (s2 == BlockState.end || s2 == BlockState.start_end || s2 == BlockState.no) {
+            //        return true;
+            //    }
+            //}
+
+            return false;
         }
 
         //private void Insert(ref VPos s, ref VPos e, string text) {

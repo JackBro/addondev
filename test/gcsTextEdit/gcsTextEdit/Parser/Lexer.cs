@@ -255,35 +255,25 @@ namespace AsControls.Parser {
                 encelemDic.Add(elem.start, (EncloseElement)elem);
                 encendelemDic.Add(((EncloseElement)elem).end, (EncloseElement)elem);
 
-                //string key = string.Empty;
                 foreach (var item in encendelemDic.Values) {
-                    //key += item.end[0];
                     if (!fCncEndkeys.Contains(item.end[0])) {
                         fCncEndkeys += item.end[0];
                     }
                 }
-                //fCncEndkeys = key;
-
-                //key = string.Empty;
                 foreach (var item in encelemDic.Values) {
                     if (!fkeys.Contains(item.start[0])) {
                         fkeys += item.start[0];
                     }
-                    //key += item.start[0];
                 }
-                //fkeys = key;
 
             }else{
                 elemDic.Add(elem.start, elem);
 
-                //string key = string.Empty;
                 foreach (var item in elemDic.Values) {
-                    //key += item.start[0];
                     if (!fkeys.Contains(item.start[0])) {
                         fkeys += item.start[0];
                     }
                 }
-                //fkeys = key;
             }
         }
 
@@ -467,7 +457,6 @@ namespace AsControls.Parser {
                                 lexSymbol();
                             }
                         }
-                    //}else if(block.state == BlockState.end){
 
                     } else {
                         if (Char.IsDigit((char)c)) {

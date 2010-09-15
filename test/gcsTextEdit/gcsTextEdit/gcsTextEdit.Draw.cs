@@ -432,7 +432,7 @@ namespace AsControls
                         //static const int slen[] = { 5, 1 };
                         //p.SetColor( clr=CTL );
                         //p.StringOut( sstr[sc], slen[sc], x+v.XBASE, a.top-H );
-                        p.DrawReturn(g, x + v.XBASE, a.top-H);
+                        p.DrawReturn(g, x + v.XBASE, a.top - H);
                     }
                     //if (v.SYB < a.top && a.top <= v.SYE && ShowReturn)
                     //    Inv(g, a.top, x+v.XBASE, x+v.XBASE+p.W(), p );

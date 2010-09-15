@@ -180,7 +180,7 @@ namespace AsControls {
 
         public void init() {
 
-            height_ = (int)(this.Font.GetHeight() + 0.5f)+3;
+            height_ = (int)(this.Font.GetHeight() + 0.5f);
             
             widthMap.Clear();
             widthMap.Add('x', CalcStringWidth('x'));
@@ -307,19 +307,19 @@ namespace AsControls {
         private Point[] returnPt2 = { new Point(), new Point(), new Point() };
         public void DrawReturn(Graphics g, int X, int Y) {
             //g.DrawString("↓", config_.Font, tabbrush, X - 2, Y);
-            returnPt1[0].X = X+2;
-            returnPt1[0].Y = Y-2;
-            returnPt1[1].X = X+2 ;
-            returnPt1[1].Y = Y - H()/2-2;
+            returnPt1[0].X = X+4;
+            returnPt1[0].Y = Y + 2;
+            returnPt1[1].X = X+4 ;
+            returnPt1[1].Y = Y + H() -2;
             g.DrawPolygon(specialCharPen, returnPt1);
 
-            returnPt2[0].X = X+2;
-            returnPt2[0].Y = Y - 2;
-            returnPt2[1].X = X + 2;
-            returnPt2[1].Y = Y;
-            returnPt2[2].X = X + 4;
-            returnPt2[2].Y = Y - 2;
-            g.DrawPolygon(specialCharPen, returnPt2);
+            returnPt2[0].X = X + 2;
+            returnPt2[0].Y = Y + H() - 4;
+            returnPt2[1].X = X + 4;
+            returnPt2[1].Y = Y + H()-2;
+            returnPt2[2].X = X + 6;
+            returnPt2[2].Y = Y + H() - 4;
+            g.DrawLines(specialCharPen, returnPt2);
         }
 
         public void DrawLineNum(Graphics g, string text, Color c, int X, int Y) {
