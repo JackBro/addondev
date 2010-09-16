@@ -279,7 +279,7 @@ namespace AsControls {
             while( times-->0 )
             {
                 if( 0 <= pt[3].X )
-                    g.DrawPolygon(specialCharPen, pt);
+                    g.DrawLines(specialCharPen, pt);
                 pt[0].X += w;
                 pt[1].X += w;
                 pt[2].X += w;
@@ -288,17 +288,14 @@ namespace AsControls {
         }
 
         public void DrawZen(Graphics g, int X, int Y, int times) {
+            int w = W('\x3000');
             for (int i = 0; i < times; i++) {
-                //g.DrawRectangle(numPen, X + i * widthTable_[' '] + 2, Y + 2, widthTable_[' '] - 4, H() - 4);
-                g.DrawRectangle(specialCharPen, X + i * W('\x3000') + 2, Y + 2, W('\x3000') - 4, H() - 4);
-                //int w = W(' ')*2 - 4;
-                //int h = H() - 4;
-                //g.DrawRectangle(numPen, 30, 30, 30,30);
+                g.DrawRectangle(specialCharPen, X + i * w + 2, Y + 2, w - 4, H() - 4);
             }
         }
 
-        public void DrawTab(Graphics g, int X, int Y, int len) {
-            for (int i = 0; i < len; i++) {
+        public void DrawTab(Graphics g, int X, int Y, int times) {
+            for (int i = 0; i < times; i++) {
                 //g.DrawString(">", config_.Font, tabbrush, X + i * T(), Y);
             }
         }

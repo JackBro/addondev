@@ -93,6 +93,7 @@ namespace AsControls
         }
         public bool isImeComposition(Message m) {
             return (ImeCompositedHira != null && m.Msg == WM_IME_COMPOSITION);
+            //return ( m.Msg == WM_IME_COMPOSITION);
         }
 
         public void ImeComposition(Message m) {
@@ -116,7 +117,8 @@ namespace AsControls
             }
         }
         public bool isStartcomposition(Message m) {
-            return (ImeCompositedHira != null && m.Msg == WM_IME_STARTCOMPOSITION);
+            //return (ImeCompositedHira != null && m.Msg == WM_IME_STARTCOMPOSITION);
+            return ( m.Msg == WM_IME_STARTCOMPOSITION);
         }
         public void ImeStartcomposition(Message m, int x, int y) {
             int hIMC = ImmGetContext(this.control.Handle);

@@ -403,7 +403,7 @@ namespace AsControls {
 
         protected override void WndProc(ref Message m) {
             if (imeComposition != null) {
-                //imeComposition.Ime(m, 0, 0);
+                //imeComposition.ImeComposition(m, 0, 0);
                 if (imeComposition.isImeComposition(m)) {
                     imeComposition.ImeComposition(m);
                 }

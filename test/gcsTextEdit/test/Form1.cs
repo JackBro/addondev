@@ -22,6 +22,8 @@ namespace test
             edit.BackColor = Color.White;
             edit.Font = this.Font;
             edit.ShowReturn = true;
+            edit.ShowWhiteSpace = true;
+            edit.ShowZenWhiteSpace = true;
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
@@ -140,9 +142,10 @@ namespace test
 //*/
 //";
 
-            edit.Text = @"/*
+            edit.Text = @"/*m*/
 mmmmmmmmmmmmm
 */
+mm
 ";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
