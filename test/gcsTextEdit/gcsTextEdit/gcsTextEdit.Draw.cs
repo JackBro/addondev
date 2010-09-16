@@ -334,15 +334,15 @@ namespace AsControls
                                 foreach (var ps in Painter.parse(s, cs)) {
                                     switch (ps[0]) {
                                         case ' ':
-                                            p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
+                                            if(ShowWhiteSpace) p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
                                             x += p.CalcStringWidth(ps);
                                             break;
                                         case '\x3000': //0x3000://L'　':
-                                            p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
+                                            if(ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
                                             x += p.CalcStringWidth(ps);
                                             break;
                                         case '\t':
-                                            p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
+                                            if(ShowTab) p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
                                             x += p.T() * ps.Length;//p.CalcStringWidth(s[ci].ToString());
                                             break;
                                         default:

@@ -250,7 +250,7 @@ namespace AsControls {
             }
             while (i < tln() && text_[i].Block.isLineHeadCmt != cmt);
 
-            for (int i2 = s; i2 <= i; i2++) {
+            for (int i2 = s; i2 < tln() && i2 <= i; i2++) {
                 block = parser.Parse(text_[i2], block, cmt);
                 cmt = parser.cmt;
             }

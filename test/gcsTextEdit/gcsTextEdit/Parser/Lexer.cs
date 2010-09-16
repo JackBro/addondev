@@ -108,39 +108,39 @@ namespace AsControls.Parser {
                 encelemDic.Add(elem.start, (MultiLineRule)elem);
                 encendelemDic.Add(((MultiLineRule)elem).end, (MultiLineRule)elem);
 
-                //foreach (var item in encendelemDic.Values) {
-                //    if (!fCncEndkeys.Contains(item.end[0])) {
-                //        fCncEndkeys += item.end[0];
-                //    }
-                //}
-                //foreach (var item in encelemDic.Values) {
-                //    if (!fkeys.Contains(item.start[0])) {
-                //        fkeys += item.start[0];
-                //    }
-                //}
+                foreach (var item in encendelemDic.Values) {
+                    if (!fCncEndkeys.Contains(item.end[0])) {
+                        fCncEndkeys += item.end[0];
+                    }
+                }
+                foreach (var item in encelemDic.Values) {
+                    if (!fkeys.Contains(item.start[0])) {
+                        fkeys += item.start[0];
+                    }
+                }
 
             }else{
                 elemDic.Add(elem.start, elem);
 
-                //foreach (var item in elemDic.Values) {
-                //    if (!fkeys.Contains(item.start[0])) {
-                //        fkeys += item.start[0];
-                //    }
-                //}
+                foreach (var item in elemDic.Values) {
+                    if (!fkeys.Contains(item.start[0])) {
+                        fkeys += item.start[0];
+                    }
+                }
             }
 
-            fCncEndkeys = string.Empty;
-            foreach (var item in encendelemDic.Values) {
-                if (!fCncEndkeys.Contains(item.end[0])) {
-                    fCncEndkeys += item.end[0];
-                }
-            }
-            fkeys = string.Empty;
-            foreach (var item in encelemDic.Values) {
-                if (!fkeys.Contains(item.start[0])) {
-                    fkeys += item.start[0];
-                }
-            }
+            //fCncEndkeys = string.Empty;
+            //foreach (var item in encendelemDic.Values) {
+            //    if (!fCncEndkeys.Contains(item.end[0])) {
+            //        fCncEndkeys += item.end[0];
+            //    }
+            //}
+            //fkeys = string.Empty;
+            //foreach (var item in encelemDic.Values) {
+            //    if (!fkeys.Contains(item.start[0])) {
+            //        fkeys += item.start[0];
+            //    }
+            //}
         }
 
         //public void AddDefaultElement(Rule elem) {
@@ -400,11 +400,13 @@ namespace AsControls.Parser {
                     else { //1: 行頭がブロックコメントの内部
                         //if (fCncEndkeys.Contains((char)c)) {
                         if (Src.IndexOf(preblock.elem.end, Offset - 1) >= 0) {
+                        //if (Src.IndexOf(preblock.elem.end, Offset) >= 0) {
 
                             var enelem = encelemDic[preblock.elem.start];
 
                             //if (Char.IsSymbol((char)c)) {
                             int index = Src.IndexOf(preblock.elem.end, Offset - 1);
+                            //int index = Src.IndexOf(preblock.elem.end, Offset);
                             //reader.unread();
                             reader.setoffset(index + preblock.elem.end.Length);
                             //lexSymbol(((char)c).ToString());
@@ -424,6 +426,7 @@ namespace AsControls.Parser {
                             //}
                         }
                         else if (Offset - 1 == 0) {
+                        //else if (Offset - 1 == 0) {
                             var enelem = encelemDic[preblock.elem.start];
 
                             //Block = new Block { elem = preblock.elem, state = BlockState.all };
@@ -612,6 +615,7 @@ namespace AsControls.Parser {
             StringBuilder buf = new StringBuilder();
             //if (initstr != null) buf.Append(initstr);
             int offset = reader.offset() - 1;
+
             while (true) {
 
                 if (elemDic.ContainsKey(buf.ToString())) {

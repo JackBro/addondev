@@ -86,7 +86,7 @@ namespace AsControls.Parser {
 
             lex.AddElement(new MultiLineRule("/*", "*/", new Attribute(Color.Green, true, false, false, false)));
 
-            lex.AddElement(new MultiLineRule("'", "'", new Attribute(Color.Brown, false, false, false, false)));
+            lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, false, false, false, false)));
 
             lex.AddElement(new EndLineRule("//", new Attribute(Color.LightBlue, false, false, false, false)));
 
@@ -294,7 +294,8 @@ namespace AsControls.Parser {
                     if (isnext)
                         line.Block.commentTransition = 3;
                     else
-                        line.Block.commentTransition = 2;
+                        //line.Block.commentTransition = 2;
+                        line.Block.commentTransition = 0;
                 }
                 else if (ad == 0 && len < line.Text.ToString().Length) {
                     line.Block.commentTransition = 1;
@@ -304,7 +305,8 @@ namespace AsControls.Parser {
                     if (isnext)
                         line.Block.commentTransition = 3;
                     else
-                        line.Block.commentTransition = 1;
+                        //line.Block.commentTransition = 1;
+                        line.Block.commentTransition = 0;
                 }
                 else {
                     line.Block.commentTransition = 2;
@@ -328,7 +330,8 @@ namespace AsControls.Parser {
                      if (eisnext)
                          line.Block.commentTransition = 3;
                      else
-                         line.Block.commentTransition = 2;
+                         //line.Block.commentTransition = 2;
+                        line.Block.commentTransition = 0;
                 }
                 else if (fad == 0 && (ead + elen < line.Text.ToString().Length)) {
                     line.Block.commentTransition = 1;
@@ -342,7 +345,8 @@ namespace AsControls.Parser {
                     if (eisnext)
                         line.Block.commentTransition = 3;
                     else
-                        line.Block.commentTransition = 1;
+                        //line.Block.commentTransition = 1;
+                        line.Block.commentTransition = 0;
                 }
                 else {
                     line.Block.commentTransition = 2;
@@ -397,9 +401,9 @@ namespace AsControls.Parser {
             //else {
             //    next.state = lex.Block.state;
             //}
-
-            cmt = (line.Block.commentTransition >> line.Block.isLineHeadCmt) & 1;
-            line.Block.isLineHeadCmt = cmt;
+            //line.Block.isLineHeadCmt = cmt;
+            cmt = (line.Block.commentTransition >> cmt) & 1;
+            
             return line.Block;//lex.Block;
         }
 
