@@ -234,26 +234,47 @@ namespace AsControls {
             if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
                 return false;
 
+
+
+            int s2 = i;
+            int pcmt = 0;
+            Rule prule = null;
+            //int tmpcmt = cmt;
+
             //BlockState state = block.state;
             //string end = block.elem == null ? string.Empty : block.elem.end;
             // 例えば、/* が入力された場合などは、下の方の行まで
             // コメントアウト状態の変化を伝達する必要がある。
             do{
                 //cmt = text_[i++].TransitCmt(cmt);
-                Line line = text_[i++];
-                //line.Block.isLineHeadCmt = cmt;
-                cmt = TransitCmt(line, cmt);
-                //block = parser.Parse(text_[i++], block, cmt);
-                //block = parser.Parse(text_[i], block, cmt);
-                //i++;
-                //cmt = parser.cmt;
-            }
-            while (i < tln() && text_[i].Block.isLineHeadCmt != cmt);
 
-            for (int i2 = s; i2 < tln() && i2 <= i; i2++) {
-                block = parser.Parse(text_[i2], block, cmt);
+                Line line = text_[i++];
+                pcmt = line.Block.isLineHeadCmt;
+                //cmt = TransitCmt(line, cmt);
+                prule = line.Block.elem;
+                //block = parser.Parse(text_[i++], block, cmt);
+                block = parser.Parse(line, block, cmt);
                 cmt = parser.cmt;
+                if (pcmt == cmt) {
+                    if (prule != block.elem) {
+                        pcmt--;
+                    }
+                    else {
+                        int sa = 0;
+                    }
+                }
             }
+            //while (i < tln() && text_[i].Block.isLineHeadCmt != cmt);
+            while (i < tln() && pcmt != cmt);
+
+            //cmt = text_[s].Block.isLineHeadCmt;
+            ////for (int i2 = s; i2 < tln() && i2 <= i; i2++) {
+            //for (int i2 = s; i2 < tln() && i2 <= i; i2++) {
+            //    block = parser.Parse(text_[i2], block, cmt);
+            //    cmt = parser.cmt;
+            //}
+
+
             //int ii = tln();
             ////BlockState state = text_[i].Block.state;// block.state;
             ////BlockState state = block.state;
@@ -277,32 +298,32 @@ namespace AsControls {
         }
 
         private int TransitCmt(Line line, int start) {
-            line.Block.isLineHeadCmt = start;
+            //line.Block.isLineHeadCmt = start;
             //commentBitReady_ = false;
             return (line.Block.commentTransition >> start) & 1;
         }
 
-        private bool diff(BlockState s1, BlockState s2) {
+        //private bool diff(BlockState s1, BlockState s2) {
 
-            if (s1 == BlockState.no) {
-                if (s2 != BlockState.no) return false;
-            }else {
-                if (s2 == BlockState.no) return true;
-            }
+        //    if (s1 == BlockState.no) {
+        //        if (s2 != BlockState.no) return false;
+        //    }else {
+        //        if (s2 == BlockState.no) return true;
+        //    }
 
-            //if (s1 == BlockState.all || s1 == BlockState.start) {
-            //    if (s2 == BlockState.all || s2 == BlockState.start) {
-            //        return true;
-            //    }
-            //}
-            //if (s1 == BlockState.end || s1 == BlockState.start_end || s1 == BlockState.no) {
-            //    if (s2 == BlockState.end || s2 == BlockState.start_end || s2 == BlockState.no) {
-            //        return true;
-            //    }
-            //}
+        //    //if (s1 == BlockState.all || s1 == BlockState.start) {
+        //    //    if (s2 == BlockState.all || s2 == BlockState.start) {
+        //    //        return true;
+        //    //    }
+        //    //}
+        //    //if (s1 == BlockState.end || s1 == BlockState.start_end || s1 == BlockState.no) {
+        //    //    if (s2 == BlockState.end || s2 == BlockState.start_end || s2 == BlockState.no) {
+        //    //        return true;
+        //    //    }
+        //    //}
 
-            return false;
-        }
+        //    return false;
+        //}
 
         //private void Insert(ref VPos s, ref VPos e, string text) {
         internal bool InsertingOperation(ref DPos s, string text, ref DPos e) {

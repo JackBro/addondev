@@ -6,17 +6,7 @@ using AsControls.Parser;
 
 namespace AsControls
 {
-    public static class isLineHeadCommented {
-        public static int firstout = 0;
-        public static int firstin = 1;
-    }
 
-    public static class commentTransition {
-        public static int lastout=0;
-        public static int firstlastrev=1;
-        public static int firstlastsame=2;
-        public static int lastin = 3;
-    }
 
     public class Line
     {

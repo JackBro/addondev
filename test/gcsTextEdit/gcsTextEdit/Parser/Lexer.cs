@@ -362,6 +362,11 @@ namespace AsControls.Parser {
             //resultAttr = null;
             tok = TokenType.TXT;
 
+            if (Src.Length == 0 && curblock.isLineHeadCmt == 1) {
+                curblock.elem = preblock.elem;
+                isNextLine = true;
+            }
+
             int c = reader.read();
             if (c == -1) {
                 tok = TokenType.EOS;
@@ -691,39 +696,39 @@ namespace AsControls.Parser {
             }
         }
 
-        private Block EncEndlexSymbol(Block block) {
-            StringBuilder buf = new StringBuilder();
-            //if (initstr != null) buf.Append(initstr);
-            int offset = reader.offset() - 1;
-            while (true) {
+        //private Block EncEndlexSymbol(Block block) {
+        //    StringBuilder buf = new StringBuilder();
+        //    //if (initstr != null) buf.Append(initstr);
+        //    int offset = reader.offset() - 1;
+        //    while (true) {
 
-                if (encendelemDic.ContainsKey(buf.ToString()) && block.elem.end == buf.ToString()) {
+        //        if (encendelemDic.ContainsKey(buf.ToString()) && block.elem.end == buf.ToString()) {
 
-                    MultiLineRule elem = encendelemDic[buf.ToString()];
-                    //int offset = reader.offset()-elem.start.Length;
+        //            MultiLineRule elem = encendelemDic[buf.ToString()];
+        //            //int offset = reader.offset()-elem.start.Length;
 
-                    //int offset = reader.offset() - value.Length;
-                    value = reader.Src.Substring(0, reader.offset());
-                    elem.startIndex = 0;
-                    elem.len = value.Length;
-                    tok = elem.token;
-                    resultElement = elem;
-                    int offse = reader.offset();
-                    reader.setoffset(offse);
-                    //reader.unread(' ');
+        //            //int offset = reader.offset() - value.Length;
+        //            value = reader.Src.Substring(0, reader.offset());
+        //            elem.startIndex = 0;
+        //            elem.len = value.Length;
+        //            tok = elem.token;
+        //            resultElement = elem;
+        //            int offse = reader.offset();
+        //            reader.setoffset(offse);
+        //            //reader.unread(' ');
 
-                    return new Block { elem = elem, state= BlockState.end };
-                }
+        //            return new Block { elem = elem, state= BlockState.end };
+        //        }
 
-                int c = reader.read();
-                if (c == -1) {
-                    //tok = TokenType.EOS;
-                    break;
-                }
-                buf.Append((char)c);
-            }
-            return new Block { elem = block.elem, state = BlockState.all };
-        }
+        //        int c = reader.read();
+        //        if (c == -1) {
+        //            //tok = TokenType.EOS;
+        //            break;
+        //        }
+        //        buf.Append((char)c);
+        //    }
+        //    return new Block { elem = block.elem, state = BlockState.all };
+        //}
 
     }
 }

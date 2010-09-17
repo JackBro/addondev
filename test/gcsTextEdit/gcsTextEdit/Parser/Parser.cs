@@ -6,28 +6,52 @@ using System.Drawing;
 
 namespace AsControls.Parser {
 
+    //public static class isLineHeadCommented {
+    //    public static int firstout = 0;
+    //    public static int firstin = 1;
+    //}
+
+    //public static class commentTransition {
+    //    public static int lastout=0;
+    //    public static int firstlastrev=1;
+    //    public static int firstlastsame=2;
+    //    public static int lastin = 3;
+    //}
+
+    public enum isLineHeadCommented {
+        firstout = 0,
+        firstin
+    }
+
+    public enum commentTransition {
+        lastout = 0,
+        firstlastrev,
+        firstlastsame,
+        lastin
+    }
+
     public class Token {
         public int ad;
         public int len;
         public Attribute attr;
     }
 
-    public enum BlockState {
-        start,
-        end,
-        start_end,
-        all,
-        no
-    }
+    //public enum BlockState {
+    //    start,
+    //    end,
+    //    start_end,
+    //    all,
+    //    no
+    //}
 
     public class Block {
-        public BlockState state;
+        //public BlockState state;
         public MultiLineRule elem;
         public int isLineHeadCmt = 0;
         public int commentTransition = 0;
 
         public Block() {
-            state = BlockState.no;
+            //state = BlockState.no;
         }
     }
 
@@ -84,9 +108,9 @@ namespace AsControls.Parser {
             
             lex.AddElement(new KeywordRule("test", new Attribute(Color.DarkGray, false, false, false, false)));
 
-            lex.AddElement(new MultiLineRule("/*", "*/", new Attribute(Color.Green, true, false, false, false)));
+            lex.AddElement(new MultiLineRule("/*", "*/", new Attribute(Color.Red, true, false, false, false)));
 
-            lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, false, false, false, false)));
+            lex.AddElement(new MultiLineRule("'", "'", new Attribute(Color.Brown, false, false, false, false)));
 
             lex.AddElement(new EndLineRule("//", new Attribute(Color.LightBlue, false, false, false, false)));
 
@@ -283,7 +307,12 @@ namespace AsControls.Parser {
             //   10: 行頭と行末はコメント状態が同じ
             //   11: 行末は常にコメントの中
             if (cmstrulrs.Count == 0) {
-                line.Block.commentTransition = 0;
+                if (line.Text.Length ==0 && _cmt == 1) {
+                    line.Block.commentTransition = 3;
+                }
+                else {
+                    line.Block.commentTransition = 0;
+                }
             }
             else if (cmstrulrs.Count == 1) {
                 int ad = cmstrulrs[0].t1;
@@ -293,20 +322,28 @@ namespace AsControls.Parser {
                 if (ad == 0 && len == line.Text.ToString().Length) {
                     if (isnext)
                         line.Block.commentTransition = 3;
-                    else
-                        //line.Block.commentTransition = 2;
-                        line.Block.commentTransition = 0;
+                    else if (_cmt == 1) {
+                        line.Block.commentTransition = 1;
+                    }else{
+                        line.Block.commentTransition = 2;
+                        //line.Block.commentTransition = 0;
+                    }
                 }
                 else if (ad == 0 && len < line.Text.ToString().Length) {
-                    line.Block.commentTransition = 1;
+                    if (_cmt == 1) {
+                        line.Block.commentTransition = 1;
+                    }
+                    else {
+                        line.Block.commentTransition = 2;
+                    }
                 }
                 else if (ad > 0 && (ad+len == line.Text.ToString().Length)) {
                     //line.Block.commentTransition = 1;
                     if (isnext)
                         line.Block.commentTransition = 3;
                     else
-                        //line.Block.commentTransition = 1;
-                        line.Block.commentTransition = 0;
+                        line.Block.commentTransition = 1;
+                        //line.Block.commentTransition = 0;
                 }
                 else {
                     line.Block.commentTransition = 2;
@@ -326,27 +363,42 @@ namespace AsControls.Parser {
 
                 if (fad == 0 && (ead + elen == line.Text.ToString().Length)) {
 
-                    //line.Block.commentTransition = 2;
-                     if (eisnext)
+                    ////line.Block.commentTransition = 2;
+                    // if (eisnext)
+                    //     line.Block.commentTransition = 3;
+                    // else
+                    //    line.Block.commentTransition = 2;
+                    //    //line.Block.commentTransition = 0;
+
+                    if (eisnext)
                          line.Block.commentTransition = 3;
-                     else
-                         //line.Block.commentTransition = 2;
-                        line.Block.commentTransition = 0;
+                    else if (_cmt == 1) {
+                        line.Block.commentTransition = 1;
+                    }else{
+                        line.Block.commentTransition = 2;
+                        //line.Block.commentTransition = 0;
+                    }
                 }
                 else if (fad == 0 && (ead + elen < line.Text.ToString().Length)) {
-                    line.Block.commentTransition = 1;
+                    //line.Block.commentTransition = 1;
+
+                    if (_cmt == 1) {
+                        line.Block.commentTransition = 1;
+                    }
+                    else {
+                        line.Block.commentTransition = 2;
+                    }
                 }
                 else if (fad > 0 && (ead + elen < line.Text.ToString().Length)) {
                     line.Block.commentTransition = 2;
                 }
                 else if (fad > 0 && (ead + elen == line.Text.ToString().Length)) {
-                    //line.Block.commentTransition = 1;
-                    //line.Block.commentTransition = 3;
+
                     if (eisnext)
                         line.Block.commentTransition = 3;
                     else
-                        //line.Block.commentTransition = 1;
-                        line.Block.commentTransition = 0;
+                        line.Block.commentTransition = 1;
+                    //line.Block.commentTransition = 0;
                 }
                 else {
                     line.Block.commentTransition = 2;
@@ -401,8 +453,8 @@ namespace AsControls.Parser {
             //else {
             //    next.state = lex.Block.state;
             //}
-            //line.Block.isLineHeadCmt = cmt;
-            cmt = (line.Block.commentTransition >> cmt) & 1;
+            line.Block.isLineHeadCmt = _cmt;
+            cmt = (line.Block.commentTransition >> _cmt) & 1;
             
             return line.Block;//lex.Block;
         }
