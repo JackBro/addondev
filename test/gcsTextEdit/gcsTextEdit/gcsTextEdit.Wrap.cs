@@ -376,8 +376,17 @@ namespace AsControls
 
                 tl = vl = rl = 0;
             } else {
-                if (linemode) //TODO 行選択モードの場合
+                if (linemode)
                 {
+                    if( tl == (int)doc_.tln()-1 ){
+				        rl=rln(tl)-1; 
+                        x=0x4fffffff;
+			        }else{
+				        vl+=rln(tl);
+                        rl=0;
+                        ++tl;
+                        x = 0;
+                    }
                 }
             }
 

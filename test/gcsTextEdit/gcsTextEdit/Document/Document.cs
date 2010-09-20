@@ -236,7 +236,7 @@ namespace AsControls {
 
 
 
-            int s2 = i;
+            //int s2 = i;
             int pcmt = 0;
             Rule prule = null;
             //int tmpcmt = cmt;
@@ -245,6 +245,7 @@ namespace AsControls {
             //string end = block.elem == null ? string.Empty : block.elem.end;
             // 例えば、/* が入力された場合などは、下の方の行まで
             // コメントアウト状態の変化を伝達する必要がある。
+            //bool issamerule = true;
             do{
                 //cmt = text_[i++].TransitCmt(cmt);
 
@@ -257,14 +258,15 @@ namespace AsControls {
                 cmt = parser.cmt;
                 if (pcmt == cmt) {
                     if (prule != block.elem) {
+                        //issamerule = false;
                         pcmt--;
                     }
-                    else {
-                        int sa = 0;
-                    }
+                    //else {
+                    //    //issamerule = true;
+                    //}
                 }
             }
-            //while (i < tln() && text_[i].Block.isLineHeadCmt != cmt);
+            //while (i < tln() && text_[i].Block.isLineHeadCmt != cmt && issamerule);
             while (i < tln() && pcmt != cmt);
 
             //cmt = text_[s].Block.isLineHeadCmt;
@@ -499,6 +501,113 @@ namespace AsControls {
 
             return buff.ToString();
         }
+
+        //public Func<int, int> rln;
+        //public Func<int, int, int> rlend;
+        //public Func<int> selRectX;
+
+        //internal string getRangesText(DPos s, DPos e) {
+            
+        //    IText buff;
+        //    if (s.tl == e.tl) {
+        //        // 一行だけの場合
+        //        //text_[s.tl].CopyAt( s.ad, e.ad-s.ad, buf );
+        //        //buf[e.ad-s.ad] = L'\0';
+        //        //buff = text_[s.tl].Text.Substring(s.ad, e.ad - s.ad);
+                
+        //        int len = s.ad;
+        //        int r = rln(s.tl);
+        //        //List<int> rlist = new List<int>(r);
+        //        //rlist.Add(0);
+        //        //for (int i = 0; i < r; i++) {
+        //        //    rlist.Add(rlend(s.tl, 0));
+        //        //}
+
+        //        int start = 0;
+        //        for (start = 0; start < r; start++)
+        //        {
+        //            int rpos = rlend(s.tl, start);
+        //            if(s.ad<rpos){
+        //                //start = i;
+        //                //start
+
+        //                start--;
+        //                if (start < 0) start = 0;
+
+        //                if (start > 0) {
+        //                    int rendpos = rlend(s.tl, start-1);
+        //                    len = s.ad - rendpos;
+        //                }
+        //                break;
+        //            }
+        //        }
+
+        //        //int sellen = selRectX()/;
+
+        //        int end = 0;
+        //        for (end = start; end < r; end++) {
+        //            int rpos = rlend(s.tl, end);
+        //            if (s.ad < rpos) {
+        //                //start = i;
+        //                //start
+        //                end--;
+        //                if (end < 0) end = 0;
+        //                break;
+        //            }
+        //        }
+
+        //        //if (r < start) start = r;
+        //        //start--;
+
+        //        if (r > 0) {
+        //            buff = new LineBuffer("");
+
+        //            //int rpos = rlend(s.tl, 0);
+        //            int rendpos = rlend(s.tl, end);
+        //            int rlen = e.ad-rendpos;
+
+        //            //buff = text_[s.tl].Text.Substring(s.ad, rlen);
+        //            for (int i = 0; i <= start+1; i++) {
+        //                int rpos = rlend(s.tl, i);
+        //                string ss = text_[s.tl].Text.Substring(rpos, rlen).ToString();
+        //                buff.Append(ss);
+                        
+        //            }
+        //        } else {
+        //            buff = text_[s.tl].Text.Substring(s.ad, e.ad - s.ad);
+        //        }
+
+        //    } else {
+        //        int sad = s.ad;
+        //        int len = e.ad-s.ad;
+
+        //        buff = new LineBuffer("");
+        //        // 先頭行の後ろをコピー
+        //        //buf += text_[s.tl].CopyToTail( s.ad, buf );
+        //        //*buf++ = '\r', *buf++ = '\n';
+        //        buff.Append(text_[s.tl].Text.Substring(s.ad).ToString());
+        //        buff.Append("\r\n");
+        //        // 途中をコピー
+        //        for (int i = s.tl + 1; i < e.tl; i++) {
+        //            //buf += text_[i].CopyToTail( 0, buf );
+        //            //*buf++ = '\r', *buf++ = '\n';
+                    
+        //            //buff.Append(text_[i].Text.Substring(0).ToString());
+        //            if (text_[i].Text.Length < e.ad) {
+        //                buff.Append(text_[i].Text.Substring(s.ad, text_[i].Text.Length - s.ad).ToString());
+        //            } else {
+        //                buff.Append(text_[i].Text.Substring(s.ad, len).ToString());
+        //            }
+        //            buff.Append("\r\n");
+        //        }
+        //        // 終了行の先頭をコピー
+        //        //buf += text_[e.tl].CopyAt( 0, e.ad, buf );
+        //        //*buf = L'\0';
+        //        buff.Append(text_[e.tl].Text.Substring(0, e.ad).ToString());
+        //    }
+
+        //    return buff.ToString();
+        //}
 
 
         //TODO wordStartOf

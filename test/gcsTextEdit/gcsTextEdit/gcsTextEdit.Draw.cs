@@ -261,6 +261,7 @@ namespace AsControls
             int tmpYMIN = -(tuple.t2 + udScr_vrl_) * H;
             int tmpTLMIN = tuple.t1;
 
+
             // 作業用変数１
             //Win32API.RECT a = new Win32API.RECT { left = 0, top = v.YMIN, right = 0, bottom = v.YMIN + p.H() };
             Win32API.RECT a = new Win32API.RECT { left = 0, top = tmpYMIN, right = 0, bottom = tmpYMIN + p.H() };
@@ -288,7 +289,7 @@ namespace AsControls
 
                 // 作業用変数２
                 int stt = 0, end;//, t, n;
-
+                int sss = 0;
 
                 int attri = 0;
                 int nextlen = 0;
@@ -303,7 +304,6 @@ namespace AsControls
                 {
                     //if(ruls[rl].ad
 
-                    
                     // 作業用変数３
                     end = rlend(tl, rl);
                     if (a.bottom <= tmpYMIN)
@@ -313,6 +313,7 @@ namespace AsControls
                     // テキストデータ描画
                     //for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
                     for (x = 0, i=stt; x <= v.XMAX && i < end; ) {
+
 
 
                         nextlen = end - (attrindex + attrlen);
@@ -397,9 +398,46 @@ namespace AsControls
                     //if( v.SYB<=a.top && a.top<=v.SYE )
                     //    Inv( a.top, a.top==v.SYB?v.SXB:(v.XBASE),
                     //                a.top==v.SYE?v.SXE:(v.XBASE+x), p );
-                    if (v.SYB <= a.top && a.top <= v.SYE)
-                        Inv(g, a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
-                                    a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                    if (v.SYB <= a.top && a.top <= v.SYE) {
+                        if (cur_.SelectMode == SelectType.Rectangle) {
+                            //int rr = rln(tl);
+                            if (cur_.Cur.tl == tl && rln(tl) - 1 == rl) {
+                                //Inv(g, a.top, v.SXB ,
+                                //    a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                                VPos vpb = new VPos();
+                                GetVPos(v.SXB, a.top, ref vpb, false);
+                                Inv(g, a.top, v.XBASE + vpb.vx, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+
+                            } else {
+                                //int rectselw = 0;
+                                //string bb = str.Substring(sss, end - sss);
+                                //int rectselcnt = cur_.calcStringCount(str.Substring(sss, end - sss), cur_.dragX_);
+                                //rectselw = CalcLineWidth(str.Substring(sss, end - sss), rectselcnt);
+                                ////Inv(g, a.top, a.top == v.SYB ? v.SXB : (v.XBASE), rectselw, p);
+                                //Inv(g, a.top, v.SXB, rectselw, p);
+
+                                //Inv(g, a.top, v.SXB, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                                //Inv(g, a.top, v.SXB, v.SXE, p);
+
+                                //TODO Rectangle
+                                VPos vpb = new VPos();
+                                GetVPos(v.SXB, a.top, ref vpb, false);
+                                VPos vpe = new VPos();
+                                GetVPos(v.SXE, a.top, ref vpe, false);
+                                if (v.SXB == v.XBASE) {
+                                    Inv(g, a.top, v.XBASE, v.XBASE + vpe.vx, p);
+                                } else {
+                                    Inv(g, a.top, v.XBASE + vpb.vx, v.XBASE + vpe.vx, p);
+                                }
+                            }
+                        } else {
+                            Inv(g, a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
+                                        a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                        }
+                    }
+
+                    sss = end;
+                    
                     // 行末より後ろの余白を背景色塗
                     if (x < v.XMAX) {
                         a.left = v.XBASE + Math.Max(v.XMIN, x);

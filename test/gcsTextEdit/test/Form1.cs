@@ -143,7 +143,7 @@ namespace test
 //";
 
             edit.Text = @"/*m*/
-mmmmmmmmmmmmm
+1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
 */
 mm
 ";

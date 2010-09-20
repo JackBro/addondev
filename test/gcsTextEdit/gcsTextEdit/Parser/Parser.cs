@@ -306,104 +306,119 @@ namespace AsControls.Parser {
             //   01: 行頭と行末はコメント状態が逆転
             //   10: 行頭と行末はコメント状態が同じ
             //   11: 行末は常にコメントの中
+            //if (cmstrulrs.Count == 0) {
+            //    if (line.Text.Length ==0 && _cmt == 1) {
+            //        //line.Block.commentTransition = 3;
+            //        line.Block.commentTransition = 2;
+            //    }
+            //    else {
+            //        //line.Block.commentTransition = 0;
+            //        line.Block.commentTransition = 2;
+            //    }
+            //}
+            //else if (cmstrulrs.Count == 1) {
+            //    int ad = cmstrulrs[0].t1;
+            //    int len = cmstrulrs[0].t2;
+            //    bool isnext = cmstrulrs[0].t3;
+
+            //    if (ad == 0 && len == line.Text.ToString().Length) {
+            //        if (isnext)
+            //            line.Block.commentTransition = 3;
+            //        else if (_cmt == 1) {
+            //            line.Block.commentTransition = 1;
+            //        }else{
+            //            line.Block.commentTransition = 2;
+            //            //line.Block.commentTransition = 0;
+            //        }
+            //    }
+            //    else if (ad == 0 && len < line.Text.ToString().Length) {
+            //        if (_cmt == 1) {
+            //            line.Block.commentTransition = 1;
+            //        }
+            //        else {
+            //            line.Block.commentTransition = 2;
+            //        }
+            //    }
+            //    else if (ad > 0 && (ad+len == line.Text.ToString().Length)) {
+            //        //line.Block.commentTransition = 1;
+            //        if (isnext)
+            //            line.Block.commentTransition = 3;
+            //        else
+            //            line.Block.commentTransition = 1;
+            //            //line.Block.commentTransition = 0;
+            //    }
+            //    else {
+            //        line.Block.commentTransition = 2;
+            //    }
+            //}
+            //else {
+            //    //Token f = cmstrulrs[0];
+            //    //Token e = cmstrulrs[cmstrulrs.Count-1];
+
+            //    int fad = cmstrulrs[0].t1;
+            //    int flen = cmstrulrs[0].t2;
+            //    bool fisnext = cmstrulrs[0].t3;
+
+            //    int ead = cmstrulrs[cmstrulrs.Count - 1].t1;
+            //    int elen = cmstrulrs[cmstrulrs.Count - 1].t2;
+            //    bool eisnext = cmstrulrs[cmstrulrs.Count - 1].t3;
+
+            //    if (fad == 0 && (ead + elen == line.Text.ToString().Length)) {
+
+            //        ////line.Block.commentTransition = 2;
+            //        // if (eisnext)
+            //        //     line.Block.commentTransition = 3;
+            //        // else
+            //        //    line.Block.commentTransition = 2;
+            //        //    //line.Block.commentTransition = 0;
+
+            //        if (eisnext)
+            //             line.Block.commentTransition = 3;
+            //        else if (_cmt == 1) {
+            //            line.Block.commentTransition = 1;
+            //        }else{
+            //            line.Block.commentTransition = 2;
+            //            //line.Block.commentTransition = 0;
+            //        }
+            //    }
+            //    else if (fad == 0 && (ead + elen < line.Text.ToString().Length)) {
+            //        //line.Block.commentTransition = 1;
+
+            //        if (_cmt == 1) {
+            //            line.Block.commentTransition = 1;
+            //        }
+            //        else {
+            //            line.Block.commentTransition = 2;
+            //        }
+            //    }
+            //    else if (fad > 0 && (ead + elen < line.Text.ToString().Length)) {
+            //        line.Block.commentTransition = 2;
+            //    }
+            //    else if (fad > 0 && (ead + elen == line.Text.ToString().Length)) {
+
+            //        if (eisnext)
+            //            line.Block.commentTransition = 3;
+            //        else
+            //            line.Block.commentTransition = 1;
+            //        //line.Block.commentTransition = 0;
+            //    }
+            //    else {
+            //        line.Block.commentTransition = 2;
+            //    }
+            //}
+
             if (cmstrulrs.Count == 0) {
-                if (line.Text.Length ==0 && _cmt == 1) {
+                line.Block.commentTransition = 2;
+            } else {
+                bool next = cmstrulrs[cmstrulrs.Count-1].t3;
+                if (next) {
                     line.Block.commentTransition = 3;
-                }
-                else {
+                } else {
                     line.Block.commentTransition = 0;
                 }
             }
-            else if (cmstrulrs.Count == 1) {
-                int ad = cmstrulrs[0].t1;
-                int len = cmstrulrs[0].t2;
-                bool isnext = cmstrulrs[0].t3;
-
-                if (ad == 0 && len == line.Text.ToString().Length) {
-                    if (isnext)
-                        line.Block.commentTransition = 3;
-                    else if (_cmt == 1) {
-                        line.Block.commentTransition = 1;
-                    }else{
-                        line.Block.commentTransition = 2;
-                        //line.Block.commentTransition = 0;
-                    }
-                }
-                else if (ad == 0 && len < line.Text.ToString().Length) {
-                    if (_cmt == 1) {
-                        line.Block.commentTransition = 1;
-                    }
-                    else {
-                        line.Block.commentTransition = 2;
-                    }
-                }
-                else if (ad > 0 && (ad+len == line.Text.ToString().Length)) {
-                    //line.Block.commentTransition = 1;
-                    if (isnext)
-                        line.Block.commentTransition = 3;
-                    else
-                        line.Block.commentTransition = 1;
-                        //line.Block.commentTransition = 0;
-                }
-                else {
-                    line.Block.commentTransition = 2;
-                }
-            }
-            else {
-                //Token f = cmstrulrs[0];
-                //Token e = cmstrulrs[cmstrulrs.Count-1];
-
-                int fad = cmstrulrs[0].t1;
-                int flen = cmstrulrs[0].t2;
-                bool fisnext = cmstrulrs[0].t3;
-
-                int ead = cmstrulrs[cmstrulrs.Count - 1].t1;
-                int elen = cmstrulrs[cmstrulrs.Count - 1].t2;
-                bool eisnext = cmstrulrs[cmstrulrs.Count - 1].t3;
-
-                if (fad == 0 && (ead + elen == line.Text.ToString().Length)) {
-
-                    ////line.Block.commentTransition = 2;
-                    // if (eisnext)
-                    //     line.Block.commentTransition = 3;
-                    // else
-                    //    line.Block.commentTransition = 2;
-                    //    //line.Block.commentTransition = 0;
-
-                    if (eisnext)
-                         line.Block.commentTransition = 3;
-                    else if (_cmt == 1) {
-                        line.Block.commentTransition = 1;
-                    }else{
-                        line.Block.commentTransition = 2;
-                        //line.Block.commentTransition = 0;
-                    }
-                }
-                else if (fad == 0 && (ead + elen < line.Text.ToString().Length)) {
-                    //line.Block.commentTransition = 1;
-
-                    if (_cmt == 1) {
-                        line.Block.commentTransition = 1;
-                    }
-                    else {
-                        line.Block.commentTransition = 2;
-                    }
-                }
-                else if (fad > 0 && (ead + elen < line.Text.ToString().Length)) {
-                    line.Block.commentTransition = 2;
-                }
-                else if (fad > 0 && (ead + elen == line.Text.ToString().Length)) {
-
-                    if (eisnext)
-                        line.Block.commentTransition = 3;
-                    else
-                        line.Block.commentTransition = 1;
-                    //line.Block.commentTransition = 0;
-                }
-                else {
-                    line.Block.commentTransition = 2;
-                }
-            }
+            //line.Block.isLineHeadCmt = _cmt;
+            cmt = (line.Block.commentTransition >> _cmt) & 1;
             
             if (rules.Count > 0) {
 
@@ -453,8 +468,9 @@ namespace AsControls.Parser {
             //else {
             //    next.state = lex.Block.state;
             //}
-            line.Block.isLineHeadCmt = _cmt;
-            cmt = (line.Block.commentTransition >> _cmt) & 1;
+
+            //line.Block.isLineHeadCmt = _cmt;
+            //cmt = (line.Block.commentTransition >> _cmt) & 1;
             
             return line.Block;//lex.Block;
         }

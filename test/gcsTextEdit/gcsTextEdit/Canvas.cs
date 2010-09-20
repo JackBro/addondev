@@ -102,7 +102,7 @@ namespace AsControls {
                 //txtZone_.Left = (1 + figNum_) * font_.F();
                 //if (txtZone_.Left + font_.W() >= txtZone_.Right)
                 //    txtZone_.Left = 0; // 行番号ゾーンがデカすぎるときは表示しない
-                if (figNum_ == 0) figNum_ = 2; //TODO
+                //if (figNum_ == 0) figNum_ = 2; //TODO
                int left = (1 + figNum_) * font_.F();
                if (left + font_.W() >= txtZone_.Right) {
                    left = 0; // 行番号ゾーンがデカすぎるときは表示しない

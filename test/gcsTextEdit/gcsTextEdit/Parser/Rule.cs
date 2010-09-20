@@ -6,6 +6,14 @@ using System.Drawing;
 
 namespace AsControls.Parser {
 
+    //public enum FigurineType {
+    //    Bold,
+    //    UnderLine,
+    //    Strike,
+    //    Link,
+    //    Image
+    //}
+
     public class Attribute {
         public readonly Color color;
         public readonly bool islink;

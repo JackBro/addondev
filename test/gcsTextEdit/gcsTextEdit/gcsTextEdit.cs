@@ -46,16 +46,56 @@ namespace AsControls {
 
         public event EventHandler<LinkClickEventArgs> LinkClick;
 
-        private class VDrawInfo {
+        internal class VDrawInfo {
             public Rectangle rc;
-            public int XBASE;      // 一番左の文字のx座標
-            public int XMIN;       // テキスト再描画範囲左端
-            public int XMAX;       // テキスト再描画範囲右端
-            public int YMIN;       // テキスト再描画範囲上端
-            public int YMAX;       // テキスト再描画範囲下端
-            public int TLMIN;      // テキスト再描画範囲上端論理行番号
-            public int SXB, SXE;   // 選択範囲のx座標
-            public int SYB, SYE;   // 選択範囲のy座標
+
+            /// <summary>
+            /// 一番左の文字のx座標
+            /// </summary>
+            public int XBASE;
+
+            /// <summary>
+            /// テキスト再描画範囲左端
+            /// </summary>
+            public int XMIN;
+
+            /// <summary>
+            /// テキスト再描画範囲右端
+            /// </summary>
+            public int XMAX;
+
+            /// <summary>
+            /// テキスト再描画範囲上端
+            /// </summary>
+            public int YMIN;
+
+            /// <summary>
+            /// テキスト再描画範囲下端
+            /// </summary>
+            public int YMAX;
+
+            /// <summary>
+            /// テキスト再描画範囲上端論理行番号
+            /// </summary>
+            public int TLMIN;
+
+            /// <summary>
+            /// 選択範囲のx座標
+            /// </summary>
+            public int SXB;
+            /// <summary>
+            /// 選択範囲のx座標
+            /// </summary>
+            public int SXE;
+
+            /// <summary>
+            /// 選択範囲のy座標
+            /// </summary>
+            public int SYB;
+            /// <summary>
+            /// 選択範囲のy座標
+            /// </summary>
+            public int SYE;
 
             public VDrawInfo() {
                 rc = new Rectangle();
@@ -67,6 +107,9 @@ namespace AsControls {
         }
 
         private VDrawInfo vRect = new VDrawInfo();
+        internal VDrawInfo VRect {
+            get { return vRect; }
+        }
 
         private VGcsScrollBar vScrollBar;
         private HGcsScrollBar hScrollBar;
@@ -300,6 +343,11 @@ namespace AsControls {
             KeyBind = new KeyMap();
 
             doc_ = new Document();
+            //doc_.rlend = rlend;
+            //doc_.rln = rln;
+            //doc_.selRectX = () => {
+            //    return cur_.dragX_;
+            //};
             //doc_.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
             doc_.TextUpdate += (s, e, e2, reparsed, nmlcmd) => {
                 on_text_update(s, e, e2, reparsed, nmlcmd);

@@ -152,6 +152,11 @@ namespace AsControls
         }
     }
 
+    public enum SelectType {
+        Normal,
+        Rectangle
+    }
+
     //
     public class Cursor {
         private enum State {
@@ -185,7 +190,13 @@ namespace AsControls
         /// </summary>
         private bool lineSelectMode_;
 
-        private int dragX_, dragY_;
+
+        public SelectType SelectMode {
+            get;
+            set;
+        }
+
+        public int dragX_, dragY_;
 
         public VPos Cur {
             get { return cur_; }
@@ -207,6 +218,10 @@ namespace AsControls
 
             state = State.none;
 
+            //TODO Rectangle
+            SelectMode = SelectType.Normal;
+            SelectMode = SelectType.Rectangle;
+
             //this.doc_.TextUpdateEvent += (s, e, e2) => {
             //    this.on_text_update(s, e, e2, true);
             //};
@@ -224,9 +239,9 @@ namespace AsControls
                 if (state == State.mouse_down) {
                    
                     //if (!PtInRect(&view_.zone(), pt)) {
-                    if ( view_.zone().Contains(e.X, e.Y)){
+                    //if ( view_.zone().Contains(e.X, e.Y)){
                         MoveByMouse(e.X, e.Y);
-                    }
+                    //}
                 }
             };
             this.view_.MouseCaptureChanged += (sender, e) => {
@@ -626,6 +641,9 @@ namespace AsControls
 
         private void MoveByMouse( int x, int y )
         {
+            dragX_ = x;
+            dragY_ = y;
+
 	        VPos vp = new VPos();
 	        view_.GetVPos( x, y, ref vp, lineSelectMode_ );
 	        MoveTo( vp, true );
@@ -702,6 +720,11 @@ namespace AsControls
         //-------------------------------------------------------------------------
         // クリップボード処理
         //-------------------------------------------------------------------------
+        public enum ClipboardDataType {
+            Normal,
+            Rectangle
+        }
+
         public void Cut()
         {
 	        if( cur_ != sel_ )
@@ -720,9 +743,13 @@ namespace AsControls
             DPos dm = new DPos(cur_.tl, cur_.ad);
             DPos dM = new DPos(sel_.tl, sel_.ad);
             if (cur_ > sel_) {
+
+                //string t = getRangesText(sel_, cur_);
+                //Clipboard.SetData(t, ClipboardDataType.Rectangle); 
                 Clipboard.SetText(doc_.getText(dM, dm));
             }
             else {
+                //string t = getRangesText(cur_, sel_);
                 Clipboard.SetText(doc_.getText(dm, dM));
             }
         }
@@ -734,6 +761,140 @@ namespace AsControls
                 //doc_.Replace(cur_, sel_, text);
                 doc_.Execute(new Replace(cur_, sel_, text));
             }
+        }
+
+        //TODO Rectangle
+        public int calcStringCount(string text, int w) {
+            int sw = 0;
+            int len = 0;
+
+            //view_.GetVPos(dragX_, y, ref vp, lineSelectMode_);
+
+            while (sw < w && len<text.Length) {
+                char c = text[len];
+                sw += view_.fnt().CalcStringWidth(c);
+                len++;
+            }
+            //len--;
+            return len;
+        }
+
+        //TODO Rectangle
+        internal string getRangesText(VPos s, VPos e) {
+            
+            IText buff;
+            if (s.tl == e.tl) {
+                // 一行だけの場合
+                //text_[s.tl].CopyAt( s.ad, e.ad-s.ad, buf );
+                //buf[e.ad-s.ad] = L'\0';
+                //buff = text_[s.tl].Text.Substring(s.ad, e.ad - s.ad);
+                int sxb = view_.VRect.SXB;// s.vx;
+                int sxe = view_.VRect.SXE;
+                int syb = view_.VRect.SYB;
+
+                int H = view_.fnt().H();
+                VPos vpb= new VPos();
+                VPos vpe = new VPos();
+                IText text = null;
+                for (int i = s.rl, i2=0; i <= e.rl; i++, i2++) {
+                    view_.GetVPos(sxb, syb + i2 * H, ref vpb, false);
+                    view_.GetVPos(sxe, syb + i2 * H, ref vpe, false);
+                    if (text == null) {
+                        text = doc_.tl(s.tl).Substring(vpb.ad, vpe.ad - vpb.ad);
+                    } else {
+                        if (sxb == view_.VRect.XBASE)
+                            text.Append(doc_.tl(s.tl).Substring(vpb.ad-1, vpe.ad - (vpb.ad-1)).ToString());
+                        else
+                            text.Append(doc_.tl(s.tl).Substring(vpb.ad, vpe.ad - vpb.ad).ToString());
+                    }
+                    text.Append("\r\n");
+                }
+                
+                int len = s.ad;
+                int r = view_.rln(s.tl);
+
+                int start = 0;
+                for (start = 0; start < r; start++)
+			    {
+                    int rpos = view_.rlend(s.tl, start);
+			        if(s.ad<rpos){
+
+
+                        start--;
+                        if (start < 0) start = 0;
+
+                        if (start > 0) {
+                            int rendpos = view_.rlend(s.tl, start-1);
+                            len = s.ad - rendpos;
+                        }
+                        break;
+                    }
+			    }
+                //int kk = 0;
+                //int sw = view_.cursor.dragX_ - view_.lna();
+                //int sellen = 0;
+                //while (kk<sw) {
+                //    char c = doc_.tl(s.tl)[sellen];
+                //    sellen++;
+                //    kk += view_.fnt().CalcStringWidth(c);
+                //}
+                //sellen -= len;
+
+                int end = 0;
+                for (end = start; end < r; end++) {
+                    int rpos = view_.rlend(s.tl, end);
+                    if (e.ad < rpos) {
+                        end--;
+                        if (end < 0) end = 0;
+                        break;
+                    }
+                }
+
+
+                if (r > 1) {
+                    int w = view_.cursor.dragX_ - view_.lna();
+                    int sellen = calcStringCount(doc_.tl(s.tl).ToString(), w) - len;
+                    buff = doc_.tl(s.tl).Substring(s.ad, sellen);
+                    for (int i = start; i <= end; i++) {
+                        int rpos = view_.rlend(s.tl, i);
+                        sellen = calcStringCount(doc_.tl(s.tl).Substring(rpos).ToString(), w) - len;
+                        string ss = doc_.tl(s.tl).Substring(rpos + len, sellen).ToString();
+                        buff.Append(ss);    
+                    }
+                } else {
+                    buff = doc_.tl(s.tl).Substring(s.ad, e.ad - s.ad);
+                }
+
+            } else {
+                int sad = s.ad;
+                int len = e.ad-s.ad;
+
+                buff = new LineBuffer("");
+                // 先頭行の後ろをコピー
+                //buf += text_[s.tl].CopyToTail( s.ad, buf );
+                //*buf++ = '\r', *buf++ = '\n';
+                buff.Append(doc_.tl(s.tl).Substring(s.ad).ToString());
+                buff.Append("\r\n");
+                // 途中をコピー
+                for (int i = s.tl + 1; i < e.tl; i++) {
+                    //buf += text_[i].CopyToTail( 0, buf );
+                    //*buf++ = '\r', *buf++ = '\n';
+                    
+                    //buff.Append(text_[i].Text.Substring(0).ToString());
+                    if (doc_.tl(i).Length < e.ad) {
+                        buff.Append(doc_.tl(i).Substring(s.ad, doc_.tl(i).Length - s.ad).ToString());
+                    } else {
+                        buff.Append(doc_.tl(i).Substring(s.ad, len).ToString());
+                    }
+                    buff.Append("\r\n");
+                }
+                // 終了行の先頭をコピー
+                //buf += text_[e.tl].CopyAt( 0, e.ad, buf );
+                //*buf = L'\0';
+                buff.Append(doc_.tl(e.tl).Substring(0, e.ad).ToString());
+            }
+
+            return buff.ToString();
         }
     }
 
