@@ -653,10 +653,13 @@ namespace AsControls {
                 DrawTXT3(e.Graphics, vRect, p);
             } else {
                 // case C: 両方更新
-                DrawLNA(e.Graphics, vRect, p);
-                //p.SetClip(cvs_.zone());
+                //DrawLNA(e.Graphics, vRect, p);
+                ////p.SetClip(cvs_.zone());
+                //DrawTXT3(e.Graphics, vRect, p);
+                ////p.ClearClip();
+
                 DrawTXT3(e.Graphics, vRect, p);
-                //p.ClearClip();
+                DrawLNA(e.Graphics, vRect, p);
             }
         }
 

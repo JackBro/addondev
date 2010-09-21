@@ -55,7 +55,7 @@ namespace AsControls {
             //txtZone_ = new Rectangle();
             showLN = true;
             wrapType = WrapType.NonWrap;
-            wrapType = WrapType.WindowWidth;
+            //wrapType = WrapType.WindowWidth;
             //txtZone_ = view.ClientRectangle;
             //font_ = new Painter(view.Handle, config);
             font_ = new Painter(view.Handle, font);

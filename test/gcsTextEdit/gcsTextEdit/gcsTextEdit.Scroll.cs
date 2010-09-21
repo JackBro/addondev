@@ -45,8 +45,11 @@ namespace AsControls {
             //hScrollBar.Maximum = Math.Max(textCx_ + 3, cx);
             hScrollBar.Maximum = Math.Max(textCx_, cx);
             hScrollBar.Value = Math.Min(hScrollBar.Value, hScrollBar.Maximum - hScrollBar.nPage + 1);
-            hScrollBar.SmallChange = 1;
-            hScrollBar.SmallChange = fnt().W()+1; //TODO
+            //int hinit = Math.Min(hScrollBar.Value, hScrollBar.Maximum - hScrollBar.nPage);
+            //hScrollBar.Value = hinit < 0 ? 0 : hinit;
+            //hScrollBar.SmallChange = 1;
+            //hScrollBar.SmallChange = fnt().W()+1; //TODO
+            hScrollBar.SmallChange = fnt().W(); //TODO
             hScrollBar.LargeChange = hScrollBar.nPage;
 
 	        // 縦はnPageとnMaxはとりあえず補正
@@ -117,7 +120,7 @@ namespace AsControls {
         }
 
         public void ScrollView(int dx, int dy, bool update) {
-            
+
             // スクロール開始通知
 	        cur_.on_scroll_begin();
 
@@ -157,6 +160,8 @@ namespace AsControls {
 			        // 再描画の不要な領域をスクロール
 			        //::ScrollWindowEx( hwnd_, dx, dy, NULL, 
 					//        clip, NULL, NULL, SW_INVALIDATE );
+                    //Console.WriteLine(" dx = " + dx);
+                    //Console.WriteLine(" hScrollBar.Value = " + hScrollBar.Value);
                     hScrollBar.Value += dx;
                     vScrollBar.Value += dy;
 
@@ -164,7 +169,7 @@ namespace AsControls {
 			        // 即時再描画？
 			        if( update ){
 				        // 縦スクロールは高速化したいので一工夫
-				        if( dy != 0 ){
+                        if (dy != 0) {
                             //// 再描画の必要な領域を自分で計算
                             //Rectangle rc = new Rectangle (0,0,right(),bottom());
                             ////dy *= H;
@@ -175,19 +180,22 @@ namespace AsControls {
                             //    //rc.Bottom = dy;
                             //    rc = new Rectangle(rc.Left, rc.Top, rc.Width, dy);
                             //}
-					        // インテリマウスの中ボタンクリックによる
-					        // オートスクロール用カーソルの下の部分を先に描く
-					        // ２回に分けることで、小さな矩形部分二つで済むので高速
-					        //::ValidateRect( hwnd_, &rc );
-					        //::UpdateWindow( hwnd_ );
-					        //::InvalidateRect( hwnd_, &rc, FALSE );
-                            
+                            // インテリマウスの中ボタンクリックによる
+                            // オートスクロール用カーソルの下の部分を先に描く
+                            // ２回に分けることで、小さな矩形部分二つで済むので高速
+                            //::ValidateRect( hwnd_, &rc );
+                            //::UpdateWindow( hwnd_ );
+                            //::InvalidateRect( hwnd_, &rc, FALSE );
+
                             //this.Invalidate(rc, false);
                             this.Invalidate(false);
-                            
-				        }
+
+                        }
+                        else {
+                            this.Invalidate(false);
+                        }
 				        //::UpdateWindow( hwnd_ );       
-                        this.Update(); //TODO scroll
+                        //this.Update(); //TODO scroll
                         
 			        }
 		        }

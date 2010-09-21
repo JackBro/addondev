@@ -20,6 +20,10 @@ namespace AsControls
             get { return stringInfo.LengthInTextElements == 0 ? true : false; }
         }
 
+        public LineBuffer() {
+            stringInfo = new StringInfo();
+        }
+
         public LineBuffer(string text)
         {
             stringInfo = new StringInfo(text);

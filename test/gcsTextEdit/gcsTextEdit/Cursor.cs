@@ -112,7 +112,7 @@ namespace AsControls
         public int vl { get; set; }
 
         /// <summary>
-        /// RLine-Index
+        /// RLine-Index 表示行
         /// </summary>
         public int rl { get; set; } 
 
@@ -572,11 +572,31 @@ namespace AsControls
                 //string del;
 		        //doc_.Execute( Delete( cur_, dp ) );
                 //doc_.Delete(new DPos(cur_.tl, cur_.ad), new DPos(dp.tl, dp.ad), out del);
-                VPos vp = new VPos();
-                vp.ad = dp.ad;
-                vp.tl = dp.tl;
-                //doc_.Delete(cur_, vp, out del);
-                doc_.Execute(new Delete(cur_, dp));
+
+                if (SelectMode == SelectType.Rectangle) {
+                    List<Tuple<DPos, DPos>> list =null;
+                    if (cur_ < sel_) {
+                        list = getRectangleDpos(cur_, sel_);
+                    }
+                    else {
+                        list = getRectangleDpos(sel_, cur_);
+                    }
+                    list.Sort((x, y) => {
+                        if (x.t1.ad == y.t1.ad) return 0;
+                        return x.t1.ad < y.t1.ad ? 1 : -1;
+                    });
+                    foreach (var item in list) {
+                        doc_.Execute(new Delete(item.t1, item.t2));
+                    }
+                }
+                else {
+
+                    //VPos vp = new VPos();
+                    //vp.ad = dp.ad;
+                    //vp.tl = dp.tl;
+                    //doc_.Delete(cur_, vp, out del);
+                    doc_.Execute(new Delete(cur_, dp));
+                }
             }
         }
 
@@ -720,10 +740,6 @@ namespace AsControls
         //-------------------------------------------------------------------------
         // クリップボード処理
         //-------------------------------------------------------------------------
-        public enum ClipboardDataType {
-            Normal,
-            Rectangle
-        }
 
         public void Cut()
         {
@@ -744,7 +760,7 @@ namespace AsControls
             DPos dM = new DPos(sel_.tl, sel_.ad);
             if (cur_ > sel_) {
 
-                //string t = getRangesText(sel_, cur_);
+                string t = getRangesText(sel_, cur_);
                 //Clipboard.SetData(t, ClipboardDataType.Rectangle); 
                 Clipboard.SetText(doc_.getText(dM, dm));
             }
@@ -763,135 +779,119 @@ namespace AsControls
             }
         }
 
-        //TODO Rectangle
-        public int calcStringCount(string text, int w) {
-            int sw = 0;
-            int len = 0;
+        public enum ClipboardDataType {
+            Normal,
+            Rectangle
+        }
 
-            //view_.GetVPos(dragX_, y, ref vp, lineSelectMode_);
+        public class RectangleSelect {
+            public List<Tuple<DPos, DPos>> plist;
+        }
 
-            while (sw < w && len<text.Length) {
-                char c = text[len];
-                sw += view_.fnt().CalcStringWidth(c);
-                len++;
+        private List<Tuple<DPos, DPos>> getRectangleDpos(VPos s, VPos e) {
+
+            List<Tuple<DPos, DPos>> list = new List<Tuple<DPos, DPos>>();
+
+            int sxb = view_.VRect.SXB;
+            int sxe = view_.VRect.SXE;
+            int syb = view_.VRect.SYB;
+
+            int H = view_.fnt().H();
+            int y = syb+H/2;
+
+            Action<int, int> action = (rl, cnt) => {
+                VPos vpb = new VPos();
+                VPos vpe = new VPos();
+                
+                view_.GetVPos(sxb, y , ref vpb, false);
+                view_.GetVPos(sxe, y , ref vpe, false);
+                y += H;
+
+                //if (vpb == vpe) {
+                //    return;
+                //}
+
+                if (rl > 0 && sxb == view_.VRect.XBASE)
+                    vpb.ad--;
+
+                list.Add(new Tuple<DPos, DPos>(vpb, vpe));
+            };
+
+            if (s.tl == e.tl) {
+                for (int i = s.rl, i2 = 0; i <= e.rl; i++, i2++) {
+                    //VPos vpb = new VPos();
+                    //VPos vpe = new VPos();
+                    //y += syb + i2 * H;
+                    //view_.GetVPos(sxb, syb + i2 * H, ref vpb, false);
+                    //view_.GetVPos(sxe, syb + i2 * H, ref vpe, false);
+
+                    //if (i > 0 && sxb == view_.VRect.XBASE)
+                    //    vpb.ad--;
+
+                    //list.Add(new Tuple<DPos, DPos>(vpb, vpe));
+                    action(i, i2);
+                }
             }
-            //len--;
-            return len;
+            else {
+                
+                for (int i = s.rl, i2 = 0; i < view_.rln(s.tl); i++, i2++) {
+                    //VPos vpb = new VPos();
+                    //VPos vpe = new VPos();
+                    //y += syb + i2 * H;
+                    //view_.GetVPos(sxb, y, ref vpb, false);
+                    //view_.GetVPos(sxe, y, ref vpe, false);
+                    
+                    //if (i>0 && sxb == view_.VRect.XBASE)
+                    //    vpb.ad--;
+
+                    //list.Add(new Tuple<DPos, DPos>(vpb, vpe));
+                    action(i, i2);
+                }
+
+                for (int i = s.tl + 1; i < e.tl; i++) {
+                    for (int j = 0, i2 = 0; j < view_.rln(i); j++, i2++) {
+                        //VPos vpb = new VPos();
+                        //VPos vpe = new VPos();
+                        //y += syb + i2 * H;
+                        //view_.GetVPos(sxb, y, ref vpb, false);
+                        //view_.GetVPos(sxe, y, ref vpe, false);
+
+                        //if (i > 0 && sxb == view_.VRect.XBASE)
+                        //    vpb.ad--;
+
+                        //list.Add(new Tuple<DPos, DPos>(vpb, vpe));
+                        action(j, i2);
+                    }
+                }
+
+                for (int i = 0, i2 = 0; i <= e.rl; i++, i2++) {
+                    //VPos vpb = new VPos();
+                    //VPos vpe = new VPos();
+                    //y += syb + i2 * H;
+                    //view_.GetVPos(sxb, syb + i2 * H, ref vpb, false);
+                    //view_.GetVPos(sxe, syb + i2 * H, ref vpe, false);
+
+                    //if (i > 0 && sxb == view_.VRect.XBASE)
+                    //    vpb.ad--;
+
+                    //list.Add(new Tuple<DPos, DPos>(vpb, vpe));
+                    action(i, i2);
+                }
+            }
+            //list.Sort((x,y)=>{
+
+            //};
+            return list;
         }
 
         //TODO Rectangle
         internal string getRangesText(VPos s, VPos e) {
             
-            IText buff;
-            if (s.tl == e.tl) {
-                // 一行だけの場合
-                //text_[s.tl].CopyAt( s.ad, e.ad-s.ad, buf );
-                //buf[e.ad-s.ad] = L'\0';
-                //buff = text_[s.tl].Text.Substring(s.ad, e.ad - s.ad);
-                int sxb = view_.VRect.SXB;// s.vx;
-                int sxe = view_.VRect.SXE;
-                int syb = view_.VRect.SYB;
-
-                int H = view_.fnt().H();
-                VPos vpb= new VPos();
-                VPos vpe = new VPos();
-                IText text = null;
-                for (int i = s.rl, i2=0; i <= e.rl; i++, i2++) {
-                    view_.GetVPos(sxb, syb + i2 * H, ref vpb, false);
-                    view_.GetVPos(sxe, syb + i2 * H, ref vpe, false);
-                    if (text == null) {
-                        text = doc_.tl(s.tl).Substring(vpb.ad, vpe.ad - vpb.ad);
-                    } else {
-                        if (sxb == view_.VRect.XBASE)
-                            text.Append(doc_.tl(s.tl).Substring(vpb.ad-1, vpe.ad - (vpb.ad-1)).ToString());
-                        else
-                            text.Append(doc_.tl(s.tl).Substring(vpb.ad, vpe.ad - vpb.ad).ToString());
-                    }
-                    text.Append("\r\n");
-                }
-                
-                int len = s.ad;
-                int r = view_.rln(s.tl);
-
-                int start = 0;
-                for (start = 0; start < r; start++)
-			    {
-                    int rpos = view_.rlend(s.tl, start);
-			        if(s.ad<rpos){
-
-
-                        start--;
-                        if (start < 0) start = 0;
-
-                        if (start > 0) {
-                            int rendpos = view_.rlend(s.tl, start-1);
-                            len = s.ad - rendpos;
-                        }
-                        break;
-                    }
-			    }
-                //int kk = 0;
-                //int sw = view_.cursor.dragX_ - view_.lna();
-                //int sellen = 0;
-                //while (kk<sw) {
-                //    char c = doc_.tl(s.tl)[sellen];
-                //    sellen++;
-                //    kk += view_.fnt().CalcStringWidth(c);
-                //}
-                //sellen -= len;
-
-                int end = 0;
-                for (end = start; end < r; end++) {
-                    int rpos = view_.rlend(s.tl, end);
-                    if (e.ad < rpos) {
-                        end--;
-                        if (end < 0) end = 0;
-                        break;
-                    }
-                }
-
-
-                if (r > 1) {
-                    int w = view_.cursor.dragX_ - view_.lna();
-                    int sellen = calcStringCount(doc_.tl(s.tl).ToString(), w) - len;
-                    buff = doc_.tl(s.tl).Substring(s.ad, sellen);
-                    for (int i = start; i <= end; i++) {
-                        int rpos = view_.rlend(s.tl, i);
-                        sellen = calcStringCount(doc_.tl(s.tl).Substring(rpos).ToString(), w) - len;
-                        string ss = doc_.tl(s.tl).Substring(rpos + len, sellen).ToString();
-                        buff.Append(ss);    
-                    }
-                } else {
-                    buff = doc_.tl(s.tl).Substring(s.ad, e.ad - s.ad);
-                }
-
-            } else {
-                int sad = s.ad;
-                int len = e.ad-s.ad;
-
-                buff = new LineBuffer("");
-                // 先頭行の後ろをコピー
-                //buf += text_[s.tl].CopyToTail( s.ad, buf );
-                //*buf++ = '\r', *buf++ = '\n';
-                buff.Append(doc_.tl(s.tl).Substring(s.ad).ToString());
-                buff.Append("\r\n");
-                // 途中をコピー
-                for (int i = s.tl + 1; i < e.tl; i++) {
-                    //buf += text_[i].CopyToTail( 0, buf );
-                    //*buf++ = '\r', *buf++ = '\n';
-                    
-                    //buff.Append(text_[i].Text.Substring(0).ToString());
-                    if (doc_.tl(i).Length < e.ad) {
-                        buff.Append(doc_.tl(i).Substring(s.ad, doc_.tl(i).Length - s.ad).ToString());
-                    } else {
-                        buff.Append(doc_.tl(i).Substring(s.ad, len).ToString());
-                    }
-                    buff.Append("\r\n");
-                }
-                // 終了行の先頭をコピー
-                //buf += text_[e.tl].CopyAt( 0, e.ad, buf );
-                //*buf = L'\0';
-                buff.Append(doc_.tl(e.tl).Substring(0, e.ad).ToString());
+            IText buff = new LineBuffer();
+            var list = getRectangleDpos(s, e);
+            foreach (var item in list) {
+                IText text = doc_.tl(item.t1.tl).Substring(item.t1.ad, item.t2.ad - item.t1.ad);
+                buff.Append(text.ToString());
             }
 
             return buff.ToString();

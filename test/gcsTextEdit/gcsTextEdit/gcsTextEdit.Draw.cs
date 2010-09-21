@@ -36,6 +36,7 @@ namespace AsControls
             if (v.rc.Top < v.YMAX) {
                 // 境界線表示
                 int line = lna() - p.F() / 2;
+                //int line = lna() - p.F();
                 p.DrawLine(g, line, v.rc.Top, line, v.YMAX);
                 //p.SetColor(LN);
 
@@ -46,6 +47,7 @@ namespace AsControls
                 int n = v.TLMIN + 1;
                 int y = v.YMIN;
                 int edge = lna() - p.F() * 2;
+
                 for (int i = v.TLMIN; y < v.YMAX; ++i, ++n) {
                     //n.Output(p, edge, y);
                     //y += p.H() * rln(i);
@@ -406,7 +408,12 @@ namespace AsControls
                                 //    a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
                                 VPos vpb = new VPos();
                                 GetVPos(v.SXB, a.top, ref vpb, false);
-                                Inv(g, a.top, v.XBASE + vpb.vx, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                                if (v.SXB == v.XBASE) {
+                                    Inv(g, a.top, v.XBASE, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                                }
+                                else {
+                                    Inv(g, a.top, v.XBASE + vpb.vx, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                                }
 
                             } else {
                                 //int rectselw = 0;
