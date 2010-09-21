@@ -38,6 +38,12 @@ namespace AsControls
             public Int32 bottom;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT {
+            public int x;
+            public int y;
+        } 
+
         //[DllImport("gdi32", CharSet = CharSet.Unicode)]
         //public unsafe static extern Int32 GetTextExtentExPointW(IntPtr hdc, string text, int textLen, int maxWidth, int* out_fitLength, int* out_x, SIZE* out_size);
 
@@ -65,6 +71,8 @@ namespace AsControls
         public static extern int DestroyCaret();
         [DllImport("user32.dll")]
         public static extern int SetCaretPos(int x, int y);
+        [DllImport("user32.dll")]
+        public static extern bool GetCaretPos(out POINT lpPoint);
         [DllImport("user32.dll")]
         public static extern int ShowCaret(IntPtr hwnd);
         [DllImport("user32.dll")]

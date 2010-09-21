@@ -22,22 +22,22 @@ namespace AsControls
         }
 
         private int vlNum_;
-        public int textCx_;
+        internal int textCx_;
 
-        public List<WLine> wrap_ ;
+        internal List<WLine> wrap_;
 
         /// <summary>
         /// 全表示行数
         /// </summary>
         /// <returns></returns>
-        public int vln() { return vlNum_; }
+        internal int vln() { return vlNum_; }
 
         /// <summary>
         /// 一行の表示行数
         /// </summary>
         /// <param name="tl"></param>
         /// <returns></returns>
-        public int rln(int tl) { return wrap_[tl].rln(); }
+        internal int rln(int tl) { return wrap_[tl].rln(); }
         
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace AsControls
         /// <param name="tl"></param>
         /// <param name="rl"></param>
         /// <returns></returns>
-        public int rlend(int tl, int rl) { 
+        internal int rlend(int tl, int rl) { 
             return wrap_[tl][rl + 1]; 
         }
 
@@ -54,7 +54,7 @@ namespace AsControls
         /// 一個でも折り返しが存在するか否か
         /// </summary>
         /// <returns></returns>
-	    bool wrapexists() { return doc_.tln() != vln(); }
+        internal bool wrapexists() { return doc_.tln() != vln(); }
 
         /// <summary>
         /// 指定した分だけ新しく行情報を追加。

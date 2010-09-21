@@ -187,6 +187,11 @@ namespace AsControls {
         [DefaultValue(false)]
         public bool ShowZenWhiteSpace { get; set; }
 
+        public WrapType Wrap {
+            get { return cvs_.wrapType; }
+            set { cvs_.wrapType = value; }
+        }
+
         public new string Text {
             set {
                 this.doc_.Clear();

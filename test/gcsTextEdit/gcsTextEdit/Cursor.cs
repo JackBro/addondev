@@ -42,6 +42,19 @@ namespace AsControls
                 //
             }
         }
+
+        public Point GetPos() {
+            Point point = new Point();
+            if (created_) {
+                Win32API.POINT p;
+                Win32API.GetCaretPos(out p);
+                //
+                point.X = p.x;
+                point.Y = p.y;
+            }
+            return point;
+        }
+
         public void Create( int H, int W){
             if( created_ ) Win32API.DestroyCaret();
 			created_ = true;
@@ -760,7 +773,8 @@ namespace AsControls
             DPos dM = new DPos(sel_.tl, sel_.ad);
             if (cur_ > sel_) {
 
-                string t = getRangesText(sel_, cur_);
+                var t = getRangesText(sel_, cur_);
+                ins(sel_, cur_, t);
                 //Clipboard.SetData(t, ClipboardDataType.Rectangle); 
                 Clipboard.SetText(doc_.getText(dM, dm));
             }
@@ -786,6 +800,135 @@ namespace AsControls
 
         public class RectangleSelect {
             public List<Tuple<DPos, DPos>> plist;
+        }
+
+        private void ins(VPos s, VPos e, List<string> texts) {
+            int cnt = texts.Count;
+            int etl=s.tl;
+            int erl = 0;
+            
+            //if (s == e) {
+                while (cnt > 0 && etl <= doc_.tln()) {
+                    if (cnt > view_.rln(etl)) {
+                        cnt -= view_.rln(etl);
+                    } else if (cnt == view_.rln(etl)) {
+                        cnt -= view_.rln(etl);
+                        erl = view_.rln(etl);
+                        break;
+                    } else {
+                        cnt = 0;
+                        erl = view_.rln(etl) + (cnt - view_.rln(etl));
+                        break;
+                    }
+                    etl++;
+                }
+
+                //if (s.tl == etl) {
+                //    for (int i = s.rl; i < erl; i++) {
+                        
+                //    }
+                //} else {
+
+                //    for (int i = s.tl; i <= etl; i++) {
+                //        if (i == s.tl) {
+
+                //        } else if (i == etl) {
+
+                //        } else {
+
+                //        }
+                //    }
+                //}
+
+                var list = getRectangleDpos(s, etl, erl);
+
+                //add
+                if (cnt > 0) {
+                    int wsw = view_.fnt().W(' ');
+                    for (int i = 0; i < cnt; i++) {
+                        int wscnt = s.vx / wsw;
+
+                    }
+                }
+
+            //} else {
+            //
+            //}
+
+        }
+
+        private List<Tuple<DPos, int>> getRectangleDpos(VPos s, int etl, int erl) {
+            List<Tuple<DPos, int>> list = new List<Tuple<DPos,int>>();
+
+            int sxb = s.vx;
+            int syb = caret_.GetPos().Y;
+
+            int H = view_.fnt().H();
+            int y = syb + H / 2;
+
+            int wsw= view_.fnt().W(' ');
+
+            Func<int, int, VPos> func = (rl, cnt) => {
+                VPos vpb = new VPos();
+                view_.GetVPos(sxb, y, ref vpb, false);
+                y += H;
+
+                if (rl > 0 && sxb == view_.VRect.XBASE)
+                    vpb.ad--;
+
+                return vpb;
+            };
+            int wcnt = 0;
+            if (s.tl == etl) {
+                wcnt=0;
+                for (int i = s.rl, i2 = 0; i <= erl; i++, i2++) {
+                    VPos vp = func(i, i2);
+
+                    if (i == erl) {
+                        if (s.vx > vp.vx) {
+                            wcnt = (s.vx - vp.vx) / wsw; 
+                        }
+                    }
+                    list.Add(new Tuple<DPos, int>(vp, wcnt));
+                }
+            } else {
+                wcnt = 0;
+                for (int i = s.rl, i2 = 0; i < view_.rln(s.tl); i++, i2++) {
+                    VPos vp = func(i, i2);
+
+                    if (i == erl) {
+                        if (s.vx > vp.vx) {
+                            wcnt = (s.vx - vp.vx) / wsw;
+                        }
+                    }
+                    list.Add(new Tuple<DPos, int>(vp, wcnt));
+                }
+
+                for (int i = s.tl + 1; i < erl; i++) {
+                    wcnt = 0;
+                    for (int j = 0, i2 = 0; j < view_.rln(i); j++, i2++) {
+                        VPos vp = func(j, i2);
+                        if (i == erl) {
+                            if (s.vx > vp.vx) {
+                                wcnt = (s.vx - vp.vx) / wsw;
+                            }
+                        }
+                        list.Add(new Tuple<DPos, int>(vp, wcnt));
+                    }
+                }
+
+                wcnt = 0;
+                for (int i = 0, i2 = 0; i <= erl; i++, i2++) {
+                    VPos vp = func(i, i2);
+                    if (i == erl) {
+                        if (s.vx > vp.vx) {
+                            wcnt = (s.vx - vp.vx) / wsw;
+                        }
+                    }
+                    list.Add(new Tuple<DPos, int>(vp, wcnt));
+                }
+            }
+            return list;
         }
 
         private List<Tuple<DPos, DPos>> getRectangleDpos(VPos s, VPos e) {
@@ -819,82 +962,41 @@ namespace AsControls
 
             if (s.tl == e.tl) {
                 for (int i = s.rl, i2 = 0; i <= e.rl; i++, i2++) {
-                    //VPos vpb = new VPos();
-                    //VPos vpe = new VPos();
-                    //y += syb + i2 * H;
-                    //view_.GetVPos(sxb, syb + i2 * H, ref vpb, false);
-                    //view_.GetVPos(sxe, syb + i2 * H, ref vpe, false);
-
-                    //if (i > 0 && sxb == view_.VRect.XBASE)
-                    //    vpb.ad--;
-
-                    //list.Add(new Tuple<DPos, DPos>(vpb, vpe));
                     action(i, i2);
                 }
             }
             else {
                 
                 for (int i = s.rl, i2 = 0; i < view_.rln(s.tl); i++, i2++) {
-                    //VPos vpb = new VPos();
-                    //VPos vpe = new VPos();
-                    //y += syb + i2 * H;
-                    //view_.GetVPos(sxb, y, ref vpb, false);
-                    //view_.GetVPos(sxe, y, ref vpe, false);
-                    
-                    //if (i>0 && sxb == view_.VRect.XBASE)
-                    //    vpb.ad--;
-
-                    //list.Add(new Tuple<DPos, DPos>(vpb, vpe));
                     action(i, i2);
                 }
 
                 for (int i = s.tl + 1; i < e.tl; i++) {
                     for (int j = 0, i2 = 0; j < view_.rln(i); j++, i2++) {
-                        //VPos vpb = new VPos();
-                        //VPos vpe = new VPos();
-                        //y += syb + i2 * H;
-                        //view_.GetVPos(sxb, y, ref vpb, false);
-                        //view_.GetVPos(sxe, y, ref vpe, false);
-
-                        //if (i > 0 && sxb == view_.VRect.XBASE)
-                        //    vpb.ad--;
-
-                        //list.Add(new Tuple<DPos, DPos>(vpb, vpe));
                         action(j, i2);
                     }
                 }
 
                 for (int i = 0, i2 = 0; i <= e.rl; i++, i2++) {
-                    //VPos vpb = new VPos();
-                    //VPos vpe = new VPos();
-                    //y += syb + i2 * H;
-                    //view_.GetVPos(sxb, syb + i2 * H, ref vpb, false);
-                    //view_.GetVPos(sxe, syb + i2 * H, ref vpe, false);
-
-                    //if (i > 0 && sxb == view_.VRect.XBASE)
-                    //    vpb.ad--;
-
-                    //list.Add(new Tuple<DPos, DPos>(vpb, vpe));
                     action(i, i2);
                 }
             }
-            //list.Sort((x,y)=>{
-
-            //};
             return list;
         }
 
         //TODO Rectangle
-        internal string getRangesText(VPos s, VPos e) {
-            
-            IText buff = new LineBuffer();
+        internal List<string> getRangesText(VPos s, VPos e) {
+
+            List<string> texts = new List<string>();
             var list = getRectangleDpos(s, e);
             foreach (var item in list) {
                 IText text = doc_.tl(item.t1.tl).Substring(item.t1.ad, item.t2.ad - item.t1.ad);
-                buff.Append(text.ToString());
+                //buff.Append(text.ToString());
+                texts.Add(text.ToString());
             }
 
-            return buff.ToString();
+            //return buff.ToString();
+            return texts;
         }
     }
 

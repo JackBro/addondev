@@ -141,7 +141,7 @@ namespace test
 //mmmmmmmmmmmmm
 //*/
 //";
-
+            edit.Wrap = AsControls.WrapType.WindowWidth;
             edit.Text = @"/*m*/
 1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
 */
