@@ -766,21 +766,26 @@ namespace AsControls
 
         public void Copy()
         {
-	        if( cur_==sel_ )
-		        return;
+	        //if( cur_==sel_ )
+		    //    return;
+
+            List<string> ss = new List<string>();
+            ss.Add("aa");
+            ss.Add("bb");
 
             DPos dm = new DPos(cur_.tl, cur_.ad);
             DPos dM = new DPos(sel_.tl, sel_.ad);
             if (cur_ > sel_) {
 
-                var t = getRangesText(sel_, cur_);
-                ins(sel_, cur_, t);
+                //var t = getRangesText(sel_, cur_);
+                RectangleInsert(sel_, cur_, ss);
                 //Clipboard.SetData(t, ClipboardDataType.Rectangle); 
-                Clipboard.SetText(doc_.getText(dM, dm));
+                //Clipboard.SetText(doc_.getText(dM, dm));
             }
             else {
-                //string t = getRangesText(cur_, sel_);
-                Clipboard.SetText(doc_.getText(dm, dM));
+                //var t = getRangesText(cur_, sel_);
+                RectangleInsert(cur_, sel_, ss);
+                //Clipboard.SetText(doc_.getText(dm, dM));
             }
         }
 
@@ -802,65 +807,170 @@ namespace AsControls
             public List<Tuple<DPos, DPos>> plist;
         }
 
-        private void ins(VPos s, VPos e, List<string> texts) {
-            int cnt = texts.Count;
-            int etl=s.tl;
-            int erl = 0;
-            
-            //if (s == e) {
-                while (cnt > 0 && etl <= doc_.tln()) {
-                    if (cnt > view_.rln(etl)) {
-                        cnt -= view_.rln(etl);
-                    } else if (cnt == view_.rln(etl)) {
-                        cnt -= view_.rln(etl);
-                        erl = view_.rln(etl);
-                        break;
-                    } else {
-                        cnt = 0;
-                        erl = view_.rln(etl) + (cnt - view_.rln(etl));
-                        break;
-                    }
-                    etl++;
+        private void RectangleInsert(VPos s, VPos e, List<string> texts) {
+            //int cnt = texts.Count;
+            //int etl = s.tl;
+            //int srl = s.rl;
+            //int erl = 0;
+
+            Func<int, int, int, Tuple<int, int, int>> func = (stl, srl, cnt) => {
+                if (cnt - (view_.rln(stl) - srl) > 0) {
+                    cnt -= (view_.rln(stl) - srl);
+                    stl++;
+                }
+                else {
+                    srl = srl + cnt;
                 }
 
-                //if (s.tl == etl) {
-                //    for (int i = s.rl; i < erl; i++) {
-                        
-                //    }
-                //} else {
+                while (cnt > 0 && stl <= doc_.tln()) {
+                    if (cnt > view_.rln(stl)) {
+                        cnt -= view_.rln(stl);
+                    }
+                    else if (cnt == view_.rln(stl)) {
+                        cnt -= view_.rln(stl);
+                        srl = view_.rln(stl);
+                        break;
+                    }
+                    else {
+                        cnt = 0;
+                        srl = view_.rln(stl) + (cnt - view_.rln(stl));
+                        break;
+                    }
+                    stl++;
+                }
 
-                //    for (int i = s.tl; i <= etl; i++) {
-                //        if (i == s.tl) {
+                return new Tuple<int, int, int>(stl, srl, cnt);
+            };
 
-                //        } else if (i == etl) {
-
-                //        } else {
-
-                //        }
-                //    }
+            if (s == e) {
+ 
+                //if (cnt - (view_.rln(etl) - srl)>0) {
+                //    cnt -= (view_.rln(etl) - srl);
+                //    etl++;
+                //}
+                //else {
+                //    erl = srl + cnt;
                 //}
 
+                //while (cnt > 0 && etl <= doc_.tln()) {
+                //    if (cnt > view_.rln(etl)) {
+                //        cnt -= view_.rln(etl);
+                //    } else if (cnt == view_.rln(etl)) {
+                //        cnt -= view_.rln(etl);
+                //        erl = view_.rln(etl);
+                //        break;
+                //    } else {
+                //        cnt = 0;
+                //        erl = view_.rln(etl) + (cnt - view_.rln(etl));
+                //        break;
+                //    }
+                //    etl++;
+                //}
+                int cnt = texts.Count;
+                var etlerl = func(s.tl, s.rl, cnt);
+                int etl = etlerl.t1;
+                int erl = etlerl.t2;
+                int rescnt = etlerl.t3;
                 var list = getRectangleDpos(s, etl, erl);
 
                 //add
-                if (cnt > 0) {
+                if (rescnt > 0) {
                     int wsw = view_.fnt().W(' ');
-                    for (int i = 0; i < cnt; i++) {
+                    for (int i = 0; i < rescnt; i++) {
                         int wscnt = s.vx / wsw;
 
                     }
                 }
 
-            //} else {
-            //
-            //}
+                list.Sort((x, y) => {
+                    if (x.t1.ad == y.t1.ad) 
+                        return 0;
+                    return x.t1.ad < y.t1.ad ? 1 : -1;
+                });
+
+                for (int i = 0; i < list.Count; i++)
+			    {
+                    DPos dp = list[i].t1;
+                    String ws= string.Empty;
+                    for (int j = 0; j < list[i].t2; j++) {
+                        ws += " ";
+                    }
+                    if (ws.Length > 0) {
+                        doc_.Execute(new Insert(dp, ws));
+                    }
+                    dp.ad += ws.Length;
+                    doc_.Execute(new Insert(dp, texts[i]));
+			    }
+                    
+
+            } else {
+                if (SelectMode == SelectType.Rectangle) {
+                    var dposlist = getRectangleDpos(s, e);
+                    if (dposlist.Count >= texts.Count) {
+                        int c = dposlist.Count - texts.Count;
+                        for (int i = 0; i < c; i++) {
+                            texts.Add("");
+                        }
+                    }
+                    else {
+                        int cnt = texts.Count - dposlist.Count;
+                        var etlerl = func(s.tl, s.rl, cnt);
+                        int etl = etlerl.t1;
+                        int erl = etlerl.t2;
+                        int rescnt = etlerl.t3;
+                        var list = getRectangleDpos(s, etl, erl);
+
+                        //add
+                        if (rescnt > 0) {
+                            int wsw = view_.fnt().W(' ');
+                            for (int i = 0; i < rescnt; i++) {
+                                int wscnt = s.vx / wsw;
+
+                            }
+                        }
+
+                        list.Sort((x, y) => {
+                            if (x.t1.ad == y.t1.ad)
+                                return 0;
+                            return x.t1.ad < y.t1.ad ? 1 : -1;
+                        });
+
+                        for (int i = 0; i < list.Count; i++) {
+                            DPos dp = list[i].t1;
+                            String ws = string.Empty;
+                            for (int j = 0; j < list[i].t2; j++) {
+                                ws += " ";
+                            }
+                            if (ws.Length > 0) {
+                                doc_.Execute(new Insert(dp, ws));
+                            }
+                            dp.ad += ws.Length;
+                            doc_.Execute(new Insert(dp, texts[i + cnt]));
+                        }
+
+                    }
+                    //dposlist.Sort((x, y) => {
+                    //    if (x.t1.ad == y.t1.ad) return 0;
+                    //    return x.t1.ad < y.t1.ad ? 1 : -1;
+                    //});
+                    //for (int i = 0; i < dposlist.Count; i++) {
+                    for (int i = dposlist.Count-1; i >=0; i--) {
+                        string text = texts[i];
+                        DPos dps = dposlist[i].t1;
+                        DPos dpe = dposlist[i].t2;
+                        doc_.Execute(new Replace(dps, dpe, text));                      
+                    }
+                }
+                else {
+                }
+            }
 
         }
 
         private List<Tuple<DPos, int>> getRectangleDpos(VPos s, int etl, int erl) {
             List<Tuple<DPos, int>> list = new List<Tuple<DPos,int>>();
 
-            int sxb = s.vx;
+            int sxb = s.vx+view_.lna();
             int syb = caret_.GetPos().Y;
 
             int H = view_.fnt().H();
@@ -881,10 +991,10 @@ namespace AsControls
             int wcnt = 0;
             if (s.tl == etl) {
                 wcnt=0;
-                for (int i = s.rl, i2 = 0; i <= erl; i++, i2++) {
+                for (int i = s.rl, i2 = 0; i < erl; i++, i2++) {
                     VPos vp = func(i, i2);
 
-                    if (i == erl) {
+                    if (i == erl-1) {
                         if (s.vx > vp.vx) {
                             wcnt = (s.vx - vp.vx) / wsw; 
                         }
@@ -896,7 +1006,7 @@ namespace AsControls
                 for (int i = s.rl, i2 = 0; i < view_.rln(s.tl); i++, i2++) {
                     VPos vp = func(i, i2);
 
-                    if (i == erl) {
+                    if (i == erl-1) {
                         if (s.vx > vp.vx) {
                             wcnt = (s.vx - vp.vx) / wsw;
                         }
@@ -908,7 +1018,7 @@ namespace AsControls
                     wcnt = 0;
                     for (int j = 0, i2 = 0; j < view_.rln(i); j++, i2++) {
                         VPos vp = func(j, i2);
-                        if (i == erl) {
+                        if (i == erl-1) {
                             if (s.vx > vp.vx) {
                                 wcnt = (s.vx - vp.vx) / wsw;
                             }
@@ -918,9 +1028,9 @@ namespace AsControls
                 }
 
                 wcnt = 0;
-                for (int i = 0, i2 = 0; i <= erl; i++, i2++) {
+                for (int i = 0, i2 = 0; i < erl; i++, i2++) {
                     VPos vp = func(i, i2);
-                    if (i == erl) {
+                    if (i == erl-1) {
                         if (s.vx > vp.vx) {
                             wcnt = (s.vx - vp.vx) / wsw;
                         }
