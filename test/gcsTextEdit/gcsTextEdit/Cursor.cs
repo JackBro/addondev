@@ -323,7 +323,7 @@ namespace AsControls
 	        int LFT = view_.left();
             int RHT = view_.right();
             int TOP = 0;
-	        int  BTM = view_.bottom();
+	        int BTM = view_.bottom();
 
 	        if( sp.Y == ep.Y )
 	        {
@@ -335,18 +335,24 @@ namespace AsControls
 	        }
 	        else
 	        {
-                //view_.Invalidate();
+                //TODO Rectangle
+                if (SelectMode == SelectType.Rectangle) {
+                    Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
+                    view_.Invalidate(rc, false);
+                } else {
+                    //view_.Invalidate();
 
-                //Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
-                Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
-                //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
-                view_.Invalidate(rc, false);
-                Rectangle re = new Rectangle(LFT, Math.Max(TOP, ep.Y), Math.Min(RHT, ep.X), Math.Min(BTM, ep.Y + view_.fnt().H()));
-                //::InvalidateRect( caret_->hwnd(), &re, FALSE );
-                view_.Invalidate(re, false);
-                Rectangle rd = new Rectangle(LFT, Math.Max(TOP, rc.Bottom), RHT, Math.Min(BTM, re.Top));
-                //::InvalidateRect( caret_->hwnd(), &rd, FALSE );
-                view_.Invalidate(rd, false);
+                    //Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
+                    Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
+                    //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
+                    view_.Invalidate(rc, false);
+                    Rectangle re = new Rectangle(LFT, Math.Max(TOP, ep.Y), Math.Min(RHT, ep.X), Math.Min(BTM, ep.Y + view_.fnt().H()));
+                    //::InvalidateRect( caret_->hwnd(), &re, FALSE );
+                    view_.Invalidate(re, false);
+                    Rectangle rd = new Rectangle(LFT, Math.Max(TOP, rc.Bottom), RHT, Math.Min(BTM, re.Top));
+                    //::InvalidateRect( caret_->hwnd(), &rd, FALSE );
+                    view_.Invalidate(rd, false);
+                }
 	        }
         }
 
@@ -766,26 +772,28 @@ namespace AsControls
 
         public void Copy()
         {
-	        //if( cur_==sel_ )
-		    //    return;
+	        if( cur_==sel_ )
+		        return;
 
-            List<string> ss = new List<string>();
-            ss.Add("aa");
-            ss.Add("bb");
+            //List<string> ss = new List<string>();
+            //ss.Add("aa");
+            //ss.Add("bb");
+            //ss.Add("cc");
+            //ss.Add("dd");
 
             DPos dm = new DPos(cur_.tl, cur_.ad);
             DPos dM = new DPos(sel_.tl, sel_.ad);
             if (cur_ > sel_) {
 
                 //var t = getRangesText(sel_, cur_);
-                RectangleInsert(sel_, cur_, ss);
+                //RectangleInsert(sel_, cur_, ss);
                 //Clipboard.SetData(t, ClipboardDataType.Rectangle); 
-                //Clipboard.SetText(doc_.getText(dM, dm));
+                Clipboard.SetText(doc_.getText(dM, dm));
             }
             else {
                 //var t = getRangesText(cur_, sel_);
-                RectangleInsert(cur_, sel_, ss);
-                //Clipboard.SetText(doc_.getText(dm, dM));
+                //RectangleInsert(cur_, sel_, ss);
+                Clipboard.SetText(doc_.getText(dm, dM));
             }
         }
 
@@ -803,15 +811,11 @@ namespace AsControls
             Rectangle
         }
 
-        public class RectangleSelect {
-            public List<Tuple<DPos, DPos>> plist;
-        }
+        //public class RectangleSelect {
+        //    public List<Tuple<DPos, DPos>> plist;
+        //}
 
         private void RectangleInsert(VPos s, VPos e, List<string> texts) {
-            //int cnt = texts.Count;
-            //int etl = s.tl;
-            //int srl = s.rl;
-            //int erl = 0;
 
             Func<int, int, int, Tuple<int, int, int>> func = (stl, srl, cnt) => {
                 if (cnt - (view_.rln(stl) - srl) > 0) {
@@ -822,7 +826,7 @@ namespace AsControls
                     srl = srl + cnt;
                 }
 
-                while (cnt > 0 && stl <= doc_.tln()) {
+                while (cnt > 0 && stl < doc_.tln()) {
                     if (cnt > view_.rln(stl)) {
                         cnt -= view_.rln(stl);
                     }
@@ -836,6 +840,9 @@ namespace AsControls
                         srl = view_.rln(stl) + (cnt - view_.rln(stl));
                         break;
                     }
+                    if (stl + 1 >= doc_.tln()) {
+                        break;
+                    }
                     stl++;
                 }
 
@@ -844,51 +851,32 @@ namespace AsControls
 
             if (s == e) {
  
-                //if (cnt - (view_.rln(etl) - srl)>0) {
-                //    cnt -= (view_.rln(etl) - srl);
-                //    etl++;
-                //}
-                //else {
-                //    erl = srl + cnt;
-                //}
-
-                //while (cnt > 0 && etl <= doc_.tln()) {
-                //    if (cnt > view_.rln(etl)) {
-                //        cnt -= view_.rln(etl);
-                //    } else if (cnt == view_.rln(etl)) {
-                //        cnt -= view_.rln(etl);
-                //        erl = view_.rln(etl);
-                //        break;
-                //    } else {
-                //        cnt = 0;
-                //        erl = view_.rln(etl) + (cnt - view_.rln(etl));
-                //        break;
-                //    }
-                //    etl++;
-                //}
                 int cnt = texts.Count;
                 var etlerl = func(s.tl, s.rl, cnt);
                 int etl = etlerl.t1;
                 int erl = etlerl.t2;
                 int rescnt = etlerl.t3;
-                var list = getRectangleDpos(s, etl, erl);
+                var list = getRectangleDpos(s, e, etl, erl);
 
                 //add
                 if (rescnt > 0) {
+                    
                     int wsw = view_.fnt().W(' ');
-                    for (int i = 0; i < rescnt; i++) {
-                        int wscnt = s.vx / wsw;
-
+                    int wscnt = s.vx / wsw;
+                    string ws = string.Empty;
+                    for (int j = 0; j < wscnt; j++) {
+                        ws += " ";
                     }
+
+                    for (int i = 0; i < rescnt; i++) {
+                        DPos dp = new DPos(doc_.tln() - 1, doc_.tl(doc_.tln() - 1).Length);
+
+                        doc_.Execute(new Insert(dp, "\r\n" + ws + texts[rescnt - i]));
+                    }
+                    texts.RemoveRange(texts.Count-rescnt, rescnt);
                 }
 
-                list.Sort((x, y) => {
-                    if (x.t1.ad == y.t1.ad) 
-                        return 0;
-                    return x.t1.ad < y.t1.ad ? 1 : -1;
-                });
-
-                for (int i = 0; i < list.Count; i++)
+                for (int i = list.Count-1; i >= 0; i--)
 			    {
                     DPos dp = list[i].t1;
                     String ws= string.Empty;
@@ -913,29 +901,34 @@ namespace AsControls
                         }
                     }
                     else {
-                        int cnt = texts.Count - dposlist.Count;
+                        int cnt = texts.Count;// -dposlist.Count;
+
                         var etlerl = func(s.tl, s.rl, cnt);
                         int etl = etlerl.t1;
                         int erl = etlerl.t2;
                         int rescnt = etlerl.t3;
-                        var list = getRectangleDpos(s, etl, erl);
+                        var list = getRectangleDpos(s, e, etl, erl);
 
                         //add
                         if (rescnt > 0) {
-                            int wsw = view_.fnt().W(' ');
-                            for (int i = 0; i < rescnt; i++) {
-                                int wscnt = s.vx / wsw;
 
+                            int wsw = view_.fnt().W(' ');
+                            int wscnt = s.vx / wsw;
+                            string ws = string.Empty;
+                            for (int j = 0; j < wscnt; j++) {
+                                ws += " ";
                             }
+
+                            for (int i = 0; i < rescnt; i++) {
+                                DPos dp = new DPos(doc_.tln() - 1, doc_.tl(doc_.tln() - 1).Length);
+
+                                doc_.Execute(new Insert(dp, "\r\n" + ws + texts[rescnt - i]));
+                            }
+                            texts.RemoveRange(texts.Count - rescnt, rescnt);
                         }
 
-                        list.Sort((x, y) => {
-                            if (x.t1.ad == y.t1.ad)
-                                return 0;
-                            return x.t1.ad < y.t1.ad ? 1 : -1;
-                        });
 
-                        for (int i = 0; i < list.Count; i++) {
+                        for (int i = list.Count - 1 ; i >= dposlist.Count; i--) {
                             DPos dp = list[i].t1;
                             String ws = string.Empty;
                             for (int j = 0; j < list[i].t2; j++) {
@@ -945,20 +938,23 @@ namespace AsControls
                                 doc_.Execute(new Insert(dp, ws));
                             }
                             dp.ad += ws.Length;
-                            doc_.Execute(new Insert(dp, texts[i + cnt]));
+                            doc_.Execute(new Insert(dp, texts[i]));
                         }
 
+                        //for (int i = dposlist.Count - 1; i >= 0; i--) {
+                        //    string text = texts[i];
+                        //    DPos dps = dposlist[i].t1;
+                        //    DPos dpe = dposlist[i].t2;
+                        //    doc_.Execute(new Replace(dps, dpe, text));
+                        //}
+
                     }
-                    //dposlist.Sort((x, y) => {
-                    //    if (x.t1.ad == y.t1.ad) return 0;
-                    //    return x.t1.ad < y.t1.ad ? 1 : -1;
-                    //});
-                    //for (int i = 0; i < dposlist.Count; i++) {
-                    for (int i = dposlist.Count-1; i >=0; i--) {
+
+                    for (int i = dposlist.Count - 1; i >= 0; i--) {
                         string text = texts[i];
                         DPos dps = dposlist[i].t1;
                         DPos dpe = dposlist[i].t2;
-                        doc_.Execute(new Replace(dps, dpe, text));                      
+                        doc_.Execute(new Replace(dps, dpe, text));
                     }
                 }
                 else {
@@ -967,13 +963,19 @@ namespace AsControls
 
         }
 
-        private List<Tuple<DPos, int>> getRectangleDpos(VPos s, int etl, int erl) {
+        private List<Tuple<DPos, int>> getRectangleDpos(VPos s, VPos e, int etl, int erl) {
             List<Tuple<DPos, int>> list = new List<Tuple<DPos,int>>();
+            
+            int H = view_.fnt().H();
 
             int sxb = s.vx+view_.lna();
-            int syb = caret_.GetPos().Y;
-
-            int H = view_.fnt().H();
+            int syb = 0;
+            if (s == e)
+                syb = caret_.GetPos().Y + H;
+            else {
+                syb = view_.VRect.SYB;
+            }
+ 
             int y = syb + H / 2;
 
             int wsw= view_.fnt().W(' ');
@@ -994,7 +996,8 @@ namespace AsControls
                 for (int i = s.rl, i2 = 0; i < erl; i++, i2++) {
                     VPos vp = func(i, i2);
 
-                    if (i == erl-1) {
+                    //if (i == erl-1) {
+                    if (i == view_.rln(s.tl)- 1) {
                         if (s.vx > vp.vx) {
                             wcnt = (s.vx - vp.vx) / wsw; 
                         }
@@ -1006,7 +1009,7 @@ namespace AsControls
                 for (int i = s.rl, i2 = 0; i < view_.rln(s.tl); i++, i2++) {
                     VPos vp = func(i, i2);
 
-                    if (i == erl-1) {
+                    if (i == view_.rln(s.tl)- 1) {
                         if (s.vx > vp.vx) {
                             wcnt = (s.vx - vp.vx) / wsw;
                         }
@@ -1014,11 +1017,12 @@ namespace AsControls
                     list.Add(new Tuple<DPos, int>(vp, wcnt));
                 }
 
-                for (int i = s.tl + 1; i < erl; i++) {
+                for (int i = s.tl + 1; i < etl; i++) {
                     wcnt = 0;
                     for (int j = 0, i2 = 0; j < view_.rln(i); j++, i2++) {
                         VPos vp = func(j, i2);
-                        if (i == erl-1) {
+                        //if (i == erl-1) {
+                        if (j == view_.rln(i) - 1) {
                             if (s.vx > vp.vx) {
                                 wcnt = (s.vx - vp.vx) / wsw;
                             }
@@ -1029,8 +1033,9 @@ namespace AsControls
 
                 wcnt = 0;
                 for (int i = 0, i2 = 0; i < erl; i++, i2++) {
-                    VPos vp = func(i, i2);
-                    if (i == erl-1) {
+                    VPos vp = func(etl, i2);
+                    //if (i == erl-1) {
+                    if (i == view_.rln(etl) - 1) {
                         if (s.vx > vp.vx) {
                             wcnt = (s.vx - vp.vx) / wsw;
                         }
@@ -1059,10 +1064,6 @@ namespace AsControls
                 view_.GetVPos(sxb, y , ref vpb, false);
                 view_.GetVPos(sxe, y , ref vpe, false);
                 y += H;
-
-                //if (vpb == vpe) {
-                //    return;
-                //}
 
                 if (rl > 0 && sxb == view_.VRect.XBASE)
                     vpb.ad--;

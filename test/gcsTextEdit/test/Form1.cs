@@ -145,8 +145,7 @@ namespace test
             edit.Text = @"/*m*/
 1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
 */
-mm
-";
+mm";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;
