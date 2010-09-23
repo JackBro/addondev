@@ -44,13 +44,13 @@
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.SearchPanel = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.ReplaceTextBox = new System.Windows.Forms.TextBox();
+            this.FindNextButton = new System.Windows.Forms.Button();
+            this.FindTextBox = new System.Windows.Forms.TextBox();
+            this.ReplaceAllButton = new System.Windows.Forms.Button();
+            this.FindAllButton = new System.Windows.Forms.Button();
+            this.ReplaceNextButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
@@ -190,58 +190,6 @@
             this.SearchPanel.Size = new System.Drawing.Size(388, 61);
             this.SearchPanel.TabIndex = 2;
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(269, 34);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(54, 20);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "Next";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(329, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(54, 25);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "All";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(329, 34);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(54, 20);
-            this.button4.TabIndex = 5;
-            this.button4.Text = "All";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox2.Location = new System.Drawing.Point(72, 3);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(191, 22);
-            this.textBox2.TabIndex = 1;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(269, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(54, 22);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Next";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(72, 34);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(191, 22);
-            this.textBox1.TabIndex = 0;
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.AutoSize = true;
@@ -251,12 +199,12 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel1.Controls.Add(this.textBox1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.button1, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.textBox2, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.button4, 3, 1);
-            this.tableLayoutPanel1.Controls.Add(this.button2, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.button3, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.ReplaceTextBox, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.FindNextButton, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.FindTextBox, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.ReplaceAllButton, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.FindAllButton, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.ReplaceNextButton, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -267,6 +215,62 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(386, 59);
             this.tableLayoutPanel1.TabIndex = 6;
+            // 
+            // ReplaceTextBox
+            // 
+            this.ReplaceTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReplaceTextBox.Location = new System.Drawing.Point(72, 34);
+            this.ReplaceTextBox.Name = "ReplaceTextBox";
+            this.ReplaceTextBox.Size = new System.Drawing.Size(191, 22);
+            this.ReplaceTextBox.TabIndex = 0;
+            // 
+            // FindNextButton
+            // 
+            this.FindNextButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FindNextButton.Location = new System.Drawing.Point(269, 3);
+            this.FindNextButton.Name = "FindNextButton";
+            this.FindNextButton.Size = new System.Drawing.Size(54, 25);
+            this.FindNextButton.TabIndex = 2;
+            this.FindNextButton.Text = "Next";
+            this.FindNextButton.UseVisualStyleBackColor = true;
+            // 
+            // FindTextBox
+            // 
+            this.FindTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FindTextBox.Location = new System.Drawing.Point(72, 3);
+            this.FindTextBox.Name = "FindTextBox";
+            this.FindTextBox.Size = new System.Drawing.Size(191, 22);
+            this.FindTextBox.TabIndex = 1;
+            // 
+            // ReplaceAllButton
+            // 
+            this.ReplaceAllButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReplaceAllButton.Location = new System.Drawing.Point(329, 34);
+            this.ReplaceAllButton.Name = "ReplaceAllButton";
+            this.ReplaceAllButton.Size = new System.Drawing.Size(54, 22);
+            this.ReplaceAllButton.TabIndex = 5;
+            this.ReplaceAllButton.Text = "All";
+            this.ReplaceAllButton.UseVisualStyleBackColor = true;
+            // 
+            // FindAllButton
+            // 
+            this.FindAllButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FindAllButton.Location = new System.Drawing.Point(329, 3);
+            this.FindAllButton.Name = "FindAllButton";
+            this.FindAllButton.Size = new System.Drawing.Size(54, 25);
+            this.FindAllButton.TabIndex = 3;
+            this.FindAllButton.Text = "All";
+            this.FindAllButton.UseVisualStyleBackColor = true;
+            // 
+            // ReplaceNextButton
+            // 
+            this.ReplaceNextButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReplaceNextButton.Location = new System.Drawing.Point(269, 34);
+            this.ReplaceNextButton.Name = "ReplaceNextButton";
+            this.ReplaceNextButton.Size = new System.Drawing.Size(54, 22);
+            this.ReplaceNextButton.TabIndex = 4;
+            this.ReplaceNextButton.Text = "Next";
+            this.ReplaceNextButton.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -333,12 +337,12 @@
         private System.Windows.Forms.ToolStripMenuItem fontToolStripMenuItem;
         private System.Windows.Forms.Panel SearchPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TextBox ReplaceTextBox;
+        private System.Windows.Forms.Button FindNextButton;
+        private System.Windows.Forms.TextBox FindTextBox;
+        private System.Windows.Forms.Button ReplaceAllButton;
+        private System.Windows.Forms.Button FindAllButton;
+        private System.Windows.Forms.Button ReplaceNextButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
 

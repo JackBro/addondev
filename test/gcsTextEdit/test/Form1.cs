@@ -109,6 +109,8 @@ namespace test
                 wrapOToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
             };
 
+
+
             panel1.Controls.Add(edit);
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
