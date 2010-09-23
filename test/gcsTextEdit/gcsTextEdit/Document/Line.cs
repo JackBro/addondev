@@ -12,9 +12,6 @@ namespace AsControls
     {
         private IText text;
         private List<Token> rules;
-        //public bool IsBlockOnly { get; set; }
-        //public bool IsImageExist { get; set; }
-        //public string p;
         public Block Block { get; set; }
 
         public List<Token> Rules {
@@ -34,7 +31,6 @@ namespace AsControls
 
         public Line(string text)
         {
-            //p = string.Empty;
             Block = new Block();
             this.text = new LineBuffer(text);
             rules = new List<Token>();

@@ -38,9 +38,15 @@ namespace AsControls {
             }
         }
 
+        private Brush lineNumberBackBrush;
+        private Color lineNumberBackColor;
         public Color LineNumberBackColor {
-            get;
-            set;
+            get { return lineNumberBackColor; }
+            set{
+                this.lineNumberBackColor = value;
+                DeleteObj(this.lineNumberBackBrush);
+                this.lineNumberBackBrush = new SolidBrush(value);
+            }
         }
 
         private Pen specialCharPen;
@@ -204,6 +210,7 @@ namespace AsControls {
         public void Dispose() {
             DeleteObj(lineNumberBrush);
             DeleteObj(lineNumberLinePen);
+            DeleteObj(lineNumberBackBrush);
             DeleteObj(specialCharPen);
             //Marshal.FreeHGlobal(widthPtr);
             Win32API.ReleaseDC(hwnd_, dc_);
@@ -322,6 +329,11 @@ namespace AsControls {
         public void DrawLineNum(Graphics g, string text, Color c, int X, int Y) {
             g.DrawString(text, this.Font, lineNumberBrush, new Point(X, Y), sf);
         }
+
+        public void DrawLineNumBack(Graphics g, Rectangle rect) {
+            g.FillRectangle(lineNumberBackBrush, rect);
+        }
+
         public void DrawText(Graphics g, string text, Color c, int X, int Y) {
             //g.DrawString(text, config_.Font, TextBrush, new Point(X, Y));
             TextRenderer.DrawText(g,
@@ -334,6 +346,7 @@ namespace AsControls {
 
         }
 
+ 
  
 
         public void Invert(Graphics g, Rectangle rect) {

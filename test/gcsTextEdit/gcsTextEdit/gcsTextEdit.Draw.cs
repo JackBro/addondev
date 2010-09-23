@@ -24,14 +24,15 @@ namespace AsControls
         //private Brush cursorBrush = new SolidBrush(Color.Black);
         //private Pen spPen;
         //private Brush tabbrush = new SolidBrush(Color.Blue);
-        private Brush ppp = new SolidBrush(Color.DarkGreen);
-        Brush bb = new SolidBrush(Color.White);
+        //private Brush ppp = new SolidBrush(Color.DarkGreen);
+        //Brush bb = new SolidBrush(Color.White);
 
         private void DrawLNA(Graphics g, VDrawInfo v, Painter p ){
             // 背面消去
             Rectangle rc = new Rectangle(v.rc.Left, v.rc.Top, lna(), v.rc.Bottom);
             //p.Fill(rc);
-            g.FillRectangle(bb, rc);
+            //g.FillRectangle(bb, rc);
+            p.DrawLineNumBack(g, rc);
 
             if (v.rc.Top < v.YMAX) {
                 // 境界線表示
@@ -227,20 +228,23 @@ namespace AsControls
         }
 
         private Tuple<int, int> l(int utl, int vrl) {
-            int upsize=1000;
+            int upsize=500;
             Painter p = cvs_.getPainter();
             int H=p.H();
             int rn=0;
-            int start = vrl > 0 ? utl - 1 : utl;
-            start = start < 0 ? 0 : start;
-            for (; start > 0; start--) {
+            //int start = vrl > 0 ? utl - 1 : utl;
+            //int start = vrl > 0 ? utl : utl-1;
+            int start = utl - 1;
+            //start = start < 0 ? 0 : start;
+            //for (; start > 0; start--) {
+            for (; start >= 0; start--) {
 
-                rn+=rln(start);
+                rn += rln(start);
                 if (upsize - rn * H <= 0) {
                     break;
                 }
             }
-            
+            start = start < 0 ? 0 : start;
             return new Tuple<int, int>(start, rn );
         }
 
@@ -253,15 +257,28 @@ namespace AsControls
             int H = p.H();
             int TLM = doc_.tln() - 1;
 
-            
+            int tmpYMIN = 0;
+            int tmpTLMIN = 0;
+            if (DrawEventHandler == null) {
+                tmpYMIN = v.YMIN;
+                tmpTLMIN = v.TLMIN;
+            }
+            else {
+                var tuple = l(udScr_tl_, udScr_vrl_);
+                tmpYMIN = -(tuple.t2 + udScr_vrl_) * H;
+                tmpTLMIN = tuple.t1;
+            }
             //TODO tmp scroll
             //int tmpYMIN = v.YMIN;
             //int tmpTLMIN = v.TLMIN;
             //v.YMIN = -(v.TLMIN) * H;
             //v.TLMIN = 0;//doc_.tln()
-            var tuple = l(udScr_tl_, udScr_vrl_);
-            int tmpYMIN = -(tuple.t2 + udScr_vrl_) * H;
-            int tmpTLMIN = tuple.t1;
+
+            //var tuple = l(udScr_tl_, udScr_vrl_);
+            //int tmpYMIN = -(tuple.t2 + udScr_vrl_) * H;
+            //int tmpTLMIN = tuple.t1;
+            //int testYMIN = -(tuple.t2 + udScr_vrl_) * H;
+            //int testTLMIN = tuple.t1;
 
 
             // 作業用変数１
