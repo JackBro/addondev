@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace AsControls {
-    class NormalSearch : ISearch {
+    public class NormalSearch : ISearch {
         private string searchword;
         public StringComparison Option { get; set; }
 
@@ -33,7 +33,7 @@ namespace AsControls {
         #endregion
     }
 
-    class NormalSearchRev : ISearch {
+    public class NormalSearchRev : ISearch {
         private string searchword;
         public StringComparison Option { get; set; }
 

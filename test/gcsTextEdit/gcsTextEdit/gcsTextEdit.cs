@@ -278,6 +278,14 @@ namespace AsControls {
             ALL 
         }
 
+        public Search Sr() { 
+                Search s = new Search(this);
+                //s.Searcher = new NormalSearch(word);
+                return s;
+        }
+
+
+
         public gcsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 

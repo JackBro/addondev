@@ -17,6 +17,7 @@ namespace AsControls
 
         public Search(gcsTextEdit edit)
         {
+           
             this.edit = edit;
         }
 

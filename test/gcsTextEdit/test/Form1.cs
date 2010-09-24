@@ -14,6 +14,7 @@ namespace test
         private Bitmap image = new Bitmap("test.png");
         private AsControls.gcsTextEdit edit = new AsControls.gcsTextEdit();
         //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
+        private AsControls.Search sr;
         public Form1()
         {
             InitializeComponent();
@@ -109,7 +110,21 @@ namespace test
                 wrapOToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
             };
 
+            FindNextButton.Click += (sender, e) => {
+                if(sr==null)
+                    sr = edit.Sr();
 
+                sr.Searcher = new AsControls.NormalSearch(FindTextBox.Text);
+                sr.FindNextImpl();
+            };
+
+            FindPreButton.Click += (sender, e) => {
+                if (sr == null)
+                    sr = edit.Sr();
+
+                sr.Searcher = new AsControls.NormalSearchRev(FindTextBox.Text);
+                sr.FindPrevImpl();
+            };
 
             panel1.Controls.Add(edit);
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
