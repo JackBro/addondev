@@ -13,10 +13,6 @@ namespace AsControls {
 
         private IntPtr dc_;
         private IntPtr hwnd_;
-        //private Config config_;
-
-        //private Brush tabbrush;
-        //private Brush TextBrush = new SolidBrush(Color.Black);
 
         private Brush lineNumberBrush;
         private Color lineNumberColor;
@@ -88,17 +84,8 @@ namespace AsControls {
         //public int T() { return widthTable_['\t']; }
         public int T() { return widthMap['\t']; }
 	    public int nextTab(int x) { int t=T(); return ((x+4)/t+1)*t; }
-        
-        //
-        //public int Wc( char ch )
-        //{
-        //    if( widthTable_[ ch ] == -1 )
-        //        ::GetCharWidthW( dc_, ch, ch, widthTable_+ch );
-        //    return widthTable_[ ch ];
-        //}
 
         private int tabWidth;
-
         [DefaultValue(4)]
         public int TabWidth {
             get { return tabWidth; }
@@ -118,7 +105,6 @@ namespace AsControls {
             }
         }
 
-        //public Painter(IntPtr hwnd, Config config) {
         public Painter(IntPtr hwnd, Font font) {
             hwnd_ = hwnd;
             dc_ = Win32API.GetDC(hwnd_);
@@ -130,58 +116,6 @@ namespace AsControls {
             TabWidth = 4;
 
             init();
-
-            //config_ = config;
-            //hfont_ = config_.Font.ToHfont();
-
-            //widthTable_ = new int[65536];
-            //int s = (int)' ';
-            //int e = (int)'~';
-            //int w = 0;
-            //for(int i=s; i<=e; i++){
-            //    //int w2 = getStringWidth(((char)i).ToString());
-            //    //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
-            //    //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
-            //    w = CalcStringWidth(((char)i));
-            //    widthTable_[i] = w;
-            //}
-
-            //widthTable_['\t'] = W() * Math.Max(1, 4);//vc.tabstep);
-            //widthTable_['\x3000'] = CalcStringWidth('\x3000');
-
-            //// 数字の最大幅を計算
-            //figWidth_ = 0;
-            //for (int ch = '0'; ch <= '9'; ++ch) {
-            //    if (figWidth_ < widthTable_[ch])
-            //        figWidth_ = widthTable_[ch];
-            //}
-
-            //height_ = (int)(config.Font.GetHeight() + 0.5f);
-            //sf.Alignment = StringAlignment.Center;
-
-            //widthMap = new Dictionary<char, int>();
-            //widthMap.Add('x', CalcStringWidth('x'));
-            //widthMap.Add('\t', W() * Math.Max(1, TabWidth));
-            //widthMap.Add('\x3000', CalcStringWidth('\x3000'));
-
-            //// 数字の最大幅を計算
-            //figWidth_ = 0;
-            //for (int i = 0; i <= 9; i++) {
-            //    //int w2 = getStringWidth(((char)i).ToString());
-            //    //int w3 = CalcStringWidth(new LineBuffer(((char)i).ToString()));
-            //    //Win32API.GetCharWidthW(dc_, (char)i, (char)i, ref w);
-            //    char num = (char)i;
-            //    int numw = CalcStringWidth(num);
-            //    widthMap.Add(num, numw);
-            //    if (figWidth_ < numw) {
-            //        figWidth_ = numw;
-            //    }
-            //}
-
-            //numPen = new Pen(Color.Gray);
-            //tabbrush = new SolidBrush(Color.Blue);
-
-
         }
 
         public void init() {
@@ -301,10 +235,24 @@ namespace AsControls {
             }
         }
 
-        public void DrawTab(Graphics g, int X, int Y, int times) {
-            for (int i = 0; i < times; i++) {
-                //g.DrawString(">", config_.Font, tabbrush, X + i * T(), Y);
-            }
+        private Point[] tabPt = { new Point(), new Point(), new Point(), new Point() };
+        public void DrawTab(Graphics g, int X, int Y, int w) {
+            int h = H();
+            int fh = h / 2;
+            tabPt[0].X = X + 2;
+            tabPt[0].Y = Y + h - 4;
+
+            tabPt[1].X = X + 2;
+            tabPt[1].Y = Y + fh;
+
+            tabPt[2].X = X + w - 4;
+            tabPt[2].Y = Y + fh;
+
+            tabPt[3].X = X + w - 4;
+            tabPt[3].Y = Y + h - 4; 
+
+            g.DrawLines(specialCharPen, tabPt);
+            //g.DrawRectangle(specialCharPen, X + 2, Y + 2, w - 4, H() - 4);
         }
 
         private Point[] returnPt1 = { new Point(), new Point() };
@@ -315,7 +263,7 @@ namespace AsControls {
             returnPt1[0].Y = Y + 2;
             returnPt1[1].X = X+4 ;
             returnPt1[1].Y = Y + H() -2;
-            g.DrawPolygon(specialCharPen, returnPt1);
+            g.DrawLines(specialCharPen, returnPt1);
 
             returnPt2[0].X = X + 2;
             returnPt2[0].Y = Y + H() - 4;
@@ -346,29 +294,10 @@ namespace AsControls {
 
         }
 
- 
- 
-
         public void Invert(Graphics g, Rectangle rect) {
             Win32API.InvertRect(g.GetHdc(), ref rect);
             g.ReleaseHdc();
         }
-
-        ////
-        //public int CalcStringWidth(IBuffer text, int startIndex, int count) {
-        //    IntPtr oldFont = Win32API.SelectObject(dc_, config_.Font.ToHfont());
-        //    int w = 0;
-        //    int len = startIndex + count;
-        //    for (int i = startIndex; i < len; i++) {
-        //        if (text[i] == "\t") {
-        //            w += T();
-        //        } else {
-        //            w += getStringWidth(text[i]);
-        //        }
-        //    }
-        //    Win32API.SelectObject(dc_, oldFont);
-        //    return w;
-        //}
 
         public int CalcStringWidth(char c) {
             int fit;
@@ -380,7 +309,9 @@ namespace AsControls {
                     w = GetTextExtend(c.ToString(), int.MaxValue, out fit).width;
                     break;
                 case '\t':
+                    //TODO tab
                     w = T();
+                    //w = nextTab(w);
                     break;
                 default:
                     w = GetTextExtend(c.ToString(), int.MaxValue, out fit).width;
@@ -391,17 +322,6 @@ namespace AsControls {
 
         private static char[] cs = { '\t' };
         public int CalcStringWidth(string text) {
-            //////return this.CalcStringWidth(text, 0, text.Length);
-            //int w = 0;
-            ////string strtext = text.ToString();
-            //for (int i = 0; i < text.Length; i++) {
-            //    w += this.W(text[i]);
-            //}
-            //return w;
-
-            //int fit;
-            //Win32API.SIZE size = GetTextExtend(text, int.MaxValue, out fit);
-            //return size.width;
 
             int fit;
             int w = 0;
@@ -420,7 +340,11 @@ namespace AsControls {
                     //    w += W('\x3000') * s.Length;
                     //    break;
                     case '\t':
-                        w += T() * s.Length;//p.CalcStringWidth(s[ci].ToString());
+                        //TODO tab
+                        //w += T() * s.Length;//p.CalcStringWidth(s[ci].ToString());
+                        for (int i2 = 0; i2 < s.Length; ++i2) {
+                            w = nextTab(w);
+                        }
                         break;
                     default:
                         w += GetTextExtend(s, int.MaxValue, out fit).width;
@@ -431,7 +355,6 @@ namespace AsControls {
             return w;
         }
 
-       
         public static IEnumerable<string> parse(string src, char[] sc) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < src.Length; i++) {
@@ -462,38 +385,6 @@ namespace AsControls {
             }
         }
 
-        //public int CalcCharWidth(Char c) {
-        //    IntPtr oldFont = Win32API.SelectObject(dc_, config_.Font.ToHfont());
-
-        //    int w = 0;
-        //    if (c == '\t') {
-        //        w = T();
-        //    } else {
-        //        w = getStringWidth(c.ToString());
-        //    }
-
-        //    Win32API.SelectObject(dc_, oldFont);
-        //    return w;
-        //}
-
-        //private int getStringWidth(string text) {
-        //    int drawableLength;
-        //    int[] extents = new int[text.Length];
-        //    return GetTextExtent(dc_, text, text.Length, int.MaxValue, out drawableLength, out extents).Width;
-        //}
-
-        //public Size GetTextExtent(IntPtr hdc, string text, int textLen, int maxWidth, out int fitLength, out int[] extents) {
-        //    Int32 bOk;
-        //    Win32API.SIZE size;
-        //    extents = new int[text.Length];
-
-        //    unsafe {
-        //        fixed (int* pExtents = extents)
-        //        fixed (int* pFitLength = &fitLength)
-        //            bOk = Win32API.GetTextExtentExPointW(hdc, text, textLen, maxWidth, pFitLength, pExtents, &size);
-        //        return new Size(size.width, size.height);
-        //    }
-        //}
         private Win32API.SIZE GetTextExtend(string str, int maxwidth, out int fit) {
             IntPtr OldFont = Win32API.SelectObject(dc_, hfont_); //TODO
             //IntPtr OldFont = Win32API.SelectObject(dc_, config_.Font.ToHfont());

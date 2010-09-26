@@ -1,4 +1,11 @@
-﻿http://panathenaia.halfmoon.jp/thebe/tech.html
+﻿http://d.hatena.ne.jp/rubikitch/?of=60
+http://d.hatena.ne.jp/kiwanami/
+http://blog.livedoor.jp/noriy0363/archives/2499417.html
+http://www.kanazawa-net.ne.jp/~pmansato/net/net_ime.htm
+http://sourceforge.jp/projects/fooeditor/
+http://top.freespace.jp/ecosoft/tips_cs/index.htm
+
+http://panathenaia.halfmoon.jp/thebe/tech.html
 http://www.fastwave.gr.jp/diarysrv/arino/200311c.html#20031130-7
 
 http://yk.tea-nifty.com/netdev/cat21079816/index.html
@@ -11,18 +18,11 @@ http://www.atmarkit.co.jp/fdotnet/practprog/wisearch02/wisearch02_03.html
 http://structurededitor.codeplex.com/
 http://azuki.sourceforge.jp/
 
-search
+incremental search
 replace
 underline
-wavline
 solidline
-selrect
 prop text
 prop wrap
-prop readonly
 prop showline
-prop showZsp
-prop showTab
-prop showReturn
 prop font
-sel word

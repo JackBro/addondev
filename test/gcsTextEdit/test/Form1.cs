@@ -21,20 +21,40 @@ namespace test
             //this.KeyPreview = true;
             edit.Name = "1";
             edit.BackColor = Color.White;
+            edit.LineNumberBackColor = Color.White;
             edit.Font = this.Font;
             edit.ShowReturn = true;
             edit.ShowWhiteSpace = true;
             edit.ShowZenWhiteSpace = true;
+
+            edit.ShowTab = true;
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
-            edit.GotFocus += new EventHandler(csedit_GotFocus);
-
 
             edit.DrawEventHandler += (g, line, x, y) => {
                 g.DrawImage(image, new Point(x, y));
             };
 
+            bool flg = false;
+            edit.MouseDown += (sender, e) => {
+                //edit.SelectMode = AsControls.SelectType.Normal;
+                if (edit.SelectMode == AsControls.SelectType.Rectangle) {
+                    flg = true;
+                }
+            };
+            edit.MouseUp += (sender, e) => {
+                if (flg) {
+                    edit.SelectMode = AsControls.SelectType.Normal;
+                }
+                flg = false;
+            };
+            edit.MouseMove += (sender, e) => {
+                if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
+                    edit.SelectMode = AsControls.SelectType.Rectangle;
+                }
+            };
+            //
             edit.KeyBind.setAction(Keys.Back, (editor) => {
                 editor.BackSpace();
             });
@@ -111,19 +131,49 @@ namespace test
             };
 
             FindNextButton.Click += (sender, e) => {
-                if(sr==null)
+                if (sr == null) {
                     sr = edit.Sr();
-
-                sr.Searcher = new AsControls.NormalSearch(FindTextBox.Text);
+                }
+                sr.SearchWord = FindTextBox.Text;
+                if (RegxCheckBox.Checked) {
+                    sr.Searcher = new AsControls.RegexSearch();
+                } else {
+                    sr.Searcher = new AsControls.NormalSearch();
+                }
                 sr.FindNextImpl();
             };
 
             FindPreButton.Click += (sender, e) => {
-                if (sr == null)
+                if (sr == null) {
                     sr = edit.Sr();
-
-                sr.Searcher = new AsControls.NormalSearchRev(FindTextBox.Text);
+                }
+                sr.SearchWord = FindTextBox.Text;
+                if (RegxCheckBox.Checked) {
+                    sr.Searcher = new AsControls.RegexSearchRev();
+                } else {
+                    sr.Searcher = new AsControls.NormalSearchRev();
+                }
                 sr.FindPrevImpl();
+            };
+
+            ReplaceNextButton.Click += (sender, e) => {
+                if (sr == null) {
+                    sr = edit.Sr();
+                }
+                sr.SearchWord = FindTextBox.Text;
+                sr.ReplaceWord = ReplaceTextBox.Text;
+                sr.Searcher = new AsControls.NormalSearch();
+                sr.ReplaceImpl();
+            };
+
+            ReplaceAllButton.Click += (sender, e) => {
+                if (sr == null) {
+                    sr = edit.Sr();
+                }
+                sr.SearchWord = FindTextBox.Text;
+                sr.ReplaceWord = ReplaceTextBox.Text;
+                sr.Searcher = new AsControls.NormalSearch();
+                sr.ReplaceAllImpl();
             };
 
             panel1.Controls.Add(edit);
@@ -162,7 +212,9 @@ namespace test
             edit.Text = @"/*m*/
 1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
 */
-mm";
+mm
+12
+a";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;
@@ -187,22 +239,6 @@ mm";
             //csedit.DragOver += new DragEventHandler(csedit_DragOver);
         }
 
-        void csedit2_GotFocus(object sender, EventArgs e)
-        {
-            Text = "Brown";
-        }
-
-        void csedit_GotFocus(object sender, EventArgs e)
-        {
-            Text = "White";
-            //throw new NotImplementedException();
-        }
-
-        private void searchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //csedit.SearchText("title");
-        }
-
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -224,18 +260,6 @@ mm";
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //int offset = csedit.offset;
-            //int i = 0;
-            //csedit.Insert(12, 15, "repl");
-        }
-
-        private void searchToolStripMenuItem1_Click(object sender, EventArgs e)
         {
 
         }

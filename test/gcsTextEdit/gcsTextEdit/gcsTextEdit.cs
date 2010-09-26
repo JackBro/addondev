@@ -22,7 +22,7 @@ namespace AsControls {
     /// <param name="nmlcmd">挿入/削除/置換ならtrue、ファイル開き/全置換ならfalse</param>
     internal delegate void TextUpdateEventHandler(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd);
 
-    public class LinkClickEventArgs : EventArgs {
+    public class ClickableLinkEventArgs : EventArgs {
         private Point location;
         public string Link { get; private set; }
         public MouseButtons Button { get; private set; }
@@ -32,7 +32,7 @@ namespace AsControls {
         public Point Location { get { return location; } private set { location = value; } }
         public int Delta { get; private set; }
 
-        public LinkClickEventArgs(MouseEventArgs e, string link)
+        public ClickableLinkEventArgs(MouseEventArgs e, string link)
         {
             Button = e.Button;
             Clicks = e.Clicks;
@@ -44,7 +44,9 @@ namespace AsControls {
 
     public partial class gcsTextEdit : Control, ITextEditor {
 
-        public event EventHandler<LinkClickEventArgs> LinkClick;
+        public event EventHandler<ClickableLinkEventArgs> MouseLinkClick;
+        public event EventHandler<ClickableLinkEventArgs> MouseLinkDoubleClick;
+        public event EventHandler<ClickableLinkEventArgs> MouseLinkDown;
 
         internal class VDrawInfo {
             public Rectangle rc;
@@ -128,17 +130,10 @@ namespace AsControls {
 
         public KeyMap KeyBind { get; set; }
 
-        //public new Color BackColor {
-        //    get { return base.BackColor; }
-        //    set { }
-        //}
-
-        //public Color ForeColor {
-        //    get { return base.ForeColor; }
-        //    set { 
-
-        //    }
-        //}
+        public SelectType SelectMode {
+            get { return cur_.SelectMode; }
+            set { cur_.SelectMode = value; }
+        }
 
         public new Font Font {
             get { return base.Font; }
@@ -284,42 +279,16 @@ namespace AsControls {
                 return s;
         }
 
-
-
         public gcsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
-            //EditorPanel = new Panel();
-            ////EditorPanel.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
-            //EditorPanel.BackColor = this.BackColor;
-            ////EditorPanel.Size = new Size(hScrollBar.Height, vScrollBar.Width);
-            //this.Controls.Add(EditorPanel);
-
-            //wrapType = WrapType.WindowWidth;
-            //wrapType = WrapType.Non;
-            //showNumLine = true;
-            //AutoScroll = true;
-
-           
-            //initDraw();
-            //initWrap();
-
-            //udScr_tl_ = 0;
-            //udScr_vrl_ = 0;
-
             vScrollBar = new VGcsScrollBar();
             vScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
-            //vScrollBar.Dock = DockStyle.Right;
             this.Controls.Add(vScrollBar);
 
             hScrollBar = new HGcsScrollBar();
             hScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
-            //hScrollBar.Dock = DockStyle.Bottom;
             this.Controls.Add(hScrollBar);
-
-            //scPanel.BackColor = this.BackColor;
-            //scPanel.Size = new Size(hScrollBar.Height, vScrollBar.Width);
-            //this.Controls.Add(scPanel);
 
             this.ImeMode = ImeMode.Off;
             imeComposition = new Ime(this);
@@ -333,20 +302,18 @@ namespace AsControls {
             this.GotFocus += (sender, e) => {
                 cur_.on_setfocus();
             };
-            this.KeyDown += (sender, e) => {
-                
-            };
+
             this.VisibleChanged += new EventHandler(gcsTextEdit_VisibleChanged);
 
             this.MouseClick += (sender, e) => {
-                if (LinkClick != null) {
+                if (MouseLinkClick != null) {
                     VPos vs, ve;
                     cur_.getCurPos(out vs, out ve);
                     var rules = doc_.Rules(vs.tl);
                     foreach (var rule in rules) {
                         if (rule.attr.islink && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
                             string link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
-                            LinkClick(this, new LinkClickEventArgs(e, link));
+                            MouseLinkClick(this, new ClickableLinkEventArgs(e, link));
                             break;
                         }
                     }
@@ -356,20 +323,10 @@ namespace AsControls {
             KeyBind = new KeyMap();
 
             doc_ = new Document();
-            //doc_.rlend = rlend;
-            //doc_.rln = rln;
-            //doc_.selRectX = () => {
-            //    return cur_.dragX_;
-            //};
-            //doc_.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
             doc_.TextUpdate += (s, e, e2, reparsed, nmlcmd) => {
                 on_text_update(s, e, e2, reparsed, nmlcmd);
             };
             //
-            Config config = new Config();
-            //config.setFontInfo(this.Font.Name, this.Font.Size);
-            //config.setFont(this.Font);
-            //cvs_ = new Canvas(this, config);
             cvs_ = new Canvas(this, this.Font);
             fnt().LineNumberForeColor = this.ForeColor;
             fnt().LineNumberBackColor = this.BackColor;
@@ -378,23 +335,6 @@ namespace AsControls {
 
             cur_ = new Cursor(this, doc_, new Caret(this.Handle));
             //base.AllowDrop = true;
-
-            //KeyBind.SetAction("cmd_Undo", delegate(object obj)
-            //{
-            //    if (doc.UndoManager.CanUndo) {
-            //        doc.UndoManager.Undo();
-            //    }
-            //});
-            //keyMap.SetAction("cmd_Redo", delegate(object obj)
-            //{
-            //    if (doc.UndoManager.CanRedo) {
-            //        doc.UndoManager.Redo();
-            //    }
-            //});
-            //keyMap.SetAction("cmd_Paste", delegate(object obj)
-            //{
-            //    this.Paste();
-            //});
 
             Initialize();
         }
@@ -420,6 +360,20 @@ namespace AsControls {
             ReSetScrollInfo();
         }
 
+        private string getLinkFromCursor() {
+            string link = string.Empty;
+            VPos vs, ve;
+            cur_.getCurPos(out vs, out ve);
+            var rules = doc_.Rules(vs.tl);
+            foreach (var rule in rules) {
+                if (rule.attr.islink && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
+                    link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
+                    break;
+                }
+            }
+            return link;
+        }
+
         internal Rectangle getClientRect() {
             return this.ClientRectangle;
             ////throw new NotImplementedException();
@@ -433,12 +387,6 @@ namespace AsControls {
             //Rectangle rec = new Rectangle(crect.Location, size);
             //return rec;
         }
-
-        //void doc_TextUpdateEvent(VPos s, VPos e, VPos e2) {
-        //    //UpDate(s, e, e2);
-        //    on_text_update(s, e, e2, true, true);       
-        //    //base.Invalidate();
-        //}
 
         public new void Dispose() {
             Dispose(true);
@@ -637,10 +585,6 @@ namespace AsControls {
             base.OnPreviewKeyDown(e);
         }
 
-        protected override void OnKeyUp(KeyEventArgs e) {
-            base.OnKeyUp(e);
-        }
-
         protected override bool ProcessDialogKey(Keys keyData) {
             return false;
         }
@@ -681,8 +625,6 @@ namespace AsControls {
             if (charCode == '\t') return true;
             return !char.IsControl(charCode);
         }
-
-
 
         private Boolean ldowm = false;
         protected override void OnMouseDown(MouseEventArgs e) {
@@ -742,21 +684,6 @@ namespace AsControls {
             base.OnMouseDown(e);
         }
 
-
-        protected override void OnMouseUp(MouseEventArgs e) {
-            //if (dostart) {
-            //    GetVPos(e.X, e.Y, ref cur);
-            //    UpdateCaretPos();
-            //    cur.CopyTo(ref sel);
-
-            //    base.Invalidate();
-            //}
-            //ldowm = false;
-            //dostart = false;
-
-            base.OnMouseUp(e);
-        }
-
         Boolean dostart = false;
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
@@ -781,12 +708,12 @@ namespace AsControls {
         }
 
         protected override void OnMouseEnter(EventArgs e) {
-            //Cursor = Cursors.IBeam;
+            this.Cursor = Cursors.IBeam;
             base.OnMouseEnter(e);
         }
 
         protected override void OnMouseLeave(EventArgs e) {
-            //Cursor = Cursors.Default;
+            this.Cursor = Cursors.Default;
             base.OnMouseLeave(e);
         }        
 

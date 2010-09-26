@@ -48,34 +48,16 @@ namespace AsControls {
         /// </summary>
         int figNum_;
 
-        //private gcsTextEdit view;
-        //public Canvas(gcsTextEdit view, Config config) {
         public Canvas(gcsTextEdit view, Font font) {
             txtZone_ = view.getClientRect();
-            //txtZone_ = new Rectangle();
             showLN = true;
             wrapType = WrapType.NonWrap;
             //wrapType = WrapType.WindowWidth;
-            //txtZone_ = view.ClientRectangle;
-            //font_ = new Painter(view.Handle, config);
             font_ = new Painter(view.Handle, font);
             wrapWidth_ = 0xfffffff;
             //wrapWidth_ = view.cx() - 3; //TODO
             //wrapWidth_ = 100;
-            //this.view = view;
-            //TODO wrap
-            //view.SizeChanged += (sender, e) => {
-            //};
-
-            //view.VisibleChanged += new EventHandler(view_VisibleChanged);
         }
-
-        //void view_VisibleChanged(object sender, EventArgs e) {
-        //    if (view.Visible) {
-        //        txtZone_ = view.getClientRect();
-        //        view.VisibleChanged -= view_VisibleChanged;
-        //    }
-        //}
 
         public Painter getPainter() {
             return font_;

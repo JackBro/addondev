@@ -39,9 +39,6 @@
             this.wrapOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wrapOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.searchToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.searchToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.SearchPanel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -54,6 +51,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.FindPreButton = new System.Windows.Forms.Button();
+            this.RegxCheckBox = new System.Windows.Forms.CheckBox();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SearchPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -62,9 +61,9 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
             this.searchToolStripMenuItem,
-            this.viewToolStripMenuItem,
-            this.searchToolStripMenuItem2});
+            this.viewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
@@ -83,7 +82,6 @@
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
             this.searchToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.searchToolStripMenuItem.Text = "Edit";
-            this.searchToolStripMenuItem.Click += new System.EventHandler(this.searchToolStripMenuItem_Click);
             // 
             // undoToolStripMenuItem
             // 
@@ -149,27 +147,6 @@
             this.fontToolStripMenuItem.Text = "font";
             this.fontToolStripMenuItem.Click += new System.EventHandler(this.fontToolStripMenuItem_Click);
             // 
-            // searchToolStripMenuItem2
-            // 
-            this.searchToolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.searchToolStripMenuItem1,
-            this.selectAllToolStripMenuItem});
-            this.searchToolStripMenuItem2.Name = "searchToolStripMenuItem2";
-            this.searchToolStripMenuItem2.Size = new System.Drawing.Size(51, 20);
-            this.searchToolStripMenuItem2.Text = "search";
-            // 
-            // searchToolStripMenuItem1
-            // 
-            this.searchToolStripMenuItem1.Name = "searchToolStripMenuItem1";
-            this.searchToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.searchToolStripMenuItem1.Text = "search";
-            // 
-            // selectAllToolStripMenuItem
-            // 
-            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.selectAllToolStripMenuItem.Text = "select all";
-            // 
             // panel1
             // 
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -195,21 +172,23 @@
             // 
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 5;
+            this.tableLayoutPanel1.ColumnCount = 6;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.Controls.Add(this.ReplaceTextBox, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.FindNextButton, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.FindNextButton, 4, 0);
             this.tableLayoutPanel1.Controls.Add(this.FindTextBox, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.ReplaceAllButton, 4, 1);
-            this.tableLayoutPanel1.Controls.Add(this.FindAllButton, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.ReplaceNextButton, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.ReplaceAllButton, 5, 1);
+            this.tableLayoutPanel1.Controls.Add(this.FindAllButton, 5, 0);
+            this.tableLayoutPanel1.Controls.Add(this.ReplaceNextButton, 4, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.FindPreButton, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.FindPreButton, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.RegxCheckBox, 2, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -224,7 +203,7 @@
             this.ReplaceTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ReplaceTextBox.Location = new System.Drawing.Point(33, 34);
             this.ReplaceTextBox.Name = "ReplaceTextBox";
-            this.ReplaceTextBox.Size = new System.Drawing.Size(200, 22);
+            this.ReplaceTextBox.Size = new System.Drawing.Size(150, 22);
             this.ReplaceTextBox.TabIndex = 0;
             // 
             // FindNextButton
@@ -243,7 +222,7 @@
             this.FindTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FindTextBox.Location = new System.Drawing.Point(33, 3);
             this.FindTextBox.Name = "FindTextBox";
-            this.FindTextBox.Size = new System.Drawing.Size(200, 22);
+            this.FindTextBox.Size = new System.Drawing.Size(150, 22);
             this.FindTextBox.TabIndex = 1;
             // 
             // ReplaceAllButton
@@ -313,6 +292,23 @@
             this.FindPreButton.Text = "Pre";
             this.FindPreButton.UseVisualStyleBackColor = true;
             // 
+            // RegxCheckBox
+            // 
+            this.RegxCheckBox.AutoSize = true;
+            this.RegxCheckBox.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.RegxCheckBox.Location = new System.Drawing.Point(189, 3);
+            this.RegxCheckBox.Name = "RegxCheckBox";
+            this.RegxCheckBox.Size = new System.Drawing.Size(44, 17);
+            this.RegxCheckBox.TabIndex = 9;
+            this.RegxCheckBox.Text = "Regx";
+            this.RegxCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -350,9 +346,6 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wrapOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wrapOffToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fontToolStripMenuItem;
         private System.Windows.Forms.Panel SearchPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -365,6 +358,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button FindPreButton;
+        private System.Windows.Forms.CheckBox RegxCheckBox;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 
     }
 }

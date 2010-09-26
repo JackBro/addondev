@@ -18,15 +18,6 @@ namespace AsControls
         /// </summary>
         public int BackDrawSize { get; set; }
 
-       // private IntPtr hdc;
-       // private IntPtr hfont;
-
-        //private Brush cursorBrush = new SolidBrush(Color.Black);
-        //private Pen spPen;
-        //private Brush tabbrush = new SolidBrush(Color.Blue);
-        //private Brush ppp = new SolidBrush(Color.DarkGreen);
-        //Brush bb = new SolidBrush(Color.White);
-
         private void DrawLNA(Graphics g, VDrawInfo v, Painter p ){
             // 背面消去
             Rectangle rc = new Rectangle(v.rc.Left, v.rc.Top, lna(), v.rc.Bottom);
@@ -60,13 +51,10 @@ namespace AsControls
             }
         }
 
-        //private Bitmap image = new Bitmap("test.png");
         private void DrawTXT2(Graphics g, VDrawInfo v, Painter p) {
-            //AutoScrollOffset= new Point(AutoScrollOffset.X,AutoScrollOffset.Y+ 10);
 
-            //g.FillRectangle(bb, v.rc);
             // 定数１
-        //	const int   TAB = p.T();
+            //	const int   TAB = p.T();
             int H = p.H();
             int TLM = doc_.tln()-1;
 
@@ -360,8 +348,21 @@ namespace AsControls
                                             x += p.CalcStringWidth(ps);
                                             break;
                                         case '\t':
-                                            if(ShowTab) p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
-                                            x += p.T() * ps.Length;//p.CalcStringWidth(s[ci].ToString());
+                                            //TODO tab
+                                            //if(ShowTab) p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
+                                            //x += p.T() * ps.Length;//p.CalcStringWidth(s[ci].ToString());
+                                            if (ShowTab) {
+                                                //for (; i < i2; ++i, x = p.nextTab(x))
+                                                //	p.CharOut( L'>', x+v.XBASE, a.top );
+                                                for (int i2 = 0; i2 < ps.Length; ++i2){//, x = p.nextTab(x)) {
+                                                    //p.DrawTab(g, x + v.XBASE, a.top);
+                                                    int ntx = p.nextTab(x);
+                                                    p.DrawTab(g, x + v.XBASE, a.top, ntx - x);
+                                                    x = ntx;
+                                                }
+                                                //p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
+                                            }
+                                            
                                             break;
                                         default:
                                             //string s2 = s.Substring(i2, ci - i2);
@@ -481,8 +482,8 @@ namespace AsControls
                         //p.StringOut( sstr[sc], slen[sc], x+v.XBASE, a.top-H );
                         p.DrawReturn(g, x + v.XBASE, a.top - H);
                     }
-                    //if (v.SYB < a.top && a.top <= v.SYE && ShowReturn)
-                    //    Inv(g, a.top, x+v.XBASE, x+v.XBASE+p.W(), p );
+                    if (v.SYB < a.top && a.top <= v.SYE && ShowReturn)
+                        Inv(g, a.top - H, x + v.XBASE, x + v.XBASE + p.W(), p);
                 }
             }
 

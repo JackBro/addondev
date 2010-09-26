@@ -399,7 +399,7 @@ namespace AsControls
                 IText buf = doc_.tl(tl);
                 int adend = rlend(tl, rl);
                 int ad = (rl == 0 ? 0 : rlend(tl, rl - 1));
-                int vx = (rl == 0 ? 0 : fnt().CalcStringWidth(buf.Substring(ad++, 1).ToString())); //TODO
+                int vx = (rl == 0 ? 0 : fnt().CalcStringWidth(buf.Substring(ad++, 1).ToString()));
 
                 while (ad < adend) {
 
@@ -408,7 +408,10 @@ namespace AsControls
                     //:  vx + fnt().W(&str[ad])
                     //);
 
-                    int nvx = vx + fnt().CalcStringWidth(buf.Substring(ad, 1).ToString()); //TODO
+                    //int nvx = vx + fnt().CalcStringWidth(buf.Substring(ad, 1).ToString());
+                    //TODO Tab
+                    int nvx = (buf[ad] == '\t' ? fnt().nextTab(vx) : vx + fnt().CalcStringWidth(buf.Substring(ad, 1).ToString()));
+
                     if (x + 2 < nvx)
                         break;
                     vx = nvx;

@@ -6,6 +6,8 @@ using System.Text;
 namespace AsControls {
     public interface ISearch {
 
+        string SearchWord { get; set; }
+
         /// <summary>
         /// 検索を行う
         /// 下方向サーチオブジェクトの場合、stt &lt;= *beg の範囲

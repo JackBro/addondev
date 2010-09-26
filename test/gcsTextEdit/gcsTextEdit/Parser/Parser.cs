@@ -36,22 +36,12 @@ namespace AsControls.Parser {
         public Attribute attr;
     }
 
-    //public enum BlockState {
-    //    start,
-    //    end,
-    //    start_end,
-    //    all,
-    //    no
-    //}
-
     public class Block {
-        //public BlockState state;
         public MultiLineRule elem;
         public int isLineHeadCmt = 0;
         public int commentTransition = 0;
 
         public Block() {
-            //state = BlockState.no;
         }
     }
 
@@ -295,118 +285,6 @@ namespace AsControls.Parser {
                 }
             }
 
-            // Line::isLineHeadCommented_
-            //    0: 行頭がブロックコメントの内部ではない
-            //    1: 行頭がブロックコメントの内部
-            //
-            // -----------------------------------------------
-            //
-            // Line::commentTransition_
-            //   00: 行末は常にコメントの外
-            //   01: 行頭と行末はコメント状態が逆転
-            //   10: 行頭と行末はコメント状態が同じ
-            //   11: 行末は常にコメントの中
-            //if (cmstrulrs.Count == 0) {
-            //    if (line.Text.Length ==0 && _cmt == 1) {
-            //        //line.Block.commentTransition = 3;
-            //        line.Block.commentTransition = 2;
-            //    }
-            //    else {
-            //        //line.Block.commentTransition = 0;
-            //        line.Block.commentTransition = 2;
-            //    }
-            //}
-            //else if (cmstrulrs.Count == 1) {
-            //    int ad = cmstrulrs[0].t1;
-            //    int len = cmstrulrs[0].t2;
-            //    bool isnext = cmstrulrs[0].t3;
-
-            //    if (ad == 0 && len == line.Text.ToString().Length) {
-            //        if (isnext)
-            //            line.Block.commentTransition = 3;
-            //        else if (_cmt == 1) {
-            //            line.Block.commentTransition = 1;
-            //        }else{
-            //            line.Block.commentTransition = 2;
-            //            //line.Block.commentTransition = 0;
-            //        }
-            //    }
-            //    else if (ad == 0 && len < line.Text.ToString().Length) {
-            //        if (_cmt == 1) {
-            //            line.Block.commentTransition = 1;
-            //        }
-            //        else {
-            //            line.Block.commentTransition = 2;
-            //        }
-            //    }
-            //    else if (ad > 0 && (ad+len == line.Text.ToString().Length)) {
-            //        //line.Block.commentTransition = 1;
-            //        if (isnext)
-            //            line.Block.commentTransition = 3;
-            //        else
-            //            line.Block.commentTransition = 1;
-            //            //line.Block.commentTransition = 0;
-            //    }
-            //    else {
-            //        line.Block.commentTransition = 2;
-            //    }
-            //}
-            //else {
-            //    //Token f = cmstrulrs[0];
-            //    //Token e = cmstrulrs[cmstrulrs.Count-1];
-
-            //    int fad = cmstrulrs[0].t1;
-            //    int flen = cmstrulrs[0].t2;
-            //    bool fisnext = cmstrulrs[0].t3;
-
-            //    int ead = cmstrulrs[cmstrulrs.Count - 1].t1;
-            //    int elen = cmstrulrs[cmstrulrs.Count - 1].t2;
-            //    bool eisnext = cmstrulrs[cmstrulrs.Count - 1].t3;
-
-            //    if (fad == 0 && (ead + elen == line.Text.ToString().Length)) {
-
-            //        ////line.Block.commentTransition = 2;
-            //        // if (eisnext)
-            //        //     line.Block.commentTransition = 3;
-            //        // else
-            //        //    line.Block.commentTransition = 2;
-            //        //    //line.Block.commentTransition = 0;
-
-            //        if (eisnext)
-            //             line.Block.commentTransition = 3;
-            //        else if (_cmt == 1) {
-            //            line.Block.commentTransition = 1;
-            //        }else{
-            //            line.Block.commentTransition = 2;
-            //            //line.Block.commentTransition = 0;
-            //        }
-            //    }
-            //    else if (fad == 0 && (ead + elen < line.Text.ToString().Length)) {
-            //        //line.Block.commentTransition = 1;
-
-            //        if (_cmt == 1) {
-            //            line.Block.commentTransition = 1;
-            //        }
-            //        else {
-            //            line.Block.commentTransition = 2;
-            //        }
-            //    }
-            //    else if (fad > 0 && (ead + elen < line.Text.ToString().Length)) {
-            //        line.Block.commentTransition = 2;
-            //    }
-            //    else if (fad > 0 && (ead + elen == line.Text.ToString().Length)) {
-
-            //        if (eisnext)
-            //            line.Block.commentTransition = 3;
-            //        else
-            //            line.Block.commentTransition = 1;
-            //        //line.Block.commentTransition = 0;
-            //    }
-            //    else {
-            //        line.Block.commentTransition = 2;
-            //    }
-            //}
-
             if (cmstrulrs.Count == 0) {
                 line.Block.commentTransition = 2;
             } else {
@@ -417,7 +295,7 @@ namespace AsControls.Parser {
                     line.Block.commentTransition = 0;
                 }
             }
-            //line.Block.isLineHeadCmt = _cmt;
+
             cmt = (line.Block.commentTransition >> _cmt) & 1;
             
             if (rules.Count > 0) {
@@ -449,30 +327,8 @@ namespace AsControls.Parser {
             }
 
             line.Rules = rules;
-
-            //Block next = new Block();
-
-            //if (lex.Block.elem != null) {
-            //    line.Block.elem = lex.Block.elem;
-            //    next.elem = lex.Block.elem;
-            //}
-            //line.Block.state = lex.Block.state;
-
-            //if (lex.Block.state == BlockState.end || lex.Block.state == BlockState.start_end) {
-            //    next.state = BlockState.no;
-            //    //next.elem.attr = defaultAttr;
-            //}
-            //else if (lex.Block.state == BlockState.start) {
-            //    next.state = BlockState.all;
-            //}
-            //else {
-            //    next.state = lex.Block.state;
-            //}
-
-            //line.Block.isLineHeadCmt = _cmt;
-            //cmt = (line.Block.commentTransition >> _cmt) & 1;
             
-            return line.Block;//lex.Block;
+            return line.Block;
         }
 
         public int cmt;

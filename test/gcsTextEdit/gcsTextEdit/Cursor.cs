@@ -233,7 +233,7 @@ namespace AsControls
 
             //TODO Rectangle
             SelectMode = SelectType.Normal;
-            SelectMode = SelectType.Rectangle;
+            //SelectMode = SelectType.Rectangle;
 
             //this.doc_.TextUpdateEvent += (s, e, e2) => {
             //    this.on_text_update(s, e, e2, true);
@@ -432,13 +432,19 @@ namespace AsControls
                 //np.vx = newvx;
                 //++np.ad;
 
+                //TODO Tab
                 // 左寄せにしてみた。
 		        int newvx;
 		        //if( str[np.ad] == '\t')
 			    //    newvx = view_.fnt().nextTab(np.vx);
 		        //else
 			    //    newvx = np.vx + view_.fnt().W(&str[np.ad]);
-                 newvx = np.vx + view_.fnt().CalcStringWidth(str.Substring(np.ad, 1).ToString());//TODO
+                if (str[np.ad] == '\t')
+                    newvx = view_.fnt().nextTab(np.vx);
+                else
+                    newvx = np.vx + view_.fnt().CalcStringWidth(str.Substring(np.ad, 1).ToString());
+
+                // newvx = np.vx + view_.fnt().CalcStringWidth(str.Substring(np.ad, 1).ToString());//TODO
 		        if(newvx > np.rx)
 			        break;
 		        np.vx = newvx;
@@ -755,7 +761,6 @@ namespace AsControls
 	        UpdateCaretPos();
         }
 
-        
         //-------------------------------------------------------------------------
         // クリップボード処理
         //-------------------------------------------------------------------------
@@ -775,44 +780,56 @@ namespace AsControls
 	        if( cur_==sel_ )
 		        return;
 
-            //List<string> ss = new List<string>();
-            //ss.Add("aa");
-            //ss.Add("bb");
-            //ss.Add("cc");
-            //ss.Add("dd");
+            if(SelectMode == SelectType.Rectangle){
+                string data=string.Empty;
+                if (cur_ > sel_) {
+                    data = getRangesText(sel_, cur_);
+                }
+                else {
+                    data = getRangesText(cur_, sel_); 
+                }
+                Clipboard.SetData("Rectangle", data);
+                //Clipboard.SetData(DataFormats.Text, data);
+            }else{
 
-            DPos dm = new DPos(cur_.tl, cur_.ad);
-            DPos dM = new DPos(sel_.tl, sel_.ad);
-            if (cur_ > sel_) {
-
-                //var t = getRangesText(sel_, cur_);
-                //RectangleInsert(sel_, cur_, ss);
-                //Clipboard.SetData(t, ClipboardDataType.Rectangle); 
-                Clipboard.SetText(doc_.getText(dM, dm));
-            }
-            else {
-                //var t = getRangesText(cur_, sel_);
-                //RectangleInsert(cur_, sel_, ss);
-                Clipboard.SetText(doc_.getText(dm, dM));
+                DPos dm = new DPos(cur_.tl, cur_.ad);
+                DPos dM = new DPos(sel_.tl, sel_.ad);
+                if (cur_ > sel_) {
+                    Clipboard.SetText(doc_.getText(dM, dm));
+                }
+                else {
+                    Clipboard.SetText(doc_.getText(dm, dM));
+                }
             }
         }
 
         public void Paste()
         {
-            string text = Clipboard.GetText();
-            if (text != null) {
-                //doc_.Replace(cur_, sel_, text);
-                doc_.Execute(new Replace(cur_, sel_, text));
+            if (Clipboard.GetData("Rectangle") != null) {
+            //if (Clipboard.GetData(DataFormats.Text) != null) {
+
+                var text = Clipboard.GetData("Rectangle") as string;
+                //var text = Clipboard.GetData(DataFormats.Text) as string;
+                if (text != null) {
+                    List<string> data = text.Split(new string[]{"\r\n"}, StringSplitOptions.None).ToList<string>();
+
+                    if (cur_ > sel_)
+                        RectangleInsert(sel_, cur_, data);       
+                    else
+                        RectangleInsert(cur_, sel_, data);
+                }
+            } else {
+                string text = Clipboard.GetText();
+                if (text != null) {
+                    //doc_.Replace(cur_, sel_, text);
+                    doc_.Execute(new Replace(cur_, sel_, text));
+                }
             }
         }
 
-        public enum ClipboardDataType {
-            Normal,
-            Rectangle
-        }
-
-        //public class RectangleSelect {
-        //    public List<Tuple<DPos, DPos>> plist;
+        //public enum ClipboardDataType {
+        //    Line,
+        //    Rectangle
         //}
 
         private void RectangleInsert(VPos s, VPos e, List<string> texts) {
@@ -971,7 +988,7 @@ namespace AsControls
             int sxb = s.vx+view_.lna();
             int syb = 0;
             if (s == e)
-                syb = caret_.GetPos().Y + H;
+                syb = caret_.GetPos().Y;// + H;
             else {
                 syb = view_.VRect.SYB;
             }
@@ -985,7 +1002,7 @@ namespace AsControls
                 view_.GetVPos(sxb, y, ref vpb, false);
                 y += H;
 
-                if (rl > 0 && sxb == view_.VRect.XBASE)
+                if (vpb.ad > 0 && rl > 0 && sxb == view_.VRect.XBASE)
                     vpb.ad--;
 
                 return vpb;
@@ -1096,7 +1113,7 @@ namespace AsControls
         }
 
         //TODO Rectangle
-        internal List<string> getRangesText(VPos s, VPos e) {
+        internal string getRangesText(VPos s, VPos e) {
 
             List<string> texts = new List<string>();
             var list = getRectangleDpos(s, e);
@@ -1107,7 +1124,7 @@ namespace AsControls
             }
 
             //return buff.ToString();
-            return texts;
+            return String.Join("\r\n", texts.ToArray<string>());
         }
     }
 
