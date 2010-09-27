@@ -33,9 +33,9 @@ namespace test
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
 
-            edit.DrawEventHandler += (g, line, x, y) => {
-                g.DrawImage(image, new Point(x, y));
-            };
+            //edit.DrawEventHandler += (g, line, x, y) => {
+            //    g.DrawImage(image, new Point(x, y));
+            //};
 
             bool flg = false;
             edit.MouseDown += (sender, e) => {
@@ -134,7 +134,8 @@ namespace test
             };
 
             CursorPos pos=null;
-            FindTextBox.KeyUp += (sender, e) => {
+
+            FindTextBox.TextChanged += (sender, e) => {
                 if (sr == null) {
                     sr = edit.Sr();
                 }

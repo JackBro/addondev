@@ -151,6 +151,9 @@ namespace AsControls {
 	        if( dx!=0 || dy!=0 ){
 		        if( -dx>=right() || dx>=right()
 		         || -dy>=bottom() || dy>=bottom() ){
+                    //TODO Scroll
+                    hScrollBar.Value += dx;
+                    vScrollBar.Value += dy;
 			        // 全画面再描画
 			        // ちょうど65536の倍数くらいスクロールしたときに、
 			        // ScrollWindowEx on Win9x だと再描画が変なのを回避。

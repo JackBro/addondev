@@ -120,7 +120,8 @@ namespace AsControls {
 
         public void init() {
 
-            height_ = (int)(this.Font.GetHeight() + 0.5f);
+            //height_ = (int)(this.Font.GetHeight() + 0.5f);
+            height_ = (int)(this.Font.GetHeight());
             
             widthMap.Clear();
             widthMap.Add('x', CalcStringWidth('x'));

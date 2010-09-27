@@ -611,7 +611,28 @@ namespace AsControls {
             base.OnPaint(e);
             
             Painter p = cvs_.getPainter();
-            vRect.rc = e.ClipRectangle;
+            //vRect.rc = e.ClipRectangle;
+            if (this.Height <= e.ClipRectangle.Height) {
+                //vRect.rc = new Rectangle {
+                //    X = e.ClipRectangle.X,
+                //    Y = e.ClipRectangle.Y,
+                //    Height = e.ClipRectangle.Height - hScrollBar.Height,
+                //    Width = e.ClipRectangle.Width - vScrollBar.Width,
+                //    Location = e.ClipRectangle.Location,
+                //    Size = new Size {
+                //        Height = e.ClipRectangle.Height - hScrollBar.Height,
+                //        Width = e.ClipRectangle.Width - vScrollBar.Width
+                //    }
+                //};
+                Size s = new Size {
+                    Height = e.ClipRectangle.Height - hScrollBar.Height,
+                    Width = e.ClipRectangle.Width - vScrollBar.Width
+                };
+                vRect.rc = new Rectangle(e.ClipRectangle.Location, s);
+
+            } else {
+                vRect.rc = e.ClipRectangle;
+            }
             
             //Size size = new Size(e.ClipRectangle.Width-16,e.ClipRectangle.Height );
             //vRect.rc = new Rectangle(e.ClipRectangle.Location, size);
