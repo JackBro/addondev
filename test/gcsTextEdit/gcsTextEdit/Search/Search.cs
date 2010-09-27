@@ -7,7 +7,7 @@ namespace AsControls
 {
     public class Search
     {
-        private gcsTextEdit edit;
+        private gcsTextEdit view;
         public ISearch Searcher { get; set; }
 
         public string SearchWord;
@@ -17,20 +17,20 @@ namespace AsControls
 
         public Search(gcsTextEdit edit)
         {
-            this.edit = edit;
+            this.view = edit;
         }
 
         public void FindPrevImpl(){
 	        // カーソル位置取得
 	        VPos stt = new VPos();
             VPos end = new VPos();
-	        edit.cursor.getCurPos( out stt, out end );
+	        view.cursor.getCurPos( out stt, out end );
 
 	        if( stt.ad!=0 || stt.tl!=0 ){
 		        // 選択範囲先頭の１文字前から検索
 		        DPos s;
 		        if( stt.ad == 0 )
-			        s = new DPos( stt.tl-1, edit.Document.len(stt.tl-1) );
+			        s = new DPos( stt.tl-1, view.Document.len(stt.tl-1) );
 		        else
 			        s = new DPos( stt.tl, stt.ad-1 );
 
@@ -38,8 +38,9 @@ namespace AsControls
                 DPos b = new DPos(); DPos e = new DPos();
 		        if( FindPrevFromImpl( s, ref b, ref e ) ){
 			        // 見つかったら選択
-			        edit.cursor.MoveCur( b, false );
-			        edit.cursor.MoveCur( e, true );
+			        view.cursor.MoveCur( b, false );
+			        view.cursor.MoveCur( e, true );
+
 			        return;
 		        }
 	        }
@@ -51,7 +52,7 @@ namespace AsControls
             Searcher.SearchWord = this.SearchWord;
 
 	        // １行ずつサーチ
-	        Document d = edit.Document;
+	        Document d = view.Document;
 	        for( int mbg=0,med=0; ; s.ad=d.len(--s.tl) ){
 		        if( Searcher.Search(
 			        d.tl(s.tl).ToString(), d.len(s.tl), s.ad, ref mbg, ref med ) ){
@@ -69,13 +70,13 @@ namespace AsControls
         public void FindNextImpl(){
 	        // カーソル位置取得
 	        VPos stt, end;
-	        edit.cursor.getCurPos( out stt, out end );
+	        view.cursor.getCurPos( out stt, out end );
 
 	        // 選択範囲ありなら、選択範囲先頭の１文字先から検索
 	        // そうでなければカーソル位置から検索
 	        DPos s = new DPos(stt.tl, stt.ad);
 	        if( stt != end )
-                if (stt.ad == edit.Document.len(stt.tl))
+                if (stt.ad == view.Document.len(stt.tl))
 			        s = new DPos( stt.tl+1, 0 );
 		        else
 			        s = new DPos( stt.tl, stt.ad+1 );
@@ -85,8 +86,8 @@ namespace AsControls
             DPos e = new DPos();
 	        if( FindNextFromImpl( s, ref b, ref e ) ){
 		        // 見つかったら選択
-                edit.cursor.MoveCur(b, false);
-                edit.cursor.MoveCur(e, true);
+                view.cursor.MoveCur(b, false);
+                view.cursor.MoveCur(e, true);
 		        return;
 	        }
 
@@ -97,7 +98,7 @@ namespace AsControls
         private bool FindNextFromImpl(DPos s, ref DPos beg, ref DPos end) {
             Searcher.SearchWord = this.SearchWord;
 	        // １行ずつサーチ
-	        Document d = edit.Document;
+	        Document d = view.Document;
 	        for( int mbg=0,med=0,e=d.tln(); s.tl<e; ++s.tl, s.ad=0 )
                 if (Searcher.Search(d.tl(s.tl).ToString(), d.len(s.tl), s.ad, ref mbg, ref med)) {
 			        beg.tl = end.tl = s.tl;
@@ -112,7 +113,7 @@ namespace AsControls
 	        // カーソル位置取得
 	        VPos stt = new VPos();
             VPos end = new VPos();
-	        edit.cursor.getCurPos( out stt, out end );
+	        view.cursor.getCurPos( out stt, out end );
 
 	        // 選択範囲先頭から検索
             DPos b = new DPos();
@@ -129,22 +130,22 @@ namespace AsControls
 
                     //edit.Document.Replace(b, e, replstr);
                     //edit.Document.Replace(new VPos(b), new VPos(e), replstr);
-                    edit.Document.Execute(new Replace(b, e, ReplaceWord));
+                    view.Document.Execute(new Replace(b, e, ReplaceWord));
 			        //replStr_.FreeWCMem( ustr );
 
                     if (FindNextFromImpl(new DPos(b.tl, b.ad + ReplaceWord.Length), ref b, ref e))
 			        {
 				        // 次を選択
-				        edit.cursor.MoveCur( b, false );
-				        edit.cursor.MoveCur( e, true );
+				        view.cursor.MoveCur( b, false );
+				        view.cursor.MoveCur( e, true );
 				        return;
 			        }
 		        }
 		        else
 		        {
 			        // そうでなければとりあえず選択
-			        edit.cursor.MoveCur( b, false );
-			        edit.cursor.MoveCur( e, true );
+			        view.cursor.MoveCur( b, false );
+			        view.cursor.MoveCur( e, true );
 			        return;
 		        }
 
@@ -195,11 +196,11 @@ namespace AsControls
             if (mcr.Count > 0) {
                 // ここで連続置換
                 foreach (var cmd in mcr) {
-                    edit.Document.Execute(cmd);        
+                    view.Document.Execute(cmd);        
                 }
                 // カーソル移動
                 e.ad = b.ad + ReplaceWord.Length;
-                edit.cursor.MoveCur(e, false);
+                view.cursor.MoveCur(e, false);
             }
         }
     }

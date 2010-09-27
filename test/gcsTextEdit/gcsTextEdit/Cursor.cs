@@ -215,6 +215,10 @@ namespace AsControls
             get { return cur_; }
         }
 
+        public VPos Sel {
+            get { return sel_; }
+        }
+
         public bool isSelectText() {
             return !(cur_ == sel_);
         }
@@ -327,16 +331,34 @@ namespace AsControls
 
 	        if( sp.Y == ep.Y )
 	        {
-		        //Rectangle rc = new Rectangle(Math.Max(LFT,sp.X), sp.Y, Math.Min(RHT,ep.X), sp.Y+view_.fnt().H());
-                Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), sp.Y, Math.Min(RHT, ep.X - sp.X), view_.fnt().H());
-                view_.Invalidate(rc, false);
-		        //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
-                //Console.WriteLine("Rectangle sp.Y == ep.Y");
+                if (SelectMode == SelectType.Rectangle) {
+                    
+                    //Console.WriteLine("sp.Y = " + sp.Y);
+                    //int ex = 0;
+                    //if (cur_ > sel_) {
+                    //    ex = cur_.vx;
+                    //}
+                    //else {
+                    //    ex = sel_.vx;
+                    //}
+                    var v = view_.VRect;
+                    var pos = view_.PointToClient(System.Windows.Forms.Cursor.Position);
+                    Rectangle rc = new Rectangle(LFT, Math.Max(TOP, 0), pos.X, ep.Y + view_.fnt().H());
+                    view_.Invalidate( false);
+                }
+                else {
+                    //Rectangle rc = new Rectangle(Math.Max(LFT,sp.X), sp.Y, Math.Min(RHT,ep.X), sp.Y+view_.fnt().H());
+                    Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), sp.Y, Math.Min(RHT, ep.X - sp.X), view_.fnt().H());
+                    view_.Invalidate(rc, false);
+                    //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
+                    //Console.WriteLine("Rectangle sp.Y == ep.Y");
+                }
 	        }
 	        else
 	        {
                 //TODO Rectangle
                 if (SelectMode == SelectType.Rectangle) {
+                    //Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
                     Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
                     view_.Invalidate(rc, false);
                 } else {

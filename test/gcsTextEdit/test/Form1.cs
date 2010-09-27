@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using AsControls;
 
 namespace test
 {
@@ -117,6 +118,8 @@ namespace test
             //    MessageBox.Show(e.Link);
             //};
 
+
+
             wrapOToolStripMenuItem.Click += (sender, e) => {
                 wrapOToolStripMenuItem.Checked = !wrapOToolStripMenuItem.Checked;
                 wrapOffToolStripMenuItem.Checked = !wrapOToolStripMenuItem.Checked;
@@ -128,6 +131,41 @@ namespace test
             wrapOffToolStripMenuItem.Click += (sender, e) => {
                 wrapOffToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
                 wrapOToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
+            };
+
+            CursorPos pos=null;
+            FindTextBox.KeyUp += (sender, e) => {
+                if (sr == null) {
+                    sr = edit.Sr();
+                }
+
+                if (pos != null) {
+                    //pos = edit.GetSelect().t1;
+                    edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
+                }
+
+                sr.SearchWord = FindTextBox.Text;
+                if (RegxCheckBox.Checked) {
+                    sr.Searcher = new AsControls.RegexSearch();
+                }
+                else {
+                    sr.Searcher = new AsControls.NormalSearch();
+                }
+                sr.FindNextImpl();
+                if (pos == null) {
+                    pos = edit.GetSelect().t1;
+                    //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
+                }
+                else {
+                    CursorPos cur = edit.GetSelect().t1;
+                    if (pos.line == cur.line && pos.index == cur.index) {
+                        //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
+                        pos = edit.GetSelect().t1;
+                    }
+                    else {
+
+                    }
+                }
             };
 
             FindNextButton.Click += (sender, e) => {

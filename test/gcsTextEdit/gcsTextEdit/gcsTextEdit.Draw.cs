@@ -207,7 +207,7 @@ namespace AsControls
             }
         }
 
-        private void Inv(Graphics g, int y, int xb, int xe, Painter p )
+        internal void Inv(Graphics g, int y, int xb, int xe, Painter p )
         {
             var rc = new Rectangle(
                 Math.Max(left(), xb), y,
@@ -419,29 +419,47 @@ namespace AsControls
                     if (v.SYB <= a.top && a.top <= v.SYE) {
                         //TODO Rectangle
                         if (cur_.SelectMode == SelectType.Rectangle) {
-                            if (cur_.Cur.tl == tl && rln(tl) - 1 == rl) {
-                                //Inv(g, a.top, v.SXB ,
-                                //    a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                            //if (cur_.Cur.tl == tl && rln(tl) - 1 == rl) {
+                            if (cur_.Cur.tl == tl && cur_.Cur.rl == rl) {
+                                ////Inv(g, a.top, v.SXB ,
+                                ////    a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
 
-                                if (v.SXB == v.XBASE) {
-                                    Inv(g, a.top, v.XBASE, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
-                                }
-                                else {
+                                //if (v.SXB == v.XBASE) {
+                                //    Inv(g, a.top, v.XBASE, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                                //}
+                                //else {
+                                //    VPos vpb = new VPos();
+                                //    GetVPos(v.SXB, a.top, ref vpb, false);
+                                //    Inv(g, a.top, v.XBASE + vpb.vx, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                                //}
+                                var pos = this.PointToClient(System.Windows.Forms.Cursor.Position);
+                                for (int selY = v.SYB; selY <= v.SYE; selY += H) {
                                     VPos vpb = new VPos();
-                                    GetVPos(v.SXB, a.top, ref vpb, false);
-                                    Inv(g, a.top, v.XBASE + vpb.vx, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
+                                    GetVPos(v.SXB, selY, ref vpb, false);
+                                    VPos vpe = new VPos();
+                                    //GetVPos(v.SXE, selY, ref vpe, false);
+                                    GetVPos(pos.X, selY, ref vpe, false);
+                                    if (v.SXB == v.XBASE) {
+                                        Inv(g, selY, v.SXB, v.XBASE + vpe.vx, p);
+                                    }
+                                    else {
+                                        Inv(g, selY, v.XBASE + vpb.vx, v.XBASE + vpe.vx, p);
+                                    }
+                                    
+                                    //if (v.SYB < selY && selY <= v.SYE && ShowReturn)
+                                    //    Inv(g, selY - H, vpe.vx + v.XBASE, vpe.vx + v.XBASE + p.W(), p);
                                 }
                             } else {
-                                //TODO Rectangle
-                                VPos vpe = new VPos();
-                                GetVPos(v.SXE, a.top, ref vpe, false);
-                                if (v.SXB == v.XBASE) {
-                                    Inv(g, a.top, v.XBASE, v.XBASE + vpe.vx, p);
-                                } else {
-                                    VPos vpb = new VPos();
-                                    GetVPos(v.SXB, a.top, ref vpb, false);
-                                    Inv(g, a.top, v.XBASE + vpb.vx, v.XBASE + vpe.vx, p);
-                                }
+                                ////TODO Rectangle
+                                //VPos vpe = new VPos();
+                                //GetVPos(v.SXE, a.top, ref vpe, false);
+                                //if (v.SXB == v.XBASE) {
+                                //    Inv(g, a.top, v.XBASE, v.XBASE + vpe.vx, p);
+                                //} else {
+                                //    VPos vpb = new VPos();
+                                //    GetVPos(v.SXB, a.top, ref vpb, false);
+                                //    Inv(g, a.top, v.XBASE + vpb.vx, v.XBASE + vpe.vx, p);
+                                //}
                             }
                         } else {
                             Inv(g, a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
@@ -476,13 +494,9 @@ namespace AsControls
                 //}
                 if( i==doc_.len(tl) && -32768<x+v.XBASE ){
                     if (ShowReturn && tl != TLM) {
-                        //static const unicode* const sstr[] = { L"[EOF]", L"/" };
-                        //static const int slen[] = { 5, 1 };
-                        //p.SetColor( clr=CTL );
-                        //p.StringOut( sstr[sc], slen[sc], x+v.XBASE, a.top-H );
                         p.DrawReturn(g, x + v.XBASE, a.top - H);
                     }
-                    if (v.SYB < a.top && a.top <= v.SYE && ShowReturn)
+                    if (cur_.SelectMode == SelectType.Normal && v.SYB < a.top && a.top <= v.SYE && ShowReturn)
                         Inv(g, a.top - H, x + v.XBASE, x + v.XBASE + p.W(), p);
                 }
             }

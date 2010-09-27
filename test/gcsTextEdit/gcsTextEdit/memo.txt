@@ -19,10 +19,7 @@ http://structurededitor.codeplex.com/
 http://azuki.sourceforge.jp/
 
 incremental search
-replace
-underline
-solidline
-prop text
-prop wrap
-prop showline
-prop font
+attr enum
+rect select inv draw
+parser interface
+undoredo List<ICommand>

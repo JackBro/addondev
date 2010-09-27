@@ -273,6 +273,23 @@ namespace AsControls {
             ALL 
         }
 
+        public void SetSelect(CursorPos s, CursorPos e) {
+           
+        }
+        
+        public Tuple<CursorPos, CursorPos> GetSelect() {
+            if (cur_.Cur > cur_.Sel) {
+                CursorPos s = new CursorPos { line = cur_.Sel.tl, index = cur_.Sel.ad };
+                CursorPos e = new CursorPos { line = cur_.Cur.tl, index = cur_.Cur.ad };
+                return new Tuple<CursorPos, CursorPos> { t1 = s, t2 = e };
+            }
+            else {
+                CursorPos s = new CursorPos { line = cur_.Cur.tl, index = cur_.Cur.ad };
+                CursorPos e = new CursorPos { line = cur_.Sel.tl, index = cur_.Sel.ad };
+                return new Tuple<CursorPos, CursorPos> { t1 = s, t2 = e };
+            }
+        }
+
         public Search Sr() { 
                 Search s = new Search(this);
                 //s.Searcher = new NormalSearch(word);

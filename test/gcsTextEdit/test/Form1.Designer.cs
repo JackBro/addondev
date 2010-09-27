@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +53,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.FindPreButton = new System.Windows.Forms.Button();
             this.RegxCheckBox = new System.Windows.Forms.CheckBox();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SearchPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -70,6 +70,12 @@
             this.menuStrip1.Size = new System.Drawing.Size(388, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
+            this.fileToolStripMenuItem.Text = "File";
             // 
             // searchToolStripMenuItem
             // 
@@ -302,12 +308,6 @@
             this.RegxCheckBox.TabIndex = 9;
             this.RegxCheckBox.Text = "Regx";
             this.RegxCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
-            this.fileToolStripMenuItem.Text = "File";
             // 
             // Form1
             // 
