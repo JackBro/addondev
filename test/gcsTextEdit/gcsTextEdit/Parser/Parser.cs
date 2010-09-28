@@ -96,13 +96,13 @@ namespace AsControls.Parser {
 
         public void init() {
             
-            lex.AddElement(new KeywordRule("test", new Attribute(Color.DarkGray, false, false, false, false)));
+            //lex.AddElement(new KeywordRule("test", new Attribute(Color.DarkGray, false, false, false, false)));
 
-            lex.AddElement(new MultiLineRule("/*", "*/", new Attribute(Color.Red, true, false, false, false)));
+            //lex.AddElement(new MultiLineRule("/*", "*/", new Attribute(Color.Red, true, false, false, false)));
 
-            lex.AddElement(new MultiLineRule("'", "'", new Attribute(Color.Brown, false, false, false, false)));
+            lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, false, false, false, false)));
 
-            lex.AddElement(new EndLineRule("//", new Attribute(Color.LightBlue, false, false, false, false)));
+            //lex.AddElement(new EndLineRule("//", new Attribute(Color.LightBlue, false, false, false, false)));
 
             //lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
 

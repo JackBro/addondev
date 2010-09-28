@@ -348,6 +348,8 @@ namespace AsControls
                 int nextlen = 0;
 
                 var ruls = doc_.Rules(tl);
+                if (ruls.Count == 0) return;
+
                 int attrindex = ruls[attri].ad;
                 int attrlen = ruls[attri].len;
                 color = ruls[attri].attr.color;

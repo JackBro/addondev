@@ -250,12 +250,12 @@ namespace test
 //*/
 //";
             edit.Wrap = AsControls.WrapType.WindowWidth;
-            edit.Text = @"/*m*/
-1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
-*/
-mm
-12
-a";
+//            edit.Text = @"/*m*/
+//1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
+//*/
+//mm
+//12
+//a";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;
