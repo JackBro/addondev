@@ -134,7 +134,9 @@ namespace test
             };
 
             CursorPos pos=null;
-
+            edit.MouseClick+= (sender, e) => {
+                pos = null;
+            };
             FindTextBox.TextChanged += (sender, e) => {
                 if (sr == null) {
                     sr = edit.Sr();

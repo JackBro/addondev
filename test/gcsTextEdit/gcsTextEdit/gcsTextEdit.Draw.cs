@@ -8,6 +8,49 @@ using System.Globalization;
 
 namespace AsControls
 {
+
+    //
+    // 文字列のまま足し算を行うルーチン
+    //
+    class strint {
+        char[] digit = new char[11];
+        public strint(char[] digit) {
+            this.digit = digit; 
+        }
+        public strint(int num) {
+            int i = 11;
+            while (num > 0) {
+                digit[--i] = (char)('0' + (num % 10));
+                num /= 10;
+            }
+            while (i > 0) {
+                digit[--i] = ' ';
+            }
+        }
+        //void operator++() {
+        public static strint operator ++(strint s) {
+            int i = 10;
+            do
+                if (s.digit[i] == '9')
+                    s.digit[i] = '0';
+                else { ++s.digit[i]; return new strint(s.digit); }
+            while (s.digit[--i] != ' ');
+            s.digit[i] = '1';
+
+            strint tmp = new strint(s.digit);
+            return tmp;
+        }
+        public void Output(Graphics g, Painter f, int x, int y) {
+            //for( unicode* p=digit+10; *p!=L' '; --p,x-=f.F() )
+            //    f.CharOut( *p, x, y );
+            for (int p = 10; digit[p] != ' '; --p, x -= f.F()) {
+                string n = digit[p].ToString();
+                f.DrawLineNum(g, n, Color.Black, x, y);
+            }
+        }
+
+    }
+
     public delegate void DrawEventHandler(Graphics g, string line, int x,int y);
     public partial class gcsTextEdit
     {
@@ -19,6 +62,7 @@ namespace AsControls
         public int BackDrawSize { get; set; }
 
         private void DrawLNA(Graphics g, VDrawInfo v, Painter p ){
+
             // 背面消去
             Rectangle rc = new Rectangle(v.rc.Left, v.rc.Top, lna(), v.rc.Bottom);
             //p.Fill(rc);
@@ -36,16 +80,17 @@ namespace AsControls
                 //sf.Alignment = StringAlignment.Far;
 
                 // 行番号表示
-                int n = v.TLMIN + 1;
+                //int n = v.TLMIN + 1;
+                strint n = new strint(v.TLMIN + 1);
                 int y = v.YMIN;
                 int edge = lna() - p.F() * 2;
 
                 for (int i = v.TLMIN; y < v.YMAX; ++i, ++n) {
-                    //n.Output(p, edge, y);
+                    n.Output(g, p, edge, y);
                     //y += p.H() * rln(i);
                     //g.DrawString(n.ToString(), this.Font, ppp, edge, y, sf);
                     //g.DrawString(n.ToString(), this.Font, ppp, edge, y, sf);
-                    p.DrawLineNum(g, n.ToString(), Color.Black, edge, y);
+                    //p.DrawLineNum(g, n.ToString(), Color.Black, edge, y);
                     y += p.H() * rln(i);
                 }
             }

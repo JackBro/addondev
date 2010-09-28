@@ -31,8 +31,8 @@ namespace AsControls {
         {
 	        int prevRlPos = hScrollBar.Value;
             //Rectangle rec = cvs_.zone();
-	        int cx = cvs_.zone().Right - cvs_.zone().Left;
-	        int cy = cvs_.zone().Bottom;
+	        int cx = cvs_.zone().right - cvs_.zone().left;
+	        int cy = cvs_.zone().bottom;
 
 	        // 横は変な値にならないよう補正するだけでよい
         //	rlScr_.nPage = cx + 1;
@@ -124,7 +124,8 @@ namespace AsControls {
             // スクロール開始通知
 	        cur_.on_scroll_begin();
 
-	        Rectangle clip = (dy==0 ? cvs_.zone() : new Rectangle() /*NULL*/);
+	        //Rectangle clip = (dy==0 ? cvs_.zone() : new Rectangle() /*NULL*/);
+            Win32API.RECT clip = (dy == 0 ? cvs_.zone() : new Win32API.RECT());
 	        int H = cvs_.getPainter().H();
 
 	        // スクロールバー更新

@@ -13,7 +13,8 @@ namespace AsControls {
 
     internal class Canvas : IDisposable {
 
-        private Rectangle txtZone_;
+        //private Rectangle txtZone_;
+        private Win32API.RECT txtZone_;
 
         /// <summary>
         /// 描画用オブジェクト
@@ -35,7 +36,8 @@ namespace AsControls {
         /// 表示領域の位置(pixel)
         /// </summary>
         /// <returns></returns>
-        public Rectangle zone() { return txtZone_; }
+        //public Rectangle zone() { return txtZone_; }
+        public Win32API.RECT zone() { return txtZone_; }
 
         /// <summary>
         /// 折り返し幅(pixel) 
@@ -78,31 +80,31 @@ namespace AsControls {
 
         bool CalcLNAreaWidth()
         {
-	        int prev = txtZone_.Left;
+            int prev = txtZone_.left;
             if (showLN)
 	        {
                 //txtZone_.Left = (1 + figNum_) * font_.F();
                 //if (txtZone_.Left + font_.W() >= txtZone_.Right)
                 //    txtZone_.Left = 0; // 行番号ゾーンがデカすぎるときは表示しない
                 //if (figNum_ == 0) figNum_ = 2; //TODO
-               int left = (1 + figNum_) * font_.F();
-               if (left + font_.W() >= txtZone_.Right) {
-                   left = 0; // 行番号ゾーンがデカすぎるときは表示しない
+                txtZone_.left = (1 + figNum_) * font_.F();
+                if (txtZone_.left + font_.W() >= txtZone_.right) {
+                    txtZone_.left = 0; // 行番号ゾーンがデカすぎるときは表示しない
                    //txtZone_ = new Rectangle(new Point(left, txtZone_.Top), new Size(view.cx(), txtZone_.Size.Height));
                }
 
-               if (left != txtZone_.Left)
-                   txtZone_ = new Rectangle(new Point(left, txtZone_.Top), txtZone_.Size);
+               //if (left != txtZone_.Left)
+               //    txtZone_ = new Rectangle(new Point(left, txtZone_.Top), txtZone_.Size);
                    //TODO wrap
                    //txtZone_ = new Rectangle(new Point(left, txtZone_.Top), new Size(view.cx() - 3 , txtZone_.Size.Height));
 	        }
 	        else
 	        {
-                //txtZone_.Left = 0;
-                txtZone_ = new Rectangle(new Point(0, txtZone_.Top), txtZone_.Size);
+                txtZone_.left = 0;
+                //txtZone_ = new Rectangle(new Point(0, txtZone_.Top), txtZone_.Size);
 	        }
 
-            return (prev != txtZone_.Left);
+            return (prev != txtZone_.left);
         }
 
         void CalcWrapWidth()
@@ -113,7 +115,7 @@ namespace AsControls {
                     wrapWidth_ = 0xfffffff;
 		        break;
             case WrapType.WindowWidth:
-                wrapWidth_ = txtZone_.Right - txtZone_.Left - 3; //TODO wrap
+                wrapWidth_ = txtZone_.right - txtZone_.left - 3; //TODO wrap
                 //wrapWidth_ = view.cx()-3; //TODO
 		        break; //Caretの分-3補正
             default:
@@ -139,9 +141,9 @@ namespace AsControls {
         public bool on_view_resize( int cx, int cy )
         {
             //TODO wrap
-	        //txtZone_.right  = cx;
-	        //txtZone_.bottom = cy;
-            txtZone_ = new Rectangle(txtZone_.Left, txtZone_.Top, cx - txtZone_.Left, cy - txtZone_.Top);
+	        txtZone_.right  = cx;
+	        txtZone_.bottom = cy;
+            //txtZone_ = new Rectangle(txtZone_.Left, txtZone_.Top, cx - txtZone_.Left, cy - txtZone_.Top);
             //txtZone_ = new Rectangle(txtZone_.Left, txtZone_.Top, cx - 18, cy - 18);
 
 	        CalcLNAreaWidth();

@@ -1,4 +1,15 @@
-﻿http://d.hatena.ne.jp/rubikitch/?of=60
+﻿///////////
+//parser bug
+(defun e2wm:fix-widen-window ()
+  (interactive)
+  (when (featurep 'widen-window)
+    (add-hook 'e2wm:pre-start-hook 'e2wm:fix-widen-window-pre-start)
+    (add-hook 'e2wm:post-stop-hook 'e2wm:fix-widen-window-post-stop))
+  )
+///////////
+
+
+http://d.hatena.ne.jp/rubikitch/?of=60
 http://d.hatena.ne.jp/kiwanami/
 http://blog.livedoor.jp/noriy0363/archives/2499417.html
 http://www.kanazawa-net.ne.jp/~pmansato/net/net_ime.htm

@@ -111,7 +111,8 @@ namespace AsControls {
 
             this.Font = font;
 
-            sf.Alignment = StringAlignment.Center;
+            //sf.Alignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Far;
 
             TabWidth = 4;
 
@@ -276,7 +277,7 @@ namespace AsControls {
         }
 
         public void DrawLineNum(Graphics g, string text, Color c, int X, int Y) {
-            g.DrawString(text, this.Font, lineNumberBrush, new Point(X, Y), sf);
+            g.DrawString(text, this.Font, lineNumberBrush, new Point(X, Y));//, sf);
         }
 
         public void DrawLineNumBack(Graphics g, Rectangle rect) {

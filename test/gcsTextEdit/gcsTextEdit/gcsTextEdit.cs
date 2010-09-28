@@ -223,7 +223,7 @@ namespace AsControls {
 
         //
         private Canvas cvs_;
-	    public Rectangle zone()  { return cvs_.zone(); }
+	    internal Win32API.RECT zone()  { return cvs_.zone(); }
         //public int left() { return cvs_.zone().Left; }
         //public int right() { return cvs_.zone().Right - vScrollBar.Width; }
         //public int bottom() { return cvs_.zone().Bottom - hScrollBar.Height; }
@@ -233,13 +233,13 @@ namespace AsControls {
         //public int cy() { return cvs_.zone().Bottom - hScrollBar.Height; }
 
         //TODO
-        internal int left() { return cvs_.zone().Left; }
-        internal int right() { return cvs_.zone().Right; }
-        internal int bottom() { return cvs_.zone().Bottom; }
-        internal int lna() { return cvs_.zone().Left; }
-        internal int cx() { return cvs_.zone().Right - cvs_.zone().Left; }
-        internal int cxAll() { return cvs_.zone().Right; }
-        internal int cy() { return cvs_.zone().Bottom; }
+        internal int left() { return cvs_.zone().left; }
+        internal int right() { return cvs_.zone().right; }
+        internal int bottom() { return cvs_.zone().bottom; }
+        internal int lna() { return cvs_.zone().left; }
+        internal int cx() { return cvs_.zone().right - cvs_.zone().left; }
+        internal int cxAll() { return cvs_.zone().right; }
+        internal int cy() { return cvs_.zone().bottom; }
         //
         private Document doc_;
         public Document Document {
@@ -391,8 +391,19 @@ namespace AsControls {
             return link;
         }
 
-        internal Rectangle getClientRect() {
-            return this.ClientRectangle;
+        Win32API.RECT elientRect = new Win32API.RECT();
+        internal Win32API.RECT getClientRect() {
+            //return this.ClientRectangle;
+
+
+            elientRect.left = this.ClientRectangle.Left;
+            elientRect.top = this.ClientRectangle.Top;
+            elientRect.right = this.ClientRectangle.Right - vScrollBar.Width;
+            if (elientRect.right < 0) elientRect.right = 0;
+            elientRect.bottom = this.ClientRectangle.Bottom - hScrollBar.Height;
+            if (elientRect.bottom < 0) elientRect.bottom = 0;
+            return elientRect;
+
             ////throw new NotImplementedException();
             //Rectangle crect = this.ClientRectangle;
             //////Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height-hScrollBar.Height));
