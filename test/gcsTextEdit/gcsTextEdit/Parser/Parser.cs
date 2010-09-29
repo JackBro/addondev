@@ -100,7 +100,8 @@ namespace AsControls.Parser {
 
             //lex.AddElement(new MultiLineRule("/*", "*/", new Attribute(Color.Red, true, false, false, false)));
 
-            lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, false, false, false, false)));
+            //lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, false, false, false, false)));
+            lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, AttrType.Normal)));
 
             //lex.AddElement(new EndLineRule("//", new Attribute(Color.LightBlue, false, false, false, false)));
 

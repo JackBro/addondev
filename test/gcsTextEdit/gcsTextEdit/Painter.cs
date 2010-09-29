@@ -284,15 +284,17 @@ namespace AsControls {
             g.FillRectangle(lineNumberBackBrush, rect);
         }
 
-        public void DrawText(Graphics g, string text, Color c, int X, int Y) {
-            //g.DrawString(text, config_.Font, TextBrush, new Point(X, Y));
+        public void DrawText(Graphics g, string text, Color color, int X, int Y) {
+
+            //g.DrawString(text, this.Font, TextBrush, new Point(X, Y));
             TextRenderer.DrawText(g,
                text,
                this.Font,
                new Point(X, Y),
-               c,
-                TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
-                //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
+               color,
+               TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+               //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping 
+               //     | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
 
         }
 

@@ -6,34 +6,40 @@ using System.Drawing;
 
 namespace AsControls.Parser {
 
-    //public enum FigurineType {
-    //    Bold,
-    //    UnderLine,
-    //    Strike,
-    //    Link,
-    //    Image
-    //}
+    [Flags]
+    public enum AttrType {
+        Normal=1,
+        Bold=2,
+        UnderLine=4,
+        Strike=8,
+        Link=16,
+        Image=32
+    }
 
     public class Attribute {
         public readonly Color color;
-        public readonly bool islink;
-        public readonly bool isimage;
-        public readonly bool isbold;
-        public readonly bool isunderline;
+        //public readonly bool islink;
+        //public readonly bool isimage;
+        //public readonly bool isbold;
+        //public readonly bool isunderline;
 
-        public Attribute(Color color, bool islink, bool isimage, bool isbold, bool isunderline) {
+        public AttrType type;
+
+        public Attribute(Color color, AttrType type) {
             this.color = color;
-            this.islink = islink;
-            this.isimage = isimage;
-            this.isbold = isbold;
-            this.isunderline = isunderline;
+            //this.islink = islink;
+            //this.isimage = isimage;
+            //this.isbold = isbold;
+            //this.isunderline = isunderline;
+            this.type = type;
         }
         public Attribute(Color color) {
-            this.color = color;
-            this.islink = false;
-            this.isimage = false;
-            this.isbold = false;
-            this.isunderline = false;
+            //this.color = color;
+            //this.islink = false;
+            //this.isimage = false;
+            //this.isbold = false;
+            //this.isunderline = false;
+            this.type = AttrType.Normal;
         }
     }
 

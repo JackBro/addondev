@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.ComponentModel;
+using AsControls.Parser;
 
 namespace AsControls {
 
@@ -149,6 +150,8 @@ namespace AsControls {
             set { fnt().TabWidth = value; }
         }
 
+
+
         public Color LineNumberForeColor {
             get { return fnt().LineNumberForeColor; }
             set { fnt().LineNumberForeColor = value; }
@@ -190,49 +193,18 @@ namespace AsControls {
         public new string Text {
             set {
                 this.doc_.Clear();
-                //InitCaret();
-                //initWrap();
-                //udScr_tl_ = 0;
-                //udScr_vrl_ = 0;
-                //hpage = 0;
-                //vpage = 0;
                 Initialize();
                 cur_.Input(value, value.Length);
             }
-
             get {
                 return this.doc_.ToString();
             }
         }
 
-        //private Document Document {
-        //    get { return this.doc; }
-        //    set {
-        //        if (doc != null) {
-        //            doc.TextUpdateEvent -= doc_TextUpdateEvent;
-        //        }
-        //        doc = value;
-        //        doc.TextUpdateEvent += new TextUpdateEventHandler(doc_TextUpdateEvent);
-        //        //initWrap();
-        //        //ReWrapAll();
-        //        //string sss = doc.ToString();
-        //        //Input(sss);
-        //        ResizeWrapList(doc.tlNum);
-        //    }
-        //}
-
         //
         private Canvas cvs_;
-	    internal Win32API.RECT zone()  { return cvs_.zone(); }
-        //public int left() { return cvs_.zone().Left; }
-        //public int right() { return cvs_.zone().Right - vScrollBar.Width; }
-        //public int bottom() { return cvs_.zone().Bottom - hScrollBar.Height; }
-        //public int lna() { return cvs_.zone().Left; }
-        //public int cx() { return cvs_.zone().Right - cvs_.zone().Left - vScrollBar.Width; }
-        //public int cxAll() { return cvs_.zone().Right; }
-        //public int cy() { return cvs_.zone().Bottom - hScrollBar.Height; }
 
-        //TODO
+	    internal Win32API.RECT zone()  { return cvs_.zone(); }
         internal int left() { return cvs_.zone().left; }
         internal int right() { return cvs_.zone().right; }
         internal int bottom() { return cvs_.zone().bottom; }
@@ -273,20 +245,20 @@ namespace AsControls {
             ALL 
         }
 
-        public void SetSelect(CursorPos s, CursorPos e) {
+        public void SetSelect(DPos s, DPos e) {
            
         }
         
-        public Tuple<CursorPos, CursorPos> GetSelect() {
+        public Tuple<DPos, DPos> GetSelect() {
             if (cur_.Cur > cur_.Sel) {
-                CursorPos s = new CursorPos { line = cur_.Sel.tl, index = cur_.Sel.ad };
-                CursorPos e = new CursorPos { line = cur_.Cur.tl, index = cur_.Cur.ad };
-                return new Tuple<CursorPos, CursorPos> { t1 = s, t2 = e };
+                DPos s = new DPos(cur_.Sel);
+                DPos e = new DPos(cur_.Cur);
+                return new Tuple<DPos, DPos> { t1 = s, t2 = e };
             }
             else {
-                CursorPos s = new CursorPos { line = cur_.Cur.tl, index = cur_.Cur.ad };
-                CursorPos e = new CursorPos { line = cur_.Sel.tl, index = cur_.Sel.ad };
-                return new Tuple<CursorPos, CursorPos> { t1 = s, t2 = e };
+                DPos s = new DPos(cur_.Cur);
+                DPos e = new DPos(cur_.Sel);
+                return new Tuple<DPos, DPos> { t1 = s, t2 = e };
             }
         }
 
@@ -320,15 +292,14 @@ namespace AsControls {
                 cur_.on_setfocus();
             };
 
-            this.VisibleChanged += new EventHandler(gcsTextEdit_VisibleChanged);
-
             this.MouseClick += (sender, e) => {
                 if (MouseLinkClick != null) {
                     VPos vs, ve;
                     cur_.getCurPos(out vs, out ve);
                     var rules = doc_.Rules(vs.tl);
                     foreach (var rule in rules) {
-                        if (rule.attr.islink && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
+                        if (((rule.attr.type & AttrType.Link) == AttrType.Link)
+                             && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
                             string link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
                             MouseLinkClick(this, new ClickableLinkEventArgs(e, link));
                             break;
@@ -351,22 +322,11 @@ namespace AsControls {
             fnt().SpecialCharForeColor = Color.Gray;
 
             cur_ = new Cursor(this, doc_, new Caret(this.Handle));
-            //base.AllowDrop = true;
 
             Initialize();
         }
 
-        void gcsTextEdit_VisibleChanged(object sender, EventArgs e) {
-            if (this.Visible) {
-                DoResize(cvs_.on_view_resize(this.ClientSize.Width - vScrollBar.Width, this.ClientSize.Height - hScrollBar.Height));
-                this.VisibleChanged -= gcsTextEdit_VisibleChanged;
-            }
-        }
-
         public void Initialize() {
-            //doc.Clear();
-            //InitCaret();
-            //initWrap();
             wrap_ = new List<WLine>();
 
             // 適当に折り返し情報初期化
@@ -377,14 +337,15 @@ namespace AsControls {
             ReSetScrollInfo();
         }
 
-        private string getLinkFromCursor() {
+        private string getLinkFromPositon(int x, int y) {
             string link = string.Empty;
-            VPos vs, ve;
-            cur_.getCurPos(out vs, out ve);
-            var rules = doc_.Rules(vs.tl);
+            VPos vp = new VPos();
+            GetVPos(x, y, ref vp, false);
+            var rules = doc_.Rules(vp.tl);
             foreach (var rule in rules) {
-                if (rule.attr.islink && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
-                    link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
+                if (((rule.attr.type & AttrType.Link) == AttrType.Link) 
+                    && (vp.ad >= rule.ad && vp.ad <= (rule.ad + rule.len))) {
+                    link = doc_.tl(vp.tl).Substring(rule.ad, rule.len).ToString();
                     break;
                 }
             }
@@ -395,7 +356,6 @@ namespace AsControls {
         internal Win32API.RECT getClientRect() {
             //return this.ClientRectangle;
 
-
             elientRect.left = this.ClientRectangle.Left;
             elientRect.top = this.ClientRectangle.Top;
             elientRect.right = this.ClientRectangle.Right - vScrollBar.Width;
@@ -403,17 +363,6 @@ namespace AsControls {
             elientRect.bottom = this.ClientRectangle.Bottom - hScrollBar.Height;
             if (elientRect.bottom < 0) elientRect.bottom = 0;
             return elientRect;
-
-            ////throw new NotImplementedException();
-            //Rectangle crect = this.ClientRectangle;
-            //////Rectangle rec = new Rectangle(crect.Location, new Size(crect.Width - vScrollBar.Width, crect.Height-hScrollBar.Height));
-            //int w = crect.Width - vScrollBar.Width;
-            //int h = crect.Height - hScrollBar.Height;
-            //w = w > 0 ? w : 0;
-            //h = h > 0 ? h : 0;
-            //Size size = new Size(w, h);
-            //Rectangle rec = new Rectangle(crect.Location, size);
-            //return rec;
         }
 
         public new void Dispose() {
@@ -428,15 +377,13 @@ namespace AsControls {
                 //Console.WriteLine("MyObject::Dispose マネージドなリソース開放");
             }
             //Console.WriteLine("MyObject::Dispose アンマネージドなリソース開放");
-            //painter.Dispose();
-            //deleteDraw();
             cvs_.Dispose();
             base.Dispose(disposing);
         }
 
-        ~gcsTextEdit() {
-            Dispose(false);
-        }
+        //~gcsTextEdit() {
+        //    Dispose(false);
+        //}
 
         protected override void WndProc(ref Message m) {
             if (imeComposition != null) {
@@ -469,36 +416,12 @@ namespace AsControls {
         }
 
         protected override void OnSizeChanged(EventArgs e) {
-
-            ////initWrap();
-            //ReWrapAll();
-            //UpdateTextCx();
-
-            //vScrollBar.Left = this.Width - vScrollBar.Width;
-            //vScrollBar.Top = 0;
-            //vScrollBar.Height = this.Height - hScrollBar.Height;
-
-            //hScrollBar.Left = 0;
-            //hScrollBar.Top = this.Height - hScrollBar.Height;
-            //hScrollBar.Width = this.Width - vScrollBar.Width;
-
-            //scPanel.Left = vScrollBar.Left;
-            //scPanel.Top = hScrollBar.Top;
-
-            //ReSetScrollInfo();
-
-            //ForceScrollTo(udScr_tl_);
-
-            //ResetPos();
-
             base.OnSizeChanged(e);
 
             int w = this.ClientSize.Width - vScrollBar.Width;
             int h = this.ClientSize.Height - hScrollBar.Height;
             if (w <= 0 || h <= 0) return;
             DoResize(cvs_.on_view_resize(w, h));
-            //DoResize(cvs_.on_view_resize(this.ClientSize.Width, this.ClientSize.Height));
-            //base.Invalidate();
         }
 
         //

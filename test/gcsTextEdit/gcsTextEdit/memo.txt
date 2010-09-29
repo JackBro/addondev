@@ -1,4 +1,7 @@
-﻿///////////
+﻿http://ksugita.blog62.fc2.com/page-4.html
+
+
+///////////
 //parser bug
 (defun e2wm:fix-widen-window ()
   (interactive)

@@ -39,7 +39,6 @@ namespace AsControls
         public void SetPos(int x, int y) {
             if (created_) {
                 Win32API.SetCaretPos(x, y);
-                //
             }
         }
 
@@ -48,7 +47,7 @@ namespace AsControls
             if (created_) {
                 Win32API.POINT p;
                 Win32API.GetCaretPos(out p);
-                //
+
                 point.X = p.x;
                 point.Y = p.y;
             }
@@ -243,9 +242,6 @@ namespace AsControls
             //    this.on_text_update(s, e, e2, true);
             //};
 
-            this.view_.PreviewKeyDown += (sender, e) => {
-
-            };
             this.view_.MouseDown += (sender, e) => {
                 state = State.mouse_down;
             };
@@ -260,12 +256,6 @@ namespace AsControls
                         MoveByMouse(e.X, e.Y);
                     //}
                 }
-            };
-            this.view_.MouseCaptureChanged += (sender, e) => {
-                //state = State.none;
-            };
-            this.view_.MouseLeave += (sender, e) => {
-                
             };
             this.view_.MouseDoubleClick += (sender, e) => {
                 // 行番号ゾーンの場合は特に何もしない

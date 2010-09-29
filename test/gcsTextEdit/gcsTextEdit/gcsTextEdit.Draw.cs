@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Globalization;
+using AsControls.Parser;
 
 namespace AsControls
 {
@@ -65,19 +66,12 @@ namespace AsControls
 
             // 背面消去
             Rectangle rc = new Rectangle(v.rc.Left, v.rc.Top, lna(), v.rc.Bottom);
-            //p.Fill(rc);
-            //g.FillRectangle(bb, rc);
             p.DrawLineNumBack(g, rc);
 
             if (v.rc.Top < v.YMAX) {
                 // 境界線表示
                 int line = lna() - p.F() / 2;
-                //int line = lna() - p.F();
                 p.DrawLine(g, line, v.rc.Top, line, v.YMAX);
-                //p.SetColor(LN);
-
-                //StringFormat sf = new StringFormat();
-                //sf.Alignment = StringAlignment.Far;
 
                 // 行番号表示
                 //int n = v.TLMIN + 1;
@@ -87,10 +81,6 @@ namespace AsControls
 
                 for (int i = v.TLMIN; y < v.YMAX; ++i, ++n) {
                     n.Output(g, p, edge, y);
-                    //y += p.H() * rln(i);
-                    //g.DrawString(n.ToString(), this.Font, ppp, edge, y, sf);
-                    //g.DrawString(n.ToString(), this.Font, ppp, edge, y, sf);
-                    //p.DrawLineNum(g, n.ToString(), Color.Black, edge, y);
                     y += p.H() * rln(i);
                 }
             }
@@ -283,7 +273,14 @@ namespace AsControls
 
         private static char[] cs = { '\t', ' ', '\x3000' };
 
+        private void DrawString() {
+
+        }
+
         private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
+
+            
+
             //g.FillRectangle(bb, v.rc);
             // 定数１
             //	const int   TAB = p.T();
@@ -320,11 +317,11 @@ namespace AsControls
             //Rectangle  a = new Rectangle( 0, v.YMIN, 0, v.YMIN+p.H() );
             //Rectangle a = new Rectangle(0, 0,,v.YMIN);
             //int clr = -1;
-            int x=0;//, x2;
-            int i=0;//, i2;
+            int x=0;
+            int i=0;
 
-            Color color = Color.Black;
-            //Attribute attr;
+            Color color; 
+            Token token;
 
             //int aTop = a.Top;
             //int aBottom = a.Bottom;
@@ -341,18 +338,19 @@ namespace AsControls
                 int rYMAX = Math.Min(v.YMAX, a.top + rln(tl) * H);
 
                 // 作業用変数２
-                int stt = 0, end;//, t, n;
-                //int sss = 0;
+                int stt = 0, end;
 
-                int attri = 0;
+                int index = 0;
                 int nextlen = 0;
 
-                var ruls = doc_.Rules(tl);
-                if (ruls.Count == 0) return;
+                var rules = doc_.Rules(tl);
+                if (rules.Count == 0) return;
 
-                int attrindex = ruls[attri].ad;
-                int attrlen = ruls[attri].len;
-                color = ruls[attri].attr.color;
+                token = rules[index];
+
+                int tokenad = token.ad;
+                int tokenlen = token.len;
+                color = token.attr.color;
 
                 // 表示行単位のLoop
                 for (int rl = 0; a.top < rYMAX; ++rl, a.top += H, a.bottom += H, stt = end)
@@ -369,17 +367,18 @@ namespace AsControls
                     //for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
                     for (x = 0, i=stt; x <= v.XMAX && i < end; ) {
 
-                        nextlen = end - (attrindex + attrlen);
+                        nextlen = end - (tokenad + tokenlen);
                         //nextlen = end - attrindex;
                         if (nextlen >= 0) {
 
-                            string s = str.Substring(attrindex, attrlen);
+                            string s = str.Substring(tokenad, tokenlen);
 
                             int ci = s.IndexOfAny(cs, 0);
                             if (ci < 0) {
                                 p.DrawText(g, s, color, x + v.XBASE, a.top);
-                                if (ruls[attri].attr.isimage && i==ruls[attri].ad && DrawEventHandler != null) {
-                                    DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
+                                if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                                    && i == token.ad && DrawEventHandler != null) {
+                                    DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
                                 }
                                 x += p.CalcStringWidth(s);
                                 i += s.Length;
@@ -391,7 +390,7 @@ namespace AsControls
                                             if(ShowWhiteSpace) p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
                                             x += p.CalcStringWidth(ps);
                                             break;
-                                        case '\x3000': //0x3000://L'　':
+                                        case '\x3000': //0x3000://'　':
                                             if(ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
                                             x += p.CalcStringWidth(ps);
                                             break;
@@ -415,8 +414,9 @@ namespace AsControls
                                         default:
                                             //string s2 = s.Substring(i2, ci - i2);
                                             p.DrawText(g, ps, color, x + v.XBASE, a.top);
-                                            if (ruls[attri].attr.isimage && i == ruls[attri].ad && DrawEventHandler != null) {
-                                                DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
+                                            if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                                                && i == token.ad && DrawEventHandler != null) {
+                                                DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
                                             }
                                             x += p.CalcStringWidth(ps);
                                             break;
@@ -428,27 +428,30 @@ namespace AsControls
                             stt = i;
 
                             if (nextlen > 0) {
-                                attri++;
-                                attrindex = ruls[attri].ad;
-                                attrlen = ruls[attri].len;
-                                color = ruls[attri].attr.color;
+                                index++;
+                                token = rules[index];
+                                tokenad = token.ad;
+                                tokenlen = token.len;
+                                color = token.attr.color;
                             }
-                            if (rln(tl) > 0 && nextlen == 0 && i == end && attri < ruls.Count-1) {
-                                attri++;
-                                attrindex = ruls[attri].ad;
-                                attrlen = ruls[attri].len;
-                                color = ruls[attri].attr.color;
+                            if (rln(tl) > 0 && nextlen == 0 && i == end && index < rules.Count-1) {
+                                index++;
+                                token = rules[index];
+                                tokenad = token.ad;
+                                tokenlen = token.len;
+                                color = token.attr.color;
                             }
 
                         } else {
                             //over
-                            string s = str.Substring(attrindex, end - attrindex);
+                            string s = str.Substring(tokenad, end - tokenad);
                             //p.DrawText(g, s, color, x + v.XBASE, a.top);
                             int ci = s.IndexOfAny(cs, 0);
                             if (ci < 0) {
                                 p.DrawText(g, s, color, x + v.XBASE, a.top);
-                                if (ruls[attri].attr.isimage && i == ruls[attri].ad && DrawEventHandler != null) {
-                                    DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
+                                if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                                    && i == token.ad && DrawEventHandler != null) {
+                                    DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
                                 }
                                 x += p.CalcStringWidth(s);
                                 i += s.Length;
@@ -459,7 +462,7 @@ namespace AsControls
                                             if (ShowWhiteSpace) p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
                                             x += p.CalcStringWidth(ps);
                                             break;
-                                        case '\x3000': //0x3000://L'　':
+                                        case '\x3000': //0x3000://'　':
                                             if (ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
                                             x += p.CalcStringWidth(ps);
                                             break;
@@ -476,8 +479,9 @@ namespace AsControls
                                         default:
                                             //string s2 = s.Substring(i2, ci - i2);
                                             p.DrawText(g, ps, color, x + v.XBASE, a.top);
-                                            if (ruls[attri].attr.isimage && i == ruls[attri].ad && DrawEventHandler != null) {
-                                                DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
+                                            if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                                                && i == token.ad && DrawEventHandler != null) {
+                                                DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
                                             }
                                             x += p.CalcStringWidth(ps);
                                             break;
@@ -494,8 +498,8 @@ namespace AsControls
                             //i += s.Length;
                             stt = i;
 
-                            attrlen -= s.Length; //(end - attrindex);
-                            attrindex = end;
+                            tokenlen -= s.Length; //(end - attrindex);
+                            tokenad = end;
                         }
                     }
 

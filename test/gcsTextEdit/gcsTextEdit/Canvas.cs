@@ -52,6 +52,7 @@ namespace AsControls {
 
         public Canvas(gcsTextEdit view, Font font) {
             txtZone_ = view.getClientRect();
+            figNum_ = 3;
             showLN = true;
             wrapType = WrapType.NonWrap;
             //wrapType = WrapType.WindowWidth;
@@ -83,25 +84,14 @@ namespace AsControls {
             int prev = txtZone_.left;
             if (showLN)
 	        {
-                //txtZone_.Left = (1 + figNum_) * font_.F();
-                //if (txtZone_.Left + font_.W() >= txtZone_.Right)
-                //    txtZone_.Left = 0; // 行番号ゾーンがデカすぎるときは表示しない
-                //if (figNum_ == 0) figNum_ = 2; //TODO
                 txtZone_.left = (1 + figNum_) * font_.F();
                 if (txtZone_.left + font_.W() >= txtZone_.right) {
                     txtZone_.left = 0; // 行番号ゾーンがデカすぎるときは表示しない
-                   //txtZone_ = new Rectangle(new Point(left, txtZone_.Top), new Size(view.cx(), txtZone_.Size.Height));
                }
-
-               //if (left != txtZone_.Left)
-               //    txtZone_ = new Rectangle(new Point(left, txtZone_.Top), txtZone_.Size);
-                   //TODO wrap
-                   //txtZone_ = new Rectangle(new Point(left, txtZone_.Top), new Size(view.cx() - 3 , txtZone_.Size.Height));
 	        }
 	        else
 	        {
                 txtZone_.left = 0;
-                //txtZone_ = new Rectangle(new Point(0, txtZone_.Top), txtZone_.Size);
 	        }
 
             return (prev != txtZone_.left);

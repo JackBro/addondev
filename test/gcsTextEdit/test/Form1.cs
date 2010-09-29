@@ -133,7 +133,7 @@ namespace test
                 wrapOToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
             };
 
-            CursorPos pos=null;
+            DPos pos=null;
             edit.MouseClick+= (sender, e) => {
                 pos = null;
             };
@@ -144,7 +144,7 @@ namespace test
 
                 if (pos != null) {
                     //pos = edit.GetSelect().t1;
-                    edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
+                    edit.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
                 }
 
                 sr.SearchWord = FindTextBox.Text;
@@ -160,8 +160,8 @@ namespace test
                     //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
                 }
                 else {
-                    CursorPos cur = edit.GetSelect().t1;
-                    if (pos.line == cur.line && pos.index == cur.index) {
+                    DPos cur = edit.GetSelect().t1;
+                    if (pos.tl == cur.tl && pos.ad == cur.ad) {
                         //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
                         pos = edit.GetSelect().t1;
                     }
@@ -244,7 +244,7 @@ namespace test
 //yyy
 //y
 //yy";
-
+            ///edit.Text = " ";
 //            csedit.Text = @"/*
 //mmmmmmmmmmmmm
 //*/
