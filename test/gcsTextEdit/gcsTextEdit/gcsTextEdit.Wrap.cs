@@ -409,7 +409,6 @@ namespace AsControls
                     //);
 
                     //int nvx = vx + fnt().CalcStringWidth(buf.Substring(ad, 1).ToString());
-                    //TODO Tab
                     int nvx = (buf[ad] == '\t' ? fnt().nextTab(vx) : vx + fnt().CalcStringWidth(buf.Substring(ad, 1).ToString()));
 
                     if (x + 2 < nvx)

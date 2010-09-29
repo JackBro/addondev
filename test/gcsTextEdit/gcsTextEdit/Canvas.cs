@@ -102,11 +102,10 @@ namespace AsControls {
 	        switch( wrapType )
 	        {
 	        case WrapType.NonWrap:
-                    wrapWidth_ = 0xfffffff;
+                wrapWidth_ = 0xfffffff;
 		        break;
             case WrapType.WindowWidth:
-                wrapWidth_ = txtZone_.right - txtZone_.left - 3; //TODO wrap
-                //wrapWidth_ = view.cx()-3; //TODO
+                wrapWidth_ = txtZone_.right - txtZone_.left - 3;
 		        break; //Caretの分-3補正
             default:
             //    wrapWidth_ = wrapType_ * font_->W();

@@ -141,7 +141,7 @@ namespace AsControls {
             set {
                 base.Font = value;
                 fnt().Font = value;
-                fnt().init(); //TODO fnt().init();
+                fnt().init();
             }
         }
 
@@ -187,7 +187,11 @@ namespace AsControls {
 
         public WrapType Wrap {
             get { return cvs_.wrapType; }
-            set { cvs_.wrapType = value; }
+            set { 
+                cvs_.wrapType = value;
+                DoResize(cvs_.on_view_resize(this.ClientSize.Width - vScrollBar.Width,
+                    this.ClientSize.Height - hScrollBar.Height));
+            }
         }
 
         public new string Text {
@@ -514,9 +518,6 @@ namespace AsControls {
                 else
                     w += p.W(txt[i]);
             return w;
-
-            //Painter p = cvs_.getPainter();
-            //return p.CalcStringWidth(txt);
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e) {
@@ -547,23 +548,11 @@ namespace AsControls {
             Painter p = cvs_.getPainter();
             //vRect.rc = e.ClipRectangle;
             if (this.Height <= e.ClipRectangle.Height) {
-                //vRect.rc = new Rectangle {
-                //    X = e.ClipRectangle.X,
-                //    Y = e.ClipRectangle.Y,
-                //    Height = e.ClipRectangle.Height - hScrollBar.Height,
-                //    Width = e.ClipRectangle.Width - vScrollBar.Width,
-                //    Location = e.ClipRectangle.Location,
-                //    Size = new Size {
-                //        Height = e.ClipRectangle.Height - hScrollBar.Height,
-                //        Width = e.ClipRectangle.Width - vScrollBar.Width
-                //    }
-                //};
                 Size s = new Size {
                     Height = e.ClipRectangle.Height - hScrollBar.Height,
                     Width = e.ClipRectangle.Width - vScrollBar.Width
                 };
                 vRect.rc = new Rectangle(e.ClipRectangle.Location, s);
-
             } else {
                 vRect.rc = e.ClipRectangle;
             }
@@ -775,25 +764,23 @@ namespace AsControls {
 
 	        switch( r ){
                 case ReDrawType.ALL: // 全画面
-		        //::InvalidateRect( hwnd_, NULL, FALSE );
-                this.Invalidate(false);
+		            //::InvalidateRect( hwnd_, NULL, FALSE );
+                    this.Invalidate(false);
                 break;
 
                 case ReDrawType.LNAREA: // 行番号表示域のみ
-		        if( lna() > 0 )
-		        {
-			        Rectangle rc = new Rectangle(0, 0, lna(), bottom());
-			        //::InvalidateRect( hwnd_, &rc, FALSE );
-                    this.Invalidate(rc, false);
-		        }
+		            if( lna() > 0 )
+		            {
+			            Rectangle rc = new Rectangle(0, 0, lna(), bottom());
+			            //::InvalidateRect( hwnd_, &rc, FALSE );
+                        this.Invalidate(rc, false);
+		            }
 		        break;
 
                 case ReDrawType.LINE: // 指定した行の後半
                 case ReDrawType.AFTER: // 指定した行以下全部
-		        //{
 			        DPos st = ( s.ad==0 ? s : doc_.leftOf(s,true) );
                     InvalidateView(st, r == ReDrawType.AFTER);
-		        //}
                 break;
 	        }
         }

@@ -238,10 +238,6 @@ namespace AsControls
             SelectMode = SelectType.Normal;
             //SelectMode = SelectType.Rectangle;
 
-            //this.doc_.TextUpdateEvent += (s, e, e2) => {
-            //    this.on_text_update(s, e, e2, true);
-            //};
-
             this.view_.MouseDown += (sender, e) => {
                 state = State.mouse_down;
             };
@@ -444,7 +440,6 @@ namespace AsControls
                 //np.vx = newvx;
                 //++np.ad;
 
-                //TODO Tab
                 // 左寄せにしてみた。
 		        int newvx;
 		        //if( str[np.ad] == '\t')

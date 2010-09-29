@@ -6,7 +6,6 @@ using System.Drawing;
 
 namespace AsControls.Parser {
 
-
     public  class LexerReader {
         private bool unget_p = false;
         private int ch;
@@ -66,17 +65,13 @@ namespace AsControls.Parser {
         private TokenType tok;
         private String value;
         public LexerReader reader;
-        //private int offset;
 
         private Rule resultElement;
 
-        //private int preoffset=0;
         public bool isNextLine = false;
 
-        //private Rule defaultElement;
         private Dictionary<String, Rule> elemDic = new Dictionary<String, Rule>();
         private Dictionary<String, Rule> keyWordElemDic = new Dictionary<String, Rule>();
-
 
         private Dictionary<String, MultiLineRule> encelemDic = new Dictionary<String, MultiLineRule>();
 
@@ -154,13 +149,11 @@ namespace AsControls.Parser {
         public string Src {
             get { return reader.Src; }
             set {
-                //preoffset = 0;
                 if (reader == null) {
                     reader = new LexerReader(value);
                 }
                 else {
                     reader.Src = value;
-                    //reader.setoffset(0);
                     tok = TokenType.TXT;
                     value = null;
                     isNextLine = false;
@@ -190,11 +183,6 @@ namespace AsControls.Parser {
                 return reader.offset();
             }
         }
-
-        //public Block Block {
-        //    get;
-        //    set;
-        //}
 
         public bool advance() {
             //skipWhiteSpace();
@@ -252,110 +240,6 @@ namespace AsControls.Parser {
             }
             return true;
         }
-
-        //public bool advance(Block block) {
-        //    //skipWhiteSpace();
-        //    //resultAttr = null;
-        //    tok = TokenType.TXT;
-
-        //    int c = reader.read();
-        //    if (c == -1) {
-        //        tok = TokenType.EOS;
-        //        return false;
-        //    }
-        //    switch (c) {
-        //        case ' ':
-        //        case 0x3000:
-        //        case '\t':
-
-        //        default:
-        //            //if (block.state == BlockState.all || block.state == BlockState.start || block.state == BlockState.end) {
-        //            if (block.state == BlockState.all || block.state == BlockState.start) {
-        //                //if (fCncEndkeys.Contains((char)c)) {
-        //                if (Src.IndexOf(block.elem.end, Offset - 1) >= 0) {
-
-        //                    var enelem = encelemDic[block.elem.start];
-
-        //                    //if (Char.IsSymbol((char)c)) {
-        //                    int index = Src.IndexOf(block.elem.end, Offset - 1);
-        //                    //reader.unread();
-        //                    reader.setoffset(index + block.elem.end.Length);
-        //                    //lexSymbol(((char)c).ToString());
-        //                    //Block = EncEndlexSymbol(block);
-        //                    enelem.startIndex = 0;
-        //                    enelem.len = index + block.elem.end.Length;
-        //                    tok = enelem.token;
-        //                    resultElement = enelem;
-
-        //                    //if(){
-        //                    //    Block = new Block { elem = enelem, state= BlockState.all };
-        //                    //}else{
-        //                    Block = new Block { elem = enelem, state = BlockState.end };
-        //                    //}
-        //                }
-        //                else if (Offset - 1 == 0) {
-        //                    var enelem = encelemDic[block.elem.start];
-
-        //                    Block = new Block { elem = block.elem, state = BlockState.all };
-        //                    reader.setoffset(Src.Length);
-        //                    enelem.startIndex = 0;
-        //                    enelem.len = Src.Length;
-        //                    tok = enelem.token;
-        //                    resultElement = enelem;
-
-        //                    Block = new Block { elem = enelem, state = BlockState.all };
-
-        //                }
-        //                else {
-        //                    if (Char.IsDigit((char)c)) {
-        //                        reader.unread();
-        //                        lexDigit();
-        //                        Block = new Block();
-        //                    }
-        //                    else if (Util.isIdentifierPart((char)c)) {
-        //                        reader.unread();
-        //                        lexKeyWord();
-        //                        Block = new Block();
-        //                    }
-        //                    else if (fkeys.Contains((char)c)) {
-        //                        //if (Char.IsSymbol((char)c)) {
-        //                        reader.unread();
-        //                        //lexSymbol(((char)c).ToString());
-        //                        lexSymbol();
-        //                    }
-        //                    else {
-        //                        Block = new Block();
-        //                    }
-        //                }
-
-        //            }
-        //            else {
-        //                if (Char.IsDigit((char)c)) {
-        //                    reader.unread();
-        //                    lexDigit();
-        //                    Block = new Block();
-        //                }
-        //                else if (Util.isIdentifierPart((char)c)) {
-        //                    reader.unread();
-        //                    lexKeyWord();
-        //                    Block = new Block();
-        //                }
-        //                else if (fkeys.Contains((char)c)) {
-        //                    //if (Char.IsSymbol((char)c)) {
-        //                    reader.unread();
-        //                    //lexSymbol(((char)c).ToString());
-        //                    lexSymbol();
-        //                }
-        //                else {
-        //                    Block = new Block();
-        //                }
-
-        //            }
-        //            break;
-
-        //    }
-        //    return true;
-        //}
 
         public bool advance(Block preblock, Block curblock) {
             //skipWhiteSpace();
@@ -695,40 +579,5 @@ namespace AsControls.Parser {
                 buf.Append((char)c);
             }
         }
-
-        //private Block EncEndlexSymbol(Block block) {
-        //    StringBuilder buf = new StringBuilder();
-        //    //if (initstr != null) buf.Append(initstr);
-        //    int offset = reader.offset() - 1;
-        //    while (true) {
-
-        //        if (encendelemDic.ContainsKey(buf.ToString()) && block.elem.end == buf.ToString()) {
-
-        //            MultiLineRule elem = encendelemDic[buf.ToString()];
-        //            //int offset = reader.offset()-elem.start.Length;
-
-        //            //int offset = reader.offset() - value.Length;
-        //            value = reader.Src.Substring(0, reader.offset());
-        //            elem.startIndex = 0;
-        //            elem.len = value.Length;
-        //            tok = elem.token;
-        //            resultElement = elem;
-        //            int offse = reader.offset();
-        //            reader.setoffset(offse);
-        //            //reader.unread(' ');
-
-        //            return new Block { elem = elem, state= BlockState.end };
-        //        }
-
-        //        int c = reader.read();
-        //        if (c == -1) {
-        //            //tok = TokenType.EOS;
-        //            break;
-        //        }
-        //        buf.Append((char)c);
-        //    }
-        //    return new Block { elem = block.elem, state = BlockState.all };
-        //}
-
     }
 }

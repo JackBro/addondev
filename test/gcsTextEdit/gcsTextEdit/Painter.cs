@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Forms;
+using AsControls.Parser;
 
 namespace AsControls {
     public class Painter : IDisposable{
@@ -54,12 +55,11 @@ namespace AsControls {
             }
         }
 
-        //private int[] widthTable_;
+        private Pen AttributeLinePen;
+
         private Dictionary<char, int> widthMap = new Dictionary<char, int>();
 
         private int figWidth_;
-
-        private StringFormat sf = new StringFormat();
 
         private int height_;
         public int H() { return height_; }
@@ -68,7 +68,6 @@ namespace AsControls {
         /// 標準文字幅(pixel)
         /// </summary>
         /// <returns></returns>
-        //public int W() { return widthTable_['x']; }
         public int W() { return this.widthMap['x']; }
 
         /// <summary>
@@ -81,7 +80,6 @@ namespace AsControls {
         /// 次のタブ揃え位置を計算
         /// </summary>
         /// <returns></returns>
-        //public int T() { return widthTable_['\t']; }
         public int T() { return widthMap['\t']; }
 	    public int nextTab(int x) { int t=T(); return ((x+4)/t+1)*t; }
 
@@ -108,13 +106,9 @@ namespace AsControls {
         public Painter(IntPtr hwnd, Font font) {
             hwnd_ = hwnd;
             dc_ = Win32API.GetDC(hwnd_);
-
             this.Font = font;
-
-            //sf.Alignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Far;
-
             TabWidth = 4;
+            AttributeLinePen = new Pen(Color.Black);
 
             init();
         }
@@ -132,7 +126,6 @@ namespace AsControls {
             // 数字の最大幅を計算
             figWidth_ = 0;
             for (char ch = '0'; ch <= '9'; ++ch) {
-                //char num = (char)i;
                 int numw = CalcStringWidth(ch);
                 widthMap.Add(ch, numw);
                 if (figWidth_ < numw) {
@@ -148,6 +141,7 @@ namespace AsControls {
             DeleteObj(lineNumberLinePen);
             DeleteObj(lineNumberBackBrush);
             DeleteObj(specialCharPen);
+            DeleteObj(AttributeLinePen);
             //Marshal.FreeHGlobal(widthPtr);
             Win32API.ReleaseDC(hwnd_, dc_);
 
@@ -260,7 +254,6 @@ namespace AsControls {
         private Point[] returnPt1 = { new Point(), new Point() };
         private Point[] returnPt2 = { new Point(), new Point(), new Point() };
         public void DrawReturn(Graphics g, int X, int Y) {
-            //g.DrawString("↓", config_.Font, tabbrush, X - 2, Y);
             returnPt1[0].X = X+4;
             returnPt1[0].Y = Y + 2;
             returnPt1[1].X = X+4 ;
@@ -296,6 +289,23 @@ namespace AsControls {
                //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping 
                //     | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
 
+        }
+
+        public void DrawText(Graphics g, string text, AsControls.Parser.Attribute attr, int X, int Y) {
+
+            TextRenderer.DrawText(g,
+               text,
+               this.Font,
+               new Point(X, Y),
+               attr.color,
+               TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+        }
+
+        public void DrawAttribute(Graphics g, AsControls.Parser.Attribute attr, int x1, int y1, int x2, int y2) {
+            if ((attr.type & AttrType.UnderLine) == AttrType.UnderLine) {
+                AttributeLinePen.Color = attr.color;
+                g.DrawLine(AttributeLinePen, x1, y1 + H(), x2, y2 + H());
+            }
         }
 
         public void Invert(Graphics g, Rectangle rect) {
@@ -390,8 +400,7 @@ namespace AsControls {
         }
 
         private Win32API.SIZE GetTextExtend(string str, int maxwidth, out int fit) {
-            IntPtr OldFont = Win32API.SelectObject(dc_, hfont_); //TODO
-            //IntPtr OldFont = Win32API.SelectObject(dc_, config_.Font.ToHfont());
+            IntPtr OldFont = Win32API.SelectObject(dc_, hfont_);
             Win32API.SIZE size = new Win32API.SIZE();
             Win32API.GetTextExtentExPointW(dc_, str, str.Length, maxwidth, out fit, null, out size);
             Win32API.SelectObject(dc_, OldFont);

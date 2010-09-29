@@ -14,14 +14,10 @@ namespace AsControls {
     public class Document {
         internal event TextUpdateEventHandler TextUpdate;
 
-        //private UndoManager undoManager;
-        public UndoManager UndoManager { get; private set; }
-
-        //
         private List<Line> text_;
-
         Parser.Parser parser;
 
+        public UndoManager UndoManager { get; private set; }
 
         /// <summary>
         /// テキストの行数
@@ -154,180 +150,46 @@ namespace AsControls {
             return linenum == text_.Count - 1 ? true : false;
         }
 
-        //private bool ReParse(int startrl, int endrl) {
-        //    //parser.Parse(startrl, endrl, text_);
-
-
-        //    //for (int i = startrl; i <= endrl; i++) {
-        //    //    if (text_.Count > i) {
-        //    //        var rules = parser.Parse(text_[i].Text.ToString());
-        //    //        text_[i].Rules = rules;
-        //    //    }
-        //    //}
-
-        //    int i;
-        //    Block block = text_[startrl].Block;
-        //    //BlockState state = block.state;
-        //    //string end = block.elem == null ? string.Empty : block.elem.end;
-        //    // まずは変更範囲を再解析
-        //    for (i = startrl; i <= endrl; ++i) {
-
-        //        block = parser.Parse(text_[i], block);
-        //        if (block.state == BlockState.end) {
-        //            //block.state = BlockState.no;
-        //        }
-        //    }
-           
-        //    // コメントアウト状態に変化がなかったらここでお終い。
-        //    if (i == tln() || text_[i].Block.state == block.state)
-        //        return false;
-
-        //    BlockState state = block.state;
-        //    string end = block.elem == null ? string.Empty : block.elem.end;
-        //    // 例えば、/* が入力された場合などは、下の方の行まで
-        //    // コメントアウト状態の変化を伝達する必要がある。
-        //    //do
-        //    //    cmt = text_[i++].TransitCmt(cmt);
-        //    //while (i < tln() && text_[i].isLineHeadCmt() != cmt);
-        //    int ii = tln();
-        //    //BlockState state = text_[i].Block.state;// block.state;
-        //    //BlockState state = block.state;
-        //    //string end = block.elem.end;
-        //    MultiLineRule elem2;
-        //    Line line;// = text_[i];
-        //    do {
-        //        line = text_[i];
-        //        //state = line.Block.state;
-        //        elem2 = line.Block.elem;
-        //        block = parser.Parse(line, block);
-        //        i++;
-        //    //} while (i < tln() && line.Block.state != state);
-        //    }
-        //    //while (i < tln() && (elem2.end != end));
-        //    while (i < tln() && !diff(state, line.Block.state));
-        //    // while (i < tln());
-        //    return true;
-
-        //    //return false;
-        //}
-
         private bool ReParse(int s, int e) {
-
-
             int i;
             int cmt = text_[s].Block.isLineHeadCmt;
             Block block = text_[s].Block;
-            //BlockState state = block.state;
-            //string end = block.elem == null ? string.Empty : block.elem.end;
             // まずは変更範囲を再解析
             for (i = s; i <= e; ++i) {
 
                 block = parser.Parse(text_[i], block, cmt);
                 cmt = parser.cmt;
-                //block.isLineHeadCmt = parser.cmt;
-                //text_[i].Block.isLineHeadCmt = parser.cmt;
             }
 
             // コメントアウト状態に変化がなかったらここでお終い。
-            //if (i == tln() || text_[i].Block.state == block.state)
-            //    return false;
             if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
                 return false;
 
-
-
-            //int s2 = i;
             int pcmt = 0;
             Rule prule = null;
-            //int tmpcmt = cmt;
 
-            //BlockState state = block.state;
-            //string end = block.elem == null ? string.Empty : block.elem.end;
             // 例えば、/* が入力された場合などは、下の方の行まで
             // コメントアウト状態の変化を伝達する必要がある。
-            //bool issamerule = true;
             do{
-                //cmt = text_[i++].TransitCmt(cmt);
-
                 Line line = text_[i++];
                 pcmt = line.Block.isLineHeadCmt;
-                //cmt = TransitCmt(line, cmt);
                 prule = line.Block.elem;
-                //block = parser.Parse(text_[i++], block, cmt);
                 block = parser.Parse(line, block, cmt);
                 cmt = parser.cmt;
                 if (pcmt == cmt) {
                     if (prule != block.elem) {
-                        //issamerule = false;
                         pcmt--;
                     }
-                    //else {
-                    //    //issamerule = true;
-                    //}
                 }
-            }
-            //while (i < tln() && text_[i].Block.isLineHeadCmt != cmt && issamerule);
-            while (i < tln() && pcmt != cmt);
+            }while (i < tln() && pcmt != cmt);
 
-            //cmt = text_[s].Block.isLineHeadCmt;
-            ////for (int i2 = s; i2 < tln() && i2 <= i; i2++) {
-            //for (int i2 = s; i2 < tln() && i2 <= i; i2++) {
-            //    block = parser.Parse(text_[i2], block, cmt);
-            //    cmt = parser.cmt;
-            //}
-
-
-            //int ii = tln();
-            ////BlockState state = text_[i].Block.state;// block.state;
-            ////BlockState state = block.state;
-            ////string end = block.elem.end;
-            //MultiLineRule elem2;
-            //Line line;// = text_[i];
-            //do {
-            //    line = text_[i];
-            //    //state = line.Block.state;
-            //    elem2 = line.Block.elem;
-            //    block = parser.Parse(line, block);
-            //    i++;
-            //    //} while (i < tln() && line.Block.state != state);
-            //}
-            ////while (i < tln() && (elem2.end != end));
-            //while (i < tln() && !diff(state, line.Block.state));
-            //// while (i < tln());
             return true;
-
-            //return false;
         }
 
         private int TransitCmt(Line line, int start) {
-            //line.Block.isLineHeadCmt = start;
-            //commentBitReady_ = false;
             return (line.Block.commentTransition >> start) & 1;
         }
 
-        //private bool diff(BlockState s1, BlockState s2) {
-
-        //    if (s1 == BlockState.no) {
-        //        if (s2 != BlockState.no) return false;
-        //    }else {
-        //        if (s2 == BlockState.no) return true;
-        //    }
-
-        //    //if (s1 == BlockState.all || s1 == BlockState.start) {
-        //    //    if (s2 == BlockState.all || s2 == BlockState.start) {
-        //    //        return true;
-        //    //    }
-        //    //}
-        //    //if (s1 == BlockState.end || s1 == BlockState.start_end || s1 == BlockState.no) {
-        //    //    if (s2 == BlockState.end || s2 == BlockState.start_end || s2 == BlockState.no) {
-        //    //        return true;
-        //    //    }
-        //    //}
-
-        //    return false;
-        //}
-
-        //private void Insert(ref VPos s, ref VPos e, string text) {
         internal bool InsertingOperation(ref DPos s, string text, ref DPos e) {
             // 位置補正
             //DPos cs = s as DPos;
@@ -368,7 +230,6 @@ namespace AsControls {
             return ReParse(s.tl, e.tl);
         }
 
-        //private void Delete(ref VPos s, ref VPos e, out string buff) {
         internal bool DeletingOperation(ref DPos s, ref DPos e, out string undobuf) {
             // 位置補正
             CorrectPos(ref s);
@@ -402,8 +263,6 @@ namespace AsControls {
             }
 
             // 再解析
-            //highlighter.Parse(text_[s.tl].Text, text_[s.tl].AttributeList);
-            //return ReParse(s.tl, e.tl);
             return ReParse(s.tl, s.tl);
         }
 

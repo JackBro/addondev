@@ -118,8 +118,6 @@ namespace test
             //    MessageBox.Show(e.Link);
             //};
 
-
-
             wrapOToolStripMenuItem.Click += (sender, e) => {
                 wrapOToolStripMenuItem.Checked = !wrapOToolStripMenuItem.Checked;
                 wrapOffToolStripMenuItem.Checked = !wrapOToolStripMenuItem.Checked;
@@ -221,29 +219,6 @@ namespace test
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
 
-//            csedit.Text = @"123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
-//mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-//TTTTTTTTTTTTgg
-//ffffffffffffffffff
-//hhhhhhhhhhhhhh
-//kkkkkkkkkkkkkkkk
-//kkkkkkkkkkkkkkkk
-//kkkkkkkkkkkkkkkkk
-//llllllllllllllllllll
-//fffffffffffffffff
-//eeeeeeeeeeeeeeeeeeeee
-//r
-//r
-//r
-//r
-//r
-//r
-//
-//ryyyyyyyyyyyyyyyyyyyyyyyyy
-//yy
-//yyy
-//y
-//yy";
             ///edit.Text = " ";
 //            csedit.Text = @"/*
 //mmmmmmmmmmmmm

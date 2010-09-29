@@ -97,8 +97,7 @@ namespace AsControls
             Win32API.RECT a = new Win32API.RECT { left = 0, top = v.YMIN, right = 0, bottom=v.YMIN + p.H() };
             //Rectangle  a = new Rectangle( 0, v.YMIN, 0, v.YMIN+p.H() );
             //Rectangle a = new Rectangle(0, 0,,v.YMIN);
-            //int clr = -1;
-            int   x, x2;
+            int x, x2;
             int i, i2;
 
             //int aTop = a.Top;
@@ -116,7 +115,6 @@ namespace AsControls
 
                 // 表示行単位のLoop
                 for (int rl = 0; a.top < rYMAX; ++rl, a.top += H, a.bottom += H, stt = end)
-                //for (int rl = 0; a.Top < rYMAX; rl++, aTop += H, aBottom += H, stt = end)
                 {
                     // 作業用変数３
                     end = rlend(tl,rl);
@@ -318,6 +316,7 @@ namespace AsControls
             //Rectangle a = new Rectangle(0, 0,,v.YMIN);
             //int clr = -1;
             int x=0;
+            int xbk = 0;
             int i=0;
 
             Color color; 
@@ -355,22 +354,19 @@ namespace AsControls
                 // 表示行単位のLoop
                 for (int rl = 0; a.top < rYMAX; ++rl, a.top += H, a.bottom += H, stt = end)
                 {
-                    //if(ruls[rl].ad
-
                     // 作業用変数３
                     end = rlend(tl, rl);
                     if (a.bottom <= tmpYMIN)
                         continue;
 
-
                     // テキストデータ描画
                     //for (x2 = x = 0, i2 = i = stt; x <= v.XMAX && i < end; x = x2, i = i2) {
                     for (x = 0, i=stt; x <= v.XMAX && i < end; ) {
-
+                        xbk = x;
                         nextlen = end - (tokenad + tokenlen);
                         //nextlen = end - attrindex;
                         if (nextlen >= 0) {
-
+                            
                             string s = str.Substring(tokenad, tokenlen);
 
                             int ci = s.IndexOfAny(cs, 0);
@@ -395,9 +391,6 @@ namespace AsControls
                                             x += p.CalcStringWidth(ps);
                                             break;
                                         case '\t':
-                                            //TODO tab
-                                            //if(ShowTab) p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
-                                            //x += p.T() * ps.Length;//p.CalcStringWidth(s[ci].ToString());
                                             if (ShowTab) {
                                                 //for (; i < i2; ++i, x = p.nextTab(x))
                                                 //	p.CharOut( L'>', x+v.XBASE, a.top );
@@ -424,7 +417,7 @@ namespace AsControls
                                     i += ps.Length;
                                 }
                             }
-
+                            p.DrawAttribute(g, token.attr, v.XBASE + xbk, a.top-1, v.XBASE + x, a.top-1);
                             stt = i;
 
                             if (nextlen > 0) {
@@ -466,7 +459,7 @@ namespace AsControls
                                             if (ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
                                             x += p.CalcStringWidth(ps);
                                             break;
-                                        case '\t': //TODO tab
+                                        case '\t':
                                             if (ShowTab) {
                                                 for (int i2 = 0; i2 < ps.Length; ++i2) {//, x = p.nextTab(x)) {
                                                     int ntx = p.nextTab(x);
@@ -489,7 +482,6 @@ namespace AsControls
                                     i += ps.Length;
                                 }
                             }
-
 
                             //if (ruls[attri].attr.isimage && i == ruls[attri].ad && DrawEventHandler != null) {
                             //    DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
@@ -557,8 +549,6 @@ namespace AsControls
                                         a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
                         }
                     }
-
-                    //sss = end;
                     
                     // 行末より後ろの余白を背景色塗
                     if (x < v.XMAX) {

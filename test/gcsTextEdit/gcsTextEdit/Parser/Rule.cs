@@ -18,27 +18,13 @@ namespace AsControls.Parser {
 
     public class Attribute {
         public readonly Color color;
-        //public readonly bool islink;
-        //public readonly bool isimage;
-        //public readonly bool isbold;
-        //public readonly bool isunderline;
-
         public AttrType type;
 
         public Attribute(Color color, AttrType type) {
             this.color = color;
-            //this.islink = islink;
-            //this.isimage = isimage;
-            //this.isbold = isbold;
-            //this.isunderline = isunderline;
             this.type = type;
         }
         public Attribute(Color color) {
-            //this.color = color;
-            //this.islink = false;
-            //this.isimage = false;
-            //this.isbold = false;
-            //this.isunderline = false;
             this.type = AttrType.Normal;
         }
     }
@@ -72,7 +58,6 @@ namespace AsControls.Parser {
         }
 
         public override int exer(Lexer lex) {
-            //throw new NotImplementedException();
             return 0;
         }
     }
@@ -134,7 +119,6 @@ namespace AsControls.Parser {
             token = TokenType.EndLine;
         }
         public override int exer(Lexer lex) {
-            //throw new NotImplementedException();
             int offset = lex.reader.offset();
             return lex.reader.Src.Length;
         }
@@ -153,7 +137,6 @@ namespace AsControls.Parser {
             c[2] = '\x3000';
         }
         public override int exer(Lexer lex) {
-            //throw new NotImplementedException();
             int offset = lex.reader.offset();
             string src = lex.reader.Src;
             int endindex = src.IndexOfAny(c, offset);
@@ -171,8 +154,6 @@ namespace AsControls.Parser {
     //##name
     class ImageRule : MultiLineRule {
 
-        public Size size;
-
         public ImageRule(string start, string end, Attribute attr) {
             this.start = start;
             this.end = end;
@@ -180,10 +161,6 @@ namespace AsControls.Parser {
             token = TokenType.Image;
         }
     }
-
-    //class BlockElement : Element {
-
-    //}
 
     class KeywordRule : Rule {
         public KeywordRule(string start, Attribute attr) {

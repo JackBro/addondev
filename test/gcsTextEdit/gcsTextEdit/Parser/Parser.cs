@@ -18,17 +18,17 @@ namespace AsControls.Parser {
     //    public static int lastin = 3;
     //}
 
-    public enum isLineHeadCommented {
-        firstout = 0,
-        firstin
-    }
+    //public enum isLineHeadCommented {
+    //    firstout = 0,
+    //    firstin
+    //}
 
-    public enum commentTransition {
-        lastout = 0,
-        firstlastrev,
-        firstlastsame,
-        lastin
-    }
+    //public enum commentTransition {
+    //    lastout = 0,
+    //    firstlastrev,
+    //    firstlastsame,
+    //    lastin
+    //}
 
     public class Token {
         public int ad;
@@ -55,13 +55,8 @@ namespace AsControls.Parser {
 
         private Lexer lex;
         private TokenType token;
-
-        List<Token> rules;
-
-        //private Dictionary<string, Lexer> Lexers;
-        //private Dictionary<string, string> EndLexers;
-
-        Attribute defaultAttr;
+        private List<Token> rules;
+        private Attribute defaultAttr;
 
         private void getToken() {
             if (lex.advance()) {
@@ -72,22 +67,7 @@ namespace AsControls.Parser {
             }
         }
 
-        //private void getToken(Block block) {
-        //    if (lex.advance(block)) {
-        //        token = lex.token;
-        //    } else {
-        //        token = TokenType.EOS;
-        //    }
-        //}
-
-        //private void getToken(int cmst) {
-        //    if (lex.advance(cmst)) {
-        //        token = lex.token;
-        //    }
-        //    else {
-        //        token = TokenType.EOS;
-        //    }
-        //}
+        public int cmt;
 
         public Parser() {
             lex = new Lexer();
@@ -103,7 +83,7 @@ namespace AsControls.Parser {
             //lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, false, false, false, false)));
             lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, AttrType.Normal)));
 
-            //lex.AddElement(new EndLineRule("//", new Attribute(Color.LightBlue, false, false, false, false)));
+            lex.AddElement(new EndLineRule("//", new Attribute(Color.DarkGreen, AttrType.UnderLine)));
 
             //lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
 
@@ -111,122 +91,13 @@ namespace AsControls.Parser {
             //lex.AddDefaultElement(new TextElement(defaultAttr));
         }
 
-        //public 
-
-        //public abstract List<Rule> createRules();
-
-        //public Block Parse(Line line, Block b) {
-        //    line.Block.state = b.state;
-
-        //    token = TokenType.TXT;
-
-        //    lex.Src = line.Text.ToString();
-
-        //    rules = new List<Token>();
-        //    //lex = new Lexer(line);
-        //    //getToken();
-        //    while (token != TokenType.EOS) {
-        //        //offset = lex.Offset;
-        //        getToken(b);
-        //        switch (token) {
-        //            case TokenType.Enclose:
-        //            case TokenType.EndLine:
-        //            case TokenType.Line:
-        //            case TokenType.Image:
-        //            case TokenType.Keyword:
-
-        //                var elem = lex.getElement();
-        //                rules.Add(new Token { ad = elem.startIndex, len = elem.len, attr = elem.attr });
-        //                //if (lex.Block.state == BlockState.end) {
-        //                //    //lex.Block.state = BlockState.no;
-        //                //}
-        //                //b.state = lex.Block.state;
-        //                //b.elem = lex.Block.elem;
-        //                break;
-        //            //case TokenType.Enclose:
-        //            //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-        //            //    break;
-
-        //            //case TokenType.EndLine:
-        //            //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-        //            //    break;
-
-        //            //case TokenType.Line:
-        //            //    break;
-
-        //            //case TokenType.Image:
-        //            //    break;
-
-        //            //case TokenType.Keyword:
-        //            //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-        //            //    break;
-        //        }
-        //    }
-
-        //    if (rules.Count > 0) {
-
-        //        var lastrule = rules[rules.Count - 1];
-        //        if (lastrule.ad + lastrule.len < line.Length) {
-        //            rules.Add(new Token { ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
-        //        }
-
-        //        List<Token> defaultRules = new List<Token>();
-        //        int index = 0;
-        //        for (int i = 0; i < rules.Count; i++) {
-
-        //            if (rules[i].ad - index > 0) {
-        //                defaultRules.Add(new Token { ad = index, len = rules[i].ad - index, attr = defaultAttr });
-        //            }
-        //            index = rules[i].ad + rules[i].len;
-        //        }
-
-        //        if (defaultRules.Count > 0) {
-        //            rules.AddRange(defaultRules);
-        //            rules.Sort((x, y) => {
-        //                return x.ad < y.ad ? -1 : 1;
-        //            });
-        //        }
-        //    } else {
-        //        rules.Add(new Token { ad = 0, len = line.Length, attr = defaultAttr });
-        //    }
-
-        //    line.Rules = rules; 
-
-        //    Block next = new Block();
-
-        //    if (lex.Block.elem != null) {
-        //        line.Block.elem = lex.Block.elem;
-        //        next.elem = lex.Block.elem;
-        //    }
-        //    //line.Block.state = lex.Block.state;
-
-        //    if (lex.Block.state == BlockState.end || lex.Block.state == BlockState.start_end) {
-        //        next.state = BlockState.no;
-        //        //next.elem.attr = defaultAttr;
-        //    }
-        //    else if(lex.Block.state == BlockState.start){
-        //        next.state = BlockState.all;
-        //    }
-        //    else {
-        //        next.state = lex.Block.state;
-        //    }
-            
-        //    return next;//lex.Block;
-        //}
-
         public Block Parse(Line line, Block b, int _cmt) {
-            //line.Block.state = b.state;
 
-
-            rules = new List<Token>();
             token = TokenType.TXT;
+            rules = new List<Token>();
 
-            //List<Token> cmstrulrs = new List<Token>();
             List<Tuple<int, int, bool>> cmstrulrs = new List<Tuple<int, int, bool>>();
-            //int cmst = (b.commentTransition >> b.isLineHeadCmt) & 1;
-            //line.Block.isLineHeadCmt = cmst;
             line.Block.isLineHeadCmt = _cmt;
-
 
             lex.Src = line.Text.ToString();
 
@@ -309,7 +180,6 @@ namespace AsControls.Parser {
                 List<Token> defaultRules = new List<Token>();
                 int index = 0;
                 for (int i = 0; i < rules.Count; i++) {
-                    //if(rules[t].attr)
                     if (rules[i].ad - index > 0) {
                         defaultRules.Add(new Token { ad = index, len = rules[i].ad - index, attr = defaultAttr });
                     }
@@ -331,84 +201,5 @@ namespace AsControls.Parser {
             
             return line.Block;
         }
-
-        public int cmt;
-
-        public List<Token> Parse(string line) {
-
-            token = TokenType.TXT;
-            //int lexoffset = 0;
-
-            //lex.reader.Src = line;
-            lex.Src = line;
-            //lex = new Lexer(line);
-            //init();
-
-            //List<Rule> rules = new List<Rule>();
-            rules = new List<Token>();
-            //lex = new Lexer(line);
-		    //getToken();
-		    while (token != TokenType.EOS) {
-                //offset = lex.Offset;
-				getToken();
-                switch (token) {
-                    case TokenType.Enclose:
-                    case TokenType.EndLine:
-                    case TokenType.Line:
-                    case TokenType.Image:
-                    case TokenType.Keyword:
-                        var elem = lex.getElement();
-                        rules.Add(new Token { ad = elem.startIndex, len = elem.len, attr = elem.attr });
-                        break;
-                    //case TokenType.Enclose:
-                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-                    //    break;
-
-                    //case TokenType.EndLine:
-                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-                    //    break;
-
-                    //case TokenType.Line:
-                    //    break;
-
-                    //case TokenType.Image:
-                    //    break;
-
-                    //case TokenType.Keyword:
-                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-                    //    break;
-                }
-		    }
-
-            if (rules.Count > 0) {
-
-                var lastrule = rules[rules.Count - 1];
-                if (lastrule.ad + lastrule.len < line.Length) {
-                    rules.Add(new Token { ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
-                }
-
-                List<Token> defaultRules =new List<Token>();
-                int index = 0;
-                for (int i = 0; i < rules.Count; i++) {
-
-                    if (rules[i].ad - index > 0) {
-                        defaultRules.Add(new Token { ad = index, len = rules[i].ad - index, attr = defaultAttr });
-                    }
-                    index = rules[i].ad + rules[i].len;
-                }
-
-                if (defaultRules.Count > 0) {
-                    rules.AddRange(defaultRules);
-                    rules.Sort((x, y) => {
-                        return x.ad < y.ad ? -1 : 1;
-                    });
-                }
-            }
-            else {
-                rules.Add(new Token { ad = 0, len = line.Length, attr = defaultAttr });
-            }
-
-            return rules;
-	    }
     }
 }
