@@ -58,6 +58,11 @@ namespace AsControls.Parser {
         private List<Token> rules;
         private Attribute defaultAttr;
 
+        public Attribute DefaultAttr {
+            get;
+            set;
+        }
+
         private void getToken() {
             if (lex.advance()) {
                 token = lex.token;
@@ -79,11 +84,12 @@ namespace AsControls.Parser {
             //lex.AddElement(new KeywordRule("test", new Attribute(Color.DarkGray, false, false, false, false)));
 
             //lex.AddElement(new MultiLineRule("/*", "*/", new Attribute(Color.Red, true, false, false, false)));
+            lex.AddElement(new EncloseRule("\"", "\"", new Attribute(Color.Red, AttrType.Normal), '\\'));
 
             //lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, false, false, false, false)));
             lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, AttrType.Normal)));
 
-            lex.AddElement(new EndLineRule("//", new Attribute(Color.DarkGreen, AttrType.UnderLine)));
+            lex.AddElement(new EndLineRule("//", new Attribute(Color.DarkGreen, AttrType.UnderLine| AttrType.Strike)));
 
             //lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
 
@@ -99,7 +105,8 @@ namespace AsControls.Parser {
             List<Tuple<int, int, bool>> cmstrulrs = new List<Tuple<int, int, bool>>();
             line.Block.isLineHeadCmt = _cmt;
 
-            lex.Src = line.Text.ToString();
+            //lex.Src = line.Text.ToString();
+            lex.Src = line.Text;
 
             while (token != TokenType.EOS) {
 

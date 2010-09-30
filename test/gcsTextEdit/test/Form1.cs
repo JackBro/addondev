@@ -219,18 +219,13 @@ namespace test
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
 
-            ///edit.Text = " ";
-//            csedit.Text = @"/*
-//mmmmmmmmmmmmm
-//*/
-//";
             edit.Wrap = AsControls.WrapType.WindowWidth;
-//            edit.Text = @"/*m*/
-//1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
-//*/
-//mm
-//12
-//a";
+            //edit.Text = " ";
+            edit.Text =@"1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
+*/
+mm
+12
+a";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;

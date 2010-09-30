@@ -5,6 +5,8 @@ using System.Text;
 
 namespace AsControls.Parser {
     class Highlight {
+        //protected List<Rule> createRules() {
 
+        //}
     }
 }

@@ -74,6 +74,10 @@ namespace AsControls
             this.Remove(startIndex, stringInfo.LengthInTextElements - startIndex);
         }
 
+        public int IndexOf(string value, int startIndex) {
+            return this.stringInfo.String.IndexOf(value, startIndex);
+        }
+
         public IText Substring(int startIndex, int count)
         {
            if(count == 0) return new LineBuffer("");

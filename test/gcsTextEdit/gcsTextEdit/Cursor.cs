@@ -85,34 +85,45 @@ namespace AsControls
             this.ad = dp.ad;
         }
 
-        public override bool Equals(object obj) {
-            return base.Equals(obj);
-        }
-
         public static Boolean operator ==(DPos x, DPos y) {
-            //if (x == null && y == null) return true;
+            if (Object.ReferenceEquals(x, null) && Object.ReferenceEquals(y, null)) return true;
+            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null)) return false; 
 
             return (x.tl == y.tl && x.ad == y.ad);
         }
 
         public static Boolean operator !=(DPos x, DPos y) {
-            return (x.tl != x.tl || x.ad != y.ad);
+            //return (x.tl != x.tl || x.ad != y.ad);
+
+            return !(x == y);
         }
 
         public static Boolean operator <(DPos x, DPos y) {
+            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null)) {
+                throw new ArgumentNullException();
+            }
+
             return (x.tl < y.tl || (x.tl == y.tl && x.ad < y.ad));
         }
 
         public static Boolean operator >(DPos x, DPos y) {
-            return (x.tl > y.tl || (x.tl == y.tl && x.ad > y.ad));
+            //return (x.tl > y.tl || (x.tl == y.tl && x.ad > y.ad));
+
+            return (y < x);
         }
 
         public static Boolean operator <=(DPos x, DPos y) {
+            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null)) {
+                throw new ArgumentNullException();
+            }
+
             return (x.tl < y.tl || (x.tl == y.tl && x.ad <= y.ad));
         }
 
         public static Boolean operator >=(DPos x, DPos y) {
-            return (x.tl > y.tl || (x.tl == y.tl && x.ad >= y.ad));
+            //return (x.tl > y.tl || (x.tl == y.tl && x.ad >= y.ad));
+
+            return (y <= x);
         }
     }
 

@@ -196,8 +196,15 @@ namespace AsControls {
 
         public new string Text {
             set {
-                this.doc_.Clear();
-                Initialize();
+                //this.doc_.Clear();
+                //Initialize();
+                //wrap_ = new List<WLine>();
+                // 適当に折り返し情報初期化
+                //InsertMulti(0, doc_.tln() - 1);
+                //udScr_tl_ = 0;
+                //udScr_vrl_ = 0;
+                //ReSetScrollInfo();
+
                 cur_.Input(value, value.Length);
             }
             get {

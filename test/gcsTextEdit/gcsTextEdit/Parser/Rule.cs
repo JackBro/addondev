@@ -89,13 +89,22 @@ namespace AsControls.Parser {
     //[[..]]end
     public class EncloseRule : Rule {
         public string end;
+        private char? escape;
         public EncloseRule() {
+            token = TokenType.Enclose;
+        }
+        public EncloseRule(string start, string end, Attribute attr, char escape) {
+            this.start = start;
+            this.end = end;
+            this.attr = attr;
+            this.escape = escape;
             token = TokenType.Enclose;
         }
         public EncloseRule(string start, string end, Attribute attr) {
             this.start = start;
             this.end = end;
             this.attr = attr;
+            this.escape = null;
             token = TokenType.Enclose;
         }
 
@@ -103,9 +112,25 @@ namespace AsControls.Parser {
             int offset = lex.reader.offset();
             int index = lex.reader.Src.IndexOf(end, offset);
 
-            if (index < 0) return index;
+            //if (index < 0) return index;
+            //if (index < 0) {
+            //    return lex.reader.Src.Length;
+            //}
 
-            int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
+            while (index > 0 && escape != null) {
+                if (lex.reader.Src[index - 1] == escape) {
+                    index = lex.reader.Src.IndexOf(end, index + end.Length);
+                }
+                else {
+                    break;
+                }
+            }
+
+            if (index < 0) {
+                return lex.reader.Src.Length;
+            }
+            //int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
+            int endindex = index + this.end.Length;
             return endindex;
         }
     }
@@ -138,7 +163,7 @@ namespace AsControls.Parser {
         }
         public override int exer(Lexer lex) {
             int offset = lex.reader.offset();
-            string src = lex.reader.Src;
+            string src = lex.reader.Src.ToString();
             int endindex = src.IndexOfAny(c, offset);
             //int index = lex.reader.src.Length - offset;
             if (endindex < 0) {

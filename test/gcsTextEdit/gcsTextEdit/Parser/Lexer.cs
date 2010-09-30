@@ -10,18 +10,32 @@ namespace AsControls.Parser {
         private bool unget_p = false;
         private int ch;
         private int cnt;
-        private string src;
-        public string Src {
+        //private string src;
+        //public string Src {
+        //    get { return src; }
+        //    set{
+        //        this.src = value;
+        //        ch = 0;
+        //        cnt = 0;
+        //        unget_p = false;
+        //    } 
+        //}
+        private IText src;
+        public IText Src {
             get { return src; }
-            set{
+            set {
                 this.src = value;
                 ch = 0;
                 cnt = 0;
                 unget_p = false;
-            } 
+            }
         }
 
-        public LexerReader(string src) {
+        //public LexerReader(string src) {
+        //    this.src = src;
+        //    cnt = 0;
+        //}
+        public LexerReader(IText src) {
             this.src = src;
             cnt = 0;
         }
@@ -63,7 +77,7 @@ namespace AsControls.Parser {
     public class Lexer {
 
         private TokenType tok;
-        private String value;
+        //private String value;
         public LexerReader reader;
 
         private Rule resultElement;
@@ -146,7 +160,22 @@ namespace AsControls.Parser {
             return resultElement;
         }
 
-        public string Src {
+        //public string Src {
+        //    get { return reader.Src; }
+        //    set {
+        //        if (reader == null) {
+        //            reader = new LexerReader(value);
+        //        }
+        //        else {
+        //            reader.Src = value;
+        //            tok = TokenType.TXT;
+        //            value = null;
+        //            isNextLine = false;
+        //        }
+        //    }
+        //}
+
+        public IText Src {
             get { return reader.Src; }
             set {
                 if (reader == null) {
@@ -165,8 +194,11 @@ namespace AsControls.Parser {
             get { return tok; }
         }
 
-        public Lexer(string src) {
+        //public Lexer(string src) {
 
+        //    reader = new LexerReader(src);
+        //}
+        public Lexer(IText src) {
             reader = new LexerReader(src);
         }
 
@@ -174,9 +206,9 @@ namespace AsControls.Parser {
             reader = new LexerReader();
         }
 
-        public string Value {
-            get { return value; }
-        }
+        //public string Value {
+        //    get { return value; }
+        //}
 
         public int Offset {
             get {
@@ -386,7 +418,7 @@ namespace AsControls.Parser {
                 }
                 num = (num * 10) + (c - '0');
             }
-            value = num.ToString();
+            //value = num.ToString();
             tok = TokenType.Number;		
         }	
 
@@ -410,7 +442,7 @@ namespace AsControls.Parser {
                 buf.Append((char)c);
             }
             String s = buf.ToString();
-            value = s;
+            var value = s;
 
             if (keyWordElemDic.ContainsKey(s)) {
                 //reader.setoffset(offset);
@@ -443,7 +475,7 @@ namespace AsControls.Parser {
                         return;
                     }
                     //int offset = reader.offset() - value.Length;
-                    value = reader.Src.Substring(offset, index - offset);
+                    var value = reader.Src.Substring(offset, index - offset);
                     elem.startIndex = offset;
                     elem.len = value.Length;
                     tok = elem.token;
@@ -476,7 +508,7 @@ namespace AsControls.Parser {
                         return;
                     }
                     //int offset = reader.offset() - value.Length;
-                    value = reader.Src.Substring(offset, index - offset);
+                    var value = reader.Src.Substring(offset, index - offset);
                     elem.startIndex = offset;
                     elem.len = value.Length;
                     tok = elem.token;
@@ -521,7 +553,7 @@ namespace AsControls.Parser {
                         return;
                     }
                     //int offset = reader.offset() - value.Length;
-                    value = reader.Src.Substring(offset, index - offset);
+                    var value = reader.Src.Substring(offset, index - offset);
                     elem.startIndex = offset;
                     elem.len = value.Length;
                     tok = elem.token;
@@ -555,7 +587,7 @@ namespace AsControls.Parser {
                         return;
                     }
                     //int offset = reader.offset() - value.Length;
-                    value = reader.Src.Substring(offset, index - offset);
+                    var value = reader.Src.Substring(offset, index - offset);
                     elem.startIndex = offset;
                     elem.len = value.Length;
                     tok = elem.token;

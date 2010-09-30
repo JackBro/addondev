@@ -302,9 +302,16 @@ namespace AsControls {
         }
 
         public void DrawAttribute(Graphics g, AsControls.Parser.Attribute attr, int x1, int y1, int x2, int y2) {
-            if ((attr.type & AttrType.UnderLine) == AttrType.UnderLine) {
+
+            if ((attr.type & AttrType.UnderLine) == AttrType.UnderLine
+                || (attr.type & AttrType.Link) == AttrType.Link) {
                 AttributeLinePen.Color = attr.color;
                 g.DrawLine(AttributeLinePen, x1, y1 + H(), x2, y2 + H());
+            }
+
+            if ((attr.type & AttrType.Strike) == AttrType.Strike) {
+                AttributeLinePen.Color = attr.color;
+                g.DrawLine(AttributeLinePen, x1, y1 + H() * 2/3, x2, y2 + H() *2/ 3);
             }
         }
 

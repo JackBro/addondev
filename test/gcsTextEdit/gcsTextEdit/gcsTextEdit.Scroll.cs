@@ -393,7 +393,7 @@ namespace AsControls {
         //
         private void GetDrawPosInfo(ref VDrawInfo v) {
             int H = cvs_.getPainter().H();
-
+            int nn = vln();
             int most_under = (vln() - vScrollBar.Value) * H;
             if (most_under <= v.rc.Top) {
                 v.YMIN = v.rc.Top;

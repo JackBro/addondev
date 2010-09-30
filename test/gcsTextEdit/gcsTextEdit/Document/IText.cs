@@ -27,6 +27,7 @@ namespace AsControls
         void Insert(int startIndex, string value);
         void Remove(int startIndex, int count);
         void Remove(int startIndex);
+        int IndexOf(string value, int startIndex);
         IText Substring(int startIndex, int count);
         IText Substring(int startIndex);
         void Replace(string oldValue, string newValue);

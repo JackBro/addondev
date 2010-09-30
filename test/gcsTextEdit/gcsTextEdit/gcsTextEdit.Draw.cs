@@ -482,7 +482,7 @@ namespace AsControls
                                     i += ps.Length;
                                 }
                             }
-
+                            p.DrawAttribute(g, token.attr, v.XBASE + xbk, a.top - 1, v.XBASE + x, a.top - 1);
                             //if (ruls[attri].attr.isimage && i == ruls[attri].ad && DrawEventHandler != null) {
                             //    DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
                             //}
