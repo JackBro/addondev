@@ -6,19 +6,6 @@ using System.Text.RegularExpressions;
 
 namespace AsControls {
 
-    //public class CursorPos {
-    //    /// <summary>
-    //    /// tl
-    //    /// 0-
-    //    /// </summary>
-    //    public int line;
-    //    /// <summary>
-    //    /// ad
-    //    /// 0-
-    //    /// </summary>
-    //    public int index;
-    //}
-
     public class Tuple<T1, T2> {
         public T1 t1;
         public T2 t2;
@@ -80,6 +67,18 @@ namespace AsControls {
         }
 
 
+        public enum CharType {
+            Unknown,
+            Digit,
+            Alphabet,
+            Hiragana,
+            Katakana,
+            Kanji,
+            Tab,
+            WSHan,
+            WSZen
+        }
+
         public static CharType getCharType(char c) {
             string str = c.ToString();
             if (Char.IsDigit(c)) return CharType.Digit;
@@ -105,17 +104,6 @@ namespace AsControls {
 
             return true;
         }
-
-        public enum CharType {
-            Unknown,
-            Digit,
-            Alphabet,
-            Hiragana,
-            Katakana,
-            Kanji,
-            Tab,
-            WSHan,
-            WSZen
-        }
+ 
     }
 }

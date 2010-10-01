@@ -25,6 +25,7 @@ namespace AsControls.Parser {
             this.type = type;
         }
         public Attribute(Color color) {
+            this.color = color;
             this.type = AttrType.Normal;
         }
     }
@@ -136,7 +137,7 @@ namespace AsControls.Parser {
     }
 
     // //. ..\nend
-    class EndLineRule : Rule {
+    public class EndLineRule : Rule {
 
         public EndLineRule(string start, Attribute attr) {
             this.start = start;
@@ -150,7 +151,7 @@ namespace AsControls.Parser {
     }
 
     // >>.. end
-    class LineRule : Rule {
+    public class LineRule : Rule {
         private Char[] c = new char[3];
 
         public LineRule(string start, Attribute attr) {
@@ -177,7 +178,7 @@ namespace AsControls.Parser {
     }
 
     //##name
-    class ImageRule : MultiLineRule {
+    public class ImageRule : MultiLineRule {
 
         public ImageRule(string start, string end, Attribute attr) {
             this.start = start;
@@ -187,7 +188,7 @@ namespace AsControls.Parser {
         }
     }
 
-    class KeywordRule : Rule {
+    public class KeywordRule : Rule {
         public KeywordRule(string start, Attribute attr) {
             this.start = start;
             this.attr = attr;

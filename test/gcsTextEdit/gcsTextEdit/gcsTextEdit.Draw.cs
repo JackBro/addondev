@@ -271,10 +271,6 @@ namespace AsControls
 
         private static char[] cs = { '\t', ' ', '\x3000' };
 
-        private void DrawString() {
-
-        }
-
         private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
 
             
@@ -319,17 +315,76 @@ namespace AsControls
             int xbk = 0;
             int i=0;
 
-            Color color; 
-            Token token;
+            Color color = Color.Empty;
+            Token token = null;
+
+            Action<IText> draw = (itext) => {
+                //var text = itext.Substring(startIndex, len);
+                string s = itext.ToString();
+
+                int ci = s.IndexOfAny(cs, 0);
+                if (ci < 0) {
+                    p.DrawText(g, s, color, x + v.XBASE, a.top);
+                    if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                        && i == token.ad && DrawEventHandler != null) {
+                        //DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
+                    }
+                    x += p.CalcStringWidth(s);
+                    i += itext.Length;
+                } else {
+                    foreach (var ps in Painter.parse(s, cs)) {
+                        switch (ps[0]) {
+                            case ' ':
+                                if (ShowWhiteSpace) p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
+                                x += p.CalcStringWidth(ps);
+                                break;
+                            case '\x3000': //0x3000://'　':
+                                if (ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
+                                x += p.CalcStringWidth(ps);
+                                break;
+                            case '\t':
+                                if (ShowTab) {
+                                    //for (; i < i2; ++i, x = p.nextTab(x))
+                                    //	p.CharOut( L'>', x+v.XBASE, a.top );
+                                    for (int i2 = 0; i2 < ps.Length; ++i2) {//, x = p.nextTab(x)) {
+                                        //p.DrawTab(g, x + v.XBASE, a.top);
+                                        int ntx = p.nextTab(x);
+                                        p.DrawTab(g, x + v.XBASE, a.top, ntx - x);
+                                        x = ntx;
+                                    }
+                                    //p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
+                                }
+
+                                break;
+                            default:
+                                //string s2 = s.Substring(i2, ci - i2);
+                                p.DrawText(g, ps, color, x + v.XBASE, a.top);
+                                if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                                    && i == token.ad && DrawEventHandler != null) {
+                                    //DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
+                                }
+                                x += p.CalcStringWidth(ps);
+                                break;
+                        }
+                        i += ps.Length;
+                    }
+                }
+
+                p.DrawAttribute(g, token.attr, v.XBASE + xbk, a.top - 1, v.XBASE + x, a.top - 1);
+            };
+
+
 
             //int aTop = a.Top;
             //int aBottom = a.Bottom;
             // 論理行単位のLoop
-            for (int tl = tmpTLMIN; a.top < v.YMAX && tl < doc_.tln(); ++tl) {
+            //for (int tl = tmpTLMIN; a.top < v.YMAX && tl < doc_.tln(); ++tl) {
+            for (int tl = tmpTLMIN; a.top < v.YMAX; ++tl) {
             //for (int tl = tmpTLMIN; a.top < v.YMAX; ++tl) {
 
                 // 定数２
-                string str = doc_.tl(tl).ToString();
+                //string str = doc_.tl(tl).ToString();
+                IText str = doc_.tl(tl); 
 
                 //if (str.Length == 0) break;
 
@@ -366,58 +421,63 @@ namespace AsControls
                         nextlen = end - (tokenad + tokenlen);
                         //nextlen = end - attrindex;
                         if (nextlen >= 0) {
-                            
-                            string s = str.Substring(tokenad, tokenlen);
+                            //var text = str.Substring(tokenad, tokenlen);
+                            //string s = text.ToString();
+                            ////IText s = str.Substring(tokenad, tokenlen);
+                            ////string s = new StringInfo(str).SubstringByTextElements(tokenad, tokenlen);
 
-                            int ci = s.IndexOfAny(cs, 0);
-                            if (ci < 0) {
-                                p.DrawText(g, s, color, x + v.XBASE, a.top);
-                                if (((token.attr.type & AttrType.Image) == AttrType.Image)
-                                    && i == token.ad && DrawEventHandler != null) {
-                                    DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
-                                }
-                                x += p.CalcStringWidth(s);
-                                i += s.Length;
-                                stt = i;
-                            } else {
-                                foreach (var ps in Painter.parse(s, cs)) {
-                                    switch (ps[0]) {
-                                        case ' ':
-                                            if(ShowWhiteSpace) p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
-                                            x += p.CalcStringWidth(ps);
-                                            break;
-                                        case '\x3000': //0x3000://'　':
-                                            if(ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
-                                            x += p.CalcStringWidth(ps);
-                                            break;
-                                        case '\t':
-                                            if (ShowTab) {
-                                                //for (; i < i2; ++i, x = p.nextTab(x))
-                                                //	p.CharOut( L'>', x+v.XBASE, a.top );
-                                                for (int i2 = 0; i2 < ps.Length; ++i2){//, x = p.nextTab(x)) {
-                                                    //p.DrawTab(g, x + v.XBASE, a.top);
-                                                    int ntx = p.nextTab(x);
-                                                    p.DrawTab(g, x + v.XBASE, a.top, ntx - x);
-                                                    x = ntx;
-                                                }
-                                                //p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
-                                            }
+                            //int ci = s.IndexOfAny(cs, 0);
+                            //if (ci < 0) {
+                            //    p.DrawText(g, s, color, x + v.XBASE, a.top);
+                            //    if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                            //        && i == token.ad && DrawEventHandler != null) {
+                            //        //DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
+                            //    }
+                            //    x += p.CalcStringWidth(s);
+                            //    i += text.Length;
+                            //    //i += new StringInfo(s).LengthInTextElements;
+                            //    stt = i;
+                            //} else {
+                            //    foreach (var ps in Painter.parse(s, cs)) {
+                            //        switch (ps[0]) {
+                            //            case ' ':
+                            //                if(ShowWhiteSpace) p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
+                            //                x += p.CalcStringWidth(ps);
+                            //                break;
+                            //            case '\x3000': //0x3000://'　':
+                            //                if(ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
+                            //                x += p.CalcStringWidth(ps);
+                            //                break;
+                            //            case '\t':
+                            //                if (ShowTab) {
+                            //                    //for (; i < i2; ++i, x = p.nextTab(x))
+                            //                    //	p.CharOut( L'>', x+v.XBASE, a.top );
+                            //                    for (int i2 = 0; i2 < ps.Length; ++i2){//, x = p.nextTab(x)) {
+                            //                        //p.DrawTab(g, x + v.XBASE, a.top);
+                            //                        int ntx = p.nextTab(x);
+                            //                        p.DrawTab(g, x + v.XBASE, a.top, ntx - x);
+                            //                        x = ntx;
+                            //                    }
+                            //                    //p.DrawTab(g, x + v.XBASE, a.top, ps.Length);
+                            //                }
                                             
-                                            break;
-                                        default:
-                                            //string s2 = s.Substring(i2, ci - i2);
-                                            p.DrawText(g, ps, color, x + v.XBASE, a.top);
-                                            if (((token.attr.type & AttrType.Image) == AttrType.Image)
-                                                && i == token.ad && DrawEventHandler != null) {
-                                                DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
-                                            }
-                                            x += p.CalcStringWidth(ps);
-                                            break;
-                                    }
-                                    i += ps.Length;
-                                }
-                            }
-                            p.DrawAttribute(g, token.attr, v.XBASE + xbk, a.top-1, v.XBASE + x, a.top-1);
+                            //                break;
+                            //            default:
+                            //                //string s2 = s.Substring(i2, ci - i2);
+                            //                p.DrawText(g, ps, color, x + v.XBASE, a.top);
+                            //                if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                            //                    && i == token.ad && DrawEventHandler != null) {
+                            //                    //DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
+                            //                }
+                            //                x += p.CalcStringWidth(ps);
+                            //                break;
+                            //        }
+                            //        i += ps.Length;
+                            //    }
+                            //}
+                            //p.DrawAttribute(g, token.attr, v.XBASE + xbk, a.top-1, v.XBASE + x, a.top-1);
+                            var text = str.Substring(tokenad, tokenlen);
+                            draw(text);
                             stt = i;
 
                             if (nextlen > 0) {
@@ -437,60 +497,55 @@ namespace AsControls
 
                         } else {
                             //over
-                            string s = str.Substring(tokenad, end - tokenad);
-                            //p.DrawText(g, s, color, x + v.XBASE, a.top);
-                            int ci = s.IndexOfAny(cs, 0);
-                            if (ci < 0) {
-                                p.DrawText(g, s, color, x + v.XBASE, a.top);
-                                if (((token.attr.type & AttrType.Image) == AttrType.Image)
-                                    && i == token.ad && DrawEventHandler != null) {
-                                    DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
-                                }
-                                x += p.CalcStringWidth(s);
-                                i += s.Length;
-                            } else {
-                                foreach (var ps in Painter.parse(s, cs)) {
-                                    switch (ps[0]) {
-                                        case ' ':
-                                            if (ShowWhiteSpace) p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
-                                            x += p.CalcStringWidth(ps);
-                                            break;
-                                        case '\x3000': //0x3000://'　':
-                                            if (ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
-                                            x += p.CalcStringWidth(ps);
-                                            break;
-                                        case '\t':
-                                            if (ShowTab) {
-                                                for (int i2 = 0; i2 < ps.Length; ++i2) {//, x = p.nextTab(x)) {
-                                                    int ntx = p.nextTab(x);
-                                                    p.DrawTab(g, x + v.XBASE, a.top, ntx - x);
-                                                    x = ntx;
-                                                }
-                                            }
-
-                                            break;
-                                        default:
-                                            //string s2 = s.Substring(i2, ci - i2);
-                                            p.DrawText(g, ps, color, x + v.XBASE, a.top);
-                                            if (((token.attr.type & AttrType.Image) == AttrType.Image)
-                                                && i == token.ad && DrawEventHandler != null) {
-                                                DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
-                                            }
-                                            x += p.CalcStringWidth(ps);
-                                            break;
-                                    }
-                                    i += ps.Length;
-                                }
-                            }
-                            p.DrawAttribute(g, token.attr, v.XBASE + xbk, a.top - 1, v.XBASE + x, a.top - 1);
-                            //if (ruls[attri].attr.isimage && i == ruls[attri].ad && DrawEventHandler != null) {
-                            //    DrawEventHandler(g, str.Substring(ruls[attri].ad, ruls[attri].len), x + v.XBASE, a.top + H);
+                            //string s = str.Substring(tokenad, end - tokenad).ToString();
+                            //int ci = s.IndexOfAny(cs, 0);
+                            //if (ci < 0) {
+                            //    p.DrawText(g, s, color, x + v.XBASE, a.top);
+                            //    if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                            //        && i == token.ad && DrawEventHandler != null) {
+                            //        //DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
+                            //    }
+                            //    x += p.CalcStringWidth(s);
+                            //    i += s.Length;
+                            //} else {
+                            //    foreach (var ps in Painter.parse(s, cs)) {
+                            //        switch (ps[0]) {
+                            //            case ' ':
+                            //                if (ShowWhiteSpace) p.DrawHSP(g, x + v.XBASE, a.top, ps.Length);
+                            //                x += p.CalcStringWidth(ps);
+                            //                break;
+                            //            case '\x3000': //0x3000://'　':
+                            //                if (ShowZenWhiteSpace) p.DrawZen(g, x + v.XBASE, a.top, ps.Length);
+                            //                x += p.CalcStringWidth(ps);
+                            //                break;
+                            //            case '\t':
+                            //                if (ShowTab) {
+                            //                    for (int i2 = 0; i2 < ps.Length; ++i2) {//, x = p.nextTab(x)) {
+                            //                        int ntx = p.nextTab(x);
+                            //                        p.DrawTab(g, x + v.XBASE, a.top, ntx - x);
+                            //                        x = ntx;
+                            //                    }
+                            //                }
+                            //                break;
+                            //            default:
+                            //                //string s2 = s.Substring(i2, ci - i2);
+                            //                p.DrawText(g, ps, color, x + v.XBASE, a.top);
+                            //                if (((token.attr.type & AttrType.Image) == AttrType.Image)
+                            //                    && i == token.ad && DrawEventHandler != null) {
+                            //                    //DrawEventHandler(g, str.Substring(token.ad, token.len), x + v.XBASE, a.top + H);
+                            //                }
+                            //                x += p.CalcStringWidth(ps);
+                            //                break;
+                            //        }
+                            //        i += ps.Length;
+                            //    }
                             //}
-                            //x += p.CalcStringWidth(s);
-                            //i += s.Length;
+                            //p.DrawAttribute(g, token.attr, v.XBASE + xbk, a.top - 1, v.XBASE + x, a.top - 1);
+                            var text = str.Substring(tokenad, end - tokenad);
+                            draw(text);
                             stt = i;
 
-                            tokenlen -= s.Length; //(end - attrindex);
+                            tokenlen -= text.Length; //(end - attrindex);
                             tokenad = end;
                         }
                     }

@@ -17,6 +17,10 @@ namespace AsControls {
         private List<Line> text_;
         Parser.Parser parser;
 
+        public void setHighlight(IHighlight highlight) {
+            parser.Highlight = highlight;
+        }
+
         public UndoManager UndoManager { get; private set; }
 
         /// <summary>
@@ -44,7 +48,7 @@ namespace AsControls {
         }
 
         public List<Token> Rules(int i) {
-            return text_[i].Rules;
+            return text_[i].Tokens;
         }
 
         public override string ToString() {
@@ -85,8 +89,8 @@ namespace AsControls {
             } else if (!wide) {
                 // 行の途中で、普通に１文字戻る場合
                 string l = tl(dp.tl).ToString();
-                if (dp.ad >= 2 && Util.isLowSurrogate(l[dp.ad - 1]) && Util.isHighSurrogate(l[dp.ad - 2]))
-                    return new DPos(dp.tl, dp.ad - 2);
+                //if (dp.ad >= 2 && Util.isLowSurrogate(l[dp.ad - 1]) && Util.isHighSurrogate(l[dp.ad - 2]))
+                //    return new DPos(dp.tl, dp.ad - 2);
                 return new DPos(dp.tl, dp.ad - 1);
             } else {
                 //TODO 行の途中で、１単語分戻る場合
@@ -117,8 +121,8 @@ namespace AsControls {
                 // 行の途中で、普通に１文字進む場合
                 string l = tl(dp.tl).ToString();
                 // 番兵 0x007f が l の末尾にいるので長さチェックは不要
-                if (Util.isHighSurrogate(l[dp.ad]) && Util.isLowSurrogate(l[dp.ad + 1]))
-                    return new DPos(dp.tl, dp.ad + 2);
+                //if (Util.isHighSurrogate(l[dp.ad]) && Util.isLowSurrogate(l[dp.ad + 1]))
+                //    return new DPos(dp.tl, dp.ad + 2);
                 return new DPos(dp.tl, dp.ad + 1);
             } else {
                 //TODO 行の途中で、普通に１単語進む場合
@@ -190,6 +194,7 @@ namespace AsControls {
             return (line.Block.commentTransition >> start) & 1;
         }
 
+        StringInfo ff = new StringInfo();
         internal bool InsertingOperation(ref DPos s, string text, ref DPos e) {
             // 位置補正
             //DPos cs = s as DPos;
@@ -210,7 +215,9 @@ namespace AsControls {
             if (lines.Count() > 1) {
                 for (int i = 1; i < lines.Count(); i++) {
                     text_.Insert(++e.tl, new Line(lines[i]));
-                    lineLen = lines[i].Length;
+                    //lineLen = lines[i].Length;
+                    ff.String = lines[i];
+                    lineLen = ff.LengthInTextElements;                    
                 }
                 // 一行目の最後尾に残ってた文字列を最終行へ
                 Line fl = text_[s.tl];
@@ -338,7 +345,7 @@ namespace AsControls {
 	        }
 	        else
 	        {
-                buff = new LineBuffer("");
+                buff = new TextBuffer("");
 		        // 先頭行の後ろをコピー
 		        //buf += text_[s.tl].CopyToTail( s.ad, buf );
 		        //*buf++ = '\r', *buf++ = '\n';

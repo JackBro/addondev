@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace AsControls
 {
-    public class LineBuffer : IText
+    public class TextBuffer : IText
     {
         private StringInfo stringInfo;
 
@@ -20,11 +20,11 @@ namespace AsControls
             get { return stringInfo.LengthInTextElements == 0 ? true : false; }
         }
 
-        public LineBuffer() {
+        public TextBuffer() {
             stringInfo = new StringInfo();
         }
 
-        public LineBuffer(string text)
+        public TextBuffer(string text)
         {
             stringInfo = new StringInfo(text);
         }
@@ -80,15 +80,15 @@ namespace AsControls
 
         public IText Substring(int startIndex, int count)
         {
-           if(count == 0) return new LineBuffer("");
+           if(count == 0) return new TextBuffer("");
 
-            return new LineBuffer(stringInfo.SubstringByTextElements(startIndex, count));
+            return new TextBuffer(stringInfo.SubstringByTextElements(startIndex, count));
         }
 
         public IText Substring(int startIndex)
         {
-            if (stringInfo.LengthInTextElements == 0 || stringInfo.LengthInTextElements == startIndex) return new LineBuffer("");
-            return new LineBuffer(stringInfo.SubstringByTextElements(startIndex));
+            if (stringInfo.LengthInTextElements == 0 || stringInfo.LengthInTextElements == startIndex) return new TextBuffer("");
+            return new TextBuffer(stringInfo.SubstringByTextElements(startIndex));
         }
 
         public void Replace(string oldValue, string newValue)

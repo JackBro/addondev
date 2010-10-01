@@ -6,17 +6,15 @@ using AsControls.Parser;
 
 namespace AsControls
 {
-
-
     public class Line
     {
         private IText text;
-        private List<Token> rules;
+        private List<Token> tokens;
         public Block Block { get; set; }
 
-        public List<Token> Rules {
-            get { return rules; }
-            set { rules = value; }
+        public List<Token> Tokens {
+            get { return tokens; }
+            set { tokens = value; }
         }
 
         public IText Text
@@ -32,14 +30,14 @@ namespace AsControls
         public Line(string text)
         {
             Block = new Block();
-            this.text = new LineBuffer(text);
-            rules = new List<Token>();
+            this.text = new TextBuffer(text);
+            tokens = new List<Token>();
         }
 
         public void SetText(string text)
         {
-            this.text = new LineBuffer(text);
-            rules.Clear();
+            this.text = new TextBuffer(text);
+            tokens.Clear();
         }
     }
 }

@@ -27,8 +27,8 @@ namespace test
             edit.ShowReturn = true;
             edit.ShowWhiteSpace = true;
             edit.ShowZenWhiteSpace = true;
-
             edit.ShowTab = true;
+            edit.Document.setHighlight(new Highlight());
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
@@ -220,12 +220,13 @@ namespace test
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
 
             edit.Wrap = AsControls.WrapType.WindowWidth;
-            //edit.Text = " ";
-            edit.Text =@"1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
-*/
-mm
-12
-a";
+
+            edit.Text = "\uD842\uDF9Fる";
+//            edit.Text =@"1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
+//*/
+//mmmmmmmmmmmmmmmmmmmmmmmmmm
+//12
+//a";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;

@@ -322,6 +322,7 @@ namespace AsControls {
             KeyBind = new KeyMap();
 
             doc_ = new Document();
+            doc_.setHighlight(new Highlight(this.ForeColor));
             doc_.TextUpdate += (s, e, e2, reparsed, nmlcmd) => {
                 on_text_update(s, e, e2, reparsed, nmlcmd);
             };

@@ -276,8 +276,8 @@ namespace AsControls {
 
 	        // スクロール
 	        if( dy!=0 )	
-                UpDown( dy, dx==0 ); //TODO scroll
-                //UpDown(dy, false);
+                //UpDown( dy, dx==0 ); //TODO scroll
+                UpDown(dy, false);
 	        if( dx!=0 )	ScrollView( dx, 0, true );
         }
 
