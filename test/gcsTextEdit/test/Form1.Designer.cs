@@ -30,15 +30,17 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UndoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RedoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wrapOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wrapOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.WrapOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.WrapOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ShowLineNumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.SearchPanel = new System.Windows.Forms.Panel();
@@ -73,84 +75,95 @@
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            // 
             // searchToolStripMenuItem
             // 
             this.searchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem,
-            this.copyToolStripMenuItem,
-            this.cutToolStripMenuItem,
-            this.pasteToolStripMenuItem});
+            this.UndoToolStripMenuItem,
+            this.RedoToolStripMenuItem,
+            this.CutToolStripMenuItem,
+            this.CopyToolStripMenuItem,
+            this.PasteToolStripMenuItem});
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
             this.searchToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.searchToolStripMenuItem.Text = "Edit";
             // 
-            // undoToolStripMenuItem
+            // UndoToolStripMenuItem
             // 
-            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.undoToolStripMenuItem.Text = "undo";
-            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            this.UndoToolStripMenuItem.Name = "UndoToolStripMenuItem";
+            this.UndoToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.UndoToolStripMenuItem.Text = "Undo";
             // 
-            // redoToolStripMenuItem
+            // RedoToolStripMenuItem
             // 
-            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.redoToolStripMenuItem.Text = "redo";
-            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+            this.RedoToolStripMenuItem.Name = "RedoToolStripMenuItem";
+            this.RedoToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.RedoToolStripMenuItem.Text = "Redo";
             // 
-            // copyToolStripMenuItem
+            // CutToolStripMenuItem
             // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.copyToolStripMenuItem.Text = "copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            this.CutToolStripMenuItem.Name = "CutToolStripMenuItem";
+            this.CutToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.CutToolStripMenuItem.Text = "Cut";
             // 
-            // cutToolStripMenuItem
+            // CopyToolStripMenuItem
             // 
-            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.cutToolStripMenuItem.Text = "cut";
-            this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+            this.CopyToolStripMenuItem.Name = "CopyToolStripMenuItem";
+            this.CopyToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.CopyToolStripMenuItem.Text = "Copy";
             // 
-            // pasteToolStripMenuItem
+            // PasteToolStripMenuItem
             // 
-            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.pasteToolStripMenuItem.Text = "paste";
-            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+            this.PasteToolStripMenuItem.Name = "PasteToolStripMenuItem";
+            this.PasteToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.PasteToolStripMenuItem.Text = "Paste";
             // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.wrapOToolStripMenuItem,
-            this.wrapOffToolStripMenuItem,
+            this.WrapOnToolStripMenuItem,
+            this.WrapOffToolStripMenuItem,
+            this.ShowLineNumToolStripMenuItem,
             this.fontToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.viewToolStripMenuItem.Text = "view";
             // 
-            // wrapOToolStripMenuItem
+            // WrapOnToolStripMenuItem
             // 
-            this.wrapOToolStripMenuItem.Name = "wrapOToolStripMenuItem";
-            this.wrapOToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-            this.wrapOToolStripMenuItem.Text = "wrap on";
+            this.WrapOnToolStripMenuItem.Name = "WrapOnToolStripMenuItem";
+            this.WrapOnToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.WrapOnToolStripMenuItem.Text = "Wrap On";
             // 
-            // wrapOffToolStripMenuItem
+            // WrapOffToolStripMenuItem
             // 
-            this.wrapOffToolStripMenuItem.Name = "wrapOffToolStripMenuItem";
-            this.wrapOffToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-            this.wrapOffToolStripMenuItem.Text = "wrap off";
+            this.WrapOffToolStripMenuItem.Name = "WrapOffToolStripMenuItem";
+            this.WrapOffToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.WrapOffToolStripMenuItem.Text = "Wrap Off";
+            // 
+            // ShowLineNumToolStripMenuItem
+            // 
+            this.ShowLineNumToolStripMenuItem.CheckOnClick = true;
+            this.ShowLineNumToolStripMenuItem.Name = "ShowLineNumToolStripMenuItem";
+            this.ShowLineNumToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.ShowLineNumToolStripMenuItem.Text = "ShowLineNum";
             // 
             // fontToolStripMenuItem
             // 
             this.fontToolStripMenuItem.Name = "fontToolStripMenuItem";
-            this.fontToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-            this.fontToolStripMenuItem.Text = "font";
+            this.fontToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.fontToolStripMenuItem.Text = "Font";
             this.fontToolStripMenuItem.Click += new System.EventHandler(this.fontToolStripMenuItem_Click);
             // 
             // panel1
@@ -338,14 +351,14 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem UndoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RedoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem CopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem CutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem PasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem wrapOToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem wrapOffToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem WrapOnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem WrapOffToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fontToolStripMenuItem;
         private System.Windows.Forms.Panel SearchPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -360,6 +373,8 @@
         private System.Windows.Forms.Button FindPreButton;
         private System.Windows.Forms.CheckBox RegxCheckBox;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ShowLineNumToolStripMenuItem;
 
     }
 }

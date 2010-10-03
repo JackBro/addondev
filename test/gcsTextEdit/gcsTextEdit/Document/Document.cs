@@ -194,7 +194,7 @@ namespace AsControls {
             return (line.Block.commentTransition >> start) & 1;
         }
 
-        StringInfo ff = new StringInfo();
+        StringInfo strinfo = new StringInfo();
         internal bool InsertingOperation(ref DPos s, string text, ref DPos e) {
             // 位置補正
             //DPos cs = s as DPos;
@@ -208,7 +208,9 @@ namespace AsControls {
             int lineLen = 0;
             // 一行目…
             text_[e.tl].Text.Insert(e.ad, lines[0]);
-            lineLen = lines[0].Length;
+            //lineLen = lines[0].Length;
+            strinfo.String = lines[0];
+            lineLen = strinfo.LengthInTextElements;
             e.ad += lineLen;
 
             // 二行目～最終行
@@ -216,8 +218,8 @@ namespace AsControls {
                 for (int i = 1; i < lines.Count(); i++) {
                     text_.Insert(++e.tl, new Line(lines[i]));
                     //lineLen = lines[i].Length;
-                    ff.String = lines[i];
-                    lineLen = ff.LengthInTextElements;                    
+                    strinfo.String = lines[i];
+                    lineLen = strinfo.LengthInTextElements;
                 }
                 // 一行目の最後尾に残ってた文字列を最終行へ
                 Line fl = text_[s.tl];
@@ -405,7 +407,14 @@ namespace AsControls {
             //    Fire_MODIFYFLAGCHANGE();
             var c = cmd.Execute(this);
             UndoManager.Invoke(c);
+        }
 
+        internal void Execute(List<ICommand> cmds) {
+            var list = new List<ICommand>();
+            foreach (var cmd in cmds) {
+                list.Add(cmd.Execute(this)); 
+            }
+            UndoManager.Invoke(list);
         }
 
         //#region IDocument メンバ

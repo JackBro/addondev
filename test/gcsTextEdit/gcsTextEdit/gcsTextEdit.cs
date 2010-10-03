@@ -136,21 +136,10 @@ namespace AsControls {
             set { cur_.SelectMode = value; }
         }
 
-        public new Font Font {
-            get { return base.Font; }
-            set {
-                base.Font = value;
-                fnt().Font = value;
-                fnt().init();
-            }
-        }
-
         public int TabWidth {
             get { return fnt().TabWidth; }
             set { fnt().TabWidth = value; }
         }
-
-
 
         public Color LineNumberForeColor {
             get { return fnt().LineNumberForeColor; }
@@ -185,12 +174,56 @@ namespace AsControls {
         [DefaultValue(false)]
         public bool ShowZenWhiteSpace { get; set; }
 
+        private bool showLineNumber = false;
+        [DefaultValue(false)]
+        public bool ShowLineNumber {
+            get { return this.showLineNumber; } 
+            set{
+                this.showLineNumber = value;
+                if (this.Visible && this.Width > 0 && this.Height > 0) {
+                    cvs_.on_config_change(Wrap, ShowLineNumber);
+                    DoConfigChange();
+                } else {
+                    cvs_.showLN = value;
+                }
+            } 
+        }
+
         public WrapType Wrap {
             get { return cvs_.wrapType; }
             set { 
-                cvs_.wrapType = value;
-                DoResize(cvs_.on_view_resize(this.ClientSize.Width - vScrollBar.Width,
-                    this.ClientSize.Height - hScrollBar.Height));
+                //cvs_.wrapType = value;
+                //DoResize(cvs_.on_view_resize(this.ClientSize.Width - vScrollBar.Width,
+                //    this.ClientSize.Height - hScrollBar.Height));
+                if (this.Visible && this.Width>0 && this.Height>0) {
+                    cvs_.on_config_change(value, ShowLineNumber);
+                    DoConfigChange();
+                } else {
+                    cvs_.wrapType = value;
+                }
+            }
+        }
+
+        public new Font Font {
+            get { return base.Font; }
+            set {
+                base.Font = value;
+                fnt().Font = value;
+                fnt().init();
+                //cur_.on_killfocus();
+                //cur_.on_setfocus();
+                //this.Invalidate(false);
+                if (this.Visible && this.Width > 0 && this.Height > 0) {
+                    //cur_.ResetCaret();
+                    //int w = this.ClientSize.Width - vScrollBar.Width;
+                    //int h = this.ClientSize.Height - hScrollBar.Height;
+                    //if (w <= 0 || h <= 0) return;
+                    //DoResize(cvs_.on_view_resize(w, h));
+                    cvs_.on_config_change(Wrap, ShowLineNumber);
+                    DoConfigChange();
+                } else {
+                }
+                //cur_.ResetPos();
             }
         }
 
@@ -205,7 +238,7 @@ namespace AsControls {
                 //udScr_vrl_ = 0;
                 //ReSetScrollInfo();
 
-                cur_.Input(value, value.Length);
+                cur_.Input(value);
             }
             get {
                 return this.doc_.ToString();
@@ -327,7 +360,7 @@ namespace AsControls {
                 on_text_update(s, e, e2, reparsed, nmlcmd);
             };
             //
-            cvs_ = new Canvas(this, this.Font);
+            cvs_ = new Canvas(this, this.Font, ShowLineNumber);
             fnt().LineNumberForeColor = this.ForeColor;
             fnt().LineNumberBackColor = this.BackColor;
             fnt().LineNumberLineColor = this.ForeColor;
@@ -364,17 +397,17 @@ namespace AsControls {
             return link;
         }
 
-        Win32API.RECT elientRect = new Win32API.RECT();
+        Win32API.RECT clientRect = new Win32API.RECT();
         internal Win32API.RECT getClientRect() {
             //return this.ClientRectangle;
 
-            elientRect.left = this.ClientRectangle.Left;
-            elientRect.top = this.ClientRectangle.Top;
-            elientRect.right = this.ClientRectangle.Right - vScrollBar.Width;
-            if (elientRect.right < 0) elientRect.right = 0;
-            elientRect.bottom = this.ClientRectangle.Bottom - hScrollBar.Height;
-            if (elientRect.bottom < 0) elientRect.bottom = 0;
-            return elientRect;
+            clientRect.left = this.ClientRectangle.Left;
+            clientRect.top = this.ClientRectangle.Top;
+            clientRect.right = this.ClientRectangle.Right - vScrollBar.Width;
+            if (clientRect.right < 0) clientRect.right = 0;
+            clientRect.bottom = this.ClientRectangle.Bottom - hScrollBar.Height;
+            if (clientRect.bottom < 0) clientRect.bottom = 0;
+            return clientRect;
         }
 
         public new void Dispose() {
@@ -430,10 +463,12 @@ namespace AsControls {
         protected override void OnSizeChanged(EventArgs e) {
             base.OnSizeChanged(e);
 
-            int w = this.ClientSize.Width - vScrollBar.Width;
-            int h = this.ClientSize.Height - hScrollBar.Height;
-            if (w <= 0 || h <= 0) return;
-            DoResize(cvs_.on_view_resize(w, h));
+            //int x = this.ClientSize.Width - vScrollBar.Width;
+            //int y = this.ClientSize.Height - hScrollBar.Height;
+            int cx = this.Location.X + this.Width - vScrollBar.Width;
+            int cy = this.Bottom - hScrollBar.Height;
+            if (cx < 0 || cy < 0) return;
+            DoResize(cvs_.on_view_resize(cx, cy));
         }
 
         //
@@ -529,30 +564,34 @@ namespace AsControls {
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e) {
-            //if (IsInputChar(e.KeyChar) && this.ImeMode == ImeMode.Off) {
+            base.OnKeyPress(e);
+            if (e.Handled) {
+                return;
+            }
+
             if (IsInputChar(e.KeyChar)) {
                 cur_.InputChar(e.KeyChar);
                 e.Handled = true;
             }else if(e.KeyChar == '\r' ){
-                cur_.Input("\r\n", 2);
+                cur_.Input("\r\n");
                 e.Handled = true;
             }
-            //base.OnKeyPress(e);
         }
 
         protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e) {
-            KeyBind.getAction(e.Modifiers | e.KeyCode)(this);
             base.OnPreviewKeyDown(e);
+            KeyBind.getAction(e.Modifiers | e.KeyCode)(this);
         }
 
         protected override bool ProcessDialogKey(Keys keyData) {
+            //base.ProcessDialogKey;
             return false;
         }
 
         //
         protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e);
-            
+
             Painter p = cvs_.getPainter();
             //vRect.rc = e.ClipRectangle;
             if (this.Height <= e.ClipRectangle.Height) {
@@ -564,10 +603,6 @@ namespace AsControls {
             } else {
                 vRect.rc = e.ClipRectangle;
             }
-            
-            //Size size = new Size(e.ClipRectangle.Width-16,e.ClipRectangle.Height );
-            //vRect.rc = new Rectangle(e.ClipRectangle.Location, size);
-            //e.Graphics.SetClip(new Rectangle(new Point(0,0), size));
 
             GetDrawPosInfo(ref vRect);
 
@@ -595,170 +630,134 @@ namespace AsControls {
             return !char.IsControl(charCode);
         }
 
-        private Boolean ldowm = false;
-        protected override void OnMouseDown(MouseEventArgs e) {
-            Focus();
-            if (e.Button == MouseButtons.Left) {
-                //if (cur_.isSelectText()) {
-                //    //DoDragDrop("", DragDropEffects.Move);
-                //}
-                //else {
-                    cur_.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
-                //}
-                //if (cur != sel) {
-                //    CaretInfo c = new CaretInfo();
-                //    GetVPos(e.X, e.Y, ref c);
-
-                //    if (Insel(c)) {
-                //        ldowm = true;
-                //        dostart = true;
-
-                //        sels = new CaretInfo(cur);
-                //        sele = new CaretInfo(sel);
-                //        CorrectPos(ref sels, ref sele);
-
-                //    } else {
-                //        GetVPos(e.X, e.Y, ref cur);
-
-                //        int ad = cur.ad;
-                //        int tl = cur.tl;
-
-                //        ScrollTo(cur);
-                //        UpdateCaretPos();
-
-                //        cur.CopyTo(ref sel);
-
-                //        base.Invalidate();
-
-                //        ldowm = true;
-                //        dostart = false;
-                //    }
-                //} else {
-                //    GetVPos(e.X, e.Y, ref cur);
-
-                //    //int ad = cur.ad;
-                //    //int tl = cur.tl;
-
-                //    ScrollTo(cur);
-                //    UpdateCaretPos();
-
-                //    cur.CopyTo(ref sel);
-
-                //    base.Invalidate();
-
-                //    ldowm = true;
-                //    dostart = false;
-                //}
-            }
-            base.OnMouseDown(e);
+        protected override void OnMouseDoubleClick(MouseEventArgs e) {
+            base.OnMouseDoubleClick(e);
+            cur_.on_mouse_db_click(e.X, e.Y);
         }
 
-        Boolean dostart = false;
+        VPos vpcur = new VPos();
+        VPos vpsel = new VPos();
+        DPos dpcur = new DPos();
+        DPos dpsel = new DPos();
+        protected override void OnMouseDown(MouseEventArgs e) {
+            base.OnMouseDown(e);
+
+            Focus();
+            if (e.Button == MouseButtons.Left) {
+                //VPos vp = new VPos();
+                //GetVPos(e.X, e.Y, ref vp, false);
+                //if (cur_.Cur.vx < vp.vx && vp.vx < cur_.Sel.vx) {
+                if (cur_.ContainSelect(e.X, e.Y, cur_.Cur, cur_.Sel)) {
+                    vpcur.Copy(cur_.Cur);
+                    vpsel.Copy(cur_.Sel);
+                    dpcur.tl = cur_.Cur.tl;
+                    dpcur.ad = cur_.Cur.ad;
+                    dpsel.tl = cur_.Sel.tl;
+                    dpsel.ad = cur_.Sel.ad;
+                    cur_.State = CursorState.TextSelect;
+                    this.AllowDrop = true;
+                } else {
+                    cur_.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
+                }
+            }
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e) {
+            base.OnMouseUp(e);
+            if (cur_.State == CursorState.TextSelect) {
+                cur_.on_lbutton_down(e.X, e.Y, false);
+            }
+            cur_.on_button_up();
+        }
+
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
-            //if (ldowm) {
-            //    //if (cur == sel)
-            //    //{
-            //    //    Point p = this.PointToClient(MousePosition);
-            //    //    GetVPos(p.X, p.Y, ref cur);
-            //    //    CaretMove(true);
-            //    //    this.Invalidate();
-            //    //}
-            //    if (dostart) {
-            //        //dostart = true;
-            //        DoDragDrop("test", DragDropEffects.Move);
-            //    } else {
-            //        Point p = this.PointToClient(MousePosition);
-            //        GetVPos(p.X, p.Y, ref cur);
-            //        MoveTo(true);
-            //        this.Invalidate();
-            //    }
-            //}
+            if (cur_.State == CursorState.MouseDown) {
+                cur_.MoveByMouse(e.X, e.Y);
+            }else if(cur_.State == CursorState.TextSelect){
+                cur_.State = CursorState.TextMove;
+                DoDragDrop("test", DragDropEffects.Move);
+                
+            }
         }
 
         protected override void OnMouseEnter(EventArgs e) {
-            this.Cursor = Cursors.IBeam;
             base.OnMouseEnter(e);
+            this.Cursor = Cursors.IBeam;  
         }
 
         protected override void OnMouseLeave(EventArgs e) {
-            this.Cursor = Cursors.Default;
             base.OnMouseLeave(e);
+            this.Cursor = Cursors.Default;
         }        
 
-        protected override void OnDragDrop(DragEventArgs drgevent) {
-            //isdropfile = false;
-            //ldowm = false;
-            //cur.CopyTo(ref sel);
+        protected override void OnDragDrop(DragEventArgs e) {
+            base.OnDragDrop(e);
+            if (cur_.State == CursorState.TextMove) {
+                Point p = this.PointToClient(new Point(e.X, e.Y));
+                if (cur_.ContainSelect(p.X, p.Y, dpcur, dpsel)) {
 
-            //if (drgevent.Data.GetDataPresent(DataFormats.FileDrop)) {
-
-            //    string[] files = (string[])drgevent.Data.GetData(DataFormats.FileDrop, false);
-
-            //} else if (drgevent.Data.GetDataPresent(typeof(string))) {
-            //    dostart = false;
-            //    if (!Insel(cur, sels, sele)) {
-            //        string ss = (string)drgevent.Data.GetData(DataFormats.UnicodeText);
-            //        ss = GetText(sels, sele).ToString();
-
-            //        if (cur < sels) {
-            //            Input(ss);
-            //            CaretInfo s = new CaretInfo(cur);
-            //            Del(sels, sele);
-            //            s.CopyTo(ref cur);
-            //            cur.CopyTo(ref sel);
-            //        } else if (cur > sele) {
-            //            Input(ss);
-            //            CaretInfo s = new CaretInfo(cur);
-            //            int nn = vlNum_;
-            //            int t = sels.tl - sele.tl;
-            //            int dad = sele.ad - sels.ad;
-            //            Del(sels, sele);
-
-            //            if (s.tl == cur.tl) {
-            //                s.ad -= dad;
-            //            }
-            //            s.vl += vlNum_ - nn;
-            //            s.tl += t;
-
-            //            ConvDPosToVPos(s, ref cur, ref s);
-
-            //            //s.CopyTo(ref cur);
-            //            cur.CopyTo(ref sel);
-
-
-            //        }
-            //        UpdateCaretPos();
-            //    }
-            //}
-            base.OnDragDrop(drgevent);
-
+                    cur_.Cur.Copy(vpcur);                  
+                    cur_.on_lbutton_down(p.X, p.Y, false);
+                    cur_.on_button_up();
+                    return;
+                }
+                if (cur_.SelectMode == SelectType.Normal) { //TODO ERROR
+                    if (cur_.Cur < dpcur) {
+                        cur_.MoveText(cur_.Cur, dpcur, dpsel);
+                        cur_.Sel.Copy(cur_.Cur);
+                    } else {
+                        int curlen = doc_.tl(cur_.Cur.tl).Length;
+                        DPos dto = new DPos(cur_.Cur);
+                        VPos vto = new VPos(cur_.Cur);
+                        cur_.MoveText(dto, dpcur, dpsel);
+                        int curlen2 = doc_.tl(dto.tl).Length;
+                        vto.ad += (curlen2 - curlen);
+                        cur_.Cur.Copy(vto);
+                        cur_.Sel.Copy(cur_.Cur);
+                    }
+                } else if (cur_.SelectMode == SelectType.Rectangle) {
+                    VPos vp = new VPos(cur_.Cur);
+                    var text = cur_.getRangesText(vpcur, vpsel);
+                    cur_.DelRectangle(vpcur, vpsel);
+                    List<string> lines = text.Split(new string[]{"\r\n"}, StringSplitOptions.None).ToList<string>();
+                    cur_.RectangleInsert(vp, vp, lines);
+                    cur_.Cur.Copy(vp);
+                    cur_.Sel.Copy(cur_.Cur);
+                }
+                cur_.ResetPos();
+            }
         }
 
         protected override void OnDragOver(DragEventArgs e) {
+            base.OnDragOver(e);
+
             if (!Focused)
                 Focus();
             
-            ////base.OnDragOver(drgevent);
-            //Point p = this.PointToClient(new Point(drgevent.X, drgevent.Y));
-            //GetVPos(p.X, p.Y, ref cur);
-            //ScrollTo(cur);
-            //UpdateCaretPos();
-            base.Invalidate();
+            if (cur_.State == CursorState.TextMove) {
+                Point p = this.PointToClient(new Point(e.X, e.Y));
+                var vp = new VPos();
+                GetVPos(p.X, p.Y, ref vp, false);
+                cur_.Cur.Copy(vp);
+                //MoveCur(vp, false);
+                cur_.UpdateCaretPos();
+                //base.Invalidate();
+            }
         }
 
-        private bool isdropfile = false;
         protected override void OnDragEnter(DragEventArgs e) {
+            base.OnDragEnter(e);
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 e.Effect = DragDropEffects.Copy;
-                isdropfile = true;
             } else if (e.Data.GetDataPresent(DataFormats.UnicodeText)
                 || e.Data.GetDataPresent(DataFormats.Text)) {
                 e.Effect = DragDropEffects.Move;
             } else {
                 e.Effect = DragDropEffects.None;
             }
-            base.OnDragEnter(e);
+            
         }
 
         //

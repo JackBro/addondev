@@ -50,6 +50,8 @@ namespace AsControls {
             vScrollBar.Height = this.Height - hScrollBar.Height;
             vScrollBar.nPage = cy / cvs_.getPainter().H() + 1;
             vScrollBar.Maximum = vln() + vScrollBar.nPage - 2;
+            //if (vScrollBar.Maximum < 0) vScrollBar.Maximum = 0;
+            //vScrollBar.Value = 0;
             vScrollBar.SmallChange = 1;
             vScrollBar.LargeChange = vScrollBar.nPage;
 	        
@@ -81,7 +83,8 @@ namespace AsControls {
 
         //
         void ScrollBar_Scroll(object sender, ScrollEventArgs e) {
-            int d = e.NewValue - e.OldValue;
+            int d = e.NewValue - e.OldValue; //TODO scroll
+            //int d = e.OldValue - e.NewValue;
             if (d != 0) {
                 if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll) {
                     ScrollView(d, 0, true);
@@ -126,9 +129,12 @@ namespace AsControls {
 		        else if( hScrollBar.Maximum-hScrollBar.nPage < hScrollBar.Value+dx ) 
 			        dx = hScrollBar.Maximum-hScrollBar.nPage-hScrollBar.Value+1;
 
+               
 		        //hScrollBar.Value += dx;
 		        //::SetScrollInfo( hwnd_, SB_HORZ, &rlScr_, TRUE );
 		        //dx = -dx;
+                hScrollBar.Value += dx;
+                dx = -dx;
 	        }
 	        if( dy != 0 ){
 		        // 範囲チェック…は前処理で終わってる。
@@ -136,15 +142,17 @@ namespace AsControls {
 		        //vScrollBar.Value += dy;
 		        //::SetScrollInfo( hwnd_, SB_VERT, &udScr_, TRUE );
 		        //dy *= -H;
-                //dy *= H;
+                vScrollBar.Value += dy;
+                dy *= -H;
+
 	        }
 
 	        if( dx!=0 || dy!=0 ){
 		        if( -dx>=right() || dx>=right()
 		         || -dy>=bottom() || dy>=bottom() ){
                     //TODO scroll
-                    hScrollBar.Value += dx;
-                    vScrollBar.Value += dy;
+                    //hScrollBar.Value += dx;
+                    //vScrollBar.Value += dy;
 			        // 全画面再描画
 			        // ちょうど65536の倍数くらいスクロールしたときに、
 			        // ScrollWindowEx on Win9x だと再描画が変なのを回避。
@@ -154,8 +162,8 @@ namespace AsControls {
 			        // 再描画の不要な領域をスクロール
 			        //::ScrollWindowEx( hwnd_, dx, dy, NULL, 
 					//        clip, NULL, NULL, SW_INVALIDATE );
-                    hScrollBar.Value += dx;
-                    vScrollBar.Value += dy;
+                    //hScrollBar.Value += dx;
+                    //vScrollBar.Value += dy;
 
                     //this.AutoScrollPosition = new Point(this.AutoScrollPosition.X + dy, this.AutoScrollPosition.Y + dy);
 			        // 即時再描画？
@@ -172,6 +180,14 @@ namespace AsControls {
                             //    //rc.Bottom = dy;
                             //    rc = new Rectangle(rc.Left, rc.Top, rc.Width, dy);
                             //}
+
+                            //this.Invalidate(false);
+
+                            // 再描画の必要な領域を自分で計算
+                            //RECT rc = { 0, 0, right(), bottom() };
+                            //if (dy < 0) rc.top = rc.bottom + dy;
+                            //else rc.bottom = dy;
+
                             // インテリマウスの中ボタンクリックによる
                             // オートスクロール用カーソルの下の部分を先に描く
                             // ２回に分けることで、小さな矩形部分二つで済むので高速
@@ -179,13 +195,24 @@ namespace AsControls {
                             //::UpdateWindow( hwnd_ );
                             //::InvalidateRect( hwnd_, &rc, FALSE );
 
-                            //this.Invalidate(rc, false);
-                            this.Invalidate(false);
+                            //Win32API.RECT rc = new Win32API.RECT();
+                            //rc.left=0; rc.top=0; rc.right = right(); rc.bottom=bottom();
+                            //if (dy < 0) rc.top = rc.bottom + dy;
+                            //else rc.bottom = dy;
+
+                            //Win32API.ValidateRect(this.Handle, ref rc);
+                            //this.Update();
+                            //Win32API.InvalidateRect(this.Handle, ref rc, false);
+
+                            //this.Invalidate(false);
+
+                            Rectangle rc = new Rectangle(0, 0, right(), bottom());
+                            this.Invalidate(rc, false);
 
                         }
-                        else {
-                            this.Invalidate(false);
-                        }
+                        //else {
+                        //    this.Invalidate(false);
+                        //}
 				        //::UpdateWindow( hwnd_ );       
                         //this.Update(); //TODO scroll
                         

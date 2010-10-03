@@ -177,17 +177,6 @@ namespace AsControls.Parser {
         }
     }
 
-    //##name
-    public class ImageRule : MultiLineRule {
-
-        public ImageRule(string start, string end, Attribute attr) {
-            this.start = start;
-            this.end = end;
-            this.attr = attr;
-            token = TokenType.Image;
-        }
-    }
-
     public class KeywordRule : Rule {
         public KeywordRule(string start, Attribute attr) {
             this.start = start;

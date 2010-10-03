@@ -164,6 +164,20 @@ namespace AsControls
             cur_.ResetPos();
         }
 
+        public void DoConfigChange(){
+	        // 折り返し位置再計算
+	        ReWrapAll();
+	        UpdateTextCx();
+
+	        // スクロール情報変更
+	        ReSetScrollInfo();
+	        ForceScrollTo( udScr_tl_ );
+
+	        // 再描画
+            ReDraw(ReDrawType.ALL, null);
+	        cur_.ResetPos();
+        }
+
         //
         public void on_text_update( DPos s, DPos e, DPos e2, bool bAft, bool mCur )
         {
@@ -210,6 +224,7 @@ namespace AsControls
 
                 //TODO DrawEventHandler
                 if(DrawEventHandler != null){
+                    //ReDraw(ReDrawType.ALL, s);
                     ReDraw(ReDrawType.AFTER, s);
                 }else{
 		            ReDraw( t, s );

@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace AsControls
 {
@@ -180,14 +181,17 @@ namespace AsControls
         Rectangle
     }
 
+    public enum CursorState {
+        None,
+        MouseDown,
+        TextSelect,
+        TextMove
+    }
+
     //
     public class Cursor {
-        private enum State {
-            none,
-            mouse_down
-        }
 
-        private State state;
+        public CursorState State { get; set; }
 
         private Document doc_; 
         private gcsTextEdit view_;
@@ -243,38 +247,37 @@ namespace AsControls
 
             bIns_ = true;
 
-            state = State.none;
+            State = CursorState.None;
 
             //TODO Rectangle
             SelectMode = SelectType.Normal;
-            //SelectMode = SelectType.Rectangle;
 
-            this.view_.MouseDown += (sender, e) => {
-                state = State.mouse_down;
-            };
-            this.view_.MouseUp += (sender, e) => {
-                state = State.none;
-            };
-            this.view_.MouseMove += (sender, e) => {
-                if (state == State.mouse_down) {
-                   
-                    //if (!PtInRect(&view_.zone(), pt)) {
-                    //if ( view_.zone().Contains(e.X, e.Y)){
-                        MoveByMouse(e.X, e.Y);
-                    //}
-                }
-            };
-            this.view_.MouseDoubleClick += (sender, e) => {
-                // 行番号ゾーンの場合は特に何もしない
-                if (view_.lna() - view_.fnt().F() < e.X)
-                    // 行末の場合も特に何もしない
-                    if (cur_.ad != doc_.len(cur_.tl)) {
-                        VPos np = new VPos();
-                        view_.ConvDPosToVPos(doc_.wordStartOf(cur_),  ref np, ref cur_);
-                        MoveTo(np, false);
-                        Right(true, true);
-                    }
-            };
+            //this.view_.MouseDown += (sender, e) => {
+            //    state = State.MouseDown;
+            //};
+            //this.view_.MouseUp += (sender, e) => {
+            //    state = State.None;
+            //};
+            //this.view_.MouseMove += (sender, e) => {
+            //    if (State == CursorState.MouseDown) {             
+            //        //if (!PtInRect(&view_.zone(), pt)) {
+            //        //if ( view_.zone().Contains(e.X, e.Y)){
+            //            MoveByMouse(e.X, e.Y);
+            //        //}
+            //    }
+            //};
+            //this.view_.MouseDoubleClick += (sender, e) => {
+            //    // 行番号ゾーンの場合は特に何もしない
+            //    if (view_.lna() - view_.fnt().F() < e.X) {
+            //        // 行末の場合も特に何もしない
+            //        if (cur_.ad != doc_.len(cur_.tl)) {
+            //            VPos np = new VPos();
+            //            view_.ConvDPosToVPos(doc_.wordStartOf(cur_), ref np, ref cur_);
+            //            MoveTo(np, false);
+            //            Right(true, true);
+            //        }
+            //    }
+            //};
         }
 
         public void MoveCur(DPos dp, bool select) {
@@ -318,7 +321,7 @@ namespace AsControls
                 ep.Y = sp.Y;
                 sp.Y = tmp;               
             }
-	        //ep.X+=2;
+	        ep.X+=2;
 
 	        //// 手抜き16bitチェック入り…
 	        int LFT = view_.left();
@@ -359,17 +362,25 @@ namespace AsControls
                     Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
                     view_.Invalidate(rc, false);
                 } else {
-                    //view_.Invalidate();
-
-                    //Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
-                    Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
+                    //RECT rc = { Max(LFT,sp.x), Max(TOP,sp.y), RHT, Min<int>(BTM,sp.y+view_.fnt().H()) };
                     //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
-                    view_.Invalidate(rc, false);
-                    Rectangle re = new Rectangle(LFT, Math.Max(TOP, ep.Y), Math.Min(RHT, ep.X), Math.Min(BTM, ep.Y + view_.fnt().H()));
+                    //RECT re = { LFT, Max(TOP,ep.y), Min(RHT,ep.x), Min<int>(BTM,ep.y+view_.fnt().H()) };
                     //::InvalidateRect( caret_->hwnd(), &re, FALSE );
-                    view_.Invalidate(re, false);
-                    Rectangle rd = new Rectangle(LFT, Math.Max(TOP, rc.Bottom), RHT, Math.Min(BTM, re.Top));
+                    //RECT rd = { LFT, Max(TOP,rc.bottom), RHT, Min<int>((long)BTM,re.top) };
                     //::InvalidateRect( caret_->hwnd(), &rd, FALSE );
+         
+                    //Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), RHT, Math.Min(BTM, sp.Y + view_.fnt().H()));
+                    //view_.Invalidate(rc, false);
+                    //Rectangle re = new Rectangle(LFT, Math.Max(TOP, ep.Y), Math.Min(RHT, ep.X), Math.Min(BTM, ep.Y + view_.fnt().H()));
+                    //view_.Invalidate(re, false);
+                    //Rectangle rd = new Rectangle(LFT, Math.Max(TOP, rc.Bottom), RHT, Math.Min(BTM, re.Top));
+                    //view_.Invalidate(rd, false);
+
+                    Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), Math.Max(TOP, sp.Y), RHT - Math.Max(LFT, sp.X), Math.Min(BTM, view_.fnt().H()));
+                    view_.Invalidate(rc, false);
+                    Rectangle re = new Rectangle(LFT, Math.Max(TOP, ep.Y), Math.Min(RHT, ep.X) - LFT, Math.Min(BTM, view_.fnt().H()));
+                    view_.Invalidate(re, false);
+                    Rectangle rd = new Rectangle(LFT, Math.Max(TOP, rc.Bottom), RHT - LFT, Math.Min(BTM, re.Top));
                     view_.Invalidate(rd, false);
                 }
 	        }
@@ -570,9 +581,9 @@ namespace AsControls
                 Right(false, true);
 
             // 入力
-            Input(ch, 1);
+            Input(ch);
         }
-        public void Input( string str, int len )
+        public void Input( string str )
         {
             if (cur_ == sel_)
                 //doc_.Execute( Insert( cur_, str, len ) );
@@ -584,13 +595,13 @@ namespace AsControls
                 doc_.Execute(new Replace(cur_, sel_, str));
         }
 
-        public void Input( char str, int len )
+        public void Input( char chr )
         {
             //unicode* ustr = new unicode[ len*4 ];
             //len = ::MultiByteToWideChar( CP_ACP, 0, str, len, ustr, len*4 );
             //Input( ustr, len );
             //delete [] ustr;
-            Input(str.ToString(), 1);
+            Input(chr.ToString());
         }
 
         public void DelBack()
@@ -628,9 +639,13 @@ namespace AsControls
                         if (x.t1.ad == y.t1.ad) return 0;
                         return x.t1.ad < y.t1.ad ? 1 : -1;
                     });
+
+                    var cmds = new List<ICommand>();
                     foreach (var item in list) {
-                        doc_.Execute(new Delete(item.t1, item.t2));
+                        //doc_.Execute(new Delete(item.t1, item.t2));
+                        cmds.Add(new Delete(item.t1, item.t2));
                     }
+                    doc_.Execute(cmds);
                 }
                 else {
 
@@ -642,12 +657,57 @@ namespace AsControls
                 }
             }
         }
+        public void DelRectangle(VPos cur, VPos sel) {
+            DPos dp = (cur == sel ? doc_.rightOf(cur, false) : (DPos)sel);
+            if (cur != dp) {
+                List<Tuple<DPos, DPos>> list = null;
+                if (cur < sel) {
+                    list = getRectangleDpos(cur, sel);
+                } else {
+                    list = getRectangleDpos(sel, cur);
+                }
+                list.Sort((x, y) => {
+                    if (x.t1.ad == y.t1.ad) return 0;
+                    return x.t1.ad < y.t1.ad ? 1 : -1;
+                });
+
+                var cmds = new List<ICommand>();
+                foreach (var item in list) {
+                    cmds.Add(new Delete(item.t1, item.t2));
+                }
+                doc_.Execute(cmds);
+            }
+        }
+
+        public void MoveText(DPos to, DPos s, DPos e) {
+            DPos s1, e1;
+            if (s < e) {
+                s1 = s; e1 = e;
+            } else {
+                s1 = e; e1 = s;
+            }
+            var text = doc_.getText(s1, e1);
+            var cmds = new List<ICommand>();
+            if (to < s1) {
+                cmds.Add(new Delete(s1, e1));
+                cmds.Add(new Insert(to, text));
+                //doc_.Execute(new Delete(s1, e1));
+                //doc_.Execute(new Insert(to, text));
+            } else if (to > e1) {
+                cmds.Add(new Insert(to, text));
+                cmds.Add(new Delete(s1, e1));
+                //doc_.Execute(new Insert(to, text));
+                //doc_.Execute(new Delete(s1, e1));
+            }
+
+            doc_.Execute(cmds);
+        }
 
         //-------------------------------------------------------------------------
         // Viewからの指令を処理
         //-------------------------------------------------------------------------
 
-        public void on_setfocus()
+        internal void on_setfocus()
         {
             //TODO caret
             caret_.Create(view_.fnt().H(),
@@ -656,25 +716,26 @@ namespace AsControls
 	        UpdateCaretPos();
         }
 
-        public void on_killfocus()
+        internal void on_killfocus()
         {
 	        caret_.Destroy();
 	        Redraw( cur_, sel_ );
         }
 
-        public void on_scroll_begin()
+        internal void on_scroll_begin()
         {
 	        caret_.Hide();
         }
 
-        public void on_scroll_end()
+        internal void on_scroll_end()
         {
 	        UpdateCaretPos();
 	        caret_.Show();
         }
 
-        public void on_lbutton_down( int x, int y, bool shift )
+        internal void on_lbutton_down(int x, int y, bool shift)
         {
+            State = CursorState.MouseDown;
 	        if( !shift )
 	        {
 		        // これまでの選択範囲をクリア
@@ -702,7 +763,24 @@ namespace AsControls
 	        //::SetCapture( caret_->hwnd() );
         }
 
-        private void MoveByMouse( int x, int y )
+        internal void on_button_up() {
+            State = CursorState.None;
+        }
+
+        internal void on_mouse_db_click(int x, int y) {
+            // 行番号ゾーンの場合は特に何もしない
+            if (view_.lna() - view_.fnt().F() < x) {
+                // 行末の場合も特に何もしない
+                if (cur_.ad != doc_.len(cur_.tl)) {
+                    VPos np = new VPos();
+                    view_.ConvDPosToVPos(doc_.wordStartOf(cur_), ref np, ref cur_);
+                    MoveTo(np, false);
+                    Right(true, true);
+                }
+            }
+        }
+
+        internal void MoveByMouse( int x, int y )
         {
             dragX_ = x;
             dragY_ = y;
@@ -710,6 +788,12 @@ namespace AsControls
 	        VPos vp = new VPos();
 	        view_.GetVPos( x, y, ref vp, lineSelectMode_ );
 	        MoveTo( vp, true );
+        }
+
+        public void ResetCaret() {
+            caret_.Create(view_.fnt().H(),
+                //(bIns_ ? 2 : view_.fnt().W()), view_.fnt().LogFont() );
+                2);
         }
 
         public void ResetPos()
@@ -720,6 +804,48 @@ namespace AsControls
 	        UpdateCaretPos();
 	        if( caret_.isAlive())
 		        view_.ScrollTo( cur_ );
+        }
+
+        public bool ContainSelect(int x, int y, VPos cur, VPos sel) {
+            //VPos vp = new VPos();
+            //view_.GetVPos(x, y, ref vp, false);
+            //DPos c = vp as DPos;
+            //var curs = Cursor.Sort(this.Cur, this.Sel);
+            //return (curs.t1 < c && c < curs.t2);
+            return this.ContainSelect(x, y, cur as DPos, sel as DPos);
+        }
+
+        public bool ContainSelect(int x, int y, DPos cur, DPos sel) {
+            if (SelectMode == SelectType.Rectangle) {
+                if (view_.VRect.SXB < x && x < view_.VRect.SXE
+                    && view_.VRect.SYB < y && y < view_.VRect.SYE) {
+                    //VPos vp=new VPos();
+                    //view_.GetVPos(x,y,ref vp,false);
+                    //if (view_.VRect.SXB < x && x < vp.vx + view_.VRect.XBASE) {
+                        return true;
+                    //}
+                }
+            } else {
+                VPos vp = new VPos();
+                view_.GetVPos(x, y, ref vp, false);
+                DPos c = vp as DPos;
+                var curs = Cursor.Sort(cur, sel);
+                return (curs.t1 < c && c < curs.t2);
+            }
+
+            return false;
+        }
+
+        public static Tuple<DPos, DPos> Sort(DPos x, DPos y) {
+            Tuple<DPos, DPos> res = new Tuple<DPos, DPos>();
+            if (x < y) {
+                res.t1 = x;
+                res.t2 = y;
+            } else {
+                res.t1 = y;
+                res.t2 = x;
+            }
+            return res;
         }
 
         public void on_text_update(DPos s, DPos e, DPos e2, bool mCur) {
@@ -799,15 +925,18 @@ namespace AsControls
 		        return;
 
             if(SelectMode == SelectType.Rectangle){
-                string data=string.Empty;
+                string lines =string.Empty;
                 if (cur_ > sel_) {
-                    data = getRangesText(sel_, cur_);
+                    lines = getRangesText(sel_, cur_);
                 }
                 else {
-                    data = getRangesText(cur_, sel_); 
+                    lines = getRangesText(cur_, sel_); 
                 }
-                Clipboard.SetData("Rectangle", data);
-                //Clipboard.SetData(DataFormats.Text, data);
+                //Clipboard.SetData("Rectangle", data);
+                DataObject data = new DataObject();
+                data.SetData(lines);
+                data.SetData(SelectType.Rectangle);
+                Clipboard.SetDataObject(data, true);
             }else{
 
                 DPos dm = new DPos(cur_.tl, cur_.ad);
@@ -823,18 +952,21 @@ namespace AsControls
 
         public void Paste()
         {
-            if (Clipboard.GetData("Rectangle") != null) {
+            IDataObject data = Clipboard.GetDataObject();
+            if(data.GetDataPresent(typeof(SelectType))){
+            //if (Clipboard.GetData("Rectangle") != null) {
             //if (Clipboard.GetData(DataFormats.Text) != null) {
 
-                var text = Clipboard.GetData("Rectangle") as string;
+                //var text = Clipboard.GetData("Rectangle") as string;
                 //var text = Clipboard.GetData(DataFormats.Text) as string;
+                var text = Clipboard.GetText();
                 if (text != null) {
-                    List<string> data = text.Split(new string[]{"\r\n"}, StringSplitOptions.None).ToList<string>();
+                    List<string> lines = text.Split(new string[]{"\r\n"}, StringSplitOptions.None).ToList<string>();
 
                     if (cur_ > sel_)
-                        RectangleInsert(sel_, cur_, data);       
+                        RectangleInsert(sel_, cur_, lines);       
                     else
-                        RectangleInsert(cur_, sel_, data);
+                        RectangleInsert(cur_, sel_, lines);
                 }
             } else {
                 string text = Clipboard.GetText();
@@ -845,12 +977,7 @@ namespace AsControls
             }
         }
 
-        //public enum ClipboardDataType {
-        //    Line,
-        //    Rectangle
-        //}
-
-        private void RectangleInsert(VPos s, VPos e, List<string> texts) {
+        internal void RectangleInsert(VPos s, VPos e, List<string> texts) {
 
             Func<int, int, int, Tuple<int, int, int>> func = (stl, srl, cnt) => {
                 if (cnt - (view_.rln(stl) - srl) > 0) {
@@ -885,7 +1012,9 @@ namespace AsControls
             };
 
             if (s == e) {
- 
+
+                var cmds = new List<ICommand>();
+
                 int cnt = texts.Count;
                 var etlerl = func(s.tl, s.rl, cnt);
                 int etl = etlerl.t1;
@@ -906,7 +1035,8 @@ namespace AsControls
                     for (int i = 0; i < rescnt; i++) {
                         DPos dp = new DPos(doc_.tln() - 1, doc_.tl(doc_.tln() - 1).Length);
 
-                        doc_.Execute(new Insert(dp, "\r\n" + ws + texts[rescnt - i]));
+                        //doc_.Execute(new Insert(dp, "\r\n" + ws + texts[rescnt - i]));
+                        cmds.Add(new Insert(dp, "\r\n" + ws + texts[rescnt - i]));
                     }
                     texts.RemoveRange(texts.Count-rescnt, rescnt);
                 }
@@ -919,15 +1049,20 @@ namespace AsControls
                         ws += " ";
                     }
                     if (ws.Length > 0) {
-                        doc_.Execute(new Insert(dp, ws));
+                        //doc_.Execute(new Insert(dp, ws));
+                        cmds.Add(new Insert(dp, ws));
                     }
                     dp.ad += ws.Length;
-                    doc_.Execute(new Insert(dp, texts[i]));
+                    //doc_.Execute(new Insert(dp, texts[i]));
+                    cmds.Add(new Insert(dp, texts[i]));
 			    }
-                    
+                doc_.Execute(cmds);
 
             } else {
                 if (SelectMode == SelectType.Rectangle) {
+
+                    var cmds = new List<ICommand>();
+
                     var dposlist = getRectangleDpos(s, e);
                     if (dposlist.Count >= texts.Count) {
                         int c = dposlist.Count - texts.Count;
@@ -957,7 +1092,8 @@ namespace AsControls
                             for (int i = 0; i < rescnt; i++) {
                                 DPos dp = new DPos(doc_.tln() - 1, doc_.tl(doc_.tln() - 1).Length);
 
-                                doc_.Execute(new Insert(dp, "\r\n" + ws + texts[rescnt - i]));
+                                //doc_.Execute(new Insert(dp, "\r\n" + ws + texts[rescnt - i]));
+                                cmds.Add(new Insert(dp, "\r\n" + ws + texts[rescnt - i]));
                             }
                             texts.RemoveRange(texts.Count - rescnt, rescnt);
                         }
@@ -970,27 +1106,24 @@ namespace AsControls
                                 ws += " ";
                             }
                             if (ws.Length > 0) {
-                                doc_.Execute(new Insert(dp, ws));
+                                //doc_.Execute(new Insert(dp, ws));
+                                cmds.Add(new Insert(dp, ws));
                             }
                             dp.ad += ws.Length;
-                            doc_.Execute(new Insert(dp, texts[i]));
+                            //doc_.Execute(new Insert(dp, texts[i]));
+                            cmds.Add(new Insert(dp, texts[i]));
                         }
-
-                        //for (int i = dposlist.Count - 1; i >= 0; i--) {
-                        //    string text = texts[i];
-                        //    DPos dps = dposlist[i].t1;
-                        //    DPos dpe = dposlist[i].t2;
-                        //    doc_.Execute(new Replace(dps, dpe, text));
-                        //}
-
                     }
 
                     for (int i = dposlist.Count - 1; i >= 0; i--) {
                         string text = texts[i];
                         DPos dps = dposlist[i].t1;
                         DPos dpe = dposlist[i].t2;
-                        doc_.Execute(new Replace(dps, dpe, text));
+                        //doc_.Execute(new Replace(dps, dpe, text));
+                        cmds.Add(new Replace(dps, dpe, text));
                     }
+
+                    doc_.Execute(cmds);
                 }
                 else {
                 }
@@ -1015,7 +1148,7 @@ namespace AsControls
 
             int wsw= view_.fnt().W(' ');
 
-            Func<int, int, VPos> func = (rl, cnt) => {
+            Func<int, VPos> func = (rl) => {
                 VPos vpb = new VPos();
                 view_.GetVPos(sxb, y, ref vpb, false);
                 y += H;
@@ -1028,8 +1161,8 @@ namespace AsControls
             int wcnt = 0;
             if (s.tl == etl) {
                 wcnt=0;
-                for (int i = s.rl, i2 = 0; i < erl; i++, i2++) {
-                    VPos vp = func(i, i2);
+                for (int i = s.rl; i < erl; i++) {
+                    VPos vp = func(i);
 
                     //if (i == erl-1) {
                     if (i == view_.rln(s.tl)- 1) {
@@ -1041,8 +1174,8 @@ namespace AsControls
                 }
             } else {
                 wcnt = 0;
-                for (int i = s.rl, i2 = 0; i < view_.rln(s.tl); i++, i2++) {
-                    VPos vp = func(i, i2);
+                for (int i = s.rl; i < view_.rln(s.tl); i++) {
+                    VPos vp = func(i);
 
                     if (i == view_.rln(s.tl)- 1) {
                         if (s.vx > vp.vx) {
@@ -1054,8 +1187,8 @@ namespace AsControls
 
                 for (int i = s.tl + 1; i < etl; i++) {
                     wcnt = 0;
-                    for (int j = 0, i2 = 0; j < view_.rln(i); j++, i2++) {
-                        VPos vp = func(j, i2);
+                    for (int j = 0; j < view_.rln(i); j++) {
+                        VPos vp = func(j);
                         //if (i == erl-1) {
                         if (j == view_.rln(i) - 1) {
                             if (s.vx > vp.vx) {
@@ -1067,8 +1200,8 @@ namespace AsControls
                 }
 
                 wcnt = 0;
-                for (int i = 0, i2 = 0; i < erl; i++, i2++) {
-                    VPos vp = func(etl, i2);
+                for (int i = 0; i < erl; i++) {
+                    VPos vp = func(etl);
                     //if (i == erl-1) {
                     if (i == view_.rln(etl) - 1) {
                         if (s.vx > vp.vx) {
@@ -1092,7 +1225,7 @@ namespace AsControls
             int H = view_.fnt().H();
             int y = syb+H/2;
 
-            Action<int, int> action = (rl, cnt) => {
+            Action<int> action = (rl) => {
                 VPos vpb = new VPos();
                 VPos vpe = new VPos();
                 
@@ -1107,24 +1240,24 @@ namespace AsControls
             };
 
             if (s.tl == e.tl) {
-                for (int i = s.rl, i2 = 0; i <= e.rl; i++, i2++) {
-                    action(i, i2);
+                for (int i = s.rl; i <= e.rl; i++) {
+                    action(i);
                 }
             }
             else {
                 
-                for (int i = s.rl, i2 = 0; i < view_.rln(s.tl); i++, i2++) {
-                    action(i, i2);
+                for (int i = s.rl; i < view_.rln(s.tl); i++) {
+                    action(i);
                 }
 
                 for (int i = s.tl + 1; i < e.tl; i++) {
-                    for (int j = 0, i2 = 0; j < view_.rln(i); j++, i2++) {
-                        action(j, i2);
+                    for (int j = 0; j < view_.rln(i); j++) {
+                        action(j);
                     }
                 }
 
-                for (int i = 0, i2 = 0; i <= e.rl; i++, i2++) {
-                    action(i, i2);
+                for (int i = 0; i <= e.rl; i++) {
+                    action(i);
                 }
             }
             return list;

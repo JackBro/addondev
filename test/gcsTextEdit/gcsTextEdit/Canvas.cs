@@ -50,16 +50,14 @@ namespace AsControls {
         /// </summary>
         int figNum_;
 
-        public Canvas(gcsTextEdit view, Font font) {
+        public Canvas(gcsTextEdit view, Font font, bool showLN) {
             txtZone_ = view.getClientRect();
-            figNum_ = 3;
-            showLN = true;
-            wrapType = WrapType.NonWrap;
-            //wrapType = WrapType.WindowWidth;
             font_ = new Painter(view.Handle, font);
+            this.showLN = showLN;
+
+            figNum_ = 3;
             wrapWidth_ = 0xfffffff;
-            //wrapWidth_ = view.cx() - 3; //TODO
-            //wrapWidth_ = 100;
+            wrapType = WrapType.NonWrap;
         }
 
         public Painter getPainter() {
@@ -79,28 +77,22 @@ namespace AsControls {
 	        return false;
         }
 
-        bool CalcLNAreaWidth()
-        {
+        bool CalcLNAreaWidth(){
             int prev = txtZone_.left;
-            if (showLN)
-	        {
+            if (showLN){
                 txtZone_.left = (1 + figNum_) * font_.F();
                 if (txtZone_.left + font_.W() >= txtZone_.right) {
                     txtZone_.left = 0; // 行番号ゾーンがデカすぎるときは表示しない
                }
-	        }
-	        else
-	        {
+	        }else{
                 txtZone_.left = 0;
 	        }
 
             return (prev != txtZone_.left);
         }
 
-        void CalcWrapWidth()
-        {
-	        switch( wrapType )
-	        {
+        void CalcWrapWidth(){
+	        switch( wrapType ){
 	        case WrapType.NonWrap:
                 wrapWidth_ = 0xfffffff;
 		        break;
@@ -113,8 +105,7 @@ namespace AsControls {
 	        }
         }
         
-        static int Log10( int n )
-	    {
+        static int Log10( int n ){
 		    int[] power_of_ten =
 			    { 1, 10, 100, 1000, 10000, 100000, 1000000,
 			      10000000, 100000000, 1000000000 }; // 10^0 ～ 10^9
@@ -127,8 +118,7 @@ namespace AsControls {
 		    return c; // 3<=c<=10 s.t. 10^(c-1) <= n < 10^c
 	    }
 
-        public bool on_view_resize( int cx, int cy )
-        {
+        public bool on_view_resize( int cx, int cy ){
             //TODO wrap
 	        txtZone_.right  = cx;
 	        txtZone_.bottom = cy;
@@ -142,6 +132,24 @@ namespace AsControls {
 		        return true;
 	        }
 	        return false;
+        }
+
+        //public void on_font_change( const VConfig& vc ){
+        //    HDC dc = font_->getDC();
+        //    font_ = NULL; // 先にデストラクタを呼ばねばならない…
+        //                  // ってうわー格好悪ぃーーー(T_T)
+        //    font_ = new Painter( dc, vc );
+
+        //    CalcLNAreaWidth();
+        //    CalcWrapWidth();
+        //}
+
+        public void on_config_change(WrapType wrap, bool showln) {
+	        showLN = showln;
+            wrapType = wrap;
+
+	        CalcLNAreaWidth();
+	        CalcWrapWidth();
         }
 
         #region IDisposable メンバ

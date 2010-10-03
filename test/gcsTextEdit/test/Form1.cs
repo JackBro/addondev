@@ -32,10 +32,13 @@ namespace test
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
-
-            //edit.DrawEventHandler += (g, line, x, y) => {
-            //    g.DrawImage(image, new Point(x, y));
-            //};
+            edit.ShowLineNumber = true;
+            edit.DrawEventHandler += (g, line, x, y) => {
+                g.DrawImage(image, new Point(x, y));
+            };
+            edit.KeyPress += (sender, e) => {
+                e.Handled = false;
+            };
 
             bool flg = false;
             edit.MouseDown += (sender, e) => {
@@ -55,6 +58,7 @@ namespace test
                     edit.SelectMode = AsControls.SelectType.Rectangle;
                 }
             };
+
             //
             edit.KeyBind.setAction(Keys.Back, (editor) => {
                 editor.BackSpace();
@@ -118,17 +122,31 @@ namespace test
             //    MessageBox.Show(e.Link);
             //};
 
-            wrapOToolStripMenuItem.Click += (sender, e) => {
-                wrapOToolStripMenuItem.Checked = !wrapOToolStripMenuItem.Checked;
-                wrapOffToolStripMenuItem.Checked = !wrapOToolStripMenuItem.Checked;
+            WrapOnToolStripMenuItem.Click += (sender, e) => {
+                WrapOnToolStripMenuItem.Checked = !WrapOnToolStripMenuItem.Checked;
+                WrapOffToolStripMenuItem.Checked = !WrapOnToolStripMenuItem.Checked;
+                if (WrapOffToolStripMenuItem.Checked) {
+                    edit.Wrap = WrapType.NonWrap;
 
-
+                } else if (WrapOnToolStripMenuItem.Checked) {
+                    edit.Wrap = WrapType.WindowWidth;
+                }
             };
 
-            wrapOffToolStripMenuItem.Checked = true;
-            wrapOffToolStripMenuItem.Click += (sender, e) => {
-                wrapOffToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
-                wrapOToolStripMenuItem.Checked = !wrapOffToolStripMenuItem.Checked;
+
+            WrapOffToolStripMenuItem.Click += (sender, e) => {
+                WrapOffToolStripMenuItem.Checked = !WrapOffToolStripMenuItem.Checked;
+                WrapOnToolStripMenuItem.Checked = !WrapOffToolStripMenuItem.Checked;
+                if (WrapOffToolStripMenuItem.Checked) {
+                    edit.Wrap = WrapType.NonWrap;
+
+                } else if (WrapOnToolStripMenuItem.Checked) {
+                    edit.Wrap = WrapType.WindowWidth;
+                }
+            };
+
+            ShowLineNumToolStripMenuItem.Click += (sender, e) => {
+                edit.ShowLineNumber = ShowLineNumToolStripMenuItem.Checked;
             };
 
             DPos pos=null;
@@ -215,14 +233,22 @@ namespace test
                 sr.ReplaceAllImpl();
             };
 
+            edit.Wrap = AsControls.WrapType.WindowWidth;
+            WrapOnToolStripMenuItem.Checked = true;
+
+            edit.Text = @"\uD842\uDF9Fる
+1234567890abcdefg";
+
             panel1.Controls.Add(edit);
+
+
+
+
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
 
-            edit.Wrap = AsControls.WrapType.WindowWidth;
 
-            edit.Text = "\uD842\uDF9Fる";
-//            edit.Text =@"1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
+//            edit.Text = @"1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
 //*/
 //mmmmmmmmmmmmmmmmmmmmmmmmmm
 //12
@@ -249,31 +275,6 @@ namespace test
             //this.KeyDown += new KeyEventHandler(Form1_KeyDown);
             //this.KeyPress += new KeyPressEventHandler(Form1_KeyPress);
             //csedit.DragOver += new DragEventHandler(csedit_DragOver);
-        }
-
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void fontToolStripMenuItem_Click(object sender, EventArgs e) {

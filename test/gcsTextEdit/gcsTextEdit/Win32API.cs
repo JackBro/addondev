@@ -116,5 +116,11 @@ namespace AsControls
 
         [DllImport("gdi32.dll")]
         public static extern int SelectClipRgn(IntPtr hdc, IntPtr hrgn);
+
+        [DllImport("user32.dll")]
+        public static extern bool ValidateRect(IntPtr hWnd, ref RECT lpRect);
+
+        [DllImport("user32.dll")]
+        public static extern bool InvalidateRect(IntPtr hWnd, ref RECT lpRect, bool bErase);
     }
 }
