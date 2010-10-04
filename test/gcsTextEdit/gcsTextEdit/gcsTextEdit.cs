@@ -641,18 +641,20 @@ namespace AsControls {
             cur_.on_mouse_db_click(e.X, e.Y);
         }
 
-        protected override void OnMouseClick(MouseEventArgs e) {
-            base.OnMouseClick(e);
-            if (cur_.State == CursorState.TextSelect) {
-                cur_.on_lbutton_down(e.X, e.Y, false);
-                cur_.SelectMode = SelectType.Normal;
-                cur_.State = CursorState.None;
-            }
-            cur_.on_button_up();
-        }
+        //protected override void OnMouseClick(MouseEventArgs e) {
+        //    Console.WriteLine("OnMouseClick");
+        //    base.OnMouseClick(e);
+        //    if (cur_.State == CursorState.TextSelect) {
+        //        cur_.on_lbutton_down(e.X, e.Y, false);
+        //        cur_.SelectMode = SelectType.Normal;
+        //        cur_.State = CursorState.None;
+        //    }
+        //    cur_.on_button_up();
+        //}
 
 
         protected override void OnMouseUp(MouseEventArgs e) {
+            Console.WriteLine("OnMouseUp");
             base.OnMouseUp(e);
             if (cur_.State == CursorState.TextSelect) {
                 cur_.on_lbutton_down(e.X, e.Y, false);
@@ -699,7 +701,8 @@ namespace AsControls {
                 cur_.MoveByMouse(e.X, e.Y);
             }else if(cur_.State == CursorState.TextSelect){
                 cur_.State = CursorState.TextMove;
-                DoDragDrop("test", DragDropEffects.Move);
+                var text = cur_.getRangesText(vpcur, vpsel);
+                DoDragDrop(text, DragDropEffects.Move);
                 
             }
         }
@@ -754,7 +757,7 @@ namespace AsControls {
                     cur_.UpdateCaretPos();
                     //cur_.Sel.Copy(cur_.Cur);
                     cur_.RectangleInsert(cur_.Cur, cur_.Cur, lines);
-                    cur_.Cur.Copy(instvp);
+                    cur_.Cur.Copy(vp);
                     cur_.Sel.Copy(cur_.Cur);
                 }
                 cur_.ResetPos();
