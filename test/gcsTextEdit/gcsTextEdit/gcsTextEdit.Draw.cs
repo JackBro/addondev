@@ -270,7 +270,7 @@ namespace AsControls
         }
 
         private static char[] cs = { '\t', ' ', '\x3000' };
-
+        private Point pp = new Point();
         private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
 
             //g.FillRectangle(bb, v.rc);
@@ -456,6 +456,9 @@ namespace AsControls
                     if (v.SYB <= a.top && a.top <= v.SYE) {
                         //TODO Rectangle
                         if (cur_.SelectMode == SelectType.Rectangle) {
+                            if (cur_.State == CursorState.MouseDown) {
+                                pp = this.PointToClient(System.Windows.Forms.Cursor.Position);
+                            }
                             //if (cur_.Cur.tl == tl && rln(tl) - 1 == rl) {
                             if (cur_.Cur.tl == tl && cur_.Cur.rl == rl) {
                                 ////Inv(g, a.top, v.SXB ,
@@ -469,13 +472,15 @@ namespace AsControls
                                 //    GetVPos(v.SXB, a.top, ref vpb, false);
                                 //    Inv(g, a.top, v.XBASE + vpb.vx, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
                                 //}
-                                var pos = this.PointToClient(System.Windows.Forms.Cursor.Position);
+                                //TODO Rectangle
+                                //var pos = this.PointToClient(System.Windows.Forms.Cursor.Position);
                                 for (int selY = v.SYB; selY <= v.SYE; selY += H) {
                                     VPos vpb = new VPos();
                                     GetVPos(v.SXB, selY, ref vpb, false);
                                     VPos vpe = new VPos();
                                     //GetVPos(v.SXE, selY, ref vpe, false);
-                                    GetVPos(pos.X, selY, ref vpe, false);
+                                    //GetVPos(pos.X, selY, ref vpe, false);
+                                    GetVPos(pp.X, selY, ref vpe, false);
                                     if (v.SXB == v.XBASE) {
                                         Inv(g, selY, v.SXB, v.XBASE + vpe.vx, p);
                                     }

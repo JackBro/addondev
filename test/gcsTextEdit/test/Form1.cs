@@ -33,29 +33,34 @@ namespace test
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
             edit.ShowLineNumber = true;
-            edit.DrawEventHandler += (g, line, x, y) => {
-                g.DrawImage(image, new Point(x, y));
-            };
+            //edit.DrawEventHandler += (g, line, x, y) => {
+            //    g.DrawImage(image, new Point(x, y));
+            //};
             edit.KeyPress += (sender, e) => {
                 e.Handled = false;
             };
 
-            bool flg = false;
-            edit.MouseDown += (sender, e) => {
-                //edit.SelectMode = AsControls.SelectType.Normal;
-                if (edit.SelectMode == AsControls.SelectType.Rectangle) {
-                    flg = true;
-                }
-            };
-            edit.MouseUp += (sender, e) => {
-                if (flg) {
-                    edit.SelectMode = AsControls.SelectType.Normal;
-                }
-                flg = false;
-            };
+            //bool flg = false;
+            //edit.MouseDown += (sender, e) => {
+            //    //edit.SelectMode = AsControls.SelectType.Normal;
+            //    if (edit.SelectMode == AsControls.SelectType.Rectangle) {
+            //        flg = true;
+            //    }
+            //};
+            //edit.MouseUp += (sender, e) => {
+            //    if (flg) {
+            //        edit.SelectMode = AsControls.SelectType.Normal;
+            //    }
+            //    flg = false;
+            //};
+            //edit.MouseMove += (sender, e) => {
+            //    if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
+            //        edit.SelectMode = AsControls.SelectType.Rectangle;
+            //    }
+            //};
             edit.MouseMove += (sender, e) => {
                 if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
-                    edit.SelectMode = AsControls.SelectType.Rectangle;
+                    edit.RectSelectStart();
                 }
             };
 

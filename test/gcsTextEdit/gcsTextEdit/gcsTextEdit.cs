@@ -131,10 +131,10 @@ namespace AsControls {
 
         public KeyMap KeyBind { get; set; }
 
-        public SelectType SelectMode {
-            get { return cur_.SelectMode; }
-            set { cur_.SelectMode = value; }
-        }
+        //public SelectType SelectMode {
+        //    get { return cur_.SelectMode; }
+        //    set { cur_.SelectMode = value; }
+        //}
 
         public int TabWidth {
             get { return fnt().TabWidth; }
@@ -632,7 +632,34 @@ namespace AsControls {
 
         protected override void OnMouseDoubleClick(MouseEventArgs e) {
             base.OnMouseDoubleClick(e);
+            //if (cur_.State == CursorState.TextSelect) {
+                //cur_.on_lbutton_down(e.X, e.Y, false);
+                cur_.SelectMode = SelectType.Normal;
+                cur_.State = CursorState.None;
+            //}
+            cur_.on_button_up();
             cur_.on_mouse_db_click(e.X, e.Y);
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e) {
+            base.OnMouseClick(e);
+            if (cur_.State == CursorState.TextSelect) {
+                cur_.on_lbutton_down(e.X, e.Y, false);
+                cur_.SelectMode = SelectType.Normal;
+                cur_.State = CursorState.None;
+            }
+            cur_.on_button_up();
+        }
+
+
+        protected override void OnMouseUp(MouseEventArgs e) {
+            base.OnMouseUp(e);
+            if (cur_.State == CursorState.TextSelect) {
+                cur_.on_lbutton_down(e.X, e.Y, false);
+                cur_.SelectMode = SelectType.Normal;
+                cur_.State = CursorState.None;
+            }
+            cur_.on_button_up(); //State = CursorState.None;
         }
 
         VPos vpcur = new VPos();
@@ -643,6 +670,7 @@ namespace AsControls {
             base.OnMouseDown(e);
 
             Focus();
+
             if (e.Button == MouseButtons.Left) {
                 //VPos vp = new VPos();
                 //GetVPos(e.X, e.Y, ref vp, false);
@@ -657,18 +685,13 @@ namespace AsControls {
                     cur_.State = CursorState.TextSelect;
                     this.AllowDrop = true;
                 } else {
+                    cur_.SelectMode = SelectType.Normal;
+                    cur_.State = CursorState.None;
                     cur_.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
                 }
             }
         }
 
-        protected override void OnMouseUp(MouseEventArgs e) {
-            base.OnMouseUp(e);
-            if (cur_.State == CursorState.TextSelect) {
-                cur_.on_lbutton_down(e.X, e.Y, false);
-            }
-            cur_.on_button_up();
-        }
 
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
@@ -717,12 +740,21 @@ namespace AsControls {
                         cur_.Sel.Copy(cur_.Cur);
                     }
                 } else if (cur_.SelectMode == SelectType.Rectangle) {
+                    //var vp1 = new VPos();
+                    ///GetVPos(p.X, p.Y, ref vp1, false);
+                    //cur_.Cur.Copy(vp1);
+
                     VPos vp = new VPos(cur_.Cur);
                     var text = cur_.getRangesText(vpcur, vpsel);
                     cur_.DelRectangle(vpcur, vpsel);
                     List<string> lines = text.Split(new string[]{"\r\n"}, StringSplitOptions.None).ToList<string>();
-                    cur_.RectangleInsert(vp, vp, lines);
+
+                    VPos instvp = new VPos(cur_.Cur);
                     cur_.Cur.Copy(vp);
+                    cur_.UpdateCaretPos();
+                    //cur_.Sel.Copy(cur_.Cur);
+                    cur_.RectangleInsert(cur_.Cur, cur_.Cur, lines);
+                    cur_.Cur.Copy(instvp);
                     cur_.Sel.Copy(cur_.Cur);
                 }
                 cur_.ResetPos();
@@ -743,6 +775,9 @@ namespace AsControls {
                 //MoveCur(vp, false);
                 cur_.UpdateCaretPos();
                 //base.Invalidate();
+                //cur_.Sel.Copy(cur_.Cur);
+                //Point p = this.PointToClient(new Point(e.X, e.Y));
+                //cur_.MoveByMouse(p.X, p.Y, false);
             }
         }
 
@@ -792,6 +827,9 @@ namespace AsControls {
 	        }
         }
 
+        public void RectSelectStart() {
+            cur_.SelectMode = SelectType.Rectangle;
+        }
 
         #region ITextEditor メンバ
 

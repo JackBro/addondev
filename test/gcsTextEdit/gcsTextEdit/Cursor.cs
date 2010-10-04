@@ -12,6 +12,7 @@ namespace AsControls
     public class Caret {
         private IntPtr hwnd_;
         private bool created_;
+        private int x, y;
 
         public bool isAlive() {
             return created_;
@@ -40,17 +41,20 @@ namespace AsControls
         public void SetPos(int x, int y) {
             if (created_) {
                 Win32API.SetCaretPos(x, y);
+                this.x = x;
+                this.y = y;
             }
         }
 
         public Point GetPos() {
             Point point = new Point();
             if (created_) {
-                Win32API.POINT p;
-                Win32API.GetCaretPos(out p);
-
-                point.X = p.x;
-                point.Y = p.y;
+                //Win32API.POINT p;
+                //Win32API.GetCaretPos(out p);
+                //point.X = p.x;
+                //point.Y = p.y;
+                point.X = this.x;
+                point.Y = this.y;
             }
             return point;
         }
@@ -764,6 +768,9 @@ namespace AsControls
         }
 
         internal void on_button_up() {
+            //if (SelectMode == SelectType.TextSelect) {
+             //   SelectMode = SelectType.Normal;
+            //}
             State = CursorState.None;
         }
 
@@ -778,6 +785,15 @@ namespace AsControls
                     Right(true, true);
                 }
             }
+        }
+
+        internal void MoveByMouse(int x, int y, bool sel) {
+            dragX_ = x;
+            dragY_ = y;
+
+            VPos vp = new VPos();
+            view_.GetVPos(x, y, ref vp, lineSelectMode_);
+            MoveTo(vp, sel);
         }
 
         internal void MoveByMouse( int x, int y )
@@ -818,11 +834,11 @@ namespace AsControls
         public bool ContainSelect(int x, int y, DPos cur, DPos sel) {
             if (SelectMode == SelectType.Rectangle) {
                 if (view_.VRect.SXB < x && x < view_.VRect.SXE
-                    && view_.VRect.SYB < y && y < view_.VRect.SYE) {
+                    && view_.VRect.SYB < y && y < view_.VRect.SYE + view_.fnt().H()) {
                     //VPos vp=new VPos();
                     //view_.GetVPos(x,y,ref vp,false);
                     //if (view_.VRect.SXB < x && x < vp.vx + view_.VRect.XBASE) {
-                        return true;
+                    return true;
                     //}
                 }
             } else {
