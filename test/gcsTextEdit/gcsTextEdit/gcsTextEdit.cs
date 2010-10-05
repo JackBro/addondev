@@ -634,7 +634,7 @@ namespace AsControls {
 
 
         protected override void OnMouseUp(MouseEventArgs e) {
-            Console.WriteLine("OnMouseUp");
+            //Console.WriteLine("OnMouseUp");
             base.OnMouseUp(e);
             if (cur_.State == CursorState.TextSelect) {
                 cur_.on_lbutton_down(e.X, e.Y, false);
@@ -651,8 +651,7 @@ namespace AsControls {
         protected override void OnMouseDown(MouseEventArgs e) {
             base.OnMouseDown(e);
 
-            Focus();
-
+            //Focus();
             if (e.Button == MouseButtons.Left) {
                 //VPos vp = new VPos();
                 //GetVPos(e.X, e.Y, ref vp, false);
@@ -673,7 +672,6 @@ namespace AsControls {
                 }
             }
         }
-
 
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
@@ -709,19 +707,26 @@ namespace AsControls {
                     return;
                 }
                 if (cur_.SelectMode == SelectType.Normal) { //TODO ERROR
-                    if (cur_.Cur < dpcur) {
-                        cur_.MoveText(cur_.Cur, dpcur, dpsel);
-                        cur_.Sel.Copy(cur_.Cur);
-                    } else {
-                        int curlen = doc_.tl(cur_.Cur.tl).Length;
-                        DPos dto = new DPos(cur_.Cur);
-                        VPos vto = new VPos(cur_.Cur);
-                        cur_.MoveText(dto, dpcur, dpsel);
-                        int curlen2 = doc_.tl(dto.tl).Length;
-                        vto.ad += (curlen2 - curlen);
-                        cur_.Cur.Copy(vto);
-                        cur_.Sel.Copy(cur_.Cur);
-                    }
+                    //if (cur_.Cur < dpcur) {
+                    //    cur_.MoveText(cur_.Cur, dpcur, dpsel);
+                    //    cur_.Sel.Copy(cur_.Cur);
+                    //} else {
+                    //    int curlen = doc_.tl(cur_.Cur.tl).Length;
+                    //    DPos dto = new DPos(cur_.Cur);
+                    //    VPos vto = new VPos(cur_.Cur);
+                    //    cur_.MoveText(dto, dpcur, dpsel);
+                    //    int curlen2 = doc_.tl(dto.tl).Length;
+                    //    vto.ad += (curlen2 - curlen);
+                    //    cur_.Cur.Copy(vto);
+                    //    cur_.Sel.Copy(cur_.Cur);
+                    //}
+                    var vp = new VPos();
+                    GetVPos(p.X, p.Y, ref vp, false);
+                    cur_.Cur.Copy(vp);
+                    cur_.MoveText(cur_.Cur, dpcur, dpsel);
+                    //cur_.on_lbutton_down(p.X, p.Y, false);
+                    //cur_.on_button_up(); //State = CursorState.None;
+
                 } else if (cur_.SelectMode == SelectType.Rectangle) {
                     //var vp1 = new VPos();
                     ///GetVPos(p.X, p.Y, ref vp1, false);
@@ -740,7 +745,9 @@ namespace AsControls {
                     cur_.Cur.Copy(vp);
                     cur_.Sel.Copy(cur_.Cur);
                 }
-                cur_.ResetPos();
+                //cur_.ResetPos();
+                cur_.SelectMode = SelectType.Normal;
+                cur_.State = CursorState.None;
             }
         }
 
@@ -754,13 +761,10 @@ namespace AsControls {
                 Point p = this.PointToClient(new Point(e.X, e.Y));
                 var vp = new VPos();
                 GetVPos(p.X, p.Y, ref vp, false);
-                cur_.Cur.Copy(vp);
-                //MoveCur(vp, false);
-                cur_.UpdateCaretPos();
-                //base.Invalidate();
-                //cur_.Sel.Copy(cur_.Cur);
-                //Point p = this.PointToClient(new Point(e.X, e.Y));
-                //cur_.MoveByMouse(p.X, p.Y, false);
+                //cur_.Cur.Copy(vp);
+                //cur_.UpdateCaretPos();
+
+                cur_.SetPos(vp);
             }
         }
 

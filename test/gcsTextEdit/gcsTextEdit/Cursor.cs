@@ -409,6 +409,20 @@ namespace AsControls
             return true;
         }
 
+        public void SetPos(VPos vp) {
+            int x = 0, y = 0;
+            view_.GetOrigin(ref x, ref y);
+            x += vp.vx;
+            y += vp.vl * view_.fnt().H();
+
+            // 行番号ゾーンにCaretがあっても困るので左に追いやる
+            if (0 < x && x < view_.left())
+                x = -view_.left();
+
+            // セット
+            caret_.SetPos(x, y);
+        }
+
         public void UpdateCaretPos() {
             int x=0, y=0;
             view_.GetOrigin(ref x, ref y);
@@ -695,13 +709,9 @@ namespace AsControls
             if (to < s1) {
                 cmds.Add(new Delete(s1, e1));
                 cmds.Add(new Insert(to, text));
-                //doc_.Execute(new Delete(s1, e1));
-                //doc_.Execute(new Insert(to, text));
             } else if (to > e1) {
                 cmds.Add(new Insert(to, text));
                 cmds.Add(new Delete(s1, e1));
-                //doc_.Execute(new Insert(to, text));
-                //doc_.Execute(new Delete(s1, e1));
             }
 
             doc_.Execute(cmds);
