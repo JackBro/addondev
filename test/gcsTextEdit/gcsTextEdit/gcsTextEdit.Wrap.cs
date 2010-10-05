@@ -360,6 +360,37 @@ namespace AsControls
 	        }
         }
 
+        public void CalcEveryLineWidth() {
+	        // 全ての行に対してCalcLineWidthを実行
+	        // …するだけ。
+	        for( int i=0, ie=doc_.tln(); i<ie; ++i )
+		        wrap_[i].width = CalcLineWidth( doc_.tl(i).ToString(), doc_.len(i) );
+        }
+
+        //
+        public int GetLastWidth(int tl) {
+            if (rln(tl) == 1)
+                return wrap_[tl][0];
+
+            int beg = rlend(tl, rln(tl) - 2);
+            string text = doc_.tl(tl).Substring(beg).ToString();
+            return CalcLineWidth(text, doc_.len(tl) - beg);
+        }
+
+        //
+        private int CalcLineWidth(string txt, int len) {
+            // 行を折り返さずに書いたときの横幅を計算する
+            // ほとんどの行が折り返し無しで表示されるテキストの場合、
+            // この値を計算しておくことで、処理の高速化が可能。
+            Painter p = cvs_.getPainter();
+            int w = 0;
+            for (int i = 0; i < len; ++i)
+                if (txt[i] == '\t')
+                    w = p.nextTab(w);
+                else
+                    w += p.W(txt[i]);
+            return w;
+        }
         //
         public void GetVPos(int x, int y, ref VPos vp, bool linemode) {
             // x座標補正

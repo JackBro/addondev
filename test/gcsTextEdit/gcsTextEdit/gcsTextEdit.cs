@@ -210,20 +210,12 @@ namespace AsControls {
                 base.Font = value;
                 fnt().Font = value;
                 fnt().init();
-                //cur_.on_killfocus();
-                //cur_.on_setfocus();
-                //this.Invalidate(false);
                 if (this.Visible && this.Width > 0 && this.Height > 0) {
-                    //cur_.ResetCaret();
-                    //int w = this.ClientSize.Width - vScrollBar.Width;
-                    //int h = this.ClientSize.Height - hScrollBar.Height;
-                    //if (w <= 0 || h <= 0) return;
-                    //DoResize(cvs_.on_view_resize(w, h));
-                    cvs_.on_config_change(Wrap, ShowLineNumber);
+                    cur_.on_setfocus();
+                    CalcEveryLineWidth(); // 行幅再計算
+                    //cvs_.on_config_change(Wrap, ShowLineNumber);
                     DoConfigChange();
-                } else {
                 }
-                //cur_.ResetPos();
             }
         }
 
@@ -242,6 +234,15 @@ namespace AsControls {
             }
             get {
                 return this.doc_.ToString();
+            }
+        }
+
+        public bool RectSelect {
+            get{
+                return cur_.SelectMode == SelectType.Rectangle ? false : true;
+            }
+            set {
+                cur_.SelectMode = value ? SelectType.Rectangle : SelectType.Normal;
             }
         }
 
@@ -538,30 +539,6 @@ namespace AsControls {
             vp.rl = rl;
             vp.rx = vp.vx = vx;
         }
-        //
-        public int GetLastWidth(int tl) {
-            if (rln(tl) == 1)
-                return wrap_[tl][0];
-
-            int beg = rlend(tl, rln(tl) - 2);
-            string text = doc_.tl(tl).Substring(beg).ToString();
-            return CalcLineWidth(text, doc_.len(tl) - beg);
-        }
-
-        //
-        private int CalcLineWidth(string txt, int len) {
-            // 行を折り返さずに書いたときの横幅を計算する
-            // ほとんどの行が折り返し無しで表示されるテキストの場合、
-            // この値を計算しておくことで、処理の高速化が可能。
-            Painter p = cvs_.getPainter();
-            int w = 0;
-            for (int i = 0; i < len; ++i)
-                if (txt[i] == '\t')
-                    w = p.nextTab(w);
-                else
-                    w += p.W(txt[i]);
-            return w;
-        }
 
         protected override void OnKeyPress(KeyPressEventArgs e) {
             base.OnKeyPress(e);
@@ -580,6 +557,9 @@ namespace AsControls {
 
         protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e) {
             base.OnPreviewKeyDown(e);
+            if (e.Modifiers == Keys.None) {
+
+            }
             KeyBind.getAction(e.Modifiers | e.KeyCode)(this);
         }
 
@@ -830,9 +810,6 @@ namespace AsControls {
 	        }
         }
 
-        public void RectSelectStart() {
-            cur_.SelectMode = SelectType.Rectangle;
-        }
 
         #region ITextEditor メンバ
 

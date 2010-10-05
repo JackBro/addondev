@@ -106,7 +106,6 @@ namespace AsControls.Parser {
         //    defaultAttr = new Attribute(Color.Black);
         //    //lex.AddDefaultElement(new TextElement(defaultAttr));
         //}
-
         public Block Parse(Line line, Block b, int _cmt) {
 
             tokentype = TokenType.TXT;

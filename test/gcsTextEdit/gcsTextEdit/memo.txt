@@ -1,4 +1,8 @@
-﻿http://ksugita.blog62.fc2.com/page-4.html
+﻿http://soudan1.biglobe.ne.jp/qa3551588.html
+http://d.hatena.ne.jp/Iori_Nishizawa/20100509/1273387113
+http://www.atmarkit.co.jp/flinux/rensai/osslc03/osslc03b.html
+
+http://ksugita.blog62.fc2.com/page-4.html
 
 
 ///////////
@@ -33,12 +37,14 @@ http://structurededitor.codeplex.com/
 http://azuki.sourceforge.jp/
 
 incremental search
-rect select inv draw
 parser interface
 refact
 token attr(bold, underline, ...)
-block token ex
+set block token limit
 CR LF CRLF
-rectmode cansel to component
+rectselmode cansel to component
 dirty flag event
+Font set reset numberline
+rect select inv draw
+
 

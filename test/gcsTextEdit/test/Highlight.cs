@@ -17,10 +17,10 @@ namespace test {
             var rules = new List<Rule>();
             rules.Add(new EncloseRule("[[", "]]", new AsControls.Parser.Attribute(Color.Red, AttrType.Image)));
             //rules.Add(new EncloseRule("\"", "\"", new AsControls.Parser.Attribute(Color.Brown), '\\'));
-            rules.Add(new MultiLineRule("/'", "'/", new AsControls.Parser.Attribute(Color.Blue)));
-            rules.Add(new MultiLineRule("/*", "*/", new AsControls.Parser.Attribute(Color.Red)));
+            rules.Add(new MultiLineRule("/'", "'/", new AsControls.Parser.Attribute(Color.LightBlue)));
+            rules.Add(new MultiLineRule("/*", "*/", new AsControls.Parser.Attribute(Color.DarkGreen)));
             rules.Add(new EncloseRule("\"", "\"", new AsControls.Parser.Attribute(Color.Brown), '\\'));
-            rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Green, AttrType.UnderLine | AttrType.Strike)));
+            //rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Green, AttrType.UnderLine | AttrType.Strike)));
             return rules;
         }
 

@@ -73,6 +73,7 @@ namespace AsControls.Parser {
         private Dictionary<String, Rule> keyWordRuleDic = new Dictionary<String, Rule>();
 
         private string ruleFirstKeys = string.Empty;
+        private string ruleEndKeys = string.Empty;
 
 
         public void AddRule(List<Rule> rules) {
@@ -90,6 +91,14 @@ namespace AsControls.Parser {
                 foreach (var item in ruleDic.Values) {
                     if (!ruleFirstKeys.Contains(item.start[0])) {
                         ruleFirstKeys += item.start[0];
+                    }
+                }
+                foreach (var item in ruleDic.Values) {
+                    MultiLineRule mrule = item as MultiLineRule;
+                    if (mrule !=null) {
+                        if (!ruleEndKeys.Contains(mrule.end[0])) {
+                            ruleEndKeys += mrule.end[0];
+                        }
                     }
                 }
             }
@@ -124,6 +133,8 @@ namespace AsControls.Parser {
 
         public Lexer() {
             reader = new LexerReader();
+            ruleFirstKeys = string.Empty;
+            ruleEndKeys = string.Empty;
         }
 
         public int Offset {
@@ -131,6 +142,7 @@ namespace AsControls.Parser {
                 return reader.offset();
             }
         }
+        //private int ss = 0;
 
         public bool advance(Block preblock, Block curblock) {
             //skipWhiteSpace();
@@ -186,23 +198,192 @@ namespace AsControls.Parser {
                         }
                     }
                     else { //1: 行頭がブロックコメントの内部
-                        if (Src.IndexOf(preblock.elem.end, Offset - 1) >= 0) {
 
-                            //var enelem = multiLineRuleDic[preblock.elem.start];
-                            var enelem = ruleDic[preblock.elem.start];
+                        //if (ruleEndKeys.Contains((char)c)) {
+                        //    //var r = ruleFirstKeys
+                        //    char fc = (char)c;
+                        //    foreach (var item in ruleDic) {
+                        //        MultiLineRule mrule = item.Value as MultiLineRule;
+                        //        if (mrule != null) {
+                        //            if (mrule.end[0] == fc) {
+                        //                var len = mrule.end.Length;
+                        //                if (Offset - 1 + len <= Src.Length) {
+                        //                    var text = Src.Substring(Offset - 1, len);
+                        //                    if (text.ToString() == mrule.end) {
+                        //                        if (ss == 1) {
+                        //                            mrule.startIndex = mf;
+                        //                            mrule.len = Offset -1 - mrule.startIndex + mrule.end.Length;
+                        //                            reader.setoffset(Offset + mrule.end.Length);
+                        //                        }
+                        //                        else {
+                        //                            //reader.setoffset(Offset + 1);
+                        //                            break;
+                        //                            mrule.startIndex = Offset - 1;
+                        //                            //mrule.startIndex = mf;
+                        //                            mrule.len = Offset + mrule.end.Length;
+                        //                            reader.setoffset(Offset + mrule.end.Length + 1);
+                        //                            //mrule.startIndex = 0;
+                        //                            //mrule.len = Offset + mrule.end.Length;
+                        //                            //reader.setoffset(Offset + mrule.end.Length);
+                        //                        }
+         
+                        //                        tok = mrule.token;
+                        //                        resultRule = mrule;
 
-                            int index = Src.IndexOf(preblock.elem.end, Offset - 1);
-                            reader.setoffset(index + preblock.elem.end.Length);
-                            enelem.startIndex = 0;
-                            enelem.len = index + preblock.elem.end.Length;
-                            tok = enelem.token;
-                            resultRule = enelem;
+                        //                        curblock.elem = preblock.elem;
 
-                            curblock.elem = preblock.elem;
+                        //                        isNextLine = false;
 
-                            isNextLine = false;
-                        }
-                        else if (Offset - 1 == 0) {
+                        //                        ss = 0;
+                        //                        break;
+                        //                    }
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+
+                        //}
+                        //else if (ruleFirstKeys.Contains((char)c)) {
+                        //    //var r = ruleFirstKeys
+                        //    char fc = (char)c;
+                        //    foreach (var item in ruleDic) {
+                        //        if (item.Key[0] == fc) {
+                        //            var len = item.Value.start.Length;
+                        //            if (Offset - 1 + len <= Src.Length) {
+                        //                var text = Src.Substring(Offset - 1, len);
+                        //                if (text.ToString() == item.Key) {
+                        //                    reader.unread();
+                        //                    lexSymbol(curblock);
+                        //                    break;
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                        //else if (Src.IndexOf(preblock.elem.end, Offset - 1) == -1) {
+                        //    var enelem = ruleDic[preblock.elem.start];
+
+                        //    reader.setoffset(Src.Length);
+                        //    enelem.startIndex = 0;
+                        //    enelem.len = Src.Length;
+                        //    tok = enelem.token;
+                        //    resultRule = enelem;
+
+                        //    curblock.elem = preblock.elem;
+                        //    isNextLine = true;
+                        //} 
+                        //else {
+                        //    if (Char.IsDigit((char)c)) {
+                        //        reader.unread();
+                        //        lexDigit();
+                        //    }
+                        //    //else if (Util.isIdentifierPart((char)c)) {
+                        //    //    reader.unread();
+                        //    //    lexKeyWord();
+                        //    //}
+                        //    else if (ruleFirstKeys.Contains((char)c)) {
+                        //        //reader.unread();
+                        //        //lexSymbol();
+                        //        char fc = (char)c;
+                        //        foreach (var item in ruleDic) {
+                        //            if (item.Key[0] == fc) {
+                        //                var len = item.Value.start.Length;
+                        //                if (Offset - 1 + len <= Src.Length) {
+                        //                    var text = Src.Substring(Offset - 1, len);
+                        //                    if (text.ToString() == item.Key) {
+                        //                        reader.unread();
+                        //                        lexSymbol(curblock);
+                        //                        break;
+                        //                    }
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //    else {
+                        //        tok = TokenType.TXT;
+                        //    }
+                        //}
+
+                        //int endindex = Src.IndexOf(preblock.elem.end, Offset - 1);
+                        //if (Src.IndexOf(preblock.elem.end, Offset - 1) >= 0) {
+                        //    //if (endindex >= 0
+                        //    //    && ((Src.IndexOf(preblock.elem.start, Offset - 1)==-1 )|| Src.IndexOf(preblock.elem.start, Offset - 1) > endindex)) {
+
+                        //    //var enelem = multiLineRuleDic[preblock.elem.start];
+                        //    var enelem = ruleDic[preblock.elem.start];
+
+                        //    int index = Src.IndexOf(preblock.elem.end, Offset - 1);
+                        //    reader.setoffset(index + preblock.elem.end.Length);
+                        //    enelem.startIndex = 0;
+                        //    enelem.len = index + preblock.elem.end.Length;
+                        //    tok = enelem.token;
+                        //    resultRule = enelem;
+
+                        //    curblock.elem = preblock.elem;
+
+                        //    isNextLine = false;
+
+                        //}
+                        //else 
+                            if (Offset - 1 == 0) {
+                            bool f = false;
+                            int findex = 0;
+                            bool e = false;
+                            int eindex = 0;
+                            string estr = string.Empty;
+                            foreach (var item in ruleDic) {
+                                MultiLineRule r = item.Value as MultiLineRule;
+                                if (r !=null) {
+                                    if (Src.IndexOf(r.end, 0) != -1) {
+                                        e = true;
+                                        if (eindex == 0 || eindex > Src.IndexOf(r.end, 0)) {
+                                            eindex = Src.IndexOf(r.end, 0);
+                                            estr = r.end;// Src.Substring(0, Src.Length - eindex).ToString();
+                                            //break;
+                                        }
+                                    }
+                                }
+                            }
+                            foreach (var item in ruleDic) {
+                                MultiLineRule r = item.Value as MultiLineRule;
+                                if (r != null) {
+                                    if (Src.IndexOf(r.start, 0) != -1) {
+                                        f = true;
+                                        findex = Src.IndexOf(r.start, 0);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (e) {
+                                string sstr = string.Empty;
+                                Rule Eenelem = null;
+                                foreach (var item in ruleDic) {
+                                    MultiLineRule r = item.Value as MultiLineRule;
+                                    if (r != null) {
+                                        if (r.end == estr) {
+                                            Eenelem = r;
+                                        }
+                                    }
+                                }
+                                if (Eenelem == null) break;
+                                //var Eenelem = ruleDic[preblock.elem.start];
+
+                                reader.setoffset(eindex + estr.Length);
+                                Eenelem.startIndex = 0;
+                                Eenelem.len =  (eindex + estr.Length);
+                                tok = Eenelem.token;
+                                resultRule = Eenelem;
+
+                                curblock.elem = preblock.elem;
+                                isNextLine = false;
+                                break;
+                            }
+
+                            if (f && findex > 0) {
+                                break;
+                            }
+
                             //var enelem = multiLineRuleDic[preblock.elem.start];
                             var enelem = ruleDic[preblock.elem.start];
 
@@ -315,7 +496,7 @@ namespace AsControls.Parser {
         private void lexSymbol() {
             lexSymbol(null);
         }
-
+        //private int mf = 0;
         private void lexSymbol(Block curblock) {
             StringBuilder buf = new StringBuilder();
             int offset = reader.offset() - 1;
@@ -326,6 +507,10 @@ namespace AsControls.Parser {
 
                     Rule rule = ruleDic[buf.ToString()];
                     if (rule.token == TokenType.MultiLine) {
+                        
+                        //ss = 1;
+                        //mf = offset;
+
                         int index = rule.exer(this);
                         if (index < 0) {
                             rule.startIndex = offset;

@@ -12,7 +12,7 @@ namespace test
 {
     public partial class Form1 : Form
     {
-        private Bitmap image = new Bitmap("test.png");
+        //private Bitmap image = new Bitmap("test.png");
         private AsControls.gcsTextEdit edit = new AsControls.gcsTextEdit();
         //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
         private AsControls.Search sr;
@@ -60,7 +60,7 @@ namespace test
             //};
             edit.MouseMove += (sender, e) => {
                 if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
-                    edit.RectSelectStart();
+                    edit.RectSelect = true;
                 }
             };
 
@@ -121,6 +121,10 @@ namespace test
 
             edit.KeyBind.setAction(Keys.Control | Keys.Y, (editor) => {
                 editor.Redo();
+            });
+
+            edit.KeyBind.setAction(Keys.Control | Keys.T, (editor) => {
+                edit.RectSelect = !edit.RectSelect;
             });
 
             //csedit.LinkClickEventHandler += (sender, e) => {
@@ -242,7 +246,11 @@ namespace test
             WrapOnToolStripMenuItem.Checked = true;
 
             edit.Text = @"\uD842\uDF9Fる
-1234567890abcdefg";
+/*
+1234567890abcdefg
+mmmmmmmmmmmmmmmmmmmm
+*/ 
+";
 
             panel1.Controls.Add(edit);
 

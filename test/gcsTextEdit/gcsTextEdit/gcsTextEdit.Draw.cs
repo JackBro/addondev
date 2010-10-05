@@ -244,7 +244,8 @@ namespace AsControls
         {
             var rc = new Rectangle(
                 Math.Max(left(), xb), y,
-                Math.Min(right(), xe), y + p.H() - 1);
+                //Math.Min(right(), xe), y + p.H() - 1);
+                Math.Min(right(), xe), y + p.H());
 	        p.Invert(g, rc );
         }
 
@@ -456,9 +457,12 @@ namespace AsControls
                     if (v.SYB <= a.top && a.top <= v.SYE) {
                         //TODO Rectangle
                         if (cur_.SelectMode == SelectType.Rectangle) {
-                            if (cur_.State == CursorState.MouseDown) {
-                                pp = this.PointToClient(System.Windows.Forms.Cursor.Position);
-                            }
+                            //if (cur_.State == CursorState.MouseDown) {
+                            //    pp = this.PointToClient(System.Windows.Forms.Cursor.Position);
+                            //}
+                            //else {
+                                pp.X = cur_.Cur.vx + v.XBASE;
+                            //}
                             //if (cur_.Cur.tl == tl && rln(tl) - 1 == rl) {
                             if (cur_.Cur.tl == tl && cur_.Cur.rl == rl) {
                                 ////Inv(g, a.top, v.SXB ,
