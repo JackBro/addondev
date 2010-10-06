@@ -59,17 +59,18 @@ namespace test
             //        edit.SelectMode = AsControls.SelectType.Rectangle;
             //    }
             //};
-            edit.MouseMove += (sender, e) => {
-                if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
-                    edit.RectSelect = true;
-                }
-            };
+            //edit.MouseMove += (sender, e) => {
+            //    if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
+            //        edit.RectSelect = true;
+            //    }
+            //};
 
-            edit.MouseDown += (sender, e) => {
-                if (e.Button == MouseButtons.Left) {
-                    edit.cursor.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
-                }
-            };
+            //edit.MouseDown += (sender, e) => {
+            //    if (e.Button == MouseButtons.Left && ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)) {
+            //        //edit.cursor.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
+            //        edit.sel(e.X, e.Y);
+            //    }
+            //};
 
             //
             edit.KeyBind.setAction(Keys.Back, (editor) => {
@@ -252,11 +253,10 @@ namespace test
             edit.Wrap = AsControls.WrapType.WindowWidth;
             WrapOnToolStripMenuItem.Checked = true;
 
-            edit.Text = @"\uD842\uDF9Fる
-/*
+            edit.Text = @"/*
 1234567890abcdefg
-mmmmmmmmmmmmmmmmmmmm
-*/ 
+*/ /'dddd'/ /*sss
+ssssss
 ";
 
             panel1.Controls.Add(edit);

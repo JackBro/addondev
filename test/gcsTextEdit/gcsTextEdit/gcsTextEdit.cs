@@ -237,6 +237,12 @@ namespace AsControls {
             }
         }
 
+        [DefaultValue(Keys.Alt)]
+        public Keys MouseRectSelectKey { get; set; }
+
+        [DefaultValue(Keys.Shift)]
+        public Keys MouseNormalSelectKey { get; set; }
+
         //
         private Canvas cvs_;
 
@@ -345,6 +351,8 @@ namespace AsControls {
             };
 
             KeyBind = new KeyMap();
+            MouseNormalSelectKey = Keys.Shift;
+            MouseRectSelectKey = Keys.Alt;
 
             doc_ = new Document();
             doc_.setHighlight(new Highlight(this.ForeColor));
@@ -529,6 +537,10 @@ namespace AsControls {
             vp.rx = vp.vx = vx;
         }
 
+        public void sel(int x, int y) {
+            cur_.on_lbutton_down(x, y, true);
+        }
+
         protected override void OnKeyPress(KeyPressEventArgs e) {
             base.OnKeyPress(e);
             if (e.Handled) {
@@ -613,11 +625,11 @@ namespace AsControls {
         protected override void OnMouseDoubleClick(MouseEventArgs e) {
             base.OnMouseDoubleClick(e);
             //if (cur_.State == CursorState.TextSelect) {
-                //cur_.on_lbutton_down(e.X, e.Y, false);
-                cur_.Selection = SelectionType.Normal;
-                cur_.State = StateType.None;
+            //    //cur_.on_lbutton_down(e.X, e.Y, false);
+                //cur_.Selection = SelectionType.Normal;
+                //cur_.State = StateType.None;
             //}
-            cur_.on_button_up();
+            //cur_.on_button_up();
             cur_.on_mouse_db_click(e.X, e.Y);
         }
 
@@ -652,15 +664,19 @@ namespace AsControls {
         bool orgAllowDrop;
         protected override void OnMouseDown(MouseEventArgs e) {
 
-            if (e.Button == MouseButtons.Left && cur_.ContainSelect(e.X, e.Y, cur_.Cur, cur_.Sel)) {
-                //cur_.State = StateType.TextSelect;
-                cur_.mouse_down(e);
-                orgAllowDrop = this.AllowDrop;
-                this.AllowDrop = true;
-            }
-            else {
-                base.OnMouseDown(e);
-            }
+            //if (e.Button == MouseButtons.Left && cur_.ContainSelect(e.X, e.Y, cur_.Cur, cur_.Sel)) {
+            //    //cur_.State = StateType.TextSelect;
+            //    cur_.mouse_down(e);
+            //    orgAllowDrop = this.AllowDrop;
+            //    this.AllowDrop = true;
+            //}
+            //else {
+            //    base.OnMouseDown(e);
+            //}
+
+            base.OnMouseDown(e);
+            cur_.mouse_down(e);
+
 
             ////Focus();
             //if (e.Button == MouseButtons.Left) {

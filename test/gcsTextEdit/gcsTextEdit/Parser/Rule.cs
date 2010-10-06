@@ -188,4 +188,24 @@ namespace AsControls.Parser {
             return lex.reader.offset();
         }
     }
+
+    public class KeywordRules : Rule {
+        private string[] words;
+        public KeywordRules(string[] start, Attribute attr) {
+            this.words = start;
+            this.attr = attr;
+            token = TokenType.Keyword;
+        }
+        public List<KeywordRule> Rules() {
+            List<KeywordRule> list = new List<KeywordRule>();
+            foreach (var item in words) {
+                list.Add(new KeywordRule(item, attr));
+            }
+            return list;
+        }
+
+        public override int exer(Lexer lex) {
+            return lex.reader.offset();
+        }
+    }
 }

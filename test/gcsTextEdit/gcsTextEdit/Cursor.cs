@@ -300,141 +300,6 @@ namespace AsControls
             //};
         }
 
-        public void mouse_down(MouseEventArgs e) {
-            switch (State) {
-                case StateType.None:
-                    if (e.Button == MouseButtons.Left){
-                        if (ContainSelect(e.X, e.Y, Cur, Sel)) {
-                            this.State = StateType.TextGrab;
-                        }
-                        else {
-
-                        }
-                    }
-                    break;
-                case StateType.TextSelect:
-                    break;
-                case StateType.TextGrab:
-                    break;
-                case StateType.TextMove:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void mouse_up(MouseEventArgs e) {
-            switch (State) {
-                case StateType.None:
-                    break;
-                case StateType.TextSelect:
-                    break;
-                case StateType.TextGrab:
-                    
-                    this.State = StateType.None;
-                    on_lbutton_down(e.X, e.Y, false);
-                    Selection = SelectionType.Normal;
-                    State = StateType.None;
-                    break;
-                case StateType.TextMove:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void mouse_move(MouseEventArgs e) {
-            switch (State) {
-                case StateType.None:
-                    if (e.Button == MouseButtons.Left) {
-                        MoveByMouse(e.X, e.Y);
-                    }
-                    break;
-                case StateType.TextSelect:
-                    break;
-                case StateType.TextGrab:
-                    this.State = StateType.TextMove;
-                    var text = getRangesText(Cur, Sel);
-                    view_.DoDragDrop(text, DragDropEffects.Move);
-                    break;
-                case StateType.TextMove:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
-        public void DragOver(DragEventArgs e) {
-            switch (State) {
-                case StateType.None:
-                    break;
-                case StateType.TextSelect:
-                    break;
-                case StateType.TextGrab:
-                    break;
-                case StateType.TextMove:
-                    Point p = view_.PointToClient(new Point(e.X, e.Y));
-                    var vp = new VPos();
-                    view_.GetVPos(p.X, p.Y, ref vp, false);
-                    SetPos(vp);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void DragDrop(DragEventArgs e) {
-            switch (State) {
-                case StateType.None:
-                    break;
-                case StateType.TextSelect:
-                    break;
-                case StateType.TextGrab:
-                    break;
-                case StateType.TextMove:
-                    Point p = view_.PointToClient(new Point(e.X, e.Y));
-                    if (ContainSelect(p.X, p.Y, Cur, Sel)) {
-
-                        //cur_.Cur.Copy(vpcur);                  
-                        on_lbutton_down(p.X, p.Y, false);
-                        on_button_up();
-                        return;
-                    }
-                    if (Selection == SelectionType.Normal) {
-                        var vp = new VPos();
-                        view_.GetVPos(p.X, p.Y, ref vp, false);
-                        //cur_.Cur.Copy(vp);
-                        MoveText(vp, Cur, Sel);
-
-                        //cur_.on_lbutton_down(p.X, p.Y, false);
-                        //cur_.on_button_up(); //State = CursorState.None;
-
-                    }
-                    else if (Selection == SelectionType.Rectangle) {
-                        //var vp1 = new VPos();
-                        ///GetVPos(p.X, p.Y, ref vp1, false);
-                        //cur_.Cur.Copy(vp1);
-
-                        //VPos vp = new VPos(cur_.Cur);
-                        string text = e.Data.GetData(DataFormats.Text) as string;
-                        //var text = getRangesText(Cur, Sel);
-                        DelRectangle(Cur, Sel);
-                        List<string> lines = text.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList<string>();
-
-                        var vp = new VPos();
-                        view_.GetVPos(p.X, p.Y, ref vp, false);
-                        Cur.Copy(vp);
-                        RectangleInsert(Cur, Cur, lines);
-                    }
-                    Selection = SelectionType.Normal;
-                    State = StateType.None;
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public void MoveCur(DPos dp, bool select) {
             VPos vp = new VPos();
             view_.ConvDPosToVPos(dp, ref vp);
@@ -907,9 +772,193 @@ namespace AsControls
 	        caret_.Show();
         }
 
-        public void on_lbutton_down(int x, int y, bool shift)
+        //mouse
+        public void mouse_down(MouseEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    if (e.Button == MouseButtons.Left) {
+                        if ((Control.ModifierKeys & view_.MouseNormalSelectKey) == view_.MouseNormalSelectKey) {                          
+                            //Selection = SelectionType.Normal;
+                            on_lbutton_down(e.X, e.Y, true);
+                            State = StateType.TextSelect;
+                        } else if ((Control.ModifierKeys & view_.MouseRectSelectKey) == view_.MouseRectSelectKey) {
+                            //Selection = SelectionType.Rectangle;
+                            on_lbutton_down(e.X, e.Y, true);
+                            State = StateType.TextSelect;
+                        } else {
+                            on_lbutton_down(e.X, e.Y, false);
+                        }
+                    }
+                    break;
+                case StateType.TextSelect:
+                    if (e.Button == MouseButtons.Left) {
+                        if (ContainSelect(e.X, e.Y, Cur, Sel)) {
+                            this.State = StateType.TextGrab;
+                        } else {
+                            on_lbutton_down(e.X, e.Y, false);
+                            Selection = SelectionType.Normal;
+                            State = StateType.None;
+                        }
+                    }
+                    break;
+                case StateType.TextGrab:
+                case StateType.TextMove:
+                    on_lbutton_down(e.X, e.Y, false);
+                    Selection = SelectionType.Normal;
+                    State = StateType.None;
+                    break;
+                //case StateType.TextMove:
+                //    break;
+                default:
+                    break;
+            }
+        }
+
+        public void mouse_up(MouseEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    break;
+                case StateType.TextSelect:
+                    //State = StateType.None;
+                    //Selection = SelectionType.Normal;
+                    //on_lbutton_down(e.X, e.Y, false);
+                    break;
+                case StateType.TextGrab:
+                    on_lbutton_down(e.X, e.Y, false);
+                    Selection = SelectionType.Normal;
+                    State = StateType.None;
+                    break;
+                case StateType.TextMove:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void mouse_double_click(MouseEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    break;
+                case StateType.TextSelect:
+                    break;
+                case StateType.TextGrab:
+                    break;
+                case StateType.TextMove:
+                    break;
+                default:
+                    break;
+            }
+            Selection = SelectionType.Normal;
+            State = StateType.None;
+            on_mouse_db_click(e.X, e.Y);
+        }
+
+        public void mouse_move(MouseEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                case StateType.TextSelect:
+                    //if (e.Button == MouseButtons.Left) {
+                    //    MoveByMouse(e.X, e.Y);
+                    //}
+                    if (e.Button == MouseButtons.Left) {
+                        //if ((Control.ModifierKeys & view_.MouseNormalSelectKey) == view_.MouseNormalSelectKey) {
+                        //    Selection = SelectionType.Normal;
+                        //    State = StateType.TextSelect;
+                        //    MoveByMouse(e.X, e.Y);
+                        //} else 
+                        if ((Control.ModifierKeys & view_.MouseRectSelectKey) == view_.MouseRectSelectKey) {
+                            Selection = SelectionType.Rectangle;
+                            State = StateType.TextSelect;
+                            MoveByMouse(e.X, e.Y);
+                        } else {
+                            Selection = SelectionType.Normal;
+                            State = StateType.TextSelect;
+                            MoveByMouse(e.X, e.Y);
+                        }
+                    }
+                    break;
+                //case StateType.TextSelect:
+                //    break;
+                case StateType.TextGrab:
+                    this.State = StateType.TextMove;
+                    var text = getRangesText(Cur, Sel);
+                    view_.DoDragDrop(text, DragDropEffects.Move);
+                    break;
+                case StateType.TextMove:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void DragOver(DragEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    break;
+                case StateType.TextSelect:
+                    break;
+                case StateType.TextGrab:
+                    break;
+                case StateType.TextMove:
+                    Point p = view_.PointToClient(new Point(e.X, e.Y));
+                    var vp = new VPos();
+                    view_.GetVPos(p.X, p.Y, ref vp, false);
+                    SetPos(vp);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void DragDrop(DragEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    break;
+                case StateType.TextSelect:
+                    break;
+                case StateType.TextGrab:
+                    break;
+                case StateType.TextMove:
+                    Point p = view_.PointToClient(new Point(e.X, e.Y));
+                    if (ContainSelect(p.X, p.Y, Cur, Sel)) {
+                        on_lbutton_down(p.X, p.Y, false);
+                        return;
+                    }
+                    if (Selection == SelectionType.Normal) {
+                        var vp = new VPos();
+                        view_.GetVPos(p.X, p.Y, ref vp, false);
+                        //cur_.Cur.Copy(vp);
+                        MoveText(vp, Cur, Sel);
+
+                        //cur_.on_lbutton_down(p.X, p.Y, false);
+                        //cur_.on_button_up(); //State = CursorState.None;
+
+                    } else if (Selection == SelectionType.Rectangle) {
+                        //var vp1 = new VPos();
+                        ///GetVPos(p.X, p.Y, ref vp1, false);
+                        //cur_.Cur.Copy(vp1);
+
+                        //VPos vp = new VPos(cur_.Cur);
+                        string text = e.Data.GetData(DataFormats.Text) as string;
+                        //var text = getRangesText(Cur, Sel);
+                        DelRectangle(Cur, Sel);
+                        List<string> lines = text.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList<string>();
+
+                        var vp = new VPos();
+                        view_.GetVPos(p.X, p.Y, ref vp, false);
+                        Cur.Copy(vp);
+                        RectangleInsert(Cur, Cur, lines);
+                    }
+                    Selection = SelectionType.Normal;
+                    State = StateType.None;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        internal void on_lbutton_down(int x, int y, bool shift)
         {
-            //State = StateType.MouseDown;
 	        if( !shift )
 	        {
 		        // これまでの選択範囲をクリア
@@ -935,13 +984,6 @@ namespace AsControls
 	        //// マウス位置の追跡開始
 	        //timerID_ = ::SetTimer( caret_->hwnd(), 178116, keyRepTime_, NULL );
 	        //::SetCapture( caret_->hwnd() );
-        }
-
-        internal void on_button_up() {
-            //if (SelectMode == SelectType.TextSelect) {
-             //   SelectMode = SelectType.Normal;
-            //}
-            State = StateType.None;
         }
 
         internal void on_mouse_db_click(int x, int y) {
@@ -1324,9 +1366,12 @@ namespace AsControls
 
             int sxb = s.vx+view_.lna();
             int syb = 0;
-            if (s == e)
-                syb = caret_.GetPos().Y;// + H;
-            else {
+            if (s == e) {
+                //syb = caret_.GetPos().Y;// + H;
+                int dummyx = 0;
+                view_.GetOrigin(ref dummyx, ref syb);
+                syb += s.vl * view_.fnt().H();
+            } else {
                 syb = view_.VRect.SYB;
             }
  

@@ -248,7 +248,6 @@ namespace AsControls {
             tabPt[3].Y = Y + h - 4; 
 
             g.DrawLines(specialCharPen, tabPt);
-            //g.DrawRectangle(specialCharPen, X + 2, Y + 2, w - 4, H() - 4);
         }
 
         private Point[] returnPt1 = { new Point(), new Point() };

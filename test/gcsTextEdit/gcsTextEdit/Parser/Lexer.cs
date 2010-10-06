@@ -90,7 +90,16 @@ namespace AsControls.Parser {
                 if((rule as MultiLineRule)!=null){
                     multiruleDic.Add(((MultiLineRule)rule).end, (MultiLineRule)rule);
                 }
-                ruleDic.Add(rule.start, rule);
+
+                if ((rule as KeywordRules) != null) {
+                    KeywordRules ks = rule as KeywordRules;
+                    var rules = ks.Rules();
+                    foreach (var item in rules) {
+                        ruleDic.Add(item.start, item);
+                    }
+                } else {
+                    ruleDic.Add(rule.start, rule);
+                }
 
 
                 foreach (var item in ruleDic.Values) {

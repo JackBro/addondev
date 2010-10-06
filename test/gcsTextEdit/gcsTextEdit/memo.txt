@@ -49,10 +49,12 @@ parser interface
 refact
 token attr(bold, underline, ...)
 set block token limit
+keyword token
 CR LF CRLF
 rectselmode cansel to component
 dirty flag event
 Font set reset numberline
 rect select inv draw
+search word Highlight
 
 

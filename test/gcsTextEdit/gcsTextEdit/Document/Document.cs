@@ -159,6 +159,7 @@ namespace AsControls {
             int cmt = text_[s].Block.isLineHeadCmt;
             Block block = text_[s].Block;
             if (s > 0) {
+                //cmt = text_[s-1].Block.isLineHeadCmt;
                 block = text_[s-1].Block;
             }
             //block.elem = null;
@@ -170,7 +171,8 @@ namespace AsControls {
             }
 
             // コメントアウト状態に変化がなかったらここでお終い。
-            if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
+            //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
+            if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem))
                 return false;
 
             int pcmt = 0;
