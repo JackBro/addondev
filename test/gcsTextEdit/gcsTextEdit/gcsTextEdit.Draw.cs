@@ -456,7 +456,7 @@ namespace AsControls
                     //                a.top==v.SYE?v.SXE:(v.XBASE+x), p );
                     if (v.SYB <= a.top && a.top <= v.SYE) {
                         //TODO Rectangle
-                        if (cur_.SelectMode == SelectType.Rectangle) {
+                        if (cur_.Selection == SelectionType.Rectangle) {
                             //if (cur_.State == CursorState.MouseDown) {
                             //    pp = this.PointToClient(System.Windows.Forms.Cursor.Position);
                             //}
@@ -540,7 +540,7 @@ namespace AsControls
                     if (ShowReturn && tl != TLM) {
                         p.DrawReturn(g, x + v.XBASE, a.top - H);
                     }
-                    if (cur_.SelectMode == SelectType.Normal && v.SYB < a.top && a.top <= v.SYE && ShowReturn)
+                    if (cur_.Selection == SelectionType.Normal && v.SYB < a.top && a.top <= v.SYE && ShowReturn)
                         Inv(g, a.top - H, x + v.XBASE, x + v.XBASE + p.W(), p);
                 }
             }

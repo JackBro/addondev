@@ -38,6 +38,8 @@ namespace AsControls
         }
 
         public void Invoke(List<ICommand> commands) {
+            if (commands.Count == 0) return;
+
             if (undostack.Count > MaxSize) {
                 undostack.Pop();
             }

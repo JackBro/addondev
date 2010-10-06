@@ -14,7 +14,15 @@ http://ksugita.blog62.fc2.com/page-4.html
     (add-hook 'e2wm:post-stop-hook 'e2wm:fix-widen-window-post-stop))
   )
 ///////////
+/*
+abcdefg
+*/ /*ssss*//'dd
+d'/
 
+/*
+abcdefg
+*/ /*ssss*//dd
+d'/
 
 http://d.hatena.ne.jp/rubikitch/?of=60
 http://d.hatena.ne.jp/kiwanami/

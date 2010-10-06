@@ -139,10 +139,14 @@ namespace AsControls {
         //    font_ = NULL; // 先にデストラクタを呼ばねばならない…
         //                  // ってうわー格好悪ぃーーー(T_T)
         //    font_ = new Painter( dc, vc );
-
         //    CalcLNAreaWidth();
         //    CalcWrapWidth();
         //}
+
+        public void on_font_change(){
+            CalcLNAreaWidth();
+            CalcWrapWidth();
+        }
 
         public void on_config_change(WrapType wrap, bool showln) {
 	        showLN = showln;

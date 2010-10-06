@@ -211,9 +211,9 @@ namespace AsControls {
                 fnt().Font = value;
                 fnt().init();
                 if (this.Visible && this.Width > 0 && this.Height > 0) {
+                    cvs_.on_font_change();
                     cur_.on_setfocus();
                     CalcEveryLineWidth(); // 行幅再計算
-                    //cvs_.on_config_change(Wrap, ShowLineNumber);
                     DoConfigChange();
                 }
             }
@@ -221,15 +221,6 @@ namespace AsControls {
 
         public new string Text {
             set {
-                //this.doc_.Clear();
-                //Initialize();
-                //wrap_ = new List<WLine>();
-                // 適当に折り返し情報初期化
-                //InsertMulti(0, doc_.tln() - 1);
-                //udScr_tl_ = 0;
-                //udScr_vrl_ = 0;
-                //ReSetScrollInfo();
-
                 cur_.Input(value);
             }
             get {
@@ -239,10 +230,10 @@ namespace AsControls {
 
         public bool RectSelect {
             get{
-                return cur_.SelectMode == SelectType.Rectangle ? false : true;
+                return cur_.Selection == SelectionType.Rectangle ? false : true;
             }
             set {
-                cur_.SelectMode = value ? SelectType.Rectangle : SelectType.Normal;
+                cur_.Selection = value ? SelectionType.Rectangle : SelectionType.Normal;
             }
         }
 
@@ -474,8 +465,6 @@ namespace AsControls {
 
         //
         public void GetOrigin(ref int x, ref int y) {
-            //x = vRect.NumLineLeft - hScrollBar.Value;
-            //y = -vScrollBar.Value * lineHeight;
             x = left() - hScrollBar.Value;
             y = -vScrollBar.Value * cvs_.getPainter().H();
         }
@@ -610,12 +599,23 @@ namespace AsControls {
             return !char.IsControl(charCode);
         }
 
+
+        protected override void OnMouseEnter(EventArgs e) {
+            base.OnMouseEnter(e);
+            this.Cursor = Cursors.IBeam;
+        }
+
+        protected override void OnMouseLeave(EventArgs e) {
+            base.OnMouseLeave(e);
+            this.Cursor = Cursors.Default;
+        }
+
         protected override void OnMouseDoubleClick(MouseEventArgs e) {
             base.OnMouseDoubleClick(e);
             //if (cur_.State == CursorState.TextSelect) {
                 //cur_.on_lbutton_down(e.X, e.Y, false);
-                cur_.SelectMode = SelectType.Normal;
-                cur_.State = CursorState.None;
+                cur_.Selection = SelectionType.Normal;
+                cur_.State = StateType.None;
             //}
             cur_.on_button_up();
             cur_.on_mouse_db_click(e.X, e.Y);
@@ -636,119 +636,67 @@ namespace AsControls {
         protected override void OnMouseUp(MouseEventArgs e) {
             //Console.WriteLine("OnMouseUp");
             base.OnMouseUp(e);
-            if (cur_.State == CursorState.TextSelect) {
-                cur_.on_lbutton_down(e.X, e.Y, false);
-                cur_.SelectMode = SelectType.Normal;
-                cur_.State = CursorState.None;
-            }
-            cur_.on_button_up(); //State = CursorState.None;
+            //if (cur_.State == StateType.TextSelect) {
+            //    cur_.on_lbutton_down(e.X, e.Y, false);
+            //    cur_.Selection = SelectionType.Normal;
+            //    cur_.State = StateType.None;
+            //}
+            //cur_.on_button_up(); //State = CursorState.None;
+            cur_.mouse_up(e);
         }
 
-        VPos vpcur = new VPos();
-        VPos vpsel = new VPos();
-        DPos dpcur = new DPos();
-        DPos dpsel = new DPos();
+        //VPos vpcur = new VPos();
+        //VPos vpsel = new VPos();
+        //DPos dpcur = new DPos();
+        //DPos dpsel = new DPos();
+        bool orgAllowDrop;
         protected override void OnMouseDown(MouseEventArgs e) {
-            base.OnMouseDown(e);
 
-            //Focus();
-            if (e.Button == MouseButtons.Left) {
-                //VPos vp = new VPos();
-                //GetVPos(e.X, e.Y, ref vp, false);
-                //if (cur_.Cur.vx < vp.vx && vp.vx < cur_.Sel.vx) {
-                if (cur_.ContainSelect(e.X, e.Y, cur_.Cur, cur_.Sel)) {
-                    vpcur.Copy(cur_.Cur);
-                    vpsel.Copy(cur_.Sel);
-                    dpcur.tl = cur_.Cur.tl;
-                    dpcur.ad = cur_.Cur.ad;
-                    dpsel.tl = cur_.Sel.tl;
-                    dpsel.ad = cur_.Sel.ad;
-                    cur_.State = CursorState.TextSelect;
-                    this.AllowDrop = true;
-                } else {
-                    cur_.SelectMode = SelectType.Normal;
-                    cur_.State = CursorState.None;
-                    cur_.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
-                }
+            if (e.Button == MouseButtons.Left && cur_.ContainSelect(e.X, e.Y, cur_.Cur, cur_.Sel)) {
+                //cur_.State = StateType.TextSelect;
+                cur_.mouse_down(e);
+                orgAllowDrop = this.AllowDrop;
+                this.AllowDrop = true;
             }
+            else {
+                base.OnMouseDown(e);
+            }
+
+            ////Focus();
+            //if (e.Button == MouseButtons.Left) {
+            //    //VPos vp = new VPos();
+            //    //GetVPos(e.X, e.Y, ref vp, false);
+            //    //if (cur_.Cur.vx < vp.vx && vp.vx < cur_.Sel.vx) {
+            //    if (cur_.ContainSelect(e.X, e.Y, cur_.Cur, cur_.Sel)) {
+            //        //vpcur.Copy(cur_.Cur);
+            //        //vpsel.Copy(cur_.Sel);
+            //        //dpcur.tl = cur_.Cur.tl;
+            //        //dpcur.ad = cur_.Cur.ad;
+            //        //dpsel.tl = cur_.Sel.tl;
+            //        //dpsel.ad = cur_.Sel.ad;
+            //        cur_.State = CursorState.TextSelect;
+            //        this.AllowDrop = true;
+            //    }
+            //    //else {
+            //    //    cur_.SelectMode = SelectType.Normal;
+            //    //    cur_.State = CursorState.None;
+            //    //    cur_.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
+            //    //}
+            //}
         }
 
         protected override void OnMouseMove(MouseEventArgs e) {
             base.OnMouseMove(e);
-            if (cur_.State == CursorState.MouseDown) {
-                cur_.MoveByMouse(e.X, e.Y);
-            }else if(cur_.State == CursorState.TextSelect){
-                cur_.State = CursorState.TextMove;
-                var text = cur_.getRangesText(vpcur, vpsel);
-                DoDragDrop(text, DragDropEffects.Move);
-                
-            }
-        }
-
-        protected override void OnMouseEnter(EventArgs e) {
-            base.OnMouseEnter(e);
-            this.Cursor = Cursors.IBeam;  
-        }
-
-        protected override void OnMouseLeave(EventArgs e) {
-            base.OnMouseLeave(e);
-            this.Cursor = Cursors.Default;
-        }        
-
-        protected override void OnDragDrop(DragEventArgs e) {
-            base.OnDragDrop(e);
-            if (cur_.State == CursorState.TextMove) {
-                Point p = this.PointToClient(new Point(e.X, e.Y));
-                if (cur_.ContainSelect(p.X, p.Y, dpcur, dpsel)) {
-
-                    cur_.Cur.Copy(vpcur);                  
-                    cur_.on_lbutton_down(p.X, p.Y, false);
-                    cur_.on_button_up();
-                    return;
-                }
-                if (cur_.SelectMode == SelectType.Normal) { //TODO ERROR
-                    //if (cur_.Cur < dpcur) {
-                    //    cur_.MoveText(cur_.Cur, dpcur, dpsel);
-                    //    cur_.Sel.Copy(cur_.Cur);
-                    //} else {
-                    //    int curlen = doc_.tl(cur_.Cur.tl).Length;
-                    //    DPos dto = new DPos(cur_.Cur);
-                    //    VPos vto = new VPos(cur_.Cur);
-                    //    cur_.MoveText(dto, dpcur, dpsel);
-                    //    int curlen2 = doc_.tl(dto.tl).Length;
-                    //    vto.ad += (curlen2 - curlen);
-                    //    cur_.Cur.Copy(vto);
-                    //    cur_.Sel.Copy(cur_.Cur);
-                    //}
-                    var vp = new VPos();
-                    GetVPos(p.X, p.Y, ref vp, false);
-                    cur_.Cur.Copy(vp);
-                    cur_.MoveText(cur_.Cur, dpcur, dpsel);
-                    //cur_.on_lbutton_down(p.X, p.Y, false);
-                    //cur_.on_button_up(); //State = CursorState.None;
-
-                } else if (cur_.SelectMode == SelectType.Rectangle) {
-                    //var vp1 = new VPos();
-                    ///GetVPos(p.X, p.Y, ref vp1, false);
-                    //cur_.Cur.Copy(vp1);
-
-                    VPos vp = new VPos(cur_.Cur);
-                    var text = cur_.getRangesText(vpcur, vpsel);
-                    cur_.DelRectangle(vpcur, vpsel);
-                    List<string> lines = text.Split(new string[]{"\r\n"}, StringSplitOptions.None).ToList<string>();
-
-                    VPos instvp = new VPos(cur_.Cur);
-                    cur_.Cur.Copy(vp);
-                    cur_.UpdateCaretPos();
-                    //cur_.Sel.Copy(cur_.Cur);
-                    cur_.RectangleInsert(cur_.Cur, cur_.Cur, lines);
-                    cur_.Cur.Copy(vp);
-                    cur_.Sel.Copy(cur_.Cur);
-                }
-                //cur_.ResetPos();
-                cur_.SelectMode = SelectType.Normal;
-                cur_.State = CursorState.None;
-            }
+            //if (cur_.State == StateType.MouseDown) {
+            //if (e.Button == MouseButtons.Left) {
+            //    cur_.MoveByMouse(e.X, e.Y);
+            //}
+            //else if(cur_.State == StateType.TextSelect){
+            //    cur_.State = StateType.TextMove;
+            //    var text = cur_.getRangesText(cur_.Cur, cur_.Sel);
+            //    DoDragDrop(text, DragDropEffects.Move);
+            //}
+            cur_.mouse_move(e);
         }
 
         protected override void OnDragOver(DragEventArgs e) {
@@ -756,17 +704,82 @@ namespace AsControls {
 
             if (!Focused)
                 Focus();
-            
-            if (cur_.State == CursorState.TextMove) {
-                Point p = this.PointToClient(new Point(e.X, e.Y));
-                var vp = new VPos();
-                GetVPos(p.X, p.Y, ref vp, false);
-                //cur_.Cur.Copy(vp);
-                //cur_.UpdateCaretPos();
 
-                cur_.SetPos(vp);
-            }
+            //if (cur_.State == StateType.TextMove) {
+            //    Point p = this.PointToClient(new Point(e.X, e.Y));
+            //    var vp = new VPos();
+            //    GetVPos(p.X, p.Y, ref vp, false);
+            //    //cur_.Cur.Copy(vp);
+            //    //cur_.UpdateCaretPos();
+            //    cur_.SetPos(vp);
+            //}
+            cur_.DragOver(e);
         }
+
+        protected override void OnDragDrop(DragEventArgs e) {
+            base.OnDragDrop(e);
+
+            cur_.DragDrop(e);
+            //if (cur_.State == StateType.TextMove) {
+            //    Point p = this.PointToClient(new Point(e.X, e.Y));
+            //    if (cur_.ContainSelect(p.X, p.Y, cur_.Cur, cur_.Sel)) {
+
+            //        //cur_.Cur.Copy(vpcur);                  
+            //        cur_.on_lbutton_down(p.X, p.Y, false);
+            //        cur_.on_button_up();
+            //        return;
+            //    }
+            //    if (cur_.Selection == SelectionType.Normal) { //TODO ERROR
+            //        //if (cur_.Cur < dpcur) {
+            //        //    cur_.MoveText(cur_.Cur, dpcur, dpsel);
+            //        //    cur_.Sel.Copy(cur_.Cur);
+            //        //} else {
+            //        //    int curlen = doc_.tl(cur_.Cur.tl).Length;
+            //        //    DPos dto = new DPos(cur_.Cur);
+            //        //    VPos vto = new VPos(cur_.Cur);
+            //        //    cur_.MoveText(dto, dpcur, dpsel);
+            //        //    int curlen2 = doc_.tl(dto.tl).Length;
+            //        //    vto.ad += (curlen2 - curlen);
+            //        //    cur_.Cur.Copy(vto);
+            //        //    cur_.Sel.Copy(cur_.Cur);
+            //        //}
+            //        var vp = new VPos();
+            //        GetVPos(p.X, p.Y, ref vp, false);
+            //        //cur_.Cur.Copy(vp);
+            //        cur_.MoveText(vp, cur_.Cur, cur_.Sel);
+
+            //        //cur_.on_lbutton_down(p.X, p.Y, false);
+            //        //cur_.on_button_up(); //State = CursorState.None;
+
+            //    } else if (cur_.Selection == SelectionType.Rectangle) {
+            //        //var vp1 = new VPos();
+            //        ///GetVPos(p.X, p.Y, ref vp1, false);
+            //        //cur_.Cur.Copy(vp1);
+
+            //        //VPos vp = new VPos(cur_.Cur);
+            //        var text = cur_.getRangesText(cur_.Cur, cur_.Sel);
+            //        cur_.DelRectangle(cur_.Cur, cur_.Sel);
+            //        List<string> lines = text.Split(new string[]{"\r\n"}, StringSplitOptions.None).ToList<string>();
+
+            //        //VPos instvp = new VPos(cur_.Cur);
+            //        //cur_.Cur.Copy(vp);
+            //        //cur_.UpdateCaretPos();
+            //        ////cur_.Sel.Copy(cur_.Cur);
+            //        //cur_.RectangleInsert(cur_.Cur, cur_.Cur, lines);
+            //        //cur_.Cur.Copy(vp);
+            //        //cur_.Sel.Copy(cur_.Cur);
+
+            //        var vp = new VPos();
+            //        GetVPos(p.X, p.Y, ref vp, false);
+            //        cur_.Cur.Copy(vp);
+            //        cur_.RectangleInsert(cur_.Cur, cur_.Cur, lines);
+            //    }
+            //    //cur_.ResetPos();
+            //    cur_.Selection = SelectionType.Normal;
+            //    cur_.State = StateType.None;
+            //}
+        }
+
 
         protected override void OnDragEnter(DragEventArgs e) {
             base.OnDragEnter(e);

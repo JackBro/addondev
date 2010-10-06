@@ -36,6 +36,7 @@ namespace test
             //edit.DrawEventHandler += (g, line, x, y) => {
             //    g.DrawImage(image, new Point(x, y));
             //};
+            edit.ContextMenuStrip = contextMenuStrip1;
             edit.KeyPress += (sender, e) => {
                 e.Handled = false;
             };
@@ -61,6 +62,12 @@ namespace test
             edit.MouseMove += (sender, e) => {
                 if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
                     edit.RectSelect = true;
+                }
+            };
+
+            edit.MouseDown += (sender, e) => {
+                if (e.Button == MouseButtons.Left) {
+                    edit.cursor.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
                 }
             };
 

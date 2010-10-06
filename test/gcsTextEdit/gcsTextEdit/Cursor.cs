@@ -163,7 +163,12 @@ namespace AsControls
             vx = src.vx;
             rx = src.rx;
         }
-        
+
+        //public void Copy(DPos src) {
+        //    tl = src.tl;
+        //    ad = src.ad;
+        //}
+
         public VPos() {
             tl = 0; ad = 0; 
             vl = 0; rl = 0; vx = 0; rx = 0; 
@@ -180,22 +185,32 @@ namespace AsControls
         }
     }
 
-    public enum SelectType {
+    public enum SelectionType {
         Normal,
         Rectangle
     }
 
-    public enum CursorState {
+    public enum StateType {
         None,
-        MouseDown,
+        //MouseDown,
         TextSelect,
+        TextGrab,
         TextMove
+    }
+
+    abstract class CursorEventAction {
+        protected Cursor cur;
+        public void MouseDown(MouseEventArgs e) { }
+        public void MouseUp(MouseEventArgs e) { }
+        public void MouseClick(MouseEventArgs e) { }
+        public void MouseDoubleClick(MouseEventArgs e) { }
+        public void MouseMove(MouseEventArgs e) { }
+        public void DragOver(DragEventArgs e) { }
+        public void DragDrop(DragEventArgs e) { }
     }
 
     //
     public class Cursor {
-
-        public CursorState State { get; set; }
 
         private Document doc_; 
         private gcsTextEdit view_;
@@ -222,7 +237,8 @@ namespace AsControls
         private bool lineSelectMode_;
 
 
-        public SelectType SelectMode {
+        public StateType State { get; set; }
+        public SelectionType Selection {
             get;
             set;
         }
@@ -251,10 +267,10 @@ namespace AsControls
 
             bIns_ = true;
 
-            State = CursorState.None;
+            State = StateType.None;
 
             //TODO Rectangle
-            SelectMode = SelectType.Normal;
+            Selection = SelectionType.Normal;
 
             //this.view_.MouseDown += (sender, e) => {
             //    state = State.MouseDown;
@@ -282,6 +298,141 @@ namespace AsControls
             //        }
             //    }
             //};
+        }
+
+        public void mouse_down(MouseEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    if (e.Button == MouseButtons.Left){
+                        if (ContainSelect(e.X, e.Y, Cur, Sel)) {
+                            this.State = StateType.TextGrab;
+                        }
+                        else {
+
+                        }
+                    }
+                    break;
+                case StateType.TextSelect:
+                    break;
+                case StateType.TextGrab:
+                    break;
+                case StateType.TextMove:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void mouse_up(MouseEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    break;
+                case StateType.TextSelect:
+                    break;
+                case StateType.TextGrab:
+                    
+                    this.State = StateType.None;
+                    on_lbutton_down(e.X, e.Y, false);
+                    Selection = SelectionType.Normal;
+                    State = StateType.None;
+                    break;
+                case StateType.TextMove:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void mouse_move(MouseEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    if (e.Button == MouseButtons.Left) {
+                        MoveByMouse(e.X, e.Y);
+                    }
+                    break;
+                case StateType.TextSelect:
+                    break;
+                case StateType.TextGrab:
+                    this.State = StateType.TextMove;
+                    var text = getRangesText(Cur, Sel);
+                    view_.DoDragDrop(text, DragDropEffects.Move);
+                    break;
+                case StateType.TextMove:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        public void DragOver(DragEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    break;
+                case StateType.TextSelect:
+                    break;
+                case StateType.TextGrab:
+                    break;
+                case StateType.TextMove:
+                    Point p = view_.PointToClient(new Point(e.X, e.Y));
+                    var vp = new VPos();
+                    view_.GetVPos(p.X, p.Y, ref vp, false);
+                    SetPos(vp);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void DragDrop(DragEventArgs e) {
+            switch (State) {
+                case StateType.None:
+                    break;
+                case StateType.TextSelect:
+                    break;
+                case StateType.TextGrab:
+                    break;
+                case StateType.TextMove:
+                    Point p = view_.PointToClient(new Point(e.X, e.Y));
+                    if (ContainSelect(p.X, p.Y, Cur, Sel)) {
+
+                        //cur_.Cur.Copy(vpcur);                  
+                        on_lbutton_down(p.X, p.Y, false);
+                        on_button_up();
+                        return;
+                    }
+                    if (Selection == SelectionType.Normal) {
+                        var vp = new VPos();
+                        view_.GetVPos(p.X, p.Y, ref vp, false);
+                        //cur_.Cur.Copy(vp);
+                        MoveText(vp, Cur, Sel);
+
+                        //cur_.on_lbutton_down(p.X, p.Y, false);
+                        //cur_.on_button_up(); //State = CursorState.None;
+
+                    }
+                    else if (Selection == SelectionType.Rectangle) {
+                        //var vp1 = new VPos();
+                        ///GetVPos(p.X, p.Y, ref vp1, false);
+                        //cur_.Cur.Copy(vp1);
+
+                        //VPos vp = new VPos(cur_.Cur);
+                        string text = e.Data.GetData(DataFormats.Text) as string;
+                        //var text = getRangesText(Cur, Sel);
+                        DelRectangle(Cur, Sel);
+                        List<string> lines = text.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList<string>();
+
+                        var vp = new VPos();
+                        view_.GetVPos(p.X, p.Y, ref vp, false);
+                        Cur.Copy(vp);
+                        RectangleInsert(Cur, Cur, lines);
+                    }
+                    Selection = SelectionType.Normal;
+                    State = StateType.None;
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void MoveCur(DPos dp, bool select) {
@@ -335,7 +486,7 @@ namespace AsControls
 
 	        if( sp.Y == ep.Y )
 	        {
-                if (SelectMode == SelectType.Rectangle) {
+                if (Selection == SelectionType.Rectangle) {
                     
                     //Console.WriteLine("sp.Y = " + sp.Y);
                     //int ex = 0;
@@ -361,7 +512,7 @@ namespace AsControls
 	        else
 	        {
                 //TODO Rectangle
-                if (SelectMode == SelectType.Rectangle) {
+                if (Selection == SelectionType.Rectangle) {
                     //Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
                     Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
                     view_.Invalidate(rc, false);
@@ -645,7 +796,7 @@ namespace AsControls
 		        //doc_.Execute( Delete( cur_, dp ) );
                 //doc_.Delete(new DPos(cur_.tl, cur_.ad), new DPos(dp.tl, dp.ad), out del);
 
-                if (SelectMode == SelectType.Rectangle) {
+                if (Selection == SelectionType.Rectangle) {
                     List<Tuple<DPos, DPos>> list =null;
                     if (cur_ < sel_) {
                         list = getRectangleDpos(cur_, sel_);
@@ -697,7 +848,7 @@ namespace AsControls
             }
         }
 
-        public void MoveText(DPos to, DPos s, DPos e) {
+        public void MoveText(VPos to, DPos s, DPos e) {
             DPos s1, e1;
             if (s < e) {
                 s1 = s; e1 = e;
@@ -709,12 +860,21 @@ namespace AsControls
             if (to < s1) {
                 cmds.Add(new Delete(s1, e1));
                 cmds.Add(new Insert(to, text));
+                doc_.Execute(cmds);
             } else if (to > e1) {
                 cmds.Add(new Insert(to, text));
                 cmds.Add(new Delete(s1, e1));
-            }
+                doc_.Execute(cmds);
+                if (s1.tl == e1.tl) {
+                    to.ad += text.Length;
+                }
+                else {
 
-            doc_.Execute(cmds);
+                }
+                Cur.Copy(to);
+                Sel.Copy(Cur);             
+                UpdateCaretPos();
+            }  
         }
 
         //-------------------------------------------------------------------------
@@ -747,9 +907,9 @@ namespace AsControls
 	        caret_.Show();
         }
 
-        internal void on_lbutton_down(int x, int y, bool shift)
+        public void on_lbutton_down(int x, int y, bool shift)
         {
-            State = CursorState.MouseDown;
+            //State = StateType.MouseDown;
 	        if( !shift )
 	        {
 		        // これまでの選択範囲をクリア
@@ -781,7 +941,7 @@ namespace AsControls
             //if (SelectMode == SelectType.TextSelect) {
              //   SelectMode = SelectType.Normal;
             //}
-            State = CursorState.None;
+            State = StateType.None;
         }
 
         internal void on_mouse_db_click(int x, int y) {
@@ -842,7 +1002,7 @@ namespace AsControls
         }
 
         public bool ContainSelect(int x, int y, DPos cur, DPos sel) {
-            if (SelectMode == SelectType.Rectangle) {
+            if (Selection == SelectionType.Rectangle) {
                 if (view_.VRect.SXB < x && x < view_.VRect.SXE
                     && view_.VRect.SYB < y && y < view_.VRect.SYE + view_.fnt().H()) {
                     //VPos vp=new VPos();
@@ -950,7 +1110,7 @@ namespace AsControls
 	        if( cur_==sel_ )
 		        return;
 
-            if(SelectMode == SelectType.Rectangle){
+            if(Selection == SelectionType.Rectangle){
                 string lines =string.Empty;
                 if (cur_ > sel_) {
                     lines = getRangesText(sel_, cur_);
@@ -961,7 +1121,7 @@ namespace AsControls
                 //Clipboard.SetData("Rectangle", data);
                 DataObject data = new DataObject();
                 data.SetData(lines);
-                data.SetData(SelectType.Rectangle);
+                data.SetData(SelectionType.Rectangle);
                 Clipboard.SetDataObject(data, true);
             }else{
 
@@ -979,7 +1139,7 @@ namespace AsControls
         public void Paste()
         {
             IDataObject data = Clipboard.GetDataObject();
-            if(data.GetDataPresent(typeof(SelectType))){
+            if(data.GetDataPresent(typeof(SelectionType))){
             //if (Clipboard.GetData("Rectangle") != null) {
             //if (Clipboard.GetData(DataFormats.Text) != null) {
 
@@ -1085,7 +1245,7 @@ namespace AsControls
                 doc_.Execute(cmds);
 
             } else {
-                if (SelectMode == SelectType.Rectangle) {
+                if (Selection == SelectionType.Rectangle) {
 
                     var cmds = new List<ICommand>();
 
