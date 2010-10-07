@@ -271,7 +271,7 @@ namespace AsControls
         }
 
         private static char[] cs = { '\t', ' ', '\x3000' };
-        private Point pp = new Point();
+        //private Point pp = new Point();
         private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
 
             //g.FillRectangle(bb, v.rc);
@@ -317,9 +317,7 @@ namespace AsControls
             Color color = Color.Empty;
             Token token = null;
 
-            //Action<IText, int, int> draw = (itext, ad ,len) => {
             Action<IText> draw = (itext) => {
-                //var text = itext.Substring(ad, len);
                 string s = itext.ToString();
 
                 int ci = s.IndexOfAny(cs, 0);
@@ -345,9 +343,7 @@ namespace AsControls
                                 break;
                             case '\t':
                                 if (ShowTab) {
-                                    //for (; i < i2; ++i, x = p.nextTab(x))
-                                    //	p.CharOut( L'>', x+v.XBASE, a.top );
-                                    for (int i2 = 0; i2 < ps.Length; ++i2) {//, x = p.nextTab(x)) {
+                                    for (int i2 = 0; i2 < ps.Length; ++i2) {
                                         int ntx = p.nextTab(x);
                                         p.DrawTab(g, x + v.XBASE, a.top, ntx - x);
                                         x = ntx;
@@ -370,7 +366,6 @@ namespace AsControls
 
                 p.DrawAttribute(g, token.attr, v.XBASE + xbk, a.top - 1, v.XBASE + x, a.top - 1);
             };
-
 
 
             //int aTop = a.Top;
@@ -457,56 +452,13 @@ namespace AsControls
                     if (v.SYB <= a.top && a.top <= v.SYE) {
                         //TODO Rectangle
                         if (cur_.Selection == SelectionType.Rectangle) {
-                            //if (cur_.State == CursorState.MouseDown) {
-                            //    pp = this.PointToClient(System.Windows.Forms.Cursor.Position);
-                            //}
-                            //else {
-                                pp.X = cur_.Cur.vx + v.XBASE;
-                            //}
-                            //if (cur_.Cur.tl == tl && rln(tl) - 1 == rl) {
+                            int cx = cur_.caret.GetPos().X;
                             if (cur_.Cur.tl == tl && cur_.Cur.rl == rl) {
-                                ////Inv(g, a.top, v.SXB ,
-                                ////    a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
-
-                                //if (v.SXB == v.XBASE) {
-                                //    Inv(g, a.top, v.XBASE, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
-                                //}
-                                //else {
-                                //    VPos vpb = new VPos();
-                                //    GetVPos(v.SXB, a.top, ref vpb, false);
-                                //    Inv(g, a.top, v.XBASE + vpb.vx, a.top == v.SYE ? v.SXE : (v.XBASE + x), p);
-                                //}
-                                //TODO Rectangle
-                                //var pos = this.PointToClient(System.Windows.Forms.Cursor.Position);
                                 for (int selY = v.SYB; selY <= v.SYE; selY += H) {
-                                    VPos vpb = new VPos();
-                                    GetVPos(v.SXB, selY, ref vpb, false);
-                                    VPos vpe = new VPos();
-                                    //GetVPos(v.SXE, selY, ref vpe, false);
-                                    //GetVPos(pos.X, selY, ref vpe, false);
-                                    GetVPos(pp.X, selY, ref vpe, false);
-                                    if (v.SXB == v.XBASE) {
-                                        Inv(g, selY, v.SXB, v.XBASE + vpe.vx, p);
-                                    }
-                                    else {
-                                        Inv(g, selY, v.XBASE + vpb.vx, v.XBASE + vpe.vx, p);
-                                    }
-                                    
-                                    //if (v.SYB < selY && selY <= v.SYE && ShowReturn)
-                                    //    Inv(g, selY - H, vpe.vx + v.XBASE, vpe.vx + v.XBASE + p.W(), p);
+                                    Inv(g, selY, Math.Min(v.XBASE + cur_.Sel.vx, cx),
+                                            Math.Max(v.XBASE + cur_.Sel.vx, cx), p);    
                                 }
-                            } else {
-                                ////TODO Rectangle
-                                //VPos vpe = new VPos();
-                                //GetVPos(v.SXE, a.top, ref vpe, false);
-                                //if (v.SXB == v.XBASE) {
-                                //    Inv(g, a.top, v.XBASE, v.XBASE + vpe.vx, p);
-                                //} else {
-                                //    VPos vpb = new VPos();
-                                //    GetVPos(v.SXB, a.top, ref vpb, false);
-                                //    Inv(g, a.top, v.XBASE + vpb.vx, v.XBASE + vpe.vx, p);
-                                //}
-                            }
+                            } 
                         } else {
                             Inv(g, a.top, a.top == v.SYB ? v.SXB : (v.XBASE),
                                         a.top == v.SYE ? v.SXE : (v.XBASE + x), p);

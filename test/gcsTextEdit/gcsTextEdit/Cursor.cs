@@ -192,7 +192,6 @@ namespace AsControls
 
     public enum StateType {
         None,
-        //MouseDown,
         TextSelect,
         TextGrab,
         TextMove
@@ -238,12 +237,15 @@ namespace AsControls
 
 
         public StateType State { get; set; }
-        public SelectionType Selection {
-            get;
-            set;
-        }
+        public SelectionType Selection { get; set; }
 
         public int dragX_, dragY_;
+
+        public Caret caret {
+            get {
+                return this.caret_;
+            }
+        }
 
         public VPos Cur {
             get { return cur_; }
@@ -379,7 +381,8 @@ namespace AsControls
                 //TODO Rectangle
                 if (Selection == SelectionType.Rectangle) {
                     //Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
-                    Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
+                    //Rectangle rc = new Rectangle(LFT, Math.Max(TOP, sp.Y), ep.X, ep.Y + view_.fnt().H());
+                    Rectangle rc = new Rectangle(LFT, Math.Min(TOP, sp.Y), RHT, (ep.Y - sp.Y) * view_.fnt().H());
                     view_.Invalidate(rc, false);
                 } else {
                     //RECT rc = { Max(LFT,sp.x), Max(TOP,sp.y), RHT, Min<int>(BTM,sp.y+view_.fnt().H()) };
@@ -452,6 +455,32 @@ namespace AsControls
             // セット
             caret_.SetPos(x, y);
             //pEvHan_->on_move(cur_, sel_);
+        }
+
+        public void UpdateCaretPos(Point p) {
+            int x = 0, y = 0;
+            view_.GetOrigin(ref x, ref y);
+            x += cur_.vx;
+            y += cur_.vl * view_.fnt().H();
+
+            // 行番号ゾーンにCaretがあっても困るので左に追いやる
+            if (0 < x && x < view_.left())
+                x = -view_.left();
+
+            if (cur_.vx < p.X) {
+                int cnt = (p.X - cur_.vx) / view_.fnt().W();
+                int nx = cur_.vx + cnt * view_.fnt().W();
+                int ny = y;
+                if (y < p.Y) {
+                    int hcnt = (p.Y - y) / view_.fnt().H();
+                    ny = y + hcnt * view_.fnt().H();
+                }
+                caret_.SetPos(nx, ny);
+            }
+            else {
+                // セット
+                caret_.SetPos(x, y);
+            }
         }
 
         public void Ud(int dy, Boolean select) {
@@ -772,6 +801,46 @@ namespace AsControls
 	        caret_.Show();
         }
 
+        internal void on_lbutton_down(int x, int y, bool shift) {
+            if (!shift) {
+                // これまでの選択範囲をクリア
+                //if(cur_ != sel_)
+                Redraw(cur_, sel_);
+
+                // 行番号ゾーンのクリックだったら、行選択モードに
+                lineSelectMode_ = (x < view_.lna() - view_.fnt().F());
+
+                // 選択開始位置を調整
+                view_.GetVPos(x, y, ref sel_, false);
+                if (lineSelectMode_)
+                    view_.ConvDPosToVPos(new DPos(sel_.tl, 0), ref sel_, ref sel_);
+                //cur_ = sel_;
+                cur_.Copy(sel_);
+            }
+
+            // 移動！
+            dragX_ = x;
+            dragY_ = y;
+            MoveByMouse(x, y);
+
+            //// マウス位置の追跡開始
+            //timerID_ = ::SetTimer( caret_->hwnd(), 178116, keyRepTime_, NULL );
+            //::SetCapture( caret_->hwnd() );
+        }
+
+        internal void on_mouse_db_click(int x, int y) {
+            // 行番号ゾーンの場合は特に何もしない
+            if (view_.lna() - view_.fnt().F() < x) {
+                // 行末の場合も特に何もしない
+                if (cur_.ad != doc_.len(cur_.tl)) {
+                    VPos np = new VPos();
+                    view_.ConvDPosToVPos(doc_.wordStartOf(cur_), ref np, ref cur_);
+                    MoveTo(np, false);
+                    Right(true, true);
+                }
+            }
+        }
+
         //mouse
         public void mouse_down(MouseEventArgs e) {
             switch (State) {
@@ -781,11 +850,13 @@ namespace AsControls
                             //Selection = SelectionType.Normal;
                             on_lbutton_down(e.X, e.Y, true);
                             State = StateType.TextSelect;
-                        } else if ((Control.ModifierKeys & view_.MouseRectSelectKey) == view_.MouseRectSelectKey) {
-                            //Selection = SelectionType.Rectangle;
-                            on_lbutton_down(e.X, e.Y, true);
-                            State = StateType.TextSelect;
-                        } else {
+                        } 
+                        //else if ((Control.ModifierKeys & view_.MouseRectSelectKey) == view_.MouseRectSelectKey) {
+                        //    //Selection = SelectionType.Rectangle;
+                        //    on_lbutton_down(e.X, e.Y, true);
+                        //    State = StateType.TextSelect;
+                        //} 
+                        else {
                             on_lbutton_down(e.X, e.Y, false);
                         }
                     }
@@ -806,6 +877,9 @@ namespace AsControls
                     on_lbutton_down(e.X, e.Y, false);
                     Selection = SelectionType.Normal;
                     State = StateType.None;
+                    if (State == StateType.TextMove) {
+                        view_.AllowDrop = AllowDropbk;
+                    }
                     break;
                 //case StateType.TextMove:
                 //    break;
@@ -852,6 +926,7 @@ namespace AsControls
             State = StateType.None;
             on_mouse_db_click(e.X, e.Y);
         }
+        private bool AllowDropbk;
 
         public void mouse_move(MouseEventArgs e) {
             switch (State) {
@@ -869,7 +944,8 @@ namespace AsControls
                         if ((Control.ModifierKeys & view_.MouseRectSelectKey) == view_.MouseRectSelectKey) {
                             Selection = SelectionType.Rectangle;
                             State = StateType.TextSelect;
-                            MoveByMouse(e.X, e.Y);
+                            //MoveByMouse(e.X, e.Y);
+                            MoveByMouse2(e.X, e.Y);
                         } else {
                             Selection = SelectionType.Normal;
                             State = StateType.TextSelect;
@@ -880,6 +956,8 @@ namespace AsControls
                 //case StateType.TextSelect:
                 //    break;
                 case StateType.TextGrab:
+                    AllowDropbk = view_.AllowDrop;
+                    view_.AllowDrop = true;
                     this.State = StateType.TextMove;
                     var text = getRangesText(Cur, Sel);
                     view_.DoDragDrop(text, DragDropEffects.Move);
@@ -951,71 +1029,45 @@ namespace AsControls
                     }
                     Selection = SelectionType.Normal;
                     State = StateType.None;
+                    view_.AllowDrop = AllowDropbk;
                     break;
                 default:
                     break;
             }
         }
 
-        internal void on_lbutton_down(int x, int y, bool shift)
-        {
-	        if( !shift )
-	        {
-		        // これまでの選択範囲をクリア
-                //if(cur_ != sel_)
-		            Redraw( cur_, sel_ );
-
-		        // 行番号ゾーンのクリックだったら、行選択モードに
-		        lineSelectMode_ = ( x < view_.lna()-view_.fnt().F() );
-
-		        // 選択開始位置を調整
-		        view_.GetVPos( x, y, ref sel_ , false);
-		        if( lineSelectMode_ )
-			        view_.ConvDPosToVPos( new DPos(sel_.tl,0), ref sel_, ref sel_ );
-		        //cur_ = sel_;
-                cur_.Copy(sel_);
-	        }
-
-	        // 移動！
-            dragX_ = x;
-            dragY_ = y;
-	        MoveByMouse( x, y );
-
-	        //// マウス位置の追跡開始
-	        //timerID_ = ::SetTimer( caret_->hwnd(), 178116, keyRepTime_, NULL );
-	        //::SetCapture( caret_->hwnd() );
-        }
-
-        internal void on_mouse_db_click(int x, int y) {
-            // 行番号ゾーンの場合は特に何もしない
-            if (view_.lna() - view_.fnt().F() < x) {
-                // 行末の場合も特に何もしない
-                if (cur_.ad != doc_.len(cur_.tl)) {
-                    VPos np = new VPos();
-                    view_.ConvDPosToVPos(doc_.wordStartOf(cur_), ref np, ref cur_);
-                    MoveTo(np, false);
-                    Right(true, true);
-                }
-            }
-        }
-
-        internal void MoveByMouse(int x, int y, bool sel) {
+        internal void MoveByMouse(int x, int y) {
             dragX_ = x;
             dragY_ = y;
 
             VPos vp = new VPos();
             view_.GetVPos(x, y, ref vp, lineSelectMode_);
-            MoveTo(vp, sel);
+            MoveTo(vp, true);
         }
 
-        internal void MoveByMouse( int x, int y )
-        {
+        internal void MoveByMouse2(int x, int y) {
             dragX_ = x;
             dragY_ = y;
 
-	        VPos vp = new VPos();
-	        view_.GetVPos( x, y, ref vp, lineSelectMode_ );
-	        MoveTo( vp, true );
+            VPos vp = new VPos();
+            view_.GetVPos(x, y, ref vp, lineSelectMode_);
+            MoveTo2(vp, true, new Point(x, y));
+        }
+        private void MoveTo2(VPos vp, bool sel, Point p) {
+            if (sel) {
+                // 選択状態が変わる範囲を再描画
+                Redraw(vp, cur_);
+            }
+            else {
+                // 選択解除される範囲を再描画
+                if (cur_ != sel_)
+                    Redraw(cur_, sel_);
+                sel_.Copy(vp);
+            }
+
+            cur_.Copy(vp);
+            UpdateCaretPos(p);
+            view_.ScrollTo(cur_);
         }
 
         public void ResetCaret() {
@@ -1032,14 +1084,12 @@ namespace AsControls
 	        UpdateCaretPos();
 	        if( caret_.isAlive())
 		        view_.ScrollTo( cur_ );
+
+            //Selection = SelectionType.Normal;
+            //State = StateType.None;
         }
 
         public bool ContainSelect(int x, int y, VPos cur, VPos sel) {
-            //VPos vp = new VPos();
-            //view_.GetVPos(x, y, ref vp, false);
-            //DPos c = vp as DPos;
-            //var curs = Cursor.Sort(this.Cur, this.Sel);
-            //return (curs.t1 < c && c < curs.t2);
             return this.ContainSelect(x, y, cur as DPos, sel as DPos);
         }
 
@@ -1047,11 +1097,7 @@ namespace AsControls
             if (Selection == SelectionType.Rectangle) {
                 if (view_.VRect.SXB < x && x < view_.VRect.SXE
                     && view_.VRect.SYB < y && y < view_.VRect.SYE + view_.fnt().H()) {
-                    //VPos vp=new VPos();
-                    //view_.GetVPos(x,y,ref vp,false);
-                    //if (view_.VRect.SXB < x && x < vp.vx + view_.VRect.XBASE) {
                     return true;
-                    //}
                 }
             } else {
                 VPos vp = new VPos();
@@ -1060,7 +1106,6 @@ namespace AsControls
                 var curs = Cursor.Sort(cur, sel);
                 return (curs.t1 < c && c < curs.t2);
             }
-
             return false;
         }
 
@@ -1080,31 +1125,25 @@ namespace AsControls
             VPos search_base  = new VPos();
             search_base.ad = -1;
 
-	        if( mCur && s==cur_ && e==sel_ )
-	        {
+	        if( mCur && s==cur_ && e==sel_ ){
 		        //search_base = new VPos(cur_);
                 search_base = cur_;
 
 	        }
-	        else if( mCur && s==sel_ && e==cur_ )
-	        {
+	        else if( mCur && s==sel_ && e==cur_ ){
 		        //search_base =  new VPos(sel_);
                 search_base = sel_;
 	        }
-	        else
-	        {
+	        else{
 		        Redraw( cur_, sel_ );
-		        if( mCur && caret_.isAlive() )
-		        {
+		        if( mCur && caret_.isAlive() ){
 			        if( cur_ <= s ){
 				        //search_base = &cur_;
                         search_base.Copy(cur_);
                     }
 		        }
-		        else
-		        {
-			        if( s < cur_ )
-			        {
+		        else{
+			        if( s < cur_ ){
                         if (cur_ <= e) {
                             //cur_ = e2 as VPos;
                             VPos ve2 = e2 as VPos;
@@ -1122,8 +1161,7 @@ namespace AsControls
 		        }
 	        }
 
-	        if( mCur )
-	        {
+	        if( mCur ){
 		        view_.ConvDPosToVPos( e2, ref cur_, ref search_base );
 		        //sel_ = cur_;
                 sel_.Copy(cur_);
@@ -1137,18 +1175,15 @@ namespace AsControls
         // クリップボード処理
         //-------------------------------------------------------------------------
 
-        public void Cut()
-        {
-	        if( cur_ != sel_ )
-	        {
+        public void Cut(){
+	        if( cur_ != sel_ ){
 		        // コピーして削除
 		        Copy();
 		        Del();
 	        }
         }
 
-        public void Copy()
-        {
+        public void Copy(){
 	        if( cur_==sel_ )
 		        return;
 
@@ -1178,8 +1213,7 @@ namespace AsControls
             }
         }
 
-        public void Paste()
-        {
+        public void Paste(){
             IDataObject data = Clipboard.GetDataObject();
             if(data.GetDataPresent(typeof(SelectionType))){
             //if (Clipboard.GetData("Rectangle") != null) {

@@ -229,8 +229,7 @@ namespace AsControls {
 	        int H = cvs_.getPainter().H();
 
 	        // 表示域より上での更新
-	        if( dp.tl < udScr_tl_ )
-	        {
+	        if( dp.tl < udScr_tl_ ){
 		        if( afterall )
 			        //::InvalidateRect( hwnd_, NULL, FALSE );
                     this.Invalidate(false);
@@ -254,8 +253,7 @@ namespace AsControls {
 		    //    //CalcLineWidth(doc_.tl(dp.tl)+rb, dp.ad-rb) -rlScr_.nPos );
             //    CalcLineWidth(text, dp.ad - rb) - hScrollBar.Value);
             int xb = left();
-	        if( xb < right() )
-	        {
+	        if( xb < right() ){
                 Rectangle rc = new Rectangle(xb, yb, right(), H);
                 this.Invalidate(rc, false);
                 //this.Invalidate(false);
@@ -271,24 +269,20 @@ namespace AsControls {
 		        xb=left();
                 ye=Math.Min(cy(),yb+(int)(H*(rln(dp.tl)-r-1)));
             }
-	        if( yb < ye )
-	        {
+	        if( yb < ye ){
                 Rectangle rc = new Rectangle( xb, yb, right(), ye );
 		        //::InvalidateRect( hwnd_, &rc, FALSE );
                 this.Invalidate(rc, false);
 	        }
         }
 
-        public void ScrollTo( VPos vp )
-        {
+        public void ScrollTo( VPos vp ){
 	        // 横フォーカス
 	        int dx=0;
-	        if( vp.vx < hScrollBar.Value )
-	        {
+	        if( vp.vx < hScrollBar.Value ){
                 dx = vp.vx - hScrollBar.Value;
 	        }
-	        else
-	        {
+	        else{
 		        int W = cvs_.getPainter().W();
                 if (hScrollBar.Value + (hScrollBar.nPage - W) <= vp.vx)
                     dx = vp.vx - (hScrollBar.Value + hScrollBar.nPage) + W;
@@ -318,8 +312,7 @@ namespace AsControls {
 		        return;
 
           // ２－１．折り返し無しの場合は一気にジャンプ出来る
-	        if( !wrapexists() )
-	        {
+	        if( !wrapexists() ){
                 udScr_tl_ = vScrollBar.Value + dy;
 	        }
 
@@ -327,19 +320,16 @@ namespace AsControls {
           // ScrollBarを連続的にドラッグせず一度に一気に飛んだ場合は
           // 1行目や最終行からの相対サーチの方が有効な可能性があるが、
           // その場合は多少速度が遅くなっても描画が引っかかることはないのでＯＫ
-	        else
-	        {
+	        else{
 		        int   rl = dy + udScr_vrl_;
 		        int tl = udScr_tl_;
 
-		        if( dy<0 ) // 上へ戻る場合
-		        {
+		        if( dy<0 ){ // 上へ戻る場合
 			        // ジャンプ先論理行の行頭へDash!
 			        while( rl < 0 )
 				        rl += rln(--tl);
 		        }
-		        else if( dy>0 ) // 下へ進む場合
-		        {
+		        else if( dy>0 ){ // 下へ進む場合
 			        // ジャンプ先論理行の行頭へDash!
 			        while( rl > 0 )
 				        rl -= rln(tl++);
@@ -361,18 +351,15 @@ namespace AsControls {
 	        ReDrawType ans =
                 (vl_dif != 0 || s.tl != e2.tl ? ReDrawType.AFTER : ReDrawType.LINE);
 
-	        if( udScr_tl_ < s.tl )
-	        {
+	        if( udScr_tl_ < s.tl ){
 		        // パターン１：現在の画面上端より下で更新された場合
 		        // スクロールしない
 	        }
-	        else if( udScr_tl_ == s.tl )
-	        {
+	        else if( udScr_tl_ == s.tl ){
 		        // パターン２：現在の画面上端と同じ行で更新された場合
 		        // 出来るだけ同じ位置を表示し続けようと試みる。
 
-		        if( vScrollBar.Value >= vln() )
-		        {
+		        if( vScrollBar.Value >= vln() ){
 			        // パターン2-1：しかしそこはすでにEOFよりも下だ！
 			        // しゃーないので一番下の行を表示
                     vScrollBar.Value = vln() - 1;
@@ -380,32 +367,27 @@ namespace AsControls {
 			        udScr_vrl_  = rln(udScr_tl_)-1;
 			        ans = ReDrawType.ALL;
 		        }
-		        else
-		        {
+		        else{
 			        // パターン2-2：
 			        // スクロール無し
-			        while( udScr_vrl_ >= rln(udScr_tl_) )
-			        {
+			        while( udScr_vrl_ >= rln(udScr_tl_) ){
 				        udScr_vrl_ -= rln(udScr_tl_);
 				        udScr_tl_++;
 			        }
 		        }
 	        }
-	        else
-	        {
+	        else{
 		        // パターン３：現在の画面上端より上で更新された場合
 		        // 表示内容を変えないように頑張る
 
-		        if( e.tl < udScr_tl_ )
-		        {
+		        if( e.tl < udScr_tl_ ){
 			        // パターン3-1：変更範囲の終端も、現在行より上の場合
 			        // 行番号は変わるが表示内容は変わらないで済む
                     vScrollBar.Value += vl_dif;
 			        udScr_tl_   += (e2.tl - e.tl);
                     ans = ReDrawType.LNAREA;
 		        }
-		        else
-		        {
+		        else{
 			        // パターン3-2：
 			        // どうしよーもないので適当な位置にスクロール
 			        ForceScrollTo( e2.tl );

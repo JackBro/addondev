@@ -53,7 +53,7 @@ keyword token
 CR LF CRLF
 rectselmode cansel to component
 dirty flag event
-Font set reset numberline
+//Font set reset numberline
 rect select inv draw
 search word Highlight
 
