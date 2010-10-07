@@ -781,7 +781,7 @@ namespace AsControls
             caret_.Create(view_.fnt().H(),
                 //(bIns_ ? 2 : view_.fnt().W()), view_.fnt().LogFont() );
                 2);
-	        UpdateCaretPos();
+	        UpdateCaretPos(); //TODO Rect
         }
 
         internal void on_killfocus()
@@ -863,6 +863,7 @@ namespace AsControls
                     break;
                 case StateType.TextSelect:
                     if (e.Button == MouseButtons.Left) {
+                        //if (ContainSelect(e.X, e.Y)){
                         if (ContainSelect(e.X, e.Y, Cur, Sel)) {
                             this.State = StateType.TextGrab;
                         } else {
@@ -1089,14 +1090,24 @@ namespace AsControls
             //State = StateType.None;
         }
 
+        //public bool ContainSelect(int x, int y) {
+        //    if (view_.VRect.SXB < x && x < view_.VRect.SXE
+        //        && view_.VRect.SYB < y && y < view_.VRect.SYE + view_.fnt().H()) {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
         public bool ContainSelect(int x, int y, VPos cur, VPos sel) {
             return this.ContainSelect(x, y, cur as DPos, sel as DPos);
         }
 
         public bool ContainSelect(int x, int y, DPos cur, DPos sel) {
             if (Selection == SelectionType.Rectangle) {
-                if (view_.VRect.SXB < x && x < view_.VRect.SXE
-                    && view_.VRect.SYB < y && y < view_.VRect.SYE + view_.fnt().H()) {
+                //if (view_.VRect.SXB < x && x < view_.VRect.SXE
+                //    && view_.VRect.SYB < y && y < view_.VRect.SYE + view_.fnt().H()) {
+                if (view_.VRect.SXB < x && x < caret.GetPos().X
+                     && view_.VRect.SYB < y && y < caret.GetPos().Y + view_.fnt().H()) {
                     return true;
                 }
             } else {

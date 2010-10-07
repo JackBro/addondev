@@ -253,7 +253,7 @@ namespace test
             edit.Wrap = AsControls.WrapType.WindowWidth;
             WrapOnToolStripMenuItem.Checked = true;
 
-            edit.Text = @"/*
+            edit.Text = @"/*テスト
 1234567890abcdefg
 */ /'dddd'/ /*sss
 ssssss

@@ -455,8 +455,22 @@ namespace AsControls
                             int cx = cur_.caret.GetPos().X;
                             if (cur_.Cur.tl == tl && cur_.Cur.rl == rl) {
                                 for (int selY = v.SYB; selY <= v.SYE; selY += H) {
-                                    Inv(g, selY, Math.Min(v.XBASE + cur_.Sel.vx, cx),
-                                            Math.Max(v.XBASE + cur_.Sel.vx, cx), p);    
+
+                                    //VPos vpb = new VPos();
+                                    //GetVPos(v.SXB, selY, ref vpb, false);
+                                    VPos vpe = new VPos();
+                                    GetVPos(cx, selY, ref vpe, false);
+                                    //int w = CalcLineWidth(doc_.tl(vpe.tl).ToString(), doc_.tl(vpe.tl).Length);
+                                    if (CalcLineWidth(doc_.tl(vpe.tl).ToString(), doc_.tl(vpe.tl).Length) + v.XBASE < cx) {
+                                        Inv(g, selY, Math.Min(v.XBASE + cur_.Sel.vx, cx),
+                                                Math.Max(v.XBASE + cur_.Sel.vx, cx), p);
+                                    } else {
+                                        Inv(g, selY, Math.Min(v.XBASE + cur_.Sel.vx, v.XBASE + vpe.vx),
+                                                Math.Max(v.XBASE + cur_.Sel.vx, v.XBASE + vpe.vx), p);
+                                    }
+
+                                    //Inv(g, selY, Math.Min(v.XBASE + cur_.Sel.vx, cx),
+                                    //        Math.Max(v.XBASE + cur_.Sel.vx, cx), p);    
                                 }
                             } 
                         } else {
