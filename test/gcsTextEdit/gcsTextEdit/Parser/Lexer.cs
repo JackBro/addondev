@@ -76,6 +76,14 @@ namespace AsControls.Parser {
         private string ruleFirstKeys = string.Empty;
         private string ruleEndKeys = string.Empty;
 
+        //public void setRule(List<Rule> rules) {
+        //    ruleDic.Clear();
+
+        //    foreach (var item in rules) {
+        //        this.AddRule(item);
+        //    }
+        //}
+
 
         public void AddRule(List<Rule> rules) {
             foreach (var item in rules) {
@@ -145,6 +153,10 @@ namespace AsControls.Parser {
             reader = new LexerReader(src);
         }
 
+        public Lexer(LexerReader reader) {
+            this.reader = reader;
+        }
+
         public Lexer() {
             reader = new LexerReader();
             ruleFirstKeys = string.Empty;
@@ -208,78 +220,7 @@ namespace AsControls.Parser {
                     else { //1: 行頭がブロックコメントの内部
 
                         if (Offset - 1 == 0) {
-                            //bool f = false;
-                            //int findex = 0;
-                            //bool e = false;
-                            //int eindex = 0;
-                            //string estr = string.Empty;
-                            //foreach (var item in ruleDic) {
-                            //    MultiLineRule r = item.Value as MultiLineRule;
-                            //    if (r !=null) {
-                            //        if (Src.IndexOf(r.end, 0) != -1) {
-                            //            e = true;
-                            //            if (eindex == 0 || eindex > Src.IndexOf(r.end, 0)) {
-                            //                eindex = Src.IndexOf(r.end, 0);
-                            //                estr = r.end;// Src.Substring(0, Src.Length - eindex).ToString();
-                            //                //break;
-                            //            }
-                            //        }
-                            //    }
-                            //}
-                            //foreach (var item in ruleDic) {
-                            //    MultiLineRule r = item.Value as MultiLineRule;
-                            //    if (r != null) {
-                            //        if (Src.IndexOf(r.start, 0) != -1) {
-                            //            f = true;
-                            //            findex = Src.IndexOf(r.start, 0);
-                            //            break;
-                            //        }
-                            //    }
-                            //}
 
-                            //if (e) {
-                            //    string sstr = string.Empty;
-                            //    Rule Eenelem = null;
-                            //    foreach (var item in ruleDic) {
-                            //        MultiLineRule r = item.Value as MultiLineRule;
-                            //        if (r != null) {
-                            //            if (r.end == estr) {
-                            //                Eenelem = r;
-                            //            }
-                            //        }
-                            //    }
-                            //    if (Eenelem == null) break;
-                            //    //var Eenelem = ruleDic[preblock.elem.start];
-
-                            //    reader.setoffset(eindex + estr.Length);
-                            //    Eenelem.startIndex = 0;
-                            //    Eenelem.len =  (eindex + estr.Length);
-                            //    tok = Eenelem.token;
-                            //    resultRule = Eenelem;
-
-                            //    curblock.elem = preblock.elem;
-                            //    isNextLine = false;
-                            //    break;
-                            //}
-
-                            //if (f && findex > 0) {
-                            //    break;
-                            //}
-
-                            ////var enelem = multiLineRuleDic[preblock.elem.start];
-                            //var enelem = ruleDic[preblock.elem.start];
-
-                            //reader.setoffset(Src.Length);
-                            //enelem.startIndex = 0;
-                            //enelem.len = Src.Length;
-                            //tok = enelem.token;
-                            //resultRule = enelem;
-
-                            //curblock.elem = preblock.elem;
-                            //isNextLine = true;
-
-                            //int index =0;
-                            //bool isbreak = false;
                             while (c != -1) {
                                 if (ruleEndKeys.Contains((char)c)) {
                                     StringBuilder buf = new StringBuilder();

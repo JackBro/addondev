@@ -63,11 +63,13 @@ namespace AsControls.Parser {
         }
     }
 
+
+
     // /*..*/end
     public class MultiLineRule : Rule {
         public string end;
         public MultiLineRule() {
-            token = TokenType.Enclose;
+            token = TokenType.MultiLine;
         }
         public MultiLineRule(string start, string end, Attribute attr) {
             this.start = start;

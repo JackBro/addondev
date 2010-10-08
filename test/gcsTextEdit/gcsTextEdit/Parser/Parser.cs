@@ -45,12 +45,6 @@ namespace AsControls.Parser {
         }
     }
 
-    //public class LexerMap{
-    //    public string start;
-    //    public string end;
-    //    public Lexer lexer;
-    //}
-
     class Parser {
 
         private Lexer lex;
@@ -58,10 +52,6 @@ namespace AsControls.Parser {
         private List<Token> tokens;
         private Attribute defaultAttr;
 
-        //public Attribute DefaultAttr {
-        //    get;
-        //    set;
-        //}
         private IHighlight highlight;
         public IHighlight Highlight {
             get { return highlight; }
@@ -81,12 +71,13 @@ namespace AsControls.Parser {
         //    }
         //}
 
+        private Lexer lex2;
+
         public int cmt;
 
         public Parser() {
             lex = new Lexer();
             //init();
-            //lex.AddRule(new EncloseRule("\"", "\"", new Attribute(Color.Red, AttrType.Normal), '\\'));
         }
 
         //public void init() {
@@ -106,6 +97,7 @@ namespace AsControls.Parser {
         //    defaultAttr = new Attribute(Color.Black);
         //    //lex.AddDefaultElement(new TextElement(defaultAttr));
         //}
+
         public Block Parse(Line line, Block b, int _cmt) {
 
             tokentype = TokenType.TXT;

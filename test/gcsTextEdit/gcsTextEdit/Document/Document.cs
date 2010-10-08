@@ -159,10 +159,9 @@ namespace AsControls {
             int cmt = text_[s].Block.isLineHeadCmt;
             Block block = text_[s].Block;
             if (s > 0) {
-                //cmt = text_[s-1].Block.isLineHeadCmt;
                 block = text_[s-1].Block;
             }
-            //block.elem = null;
+
             // まずは変更範囲を再解析
             for (i = s; i <= e; ++i) {
 
