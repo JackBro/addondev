@@ -157,6 +157,7 @@ namespace AsControls {
         private bool ReParse(int s, int e) {
             int i;
             int cmt = text_[s].Block.isLineHeadCmt;
+            int sccmt = text_[s].Block.scisLineHeadCmt;
             Block block = text_[s].Block;
             if (s > 0) {
                 block = text_[s-1].Block;
@@ -165,17 +166,23 @@ namespace AsControls {
             // まずは変更範囲を再解析
             for (i = s; i <= e; ++i) {
 
-                block = parser.Parse(text_[i], block, cmt);
+                block = parser.Parse(text_[i], block, cmt, sccmt);
                 cmt = parser.cmt;
+                sccmt = parser.sccmt;
             }
 
             // コメントアウト状態に変化がなかったらここでお終い。
             //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
-            if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem))
+            //if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem))
+            if (i == tln()
+                || ( (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem)
+                     && (text_[i].Block.scisLineHeadCmt == sccmt)))
                 return false;
 
             int pcmt = 0;
             Rule prule = null;
+
+            int scpcmt = 0;
 
             // 例えば、/* が入力された場合などは、下の方の行まで
             // コメントアウト状態の変化を伝達する必要がある。
@@ -183,21 +190,35 @@ namespace AsControls {
                 Line line = text_[i++];
                 pcmt = line.Block.isLineHeadCmt;
                 prule = line.Block.elem;
-                block = parser.Parse(line, block, cmt);
+
+                scpcmt = line.Block.scisLineHeadCmt;
+
+                //block = parser.Parse(line, block, cmt);
+                block = parser.Parse(line, block, cmt, sccmt);
                 cmt = parser.cmt;
+                sccmt = parser.sccmt;
+
                 if (pcmt == cmt) {
                     if (prule != block.elem) {
                         pcmt--;
                     }
                 }
-            }while (i < tln() && pcmt != cmt);
+
+                //if (scpcmt == sccmt) {
+                //    if (prule != block.elem) {
+                //        scpcmt--;
+                //    }
+                //}
+
+            //}while (i < tln() && pcmt != cmt);
+            } while (i < tln() && (pcmt != cmt || scpcmt != sccmt));
 
             return true;
         }
 
-        private int TransitCmt(Line line, int start) {
-            return (line.Block.commentTransition >> start) & 1;
-        }
+        //private int TransitCmt(Line line, int start) {
+        //    return (line.Block.commentTransition >> start) & 1;
+        //}
 
         StringInfo strinfo = new StringInfo();
         internal bool InsertingOperation(ref DPos s, string text, ref DPos e) {

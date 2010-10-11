@@ -37,10 +37,10 @@ namespace AsControls.Parser {
         Enclose,
         EndLine,
         Line,
-        Image,
         Keyword,
         Element,
-        Number
+        Number,
+        Scan
     }
 
     public abstract class Rule {
@@ -76,6 +76,29 @@ namespace AsControls.Parser {
             this.end = end;
             this.attr = attr;
             token = TokenType.MultiLine;
+        }
+
+        public override int exer(Lexer lex) {
+            int offset = lex.reader.offset();
+            int index = lex.reader.Src.IndexOf(end, offset);
+
+            if (index < 0) return index;
+
+            int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
+            return endindex;
+        }
+    }
+
+    public class ScanRule : MultiLineRule {
+        public string end;
+        public ScanRule() {
+            token = TokenType.Scan;
+        }
+        public ScanRule(string start, string end, Attribute attr) {
+            this.start = start;
+            this.end = end;
+            this.attr = attr;
+            token = TokenType.Scan;
         }
 
         public override int exer(Lexer lex) {

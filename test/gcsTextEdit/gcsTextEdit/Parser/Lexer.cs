@@ -62,6 +62,8 @@ namespace AsControls.Parser {
 
     public class Lexer {
 
+        public string Value { get; set; }
+
         private TokenType tok;
         public LexerReader reader;
 
@@ -84,6 +86,13 @@ namespace AsControls.Parser {
         //    }
         //}
 
+        public void ClearRule() {
+            ruleDic.Clear();
+            multiruleDic.Clear();
+            keyWordRuleDic.Clear();
+            ruleFirstKeys = string.Empty;
+            ruleEndKeys = string.Empty;
+        }
 
         public void AddRule(List<Rule> rules) {
             foreach (var item in rules) {
@@ -95,7 +104,8 @@ namespace AsControls.Parser {
                 keyWordRuleDic.Add(rule.start, rule);
             }
             else{
-                if((rule as MultiLineRule)!=null){
+                //if((rule as MultiLineRule)!=null){
+                if(rule is MultiLineRule && !(rule is ScanRule)){
                     multiruleDic.Add(((MultiLineRule)rule).end, (MultiLineRule)rule);
                 }
 
@@ -115,7 +125,8 @@ namespace AsControls.Parser {
                         ruleFirstKeys += item.start[0];
                     }
                 }
-                foreach (var item in ruleDic.Values) {
+                //foreach (var item in ruleDic.Values) {
+                foreach (var item in multiruleDic.Values) {
                     MultiLineRule mrule = item as MultiLineRule;
                     if (mrule !=null) {
                         if (!ruleEndKeys.Contains(mrule.end[0])) {
@@ -291,7 +302,17 @@ namespace AsControls.Parser {
                             }
                         }
                     }
+                    //TODO test
+                    if (curblock.scisLineHeadCmt == 0) {
+                    } else {
+                        if (c == '#') {
+                            Value = "#END";
+                            tok = TokenType.Scan;
+                        }
+                    }
+
                     break;
+
             }
             return true;
         }
@@ -393,6 +414,12 @@ namespace AsControls.Parser {
                             isNextLine = false;
                         }
                         return;
+                    } else if (rule.token == TokenType.Scan) {//TODO test
+
+                        tok = rule.token;
+                        Value = rule.start;
+                        return;
+
                     } else {
 
                         int index = rule.exer(this);

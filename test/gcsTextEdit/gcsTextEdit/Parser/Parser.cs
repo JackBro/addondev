@@ -29,6 +29,24 @@ namespace AsControls.Parser {
     //    firstlastsame,
     //    lastin
     //}
+    class TestHighlight : IHighlight {
+        public TestHighlight() {
+        }
+
+        #region IHighlight メンバ
+
+        public Attribute getDefault() {
+            return new Attribute(Color.Red);
+        }
+
+        public List<Rule> getRules() {
+            var rules = new List<Rule>();
+            rules.Add(new ScanRule("#START", "#END", new AsControls.Parser.Attribute(Color.Red)));
+            return rules;
+        }
+
+        #endregion
+    }
 
     public class Token {
         public int ad;
@@ -37,6 +55,12 @@ namespace AsControls.Parser {
     }
 
     public class Block {
+        //TODO test
+        public string pa;
+        public IHighlight schi;
+        public int scisLineHeadCmt = 0;
+        public int sccommentTransition = 0;
+
         public MultiLineRule elem;
         public int isLineHeadCmt = 0;
         public int commentTransition = 0;
@@ -52,14 +76,30 @@ namespace AsControls.Parser {
         private List<Token> tokens;
         private Attribute defaultAttr;
 
+        private IHighlight tmp=null;
+
         private IHighlight highlight;
         public IHighlight Highlight {
             get { return highlight; }
             set{
+                //TODO test
+                if(tmp==null){
+                    tmp = value;
+                }
                 highlight = value;
+
                 defaultAttr = highlight.getDefault();
+                lex.ClearRule();
                 this.lex.AddRule(highlight.getRules());
             }
+        }
+        //TODO test
+        private Dictionary<string, Tuple<IHighlight, ScanRule>> scrule;
+        public void AddHighlight(string name, IHighlight highlight) {
+
+        }
+        public void AddHighlight(string name, IHighlight highlight, ScanRule rule) {
+
         }
 
         //private void getToken() {
@@ -71,40 +111,28 @@ namespace AsControls.Parser {
         //    }
         //}
 
-        private Lexer lex2;
-
         public int cmt;
+
+        public int sccmt;
 
         public Parser() {
             lex = new Lexer();
-            //init();
         }
 
-        //public void init() {
-            
-        //    //lex.AddElement(new KeywordRule("test", new Attribute(Color.DarkGray, false, false, false, false)));
-
-        //    //lex.AddElement(new MultiLineRule("/*", "*/", new Attribute(Color.Red, true, false, false, false)));
-        //    lex.AddElement(new EncloseRule("\"", "\"", new Attribute(Color.Red, AttrType.Normal), '\\'));
-
-        //    //lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, false, false, false, false)));
-        //    lex.AddElement(new MultiLineRule("/'", "'/", new Attribute(Color.Brown, AttrType.Normal)));
-
-        //    lex.AddElement(new EndLineRule("//", new Attribute(Color.DarkGreen, AttrType.UnderLine| AttrType.Strike)));
-
-        //    //lex.AddElement(new ImageElement("[[", "]]", new Attribute(Color.Red, false, true, false, false)));
-
-        //    defaultAttr = new Attribute(Color.Black);
-        //    //lex.AddDefaultElement(new TextElement(defaultAttr));
-        //}
-
-        public Block Parse(Line line, Block b, int _cmt) {
+        public Block Parse(Line line, Block b, int _cmt, int _sccmt) {
 
             tokentype = TokenType.TXT;
             tokens = new List<Token>();
 
             List<Tuple<int, int, bool>> cmstrulrs = new List<Tuple<int, int, bool>>();
             line.Block.isLineHeadCmt = _cmt;
+
+            bool? isscnext = null;
+            line.Block.scisLineHeadCmt = _sccmt;
+
+            if (b.schi != null) {
+                this.Highlight = b.schi;
+            }
 
             //lex.Src = line.Text.ToString();
             lex.Src = line.Text;
@@ -129,7 +157,6 @@ namespace AsControls.Parser {
                     case TokenType.Enclose:
                     case TokenType.EndLine:
                     case TokenType.Line:
-                    case TokenType.Image:
                     case TokenType.Keyword:
                         if (tokentype == TokenType.MultiLine) {
                             var melem = lex.getRule();
@@ -144,6 +171,22 @@ namespace AsControls.Parser {
                         //}
                         //b.state = lex.Block.state;
                         //b.elem = lex.Block.elem;
+                        break;
+
+
+                    case TokenType.Scan: //TODO test
+                        var val = lex.Value;
+                        if (val == "#START") {
+                            isscnext = true;
+                            this.Highlight = new TestHighlight();
+                            line.Block.schi = this.Highlight;
+                        } else if (val == "#END") {
+                            isscnext = false;
+                            this.Highlight = tmp;
+                        } else {
+
+                        }
+                        //lex.AddRule(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
                         break;
                     //case TokenType.Enclose:
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
@@ -163,6 +206,9 @@ namespace AsControls.Parser {
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
                     //    break;
                 }
+                if (sccmt == 1) {
+                    isscnext = true;
+                }
             }
 
             if (cmstrulrs.Count == 0) {
@@ -175,8 +221,19 @@ namespace AsControls.Parser {
                     line.Block.commentTransition = 0;
                 }
             }
-
             cmt = (line.Block.commentTransition >> _cmt) & 1;
+
+
+            if (isscnext == null) {
+                line.Block.sccommentTransition = 2;
+            } else {
+                if ((bool)isscnext) {
+                    line.Block.sccommentTransition = 3;
+                } else {
+                    line.Block.sccommentTransition = 0;
+                }
+            }
+            sccmt = (line.Block.sccommentTransition >> _sccmt) & 1;
             
             if (tokens.Count > 0) {
 
