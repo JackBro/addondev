@@ -40,7 +40,9 @@ namespace AsControls.Parser {
         Keyword,
         Element,
         Number,
-        Scan
+        PartitionStart,
+        Partition,
+        PartitionEnd
     }
 
     public abstract class Rule {
@@ -91,14 +93,16 @@ namespace AsControls.Parser {
 
     public class ScanRule : MultiLineRule {
         public string end;
+        public string pa;
         public ScanRule() {
-            token = TokenType.Scan;
+            token = TokenType.TXT;
         }
-        public ScanRule(string start, string end, Attribute attr) {
+        public ScanRule(string start, string end, string pa, Attribute attr) {
             this.start = start;
             this.end = end;
             this.attr = attr;
-            token = TokenType.Scan;
+            this.pa = pa;
+            token = TokenType.TXT;
         }
 
         public override int exer(Lexer lex) {

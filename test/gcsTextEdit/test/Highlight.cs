@@ -15,7 +15,7 @@ namespace test {
 
         public List<Rule> getRules() {
             var rules = new List<Rule>();
-            rules.Add(new ScanRule("#START", "#END", new AsControls.Parser.Attribute(Color.Red, AttrType.Image)));
+            //rules.Add(new ScanRule("#START", "#END", new AsControls.Parser.Attribute(Color.Red, AttrType.Image)));
             //rules.Add(new EncloseRule("[[", "]]", new AsControls.Parser.Attribute(Color.Red, AttrType.Image)));
             //rules.Add(new EncloseRule("\"", "\"", new AsControls.Parser.Attribute(Color.Brown), '\\'));
             //rules.Add(new MultiLineRule("/'", "'/", new AsControls.Parser.Attribute(Color.LightBlue)));

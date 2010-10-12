@@ -41,7 +41,9 @@ namespace AsControls.Parser {
 
         public List<Rule> getRules() {
             var rules = new List<Rule>();
-            rules.Add(new ScanRule("#START", "#END", new AsControls.Parser.Attribute(Color.Red)));
+            rules.Add(new ScanRule("#START", "#END", "start",new AsControls.Parser.Attribute(Color.Red)));
+
+            rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
             return rules;
         }
 
@@ -66,6 +68,7 @@ namespace AsControls.Parser {
         public int commentTransition = 0;
 
         public Block() {
+            pa = "default";
         }
     }
 
@@ -85,21 +88,25 @@ namespace AsControls.Parser {
                 //TODO test
                 if(tmp==null){
                     tmp = value;
+                    //this.lex.AddScanRule();
+                    //if (value.getRules().Count>0)
+                    //lex.AddScanRule((ScanRule)value.getRules()[0]);
+                    lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
                 }
                 highlight = value;
 
                 defaultAttr = highlight.getDefault();
                 lex.ClearRule();
-                this.lex.AddRule(highlight.getRules());
+                this.lex.AddRule(highlight.getRules());     
             }
         }
         //TODO test
-        private Dictionary<string, Tuple<IHighlight, ScanRule>> scrule;
+        private Dictionary<string, Tuple<IHighlight, ScanRule>> scruledic=new Dictionary<string,Tuple<IHighlight,ScanRule>>();
         public void AddHighlight(string name, IHighlight highlight) {
 
         }
         public void AddHighlight(string name, IHighlight highlight, ScanRule rule) {
-
+            scruledic.Add(name, new Tuple<IHighlight, ScanRule>(highlight, rule));
         }
 
         //private void getToken() {
@@ -110,6 +117,7 @@ namespace AsControls.Parser {
         //        tokentype = TokenType.EOS;
         //    }
         //}
+        private ScanRule scr;
 
         public int cmt;
 
@@ -130,8 +138,17 @@ namespace AsControls.Parser {
             bool? isscnext = null;
             line.Block.scisLineHeadCmt = _sccmt;
 
+            if (line.Block.pa != "default") {
+                if (!(this.Highlight is TestHighlight))
+                    this.Highlight = new TestHighlight();               
+            }
+            else {
+                if(this.Highlight != tmp)
+                    this.Highlight = tmp;
+            }
+
             if (b.schi != null) {
-                this.Highlight = b.schi;
+                //this.Highlight = b.schi;
             }
 
             //lex.Src = line.Text.ToString();
@@ -140,7 +157,8 @@ namespace AsControls.Parser {
             while (tokentype != TokenType.EOS) {
 
                 //getToken(b);
-                if (lex.advance(b, line.Block)) {
+                //if (lex.advance(b, line.Block)) {
+                if (lex.advance2(b, line.Block)) {
                     tokentype = lex.token;
                 }
                 else {
@@ -174,19 +192,34 @@ namespace AsControls.Parser {
                         break;
 
 
-                    case TokenType.Scan: //TODO test
-                        var val = lex.Value;
-                        if (val == "#START") {
-                            isscnext = true;
+                    case TokenType.PartitionStart: //TODO test
+                        //var val = lex.Value;
+                        //if (val == "#START") {
+                        //    isscnext = true;
+                        //    this.Highlight = new TestHighlight();
+                        //    line.Block.pa = "START";
+                        //    line.Block.schi = this.Highlight;
+                        //} else if (val == "#END") {
+                        //    isscnext = false;
+                        //    this.Highlight = tmp;
+                        //} 
+                        isscnext = lex.scisNextLine;
+                        if (line.Block.pa != "default") {
                             this.Highlight = new TestHighlight();
-                            line.Block.schi = this.Highlight;
-                        } else if (val == "#END") {
-                            isscnext = false;
-                            this.Highlight = tmp;
-                        } else {
-
+                            //if (scr == null) {
+                            //    scr = new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red));
+                            //    lex.AddScanRule(scr);
+                            //}
                         }
-                        //lex.AddRule(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
+                        break;
+                    case TokenType.Partition:
+                        isscnext = lex.scisNextLine;
+                        this.Highlight = new TestHighlight();
+                        break;
+                    case TokenType.PartitionEnd:
+                        isscnext = lex.scisNextLine;
+                        line.Block.pa = "default";
+                        this.Highlight = tmp;
                         break;
                     //case TokenType.Enclose:
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
@@ -206,9 +239,9 @@ namespace AsControls.Parser {
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
                     //    break;
                 }
-                if (sccmt == 1) {
-                    isscnext = true;
-                }
+                //if (sccmt == 1) {
+                //    isscnext = true;
+                //}
             }
 
             if (cmstrulrs.Count == 0) {
