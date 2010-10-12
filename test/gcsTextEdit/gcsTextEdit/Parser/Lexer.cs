@@ -246,7 +246,8 @@ namespace AsControls.Parser {
                                                 curblock.pa = item.Value.pa;
                                                 scisNextLine = true;
                                             }
-                                            //return true;
+                                            reader.setoffset(Offset + text.Length);
+                                            return true;
                                             break;
                                         }
                                     }
@@ -270,7 +271,7 @@ namespace AsControls.Parser {
 
                                                 curblock.pa = Eenelem.pa;
                                                 scisNextLine = false;
-
+                                                return true;
                                                 goto Finish;
                                             }
                                         }
@@ -297,6 +298,7 @@ namespace AsControls.Parser {
                             reader.setoffset(0);
                             c = reader.read();
                             //return true;
+                            //break;
                         }
                         else if (paruleStartKeys.Contains((char)c)) {
                             char fc = (char)c;

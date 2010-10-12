@@ -41,7 +41,7 @@ namespace AsControls.Parser {
 
         public List<Rule> getRules() {
             var rules = new List<Rule>();
-            rules.Add(new ScanRule("#START", "#END", "start",new AsControls.Parser.Attribute(Color.Red)));
+            //rules.Add(new ScanRule("#START", "#END", "start",new AsControls.Parser.Attribute(Color.Red)));
 
             rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
             return rules;
@@ -91,7 +91,7 @@ namespace AsControls.Parser {
                     //this.lex.AddScanRule();
                     //if (value.getRules().Count>0)
                     //lex.AddScanRule((ScanRule)value.getRules()[0]);
-                    lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
+                    //lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
                 }
                 highlight = value;
 
@@ -125,6 +125,7 @@ namespace AsControls.Parser {
 
         public Parser() {
             lex = new Lexer();
+            lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
         }
 
         public Block Parse(Line line, Block b, int _cmt, int _sccmt) {
@@ -138,12 +139,19 @@ namespace AsControls.Parser {
             bool? isscnext = null;
             line.Block.scisLineHeadCmt = _sccmt;
 
-            if (line.Block.pa != "default") {
+            //if (line.Block.pa != "default") {
+            //    if (!(this.Highlight is TestHighlight))
+            //        this.Highlight = new TestHighlight();               
+            //}
+            //else {
+            //    if(this.Highlight != tmp)
+            //        this.Highlight = tmp;
+            //}
+            if (b.pa != "default") {
                 if (!(this.Highlight is TestHighlight))
-                    this.Highlight = new TestHighlight();               
-            }
-            else {
-                if(this.Highlight != tmp)
+                    this.Highlight = new TestHighlight();
+            } else {
+                if (this.Highlight != tmp)
                     this.Highlight = tmp;
             }
 
