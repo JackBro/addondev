@@ -59,7 +59,7 @@ namespace AsControls.Parser {
     public class Block {
         //TODO test
         public string pa;
-        public IHighlight schi;
+        //public IHighlight schi;
         public int scisLineHeadCmt = 0;
         public int sccommentTransition = 0;
 
@@ -79,35 +79,50 @@ namespace AsControls.Parser {
         private List<Token> tokens;
         private Attribute defaultAttr;
 
-        private IHighlight tmp=null;
+        //private IHighlight tmp=null;
+        //private IHighlight highlight;
+        //public IHighlight Highlight {
+        //    get { return highlight; }
+        //    set{
+        //        //TODO test
+        //        if(tmp==null){
+        //            tmp = value;
+        //            //this.lex.AddScanRule();
+        //            //if (value.getRules().Count>0)
+        //            //lex.AddScanRule((ScanRule)value.getRules()[0]);
+        //            //lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
+        //        }
+        //        highlight = value;
 
-        private IHighlight highlight;
-        public IHighlight Highlight {
-            get { return highlight; }
-            set{
-                //TODO test
-                if(tmp==null){
-                    tmp = value;
-                    //this.lex.AddScanRule();
-                    //if (value.getRules().Count>0)
-                    //lex.AddScanRule((ScanRule)value.getRules()[0]);
-                    //lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
-                }
-                highlight = value;
+        //        defaultAttr = highlight.getDefault();
+        //        lex.ClearRule();
+        //        this.lex.AddRule(highlight.getRules());     
+        //    }
+        //}
 
-                defaultAttr = highlight.getDefault();
-                lex.ClearRule();
-                this.lex.AddRule(highlight.getRules());     
-            }
-        }
         //TODO test
-        private Dictionary<string, Tuple<IHighlight, ScanRule>> scruledic=new Dictionary<string,Tuple<IHighlight,ScanRule>>();
-        public void AddHighlight(string name, IHighlight highlight) {
+        //private Dictionary<string, Tuple<IHighlight, ScanRule>> scruledic=new Dictionary<string,Tuple<IHighlight,ScanRule>>();
+        private Dictionary<string, ScanRule> scruledic = new Dictionary<string, ScanRule>();
+        private Dictionary<string, IHighlight> highlightDic = new Dictionary<string, IHighlight>();
+        public void AddPartition(string id, ScanRule rule) {
+            scruledic.Add(id, rule);
+            lex.AddScanRule(rule);
+        }
 
+        public void AddHighlight(string id, IHighlight highlight) {
+            highlightDic.Add(id, highlight);
         }
-        public void AddHighlight(string name, IHighlight highlight, ScanRule rule) {
-            scruledic.Add(name, new Tuple<IHighlight, ScanRule>(highlight, rule));
+
+        public void setd(string id) {
+            IHighlight highlight = highlightDic[id];
+            defaultAttr = highlight.getDefault();
+            lex.ClearRule();
+            this.lex.AddRule(highlight.getRules()); 
         }
+
+        //public void AddHighlight(string name, IHighlight highlight, ScanRule rule) {
+        //    scruledic.Add(name, new Tuple<IHighlight, ScanRule>(highlight, rule));
+        //}
 
         //private void getToken() {
         //    if (lex.advance()) {
@@ -125,7 +140,7 @@ namespace AsControls.Parser {
 
         public Parser() {
             lex = new Lexer();
-            lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
+            //lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
         }
 
         public Block Parse(Line line, Block b, int _cmt, int _sccmt) {
@@ -148,15 +163,12 @@ namespace AsControls.Parser {
             //        this.Highlight = tmp;
             //}
             if (b.pa != "default") {
-                if (!(this.Highlight is TestHighlight))
-                    this.Highlight = new TestHighlight();
-            } else {
-                if (this.Highlight != tmp)
-                    this.Highlight = tmp;
-            }
+                //if (!(this.Highlight is TestHighlight))
+                //    this.Highlight = new TestHighlight();
 
-            if (b.schi != null) {
-                //this.Highlight = b.schi;
+            } else {
+                //if (this.Highlight != tmp)
+                //    this.Highlight = tmp;
             }
 
             //lex.Src = line.Text.ToString();
@@ -222,7 +234,7 @@ namespace AsControls.Parser {
                         break;
                     case TokenType.Partition:
                         isscnext = lex.scisNextLine;
-                        this.Highlight = new TestHighlight();
+                        //this.Highlight = new TestHighlight();
                         break;
                     case TokenType.PartitionEnd:
                         isscnext = lex.scisNextLine;
