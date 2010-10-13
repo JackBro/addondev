@@ -110,7 +110,9 @@ namespace AsControls.Parser {
         }
 
         public void AddHighlight(string id, IHighlight highlight) {
-            highlightDic.Add(id, highlight);
+            if (!highlightDic.ContainsKey(id)) {
+                highlightDic.Add(id, highlight);
+            }
         }
 
         public void setd(string id) {
@@ -225,7 +227,7 @@ namespace AsControls.Parser {
                         //} 
                         isscnext = lex.scisNextLine;
                         if (line.Block.pa != "default") {
-                            this.Highlight = new TestHighlight();
+                            //this.Highlight = new TestHighlight();
                             //if (scr == null) {
                             //    scr = new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red));
                             //    lex.AddScanRule(scr);
@@ -239,7 +241,7 @@ namespace AsControls.Parser {
                     case TokenType.PartitionEnd:
                         isscnext = lex.scisNextLine;
                         line.Block.pa = "default";
-                        this.Highlight = tmp;
+                        //this.Highlight = tmp;
                         break;
                     //case TokenType.Enclose:
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });

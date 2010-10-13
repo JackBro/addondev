@@ -18,7 +18,9 @@ namespace AsControls {
         Parser.Parser parser;
 
         public void setHighlight(IHighlight highlight) {
-            parser.Highlight = highlight;
+            //parser.Highlight = highlight;
+            parser.AddHighlight("default", highlight);
+            parser.setd("default");
         }
 
         public UndoManager UndoManager { get; private set; }
@@ -45,6 +47,10 @@ namespace AsControls {
         /// <returns></returns>
         public IText tl(int i) {
             return text_[i].Text;
+        }
+
+        public Line line(int i) {
+            return text_[i];
         }
 
         public List<Token> Rules(int i) {

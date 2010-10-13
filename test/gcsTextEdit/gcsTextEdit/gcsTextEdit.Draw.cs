@@ -273,7 +273,9 @@ namespace AsControls
         private static char[] cs = { '\t', ' ', '\x3000' };
         //private Point pp = new Point();
         private void DrawTXT3(Graphics g, VDrawInfo v, Painter p) {
-
+            
+            //doc_.line(0).Block.pa
+            
             //g.FillRectangle(bb, v.rc);
             // 定数１
             //	const int   TAB = p.T();
@@ -375,6 +377,9 @@ namespace AsControls
             for (int tl = tmpTLMIN; a.top < v.YMAX; ++tl) {
             //for (int tl = tmpTLMIN; a.top < v.YMAX; ++tl) {
 
+                //TODO test
+                string pa = doc_.line(tl).Block.pa;
+
                 // 定数２
                 //string str = doc_.tl(tl).ToString();
                 IText str = doc_.tl(tl); 
@@ -406,6 +411,11 @@ namespace AsControls
                     end = rlend(tl, rl);
                     if (a.bottom <= tmpYMIN)
                         continue;
+
+                    //TODO test
+                    if (pa == "default") {
+                        p.DrawFill(g, 0, a.top, v.XMAX, H);
+                    }
 
                     // テキストデータ描画
                     for (x = 0, i=stt; x <= v.XMAX && i < end; ) {
