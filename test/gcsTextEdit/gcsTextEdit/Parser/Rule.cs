@@ -92,16 +92,15 @@ namespace AsControls.Parser {
     }
 
     public class ScanRule : MultiLineRule {
-        public string end;
-        public string pa;
+        public string id;
         public ScanRule() {
             token = TokenType.TXT;
         }
-        public ScanRule(string start, string end, string pa, Attribute attr) {
+        public ScanRule(string start, string end, string id) {
             this.start = start;
             this.end = end;
-            this.attr = attr;
-            this.pa = pa;
+            //this.attr = attr;
+            this.id = id;
             token = TokenType.TXT;
         }
 

@@ -212,7 +212,7 @@ namespace AsControls.Parser {
             }
 
             if (Src.Length == 0 && curblock.scisLineHeadCmt == 1) {
-                curblock.pa = preblock.pa;
+                curblock.id = preblock.id;
                 scisNextLine = true;
             }
 
@@ -243,7 +243,7 @@ namespace AsControls.Parser {
                                             //lexSymbol(curblock);
                                             tok = TokenType.PartitionStart;
                                             if (curblock != null) {
-                                                curblock.pa = item.Value.pa;
+                                                curblock.id = item.Value.id;
                                                 scisNextLine = true;
                                             }
                                             reader.setoffset(Offset + text.Length);
@@ -254,6 +254,12 @@ namespace AsControls.Parser {
                                 }
                             }
                         }
+                        tok = TokenType.PartitionEnd;
+                        if (preblock.id == Document.DEFAULT_ID) {
+                            curblock.id = preblock.id;
+                        }
+                        scisNextLine = false;
+                        return true;
                     }
                     else {
                         if (Offset - 1 == 0) {
@@ -264,13 +270,16 @@ namespace AsControls.Parser {
                                         buf.Append((char)c);
 
                                         if (scanEndRuleDic.ContainsKey(buf.ToString())) {
-                                            if (preblock.pa == scanEndRuleDic[buf.ToString()].pa) {
+                                            if (preblock.id == scanEndRuleDic[buf.ToString()].id) {
                                                 var Eenelem = scanEndRuleDic[buf.ToString()];
                                                 tok = TokenType.PartitionEnd;
                                                 //resultRule = Eenelem;
 
-                                                curblock.pa = Eenelem.pa;
+                                                curblock.id = Eenelem.id;
                                                 scisNextLine = false;
+
+                                                reader.setoffset(Offset + buf.ToString().Length);
+
                                                 return true;
                                                 goto Finish;
                                             }
@@ -292,7 +301,7 @@ namespace AsControls.Parser {
                                 tok = TokenType.Partition;
                                 //resultRule = enelem;
 
-                                curblock.pa = preblock.pa;
+                                curblock.id = preblock.id;
                                 scisNextLine = true;
                             }
                             reader.setoffset(0);
@@ -312,7 +321,7 @@ namespace AsControls.Parser {
                                             //lexSymbol(curblock);
                                             tok = TokenType.PartitionStart;
                                             if (curblock != null) {
-                                                curblock.pa = item.Key;
+                                                curblock.id = item.Key;
                                                 scisNextLine = true;
                                             }
                                             //return true;
@@ -385,7 +394,7 @@ namespace AsControls.Parser {
 
                         Finish:
 
-                            if (c == -1) {
+                            if (c == -1 && preblock.elem != null && ruleDic.ContainsKey(preblock.elem.start)) {
                                 var enelem = ruleDic[preblock.elem.start];
 
                                 reader.setoffset(Src.Length);

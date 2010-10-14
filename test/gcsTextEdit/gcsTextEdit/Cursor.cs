@@ -355,14 +355,6 @@ namespace AsControls
 	        {
                 if (Selection == SelectionType.Rectangle) {
                     
-                    //Console.WriteLine("sp.Y = " + sp.Y);
-                    //int ex = 0;
-                    //if (cur_ > sel_) {
-                    //    ex = cur_.vx;
-                    //}
-                    //else {
-                    //    ex = sel_.vx;
-                    //}
                     var v = view_.VRect;
                     var pos = view_.PointToClient(System.Windows.Forms.Cursor.Position);
                     Rectangle rc = new Rectangle(LFT, Math.Max(TOP, 0), pos.X, ep.Y + view_.fnt().H());
@@ -370,7 +362,9 @@ namespace AsControls
                 }
                 else {
                     //Rectangle rc = new Rectangle(Math.Max(LFT,sp.X), sp.Y, Math.Min(RHT,ep.X), sp.Y+view_.fnt().H());
-                    Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), sp.Y, Math.Min(RHT, ep.X - sp.X), view_.fnt().H());
+                   
+                    //Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), sp.Y, Math.Min(RHT, ep.X - sp.X), view_.fnt().H());
+                    Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), sp.Y, RHT, view_.fnt().H()); //TODO
                     view_.Invalidate(rc, false);
                     //::InvalidateRect( caret_->hwnd(), &rc, FALSE );
                     //Console.WriteLine("Rectangle sp.Y == ep.Y");

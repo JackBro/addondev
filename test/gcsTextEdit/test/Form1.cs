@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using AsControls;
+using AsControls.Parser;
 
 namespace test
 {
@@ -28,7 +29,8 @@ namespace test
             edit.ShowWhiteSpace = true;
             edit.ShowZenWhiteSpace = true;
             edit.ShowTab = true;
-            edit.Document.setHighlight(new Highlight());
+            edit.Document.AddPartition(new ScanRule("#start", "#end", "test"));
+            edit.Document.setHighlight("test", new Highlight());
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;

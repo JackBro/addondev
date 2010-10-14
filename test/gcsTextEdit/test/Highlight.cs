@@ -8,9 +8,9 @@ using AsControls.Parser;
 namespace test {
     class Highlight : IHighlight {
         #region IHighlight メンバ
-
+        private AsControls.Parser.Attribute defaultAttr = new AsControls.Parser.Attribute(Color.Black);
         public AsControls.Parser.Attribute getDefault() {
-            return new AsControls.Parser.Attribute(Color.Black);
+            return defaultAttr;
         }
 
         public List<Rule> getRules() {

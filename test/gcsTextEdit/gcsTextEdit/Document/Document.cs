@@ -12,6 +12,9 @@ namespace AsControls {
 
     //public class Document : IDocument {
     public class Document {
+
+        public static string DEFAULT_ID = "default";
+
         internal event TextUpdateEventHandler TextUpdate;
 
         private List<Line> text_;
@@ -19,8 +22,18 @@ namespace AsControls {
 
         public void setHighlight(IHighlight highlight) {
             //parser.Highlight = highlight;
-            parser.AddHighlight("default", highlight);
-            parser.setd("default");
+            parser.AddHighlight(Document.DEFAULT_ID, highlight);
+            parser.setd(Document.DEFAULT_ID);
+        }
+
+        public void setHighlight(string id, IHighlight highlight) {
+            //parser.Highlight = highlight;
+            parser.AddHighlight(id, highlight);
+        }
+
+        public void AddPartition(ScanRule rule) {
+            //parser.Highlight = highlight;
+            parser.AddPartition(rule);
         }
 
         public UndoManager UndoManager { get; private set; }

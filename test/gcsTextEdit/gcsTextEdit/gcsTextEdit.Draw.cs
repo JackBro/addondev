@@ -378,7 +378,7 @@ namespace AsControls
             //for (int tl = tmpTLMIN; a.top < v.YMAX; ++tl) {
 
                 //TODO test
-                string pa = doc_.line(tl).Block.pa;
+                string pa = doc_.line(tl).Block.id;
 
                 // 定数２
                 //string str = doc_.tl(tl).ToString();
@@ -413,8 +413,8 @@ namespace AsControls
                         continue;
 
                     //TODO test
-                    if (pa == "default") {
-                        p.DrawFill(g, 0, a.top, v.XMAX, H);
+                    if (pa != Document.DEFAULT_ID) {
+                        p.DrawFill(g, 0, a.top, v.XMAX + v.XBASE, H);
                     }
 
                     // テキストデータ描画

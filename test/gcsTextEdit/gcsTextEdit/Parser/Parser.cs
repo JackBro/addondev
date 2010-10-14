@@ -29,26 +29,26 @@ namespace AsControls.Parser {
     //    firstlastsame,
     //    lastin
     //}
-    class TestHighlight : IHighlight {
-        public TestHighlight() {
-        }
+    //class TestHighlight : IHighlight {
+    //    public TestHighlight() {
+    //    }
 
-        #region IHighlight メンバ
+    //    #region IHighlight メンバ
 
-        public Attribute getDefault() {
-            return new Attribute(Color.Red);
-        }
+    //    public Attribute getDefault() {
+    //        return new Attribute(Color.Red);
+    //    }
 
-        public List<Rule> getRules() {
-            var rules = new List<Rule>();
-            //rules.Add(new ScanRule("#START", "#END", "start",new AsControls.Parser.Attribute(Color.Red)));
+    //    public List<Rule> getRules() {
+    //        var rules = new List<Rule>();
+    //        //rules.Add(new ScanRule("#START", "#END", "start",new AsControls.Parser.Attribute(Color.Red)));
 
-            rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
-            return rules;
-        }
+    //        rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
+    //        return rules;
+    //    }
 
-        #endregion
-    }
+    //    #endregion
+    //}
 
     public class Token {
         public int ad;
@@ -58,8 +58,7 @@ namespace AsControls.Parser {
 
     public class Block {
         //TODO test
-        public string pa;
-        //public IHighlight schi;
+        public string id;
         public int scisLineHeadCmt = 0;
         public int sccommentTransition = 0;
 
@@ -68,7 +67,7 @@ namespace AsControls.Parser {
         public int commentTransition = 0;
 
         public Block() {
-            pa = "default";
+            id = Document.DEFAULT_ID;
         }
     }
 
@@ -104,8 +103,8 @@ namespace AsControls.Parser {
         //private Dictionary<string, Tuple<IHighlight, ScanRule>> scruledic=new Dictionary<string,Tuple<IHighlight,ScanRule>>();
         private Dictionary<string, ScanRule> scruledic = new Dictionary<string, ScanRule>();
         private Dictionary<string, IHighlight> highlightDic = new Dictionary<string, IHighlight>();
-        public void AddPartition(string id, ScanRule rule) {
-            scruledic.Add(id, rule);
+        public void AddPartition(ScanRule rule) {
+            scruledic.Add(rule.id, rule);
             lex.AddScanRule(rule);
         }
 
@@ -114,12 +113,15 @@ namespace AsControls.Parser {
                 highlightDic.Add(id, highlight);
             }
         }
-
+        private string curID = string.Empty;
         public void setd(string id) {
+            if (curID != id) {
             IHighlight highlight = highlightDic[id];
             defaultAttr = highlight.getDefault();
             lex.ClearRule();
-            this.lex.AddRule(highlight.getRules()); 
+            this.lex.AddRule(highlight.getRules());
+            curID = id;
+            }
         }
 
         //public void AddHighlight(string name, IHighlight highlight, ScanRule rule) {
@@ -164,13 +166,14 @@ namespace AsControls.Parser {
             //    if(this.Highlight != tmp)
             //        this.Highlight = tmp;
             //}
-            if (b.pa != "default") {
+            if (b.id != Document.DEFAULT_ID) {
                 //if (!(this.Highlight is TestHighlight))
                 //    this.Highlight = new TestHighlight();
-
+                setd(b.id);
             } else {
                 //if (this.Highlight != tmp)
                 //    this.Highlight = tmp;
+                setd(b.id);
             }
 
             //lex.Src = line.Text.ToString();
@@ -226,12 +229,13 @@ namespace AsControls.Parser {
                         //    this.Highlight = tmp;
                         //} 
                         isscnext = lex.scisNextLine;
-                        if (line.Block.pa != "default") {
+                        if (line.Block.id != Document.DEFAULT_ID) {
                             //this.Highlight = new TestHighlight();
                             //if (scr == null) {
                             //    scr = new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red));
                             //    lex.AddScanRule(scr);
                             //}
+                            setd(line.Block.id);
                         }
                         break;
                     case TokenType.Partition:
@@ -240,8 +244,9 @@ namespace AsControls.Parser {
                         break;
                     case TokenType.PartitionEnd:
                         isscnext = lex.scisNextLine;
-                        line.Block.pa = "default";
-                        //this.Highlight = tmp;
+                        line.Block.id = Document.DEFAULT_ID; //TODO
+                        //setd(line.Block.pa);
+                        setd(Document.DEFAULT_ID);
                         break;
                     //case TokenType.Enclose:
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
