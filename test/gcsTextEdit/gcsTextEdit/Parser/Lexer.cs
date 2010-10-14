@@ -230,109 +230,108 @@ namespace AsControls.Parser {
 
                 default:
                     //TODO test
-                    if (curblock.scisLineHeadCmt == 0) {
-                        if (paruleStartKeys.Contains((char)c)) {
-                            char fc = (char)c;
-                            foreach (var item in scanRuleDic) {
-                                if (item.Key[0] == fc) {
-                                    var len = item.Value.start.Length;
-                                    if (Offset - 1 + len <= Src.Length) {
-                                        var text = Src.Substring(Offset - 1, len);
-                                        if (text.ToString() == item.Key) {
-                                            //reader.unread();
-                                            //lexSymbol(curblock);
-                                            tok = TokenType.PartitionStart;
-                                            if (curblock != null) {
-                                                curblock.id = item.Value.id;
-                                                scisNextLine = true;
-                                            }
-                                            reader.setoffset(Offset + text.Length);
-                                            return true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        tok = TokenType.PartitionEnd;
-                        if (preblock.id == Document.DEFAULT_ID) {
-                            curblock.id = preblock.id;
-                        }
-                        scisNextLine = false;
-                        return true;
-                    }
-                    else {
-                        if (Offset - 1 == 0) {
-                            while (c != -1) {
-                                if (paruleStartKeys.Contains((char)c)) {
-                                    StringBuilder buf = new StringBuilder();
-                                    while (c != -1) {
-                                        buf.Append((char)c);
-
-                                        if (scanEndRuleDic.ContainsKey(buf.ToString())) {
-                                            if (preblock.id == scanEndRuleDic[buf.ToString()].id) {
-                                                var Eenelem = scanEndRuleDic[buf.ToString()];
-                                                tok = TokenType.PartitionEnd;
-                                                //resultRule = Eenelem;
-
-                                                curblock.id = Eenelem.id;
-                                                scisNextLine = false;
-
-                                                reader.setoffset(Offset + buf.ToString().Length);
-
+                    if (curblock.isLineHeadCmt == 0) {
+                        if (curblock.scisLineHeadCmt == 0) {
+                            if (paruleStartKeys.Contains((char)c)) {
+                                char fc = (char)c;
+                                foreach (var item in scanRuleDic) {
+                                    if (item.Key[0] == fc) {
+                                        var len = item.Value.start.Length;
+                                        if (Offset - 1 + len <= Src.Length) {
+                                            var text = Src.Substring(Offset - 1, len);
+                                            if (text.ToString() == item.Key) {
+                                                //reader.unread();
+                                                //lexSymbol(curblock);
+                                                tok = TokenType.PartitionStart;
+                                                if (curblock != null) {
+                                                    curblock.id = item.Value.id;
+                                                    scisNextLine = true;
+                                                }
+                                                reader.setoffset(Offset + text.Length);
                                                 return true;
-                                                goto Finish;
+                                                break;
                                             }
                                         }
-                                        c = reader.read();
                                     }
                                 }
-                                c = reader.read();
                             }
-
-                        Finish:
-
-                            if (c == -1) {
-                                //var enelem = ruleDic[preblock.elem.start];
-
-                                //reader.setoffset(Src.Length);
-                                //enelem.startIndex = 0;
-                                //enelem.len = Src.Length;
-                                tok = TokenType.Partition;
-                                //resultRule = enelem;
-
-                                curblock.id = preblock.id;
-                                scisNextLine = true;
-                            }
-                            reader.setoffset(0);
-                            c = reader.read();
+                            //tok = TokenType.PartitionEnd;
+                            //if (preblock.id == Document.DEFAULT_ID) {
+                            //    curblock.id = preblock.id;
+                            //}
+                            //scisNextLine = false;
                             //return true;
-                            //break;
-                        }
-                        else if (paruleStartKeys.Contains((char)c)) {
-                            char fc = (char)c;
-                            foreach (var item in scanRuleDic) {
-                                if (item.Key[0] == fc) {
-                                    var len = item.Value.start.Length;
-                                    if (Offset - 1 + len <= Src.Length) {
-                                        var text = Src.Substring(Offset - 1, len);
-                                        if (text.ToString() == item.Key) {
-                                            //reader.unread();
-                                            //lexSymbol(curblock);
-                                            tok = TokenType.PartitionStart;
-                                            if (curblock != null) {
-                                                curblock.id = item.Key;
-                                                scisNextLine = true;
+                        } else {
+                            if (Offset - 1 == 0) {
+                                while (c != -1) {
+                                    if (paruleStartKeys.Contains((char)c)) {
+                                        StringBuilder buf = new StringBuilder();
+                                        while (c != -1) {
+                                            buf.Append((char)c);
+
+                                            if (scanEndRuleDic.ContainsKey(buf.ToString())) {
+                                                if (preblock.id == scanEndRuleDic[buf.ToString()].id) {
+                                                    var Eenelem = scanEndRuleDic[buf.ToString()];
+                                                    tok = TokenType.PartitionEnd;
+                                                    //resultRule = Eenelem;
+
+                                                    curblock.id = Eenelem.id;
+                                                    scisNextLine = false;
+
+                                                    reader.setoffset(Offset + buf.ToString().Length);
+
+                                                    return true;
+                                                    goto Finish;
+                                                }
                                             }
-                                            //return true;
-                                            break;
+                                            c = reader.read();
+                                        }
+                                    }
+                                    c = reader.read();
+                                }
+
+                            Finish:
+
+                                if (c == -1) {
+                                    //var enelem = ruleDic[preblock.elem.start];
+
+                                    //reader.setoffset(Src.Length);
+                                    //enelem.startIndex = 0;
+                                    //enelem.len = Src.Length;
+                                    tok = TokenType.Partition;
+                                    //resultRule = enelem;
+
+                                    curblock.id = preblock.id;
+                                    scisNextLine = true;
+                                }
+                                reader.setoffset(0);
+                                c = reader.read();
+                                //return true;
+                                //break;
+                            } else if (paruleStartKeys.Contains((char)c)) {
+                                char fc = (char)c;
+                                foreach (var item in scanRuleDic) {
+                                    if (item.Key[0] == fc) {
+                                        var len = item.Value.start.Length;
+                                        if (Offset - 1 + len <= Src.Length) {
+                                            var text = Src.Substring(Offset - 1, len);
+                                            if (text.ToString() == item.Key) {
+                                                //reader.unread();
+                                                //lexSymbol(curblock);
+                                                tok = TokenType.PartitionStart;
+                                                if (curblock != null) {
+                                                    curblock.id = item.Key;
+                                                    scisNextLine = true;
+                                                }
+                                                //return true;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-
 
                     if (curblock.isLineHeadCmt == 0) { //0: 行頭がブロックコメントの内部ではない
                         if (Char.IsDigit((char)c)) {
@@ -365,7 +364,7 @@ namespace AsControls.Parser {
                     }
                     else { //1: 行頭がブロックコメントの内部
 
-                        if (Offset - 1 == 0) {
+                        if (Offset - 1 == 0){// && preblock.elem != null) {
 
                             while (c != -1) {
                                 if (ruleEndKeys.Contains((char)c)) {

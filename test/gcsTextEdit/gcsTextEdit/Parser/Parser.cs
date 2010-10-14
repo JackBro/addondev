@@ -169,10 +169,14 @@ namespace AsControls.Parser {
             if (b.id != Document.DEFAULT_ID) {
                 //if (!(this.Highlight is TestHighlight))
                 //    this.Highlight = new TestHighlight();
+                if (b.sccommentTransition == 0) {
+                    line.Block.id = Document.DEFAULT_ID;
+                }
                 setd(b.id);
             } else {
                 //if (this.Highlight != tmp)
                 //    this.Highlight = tmp;
+                line.Block.id = b.id;
                 setd(b.id);
             }
 
@@ -244,7 +248,7 @@ namespace AsControls.Parser {
                         break;
                     case TokenType.PartitionEnd:
                         isscnext = lex.scisNextLine;
-                        line.Block.id = Document.DEFAULT_ID; //TODO
+                        //line.Block.id = Document.DEFAULT_ID; //TODO
                         //setd(line.Block.pa);
                         setd(Document.DEFAULT_ID);
                         break;
