@@ -22,6 +22,7 @@ namespace test {
             rules.Add(new MultiLineRule("/*", "*/", new AsControls.Parser.Attribute(Color.Green)));
             //rules.Add(new EncloseRule("\"", "\"", new AsControls.Parser.Attribute(Color.Brown), '\\'));
             //rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
+            rules.Add(new KeywordRule("if", new AsControls.Parser.Attribute(Color.Blue)));
             return rules;
         }
 

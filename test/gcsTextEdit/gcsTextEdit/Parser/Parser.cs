@@ -146,7 +146,7 @@ namespace AsControls.Parser {
             lex = new Lexer();
             //lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
         }
-
+        private string cuid = string.Empty;
         public Block Parse(Line line, Block b, int _cmt, int _sccmt) {
 
             tokentype = TokenType.TXT;
@@ -166,16 +166,25 @@ namespace AsControls.Parser {
             //    if(this.Highlight != tmp)
             //        this.Highlight = tmp;
             //}
-            if (b.id != Document.DEFAULT_ID) {
-                //if (!(this.Highlight is TestHighlight))
-                //    this.Highlight = new TestHighlight();
-                if (b.sccommentTransition == 0) {
-                    line.Block.id = Document.DEFAULT_ID;
-                }
+
+            //if (b.id != Document.DEFAULT_ID) {
+            //    //if (!(this.Highlight is TestHighlight))
+            //    //    this.Highlight = new TestHighlight();
+            //    if (b.sccommentTransition == 0) {
+            //        line.Block.id = Document.DEFAULT_ID;
+            //    }
+            //    setd(b.id);
+            //} else {
+            //    //if (this.Highlight != tmp)
+            //    //    this.Highlight = tmp;
+            //    line.Block.id = b.id;
+            //    setd(b.id);
+            //}
+            if (line.Block.scisLineHeadCmt == 0) {
+                line.Block.id = Document.DEFAULT_ID;
                 setd(b.id);
-            } else {
-                //if (this.Highlight != tmp)
-                //    this.Highlight = tmp;
+            }
+            else {
                 line.Block.id = b.id;
                 setd(b.id);
             }
@@ -245,12 +254,19 @@ namespace AsControls.Parser {
                     case TokenType.Partition:
                         isscnext = lex.scisNextLine;
                         //this.Highlight = new TestHighlight();
+                        cuid = line.Block.id;
+                        setd(line.Block.id);
                         break;
                     case TokenType.PartitionEnd:
                         isscnext = lex.scisNextLine;
                         //line.Block.id = Document.DEFAULT_ID; //TODO
                         //setd(line.Block.pa);
+                        cuid = line.Block.id;
+                        //line.Block.id = Document.DEFAULT_ID;
                         setd(Document.DEFAULT_ID);
+                        break;
+                    default:
+                        //setd(line.Block.id);
                         break;
                     //case TokenType.Enclose:
                     //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
@@ -274,7 +290,9 @@ namespace AsControls.Parser {
                 //    isscnext = true;
                 //}
             }
-
+            //if (cuid != string.Empty)
+            //line.Block.id = cuid;
+            
             if (cmstrulrs.Count == 0) {
                 line.Block.commentTransition = 2;
             } else {

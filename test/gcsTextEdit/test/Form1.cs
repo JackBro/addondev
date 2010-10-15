@@ -255,11 +255,13 @@ namespace test
             edit.Wrap = AsControls.WrapType.WindowWidth;
             WrapOnToolStripMenuItem.Checked = true;
 
-            edit.Text = @"/*テスト
-1234567890abcdefg
-*/ /'dddd'/ /*sss
-ssssss
-";
+            edit.Text = @"/*sss*/
+#start
+/*
+e
+ee
+*/
+#end";
 
             panel1.Controls.Add(edit);
 

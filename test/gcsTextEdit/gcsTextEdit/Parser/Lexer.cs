@@ -230,7 +230,7 @@ namespace AsControls.Parser {
 
                 default:
                     //TODO test
-                    if (curblock.isLineHeadCmt == 0) {
+                    if (curblock.isLineHeadCmt == 0){// && preblock.elem == curblock.elem) {
                         if (curblock.scisLineHeadCmt == 0) {
                             if (paruleStartKeys.Contains((char)c)) {
                                 char fc = (char)c;
@@ -308,7 +308,8 @@ namespace AsControls.Parser {
                                 c = reader.read();
                                 //return true;
                                 //break;
-                            } else if (paruleStartKeys.Contains((char)c)) {
+                            }
+                            else if (paruleStartKeys.Contains((char)c)) {
                                 char fc = (char)c;
                                 foreach (var item in scanRuleDic) {
                                     if (item.Key[0] == fc) {
@@ -436,11 +437,7 @@ namespace AsControls.Parser {
                             }
                         }
                     }
-
-                    
-
                     break;
-
             }
             return true;
         }
