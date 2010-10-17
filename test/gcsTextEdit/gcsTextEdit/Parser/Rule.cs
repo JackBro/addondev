@@ -38,7 +38,6 @@ namespace AsControls.Parser {
         EndLine,
         Line,
         Keyword,
-        Element,
         Number,
         PartitionStart,
         Partition,

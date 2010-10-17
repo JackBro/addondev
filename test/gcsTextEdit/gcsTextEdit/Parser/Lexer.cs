@@ -255,12 +255,6 @@ namespace AsControls.Parser {
                                     }
                                 }
                             }
-                            //tok = TokenType.PartitionEnd;
-                            //if (preblock.id == Document.DEFAULT_ID) {
-                            //    curblock.id = preblock.id;
-                            //}
-                            //scisNextLine = false;
-                            //return true;
                         } else {
                             if (Offset - 1 == 0) {
                                 while (c != -1) {
