@@ -43,37 +43,6 @@ namespace test
                 e.Handled = false;
             };
 
-            //bool flg = false;
-            //edit.MouseDown += (sender, e) => {
-            //    //edit.SelectMode = AsControls.SelectType.Normal;
-            //    if (edit.SelectMode == AsControls.SelectType.Rectangle) {
-            //        flg = true;
-            //    }
-            //};
-            //edit.MouseUp += (sender, e) => {
-            //    if (flg) {
-            //        edit.SelectMode = AsControls.SelectType.Normal;
-            //    }
-            //    flg = false;
-            //};
-            //edit.MouseMove += (sender, e) => {
-            //    if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
-            //        edit.SelectMode = AsControls.SelectType.Rectangle;
-            //    }
-            //};
-            //edit.MouseMove += (sender, e) => {
-            //    if (e.Button == MouseButtons.Left && (Control.ModifierKeys & Keys.Alt) == Keys.Alt) {
-            //        edit.RectSelect = true;
-            //    }
-            //};
-
-            //edit.MouseDown += (sender, e) => {
-            //    if (e.Button == MouseButtons.Left && ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)) {
-            //        //edit.cursor.on_lbutton_down(e.X, e.Y, (Control.ModifierKeys & Keys.Shift) == Keys.Shift);
-            //        edit.sel(e.X, e.Y);
-            //    }
-            //};
-
             //
             edit.KeyBind.setAction(Keys.Back, (editor) => {
                 editor.BackSpace();

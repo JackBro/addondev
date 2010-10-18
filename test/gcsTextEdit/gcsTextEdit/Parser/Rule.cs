@@ -6,6 +6,27 @@ using System.Drawing;
 
 namespace AsControls.Parser {
 
+    public class Token {
+        public int ad;
+        public int len;
+        public Attribute attr;
+    }
+
+    public class Block {
+        //TODO test
+        public string id;
+        public int scisLineHeadCmt = 0;
+        public int sccommentTransition = 0;
+
+        public MultiLineRule elem;
+        public int isLineHeadCmt = 0;
+        public int commentTransition = 0;
+
+        public Block() {
+            id = Document.DEFAULT_ID;
+        }
+    }
+
     [Flags]
     public enum AttrType {
         Normal=1,
@@ -34,6 +55,7 @@ namespace AsControls.Parser {
         EOS,
         TXT, // 普通の字
         MultiLine,
+        MultiLineEnd,
         Enclose,
         EndLine,
         Line,
@@ -51,10 +73,25 @@ namespace AsControls.Parser {
         public abstract int exer(Lexer lex);
         public int startIndex;
         public int len;
+
+        public Func<string, LexerReader, bool> detected;
+
+        public bool Detected(string sequence, LexerReader reader) {
+            if (detected == null) {
+                if (sequence == start) {
+                    return true;
+                }
+                return false;
+            }
+            else {
+                return detected(sequence, reader);
+            }
+        }
     }
 
     public class TextRule : Rule {
         public TextRule(Attribute attr) {
+            
             this.attr = attr;
             this.token = TokenType.TXT;
         }
@@ -140,11 +177,6 @@ namespace AsControls.Parser {
             int offset = lex.reader.offset();
             int index = lex.reader.Src.IndexOf(end, offset);
 
-            //if (index < 0) return index;
-            //if (index < 0) {
-            //    return lex.reader.Src.Length;
-            //}
-
             while (index > 0 && escape != null) {
                 if (lex.reader.Src[index - 1] == escape) {
                     index = lex.reader.Src.IndexOf(end, index + end.Length);
@@ -157,7 +189,6 @@ namespace AsControls.Parser {
             if (index < 0) {
                 return lex.reader.Src.Length;
             }
-            //int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
             int endindex = index + this.end.Length;
             return endindex;
         }

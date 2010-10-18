@@ -50,7 +50,7 @@ namespace AsControls.Parser {
     //    #endregion
     //}
 
-    class Parser {
+    class Parser_test {
 
         private Lexer lex;
         private TokenType tokentype;
@@ -95,11 +95,11 @@ namespace AsControls.Parser {
         private string curID = string.Empty;
         public void setd(string id) {
             if (curID != id) {
-            IHighlight highlight = highlightDic[id];
-            defaultAttr = highlight.getDefault();
-            lex.ClearRule();
-            this.lex.AddRule(highlight.getRules());
-            curID = id;
+                IHighlight highlight = highlightDic[id];
+                defaultAttr = highlight.getDefault();
+                lex.ClearRule();
+                this.lex.AddRule(highlight.getRules());
+                curID = id;
             }
         }
 
@@ -121,7 +121,7 @@ namespace AsControls.Parser {
 
         public int sccmt;
 
-        public Parser() {
+        public Parser_test() {
             lex = new Lexer();
             //lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
         }
@@ -183,11 +183,11 @@ namespace AsControls.Parser {
                 }
                 switch (tokentype) {
                     case TokenType.MultiLine:
-                        //var melem = lex.getElement();
-                        ////if (melem.startIndex == 0 && melem.len == line.Text.ToString().Length) {
-                        ////    line.Block.commentTransition = 2;
-                        ////}
-                        //cmstrulrs.Add(new Token { ad = melem.startIndex, len = melem.len, attr = null });
+                    //var melem = lex.getElement();
+                    ////if (melem.startIndex == 0 && melem.len == line.Text.ToString().Length) {
+                    ////    line.Block.commentTransition = 2;
+                    ////}
+                    //cmstrulrs.Add(new Token { ad = melem.startIndex, len = melem.len, attr = null });
 
                     case TokenType.Enclose:
                     case TokenType.EndLine:
@@ -271,14 +271,16 @@ namespace AsControls.Parser {
             }
             //if (cuid != string.Empty)
             //line.Block.id = cuid;
-            
+
             if (cmstrulrs.Count == 0) {
                 line.Block.commentTransition = 2;
-            } else {
-                bool next = cmstrulrs[cmstrulrs.Count-1].t3;
+            }
+            else {
+                bool next = cmstrulrs[cmstrulrs.Count - 1].t3;
                 if (next) {
                     line.Block.commentTransition = 3;
-                } else {
+                }
+                else {
                     line.Block.commentTransition = 0;
                 }
             }
@@ -287,15 +289,17 @@ namespace AsControls.Parser {
 
             if (isscnext == null) {
                 line.Block.sccommentTransition = 2;
-            } else {
+            }
+            else {
                 if ((bool)isscnext) {
                     line.Block.sccommentTransition = 3;
-                } else {
+                }
+                else {
                     line.Block.sccommentTransition = 0;
                 }
             }
             sccmt = (line.Block.sccommentTransition >> _sccmt) & 1;
-            
+
             if (tokens.Count > 0) {
 
                 var lastrule = tokens[tokens.Count - 1];
@@ -324,7 +328,7 @@ namespace AsControls.Parser {
             }
 
             line.Tokens = tokens;
-            
+
             return line.Block;
         }
     }
