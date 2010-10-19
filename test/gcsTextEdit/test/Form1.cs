@@ -224,13 +224,17 @@ namespace test
             edit.Wrap = AsControls.WrapType.WindowWidth;
             WrapOnToolStripMenuItem.Checked = true;
 
-            edit.Text = @"/*sss*/
-#start
-/*
-e
-ee
-*/
-#end";
+//            edit.Text = @"/*sss*/
+//#start
+///*
+//e
+//ee
+//*/
+//#end";
+
+            edit.Text = @"/*ss
+s*/mmmm
+e";
 
             panel1.Controls.Add(edit);
 

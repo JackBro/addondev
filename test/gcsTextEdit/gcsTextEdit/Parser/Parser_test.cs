@@ -102,36 +102,40 @@ namespace AsControls.Parser {
                 }
 
                 switch (tokentype) {
-                    case TokenType.EndLine: {
-                            tokens.Add(new Token { ad = lex.Offset, len = line.Length - lex.Offset, attr = lex.Attr });
-                        }
-                        break;
+                    case TokenType.EndLine:
                     case TokenType.Line:
                     case TokenType.Enclose:
                     case TokenType.Keyword: {
-                            tokens.Add(new Token { ad = lex.Offset, len = lex.Value.Length, attr = lex.Attr });
+                            tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
                         }
                         break;
 
                     case TokenType.MultiLineStart: {
                             int off = lex.Offset;
-                            int len = line.Length - off;
-                            var attr = lex.Attr;
-                            bool isnext = lex.isNextLine;
+                            int len = line.Length - lex.OffsetLenAttr.t1;
+                            lex.isNextLine = true;
 
-                            cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = isnext });
-                            tokens.Add(new Token { ad = off, len = len, attr = attr });
+                            cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = lex.isNextLine });
+                            tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = len, attr = lex.OffsetLenAttr.t3 });
                         }
                         break;
                     case TokenType.MultiLineEnd: {
+                            int len = line.Length - lex.OffsetLenAttr.t1;
+                            bool isnext = false;// lex.isNextLine;
+                            lex.isNextLine = false;
+
                             if (cmstrulrs.Count > 0) {
-                                bool isnext = lex.isNextLine;
                                 cmstrulrs[cmstrulrs.Count - 1].t3 = isnext;
+                            } else {
+                                int off = lex.Offset;
+                                cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = isnext });
                             }
                             if (tokens.Count > 0) {
-                                int len = tokens[tokens.Count - 1].len;
-                                tokens[tokens.Count - 1].len -= len-lex.Offset;
-                            }
+                                int off = tokens[tokens.Count - 1].ad;
+                                tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
+                            } else if (line.Block.isLineHeadCmt!=0) {
+                                tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
+                            } 
                         }
                         break;
 

@@ -18,7 +18,8 @@ namespace AsControls {
         internal event TextUpdateEventHandler TextUpdate;
 
         private List<Line> text_;
-        Parser.Parser parser;
+        //Parser.Parser parser;
+        Parser.Parser_test parser;
 
         public void setHighlight(IHighlight highlight) {
             //parser.Highlight = highlight;
@@ -86,7 +87,8 @@ namespace AsControls {
         
         public Document() {
 
-            parser = new AsControls.Parser.Parser();
+            //parser = new AsControls.Parser.Parser();
+            parser = new AsControls.Parser.Parser_test();
 
             UndoManager = new UndoManager(this);
 

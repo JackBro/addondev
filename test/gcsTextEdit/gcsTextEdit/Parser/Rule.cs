@@ -93,20 +93,6 @@ namespace AsControls.Parser {
         }
     }
 
-    public class TextRule : Rule {
-        public TextRule(Attribute attr) {
-            
-            this.attr = attr;
-            this.token = TokenType.TXT;
-        }
-
-        public override int exer(Lexer lex) {
-            return 0;
-        }
-    }
-
-
-
     // /*..*/end
     public class MultiLineRule : Rule {
         public string end;
@@ -142,6 +128,14 @@ namespace AsControls.Parser {
 
             return false;
         }
+
+        public override int getLen(string sequence, LexerReader reader) {
+            if (sequence == this.start) {
+                return base.getLen(sequence, reader);
+            } else {
+                return reader.offset();
+            }
+        }
     }
 
     public class ScanRule : MultiLineRule {
@@ -152,7 +146,6 @@ namespace AsControls.Parser {
         public ScanRule(string start, string end, string id) {
             this.start = start;
             this.end = end;
-            //this.attr = attr;
             this.id = id;
             token = TokenType.TXT;
         }
@@ -210,16 +203,14 @@ namespace AsControls.Parser {
             return endindex;
         }
 
-        public override string getValue(string sequence, LexerReader reader) {
+        public override int getLen(string sequence, LexerReader reader) {
             int off = reader.offset();
-            int index = reader.Src.IndexOf(this.end ,off);
+            int index = reader.Src.IndexOf(this.end, off);
             if (index < 0) {
-                return reader.Src.Substring(off).ToString();
+                return reader.Src.Length - off;
+            } else {
+                return index - off;
             }
-            else {
-                return reader.Src.Substring(off, index - off).ToString();
-            }
-            //return base.getValue(sequence, reader);
         }
     }
 
@@ -234,6 +225,10 @@ namespace AsControls.Parser {
         public override int exer(Lexer lex) {
             int offset = lex.reader.offset();
             return lex.reader.Src.Length;
+        }
+
+        public override int getLen(string sequence, LexerReader reader) {
+            return reader.Src.Length - reader.offset() + this.start.Length;
         }
     }
 
@@ -261,6 +256,16 @@ namespace AsControls.Parser {
                 endindex = src.Length - endindex;
             }
             return endindex;
+        }
+
+        public override int getLen(string sequence, LexerReader reader) {
+            int off = reader.offset();
+            int index = reader.Src.ToString().IndexOfAny(c, off);
+            if (index < 0) {
+                return reader.Src.Length - off;
+            } else {
+                return index - off;
+            }
         }
     }
 

@@ -8,8 +8,8 @@ namespace AsControls.Parser {
 
     public class Lexer_test {
 
-        public string Value { get; set; }
-        public AsControls.Parser.Attribute Attr { get; set; }
+        //public string Value { get; set; }
+        //public AsControls.Parser.Attribute Attr { get; set; }
 
         //public Tuple<int, int> OffsetLen;
 
@@ -18,14 +18,16 @@ namespace AsControls.Parser {
         private TokenType tok;
         public LexerReader reader;
 
-        private Rule resultRule;
+        //private Rule resultRule;
 
         public bool isNextLine = false;
-
         public bool scisNextLine = false;
 
         private Dictionary<String, Rule> ruleDic = new Dictionary<String, Rule>();
-        private Dictionary<String, MultiLineRule> multiruleEndDic = new Dictionary<String, MultiLineRule>();
+
+        private Dictionary<String, MultiLineRule> multiRuleDic = new Dictionary<String, MultiLineRule>();
+        private Dictionary<String, MultiLineRule> multiRuleEndDic = new Dictionary<String, MultiLineRule>();
+
         private Dictionary<String, Rule> keyWordRuleDic = new Dictionary<String, Rule>();
 
         private string ruleFirstKeys = string.Empty;
@@ -39,7 +41,8 @@ namespace AsControls.Parser {
 
         public void ClearRule() {
             ruleDic.Clear();
-            multiruleEndDic.Clear();
+            multiRuleDic.Clear();
+            multiRuleEndDic.Clear();
             keyWordRuleDic.Clear();
             ruleFirstKeys = string.Empty;
             ruleEndKeys = string.Empty;
@@ -57,7 +60,8 @@ namespace AsControls.Parser {
             else {
                 //if((rule as MultiLineRule)!=null){
                 if (rule is MultiLineRule && !(rule is ScanRule)) {
-                    multiruleEndDic.Add(((MultiLineRule)rule).end, (MultiLineRule)rule);
+                    multiRuleDic.Add(((MultiLineRule)rule).start, (MultiLineRule)rule);
+                    multiRuleEndDic.Add(((MultiLineRule)rule).end, (MultiLineRule)rule);
                 }
 
                 if ((rule as KeywordRules) != null) {
@@ -78,7 +82,7 @@ namespace AsControls.Parser {
                     }
                 }
                 //foreach (var item in ruleDic.Values) {
-                foreach (var item in multiruleEndDic.Values) {
+                foreach (var item in multiRuleEndDic.Values) {
                     MultiLineRule mrule = item as MultiLineRule;
                     if (mrule != null) {
                         if (!ruleEndKeys.Contains(mrule.end[0])) {
@@ -101,10 +105,6 @@ namespace AsControls.Parser {
                     paruleEndKeys += item.end[0];
                 }
             }
-        }
-
-        public Rule getRule() {
-            return resultRule;
         }
 
         public IText Src {
@@ -173,7 +173,7 @@ namespace AsControls.Parser {
 
                 default:
                     //TODO test
-                    if (curblock.isLineHeadCmt == 0) {// && preblock.elem == curblock.elem) {
+                    if (curblock.isLineHeadCmt == 0) {
                         if (curblock.scisLineHeadCmt == 0) {
                             if (paruleStartKeys.Contains((char)c)) {
                                 char fc = (char)c;
@@ -183,8 +183,6 @@ namespace AsControls.Parser {
                                         if (Offset - 1 + len <= Src.Length) {
                                             var text = Src.Substring(Offset - 1, len);
                                             if (text.ToString() == item.Key) {
-                                                //reader.unread();
-                                                //lexSymbol(curblock);
                                                 tok = TokenType.PartitionStart;
                                                 if (curblock != null) {
                                                     curblock.id = item.Value.id;
@@ -263,114 +261,64 @@ namespace AsControls.Parser {
                         if (Char.IsDigit((char)c)) {
                             reader.unread();
                             lexDigit();
+                            break;
                         }
                         else if (Util.isIdentifierPart((char)c)) {
                             reader.unread();
                             lexKeyWord();
+                            break;
                         }
                         else {
                             reader.unread();
                             lexSymbol(curblock);
+                            break;
                         }
                     }
                     else { //1: 行頭がブロックコメントの内部
 
                         if (Offset - 1 == 0) {
                             {
+                                reader.unread();
                                 StringBuilder buf = new StringBuilder();
                                 while (true) {
                                     c = reader.read();
                                     if (c == -1) {
-                                        //return;
                                         break;
                                     }
                                     buf.Append((char)c);
 
                                     string s = buf.ToString();
-                                    if (preblock.elem.end == s) {
-                                        if (ruleDic.ContainsKey(s)) {
-                                            Rule rule = ruleDic[s];
-                                            if (rule.Detected(s, reader)) {
-                                                curblock.elem = rule as MultiLineRule;
-                                                isNextLine = false;
+                                    string end = preblock.elem.end;
+  
+                                    if (s.EndsWith(end)) {
+                                        if (multiRuleEndDic.ContainsKey(end)) {
+                                            var rule = multiRuleEndDic[end];
+                                            if (rule.Detected(end, reader)) {
+                                                curblock.elem = rule;
+                                                //isNextLine = false;
 
                                                 tok = rule.token;
-                                                OffsetLenAttr = new Tuple<int, int, Attribute>(0, rule.getLen(s, reader), rule.attr);
-                                                break;
+                                                int len = rule.getLen(end, reader);
+                                                reader.setoffset(len);
+                                                OffsetLenAttr = new Tuple<int, int, Attribute>(0, len, rule.attr);
+                                                //break;
+                                                return true;
                                             }
                                         }
                                     }
                                 }
 
-                                if (c == -1 && preblock.elem != null && ruleDic.ContainsKey(preblock.elem.start)) {
-                                    var enelem = ruleDic[preblock.elem.start];
+                                if (c == -1 && preblock.elem != null && multiRuleDic.ContainsKey(preblock.elem.start)) {
+                                    var enelem = multiRuleDic[preblock.elem.start];
+                                    curblock.elem = preblock.elem;
+                                    //isNextLine = true;
+                                    tok = TokenType.MultiLineStart;
+                                    OffsetLenAttr = new Tuple<int, int, Attribute>(0, Src.Length, enelem.attr);
 
                                     reader.setoffset(Src.Length);
-                                    //enelem.startIndex = 0;
-                                    //enelem.len = Src.Length;
-                                    //tok = enelem.token;
-                                    //resultRule = enelem;
-
-                                    curblock.elem = preblock.elem;
-                                    isNextLine = true;
-
-                                    tok = TokenType.MultiLineStart;
-                                    //Attr = enelem.attr;
-                                    //OffsetLen = new Tuple<int, int>(0, Src.Length);
-                                    OffsetLenAttr = new Tuple<int, int, Attribute>(0, Src.Length, enelem.attr);
                                 }
                                 break;
                             }
-
-                        //    while (c != -1) {
-                        //        if (ruleEndKeys.Contains((char)c)) {
-                        //            StringBuilder buf = new StringBuilder();
-                        //            while (c != -1) {
-                        //                buf.Append((char)c);
-                        //                if (preblock.elem.end == buf.ToString()) {
-                        //                    if (multiruleEndDic.ContainsKey(buf.ToString())) {
-                        //                        var Eenelem = multiruleEndDic[buf.ToString()];
-                        //                        Eenelem.startIndex = 0;
-                        //                        Eenelem.len = (Offset - Eenelem.startIndex);
-                        //                        tok = Eenelem.token;
-                        //                        resultRule = Eenelem;
-
-                        //                        curblock.elem = Eenelem;
-                        //                        isNextLine = false;
-
-                        //                        tok = TokenType.MultiLineEnd;
-                        //                        Attr = Eenelem.attr;
-                        //                        OffsetLen = new Tuple<int, int>(0, Offset);
-                        //                        OffsetLenAttr = new Tuple<int, int, Attribute>(0, Offset, Eenelem.attr);
-                        //                        goto Finish;
-                        //                    }
-                        //                }
-                        //                c = reader.read();
-                        //            }
-                        //        }
-                        //        c = reader.read();
-                        //    }
-
-                        //Finish:
-
-                        //    if (c == -1 && preblock.elem != null && ruleDic.ContainsKey(preblock.elem.start)) {
-                        //        var enelem = ruleDic[preblock.elem.start];
-
-                        //        reader.setoffset(Src.Length);
-                        //        enelem.startIndex = 0;
-                        //        enelem.len = Src.Length;
-                        //        tok = enelem.token;
-                        //        resultRule = enelem;
-
-                        //        curblock.elem = preblock.elem;
-                        //        isNextLine = true;
-
-                        //        tok = TokenType.MultiLineStart;
-                        //        Attr = enelem.attr;
-                        //        OffsetLen = new Tuple<int, int>(0, Src.Length);
-                        //        OffsetLenAttr = new Tuple<int, int, Attribute>(0, Src.Length, enelem.attr);
-                        //    }
-                        //    break;
                         }
                         else {
                             if (Char.IsDigit((char)c)) {
@@ -441,11 +389,9 @@ namespace AsControls.Parser {
             if (keyWordRuleDic.ContainsKey(s)) {
                 tok = TokenType.Keyword;
                 var elem = keyWordRuleDic[s];
-                elem.startIndex = offset;
-                elem.len = value.Length;
-                resultRule = elem;
-
-                OffsetLenAttr = new Tuple<int, int, Attribute>(offset, value.Length, elem.attr);
+                int len = elem.getLen(s, reader);
+                reader.setoffset(offset + len);
+                OffsetLenAttr = new Tuple<int, int, Attribute>(offset, len, elem.attr);
             }
         }
 
@@ -462,15 +408,37 @@ namespace AsControls.Parser {
 
                 string s = buf.ToString();
                 if (ruleDic.ContainsKey(s)) {
-                    Rule rule = ruleDic[s];
+                    var rule = ruleDic[s];
                     if (rule.Detected(s, reader)) {
                         tok = rule.token;
-                        Attr = rule.attr;
-                        //Value = buf.ToString();
-                        OffsetLen = new Tuple<int,int>(offset, rule.getLen(s, reader));
-                        OffsetLenAttr = new Tuple<int, int, Attribute>(offset, rule.getLen(s, reader), rule.attr);
+                        int len = rule.getLen(s, reader);
+                        OffsetLenAttr = new Tuple<int, int, Attribute>(offset, len, rule.attr);
+                        reader.setoffset(offset + len);
+
+                        if (rule is MultiLineRule) {
+                            if (curblock != null) {
+                                curblock.elem = rule as MultiLineRule;
+                                //isNextLine = true;
+                            }
+                        }
+
                         break;
                     }                   
+                }
+                else if (multiRuleEndDic.ContainsKey(s)) {
+                    var rule = multiRuleEndDic[s];
+                    if (rule.Detected(s, reader)) {
+                        tok = rule.token;
+                        int len = rule.getLen(s, reader);
+                        OffsetLenAttr = new Tuple<int, int, Attribute>(offset, len, rule.attr);
+                        reader.setoffset(offset + len);
+
+                        if (curblock != null) {
+                            curblock.elem = rule as MultiLineRule;
+                        }
+
+                        break;
+                    }
                 }
             }
         }
