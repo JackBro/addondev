@@ -13,7 +13,6 @@ namespace AsControls.Parser {
     }
 
     public class Block {
-        //TODO test
         public string id;
         public int scisLineHeadCmt = 0;
         public int sccommentTransition = 0;
@@ -55,6 +54,7 @@ namespace AsControls.Parser {
         EOS,
         TXT, // 普通の字
         MultiLine,
+        MultiLineStart,
         MultiLineEnd,
         Enclose,
         EndLine,
@@ -76,7 +76,7 @@ namespace AsControls.Parser {
 
         public Func<string, LexerReader, bool> detected;
 
-        public bool Detected(string sequence, LexerReader reader) {
+        public virtual bool Detected(string sequence, LexerReader reader) {
             if (detected == null) {
                 if (sequence == start) {
                     return true;
@@ -86,6 +86,10 @@ namespace AsControls.Parser {
             else {
                 return detected(sequence, reader);
             }
+        }
+
+        public virtual int getLen(string sequence, LexerReader reader) {
+            return this.start.Length;
         }
     }
 
@@ -124,6 +128,19 @@ namespace AsControls.Parser {
 
             int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
             return endindex;
+        }
+
+        public override bool Detected(string sequence, LexerReader reader) {
+            if (sequence == start) {
+                token = TokenType.MultiLineStart;
+                return true;
+            }
+            if (sequence == end) {
+                token = TokenType.MultiLineEnd;
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -191,6 +208,18 @@ namespace AsControls.Parser {
             }
             int endindex = index + this.end.Length;
             return endindex;
+        }
+
+        public override string getValue(string sequence, LexerReader reader) {
+            int off = reader.offset();
+            int index = reader.Src.IndexOf(this.end ,off);
+            if (index < 0) {
+                return reader.Src.Substring(off).ToString();
+            }
+            else {
+                return reader.Src.Substring(off, index - off).ToString();
+            }
+            //return base.getValue(sequence, reader);
         }
     }
 
