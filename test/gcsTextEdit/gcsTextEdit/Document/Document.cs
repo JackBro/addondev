@@ -18,22 +18,19 @@ namespace YYS {
         internal event TextUpdateEventHandler TextUpdate;
 
         private List<Line> text_;
-        //Parser.Parser parser;
+
         Parser.Parser parser;
 
         public void setHighlight(IHighlight highlight) {
-            //parser.Highlight = highlight;
             parser.AddHighlight(Document.DEFAULT_ID, highlight);
             parser.setd(Document.DEFAULT_ID);
         }
 
         public void setHighlight(string id, IHighlight highlight) {
-            //parser.Highlight = highlight;
             parser.AddHighlight(id, highlight);
         }
 
         public void AddPartition(PartRule rule) {
-            //parser.Highlight = highlight;
             parser.AddPartition(rule);
         }
 
@@ -86,8 +83,6 @@ namespace YYS {
         }
         
         public Document() {
-
-            //parser = new AsControls.Parser.Parser();
             parser = new YYS.Parser.Parser();
 
             UndoManager = new UndoManager(this);

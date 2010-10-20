@@ -37,7 +37,6 @@ namespace YYS.Parser {
         private List<Token> tokens;
         private Attribute defaultAttr;
 
-        //TODO test
         private Dictionary<string, PartRule> scruledic = new Dictionary<string, PartRule>();
         private Dictionary<string, IHighlight> highlightDic = new Dictionary<string, IHighlight>();
 
@@ -132,18 +131,17 @@ namespace YYS.Parser {
                             }
                             if (tokens.Count > 0) {
                                 int off = tokens[tokens.Count - 1].ad;
-                                tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
+                                //tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
+                                tokens[tokens.Count - 1].len = lex.OffsetLenAttr.t2 - off; 
                             } else if (line.Block.isLineHeadCmt!=0) {
                                 tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
                             } 
                         }
                         break;
 
-                    case TokenType.PartitionStart: //TODO test
-
+                    case TokenType.PartitionStart: 
                         isscnext = lex.scisNextLine;
                         if (line.Block.id != Document.DEFAULT_ID) {
-
                             setd(line.Block.id);
                         }
                         break;

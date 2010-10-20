@@ -187,9 +187,6 @@ namespace YYS {
         public WrapType Wrap {
             get { return cvs_.wrapType; }
             set { 
-                //cvs_.wrapType = value;
-                //DoResize(cvs_.on_view_resize(this.ClientSize.Width - vScrollBar.Width,
-                //    this.ClientSize.Height - hScrollBar.Height));
                 if (this.Visible && this.Width>0 && this.Height>0) {
                     cvs_.on_config_change(value, ShowLineNumber);
                     DoConfigChange();
@@ -215,21 +212,13 @@ namespace YYS {
         }
 
         public new string Text {
-            set {
-                cur_.Input(value);
-            }
-            get {
-                return this.doc_.ToString();
-            }
+            set { cur_.Input(value); }
+            get { return this.doc_.ToString(); }
         }
 
         public bool RectSelect {
-            get{
-                return cur_.Selection == SelectionType.Rectangle;
-            }
-            set {
-                cur_.Selection = value ? SelectionType.Rectangle : SelectionType.Normal;
-            }
+            get { return cur_.Selection == SelectionType.Rectangle; }
+            set { cur_.Selection = value ? SelectionType.Rectangle : SelectionType.Normal; }
         }
 
         [DefaultValue(Keys.Alt)]
@@ -238,7 +227,6 @@ namespace YYS {
         [DefaultValue(Keys.Shift)]
         public Keys MouseNormalSelectKey { get; set; }
 
-        //
         private Canvas cvs_;
 
 	    internal Win32API.RECT zone()  { return cvs_.zone(); }
@@ -615,7 +603,6 @@ namespace YYS {
 
         protected override void OnMouseDoubleClick(MouseEventArgs e) {
             base.OnMouseDoubleClick(e);
-            //cur_.on_mouse_db_click(e.X, e.Y);
             cur_.mouse_double_click(e);
         }
 

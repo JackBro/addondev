@@ -19,8 +19,8 @@ namespace YYS.Parser {
 
         public List<Rule> getRules() {
             var rules = new List<Rule>();
-            rules.Add(new EndLineRule("//", new YYS.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
-            rules.Add(new MultiLineRule("/*", "*/", new YYS.Parser.Attribute(Color.Red)));
+            //rules.Add(new EndLineRule("//", new YYS.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
+            //rules.Add(new MultiLineRule("/*", "*/", new YYS.Parser.Attribute(Color.Red)));
             return rules;
         }
 
