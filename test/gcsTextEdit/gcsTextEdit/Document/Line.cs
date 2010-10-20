@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AsControls.Parser;
+using YYS.Parser;
 
-namespace AsControls
+namespace YYS
 {
     public class Line
     {

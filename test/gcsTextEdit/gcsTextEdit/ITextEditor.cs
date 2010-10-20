@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AsControls {
+namespace YYS {
     public interface ITextEditor {
         void Copy();
         void Cut();

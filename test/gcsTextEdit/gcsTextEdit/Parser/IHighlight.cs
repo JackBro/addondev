@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AsControls.Parser {
+namespace YYS.Parser {
     public interface IHighlight {
-        AsControls.Parser.Attribute getDefault();
+        YYS.Parser.Attribute getDefault();
         List<Rule> getRules();
     }
 }

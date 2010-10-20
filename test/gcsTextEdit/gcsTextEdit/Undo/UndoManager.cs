@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AsControls
+namespace YYS
 {
     public class UndoManager
     {

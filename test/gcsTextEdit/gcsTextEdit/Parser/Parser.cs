@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace AsControls.Parser {
+namespace YYS.Parser {
 
     //public static class isLineHeadCommented {
     //    public static int firstout = 0;
@@ -29,26 +29,6 @@ namespace AsControls.Parser {
     //    firstlastsame,
     //    lastin
     //}
-    //class TestHighlight : IHighlight {
-    //    public TestHighlight() {
-    //    }
-
-    //    #region IHighlight メンバ
-
-    //    public Attribute getDefault() {
-    //        return new Attribute(Color.Red);
-    //    }
-
-    //    public List<Rule> getRules() {
-    //        var rules = new List<Rule>();
-    //        //rules.Add(new ScanRule("#START", "#END", "start",new AsControls.Parser.Attribute(Color.Red)));
-
-    //        rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
-    //        return rules;
-    //    }
-
-    //    #endregion
-    //}
 
     class Parser {
 
@@ -57,34 +37,13 @@ namespace AsControls.Parser {
         private List<Token> tokens;
         private Attribute defaultAttr;
 
-        //private IHighlight tmp=null;
-        //private IHighlight highlight;
-        //public IHighlight Highlight {
-        //    get { return highlight; }
-        //    set{
-        //        //TODO test
-        //        if(tmp==null){
-        //            tmp = value;
-        //            //this.lex.AddScanRule();
-        //            //if (value.getRules().Count>0)
-        //            //lex.AddScanRule((ScanRule)value.getRules()[0]);
-        //            //lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
-        //        }
-        //        highlight = value;
-
-        //        defaultAttr = highlight.getDefault();
-        //        lex.ClearRule();
-        //        this.lex.AddRule(highlight.getRules());     
-        //    }
-        //}
-
         //TODO test
-        //private Dictionary<string, Tuple<IHighlight, ScanRule>> scruledic=new Dictionary<string,Tuple<IHighlight,ScanRule>>();
-        private Dictionary<string, ScanRule> scruledic = new Dictionary<string, ScanRule>();
+        private Dictionary<string, PartRule> scruledic = new Dictionary<string, PartRule>();
         private Dictionary<string, IHighlight> highlightDic = new Dictionary<string, IHighlight>();
-        public void AddPartition(ScanRule rule) {
+
+        public void AddPartition(PartRule rule) {
             scruledic.Add(rule.id, rule);
-            lex.AddScanRule(rule);
+            lex.AddPartRule(rule);
         }
 
         public void AddHighlight(string id, IHighlight highlight) {
@@ -95,70 +54,33 @@ namespace AsControls.Parser {
         private string curID = string.Empty;
         public void setd(string id) {
             if (curID != id) {
-            IHighlight highlight = highlightDic[id];
-            defaultAttr = highlight.getDefault();
-            lex.ClearRule();
-            this.lex.AddRule(highlight.getRules());
-            curID = id;
+                IHighlight highlight = highlightDic[id];
+                defaultAttr = highlight.getDefault();
+                lex.ClearRule();
+                this.lex.AddRule(highlight.getRules());
+                curID = id;
             }
         }
 
-        //public void AddHighlight(string name, IHighlight highlight, ScanRule rule) {
-        //    scruledic.Add(name, new Tuple<IHighlight, ScanRule>(highlight, rule));
-        //}
-
-        //private void getToken() {
-        //    if (lex.advance()) {
-        //        tokentype = lex.token;
-        //    }
-        //    else {
-        //        tokentype = TokenType.EOS;
-        //    }
-        //}
-        private ScanRule scr;
-
         public int cmt;
-
         public int sccmt;
 
         public Parser() {
             lex = new Lexer();
-            //lex.AddScanRule(new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red)));
         }
-        private string cuid = string.Empty;
+
         public Block Parse(Line line, Block b, int _cmt, int _sccmt) {
 
             tokentype = TokenType.TXT;
             tokens = new List<Token>();
 
             List<Tuple<int, int, bool>> cmstrulrs = new List<Tuple<int, int, bool>>();
+
             line.Block.isLineHeadCmt = _cmt;
 
             bool? isscnext = null;
             line.Block.scisLineHeadCmt = _sccmt;
 
-            //if (line.Block.pa != "default") {
-            //    if (!(this.Highlight is TestHighlight))
-            //        this.Highlight = new TestHighlight();               
-            //}
-            //else {
-            //    if(this.Highlight != tmp)
-            //        this.Highlight = tmp;
-            //}
-
-            //if (b.id != Document.DEFAULT_ID) {
-            //    //if (!(this.Highlight is TestHighlight))
-            //    //    this.Highlight = new TestHighlight();
-            //    if (b.sccommentTransition == 0) {
-            //        line.Block.id = Document.DEFAULT_ID;
-            //    }
-            //    setd(b.id);
-            //} else {
-            //    //if (this.Highlight != tmp)
-            //    //    this.Highlight = tmp;
-            //    line.Block.id = b.id;
-            //    setd(b.id);
-            //}
             if (line.Block.scisLineHeadCmt == 0) {
                 line.Block.id = Document.DEFAULT_ID;
                 setd(b.id);
@@ -168,117 +90,86 @@ namespace AsControls.Parser {
                 setd(b.id);
             }
 
-            //lex.Src = line.Text.ToString();
             lex.Src = line.Text;
 
             while (tokentype != TokenType.EOS) {
 
-                //getToken(b);
-                //if (lex.advance(b, line.Block)) {
-                if (lex.advance2(b, line.Block)) {
+                if (lex.advance(b, line.Block)) {
                     tokentype = lex.token;
                 }
                 else {
                     tokentype = TokenType.EOS;
                 }
-                switch (tokentype) {
-                    case TokenType.MultiLine:
-                        //var melem = lex.getElement();
-                        ////if (melem.startIndex == 0 && melem.len == line.Text.ToString().Length) {
-                        ////    line.Block.commentTransition = 2;
-                        ////}
-                        //cmstrulrs.Add(new Token { ad = melem.startIndex, len = melem.len, attr = null });
 
-                    case TokenType.Enclose:
+                switch (tokentype) {
                     case TokenType.EndLine:
                     case TokenType.Line:
-                    case TokenType.Keyword:
-                        if (tokentype == TokenType.MultiLine) {
-                            var melem = lex.getRule();
-                            var isnext = lex.isNextLine;
-                            //cmstrulrs.Add(new Token { ad = melem.startIndex, len = melem.len, attr = null });
-                            cmstrulrs.Add(new Tuple<int, int, bool> { t1 = melem.startIndex, t2 = melem.len, t3 = isnext });
+                    case TokenType.Enclose:
+                    case TokenType.Keyword: {
+                            tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
                         }
-                        var elem = lex.getRule();
-                        tokens.Add(new Token { ad = elem.startIndex, len = elem.len, attr = elem.attr });
-                        //if (lex.Block.state == BlockState.end) {
-                        //    //lex.Block.state = BlockState.no;
-                        //}
-                        //b.state = lex.Block.state;
-                        //b.elem = lex.Block.elem;
                         break;
 
+                    case TokenType.MultiLineStart: {
+                            int off = lex.Offset;
+                            int len = line.Length - lex.OffsetLenAttr.t1;
+                            lex.isNextLine = true;
+                        
+                            cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = lex.isNextLine });
+                            tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = len, attr = lex.OffsetLenAttr.t3 });
+                        }
+                        break;
+                    case TokenType.MultiLineEnd: {
+                            int len = line.Length - lex.OffsetLenAttr.t1;
+                            bool isnext = false;// lex.isNextLine;
+                            lex.isNextLine = false;
+
+                            if (cmstrulrs.Count > 0) {
+                                cmstrulrs[cmstrulrs.Count - 1].t3 = isnext;
+                            } else {
+                                int off = lex.Offset;
+                                cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = isnext });
+                            }
+                            if (tokens.Count > 0) {
+                                int off = tokens[tokens.Count - 1].ad;
+                                tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
+                            } else if (line.Block.isLineHeadCmt!=0) {
+                                tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
+                            } 
+                        }
+                        break;
 
                     case TokenType.PartitionStart: //TODO test
-                        //var val = lex.Value;
-                        //if (val == "#START") {
-                        //    isscnext = true;
-                        //    this.Highlight = new TestHighlight();
-                        //    line.Block.pa = "START";
-                        //    line.Block.schi = this.Highlight;
-                        //} else if (val == "#END") {
-                        //    isscnext = false;
-                        //    this.Highlight = tmp;
-                        //} 
+
                         isscnext = lex.scisNextLine;
                         if (line.Block.id != Document.DEFAULT_ID) {
-                            //this.Highlight = new TestHighlight();
-                            //if (scr == null) {
-                            //    scr = new ScanRule("#START", "#END", "start", new AsControls.Parser.Attribute(Color.Red));
-                            //    lex.AddScanRule(scr);
-                            //}
+
                             setd(line.Block.id);
                         }
                         break;
                     case TokenType.Partition:
                         isscnext = lex.scisNextLine;
-                        //this.Highlight = new TestHighlight();
-                        cuid = line.Block.id;
                         setd(line.Block.id);
                         break;
                     case TokenType.PartitionEnd:
                         isscnext = lex.scisNextLine;
-                        //line.Block.id = Document.DEFAULT_ID; //TODO
-                        //setd(line.Block.pa);
-                        cuid = line.Block.id;
-                        //line.Block.id = Document.DEFAULT_ID;
                         setd(Document.DEFAULT_ID);
                         break;
                     default:
-                        //setd(line.Block.id);
                         break;
-                    //case TokenType.Enclose:
-                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-                    //    break;
-
-                    //case TokenType.EndLine:
-                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-                    //    break;
-
-                    //case TokenType.Line:
-                    //    break;
-
-                    //case TokenType.Image:
-                    //    break;
-
-                    //case TokenType.Keyword:
-                    //    rules.Add(new Rule { ad = lex.Offset - lex.Value.Length, len = lex.Value.Length, attr = lex.getElement().attr });
-                    //    break;
                 }
-                //if (sccmt == 1) {
-                //    isscnext = true;
-                //}
+
             }
-            //if (cuid != string.Empty)
-            //line.Block.id = cuid;
-            
+
             if (cmstrulrs.Count == 0) {
                 line.Block.commentTransition = 2;
-            } else {
-                bool next = cmstrulrs[cmstrulrs.Count-1].t3;
+            }
+            else {
+                bool next = cmstrulrs[cmstrulrs.Count - 1].t3;
                 if (next) {
                     line.Block.commentTransition = 3;
-                } else {
+                }
+                else {
                     line.Block.commentTransition = 0;
                 }
             }
@@ -287,15 +178,17 @@ namespace AsControls.Parser {
 
             if (isscnext == null) {
                 line.Block.sccommentTransition = 2;
-            } else {
+            }
+            else {
                 if ((bool)isscnext) {
                     line.Block.sccommentTransition = 3;
-                } else {
+                }
+                else {
                     line.Block.sccommentTransition = 0;
                 }
             }
             sccmt = (line.Block.sccommentTransition >> _sccmt) & 1;
-            
+
             if (tokens.Count > 0) {
 
                 var lastrule = tokens[tokens.Count - 1];
@@ -324,7 +217,7 @@ namespace AsControls.Parser {
             }
 
             line.Tokens = tokens;
-            
+
             return line.Block;
         }
     }

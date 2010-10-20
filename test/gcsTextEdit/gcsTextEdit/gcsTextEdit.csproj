@@ -8,8 +8,8 @@
     <ProjectGuid>{EF6F9898-510A-4114-82F1-93085AA9728D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AsControls</RootNamespace>
-    <AssemblyName>gcsTextEdit</AssemblyName>
+    <RootNamespace>YYS</RootNamespace>
+    <AssemblyName>GCsTextEdit</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -56,16 +56,16 @@
     </Compile>
     <Compile Include="Document\ICommand.cs" />
     <Compile Include="Document\Command.cs" />
-    <Compile Include="gcsTextEdit.cs">
+    <Compile Include="GCsTextEdit.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="gcsTextEdit.Draw.cs">
+    <Compile Include="GCsTextEdit.Draw.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="gcsTextEdit.Scroll.cs">
+    <Compile Include="GCsTextEdit.Scroll.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="gcsTextEdit.Wrap.cs">
+    <Compile Include="GCsTextEdit.Wrap.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Cursor.cs" />
@@ -78,11 +78,9 @@
     <Compile Include="Painter.cs" />
     <Compile Include="Parser\Highlight.cs" />
     <Compile Include="Parser\IHighlight.cs" />
-    <Compile Include="Parser\Lexer.cs" />
     <Compile Include="Parser\LexerReader.cs" />
-    <Compile Include="Parser\Lexer_test.cs" />
+    <Compile Include="Parser\Lexer.cs" />
     <Compile Include="Parser\Parser.cs" />
-    <Compile Include="Parser\Parser_test.cs" />
     <Compile Include="Parser\Rule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\NormalSearch.cs" />

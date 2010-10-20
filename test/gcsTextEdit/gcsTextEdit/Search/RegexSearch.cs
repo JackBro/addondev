@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AsControls {
+namespace YYS {
     public class RegexSearch : ISearch {
         private Regex regex;
         private string regexStr;

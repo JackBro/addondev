@@ -5,11 +5,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Globalization;
-using AsControls.Parser;
+using YYS.Parser;
 
-namespace AsControls
+namespace YYS
 {
-
     //
     // 文字列のまま足し算を行うルーチン
     //
@@ -53,7 +52,7 @@ namespace AsControls
     }
 
     public delegate void DrawEventHandler(Graphics g, string line, int x,int y);
-    public partial class gcsTextEdit
+    public partial class GCsTextEdit
     {
         public event DrawEventHandler DrawEventHandler;
 

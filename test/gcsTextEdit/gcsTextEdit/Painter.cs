@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Forms;
-using AsControls.Parser;
+using YYS.Parser;
 
-namespace AsControls {
+namespace YYS {
     public class Painter : IDisposable{
 
         private IntPtr dc_;
@@ -296,7 +296,7 @@ namespace AsControls {
 
         }
 
-        public void DrawText(Graphics g, string text, AsControls.Parser.Attribute attr, int X, int Y) {
+        public void DrawText(Graphics g, string text, YYS.Parser.Attribute attr, int X, int Y) {
 
             TextRenderer.DrawText(g,
                text,
@@ -306,7 +306,7 @@ namespace AsControls {
                TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
         }
 
-        public void DrawAttribute(Graphics g, AsControls.Parser.Attribute attr, int x1, int y1, int x2, int y2) {
+        public void DrawAttribute(Graphics g, YYS.Parser.Attribute attr, int x1, int y1, int x2, int y2) {
 
             if ((attr.type & AttrType.UnderLine) == AttrType.UnderLine
                 || (attr.type & AttrType.Link) == AttrType.Link) {

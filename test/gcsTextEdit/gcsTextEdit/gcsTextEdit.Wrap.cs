@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AsControls
+namespace YYS
 {
-    public partial class gcsTextEdit
+    public partial class GCsTextEdit
     {
         public class WLine : List<int> {
 	        public int width{

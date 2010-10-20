@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AsControls {
+namespace YYS {
     public class NormalSearch : ISearch {
         //private string searchword;
         public StringComparison Option { get; set; }

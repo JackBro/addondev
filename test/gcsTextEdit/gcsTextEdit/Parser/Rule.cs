@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace AsControls.Parser {
+namespace YYS.Parser {
 
     public class Token {
         public int ad;
@@ -70,7 +70,6 @@ namespace AsControls.Parser {
         public Attribute attr;
         public TokenType token;
         public string start { get; set; }
-        public abstract int exer(Lexer lex);
         public int startIndex;
         public int len;
 
@@ -106,16 +105,6 @@ namespace AsControls.Parser {
             token = TokenType.MultiLine;
         }
 
-        public override int exer(Lexer lex) {
-            int offset = lex.reader.offset();
-            int index = lex.reader.Src.IndexOf(end, offset);
-
-            if (index < 0) return index;
-
-            int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
-            return endindex;
-        }
-
         public override bool Detected(string sequence, LexerReader reader) {
             if (sequence == start) {
                 token = TokenType.MultiLineStart;
@@ -138,26 +127,17 @@ namespace AsControls.Parser {
         }
     }
 
-    public class ScanRule : MultiLineRule {
+    public class PartRule : Rule {
         public string id;
-        public ScanRule() {
+        public string end;
+        public PartRule() {
             token = TokenType.TXT;
         }
-        public ScanRule(string start, string end, string id) {
+        public PartRule(string start, string end, string id) {
             this.start = start;
             this.end = end;
             this.id = id;
             token = TokenType.TXT;
-        }
-
-        public override int exer(Lexer lex) {
-            int offset = lex.reader.offset();
-            int index = lex.reader.Src.IndexOf(end, offset);
-
-            if (index < 0) return index;
-
-            int endindex = lex.reader.Src.IndexOf(end, offset) + this.end.Length;
-            return endindex;
         }
     }
 
@@ -183,26 +163,6 @@ namespace AsControls.Parser {
             token = TokenType.Enclose;
         }
 
-        public override int exer(Lexer lex) {
-            int offset = lex.reader.offset();
-            int index = lex.reader.Src.IndexOf(end, offset);
-
-            while (index > 0 && escape != null) {
-                if (lex.reader.Src[index - 1] == escape) {
-                    index = lex.reader.Src.IndexOf(end, index + end.Length);
-                }
-                else {
-                    break;
-                }
-            }
-
-            if (index < 0) {
-                return lex.reader.Src.Length;
-            }
-            int endindex = index + this.end.Length;
-            return endindex;
-        }
-
         public override int getLen(string sequence, LexerReader reader) {
             int off = reader.offset();
             int index = reader.Src.IndexOf(this.end, off);
@@ -222,10 +182,6 @@ namespace AsControls.Parser {
             this.attr = attr;
             token = TokenType.EndLine;
         }
-        public override int exer(Lexer lex) {
-            int offset = lex.reader.offset();
-            return lex.reader.Src.Length;
-        }
 
         public override int getLen(string sequence, LexerReader reader) {
             return reader.Src.Length - reader.offset() + this.start.Length;
@@ -244,19 +200,6 @@ namespace AsControls.Parser {
             c[1] = ' ';
             c[2] = '\x3000';
         }
-        public override int exer(Lexer lex) {
-            int offset = lex.reader.offset();
-            string src = lex.reader.Src.ToString();
-            int endindex = src.IndexOfAny(c, offset);
-            //int index = lex.reader.src.Length - offset;
-            if (endindex < 0) {
-                endindex = src.Length;
-            }
-            else {
-                endindex = src.Length - endindex;
-            }
-            return endindex;
-        }
 
         public override int getLen(string sequence, LexerReader reader) {
             int off = reader.offset();
@@ -270,34 +213,20 @@ namespace AsControls.Parser {
     }
 
     public class KeywordRule : Rule {
-        public KeywordRule(string start, Attribute attr) {
-            this.start = start;
+        private string[] words; 
+
+        public KeywordRule(string[] words, Attribute attr) {
+            this.words = words;
             this.attr = attr;
             token = TokenType.Keyword;
         }
 
-        public override int exer(Lexer lex) {
-            return lex.reader.offset();
-        }
-    }
-
-    public class KeywordRules : Rule {
-        private string[] words;
-        public KeywordRules(string[] start, Attribute attr) {
-            this.words = start;
-            this.attr = attr;
-            token = TokenType.Keyword;
-        }
-        public List<KeywordRule> Rules() {
-            List<KeywordRule> list = new List<KeywordRule>();
-            foreach (var item in words) {
-                list.Add(new KeywordRule(item, attr));
-            }
-            return list;
+        public override bool Detected(string sequence, LexerReader reader) {
+            return words.Contains(sequence);
         }
 
-        public override int exer(Lexer lex) {
-            return lex.reader.offset();
+        public override int getLen(string sequence, LexerReader reader) {
+            return sequence.Length;
         }
     }
 }

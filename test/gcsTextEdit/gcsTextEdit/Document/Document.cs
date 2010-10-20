@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Globalization;
-using AsControls.Parser;
+using YYS.Parser;
 
-namespace AsControls {
+namespace YYS {
 
     //public class Document : IDocument {
     public class Document {
@@ -19,7 +19,7 @@ namespace AsControls {
 
         private List<Line> text_;
         //Parser.Parser parser;
-        Parser.Parser_test parser;
+        Parser.Parser parser;
 
         public void setHighlight(IHighlight highlight) {
             //parser.Highlight = highlight;
@@ -32,7 +32,7 @@ namespace AsControls {
             parser.AddHighlight(id, highlight);
         }
 
-        public void AddPartition(ScanRule rule) {
+        public void AddPartition(PartRule rule) {
             //parser.Highlight = highlight;
             parser.AddPartition(rule);
         }
@@ -88,7 +88,7 @@ namespace AsControls {
         public Document() {
 
             //parser = new AsControls.Parser.Parser();
-            parser = new AsControls.Parser.Parser_test();
+            parser = new YYS.Parser.Parser();
 
             UndoManager = new UndoManager(this);
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gcsTextEdit", "gcsTextEdit\gcsTextEdit.csproj", "{EF6F9898-510A-4114-82F1-93085AA9728D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GCsTextEdit", "gcsTextEdit\GCsTextEdit.csproj", "{EF6F9898-510A-4114-82F1-93085AA9728D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{0A3AF7EA-9A5D-4A96-8033-8E37CF6F0FC4}"
 EndProject

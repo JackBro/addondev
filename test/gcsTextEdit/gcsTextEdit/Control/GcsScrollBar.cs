@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace AsControls {
+namespace YYS {
     internal class HGcsScrollBar : HScrollBar {
         public int nPage {
             get;

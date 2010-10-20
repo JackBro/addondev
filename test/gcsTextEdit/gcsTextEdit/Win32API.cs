@@ -5,7 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Drawing;
 
-namespace AsControls
+namespace YYS
 {
     class Win32API
     {

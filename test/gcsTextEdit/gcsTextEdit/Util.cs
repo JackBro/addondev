@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AsControls {
+namespace YYS {
 
     public class Tuple<T1, T2> {
         public T1 t1;

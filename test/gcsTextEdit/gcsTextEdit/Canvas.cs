@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace AsControls {
+namespace YYS {
 
     public enum WrapType {
         NonWrap,
@@ -50,7 +50,7 @@ namespace AsControls {
         /// </summary>
         int figNum_;
 
-        public Canvas(gcsTextEdit view, Font font, bool showLN) {
+        public Canvas(GCsTextEdit view, Font font, bool showLN) {
             txtZone_ = view.getClientRect();
             font_ = new Painter(view.Handle, font);
             this.showLN = showLN;

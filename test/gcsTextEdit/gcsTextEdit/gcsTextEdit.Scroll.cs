@@ -5,8 +5,8 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace AsControls {
-    partial class gcsTextEdit {
+namespace YYS {
+    partial class GCsTextEdit {
 
         //
         //-------------------------------------------------------------------------

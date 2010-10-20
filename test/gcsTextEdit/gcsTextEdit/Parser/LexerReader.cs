@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AsControls.Parser {
+namespace YYS.Parser {
     public class LexerReader {
         private bool unget_p = false;
         private int ch;

@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.ComponentModel;
-using AsControls.Parser;
+using YYS.Parser;
 
-namespace AsControls {
+namespace YYS {
 
     /// <summary>
     /// テキスト内容が変更されたときに発生
@@ -43,7 +43,7 @@ namespace AsControls {
         }
     }
 
-    public partial class gcsTextEdit : Control, ITextEditor {
+    public partial class GCsTextEdit : Control, ITextEditor {
 
         public event EventHandler<ClickableLinkEventArgs> MouseLinkClick;
         public event EventHandler<ClickableLinkEventArgs> MouseLinkDoubleClick;
@@ -305,7 +305,7 @@ namespace AsControls {
                 return s;
         }
 
-        public gcsTextEdit() {
+        public GCsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
             vScrollBar = new VGcsScrollBar();

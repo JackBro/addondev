@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Globalization;
 
-namespace AsControls
+namespace YYS
 {
     public class Caret {
         private IntPtr hwnd_;
@@ -212,7 +212,7 @@ namespace AsControls
     public class Cursor {
 
         private Document doc_; 
-        private gcsTextEdit view_;
+        private GCsTextEdit view_;
         private Caret caret_;
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace AsControls
             return !(cur_ == sel_);
         }
 
-        public Cursor(gcsTextEdit view_, Document doc_, Caret caret_) {
+        public Cursor(GCsTextEdit view_, Document doc_, Caret caret_) {
             this.view_ = view_;
             this.doc_ = doc_;
             this.caret_ = caret_;

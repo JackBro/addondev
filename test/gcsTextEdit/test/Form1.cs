@@ -6,17 +6,17 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using AsControls;
-using AsControls.Parser;
+using YYS;
+using YYS.Parser;
 
 namespace test
 {
     public partial class Form1 : Form
     {
         //private Bitmap image = new Bitmap("test.png");
-        private AsControls.gcsTextEdit edit = new AsControls.gcsTextEdit();
+        private YYS.GCsTextEdit edit = new YYS.GCsTextEdit();
         //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
-        private AsControls.Search sr;
+        private YYS.Search sr;
         public Form1()
         {
             InitializeComponent();
@@ -29,7 +29,7 @@ namespace test
             edit.ShowWhiteSpace = true;
             edit.ShowZenWhiteSpace = true;
             edit.ShowTab = true;
-            edit.Document.AddPartition(new ScanRule("#start", "#end", "test"));
+            edit.Document.AddPartition(new PartRule("#start", "#end", "test"));
             edit.Document.setHighlight("test", new Highlight());
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
@@ -153,10 +153,10 @@ namespace test
 
                 sr.SearchWord = FindTextBox.Text;
                 if (RegxCheckBox.Checked) {
-                    sr.Searcher = new AsControls.RegexSearch();
+                    sr.Searcher = new YYS.RegexSearch();
                 }
                 else {
-                    sr.Searcher = new AsControls.NormalSearch();
+                    sr.Searcher = new YYS.NormalSearch();
                 }
                 sr.FindNextImpl();
                 if (pos == null) {
@@ -181,9 +181,9 @@ namespace test
                 }
                 sr.SearchWord = FindTextBox.Text;
                 if (RegxCheckBox.Checked) {
-                    sr.Searcher = new AsControls.RegexSearch();
+                    sr.Searcher = new YYS.RegexSearch();
                 } else {
-                    sr.Searcher = new AsControls.NormalSearch();
+                    sr.Searcher = new YYS.NormalSearch();
                 }
                 sr.FindNextImpl();
             };
@@ -194,9 +194,9 @@ namespace test
                 }
                 sr.SearchWord = FindTextBox.Text;
                 if (RegxCheckBox.Checked) {
-                    sr.Searcher = new AsControls.RegexSearchRev();
+                    sr.Searcher = new YYS.RegexSearchRev();
                 } else {
-                    sr.Searcher = new AsControls.NormalSearchRev();
+                    sr.Searcher = new YYS.NormalSearchRev();
                 }
                 sr.FindPrevImpl();
             };
@@ -207,7 +207,7 @@ namespace test
                 }
                 sr.SearchWord = FindTextBox.Text;
                 sr.ReplaceWord = ReplaceTextBox.Text;
-                sr.Searcher = new AsControls.NormalSearch();
+                sr.Searcher = new YYS.NormalSearch();
                 sr.ReplaceImpl();
             };
 
@@ -217,11 +217,11 @@ namespace test
                 }
                 sr.SearchWord = FindTextBox.Text;
                 sr.ReplaceWord = ReplaceTextBox.Text;
-                sr.Searcher = new AsControls.NormalSearch();
+                sr.Searcher = new YYS.NormalSearch();
                 sr.ReplaceAllImpl();
             };
 
-            edit.Wrap = AsControls.WrapType.WindowWidth;
+            edit.Wrap = YYS.WrapType.WindowWidth;
             WrapOnToolStripMenuItem.Checked = true;
 
 //            edit.Text = @"/*sss*/

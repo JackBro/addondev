@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AsControls
+namespace YYS
 {
     public class Search
     {
-        private gcsTextEdit view;
+        private GCsTextEdit view;
         public ISearch Searcher { get; set; }
 
         public string SearchWord;
@@ -15,7 +15,7 @@ namespace AsControls
 
         //public string searchstr;
 
-        public Search(gcsTextEdit edit)
+        public Search(GCsTextEdit edit)
         {
             this.view = edit;
         }

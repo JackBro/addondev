@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace AsControls.Parser {
+namespace YYS.Parser {
     class Highlight : IHighlight {
         private Color textcolor;
         public Highlight(Color textcolor) {
@@ -19,8 +19,8 @@ namespace AsControls.Parser {
 
         public List<Rule> getRules() {
             var rules = new List<Rule>();
-            rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
-            rules.Add(new MultiLineRule("/*", "*/", new AsControls.Parser.Attribute(Color.Red)));
+            rules.Add(new EndLineRule("//", new YYS.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
+            rules.Add(new MultiLineRule("/*", "*/", new YYS.Parser.Attribute(Color.Red)));
             return rules;
         }
 
