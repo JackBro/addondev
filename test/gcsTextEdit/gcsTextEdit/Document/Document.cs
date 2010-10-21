@@ -10,6 +10,12 @@ using YYS.Parser;
 
 namespace YYS {
 
+    public enum lbcode {
+        CR,
+        LF,
+        CRLF
+    }
+
     //public class Document : IDocument {
     public class Document {
 
@@ -70,9 +76,39 @@ namespace YYS {
 
         public override string ToString() {
             StringBuilder str = new StringBuilder();
-            for (int i = 0; i < text_.Count; i++) {
+            int i = 0;
+            for (i = 0; i < text_.Count-1; i++) {
                 str.AppendLine(text_[i].Text.ToString());
+                str.Append(Environment.NewLine);
             }
+            str.AppendLine(text_[i].Text.ToString());
+            return str.ToString();
+        }
+         
+        public string GetText(lbcode code) {
+
+            string lb = Environment.NewLine;
+            switch (code) {
+                case lbcode.CR:
+                    lb = "\r";
+                    break;
+                case lbcode.LF:
+                    lb = "\n";
+                    break;
+                case lbcode.CRLF:
+                    lb = "\r\n";
+                    break;
+                default:
+                    break;
+            }
+
+            StringBuilder str = new StringBuilder();
+            int i = 0;
+            for (i = 0; i < text_.Count - 1; i++) {
+                str.AppendLine(text_[i].Text.ToString());
+                str.Append(lb);
+            }
+            str.AppendLine(text_[i].Text.ToString());
             return str.ToString();
         }
 
@@ -126,6 +162,7 @@ namespace YYS {
                 return new DPos(dp.tl, s);
             }
         }
+
         internal DPos rightOf(DPos dp, bool wide) {
             if (dp.ad == len(dp.tl)) {
                 // 行末だが、ファイルの終わりではない場合

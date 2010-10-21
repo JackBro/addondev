@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using YYS;
 using YYS.Parser;
+using System.IO;
 
 namespace test
 {
@@ -237,9 +238,6 @@ s*/mmmm
 e";
 
             panel1.Controls.Add(edit);
-
-
-
 
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";

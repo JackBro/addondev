@@ -317,21 +317,21 @@ namespace YYS {
                 cur_.on_setfocus();
             };
 
-            this.MouseClick += (sender, e) => {
-                if (MouseLinkClick != null) {
-                    VPos vs, ve;
-                    cur_.getCurPos(out vs, out ve);
-                    var rules = doc_.Rules(vs.tl);
-                    foreach (var rule in rules) {
-                        if (((rule.attr.type & AttrType.Link) == AttrType.Link)
-                             && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
-                            string link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
-                            MouseLinkClick(this, new ClickableLinkEventArgs(e, link));
-                            break;
-                        }
-                    }
-                }
-            };
+            //this.MouseClick += (sender, e) => {
+            //    if (MouseLinkClick != null) {
+            //        VPos vs, ve;
+            //        cur_.getCurPos(out vs, out ve);
+            //        var rules = doc_.Rules(vs.tl);
+            //        foreach (var rule in rules) {
+            //            if (((rule.attr.type & AttrType.Link) == AttrType.Link)
+            //                 && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
+            //                string link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
+            //                MouseLinkClick(this, new ClickableLinkEventArgs(e, link));
+            //                break;
+            //            }
+            //        }
+            //    }
+            //};
 
             KeyBind = new KeyMap();
             MouseNormalSelectKey = Keys.Shift;
@@ -366,7 +366,7 @@ namespace YYS {
         }
 
         private string getLinkFromPositon(int x, int y) {
-            string link = string.Empty;
+            string link = null;
             VPos vp = new VPos();
             GetVPos(x, y, ref vp, false);
             var rules = doc_.Rules(vp.tl);
@@ -601,20 +601,46 @@ namespace YYS {
             this.Cursor = Cursors.Default;
         }
 
+        protected override void OnMouseClick(MouseEventArgs e) {
+            base.OnMouseClick(e);
+
+            if (MouseLinkClick != null) {
+                string link = getLinkFromPositon(e.X, e.Y);
+                if (link != null) {
+                    MouseLinkClick(this, new ClickableLinkEventArgs(e, link));
+                }
+            }
+        }
+
         protected override void OnMouseDoubleClick(MouseEventArgs e) {
             base.OnMouseDoubleClick(e);
+
             cur_.mouse_double_click(e);
+            if (MouseLinkDoubleClick != null) {
+                string link = getLinkFromPositon(e.X, e.Y);
+                if (link != null) {
+                    MouseLinkDoubleClick(this, new ClickableLinkEventArgs(e, link));
+                }
+            }
         }
 
         protected override void OnMouseUp(MouseEventArgs e) {
             base.OnMouseUp(e);
+
             cur_.mouse_up(e);
         }
 
         bool orgAllowDrop;
         protected override void OnMouseDown(MouseEventArgs e) {
             base.OnMouseDown(e);
+
             cur_.mouse_down(e);
+            if (MouseLinkDown != null) {
+                string link = getLinkFromPositon(e.X, e.Y);
+                if (link != null) {
+                    MouseLinkDown(this, new ClickableLinkEventArgs(e, link));
+                }
+            }
         }
 
         protected override void OnMouseMove(MouseEventArgs e) {
