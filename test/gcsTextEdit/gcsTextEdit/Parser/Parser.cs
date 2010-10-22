@@ -81,12 +81,12 @@ namespace YYS.Parser {
             line.Block.scisLineHeadCmt = _sccmt;
 
             if (line.Block.scisLineHeadCmt == 0) {
-                line.Block.id = Document.DEFAULT_ID;
-                setd(b.id);
+                line.Block.PartID = Document.DEFAULT_ID;
+                setd(b.PartID);
             }
             else {
-                line.Block.id = b.id;
-                setd(b.id);
+                line.Block.PartID = b.PartID;
+                setd(b.PartID);
             }
 
             lex.Src = line.Text;
@@ -141,13 +141,13 @@ namespace YYS.Parser {
 
                     case TokenType.PartitionStart: 
                         isscnext = lex.scisNextLine;
-                        if (line.Block.id != Document.DEFAULT_ID) {
-                            setd(line.Block.id);
+                        if (line.Block.PartID != Document.DEFAULT_ID) {
+                            setd(line.Block.PartID);
                         }
                         break;
                     case TokenType.Partition:
                         isscnext = lex.scisNextLine;
-                        setd(line.Block.id);
+                        setd(line.Block.PartID);
                         break;
                     case TokenType.PartitionEnd:
                         isscnext = lex.scisNextLine;

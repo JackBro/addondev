@@ -22,7 +22,7 @@ namespace test {
             rules.Add(new MultiLineRule("/*", "*/", new YYS.Parser.Attribute(Color.Green)));
             //rules.Add(new EncloseRule("\"", "\"", new AsControls.Parser.Attribute(Color.Brown), '\\'));
             //rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
-            rules.Add(new KeywordRule(new string[]{"if"}, new YYS.Parser.Attribute(Color.Blue, AttrType.UnderLine)));
+            rules.Add(new KeywordRule(new string[] { "if" }, new YYS.Parser.Attribute(Color.Blue, AttrType.Bold | AttrType.UnderLine)));
             return rules;
         }
 

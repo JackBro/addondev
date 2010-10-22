@@ -13,7 +13,7 @@ namespace YYS.Parser {
     }
 
     public class Block {
-        public string id;
+        public string PartID;
         public int scisLineHeadCmt = 0;
         public int sccommentTransition = 0;
 
@@ -22,7 +22,7 @@ namespace YYS.Parser {
         public int commentTransition = 0;
 
         public Block() {
-            id = Document.DEFAULT_ID;
+            PartID = Document.DEFAULT_ID;
         }
     }
 

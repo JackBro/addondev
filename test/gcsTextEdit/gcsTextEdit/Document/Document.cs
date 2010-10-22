@@ -384,7 +384,8 @@ namespace YYS {
             }
         }
 
-        private string[] separater= new string[] { "\r\n", "\r" };
+        private string[] separater= new string[] { "\r\n", "\r", "\n" };
+        //private string[] separater = new string[] { "\r\n" };
         private string[] SplitLine(string line) {
             //string[] res = line.Split(separater, StringSplitOptions.RemoveEmptyEntries);
             //if (res.Count() == 0) {

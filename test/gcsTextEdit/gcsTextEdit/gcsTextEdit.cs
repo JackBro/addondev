@@ -525,7 +525,7 @@ namespace YYS {
             if (e.Handled) {
                 return;
             }
-
+   
             if (IsInputChar(e.KeyChar)) {
                 cur_.InputChar(e.KeyChar);
                 e.Handled = true;
@@ -604,6 +604,8 @@ namespace YYS {
         protected override void OnMouseClick(MouseEventArgs e) {
             base.OnMouseClick(e);
 
+            if (!Focused) Focus();
+
             if (MouseLinkClick != null) {
                 string link = getLinkFromPositon(e.X, e.Y);
                 if (link != null) {
@@ -614,6 +616,8 @@ namespace YYS {
 
         protected override void OnMouseDoubleClick(MouseEventArgs e) {
             base.OnMouseDoubleClick(e);
+            
+            if (!Focused) Focus();
 
             cur_.mouse_double_click(e);
             if (MouseLinkDoubleClick != null) {
@@ -633,6 +637,8 @@ namespace YYS {
         bool orgAllowDrop;
         protected override void OnMouseDown(MouseEventArgs e) {
             base.OnMouseDown(e);
+
+            if (!Focused) Focus();
 
             cur_.mouse_down(e);
             if (MouseLinkDown != null) {

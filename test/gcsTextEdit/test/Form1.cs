@@ -233,9 +233,7 @@ namespace test
 //*/
 //#end";
 
-            edit.Text = @"/*ss
-s*/mmmm
-e";
+            edit.Text = "/*ss\ns*/mmm\nme";
 
             panel1.Controls.Add(edit);
 

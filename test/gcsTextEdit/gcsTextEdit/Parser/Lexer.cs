@@ -10,10 +10,7 @@ namespace YYS.Parser {
 
         public Tuple<int, int, YYS.Parser.Attribute> OffsetLenAttr;
 
-
         public LexerReader reader;
-
-        //private Rule resultRule;
 
         public bool isNextLine = false;
         public bool scisNextLine = false;
@@ -110,7 +107,7 @@ namespace YYS.Parser {
             }
 
             if (Src.Length == 0 && curblock.scisLineHeadCmt == 1) {
-                curblock.id = preblock.id;
+                curblock.PartID = preblock.PartID;
                 scisNextLine = true;
             }
 
@@ -141,7 +138,7 @@ namespace YYS.Parser {
                                             if (text.ToString() == item.Key) {
                                                 tok = TokenType.PartitionStart;
                                                 if (curblock != null) {
-                                                    curblock.id = item.Value.id;
+                                                    curblock.PartID = item.Value.id;
                                                     scisNextLine = true;
                                                 }
                                                 reader.setoffset(Offset + text.Length);
@@ -160,11 +157,11 @@ namespace YYS.Parser {
                                             buf.Append((char)c);
 
                                             if (partRuleEndDic.ContainsKey(buf.ToString())) {
-                                                if (preblock.id == partRuleEndDic[buf.ToString()].id) {
+                                                if (preblock.PartID == partRuleEndDic[buf.ToString()].id) {
                                                     var Eenelem = partRuleEndDic[buf.ToString()];
                                                     tok = TokenType.PartitionEnd;
 
-                                                    curblock.id = Eenelem.id;
+                                                    curblock.PartID = Eenelem.id;
                                                     scisNextLine = false;
 
                                                     reader.setoffset(Offset + buf.ToString().Length);
@@ -182,7 +179,7 @@ namespace YYS.Parser {
 
                                 if (c == -1) {
                                     tok = TokenType.Partition;
-                                    curblock.id = preblock.id;
+                                    curblock.PartID = preblock.PartID;
                                     scisNextLine = true;
                                 }
                                 reader.setoffset(0);
@@ -198,7 +195,7 @@ namespace YYS.Parser {
                                             if (text.ToString() == item.Key) {
                                                 tok = TokenType.PartitionStart;
                                                 if (curblock != null) {
-                                                    curblock.id = item.Key;
+                                                    curblock.PartID = item.Key;
                                                     scisNextLine = true;
                                                 }
                                                 reader.setoffset(Offset + text.Length);

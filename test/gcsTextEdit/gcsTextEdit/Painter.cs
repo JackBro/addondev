@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Forms;
 using YYS.Parser;
 
@@ -56,6 +54,15 @@ namespace YYS {
         }
 
         private Pen AttributeLinePen;
+        private float lineWeight;
+        public float LineWeight {
+            get { return lineWeight; }
+            set {
+                lineWeight = value;
+                DeleteObj(this.AttributeLinePen);
+                this.AttributeLinePen = new Pen(Color.Black, value);
+            }
+        }
 
         private Dictionary<char, int> widthMap = new Dictionary<char, int>();
 
@@ -100,6 +107,24 @@ namespace YYS {
                 this.font = value;
                 DeleteObject(hfont_);
                 this.hfont_= value.ToHfont();
+
+                LineWeight = (float)(this.font.Size/10.0);
+
+                DeleteObj(boldFont);
+                boldFont = null;
+            }
+        }
+
+        private Font boldFont;
+        private Font BoldFont {
+            get {
+                if (boldFont == null) {
+                    var ff = this.Font.FontFamily;
+                    var size = this.Font.Size;
+                    
+                    boldFont = new Font(ff, size, FontStyle.Bold);
+                }
+                return boldFont;
             }
         }
 
@@ -145,6 +170,7 @@ namespace YYS {
             //Marshal.FreeHGlobal(widthPtr);
             Win32API.ReleaseDC(hwnd_, dc_);
 
+            DeleteObj(this.boldFont);
             DeleteObject(hfont_);
         }
 
@@ -159,6 +185,7 @@ namespace YYS {
         private void DeleteObj(IDisposable obj) {
             if (obj != null) {
                 obj.Dispose();
+                obj = null;
             }
         }
 
@@ -282,28 +309,35 @@ namespace YYS {
             g.FillRectangle(lineNumberBackBrush, rect);
         }
 
-        public void DrawText(Graphics g, string text, Color color, int X, int Y) {
-
-            //g.DrawString(text, this.Font, TextBrush, new Point(X, Y));
-            TextRenderer.DrawText(g,
-               text,
-               this.Font,
-               new Point(X, Y),
-               color,
-               TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
-               //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping 
-               //     | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
-
-        }
+        //public void DrawText(Graphics g, string text, Color color, int X, int Y) {
+        //    //g.DrawString(text, this.Font, TextBrush, new Point(X, Y));
+        //    TextRenderer.DrawText(g,
+        //       text,
+        //       this.Font,
+        //       new Point(X, Y),
+        //       color,
+        //       TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+        //       //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping 
+        //       //     | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
+        //}
 
         public void DrawText(Graphics g, string text, YYS.Parser.Attribute attr, int X, int Y) {
-
-            TextRenderer.DrawText(g,
-               text,
-               this.Font,
-               new Point(X, Y),
-               attr.color,
-               TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+            if ((attr.type & AttrType.Bold) == AttrType.Bold) {
+                TextRenderer.DrawText(g,
+                   text,
+                   this.BoldFont,
+                   new Point(X, Y),
+                   attr.color,
+                   TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+            }
+            else {
+                TextRenderer.DrawText(g,
+                   text,
+                   this.Font,
+                   new Point(X, Y),
+                   attr.color,
+                   TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+            }
         }
 
         public void DrawAttribute(Graphics g, YYS.Parser.Attribute attr, int x1, int y1, int x2, int y2) {
