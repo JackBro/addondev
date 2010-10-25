@@ -43,6 +43,7 @@ namespace YYS {
         }
     }
 
+    //public partial class GCsTextEdit : UserControl, ITextEditor {
     public partial class GCsTextEdit : Control, ITextEditor {
 
         public event EventHandler<ClickableLinkEventArgs> MouseLinkClick;
@@ -294,7 +295,11 @@ namespace YYS {
         }
 
         public GCsTextEdit() {
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+
+            this.SetStyle(ControlStyles.DoubleBuffer, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
             vScrollBar = new VGcsScrollBar();
             vScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);

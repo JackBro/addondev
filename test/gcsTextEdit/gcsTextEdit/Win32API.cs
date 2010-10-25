@@ -122,5 +122,30 @@ namespace YYS
 
         [DllImport("user32.dll")]
         public static extern bool InvalidateRect(IntPtr hWnd, ref RECT lpRect, bool bErase);
+        
+        //[DllImport("user32.dll")]
+        //public static extern int ScrollWindowEx(IntPtr hWnd, int dx, int dy, IntPtr prcScroll,
+        //    [In] ref RECT prcClip, IntPtr hrgnUpdate, IntPtr prcUpdate, uint flags);
+
+        //[DllImport("user32.dll")]
+        //public static extern int ScrollWindowEx(IntPtr hWnd, int dx, int dy, ref RECT prcScroll,
+        //    [In] ref RECT prcClip, IntPtr hrgnUpdate, IntPtr prcUpdate, uint flags);
+
+        const int SW_INVALIDATE = 0x0002;
+
+        [DllImport("user32.dll")]
+        public static unsafe extern Int32 ScrollWindowEx(IntPtr window, int x, int y, RECT* scroll, RECT* clip, IntPtr updateRegion, RECT* update, UInt32 flags);
+
+        public static void ScrollWindow(IntPtr window, int x, int y, RECT clip) {
+            unsafe {
+                ScrollWindowEx(window, x, y, &clip, &clip, IntPtr.Zero, null, SW_INVALIDATE);
+            }
+        }
+
+        public static void ScrollWindow(IntPtr window, int x, int y) {
+            unsafe {
+                ScrollWindowEx(window, x, y, null, null, IntPtr.Zero, null, SW_INVALIDATE);
+            }
+        }
     }
 }

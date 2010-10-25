@@ -395,8 +395,10 @@ namespace YYS
 
                     Rectangle rc = new Rectangle(Math.Max(LFT, sp.X), Math.Max(TOP, sp.Y), RHT - Math.Max(LFT, sp.X), Math.Min(BTM, view_.fnt().H()));
                     view_.Invalidate(rc, false);
+
                     Rectangle re = new Rectangle(LFT, Math.Max(TOP, ep.Y), Math.Min(RHT, ep.X) - LFT, Math.Min(BTM, view_.fnt().H()));
                     view_.Invalidate(re, false);
+
                     Rectangle rd = new Rectangle(LFT, Math.Max(TOP, rc.Bottom), RHT - LFT, Math.Min(BTM, re.Top));
                     view_.Invalidate(rd, false);
                 }
