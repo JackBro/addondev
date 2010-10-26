@@ -14,10 +14,11 @@ namespace test
 {
     public partial class Form1 : Form
     {
-        //private Bitmap image = new Bitmap("test.png");
+        private Bitmap image = new Bitmap("test.png");
         private YYS.GCsTextEdit edit = new YYS.GCsTextEdit();
         //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
         private YYS.Search sr;
+        private YYS.IncrementalSearch incsr;
         public Form1()
         {
             InitializeComponent();
@@ -36,9 +37,9 @@ namespace test
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
             edit.ShowLineNumber = true;
-            //edit.DrawEventHandler += (g, line, x, y) => {
-            //    g.DrawImage(image, new Point(x, y));
-            //};
+            edit.DrawEventHandler += (g, line, x, y) => {
+                g.DrawImage(image, new Point(x, y));
+            };
             edit.ContextMenuStrip = contextMenuStrip1;
             edit.KeyPress += (sender, e) => {
                 e.Handled = false;
@@ -143,37 +144,44 @@ namespace test
                 pos = null;
             };
             FindTextBox.TextChanged += (sender, e) => {
-                if (sr == null) {
-                    sr = edit.Sr();
+                if (incsr == null) {
+                    incsr = edit.IncSr();
+                    incsr.Searcher = new YYS.NormalSearch();
                 }
+                incsr.SearchWord = FindTextBox.Text;
+                incsr.FindNext();
 
-                if (pos != null) {
-                    //pos = edit.GetSelect().t1;
-                    edit.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
-                }
+                //if (sr == null) {
+                //    sr = edit.Sr();
+                //}
 
-                sr.SearchWord = FindTextBox.Text;
-                if (RegxCheckBox.Checked) {
-                    sr.Searcher = new YYS.RegexSearch();
-                }
-                else {
-                    sr.Searcher = new YYS.NormalSearch();
-                }
-                sr.FindNextImpl();
-                if (pos == null) {
-                    pos = edit.GetSelect().t1;
-                    //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
-                }
-                else {
-                    DPos cur = edit.GetSelect().t1;
-                    if (pos.tl == cur.tl && pos.ad == cur.ad) {
-                        //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
-                        pos = edit.GetSelect().t1;
-                    }
-                    else {
+                //if (pos != null) {
+                //    //pos = edit.GetSelect().t1;
+                //    edit.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
+                //}
 
-                    }
-                }
+                //sr.SearchWord = FindTextBox.Text;
+                //if (RegxCheckBox.Checked) {
+                //    sr.Searcher = new YYS.RegexSearch();
+                //}
+                //else {
+                //    sr.Searcher = new YYS.NormalSearch();
+                //}
+                //sr.FindNextImpl();
+                //if (pos == null) {
+                //    pos = edit.GetSelect().t1;
+                //    //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
+                //}
+                //else {
+                //    DPos cur = edit.GetSelect().t1;
+                //    if (pos.tl == cur.tl && pos.ad == cur.ad) {
+                //        //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
+                //        pos = edit.GetSelect().t1;
+                //    }
+                //    else {
+
+                //    }
+                //}
             };
 
             FindNextButton.Click += (sender, e) => {

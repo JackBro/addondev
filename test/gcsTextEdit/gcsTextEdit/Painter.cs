@@ -320,7 +320,7 @@ namespace YYS {
         //       //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping 
         //       //     | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
         //}
-
+        private TextFormatFlags textFlags = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix;
         public void DrawText(Graphics g, string text, YYS.Parser.Attribute attr, int X, int Y) {
             if ((attr.type & AttrType.Bold) == AttrType.Bold) {
                 TextRenderer.DrawText(g,
@@ -328,7 +328,7 @@ namespace YYS {
                    this.BoldFont,
                    new Point(X, Y),
                    attr.color,
-                   TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+                   textFlags);
             }
             else {
                 TextRenderer.DrawText(g,
@@ -336,7 +336,7 @@ namespace YYS {
                    this.Font,
                    new Point(X, Y),
                    attr.color,
-                   TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix);
+                   textFlags);
             }
         }
 
@@ -453,8 +453,8 @@ namespace YYS {
             return size;
         }
 
-        public void SetClip(Rectangle rc ){
-            Win32API.IntersectClipRect(dc_, rc.Left, rc.Top, rc.Right, rc.Bottom);
+        internal void SetClip(Win32API.RECT rc) {
+            Win32API.IntersectClipRect(dc_, rc.left, rc.top, rc.right, rc.bottom);
         }
 
         public void ClearClip()

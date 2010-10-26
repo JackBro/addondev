@@ -96,6 +96,7 @@ namespace YYS {
             }
         }
 
+
         public void ScrollView(int dx, int dy, bool update) {
 
             // スクロール開始通知
@@ -154,28 +155,34 @@ namespace YYS {
 			        if( update ){
 				        // 縦スクロールは高速化したいので一工夫
                         if (dy != 0) {
-                            //// 再描画の必要な領域を自分で計算
-                            //RECT rc = {0,0,right(),bottom()};
-                            //if( dy < 0 ) rc.top  = rc.bottom + dy;
-                            //else         rc.bottom = dy;
+                            if (DrawEventHandler == null) {
+                                //// 再描画の必要な領域を自分で計算
+                                //RECT rc = {0,0,right(),bottom()};
+                                //if( dy < 0 ) rc.top  = rc.bottom + dy;
+                                //else         rc.bottom = dy;
 
-                            //// インテリマウスの中ボタンクリックによる
-                            //// オートスクロール用カーソルの下の部分を先に描く
-                            //// ２回に分けることで、小さな矩形部分二つで済むので高速
-                            //::ValidateRect( hwnd_, &rc );
-                            //::UpdateWindow( hwnd_ );
-                            //::InvalidateRect( hwnd_, &rc, FALSE );
+                                //// インテリマウスの中ボタンクリックによる
+                                //// オートスクロール用カーソルの下の部分を先に描く
+                                //// ２回に分けることで、小さな矩形部分二つで済むので高速
+                                //::ValidateRect( hwnd_, &rc );
+                                //::UpdateWindow( hwnd_ );
+                                //::InvalidateRect( hwnd_, &rc, FALSE );
 
-                            Win32API.RECT rc = new Win32API.RECT();
-                            rc.left=0; rc.top=0; rc.right = right(); rc.bottom=bottom();
-                            if (dy < 0) rc.top = rc.bottom + dy;
-                            else rc.bottom = dy;
+                                Win32API.RECT rc = new Win32API.RECT();
+                                rc.left = 0; rc.top = 0; rc.right = right(); rc.bottom = bottom();
+                                if (dy < 0) rc.top = rc.bottom + dy;
+                                else rc.bottom = dy;
 
-                            Win32API.ValidateRect(this.Handle, ref rc);
-                            this.Update();
-                            Win32API.InvalidateRect(this.Handle, ref rc, false);
+                                Win32API.ValidateRect(this.Handle, ref rc);
+                                //this.Update();
+                                Win32API.UpdateWindow(this.Handle);
+                                Win32API.InvalidateRect(this.Handle, ref rc, false);
+                            }
                         }
-                        this.Update(); //TODO scroll                        
+                        //else {
+                        //    Win32API.UpdateWindow(this.Handle);
+                        //}
+                        //this.Update(); //TODO scroll                        
 			        }
 		        }
 	        }

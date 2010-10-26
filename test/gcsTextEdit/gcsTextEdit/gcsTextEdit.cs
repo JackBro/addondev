@@ -294,12 +294,18 @@ namespace YYS {
                 return s;
         }
 
-        public GCsTextEdit() {
-            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+        public IncrementalSearch IncSr() {
+            IncrementalSearch s = new IncrementalSearch(this);
+            //s.Searcher = new NormalSearch(word);
+            return s;
+        }
 
-            this.SetStyle(ControlStyles.DoubleBuffer, true);
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+        public GCsTextEdit() {
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+
+            //this.SetStyle(ControlStyles.DoubleBuffer, true);
+            //this.SetStyle(ControlStyles.UserPaint, true);
+            //this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
             vScrollBar = new VGcsScrollBar();
             vScrollBar.Scroll += new ScrollEventHandler(ScrollBar_Scroll);
@@ -556,7 +562,7 @@ namespace YYS {
         //
         protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e);
-
+       
             Painter p = cvs_.getPainter();
             //vRect.rc = e.ClipRectangle;
             if (this.Height <= e.ClipRectangle.Height) {
@@ -579,13 +585,13 @@ namespace YYS {
                 DrawTXT3(e.Graphics, vRect, p);
             } else {
                 // case C: 両方更新
-                //DrawLNA(e.Graphics, vRect, p);
-                ////p.SetClip(cvs_.zone());
-                //DrawTXT3(e.Graphics, vRect, p);
-                ////p.ClearClip();
-
-                DrawTXT3(e.Graphics, vRect, p);
                 DrawLNA(e.Graphics, vRect, p);
+                p.SetClip(cvs_.zone());
+                DrawTXT3(e.Graphics, vRect, p);
+                p.ClearClip();
+
+                //DrawTXT3(e.Graphics, vRect, p);
+                //DrawLNA(e.Graphics, vRect, p);
             }
         }
 

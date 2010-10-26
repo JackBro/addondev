@@ -167,9 +167,9 @@ namespace YYS.Parser {
             int off = reader.offset();
             int index = reader.Src.IndexOf(this.end, off);
             if (index < 0) {
-                return reader.Src.Length - off;
+                return reader.Src.Length - (off-this.start.Length);
             } else {
-                return index - off;
+                return index - (off - this.start.Length) + this.end.Length;
             }
         }
     }

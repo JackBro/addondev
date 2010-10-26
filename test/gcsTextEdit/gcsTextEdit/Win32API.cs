@@ -122,6 +122,9 @@ namespace YYS
 
         [DllImport("user32.dll")]
         public static extern bool InvalidateRect(IntPtr hWnd, ref RECT lpRect, bool bErase);
+
+        [DllImport("user32.dll")]
+        public static extern bool UpdateWindow(IntPtr hWnd);
         
         //[DllImport("user32.dll")]
         //public static extern int ScrollWindowEx(IntPtr hWnd, int dx, int dy, IntPtr prcScroll,
@@ -138,7 +141,7 @@ namespace YYS
 
         public static void ScrollWindow(IntPtr window, int x, int y, RECT clip) {
             unsafe {
-                ScrollWindowEx(window, x, y, &clip, &clip, IntPtr.Zero, null, SW_INVALIDATE);
+                ScrollWindowEx(window, x, y, null, &clip, IntPtr.Zero, null, SW_INVALIDATE);
             }
         }
 

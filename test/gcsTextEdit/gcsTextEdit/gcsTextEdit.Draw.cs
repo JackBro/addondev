@@ -243,21 +243,19 @@ namespace YYS
         {
             var rc = new Rectangle(
                 Math.Max(left(), xb), y,
-                //Math.Min(right(), xe), y + p.H() - 1);
                 Math.Min(right(), xe), y + p.H());
+
 	        p.Invert(g, rc );
         }
 
         private Tuple<int, int> l(int utl, int vrl) {
-            int upsize=500;
+            int upsize=300;
             Painter p = cvs_.getPainter();
             int H=p.H();
             int rn=0;
-            //int start = vrl > 0 ? utl - 1 : utl;
-            //int start = vrl > 0 ? utl : utl-1;
+
             int start = utl - 1;
-            //start = start < 0 ? 0 : start;
-            //for (; start > 0; start--) {
+
             for (; start >= 0; start--) {
 
                 rn += rln(start);
@@ -283,15 +281,27 @@ namespace YYS
 
             int tmpYMIN = 0;
             int tmpTLMIN = 0;
-            if (DrawEventHandler == null) {
-                tmpYMIN = v.YMIN;
-                tmpTLMIN = v.TLMIN;
-            }
-            else {
+            //if (DrawEventHandler == null) {
+            //    tmpYMIN = v.YMIN;
+            //    tmpTLMIN = v.TLMIN;
+            //}
+            //else {
+            //    var tuple = l(udScr_tl_, udScr_vrl_);
+            //    tmpYMIN = -(tuple.t2 + udScr_vrl_) * H;
+            //    tmpTLMIN = tuple.t1;
+            //}
+
+            //if (DrawEventHandler != null && v.YMIN<=0) {
+            if (DrawEventHandler != null ) {
                 var tuple = l(udScr_tl_, udScr_vrl_);
                 tmpYMIN = -(tuple.t2 + udScr_vrl_) * H;
                 tmpTLMIN = tuple.t1;
             }
+            else {
+                tmpYMIN = v.YMIN;
+                tmpTLMIN = v.TLMIN;
+            }
+
             //TODO tmp scroll
             //int tmpYMIN = v.YMIN;
             //int tmpTLMIN = v.TLMIN;
@@ -351,7 +361,6 @@ namespace YYS
                                         x = ntx;
                                     }
                                 }
-
                                 break;
                             default:
                                 //p.DrawText(g, ps, color, x + v.XBASE, a.top);
