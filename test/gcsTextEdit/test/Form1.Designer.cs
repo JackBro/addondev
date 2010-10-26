@@ -58,6 +58,10 @@
             this.RegxCheckBox = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.label3 = new System.Windows.Forms.Label();
+            this.IncSrcTextBox = new System.Windows.Forms.TextBox();
+            this.IncSrcRegxCheckBox = new System.Windows.Forms.CheckBox();
+            this.IncSrcMigemoCheckBox = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SearchPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -73,7 +77,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(388, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(492, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -173,10 +177,10 @@
             // panel1
             // 
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 85);
+            this.panel1.Location = new System.Drawing.Point(0, 113);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(388, 288);
+            this.panel1.Size = new System.Drawing.Size(492, 360);
             this.panel1.TabIndex = 1;
             // 
             // SearchPanel
@@ -188,7 +192,7 @@
             this.SearchPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.SearchPanel.Location = new System.Drawing.Point(0, 24);
             this.SearchPanel.Name = "SearchPanel";
-            this.SearchPanel.Size = new System.Drawing.Size(388, 61);
+            this.SearchPanel.Size = new System.Drawing.Size(492, 89);
             this.SearchPanel.TabIndex = 2;
             // 
             // tableLayoutPanel1
@@ -198,8 +202,8 @@
             this.tableLayoutPanel1.ColumnCount = 6;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.Controls.Add(this.ReplaceTextBox, 1, 1);
@@ -212,28 +216,33 @@
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.FindPreButton, 3, 0);
             this.tableLayoutPanel1.Controls.Add(this.RegxCheckBox, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label3, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.IncSrcTextBox, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.IncSrcRegxCheckBox, 2, 2);
+            this.tableLayoutPanel1.Controls.Add(this.IncSrcMigemoCheckBox, 3, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(386, 59);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(490, 87);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
             // ReplaceTextBox
             // 
             this.ReplaceTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ReplaceTextBox.Location = new System.Drawing.Point(33, 34);
+            this.ReplaceTextBox.Location = new System.Drawing.Point(50, 34);
             this.ReplaceTextBox.Name = "ReplaceTextBox";
-            this.ReplaceTextBox.Size = new System.Drawing.Size(150, 22);
+            this.ReplaceTextBox.Size = new System.Drawing.Size(217, 22);
             this.ReplaceTextBox.TabIndex = 0;
             // 
             // FindNextButton
             // 
             this.FindNextButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FindNextButton.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.FindNextButton.Location = new System.Drawing.Point(289, 3);
+            this.FindNextButton.Location = new System.Drawing.Point(393, 3);
             this.FindNextButton.Name = "FindNextButton";
             this.FindNextButton.Size = new System.Drawing.Size(44, 25);
             this.FindNextButton.TabIndex = 2;
@@ -243,16 +252,16 @@
             // FindTextBox
             // 
             this.FindTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FindTextBox.Location = new System.Drawing.Point(33, 3);
+            this.FindTextBox.Location = new System.Drawing.Point(50, 3);
             this.FindTextBox.Name = "FindTextBox";
-            this.FindTextBox.Size = new System.Drawing.Size(150, 22);
+            this.FindTextBox.Size = new System.Drawing.Size(217, 22);
             this.FindTextBox.TabIndex = 1;
             // 
             // ReplaceAllButton
             // 
             this.ReplaceAllButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ReplaceAllButton.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.ReplaceAllButton.Location = new System.Drawing.Point(339, 34);
+            this.ReplaceAllButton.Location = new System.Drawing.Point(443, 34);
             this.ReplaceAllButton.Name = "ReplaceAllButton";
             this.ReplaceAllButton.Size = new System.Drawing.Size(44, 22);
             this.ReplaceAllButton.TabIndex = 5;
@@ -263,7 +272,7 @@
             // 
             this.FindAllButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FindAllButton.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.FindAllButton.Location = new System.Drawing.Point(339, 3);
+            this.FindAllButton.Location = new System.Drawing.Point(443, 3);
             this.FindAllButton.Name = "FindAllButton";
             this.FindAllButton.Size = new System.Drawing.Size(44, 25);
             this.FindAllButton.TabIndex = 3;
@@ -274,7 +283,7 @@
             // 
             this.ReplaceNextButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ReplaceNextButton.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.ReplaceNextButton.Location = new System.Drawing.Point(289, 34);
+            this.ReplaceNextButton.Location = new System.Drawing.Point(393, 34);
             this.ReplaceNextButton.Name = "ReplaceNextButton";
             this.ReplaceNextButton.Size = new System.Drawing.Size(44, 22);
             this.ReplaceNextButton.TabIndex = 4;
@@ -288,7 +297,7 @@
             this.label1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(24, 31);
+            this.label1.Size = new System.Drawing.Size(41, 31);
             this.label1.TabIndex = 6;
             this.label1.Text = "find";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -300,17 +309,18 @@
             this.label2.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label2.Location = new System.Drawing.Point(3, 31);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(24, 28);
+            this.label2.Size = new System.Drawing.Size(41, 28);
             this.label2.TabIndex = 7;
             this.label2.Text = "rep";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FindPreButton
             // 
+            this.FindPreButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FindPreButton.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.FindPreButton.Location = new System.Drawing.Point(239, 3);
+            this.FindPreButton.Location = new System.Drawing.Point(333, 3);
             this.FindPreButton.Name = "FindPreButton";
-            this.FindPreButton.Size = new System.Drawing.Size(44, 23);
+            this.FindPreButton.Size = new System.Drawing.Size(54, 25);
             this.FindPreButton.TabIndex = 8;
             this.FindPreButton.Text = "Pre";
             this.FindPreButton.UseVisualStyleBackColor = true;
@@ -318,12 +328,14 @@
             // RegxCheckBox
             // 
             this.RegxCheckBox.AutoSize = true;
-            this.RegxCheckBox.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.RegxCheckBox.Location = new System.Drawing.Point(189, 3);
+            this.RegxCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RegxCheckBox.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.RegxCheckBox.Location = new System.Drawing.Point(273, 3);
             this.RegxCheckBox.Name = "RegxCheckBox";
-            this.RegxCheckBox.Size = new System.Drawing.Size(44, 17);
+            this.RegxCheckBox.Size = new System.Drawing.Size(54, 25);
             this.RegxCheckBox.TabIndex = 9;
             this.RegxCheckBox.Text = "Regx";
+            this.RegxCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.RegxCheckBox.UseVisualStyleBackColor = true;
             // 
             // contextMenuStrip1
@@ -339,11 +351,57 @@
             this.copyToolStripMenuItem1.Size = new System.Drawing.Size(96, 22);
             this.copyToolStripMenuItem1.Text = "Copy";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label3.Location = new System.Drawing.Point(3, 59);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 28);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "IncSrc";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // IncSrcTextBox
+            // 
+            this.IncSrcTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IncSrcTextBox.Location = new System.Drawing.Point(50, 62);
+            this.IncSrcTextBox.Name = "IncSrcTextBox";
+            this.IncSrcTextBox.Size = new System.Drawing.Size(217, 22);
+            this.IncSrcTextBox.TabIndex = 11;
+            // 
+            // IncSrcRegxCheckBox
+            // 
+            this.IncSrcRegxCheckBox.AutoSize = true;
+            this.IncSrcRegxCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IncSrcRegxCheckBox.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.IncSrcRegxCheckBox.Location = new System.Drawing.Point(273, 62);
+            this.IncSrcRegxCheckBox.Name = "IncSrcRegxCheckBox";
+            this.IncSrcRegxCheckBox.Size = new System.Drawing.Size(54, 22);
+            this.IncSrcRegxCheckBox.TabIndex = 12;
+            this.IncSrcRegxCheckBox.Text = "Regx";
+            this.IncSrcRegxCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.IncSrcRegxCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // IncSrcMigemoCheckBox
+            // 
+            this.IncSrcMigemoCheckBox.AutoSize = true;
+            this.IncSrcMigemoCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IncSrcMigemoCheckBox.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.IncSrcMigemoCheckBox.Location = new System.Drawing.Point(333, 62);
+            this.IncSrcMigemoCheckBox.Name = "IncSrcMigemoCheckBox";
+            this.IncSrcMigemoCheckBox.Size = new System.Drawing.Size(54, 22);
+            this.IncSrcMigemoCheckBox.TabIndex = 13;
+            this.IncSrcMigemoCheckBox.Text = "migemo";
+            this.IncSrcMigemoCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.IncSrcMigemoCheckBox.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(388, 373);
+            this.ClientSize = new System.Drawing.Size(492, 473);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.SearchPanel);
             this.Controls.Add(this.menuStrip1);
@@ -395,6 +453,10 @@
         private System.Windows.Forms.ToolStripMenuItem ShowLineNumToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox IncSrcTextBox;
+        private System.Windows.Forms.CheckBox IncSrcRegxCheckBox;
+        private System.Windows.Forms.CheckBox IncSrcMigemoCheckBox;
 
     }
 }

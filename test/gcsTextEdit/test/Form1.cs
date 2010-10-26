@@ -139,51 +139,6 @@ namespace test
                 edit.ShowLineNumber = ShowLineNumToolStripMenuItem.Checked;
             };
 
-            DPos pos=null;
-            edit.MouseClick+= (sender, e) => {
-                pos = null;
-            };
-            FindTextBox.TextChanged += (sender, e) => {
-                if (incsr == null) {
-                    incsr = edit.IncSr();
-                    incsr.Searcher = new YYS.NormalSearch();
-                }
-                incsr.SearchWord = FindTextBox.Text;
-                incsr.FindNext();
-
-                //if (sr == null) {
-                //    sr = edit.Sr();
-                //}
-
-                //if (pos != null) {
-                //    //pos = edit.GetSelect().t1;
-                //    edit.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
-                //}
-
-                //sr.SearchWord = FindTextBox.Text;
-                //if (RegxCheckBox.Checked) {
-                //    sr.Searcher = new YYS.RegexSearch();
-                //}
-                //else {
-                //    sr.Searcher = new YYS.NormalSearch();
-                //}
-                //sr.FindNextImpl();
-                //if (pos == null) {
-                //    pos = edit.GetSelect().t1;
-                //    //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
-                //}
-                //else {
-                //    DPos cur = edit.GetSelect().t1;
-                //    if (pos.tl == cur.tl && pos.ad == cur.ad) {
-                //        //edit.cursor.MoveCur(new DPos(pos.line, pos.index), false);
-                //        pos = edit.GetSelect().t1;
-                //    }
-                //    else {
-
-                //    }
-                //}
-            };
-
             FindNextButton.Click += (sender, e) => {
                 if (sr == null) {
                     sr = edit.Sr();
@@ -228,6 +183,16 @@ namespace test
                 sr.ReplaceWord = ReplaceTextBox.Text;
                 sr.Searcher = new YYS.NormalSearch();
                 sr.ReplaceAllImpl();
+            };
+
+
+            IncSrcTextBox.TextChanged += (sender, e) => {
+                if (incsr == null) {
+                    incsr = edit.IncSr();
+                    incsr.Searcher = new YYS.NormalSearch();
+                }
+                incsr.SearchWord = FindTextBox.Text;
+                incsr.FindNext();
             };
 
             edit.Wrap = YYS.WrapType.WindowWidth;
