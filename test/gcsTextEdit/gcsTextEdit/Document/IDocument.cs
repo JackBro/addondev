@@ -23,8 +23,9 @@ namespace YYS
         {
             get;
         }
-        void Insert(VPos s, VPos e, string value);
-        void Delete(VPos s, VPos e, out string value);
-        void Replace(VPos s, VPos e, string newValue);
+        void Insert(DPos s, DPos e, string value);
+        void Delete(DPos s, DPos e);
+        void Replace(DPos s, DPos e, string newValue);
+
     }
 }

@@ -56,12 +56,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.FindPreButton = new System.Windows.Forms.Button();
             this.RegxCheckBox = new System.Windows.Forms.CheckBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.label3 = new System.Windows.Forms.Label();
             this.IncSrcTextBox = new System.Windows.Forms.TextBox();
             this.IncSrcRegxCheckBox = new System.Windows.Forms.CheckBox();
             this.IncSrcMigemoCheckBox = new System.Windows.Forms.CheckBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.IncSrcPreCheckBox = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SearchPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -220,6 +221,7 @@
             this.tableLayoutPanel1.Controls.Add(this.IncSrcTextBox, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.IncSrcRegxCheckBox, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.IncSrcMigemoCheckBox, 3, 2);
+            this.tableLayoutPanel1.Controls.Add(this.IncSrcPreCheckBox, 4, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -338,19 +340,6 @@
             this.RegxCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.RegxCheckBox.UseVisualStyleBackColor = true;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToolStripMenuItem1});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(97, 26);
-            // 
-            // copyToolStripMenuItem1
-            // 
-            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
-            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(96, 22);
-            this.copyToolStripMenuItem1.Text = "Copy";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -396,6 +385,32 @@
             this.IncSrcMigemoCheckBox.Text = "migemo";
             this.IncSrcMigemoCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.IncSrcMigemoCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem1});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(97, 26);
+            // 
+            // copyToolStripMenuItem1
+            // 
+            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
+            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(96, 22);
+            this.copyToolStripMenuItem1.Text = "Copy";
+            // 
+            // IncSrcPreCheckBox
+            // 
+            this.IncSrcPreCheckBox.AutoSize = true;
+            this.IncSrcPreCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IncSrcPreCheckBox.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.IncSrcPreCheckBox.Location = new System.Drawing.Point(393, 62);
+            this.IncSrcPreCheckBox.Name = "IncSrcPreCheckBox";
+            this.IncSrcPreCheckBox.Size = new System.Drawing.Size(44, 22);
+            this.IncSrcPreCheckBox.TabIndex = 14;
+            this.IncSrcPreCheckBox.Text = "Pre";
+            this.IncSrcPreCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.IncSrcPreCheckBox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -457,6 +472,7 @@
         private System.Windows.Forms.TextBox IncSrcTextBox;
         private System.Windows.Forms.CheckBox IncSrcRegxCheckBox;
         private System.Windows.Forms.CheckBox IncSrcMigemoCheckBox;
+        private System.Windows.Forms.CheckBox IncSrcPreCheckBox;
 
     }
 }
