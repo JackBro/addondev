@@ -60,9 +60,9 @@
             this.IncSrcTextBox = new System.Windows.Forms.TextBox();
             this.IncSrcRegxCheckBox = new System.Windows.Forms.CheckBox();
             this.IncSrcMigemoCheckBox = new System.Windows.Forms.CheckBox();
+            this.IncSrcPreCheckBox = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.IncSrcPreCheckBox = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SearchPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -386,19 +386,6 @@
             this.IncSrcMigemoCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.IncSrcMigemoCheckBox.UseVisualStyleBackColor = true;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToolStripMenuItem1});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(97, 26);
-            // 
-            // copyToolStripMenuItem1
-            // 
-            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
-            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(96, 22);
-            this.copyToolStripMenuItem1.Text = "Copy";
-            // 
             // IncSrcPreCheckBox
             // 
             this.IncSrcPreCheckBox.AutoSize = true;
@@ -411,6 +398,19 @@
             this.IncSrcPreCheckBox.Text = "Pre";
             this.IncSrcPreCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.IncSrcPreCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem1});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(97, 26);
+            // 
+            // copyToolStripMenuItem1
+            // 
+            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
+            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(96, 22);
+            this.copyToolStripMenuItem1.Text = "Copy";
             // 
             // Form1
             // 

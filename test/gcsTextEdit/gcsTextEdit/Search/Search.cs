@@ -33,7 +33,7 @@ namespace YYS
 		        DPos s;
 		        if( stt.ad == 0 )
 			        //s = new DPos( stt.tl-1, view.Document.len(stt.tl-1) );
-                    s = new DPos( stt.tl-1, view.Document.GetLength(stt.tl-1) );
+                    s = new DPos( stt.tl-1, view.GetDocument().GetLength(stt.tl-1) );
 		        else
 			        s = new DPos( stt.tl, stt.ad-1 );
 
@@ -56,8 +56,8 @@ namespace YYS
             Searcher.SearchWord = this.SearchWord;
 
 	        // １行ずつサーチ
-	        //Document d = view.Document;
-            IDocument d = view.Document;
+            Document d = view.GetDocument();
+            //IDocument d = view.Document;
 	        //for( int mbg=0,med=0; ; s.ad=d.len(--s.tl) ){
             for (int mbg = 0, med = 0; ; s.ad = d.GetLength(--s.tl)) {
 		        if( Searcher.Search(
@@ -86,7 +86,7 @@ namespace YYS
 	        DPos s = new DPos(stt.tl, stt.ad);
 	        if( stt != end )
                 //if (stt.ad == view.Document.len(stt.tl))
-                if (stt.ad == view.Document.GetLength(stt.tl))
+                if (stt.ad == view.GetDocument().GetLength(stt.tl))
 			        s = new DPos( stt.tl+1, 0 );
 		        else
 			        s = new DPos( stt.tl, stt.ad+1 );
@@ -109,10 +109,9 @@ namespace YYS
         private bool FindNextFromImpl(DPos s, ref DPos beg, ref DPos end) {
             Searcher.SearchWord = this.SearchWord;
 	        // １行ずつサーチ
-	        //Document d = view.Document;
-            IDocument d = view.Document;
+            Document d = view.GetDocument();
 	        //for( int mbg=0,med=0,e=d.tln(); s.tl<e; ++s.tl, s.ad=0 )
-            for (int mbg = 0, med = 0, e = d.Count; s.tl < e; ++s.tl, s.ad = 0)
+            for (int mbg = 0, med = 0, e = d.Count(); s.tl < e; ++s.tl, s.ad = 0)
                 //if (Searcher.Search(d.tl(s.tl).ToString(), d.GetLength(s.tl), s.ad, ref mbg, ref med)) {
                 if (Searcher.Search(d.GetText(s.tl), d.GetLength(s.tl), s.ad, ref mbg, ref med)) {
 			        beg.tl = end.tl = s.tl;
@@ -145,7 +144,7 @@ namespace YYS
                     //) );
 
                     //view.Document.Execute(new Replace(b, e, ReplaceWord));
-                    view.Document.Replace(b, e, ReplaceWord);
+                    view.GetDocument().Replace(b, e, ReplaceWord);
 
                     if (FindNextFromImpl(new DPos(b.tl, b.ad + ReplaceWord.Length), ref b, ref e))
 			        {
@@ -212,7 +211,7 @@ namespace YYS
             if (mcr.Count > 0) {
                 // ここで連続置換
                 foreach (var cmd in mcr) {
-                    view.Document.Execute(cmd);        
+                    view.GetDocument().Execute(cmd);        
                 }
                 // カーソル移動
                 e.ad = b.ad + ReplaceWord.Length;

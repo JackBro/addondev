@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using YYS.Parser;
+using System.Collections;
 
 namespace YYS {
 
@@ -16,7 +17,7 @@ namespace YYS {
         CRLF
     }
 
-    public class Document : IDocument {
+    public class Document : IEnumerable<string> {
     //public class Document {
 
         public static string DEFAULT_ID = "default";
@@ -66,7 +67,7 @@ namespace YYS {
             return text_[i].Text;
         }
 
-        public Line line(int i) {
+        internal Line line(int i) {
             return text_[i];
         }
 
@@ -460,7 +461,6 @@ namespace YYS {
 	        }
 	        else
 	        {
-                
 		        // 行の途中
                 //const uchar* f = pl(dp.tl);
                 //      ulong  s = dp.ad;
@@ -481,10 +481,6 @@ namespace YYS {
         }
 
         public void Execute(ICommand cmd) {
-            //bool b = urdo_.isModified();
-            //urdo_.NewlyExec(cmd, doc_);
-            //if (b != urdo_.isModified())
-            //    Fire_MODIFYFLAGCHANGE();
             var c = cmd.Execute(this);
             UndoManager.Invoke(c);
         }
@@ -497,18 +493,7 @@ namespace YYS {
             UndoManager.Invoke(list);
         }
 
-        #region IDocument メンバ
-
-        public string Text {
-            get {
-                throw new NotImplementedException();
-            }
-            set {
-                throw new NotImplementedException();
-            }
-        }
-
-        public int Count {
+        public int LineCount {
             get { return tln(); }
         }
 
@@ -546,6 +531,24 @@ namespace YYS {
 
         public int GetLength(int line) {
             return tl(line).Length;
+        }
+
+        #region IEnumerable<string> メンバ
+
+        IEnumerator<string> IEnumerable<string>.GetEnumerator() {
+            for (int i = 0; i < tln(); i++) {
+                yield return this.tl(i).ToString();
+            }
+        }
+
+        #endregion
+
+        #region IEnumerable メンバ
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            for (int i = 0; i < tln(); i++) {
+                yield return this.tl(i).ToString();
+            }
         }
 
         #endregion

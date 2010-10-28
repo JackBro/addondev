@@ -7,13 +7,9 @@ using System.Drawing;
 namespace YYS {
     public interface ITextEditor {
 
-        event EventHandler<ClickableLinkEventArgs> MouseLinkClick;
-        event EventHandler<ClickableLinkEventArgs> MouseLinkDoubleClick;
-        event EventHandler<ClickableLinkEventArgs> MouseLinkDown;
-
-        IDocument Document { get; set; }
-        KeyMap KeyMap { get; set; }
-
+        //IDocument Document { get; set; }
+        //KeyMap KeyMap { get; set; }
+        Document GetDocument();
 
         void Copy();
         void Cut();

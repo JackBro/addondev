@@ -237,6 +237,7 @@ namespace YYS {
         internal int cx() { return cvs_.zone().right - cvs_.zone().left; }
         internal int cxAll() { return cvs_.zone().right; }
         internal int cy() { return cvs_.zone().bottom; }
+        
         //
         private Document doc_;
         public Document Document {
@@ -770,13 +771,8 @@ namespace YYS {
         #region ITextEditor メンバ
 
 
-        IDocument ITextEditor.Document {
-            get {
-                return this.doc_;
-            }
-            set {
-                throw new NotImplementedException();
-            }
+        public Document GetDocument() {
+            return this.doc_;
         }
 
         public void SetSelction(DPos s, DPos e) {

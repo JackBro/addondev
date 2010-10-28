@@ -99,11 +99,11 @@ namespace test
             });
 
             edit.KeyMap.setAction(Keys.Control | Keys.Z, (editor) => {
-                editor.Document.Undo();
+                editor.GetDocument().Undo();
             });
 
             edit.KeyMap.setAction(Keys.Control | Keys.Y, (editor) => {
-                editor.Document.Redo();
+                editor.GetDocument().Redo();
             });
 
             edit.KeyMap.setAction(Keys.Control | Keys.T, (editor) => {
