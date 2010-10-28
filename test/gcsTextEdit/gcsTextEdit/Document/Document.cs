@@ -16,8 +16,8 @@ namespace YYS {
         CRLF
     }
 
-    //public class Document : IDocument {
-    public class Document {
+    public class Document : IDocument {
+    //public class Document {
 
         public static string DEFAULT_ID = "default";
 
@@ -480,7 +480,7 @@ namespace YYS {
 	        }
         }
 
-        internal void Execute(ICommand cmd) {
+        public void Execute(ICommand cmd) {
             //bool b = urdo_.isModified();
             //urdo_.NewlyExec(cmd, doc_);
             //if (b != urdo_.isModified())
@@ -497,50 +497,57 @@ namespace YYS {
             UndoManager.Invoke(list);
         }
 
-        //#region IDocument メンバ
-        //public event TextUpdateEventHandler TextUpdateEvent;
-        //private UndoManager undoManager = new UndoManager();
-        //public UndoManager UndoManager {
-        //    get { return undoManager; }
-        //}
+        #region IDocument メンバ
 
-        //public void Insert(VPos s, VPos e, string text) {
-        //    Insert(ref s, ref e, text);
+        public string Text {
+            get {
+                throw new NotImplementedException();
+            }
+            set {
+                throw new NotImplementedException();
+            }
+        }
 
-        //    if (UndoManager.AcceptChanges) {
-        //        UndoManager.Push(new UndoInsert(this, s, e, text));
-        //    }
-        //    if (TextUpdateEvent != null) {
-        //        TextUpdateEvent(new VPos(s), new VPos(s), e);
-        //    }
-        //}
+        public int Count {
+            get { return tln(); }
+        }
 
-        //public void Delete(VPos s, VPos e, out string deltext) {
-        //    string buff;
-        //    Delete(ref s, ref e, out buff);
-        //    deltext = buff;
+        public void Insert(DPos s, DPos e, string value) {
+            this.Execute(new Insert(s, value));
+        }
 
-        //    if (UndoManager.AcceptChanges) {
-        //        UndoManager.Push(new UndoDelete(this, s, s, buff));
-        //    }
-        //    if (TextUpdateEvent != null) {
-        //        TextUpdateEvent(new VPos(s), e, new VPos(s));
-        //    }
-        //}
+        public void Delete(DPos s, DPos e) {
+            this.Execute(new Delete(s, e));
+        }
 
-        //public void Replace(VPos s, VPos e, string newValue) {
-        //    string oldvalue;
-        //    VPos e2 = new VPos();
-        //    Replace(ref s, ref e, ref e2, out oldvalue, newValue);
+        public void Replace(DPos s, DPos e, string newValue) {
+            this.Execute(new Replace(s, e, newValue));
+        }
 
-        //    if (UndoManager.AcceptChanges) {
-        //        UndoManager.Push(new UndoReplace(this, s, e, e2, oldvalue, newValue));
-        //    }
-        //    if (TextUpdateEvent != null) {
-        //        TextUpdateEvent(new VPos(s), e, new VPos(e2));
-        //    }
-        //}
+        public void Undo() {
+            this.UndoManager.Undo();
+        }
 
-        //#endregion
+        public void Redo() {
+            this.UndoManager.Redo();
+        }
+
+        public bool CanUndo() {
+            return this.UndoManager.CanUndo;
+        }
+
+        public bool CanRedo() {
+            return this.UndoManager.CanRedo;
+        }
+
+        public string GetText(int line) {
+            return tl(line).ToString();        
+        }
+
+        public int GetLength(int line) {
+            return tl(line).Length;
+        }
+
+        #endregion
     }
 }

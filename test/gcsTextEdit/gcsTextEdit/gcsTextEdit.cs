@@ -43,7 +43,6 @@ namespace YYS {
         }
     }
 
-    //public partial class GCsTextEdit : UserControl, ITextEditor {
     public partial class GCsTextEdit : Control, ITextEditor {
 
         public event EventHandler<ClickableLinkEventArgs> MouseLinkClick;
@@ -130,7 +129,7 @@ namespace YYS {
 
         private Ime imeComposition;
 
-        public KeyMap KeyBind { get; set; }
+        public KeyMap KeyMap { get; set; }
 
         public int TabWidth {
             get { return fnt().TabWidth; }
@@ -270,10 +269,6 @@ namespace YYS {
             /// </summary>
             ALL 
         }
-
-        public void SetSelect(DPos s, DPos e) {
-           
-        }
         
         public Tuple<DPos, DPos> GetSelect() {
             if (cur_.Cur > cur_.Sel) {
@@ -344,7 +339,7 @@ namespace YYS {
             //    }
             //};
 
-            KeyBind = new KeyMap();
+            KeyMap = new KeyMap();
             MouseNormalSelectKey = Keys.Shift;
             MouseRectSelectKey = Keys.Alt;
 
@@ -551,7 +546,7 @@ namespace YYS {
             if (e.Modifiers == Keys.None) {
 
             }
-            KeyBind.getAction(e.Modifiers | e.KeyCode)(this);
+            KeyMap.getAction(e.Modifiers | e.KeyCode)(this);
         }
 
         protected override bool ProcessDialogKey(Keys keyData) {
@@ -770,20 +765,48 @@ namespace YYS {
             cur_.End(wide, select);
         }
 
-        public bool CanUndo() {
-            throw new NotImplementedException();
+        #endregion
+
+        #region ITextEditor メンバ
+
+
+        IDocument ITextEditor.Document {
+            get {
+                return this.doc_;
+            }
+            set {
+                throw new NotImplementedException();
+            }
         }
 
-        public bool CanRedo() {
-            throw new NotImplementedException();
+        public void SetSelction(DPos s, DPos e) {
+            cur_.MoveCur(s, false);
+            cur_.MoveCur(e, true);
         }
 
-        public void Undo() {
-            doc_.UndoManager.Undo();
+        public void GetSelction(out DPos s, out DPos e) {
+            if (cur_.Cur <= cur_.Sel) {
+                s = cur_.Cur;
+                e = cur_.Sel;
+            }
+            else {
+                s = cur_.Sel;
+                e = cur_.Cur;
+            }
         }
 
-        public void Redo() {
-            doc_.UndoManager.Redo();
+        #endregion
+
+        #region ITextEditor メンバ
+
+
+        public void MoveCursor(DPos dp) {
+            cur_.MoveCur(dp, false);
+        }
+
+        public void SelectAll() {
+            this.Home(true, false);
+            this.End(true, true);
         }
 
         #endregion

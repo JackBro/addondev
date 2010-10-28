@@ -7,7 +7,7 @@ namespace YYS
 {
     public class Search
     {
-        private GCsTextEdit view;
+        private ITextEditor view;
         public ISearch Searcher { get; set; }
 
         public string SearchWord;
@@ -22,15 +22,18 @@ namespace YYS
 
         public void FindPrevImpl(){
 	        // カーソル位置取得
-	        VPos stt = new VPos();
-            VPos end = new VPos();
-	        view.cursor.getCurPos( out stt, out end );
+	        //VPos stt = new VPos();
+            //VPos end = new VPos();
+	        //view.cursor.getCurPos( out stt, out end );
+            DPos stt, end;
+            view.GetSelction(out stt, out end);
 
 	        if( stt.ad!=0 || stt.tl!=0 ){
 		        // 選択範囲先頭の１文字前から検索
 		        DPos s;
 		        if( stt.ad == 0 )
-			        s = new DPos( stt.tl-1, view.Document.len(stt.tl-1) );
+			        //s = new DPos( stt.tl-1, view.Document.len(stt.tl-1) );
+                    s = new DPos( stt.tl-1, view.Document.GetLength(stt.tl-1) );
 		        else
 			        s = new DPos( stt.tl, stt.ad-1 );
 
@@ -38,8 +41,9 @@ namespace YYS
                 DPos b = new DPos(); DPos e = new DPos();
 		        if( FindPrevFromImpl( s, ref b, ref e ) ){
 			        // 見つかったら選択
-			        view.cursor.MoveCur( b, false );
-			        view.cursor.MoveCur( e, true );
+			        //view.cursor.MoveCur( b, false );
+			        //view.cursor.MoveCur( e, true );
+                    view.SetSelction(b, e);
 
 			        return;
 		        }
@@ -52,10 +56,13 @@ namespace YYS
             Searcher.SearchWord = this.SearchWord;
 
 	        // １行ずつサーチ
-	        Document d = view.Document;
-	        for( int mbg=0,med=0; ; s.ad=d.len(--s.tl) ){
+	        //Document d = view.Document;
+            IDocument d = view.Document;
+	        //for( int mbg=0,med=0; ; s.ad=d.len(--s.tl) ){
+            for (int mbg = 0, med = 0; ; s.ad = d.GetLength(--s.tl)) {
 		        if( Searcher.Search(
-			        d.tl(s.tl).ToString(), d.len(s.tl), s.ad, ref mbg, ref med ) ){
+			        //d.tl(s.tl).ToString(), d.len(s.tl), s.ad, ref mbg, ref med ) ){
+                    d.GetText(s.tl), d.GetLength(s.tl), s.ad, ref mbg, ref med)) {
 			        beg.tl = end.tl = s.tl;
 			        beg.ad = mbg;
 			        end.ad = med;
@@ -69,14 +76,17 @@ namespace YYS
 
         public void FindNextImpl(){
 	        // カーソル位置取得
-	        VPos stt, end;
-	        view.cursor.getCurPos( out stt, out end );
+	        //VPos stt, end;
+	        //view.cursor.getCurPos( out stt, out end );
+            DPos stt, end;
+            view.GetSelction(out stt, out end);
 
 	        // 選択範囲ありなら、選択範囲先頭の１文字先から検索
 	        // そうでなければカーソル位置から検索
 	        DPos s = new DPos(stt.tl, stt.ad);
 	        if( stt != end )
-                if (stt.ad == view.Document.len(stt.tl))
+                //if (stt.ad == view.Document.len(stt.tl))
+                if (stt.ad == view.Document.GetLength(stt.tl))
 			        s = new DPos( stt.tl+1, 0 );
 		        else
 			        s = new DPos( stt.tl, stt.ad+1 );
@@ -86,8 +96,9 @@ namespace YYS
             DPos e = new DPos();
 	        if( FindNextFromImpl( s, ref b, ref e ) ){
 		        // 見つかったら選択
-                view.cursor.MoveCur(b, false);
-                view.cursor.MoveCur(e, true);
+                //view.cursor.MoveCur(b, false);
+                //view.cursor.MoveCur(e, true);
+                view.SetSelction(b, e);
 		        return;
 	        }
 
@@ -98,9 +109,12 @@ namespace YYS
         private bool FindNextFromImpl(DPos s, ref DPos beg, ref DPos end) {
             Searcher.SearchWord = this.SearchWord;
 	        // １行ずつサーチ
-	        Document d = view.Document;
-	        for( int mbg=0,med=0,e=d.tln(); s.tl<e; ++s.tl, s.ad=0 )
-                if (Searcher.Search(d.tl(s.tl).ToString(), d.len(s.tl), s.ad, ref mbg, ref med)) {
+	        //Document d = view.Document;
+            IDocument d = view.Document;
+	        //for( int mbg=0,med=0,e=d.tln(); s.tl<e; ++s.tl, s.ad=0 )
+            for (int mbg = 0, med = 0, e = d.Count; s.tl < e; ++s.tl, s.ad = 0)
+                //if (Searcher.Search(d.tl(s.tl).ToString(), d.GetLength(s.tl), s.ad, ref mbg, ref med)) {
+                if (Searcher.Search(d.GetText(s.tl), d.GetLength(s.tl), s.ad, ref mbg, ref med)) {
 			        beg.tl = end.tl = s.tl;
 			        beg.ad = mbg;
 			        end.ad = med;
@@ -111,9 +125,11 @@ namespace YYS
 
         public void ReplaceImpl(){
 	        // カーソル位置取得
-	        VPos stt = new VPos();
-            VPos end = new VPos();
-	        view.cursor.getCurPos( out stt, out end );
+	        //VPos stt = new VPos();
+            //VPos end = new VPos();
+	        //view.cursor.getCurPos( out stt, out end );
+            DPos stt, end;
+            view.GetSelction(out stt, out end);
 
 	        // 選択範囲先頭から検索
             DPos b = new DPos();
@@ -128,24 +144,24 @@ namespace YYS
                     //    b, e, ustr, ulen
                     //) );
 
-                    //edit.Document.Replace(b, e, replstr);
-                    //edit.Document.Replace(new VPos(b), new VPos(e), replstr);
-                    view.Document.Execute(new Replace(b, e, ReplaceWord));
-			        //replStr_.FreeWCMem( ustr );
+                    //view.Document.Execute(new Replace(b, e, ReplaceWord));
+                    view.Document.Replace(b, e, ReplaceWord);
 
                     if (FindNextFromImpl(new DPos(b.tl, b.ad + ReplaceWord.Length), ref b, ref e))
 			        {
 				        // 次を選択
-				        view.cursor.MoveCur( b, false );
-				        view.cursor.MoveCur( e, true );
+				        //view.cursor.MoveCur( b, false );
+				        //view.cursor.MoveCur( e, true );
+                        view.SetSelction(b, e);
 				        return;
 			        }
 		        }
 		        else
 		        {
 			        // そうでなければとりあえず選択
-			        view.cursor.MoveCur( b, false );
-			        view.cursor.MoveCur( e, true );
+			        //view.cursor.MoveCur( b, false );
+			        //view.cursor.MoveCur( e, true );
+                    view.SetSelction(b, e);
 			        return;
 		        }
 
@@ -200,7 +216,8 @@ namespace YYS
                 }
                 // カーソル移動
                 e.ad = b.ad + ReplaceWord.Length;
-                view.cursor.MoveCur(e, false);
+                //view.cursor.MoveCur(e, false);
+                view.MoveCursor(e);
             }
         }
     }

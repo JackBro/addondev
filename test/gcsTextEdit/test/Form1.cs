@@ -17,6 +17,7 @@ namespace test
     {
         private Bitmap image = new Bitmap("test.png");
         private YYS.GCsTextEdit edit = new YYS.GCsTextEdit();
+        //private YYS.ITextEditor edit = new YYS.GCsTextEdit();
         //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
         private YYS.Search sr;
         private YYS.IncrementalSearch incsr;
@@ -47,65 +48,65 @@ namespace test
             };
 
             //
-            edit.KeyBind.setAction(Keys.Back, (editor) => {
+            edit.KeyMap.setAction(Keys.Back, (editor) => {
                 editor.BackSpace();
             });
-            edit.KeyBind.setAction(Keys.Delete, (editor) => {
+            edit.KeyMap.setAction(Keys.Delete, (editor) => {
                 editor.Delete();
             });
 
-            edit.KeyBind.setAction(Keys.Up, (editor) => {
+            edit.KeyMap.setAction(Keys.Up, (editor) => {
                 editor.Up(false, false);
             });
-            edit.KeyBind.setAction(Keys.Shift | Keys.Up, (editor) => {
+            edit.KeyMap.setAction(Keys.Shift | Keys.Up, (editor) => {
                 editor.Up(false, true);
             });
 
-            edit.KeyBind.setAction(Keys.Down, (editor) => {
+            edit.KeyMap.setAction(Keys.Down, (editor) => {
                 editor.Down(false, false);
             });
-            edit.KeyBind.setAction(Keys.Shift | Keys.Down, (editor) => {
+            edit.KeyMap.setAction(Keys.Shift | Keys.Down, (editor) => {
                 editor.Down(false, true);
             });
 
-            edit.KeyBind.setAction(Keys.Left, (editor) => {
+            edit.KeyMap.setAction(Keys.Left, (editor) => {
                 editor.Left(false, false);
             });
-            edit.KeyBind.setAction(Keys.Shift | Keys.Left, (editor) => {
+            edit.KeyMap.setAction(Keys.Shift | Keys.Left, (editor) => {
                 editor.Left(false, true);
             });
 
-            edit.KeyBind.setAction(Keys.Right, (editor) => {
+            edit.KeyMap.setAction(Keys.Right, (editor) => {
                 editor.Right(false, false);
             });
-            edit.KeyBind.setAction(Keys.Shift | Keys.Right, (editor) => {
+            edit.KeyMap.setAction(Keys.Shift | Keys.Right, (editor) => {
                 editor.Right(false, true);
             });
 
-            edit.KeyBind.setAction(Keys.Control | Keys.C, (editor) => {
+            edit.KeyMap.setAction(Keys.Control | Keys.C, (editor) => {
                 editor.Copy();
             });
-            edit.KeyBind.setAction(Keys.Control | Keys.X, (editor) => {
+            edit.KeyMap.setAction(Keys.Control | Keys.X, (editor) => {
                 editor.Cut();
             });
-            edit.KeyBind.setAction(Keys.Control | Keys.V, (editor) => {
+            edit.KeyMap.setAction(Keys.Control | Keys.V, (editor) => {
                 editor.Paste();
             });
 
-            edit.KeyBind.setAction(Keys.Control | Keys.A, (editor) => {
+            edit.KeyMap.setAction(Keys.Control | Keys.A, (editor) => {
                 editor.Home(true, false);
                 editor.End(true, true);
             });
 
-            edit.KeyBind.setAction(Keys.Control | Keys.Z, (editor) => {
-                editor.Undo();
+            edit.KeyMap.setAction(Keys.Control | Keys.Z, (editor) => {
+                editor.Document.Undo();
             });
 
-            edit.KeyBind.setAction(Keys.Control | Keys.Y, (editor) => {
-                editor.Redo();
+            edit.KeyMap.setAction(Keys.Control | Keys.Y, (editor) => {
+                editor.Document.Redo();
             });
 
-            edit.KeyBind.setAction(Keys.Control | Keys.T, (editor) => {
+            edit.KeyMap.setAction(Keys.Control | Keys.T, (editor) => {
                 edit.RectSelect = !edit.RectSelect;
             });
 
