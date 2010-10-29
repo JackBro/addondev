@@ -1,4 +1,7 @@
-﻿http://soudan1.biglobe.ne.jp/qa3551588.html
+﻿http://www.codeproject.com/KB/edit/TextEditorControl.aspx
+http://www.toy-box.biz/wikiplus/?Development%2FCSharp%2FICSharpCode.TextEditor
+
+http://soudan1.biglobe.ne.jp/qa3551588.html
 http://d.hatena.ne.jp/Iori_Nishizawa/20100509/1273387113
 http://www.atmarkit.co.jp/flinux/rensai/osslc03/osslc03b.html
 

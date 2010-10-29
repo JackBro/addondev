@@ -197,16 +197,16 @@ namespace YYS
         TextMove
     }
 
-    abstract class CursorEventAction {
-        protected Cursor cur;
-        public void MouseDown(MouseEventArgs e) { }
-        public void MouseUp(MouseEventArgs e) { }
-        public void MouseClick(MouseEventArgs e) { }
-        public void MouseDoubleClick(MouseEventArgs e) { }
-        public void MouseMove(MouseEventArgs e) { }
-        public void DragOver(DragEventArgs e) { }
-        public void DragDrop(DragEventArgs e) { }
-    }
+    //abstract class CursorEventAction {
+    //    protected Cursor cur;
+    //    public void MouseDown(MouseEventArgs e) { }
+    //    public void MouseUp(MouseEventArgs e) { }
+    //    public void MouseClick(MouseEventArgs e) { }
+    //    public void MouseDoubleClick(MouseEventArgs e) { }
+    //    public void MouseMove(MouseEventArgs e) { }
+    //    public void DragOver(DragEventArgs e) { }
+    //    public void DragDrop(DragEventArgs e) { }
+    //}
 
     //
     public class Cursor {
@@ -259,9 +259,10 @@ namespace YYS
             return !(cur_ == sel_);
         }
 
-        public Cursor(GCsTextEdit view_, Document doc_, Caret caret_) {
+        //public Cursor(GCsTextEdit view_, Document doc_, Caret caret_) {
+        public Cursor(GCsTextEdit view_, Caret caret_) {
             this.view_ = view_;
-            this.doc_ = doc_;
+            this.doc_ = view_.Document;
             this.caret_ = caret_;
 
             cur_ = new VPos();
@@ -745,7 +746,7 @@ namespace YYS
             } else {
                 s1 = e; e1 = s;
             }
-            var text = doc_.getText(s1, e1);
+            var text = doc_.GetText(s1, e1);
             var cmds = new List<ICommand>();
             if (to < s1) {
                 cmds.Add(new Delete(s1, e1));
@@ -1212,10 +1213,10 @@ namespace YYS
                 DPos dm = new DPos(cur_.tl, cur_.ad);
                 DPos dM = new DPos(sel_.tl, sel_.ad);
                 if (cur_ > sel_) {
-                    Clipboard.SetText(doc_.getText(dM, dm));
+                    Clipboard.SetText(doc_.GetText(dM, dm));
                 }
                 else {
-                    Clipboard.SetText(doc_.getText(dm, dM));
+                    Clipboard.SetText(doc_.GetText(dm, dM));
                 }
             }
         }

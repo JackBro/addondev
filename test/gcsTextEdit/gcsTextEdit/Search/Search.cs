@@ -5,9 +5,33 @@ using System.Text;
 
 namespace YYS
 {
+
+    //public class FindEventArgs : EventArgs {
+    //    private Point location;
+    //    public string Link { get; private set; }
+    //    public MouseButtons Button { get; private set; }
+
+    //    public FindEventArgs(DPos s, DPos e) {
+
+    //    }
+    //}
+    //public class ReplaceEventArgs : EventArgs {
+    //    private Point location;
+    //    public string Link { get; private set; }
+    //    public MouseButtons Button { get; private set; }
+
+    //    public ReplaceEventArgs(DPos s, DPos e) {
+
+    //    }
+    //}
+
+    //public delegate void FindEventHandler(Object sender, string line, int x, int y);
+    //public delegate void ReplaceEventHandler(Object sender, string line, int x, int y);
+
     public class Search
     {
-        private ITextEditor view;
+        private GCsTextEdit view;
+        private Document document;
         public ISearch Searcher { get; set; }
 
         public string SearchWord;
@@ -18,6 +42,7 @@ namespace YYS
         public Search(GCsTextEdit edit)
         {
             this.view = edit;
+            this.document = this.view.Document;
         }
 
         public void FindPrevImpl(){
@@ -33,7 +58,7 @@ namespace YYS
 		        DPos s;
 		        if( stt.ad == 0 )
 			        //s = new DPos( stt.tl-1, view.Document.len(stt.tl-1) );
-                    s = new DPos( stt.tl-1, view.GetDocument().GetLength(stt.tl-1) );
+                    s = new DPos( stt.tl-1, view.Document.GetLength(stt.tl-1) );
 		        else
 			        s = new DPos( stt.tl, stt.ad-1 );
 
@@ -56,13 +81,13 @@ namespace YYS
             Searcher.SearchWord = this.SearchWord;
 
 	        // １行ずつサーチ
-            Document d = view.GetDocument();
+            //Document d = view.Document();
             //IDocument d = view.Document;
 	        //for( int mbg=0,med=0; ; s.ad=d.len(--s.tl) ){
-            for (int mbg = 0, med = 0; ; s.ad = d.GetLength(--s.tl)) {
+            for (int mbg = 0, med = 0; ; s.ad = document.GetLength(--s.tl)) {
 		        if( Searcher.Search(
 			        //d.tl(s.tl).ToString(), d.len(s.tl), s.ad, ref mbg, ref med ) ){
-                    d.GetText(s.tl), d.GetLength(s.tl), s.ad, ref mbg, ref med)) {
+                    document.GetText(s.tl), document.GetLength(s.tl), s.ad, ref mbg, ref med)) {
 			        beg.tl = end.tl = s.tl;
 			        beg.ad = mbg;
 			        end.ad = med;
@@ -86,7 +111,7 @@ namespace YYS
 	        DPos s = new DPos(stt.tl, stt.ad);
 	        if( stt != end )
                 //if (stt.ad == view.Document.len(stt.tl))
-                if (stt.ad == view.GetDocument().GetLength(stt.tl))
+                if (stt.ad == document.GetLength(stt.tl))
 			        s = new DPos( stt.tl+1, 0 );
 		        else
 			        s = new DPos( stt.tl, stt.ad+1 );
@@ -109,11 +134,11 @@ namespace YYS
         private bool FindNextFromImpl(DPos s, ref DPos beg, ref DPos end) {
             Searcher.SearchWord = this.SearchWord;
 	        // １行ずつサーチ
-            Document d = view.GetDocument();
+            //Document d = view.GetDocument();
 	        //for( int mbg=0,med=0,e=d.tln(); s.tl<e; ++s.tl, s.ad=0 )
-            for (int mbg = 0, med = 0, e = d.Count(); s.tl < e; ++s.tl, s.ad = 0)
+            for (int mbg = 0, med = 0, e = document.tln(); s.tl < e; ++s.tl, s.ad = 0)
                 //if (Searcher.Search(d.tl(s.tl).ToString(), d.GetLength(s.tl), s.ad, ref mbg, ref med)) {
-                if (Searcher.Search(d.GetText(s.tl), d.GetLength(s.tl), s.ad, ref mbg, ref med)) {
+                if (Searcher.Search(document.GetText(s.tl), document.GetLength(s.tl), s.ad, ref mbg, ref med)) {
 			        beg.tl = end.tl = s.tl;
 			        beg.ad = mbg;
 			        end.ad = med;
@@ -144,7 +169,7 @@ namespace YYS
                     //) );
 
                     //view.Document.Execute(new Replace(b, e, ReplaceWord));
-                    view.GetDocument().Replace(b, e, ReplaceWord);
+                    document.Replace(b, e, ReplaceWord);
 
                     if (FindNextFromImpl(new DPos(b.tl, b.ad + ReplaceWord.Length), ref b, ref e))
 			        {
@@ -211,7 +236,8 @@ namespace YYS
             if (mcr.Count > 0) {
                 // ここで連続置換
                 foreach (var cmd in mcr) {
-                    view.GetDocument().Execute(cmd);        
+                    //view.GetDocument().Execute(cmd);
+                    document.Execute(cmd);  
                 }
                 // カーソル移動
                 e.ad = b.ad + ReplaceWord.Length;

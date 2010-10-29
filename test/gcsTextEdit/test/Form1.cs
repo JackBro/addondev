@@ -17,13 +17,13 @@ namespace test
     {
         private Bitmap image = new Bitmap("test.png");
         private YYS.GCsTextEdit edit = new YYS.GCsTextEdit();
-        //private YYS.ITextEditor edit = new YYS.GCsTextEdit();
-        //private AsControls.gcsTextEdit csedit2 = new AsControls.gcsTextEdit();
         private YYS.Search sr;
         private YYS.IncrementalSearch incsr;
+
         public Form1()
         {
             InitializeComponent();
+            this.AllowDrop = true;
             //this.KeyPreview = true;
             edit.Name = "1";
             edit.BackColor = Color.White;
@@ -39,14 +39,33 @@ namespace test
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
             edit.ShowLineNumber = true;
-            edit.DrawEventHandler += (g, line, x, y) => {
-                g.DrawImage(image, new Point(x, y));
-            };
+            //edit.AllowDrop = true;
+            //edit.DrawEventHandler += (g, line, x, y) => {
+            //    g.DrawImage(image, new Point(x, y));
+            //};
             edit.ContextMenuStrip = contextMenuStrip1;
             edit.KeyPress += (sender, e) => {
                 e.Handled = false;
             };
-
+            this.DragEnter += (sender, e)=>{
+                if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                    e.Effect = DragDropEffects.Move;
+                }
+            };
+            this.DragDrop += (sender, e) => {
+                if (e.Data.GetDataPresent(DataFormats.FileDrop)){
+				    string[] fullpaths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                    if (File.Exists(fullpaths[0])) {
+                        string text = File.ReadAllText(fullpaths[0], Encoding.GetEncoding("shift_jis"));
+                        this.edit.Text = text;
+                        this.edit.MoveCursor(new DPos(0, 0));
+                        if (!this.Focused) {
+                            this.Activate();
+                        }
+                    }
+                }
+            };
+            
             //
             edit.KeyMap.setAction(Keys.Back, (editor) => {
                 editor.BackSpace();
@@ -99,11 +118,11 @@ namespace test
             });
 
             edit.KeyMap.setAction(Keys.Control | Keys.Z, (editor) => {
-                editor.GetDocument().Undo();
+                editor.Document.Undo();
             });
 
             edit.KeyMap.setAction(Keys.Control | Keys.Y, (editor) => {
-                editor.GetDocument().Redo();
+                editor.Document.Redo();
             });
 
             edit.KeyMap.setAction(Keys.Control | Keys.T, (editor) => {
@@ -143,7 +162,8 @@ namespace test
 
             FindNextButton.Click += (sender, e) => {
                 if (sr == null) {
-                    sr = edit.Sr();
+                    //sr = edit.Sr();
+                    sr = new Search(edit);
                 }
                 sr.SearchWord = FindTextBox.Text;
                 if (RegxCheckBox.Checked) {
@@ -156,7 +176,8 @@ namespace test
 
             FindPreButton.Click += (sender, e) => {
                 if (sr == null) {
-                    sr = edit.Sr();
+                    //sr = edit.Sr();
+                    sr = new Search(edit);
                 }
                 sr.SearchWord = FindTextBox.Text;
                 if (RegxCheckBox.Checked) {
@@ -169,7 +190,8 @@ namespace test
 
             ReplaceNextButton.Click += (sender, e) => {
                 if (sr == null) {
-                    sr = edit.Sr();
+                    //sr = edit.Sr();
+                    sr = new Search(edit);
                 }
                 sr.SearchWord = FindTextBox.Text;
                 sr.ReplaceWord = ReplaceTextBox.Text;
@@ -179,7 +201,8 @@ namespace test
 
             ReplaceAllButton.Click += (sender, e) => {
                 if (sr == null) {
-                    sr = edit.Sr();
+                    //sr = edit.Sr();
+                    sr = new Search(edit);
                 }
                 sr.SearchWord = FindTextBox.Text;
                 sr.ReplaceWord = ReplaceTextBox.Text;
@@ -190,11 +213,24 @@ namespace test
 
             IncSrcTextBox.TextChanged += (sender, e) => {
                 if (incsr == null) {
-                    incsr = edit.IncSr();
-                    incsr.Searcher = new YYS.NormalSearch();
+                    //incsr = edit.IncSr();
+                    incsr = new IncrementalSearch(edit);
+                    //incsr.Searcher = new YYS.NormalSearch();
                 }
-                incsr.SearchWord = FindTextBox.Text;
-                incsr.FindNext();
+                incsr.SearchWord = IncSrcTextBox.Text;
+
+                if (IncSrcPreCheckBox.Checked) {
+                    if (!(incsr.Searcher is YYS.NormalSearchRev)) {
+                        incsr.Searcher = new YYS.NormalSearchRev();
+                    }
+                    incsr.FindPrev();
+                }
+                else {
+                    if (!(incsr.Searcher is YYS.NormalSearch)) {
+                        incsr.Searcher = new YYS.NormalSearch();
+                    }
+                    incsr.FindNext();
+                }
             };
 
             edit.Wrap = YYS.WrapType.WindowWidth;
@@ -243,6 +279,11 @@ namespace test
             //this.KeyDown += new KeyEventHandler(Form1_KeyDown);
             //this.KeyPress += new KeyPressEventHandler(Form1_KeyPress);
             //csedit.DragOver += new DragEventHandler(csedit_DragOver);
+
+            openToolStripMenuItem.Click += (sender, e) => {
+                using (OpenFileDialog fd = new OpenFileDialog()) {
+                }
+            };
         }
 
         private void fontToolStripMenuItem_Click(object sender, EventArgs e) {

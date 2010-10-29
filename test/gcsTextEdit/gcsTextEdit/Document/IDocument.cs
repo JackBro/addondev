@@ -5,42 +5,40 @@ using System.Text;
 
 namespace YYS
 {
-    //public interface IControl
-    //{
-    //    UndoManager UndoManager
-    //    {
-    //        get;
-    //    }
-    //    void Insert(CaretInfo s, CaretInfo e, string text);
-    //    void Delete(CaretInfo s, CaretInfo e);
-    //}
-
     //public delegate void TextUpdateEventHandler(VPos s, VPos e, VPos e2);
-    public interface IDocument
-    {
-        //event TextUpdateEventHandler TextUpdateEvent;
-        //UndoManager UndoManager
-        //{
-        //    get;
-        //}
+    //public interface IDocument
+    //{
+    //    //static string DEFAULT_ID;// = "default";
 
-        string Text { get; set; }
-        int Count { get; }
+    //    event TextUpdateEventHandler TextUpdateEvent;
+    //    //UndoManager UndoManager
+    //    //{
+    //    //    get;
+    //    //}
 
-        void Insert(DPos s, DPos e, string value);
-        void Delete(DPos s, DPos e);
-        void Replace(DPos s, DPos e, string newValue);
+    //    //bool ReadOnly { get; set; }
 
-        void Execute(ICommand command);
+    //    void Insert(DPos s, DPos e, string value);
+    //    void Delete(DPos s, DPos e);
+    //    void Replace(DPos s, DPos e, string newValue);
 
-        void Undo();
-        void Redo();
-        bool CanUndo();
-        bool CanRedo();
+    //    void Execute(ICommand command);
+    //    void Execute(List<ICommand> commands);
 
-        
-        string GetText(int line);
-        int GetLength(int line);
+    //    void Undo();
+    //    void Redo();
+    //    bool CanUndo();
+    //    bool CanRedo();
 
-    }
+    //    string GetText(int line);
+    //    string GetText(DPos s, DPos e);
+    //    int GetLength(int line);
+
+    //    int tln();
+    //    int len(int i);
+    //    IText tl(int i);
+    //    Line line(int i);
+    //    DPos leftOf(DPos dp, bool wide);
+    //    DPos rightOf(DPos dp, bool wide);
+    //}
 }

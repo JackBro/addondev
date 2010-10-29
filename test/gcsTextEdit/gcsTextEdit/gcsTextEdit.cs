@@ -21,7 +21,7 @@ namespace YYS {
     /// <param name="e2">変更範囲の終端(後)</param>
     /// <param name="reparsed">e2より後ろのコメントアウト状態が変化していたらtrue</param>
     /// <param name="nmlcmd">挿入/削除/置換ならtrue、ファイル開き/全置換ならfalse</param>
-    internal delegate void TextUpdateEventHandler(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd);
+    public delegate void TextUpdateEventHandler(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd);
 
     public class ClickableLinkEventArgs : EventArgs {
         private Point location;
@@ -43,7 +43,8 @@ namespace YYS {
         }
     }
 
-    public partial class GCsTextEdit : Control, ITextEditor {
+    //public partial class GCsTextEdit : Control, ITextEditor {
+    public partial class GCsTextEdit : Control {
 
         public event EventHandler<ClickableLinkEventArgs> MouseLinkClick;
         public event EventHandler<ClickableLinkEventArgs> MouseLinkDoubleClick;
@@ -212,8 +213,11 @@ namespace YYS {
         }
 
         public new string Text {
-            set { cur_.Input(value); }
             get { return this.doc_.ToString(); }
+            set {
+                //cur_.Input(value);
+                doc_.Text = value;
+            }
         }
 
         public bool RectSelect {
@@ -243,14 +247,20 @@ namespace YYS {
         public Document Document {
             get { return this.doc_; }
         }
+
+        //private IDocument doc_;
+        //public IDocument Document {
+        //    get { return this.doc_; }
+        //}
+
         //
         internal Painter fnt() { return cvs_.getPainter(); }
         //
         private Cursor cur_;
 
-        public Cursor cursor {
-            get { return cur_; }
-        }
+        //public Cursor cursor {
+        //    get { return cur_; }
+        //}
         //
         internal enum ReDrawType {
             /// <summary>
@@ -284,17 +294,17 @@ namespace YYS {
             }
         }
 
-        public Search Sr() { 
-                Search s = new Search(this);
-                //s.Searcher = new NormalSearch(word);
-                return s;
-        }
+        //public Search Sr() { 
+        //        Search s = new Search(this);
+        //        //s.Searcher = new NormalSearch(word);
+        //        return s;
+        //}
 
-        public IncrementalSearch IncSr() {
-            IncrementalSearch s = new IncrementalSearch(this);
-            //s.Searcher = new NormalSearch(word);
-            return s;
-        }
+        //public IncrementalSearch IncSr() {
+        //    IncrementalSearch s = new IncrementalSearch(this);
+        //    //s.Searcher = new NormalSearch(word);
+        //    return s;
+        //}
 
         public GCsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
@@ -324,29 +334,18 @@ namespace YYS {
                 cur_.on_setfocus();
             };
 
-            //this.MouseClick += (sender, e) => {
-            //    if (MouseLinkClick != null) {
-            //        VPos vs, ve;
-            //        cur_.getCurPos(out vs, out ve);
-            //        var rules = doc_.Rules(vs.tl);
-            //        foreach (var rule in rules) {
-            //            if (((rule.attr.type & AttrType.Link) == AttrType.Link)
-            //                 && (vs.ad >= rule.ad && vs.ad <= (rule.ad + rule.len))) {
-            //                string link = doc_.tl(vs.tl).Substring(rule.ad, rule.len).ToString();
-            //                MouseLinkClick(this, new ClickableLinkEventArgs(e, link));
-            //                break;
-            //            }
-            //        }
-            //    }
-            //};
-
             KeyMap = new KeyMap();
             MouseNormalSelectKey = Keys.Shift;
             MouseRectSelectKey = Keys.Alt;
 
             doc_ = new Document();
             doc_.setHighlight(new Highlight(this.ForeColor));
-            doc_.TextUpdate += (s, e, e2, reparsed, nmlcmd) => {
+            //doc_.DocumentChanged += (sender, e) => {
+            //    if (e.type == DocumentEventType.Clear) {
+            //        this.MoveCursor(new DPos(0, 0));
+            //    }
+            //};
+            doc_.TextUpdateEvent += (s, e, e2, reparsed, nmlcmd) => {
                 on_text_update(s, e, e2, reparsed, nmlcmd);
             };
             //
@@ -356,7 +355,8 @@ namespace YYS {
             fnt().LineNumberLineColor = this.ForeColor;
             fnt().SpecialCharForeColor = Color.Gray;
 
-            cur_ = new Cursor(this, doc_, new Caret(this.Handle));
+            //cur_ = new Cursor(this, doc_, new Caret(this.Handle));
+            cur_ = new Cursor(this, new Caret(this.Handle));
 
             Initialize();
         }
@@ -676,9 +676,7 @@ namespace YYS {
         protected override void OnDragEnter(DragEventArgs e) {
             base.OnDragEnter(e);
 
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
-                e.Effect = DragDropEffects.Copy;
-            } else if (e.Data.GetDataPresent(DataFormats.UnicodeText)
+            if (e.Data.GetDataPresent(DataFormats.UnicodeText)
                 || e.Data.GetDataPresent(DataFormats.Text)) {
                 e.Effect = DragDropEffects.Move;
             } else {
@@ -771,9 +769,9 @@ namespace YYS {
         #region ITextEditor メンバ
 
 
-        public Document GetDocument() {
-            return this.doc_;
-        }
+        //public Document GetDocument() {
+        //    return this.doc_;
+        //}
 
         public void SetSelction(DPos s, DPos e) {
             cur_.MoveCur(s, false);
@@ -803,6 +801,21 @@ namespace YYS {
         public void SelectAll() {
             this.Home(true, false);
             this.End(true, true);
+        }
+
+        public Point GetPointFromDPos(DPos dp) {
+            int x,y;
+            if (dp == this.cur_.Cur) {
+                x = this.cur_.Cur.rx;
+                y = this.cur_.Cur.vl * fnt().H();
+            }
+            else {
+                VPos vp = new VPos();
+                this.ConvDPosToVPos(dp, ref vp);
+                x = vp.rx;
+                y = vp.vl * fnt().H();
+            }
+            return new Point(x, y);
         }
 
         #endregion

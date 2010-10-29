@@ -17,12 +17,40 @@ namespace YYS {
         CRLF
     }
 
+    public enum DocumentEventType {
+        None,
+        Clear,
+        Insert,
+        Delete,
+        Replace
+    }
+
+    public class DocumentEventArgs : EventArgs {
+        public Document document;
+        public DocumentEventType type;
+        public DPos s;
+        public int len;
+        public string value;
+
+        public DocumentEventArgs(Document document, DocumentEventType type, DPos s, int len, string value ){
+            this.document = document;
+            this.type = type;
+            this.s = s;
+            this.len = len;
+            this.value = value;
+        }
+    }
+
+    public delegate void DocumentEventHandler(object sender, DocumentEventArgs e);
+    
     public class Document : IEnumerable<string> {
     //public class Document {
 
         public static string DEFAULT_ID = "default";
 
-        internal event TextUpdateEventHandler TextUpdate;
+        public event DocumentEventHandler DocumentChanged;
+
+        internal event TextUpdateEventHandler TextUpdateEvent;
 
         private List<Line> text_;
 
@@ -67,12 +95,26 @@ namespace YYS {
             return text_[i].Text;
         }
 
-        internal Line line(int i) {
+        public Line line(int i) {
             return text_[i];
         }
 
         public List<Token> Rules(int i) {
             return text_[i].Tokens;
+        }
+
+        public string Text {
+            get {
+                return ToString();
+            }
+            set { 
+                //Clear();
+                if (tln() - 1 >= 0 && tl(tln() - 1).Length - 1>=0) {
+                    this.Delete(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length-1));
+                }
+                Clear();
+                this.Insert(new DPos(0, 0), value);
+            }
         }
 
         public override string ToString() {
@@ -129,10 +171,10 @@ namespace YYS {
         }
 
         internal void Fire_TEXTUPDATE(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd) {
-            TextUpdate(s, e, e2, reparsed, nmlcmd);
+            TextUpdateEvent(s, e, e2, reparsed, nmlcmd);
         }
 
-        internal DPos leftOf(DPos dp, bool wide) {
+        public DPos leftOf(DPos dp, bool wide) {
             if (dp.ad == 0) {
                 // 行の先頭だが、ファイルの先頭ではない場合
                 // 一つ前の行の行末へ
@@ -164,7 +206,7 @@ namespace YYS {
             }
         }
 
-        internal DPos rightOf(DPos dp, bool wide) {
+        public DPos rightOf(DPos dp, bool wide) {
             if (dp.ad == len(dp.tl)) {
                 // 行末だが、ファイルの終わりではない場合
                 // 一つ後の行の先頭へ
@@ -331,7 +373,7 @@ namespace YYS {
             // Undo操作用バッファ確保
             //undobuf = new unicode[undosiz + 1];
             //getText(undobuf, s, e);
-            undobuf = getText(s, e);
+            undobuf = GetText(s, e);
 
             // 削除る
             if (s.tl == e.tl) {
@@ -416,7 +458,7 @@ namespace YYS {
 	        return ans;
         }
 
-        internal string getText(DPos s, DPos e)
+        public string GetText(DPos s, DPos e)
         {
             IText buff;
 	        if( s.tl == e.tl )
@@ -480,14 +522,14 @@ namespace YYS {
 	        }
         }
 
-        public void Execute(ICommand cmd) {
-            var c = cmd.Execute(this);
+        public void Execute(ICommand command) {
+            var c = command.Execute(this);
             UndoManager.Invoke(c);
         }
 
-        internal void Execute(List<ICommand> cmds) {
+        public void Execute(List<ICommand> commands) {
             var list = new List<ICommand>();
-            foreach (var cmd in cmds) {
+            foreach (var cmd in commands) {
                 list.Add(cmd.Execute(this)); 
             }
             UndoManager.Invoke(list);
@@ -497,7 +539,7 @@ namespace YYS {
             get { return tln(); }
         }
 
-        public void Insert(DPos s, DPos e, string value) {
+        public void Insert(DPos s, string value) {
             this.Execute(new Insert(s, value));
         }
 

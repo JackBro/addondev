@@ -32,10 +32,29 @@ namespace YYS {
         public void FindNext() {
 
             if (pos != null) {
-                view.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
+                //view.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
+                view.MoveCursor(new DPos(pos.tl, pos.ad));
             }
 
             search.FindNextImpl();
+            if (pos == null) {
+                pos = view.GetSelect().t1;
+            }
+            else {
+                DPos cur = view.GetSelect().t1;
+                if (pos.tl == cur.tl && pos.ad == cur.ad) {
+                    pos = view.GetSelect().t1;
+                }
+            }
+        }
+
+        public void FindPrev() {
+            if (pos != null) {
+                //view.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
+                view.MoveCursor(new DPos(pos.tl, pos.ad));
+            }
+
+            search.FindPrevImpl();
             if (pos == null) {
                 pos = view.GetSelect().t1;
             }
