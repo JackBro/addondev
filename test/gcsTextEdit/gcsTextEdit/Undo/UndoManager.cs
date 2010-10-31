@@ -79,7 +79,7 @@ namespace YYS
             undostack.Push(cs);
         }
 
-        public void Refresh() {
+        public void Clear() {
             undostack.Clear();
             redostack.Clear();
         }

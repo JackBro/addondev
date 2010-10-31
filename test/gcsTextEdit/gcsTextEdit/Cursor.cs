@@ -1154,8 +1154,10 @@ namespace YYS
 			        if( s < cur_ ){
                         if (cur_ <= e) {
                             //cur_ = e2 as VPos;
-                            VPos ve2 = e2 as VPos;
-                            cur_.Copy(ve2);
+                            //VPos ve2 = e2 as VPos;
+                            //cur_.Copy(ve2);
+                            cur_.tl = e2.tl;
+                            cur_.ad = e2.ad;
                         } else if (cur_.tl == e.tl) {
                             cur_.tl = e2.tl;
                             cur_.ad = e2.ad + cur_.ad - e.ad;

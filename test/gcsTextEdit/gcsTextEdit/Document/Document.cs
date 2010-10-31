@@ -109,11 +109,13 @@ namespace YYS {
             }
             set { 
                 //Clear();
-                if (tln() - 1 >= 0 && tl(tln() - 1).Length - 1>=0) {
-                    this.Delete(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length-1));
-                }
-                Clear();
-                this.Insert(new DPos(0, 0), value);
+                ClearAll();
+                //this.Insert(new DPos(0, 0), value);
+                DPos s = new DPos(0,0);
+                DPos e = new DPos(0,0);
+                InsertingOperation(ref s, value, ref e); 
+                //Fire_TEXTUPDATE(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd);
+                Fire_TEXTUPDATE(new DPos(0, 0), new DPos(0, 0), e, true, false);
             }
         }
 
@@ -155,10 +157,13 @@ namespace YYS {
             return str.ToString();
         }
 
-        public void Clear() {
-            text_.Clear();
-            text_.Add(new Line(""));
-            UndoManager.Refresh();
+        public void ClearAll() {
+            //text_.Clear();
+            //text_.Add(new Line(""));
+            //if (tln() - 1 >= 0 && tl(tln() - 1).Length >= 0) {
+                this.Delete(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length));
+            //}
+            UndoManager.Clear();
         }
         
         public Document() {
@@ -251,6 +256,7 @@ namespace YYS {
         }
 
         private bool ReParse(int s, int e) {
+
             int i;
             int cmt = text_[s].Block.isLineHeadCmt;
             int sccmt = text_[s].Block.scisLineHeadCmt;
