@@ -293,18 +293,6 @@ namespace YYS {
         //    }
         //}
 
-        //public Search Sr() { 
-        //        Search s = new Search(this);
-        //        //s.Searcher = new NormalSearch(word);
-        //        return s;
-        //}
-
-        //public IncrementalSearch IncSr() {
-        //    IncrementalSearch s = new IncrementalSearch(this);
-        //    //s.Searcher = new NormalSearch(word);
-        //    return s;
-        //}
-
         public GCsTextEdit() {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 

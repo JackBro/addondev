@@ -233,6 +233,30 @@ namespace test
                 }
             };
 
+
+            CopyContextMenuItem.Click += (sender, e) => {
+                edit.Copy();
+            };
+
+            CutContextMenuItem.Click += (sender, e) => {
+                edit.Cut();
+            };
+
+            PasteContextMenuItem.Click += (sender, e) => {
+                edit.Paste();
+            };
+
+            SelectAllContextMenuItem.Click += (sender, e) => {
+                edit.SelectAll();
+            };
+
+            UndoContextMenuItem.Click += (sender, e) => {
+                edit.Document.Undo();
+            };
+            RedoContextMenuItem.Click += (sender, e) => {
+                edit.Document.Redo();
+            };
+
             edit.Wrap = YYS.WrapType.WindowWidth;
             WrapOnToolStripMenuItem.Checked = true;
 
