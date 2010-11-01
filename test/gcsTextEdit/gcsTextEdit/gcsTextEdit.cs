@@ -21,7 +21,7 @@ namespace YYS {
     /// <param name="e2">変更範囲の終端(後)</param>
     /// <param name="reparsed">e2より後ろのコメントアウト状態が変化していたらtrue</param>
     /// <param name="nmlcmd">挿入/削除/置換ならtrue、ファイル開き/全置換ならfalse</param>
-    public delegate void TextUpdateEventHandler(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd);
+    internal delegate void TextUpdateEventHandler(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd);
 
     public class ClickableLinkEventArgs : EventArgs {
         private Point location;
@@ -126,7 +126,6 @@ namespace YYS {
         /// 一番上に表示される表示行のVRLine_Index
         /// </summary>
         private int udScr_vrl_;
-
 
         private Ime imeComposition;
 
@@ -281,18 +280,18 @@ namespace YYS {
             ALL 
         }
         
-        public Tuple<DPos, DPos> GetSelect() {
-            if (cur_.Cur > cur_.Sel) {
-                DPos s = new DPos(cur_.Sel);
-                DPos e = new DPos(cur_.Cur);
-                return new Tuple<DPos, DPos> { t1 = s, t2 = e };
-            }
-            else {
-                DPos s = new DPos(cur_.Cur);
-                DPos e = new DPos(cur_.Sel);
-                return new Tuple<DPos, DPos> { t1 = s, t2 = e };
-            }
-        }
+        //public Tuple<DPos, DPos> GetSelect() {
+        //    if (cur_.Cur > cur_.Sel) {
+        //        DPos s = new DPos(cur_.Sel);
+        //        DPos e = new DPos(cur_.Cur);
+        //        return new Tuple<DPos, DPos> { t1 = s, t2 = e };
+        //    }
+        //    else {
+        //        DPos s = new DPos(cur_.Cur);
+        //        DPos e = new DPos(cur_.Sel);
+        //        return new Tuple<DPos, DPos> { t1 = s, t2 = e };
+        //    }
+        //}
 
         //public Search Sr() { 
         //        Search s = new Search(this);
@@ -355,7 +354,6 @@ namespace YYS {
             fnt().LineNumberLineColor = this.ForeColor;
             fnt().SpecialCharForeColor = Color.Gray;
 
-            //cur_ = new Cursor(this, doc_, new Caret(this.Handle));
             cur_ = new Cursor(this, new Caret(this.Handle));
 
             Initialize();
@@ -461,20 +459,19 @@ namespace YYS {
             DoResize(cvs_.on_view_resize(cx, cy));
         }
 
-        //
-        public void GetOrigin(ref int x, ref int y) {
+        internal void GetOrigin(ref int x, ref int y) {
             x = left() - hScrollBar.Value;
             y = -vScrollBar.Value * cvs_.getPainter().H();
         }
 
         //
-        VPos dummyVPos = new VPos();
-        public void ConvDPosToVPos(DPos dp, ref VPos vp) {
+        private VPos dummyVPos = new VPos();
+        internal void ConvDPosToVPos(DPos dp, ref VPos vp) {
             dummyVPos.ad = -1;
             ConvDPosToVPos(dp, ref vp, ref dummyVPos);
         }
         //
-        public void ConvDPosToVPos(DPos dp, ref VPos vp, ref VPos basevp) {
+        internal void ConvDPosToVPos(DPos dp, ref VPos vp, ref VPos basevp) {
 
             // 補正
             dp.tl = Math.Min(dp.tl, doc_.tln() - 1);
@@ -532,14 +529,17 @@ namespace YYS {
             if (e.Handled) {
                 return;
             }
-   
+
             if (IsInputChar(e.KeyChar)) {
                 cur_.InputChar(e.KeyChar);
                 e.Handled = true;
-            }else if(e.KeyChar == '\r' ){
-                cur_.Input("\r\n");
-                e.Handled = true;
             }
+        }
+
+        protected override bool IsInputChar(char charCode) {
+            if (charCode == '\t') return true;
+            if (charCode == '\r') return true;
+            return !char.IsControl(charCode);
         }
 
         protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e) {
@@ -555,7 +555,6 @@ namespace YYS {
             return false;
         }
 
-        //
         protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e);
        
@@ -590,13 +589,6 @@ namespace YYS {
                 //DrawLNA(e.Graphics, vRect, p);
             }
         }
-
-        protected override bool IsInputChar(char charCode) {
-            //return (!char.IsControl(charCode)) || (charCode == '\t');
-            if (charCode == '\t') return true;
-            return !char.IsControl(charCode);
-        }
-
 
         protected override void OnMouseEnter(EventArgs e) {
             base.OnMouseEnter(e);
@@ -641,7 +633,6 @@ namespace YYS {
             cur_.mouse_up(e);
         }
 
-        bool orgAllowDrop;
         protected override void OnMouseDown(MouseEventArgs e) {
             base.OnMouseDown(e);
 
@@ -689,7 +680,7 @@ namespace YYS {
         //-------------------------------------------------------------------------
         // 再描画したい範囲を Invalidate する。
         //-------------------------------------------------------------------------
-        void ReDraw( ReDrawType r, DPos s )
+        private void ReDraw( ReDrawType r, DPos s )
         {
 	        // まずスクロールバーを更新
 	        //UpdateScrollBar();
@@ -768,11 +759,6 @@ namespace YYS {
 
         #region ITextEditor メンバ
 
-
-        //public Document GetDocument() {
-        //    return this.doc_;
-        //}
-
         public void SetSelction(DPos s, DPos e) {
             cur_.MoveCur(s, false);
             cur_.MoveCur(e, true);
@@ -792,7 +778,6 @@ namespace YYS {
         #endregion
 
         #region ITextEditor メンバ
-
 
         public void MoveCursor(DPos dp) {
             cur_.MoveCur(dp, false);

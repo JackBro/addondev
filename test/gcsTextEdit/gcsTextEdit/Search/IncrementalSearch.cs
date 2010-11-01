@@ -29,41 +29,61 @@ namespace YYS {
             pos = null;
         }
 
-        public void FindNext() {
+        public bool FindNext() {
 
             if (pos != null) {
                 //view.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
                 view.MoveCursor(new DPos(pos.tl, pos.ad));
             }
 
-            search.FindNextImpl();
-            if (pos == null) {
-                pos = view.GetSelect().t1;
-            }
-            else {
-                DPos cur = view.GetSelect().t1;
-                if (pos.tl == cur.tl && pos.ad == cur.ad) {
-                    pos = view.GetSelect().t1;
+            if (search.FindNextImpl()) {
+
+                DPos dummy;
+                if (pos == null) {
+                    view.GetSelction(out pos, out dummy);
                 }
+                else {
+                    DPos cur;
+                    view.GetSelction(out cur, out dummy);
+                    if (pos.tl == cur.tl && pos.ad == cur.ad) {
+                        //pos = view.GetSelect().t1;
+                        view.GetSelction(out pos, out dummy);
+                    }
+                }
+
+                return true;
             }
+
+            return false;
         }
 
-        public void FindPrev() {
+        public bool FindPrev() {
             if (pos != null) {
                 //view.cursor.MoveCur(new DPos(pos.tl, pos.ad), false);
                 view.MoveCursor(new DPos(pos.tl, pos.ad));
             }
 
-            search.FindPrevImpl();
-            if (pos == null) {
-                pos = view.GetSelect().t1;
-            }
-            else {
-                DPos cur = view.GetSelect().t1;
-                if (pos.tl == cur.tl && pos.ad == cur.ad) {
-                    pos = view.GetSelect().t1;
+            if (search.FindPrevImpl()) {
+
+                DPos dummy;
+                if (pos == null) {
+                    //pos = view.GetSelect().t1;
+                    view.GetSelction(out pos, out dummy);
                 }
+                else {
+                    //DPos cur = view.GetSelect().t1;
+                    DPos cur;
+                    view.GetSelction(out cur, out dummy);
+                    if (pos.tl == cur.tl && pos.ad == cur.ad) {
+                        //pos = view.GetSelect().t1;
+                        view.GetSelction(out pos, out dummy);
+                    }
+                }
+
+                return true;
             }
+
+            return false;
         }
     }
 }

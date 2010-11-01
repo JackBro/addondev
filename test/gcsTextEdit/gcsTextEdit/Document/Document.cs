@@ -179,7 +179,7 @@ namespace YYS {
             TextUpdateEvent(s, e, e2, reparsed, nmlcmd);
         }
 
-        public DPos leftOf(DPos dp, bool wide) {
+        internal DPos leftOf(DPos dp, bool wide) {
             if (dp.ad == 0) {
                 // 行の先頭だが、ファイルの先頭ではない場合
                 // 一つ前の行の行末へ
@@ -211,7 +211,7 @@ namespace YYS {
             }
         }
 
-        public DPos rightOf(DPos dp, bool wide) {
+        internal DPos rightOf(DPos dp, bool wide) {
             if (dp.ad == len(dp.tl)) {
                 // 行末だが、ファイルの終わりではない場合
                 // 一つ後の行の先頭へ

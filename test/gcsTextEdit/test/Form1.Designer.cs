@@ -62,7 +62,14 @@
             this.IncSrcMigemoCheckBox = new System.Windows.Forms.CheckBox();
             this.IncSrcPreCheckBox = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.CopyContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CutContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PasteContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SelectAllContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UndoContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RedoContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.SearchPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -402,15 +409,62 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToolStripMenuItem1});
+            this.CopyContextMenuItem,
+            this.CutContextMenuItem,
+            this.PasteContextMenuItem,
+            this.toolStripSeparator2,
+            this.SelectAllContextMenuItem,
+            this.toolStripSeparator1,
+            this.UndoContextMenuItem,
+            this.RedoContextMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(97, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 170);
             // 
-            // copyToolStripMenuItem1
+            // CopyContextMenuItem
             // 
-            this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
-            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(96, 22);
-            this.copyToolStripMenuItem1.Text = "Copy";
+            this.CopyContextMenuItem.Name = "CopyContextMenuItem";
+            this.CopyContextMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.CopyContextMenuItem.Text = "Copy";
+            // 
+            // CutContextMenuItem
+            // 
+            this.CutContextMenuItem.Name = "CutContextMenuItem";
+            this.CutContextMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.CutContextMenuItem.Text = "Cut";
+            // 
+            // PasteContextMenuItem
+            // 
+            this.PasteContextMenuItem.Name = "PasteContextMenuItem";
+            this.PasteContextMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.PasteContextMenuItem.Text = "Paste";
+            // 
+            // SelectAllContextMenuItem
+            // 
+            this.SelectAllContextMenuItem.Name = "SelectAllContextMenuItem";
+            this.SelectAllContextMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.SelectAllContextMenuItem.Text = "SelectAll";
+            // 
+            // UndoContextMenuItem
+            // 
+            this.UndoContextMenuItem.Name = "UndoContextMenuItem";
+            this.UndoContextMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.UndoContextMenuItem.Text = "Undo";
+            // 
+            // RedoContextMenuItem
+            // 
+            this.RedoContextMenuItem.Name = "RedoContextMenuItem";
+            this.RedoContextMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.RedoContextMenuItem.Text = "Redo";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
             // 
             // Form1
             // 
@@ -467,12 +521,19 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ShowLineNumToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem CopyContextMenuItem;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox IncSrcTextBox;
         private System.Windows.Forms.CheckBox IncSrcRegxCheckBox;
         private System.Windows.Forms.CheckBox IncSrcMigemoCheckBox;
         private System.Windows.Forms.CheckBox IncSrcPreCheckBox;
+        private System.Windows.Forms.ToolStripMenuItem CutContextMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem PasteContextMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SelectAllContextMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem UndoContextMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RedoContextMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 
     }
 }

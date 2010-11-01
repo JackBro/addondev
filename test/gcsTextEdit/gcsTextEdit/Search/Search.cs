@@ -45,7 +45,7 @@ namespace YYS
             this.document = this.view.Document;
         }
 
-        public void FindPrevImpl(){
+        public bool FindPrevImpl() {
 	        // カーソル位置取得
 	        //VPos stt = new VPos();
             //VPos end = new VPos();
@@ -70,12 +70,12 @@ namespace YYS
 			        //view.cursor.MoveCur( e, true );
                     view.SetSelction(b, e);
 
-			        return;
+			        return true;
 		        }
 	        }
 
 	        // 見つからなかった場合
-	        //NotFound();
+            return false;
         }
         private bool FindPrevFromImpl( DPos s, ref DPos beg, ref DPos end ){
             Searcher.SearchWord = this.SearchWord;
@@ -99,7 +99,7 @@ namespace YYS
 	        return false;
         }
 
-        public void FindNextImpl(){
+        public bool FindNextImpl(){
 	        // カーソル位置取得
 	        //VPos stt, end;
 	        //view.cursor.getCurPos( out stt, out end );
@@ -124,11 +124,11 @@ namespace YYS
                 //view.cursor.MoveCur(b, false);
                 //view.cursor.MoveCur(e, true);
                 view.SetSelction(b, e);
-		        return;
+		        return true;
 	        }
 
 	        // 見つからなかった場合
-	        //NotFound();
+            return false;
         }
 
         private bool FindNextFromImpl(DPos s, ref DPos beg, ref DPos end) {
