@@ -48,7 +48,6 @@ namespace YYS
                 f.DrawLineNum(g, n, Color.Black, x, y);
             }
         }
-
     }
 
     public delegate void DrawEventHandler(Graphics g, string line, int x,int y);

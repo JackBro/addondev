@@ -1,4 +1,6 @@
-﻿http://www.codeproject.com/KB/edit/TextEditorControl.aspx
+﻿verttabbar-2.8.2-fx.xpi
+
+http://www.codeproject.com/KB/edit/TextEditorControl.aspx
 http://www.toy-box.biz/wikiplus/?Development%2FCSharp%2FICSharpCode.TextEditor
 
 http://soudan1.biglobe.ne.jp/qa3551588.html
