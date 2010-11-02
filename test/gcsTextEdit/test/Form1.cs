@@ -260,6 +260,7 @@ namespace test
             edit.Wrap = YYS.WrapType.WindowWidth;
             WrapOnToolStripMenuItem.Checked = true;
 
+            
 //            edit.Text = @"/*sss*/
 //#start
 ///*

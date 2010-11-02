@@ -102,11 +102,11 @@ namespace YYS.Parser {
             tok = TokenType.TXT;
 
             if (Src.Length == 0 && curblock.isLineHeadCmt == 1) {
-                curblock.elem = preblock.elem;
+                curblock.mRule = preblock.mRule;
                 isNextLine = true;
             }
 
-            if (Src.Length == 0 && curblock.scisLineHeadCmt == 1) {
+            if (Src.Length == 0 && curblock.isLineHeadPart == 1) {
                 curblock.PartID = preblock.PartID;
                 scisNextLine = true;
             }
@@ -127,7 +127,7 @@ namespace YYS.Parser {
                 default:
                     //TODO test
                     if (curblock.isLineHeadCmt == 0) {
-                        if (curblock.scisLineHeadCmt == 0) {
+                        if (curblock.isLineHeadPart == 0) {
                             if (paruleStartKeys.Contains((char)c)) {
                                 char fc = (char)c;
                                 foreach (var item in partRuleDic) {
@@ -239,13 +239,13 @@ namespace YYS.Parser {
                                 buf.Append((char)c);
 
                                 string s = buf.ToString();
-                                string end = preblock.elem.end;
+                                string end = preblock.mRule.end;
 
                                 if (s.EndsWith(end)) {
                                     if (multiRuleEndDic.ContainsKey(end)) {
                                         var rule = multiRuleEndDic[end];
                                         if (rule.Detected(end, reader)) {
-                                            curblock.elem = rule;
+                                            curblock.mRule = rule;
                                             //isNextLine = false;
 
                                             tok = rule.token;
@@ -259,9 +259,9 @@ namespace YYS.Parser {
                                 }
                             }
 
-                            if (c == -1 && preblock.elem != null && multiRuleDic.ContainsKey(preblock.elem.start)) {
-                                var enelem = multiRuleDic[preblock.elem.start];
-                                curblock.elem = preblock.elem;
+                            if (c == -1 && preblock.mRule != null && multiRuleDic.ContainsKey(preblock.mRule.start)) {
+                                var enelem = multiRuleDic[preblock.mRule.start];
+                                curblock.mRule = preblock.mRule;
 
                                 tok = TokenType.MultiLineStart;
                                 OffsetLenAttr = new Tuple<int, int, Attribute>(0, Src.Length, enelem.attr);
@@ -368,7 +368,7 @@ namespace YYS.Parser {
 
                         if (rule is MultiLineRule) {
                             if (curblock != null) {
-                                curblock.elem = rule as MultiLineRule;
+                                curblock.mRule = rule as MultiLineRule;
                                 //isNextLine = true;
                             }
                         }
@@ -384,7 +384,7 @@ namespace YYS.Parser {
                         reader.setoffset(offset + len);
 
                         if (curblock != null) {
-                            curblock.elem = rule as MultiLineRule;
+                            curblock.mRule = rule as MultiLineRule;
                         }
 
                         break;

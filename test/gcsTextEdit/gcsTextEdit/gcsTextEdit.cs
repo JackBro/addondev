@@ -743,10 +743,6 @@ namespace YYS {
             cur_.End(wide, select);
         }
 
-        #endregion
-
-        #region ITextEditor メンバ
-
         public void SetSelction(DPos s, DPos e) {
             cur_.MoveCur(s, false);
             cur_.MoveCur(e, true);
@@ -761,6 +757,20 @@ namespace YYS {
                 s = cur_.Sel;
                 e = cur_.Cur;
             }
+        }
+
+        public Tuple<DPos, DPos> GetSelction() {
+            DPos s, e;
+            if (cur_.Cur <= cur_.Sel) {
+                s = new DPos(cur_.Cur.tl, cur_.Cur.ad);
+                e = new DPos(cur_.Sel.tl, cur_.Sel.ad);
+
+            }
+            else {
+                s = new DPos(cur_.Sel.tl, cur_.Sel.ad);
+                e = new DPos(cur_.Cur.tl, cur_.Cur.ad);
+            }
+            return new Tuple<DPos, DPos>(s, e);
         }
 
         #endregion

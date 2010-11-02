@@ -14,10 +14,10 @@ namespace YYS.Parser {
 
     public class Block {
         public string PartID;
-        public int scisLineHeadCmt = 0;
-        public int sccommentTransition = 0;
+        public int isLineHeadPart = 0;
+        public int partTransition = 0;
 
-        public MultiLineRule elem;
+        public MultiLineRule mRule;
         public int isLineHeadCmt = 0;
         public int commentTransition = 0;
 

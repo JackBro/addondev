@@ -78,9 +78,9 @@ namespace YYS.Parser {
             line.Block.isLineHeadCmt = _cmt;
 
             bool? isscnext = null;
-            line.Block.scisLineHeadCmt = _sccmt;
+            line.Block.isLineHeadPart = _sccmt;
 
-            if (line.Block.scisLineHeadCmt == 0) {
+            if (line.Block.isLineHeadPart == 0) {
                 line.Block.PartID = Document.DEFAULT_ID;
                 setd(b.PartID);
             }
@@ -175,17 +175,17 @@ namespace YYS.Parser {
 
 
             if (isscnext == null) {
-                line.Block.sccommentTransition = 2;
+                line.Block.partTransition = 2;
             }
             else {
                 if ((bool)isscnext) {
-                    line.Block.sccommentTransition = 3;
+                    line.Block.partTransition = 3;
                 }
                 else {
-                    line.Block.sccommentTransition = 0;
+                    line.Block.partTransition = 0;
                 }
             }
-            sccmt = (line.Block.sccommentTransition >> _sccmt) & 1;
+            sccmt = (line.Block.partTransition >> _sccmt) & 1;
 
             if (tokens.Count > 0) {
 

@@ -259,7 +259,7 @@ namespace YYS {
 
             int i;
             int cmt = text_[s].Block.isLineHeadCmt;
-            int sccmt = text_[s].Block.scisLineHeadCmt;
+            int sccmt = text_[s].Block.isLineHeadPart;
             Block block = text_[s].Block;
             if (s > 0) {
                 block = text_[s-1].Block;
@@ -277,8 +277,8 @@ namespace YYS {
             //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
             //if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem))
             if (i == tln()
-                || ( (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem)
-                     && (text_[i].Block.scisLineHeadCmt == sccmt)))
+                || ( (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)
+                     && (text_[i].Block.isLineHeadPart == sccmt)))
                 return false;
 
             int pcmt = 0;
@@ -291,9 +291,9 @@ namespace YYS {
             do{
                 Line line = text_[i++];
                 pcmt = line.Block.isLineHeadCmt;
-                prule = line.Block.elem;
+                prule = line.Block.mRule;
 
-                scpcmt = line.Block.scisLineHeadCmt;
+                scpcmt = line.Block.isLineHeadPart;
 
                 //block = parser.Parse(line, block, cmt);
                 block = parser.Parse(line, block, cmt, sccmt);
@@ -301,7 +301,7 @@ namespace YYS {
                 sccmt = parser.sccmt;
 
                 if (pcmt == cmt) {
-                    if (prule != block.elem) {
+                    if (prule != block.mRule) {
                         pcmt--;
                     }
                 }
