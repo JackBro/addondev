@@ -17,9 +17,9 @@ namespace YYS.Parser {
         public int isLineHeadPart = 0;
         public int partTransition = 0;
 
-        public MultiLineRule mRule;
-        public int isLineHeadCmt = 0;
-        public int commentTransition = 0;
+        //public MultiLineRule mRule;
+        //public int isLineHeadCmt = 0;
+        //public int commentTransition = 0;
 
         public Block() {
             PartID = Document.DEFAULT_ID;
@@ -93,39 +93,39 @@ namespace YYS.Parser {
     }
 
     // /*..*/end
-    public class MultiLineRule : Rule {
-        public string end;
-        public MultiLineRule() {
-            token = TokenType.MultiLine;
-        }
-        public MultiLineRule(string start, string end, Attribute attr) {
-            this.start = start;
-            this.end = end;
-            this.attr = attr;
-            token = TokenType.MultiLine;
-        }
+    //public class MultiLineRule : Rule {
+    //    public string end;
+    //    public MultiLineRule() {
+    //        token = TokenType.MultiLine;
+    //    }
+    //    public MultiLineRule(string start, string end, Attribute attr) {
+    //        this.start = start;
+    //        this.end = end;
+    //        this.attr = attr;
+    //        token = TokenType.MultiLine;
+    //    }
 
-        public override bool Detected(string sequence, LexerReader reader) {
-            if (sequence == start) {
-                token = TokenType.MultiLineStart;
-                return true;
-            }
-            if (sequence == end) {
-                token = TokenType.MultiLineEnd;
-                return true;
-            }
+    //    public override bool Detected(string sequence, LexerReader reader) {
+    //        if (sequence == start) {
+    //            token = TokenType.MultiLineStart;
+    //            return true;
+    //        }
+    //        if (sequence == end) {
+    //            token = TokenType.MultiLineEnd;
+    //            return true;
+    //        }
 
-            return false;
-        }
+    //        return false;
+    //    }
 
-        public override int getLen(string sequence, LexerReader reader) {
-            if (sequence == this.start) {
-                return base.getLen(sequence, reader);
-            } else {
-                return reader.offset();
-            }
-        }
-    }
+    //    public override int getLen(string sequence, LexerReader reader) {
+    //        if (sequence == this.start) {
+    //            return base.getLen(sequence, reader);
+    //        } else {
+    //            return reader.offset();
+    //        }
+    //    }
+    //}
 
     public class PartRule : Rule {
         public string id;

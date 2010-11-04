@@ -108,13 +108,10 @@ namespace YYS {
                 return ToString();
             }
             set { 
-                //Clear();
                 ClearAll();
-                //this.Insert(new DPos(0, 0), value);
                 DPos s = new DPos(0,0);
                 DPos e = new DPos(0,0);
                 InsertingOperation(ref s, value, ref e); 
-                //Fire_TEXTUPDATE(DPos s, DPos e, DPos e2, bool reparsed, bool nmlcmd);
                 Fire_TEXTUPDATE(new DPos(0, 0), new DPos(0, 0), e, true, false);
             }
         }
@@ -158,11 +155,7 @@ namespace YYS {
         }
 
         public void ClearAll() {
-            //text_.Clear();
-            //text_.Add(new Line(""));
-            //if (tln() - 1 >= 0 && tl(tln() - 1).Length >= 0) {
-                this.Delete(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length));
-            //}
+            this.Delete(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length));
             UndoManager.Clear();
         }
         
@@ -255,65 +248,127 @@ namespace YYS {
             return linenum == text_.Count - 1 ? true : false;
         }
 
+        //private bool ReParse(int s, int e) {
+
+        //    int i;
+        //    int cmt = text_[s].Block.isLineHeadCmt;
+        //    int sccmt = text_[s].Block.isLineHeadPart;
+        //    Block block = text_[s].Block;
+        //    if (s > 0) {
+        //        block = text_[s-1].Block;
+        //    }
+
+        //    // まずは変更範囲を再解析
+        //    for (i = s; i <= e; ++i) {
+
+        //        block = parser.Parse(text_[i], block, cmt, sccmt);
+        //        cmt = parser.cmt;
+        //        sccmt = parser.sccmt;
+        //    }
+
+        //    // コメントアウト状態に変化がなかったらここでお終い。
+        //    //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
+        //    //if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem))
+        //    if (i == tln()
+        //        || ( (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)
+        //             && (text_[i].Block.isLineHeadPart == sccmt)))
+        //        return false;
+
+        //    int pcmt = 0;
+        //    Rule prule = null;
+
+        //    int scpcmt = 0;
+
+        //    // 例えば、/* が入力された場合などは、下の方の行まで
+        //    // コメントアウト状態の変化を伝達する必要がある。
+        //    do{
+        //        Line line = text_[i++];
+        //        pcmt = line.Block.isLineHeadCmt;
+        //        prule = line.Block.mRule;
+
+        //        scpcmt = line.Block.isLineHeadPart;
+
+        //        //block = parser.Parse(line, block, cmt);
+        //        block = parser.Parse(line, block, cmt, sccmt);
+        //        cmt = parser.cmt;
+        //        sccmt = parser.sccmt;
+
+        //        if (pcmt == cmt) {
+        //            if (prule != block.mRule) {
+        //                pcmt--;
+        //            }
+        //        }
+
+        //        //if (scpcmt == sccmt) {
+        //        //    if (prule != block.elem) {
+        //        //        scpcmt--;
+        //        //    }
+        //        //}
+
+        //    //}while (i < tln() && pcmt != cmt);
+        //    } while (i < tln() && (pcmt != cmt || scpcmt != sccmt));
+
+        //    return true;
+        //}
+
         private bool ReParse(int s, int e) {
 
             int i;
-            int cmt = text_[s].Block.isLineHeadCmt;
+            //int cmt = text_[s].Block.isLineHeadCmt;
             int sccmt = text_[s].Block.isLineHeadPart;
             Block block = text_[s].Block;
             if (s > 0) {
-                block = text_[s-1].Block;
+                block = text_[s - 1].Block;
             }
 
             // まずは変更範囲を再解析
             for (i = s; i <= e; ++i) {
 
-                block = parser.Parse(text_[i], block, cmt, sccmt);
-                cmt = parser.cmt;
+                block = parser.Parse(text_[i], block, sccmt);
+                //cmt = parser.cmt;
                 sccmt = parser.sccmt;
             }
 
             // コメントアウト状態に変化がなかったらここでお終い。
             //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
             //if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem))
-            if (i == tln()
-                || ( (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)
-                     && (text_[i].Block.isLineHeadPart == sccmt)))
+            if (i == tln() || (text_[i].Block.isLineHeadPart == sccmt && text_[i].Block.PartID == block.PartID))
                 return false;
 
             int pcmt = 0;
             Rule prule = null;
 
             int scpcmt = 0;
+            string pID = string.Empty;
 
             // 例えば、/* が入力された場合などは、下の方の行まで
             // コメントアウト状態の変化を伝達する必要がある。
-            do{
+            do {
                 Line line = text_[i++];
-                pcmt = line.Block.isLineHeadCmt;
-                prule = line.Block.mRule;
+                //pcmt = line.Block.isLineHeadCmt;
+                //prule = line.Block.mRule;
 
                 scpcmt = line.Block.isLineHeadPart;
 
                 //block = parser.Parse(line, block, cmt);
-                block = parser.Parse(line, block, cmt, sccmt);
-                cmt = parser.cmt;
+                block = parser.Parse(line, block, sccmt);
+                //cmt = parser.cmt;
                 sccmt = parser.sccmt;
 
-                if (pcmt == cmt) {
-                    if (prule != block.mRule) {
-                        pcmt--;
-                    }
-                }
-
-                //if (scpcmt == sccmt) {
-                //    if (prule != block.elem) {
-                //        scpcmt--;
+                //if (pcmt == cmt) {
+                //    if (prule != block.mRule) {
+                //        pcmt--;
                 //    }
                 //}
 
-            //}while (i < tln() && pcmt != cmt);
-            } while (i < tln() && (pcmt != cmt || scpcmt != sccmt));
+                if (scpcmt == sccmt) {
+                    if (pID != block.PartID) {
+                        scpcmt--;
+                    }
+                }
+
+                //}while (i < tln() && pcmt != cmt);
+            } while (i < tln() && scpcmt != sccmt);
 
             return true;
         }

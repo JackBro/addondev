@@ -301,12 +301,6 @@ namespace YYS
                 tmpTLMIN = v.TLMIN;
             }
 
-            //TODO tmp scroll
-            //int tmpYMIN = v.YMIN;
-            //int tmpTLMIN = v.TLMIN;
-            //v.YMIN = -(v.TLMIN) * H;
-            //v.TLMIN = 0;//doc_.tln()
-
             //var tuple = l(udScr_tl_, udScr_vrl_);
             //int tmpYMIN = -(tuple.t2 + udScr_vrl_) * H;
             //int tmpTLMIN = tuple.t1;
@@ -421,10 +415,10 @@ namespace YYS
                     if (a.bottom <= tmpYMIN)
                         continue;
 
-                    //TODO test
-                    if (pa != Document.DEFAULT_ID) {
-                        p.DrawFill(g, 0, a.top, v.XMAX + v.XBASE, H);
-                    }
+                    ////TODO test
+                    //if (pa != Document.DEFAULT_ID) {
+                    //    p.DrawFill(g, 0, a.top, v.XMAX + v.XBASE, H);
+                    //}
 
                     // テキストデータ描画
                     for (x = 0, i=stt; x <= v.XMAX && i < end; ) {

@@ -24,7 +24,6 @@ namespace test
         {
             InitializeComponent();
             this.AllowDrop = true;
-            //this.KeyPreview = true;
             edit.Name = "1";
             edit.BackColor = Color.White;
             edit.LineNumberBackColor = Color.White;
@@ -33,8 +32,11 @@ namespace test
             edit.ShowWhiteSpace = true;
             edit.ShowZenWhiteSpace = true;
             edit.ShowTab = true;
-            edit.Document.AddPartition(new PartRule("#start", "#end", "test"));
+            
+            //edit.Document.AddPartition(new PartRule("#start", "#end", "test"));
+            edit.Document.AddPartition(new PartRule("/*", "*/", "test"));
             edit.Document.setHighlight("test", new Highlight());
+            
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
@@ -269,7 +271,9 @@ namespace test
 //*/
 //#end";
 
-            edit.Text = "/*ss\ns*/mmm\nme";
+            edit.Text = @"/*ss
+zxcvbns*/mmm
+me";
 
             panel1.Controls.Add(edit);
 
