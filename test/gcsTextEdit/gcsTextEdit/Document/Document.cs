@@ -56,17 +56,21 @@ namespace YYS {
 
         Parser.Parser parser;
 
-        public void setHighlight(IHighlight highlight) {
-            parser.AddHighlight(Document.DEFAULT_ID, highlight);
-            parser.setd(Document.DEFAULT_ID);
-        }
+        //public void setHighlight(IHighlight highlight) {
+        //    parser.AddHighlight(Document.DEFAULT_ID, highlight);
+        //    parser.setd(Document.DEFAULT_ID);
+        //}
 
-        public void setHighlight(string id, IHighlight highlight) {
-            parser.AddHighlight(id, highlight);
-        }
+        //public void setHighlight(string id, IHighlight highlight) {
+        //    parser.AddHighlight(id, highlight);
+        //}
 
-        public void AddPartition(PartRule rule) {
-            parser.AddPartition(rule);
+        //public void AddPartition(PartRule rule) {
+        //    parser.AddPartition(rule);
+        //}
+
+        public void SetPartition(AbstractPartition partition) {
+            parser.SetPartition(partition);
         }
 
         public UndoManager UndoManager { get; private set; }
@@ -335,8 +339,8 @@ namespace YYS {
             if (i == tln() || (text_[i].Block.isLineHeadPart == sccmt && text_[i].Block.PartID == block.PartID))
                 return false;
 
-            int pcmt = 0;
-            Rule prule = null;
+            //int pcmt = 0;
+            //Rule prule = null;
 
             int scpcmt = 0;
             string pID = string.Empty;

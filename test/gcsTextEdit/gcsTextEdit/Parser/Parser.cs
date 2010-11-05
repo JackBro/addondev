@@ -37,28 +37,58 @@ namespace YYS.Parser {
         private List<Token> tokens;
         private Attribute defaultAttr;
 
-        private Dictionary<string, PartRule> scruledic = new Dictionary<string, PartRule>();
-        private Dictionary<string, IHighlight> highlightDic = new Dictionary<string, IHighlight>();
+        //private Dictionary<string, PartRule> scruledic = new Dictionary<string, PartRule>();
+        //private Dictionary<string, IHighlight> highlightDic = new Dictionary<string, IHighlight>();
 
-        public void AddPartition(PartRule rule) {
-            scruledic.Add(rule.id, rule);
-            lex.AddPartRule(rule);
-        }
+        //public void AddPartition(PartRule rule) {
+        //    scruledic.Add(rule.id, rule);
+        //    lex.AddPartRule(rule);
+        //}
 
-        public void AddHighlight(string id, IHighlight highlight) {
-            if (!highlightDic.ContainsKey(id)) {
-                highlightDic.Add(id, highlight);
-            }
-        }
-        private string curID = string.Empty;
-        public void setd(string id) {
-            if (curID != id) {
-                IHighlight highlight = highlightDic[id];
+        //public void AddHighlight(string id, IHighlight highlight) {
+        //    if (!highlightDic.ContainsKey(id)) {
+        //        highlightDic.Add(id, highlight);
+        //    }
+        //}
+
+        //private string curID = string.Empty;
+        //public void setd(string id) {
+        //    if (curID != id) {
+        //        IHighlight highlight = highlightDic[id];
+        //        defaultAttr = highlight.getDefault();
+        //        lex.ClearRule();
+        //        this.lex.AddRule(highlight.getRules());
+        //        curID = id;
+        //    }
+        //}
+
+        private AbstractPartition partition;
+        public void SetPartition(AbstractPartition partition) {
+            if (this.partition != partition) {
+                this.partition = partition;
+
+                var highlight = this.partition.GetHighlight();
                 defaultAttr = highlight.getDefault();
+
                 lex.ClearRule();
+
+                var ch = this.partition.Children;
+                foreach (var item in ch) {
+                    this.lex.AddPartRule(item.GetPartRule());
+                }
                 this.lex.AddRule(highlight.getRules());
-                curID = id;
             }
+        }
+        private AbstractPartition getPartition(string ID) {
+            //var ch = this.partition.Children;
+            //foreach (var item in ch) {
+            //    if (item.ID == ID) {
+            //        return item;
+            //    }
+            //}
+            //return null;
+
+            return this.partition.GetChildren(ID);
         }
 
         //public int cmt;
@@ -73,7 +103,7 @@ namespace YYS.Parser {
             tokentype = TokenType.TXT;
             tokens = new List<Token>();
 
-            List<Tuple<int, int, bool>> cmstrulrs = new List<Tuple<int, int, bool>>();
+            //List<Tuple<int, int, bool>> cmstrulrs = new List<Tuple<int, int, bool>>();
 
             //line.Block.isLineHeadCmt = _cmt;
 
@@ -81,13 +111,19 @@ namespace YYS.Parser {
             line.Block.isLineHeadPart = _sccmt;
 
             if (line.Block.isLineHeadPart == 0) {
-                line.Block.PartID = Document.DEFAULT_ID;
-                //setd(b.PartID);
-                setd(Document.DEFAULT_ID);
+                //line.Block.PartID = Document.DEFAULT_ID;
+                //setd(Document.DEFAULT_ID);
+                if (this.partition.Parent != null) {
+                    line.Block.PartID = this.partition.Parent.ID;
+                    SetPartition(this.partition.Parent);
+                }
             }
             else {
+                //line.Block.PartID = b.PartID;
+                //setd(b.PartID);
+
                 line.Block.PartID = b.PartID;
-                setd(b.PartID);
+                SetPartition(getPartition(line.Block.PartID));
             }
 
             lex.Src = line.Text;
@@ -166,13 +202,17 @@ namespace YYS.Parser {
                         }
 
                         isscnext = lex.scisNextLine;
-                        if (line.Block.PartID != Document.DEFAULT_ID) {
-                            setd(line.Block.PartID);
+                        //if (line.Block.PartID != Document.DEFAULT_ID) {
+                        //    setd(line.Block.PartID);
+                        //}
+
+                        if (line.Block.PartID != this.partition.Parent.ID) {
+                            SetPartition(getPartition(line.Block.PartID));
                         }
                         break;
                     case TokenType.Partition:
                         isscnext = lex.scisNextLine;
-                        setd(line.Block.PartID);
+                        //setd(line.Block.PartID);
                         break;
                     case TokenType.PartitionEnd:
 
@@ -202,7 +242,9 @@ namespace YYS.Parser {
                         }
 
                         isscnext = lex.scisNextLine; 
-                        setd(Document.DEFAULT_ID);
+                        //setd(Document.DEFAULT_ID);
+
+                        SetPartition(partition.Parent);
                         break;
                     default:
                         break;

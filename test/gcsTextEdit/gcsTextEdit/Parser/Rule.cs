@@ -22,7 +22,7 @@ namespace YYS.Parser {
         //public int commentTransition = 0;
 
         public Block() {
-            PartID = Document.DEFAULT_ID;
+            //PartID = Document.DEFAULT_ID;
         }
     }
 

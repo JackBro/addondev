@@ -90,6 +90,14 @@ namespace YYS
             this.ad = dp.ad;
         }
 
+        public override int GetHashCode() {
+            return base.GetHashCode();
+        }
+
+        public override bool Equals(object obj) {
+            return base.Equals(obj);
+        }
+
         public static Boolean operator ==(DPos x, DPos y) {
             if (Object.ReferenceEquals(x, null) && Object.ReferenceEquals(y, null)) return true;
             if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null)) return false; 

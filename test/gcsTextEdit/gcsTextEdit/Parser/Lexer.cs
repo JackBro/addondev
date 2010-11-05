@@ -54,6 +54,8 @@ namespace YYS.Parser {
         }
 
         public void AddPartRule(PartRule rule) {
+            if (rule == null) return;
+
             partRuleDic.Add(rule.start, rule);
             partRuleEndDic.Add(rule.end, rule);
 

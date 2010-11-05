@@ -32,15 +32,15 @@ namespace test
             edit.ShowWhiteSpace = true;
             edit.ShowZenWhiteSpace = true;
             edit.ShowTab = true;
-            
+            edit.ShowLineNumber = true;
+ 
             //edit.Document.AddPartition(new PartRule("#start", "#end", "test"));
-            edit.Document.AddPartition(new PartRule("/*", "*/", "test"));
-            edit.Document.setHighlight("test", new Highlight());
+            //edit.Document.AddPartition(new PartRule("/*", "*/", "test"));
+            //edit.Document.setHighlight("test", new Highlight());
             
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
             //csedit.Height = this.Height / 2;
-            edit.ShowLineNumber = true;
             //edit.AllowDrop = true;
             //edit.DrawEventHandler += (g, line, x, y) => {
             //    g.DrawImage(image, new Point(x, y));
