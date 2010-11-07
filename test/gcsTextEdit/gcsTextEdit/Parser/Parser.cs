@@ -39,17 +39,29 @@ namespace YYS.Parser {
 
         //private Dictionary<string, PartRule> scruledic = new Dictionary<string, PartRule>();
         //private Dictionary<string, IHighlight> highlightDic = new Dictionary<string, IHighlight>();
+        private Dictionary<string, Partition> partitionDic = new Dictionary<string, Partition>();
 
         //public void AddPartition(PartRule rule) {
         //    scruledic.Add(rule.id, rule);
         //    lex.AddPartRule(rule);
         //}
 
-        //public void AddHighlight(string id, IHighlight highlight) {
-        //    if (!highlightDic.ContainsKey(id)) {
-        //        highlightDic.Add(id, highlight);
-        //    }
-        //}
+        public void AddHighlight(string id, IHighlight highlight) {
+            if (partitionDic.ContainsKey(id)) {
+
+            } else {
+
+                var rules = highlight.getRules();
+                foreach (var rule in rules) {
+                    if (rule is PartRule) {
+
+                    }
+                }
+            }
+        }
+        public void AddHighlight(IHighlight highlight) {
+
+        }
 
         //private string curID = string.Empty;
         //public void setd(string id) {
