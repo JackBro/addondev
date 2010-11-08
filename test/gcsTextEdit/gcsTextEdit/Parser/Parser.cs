@@ -54,7 +54,6 @@ namespace YYS.Parser {
                 part.Highlight.getRules().AddRange(highlight.getRules());
 
                 var rules = part.Highlight.getRules();
-                int i = 0;
 
                 foreach (var rule in rules) {
                     if (rule is PartRule) {
