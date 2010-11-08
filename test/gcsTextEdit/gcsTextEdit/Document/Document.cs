@@ -68,9 +68,11 @@ namespace YYS {
         //public void AddPartition(PartRule rule) {
         //    parser.AddPartition(rule);
         //}
-
-        public void SetPartition(AbstractPartition partition) {
-            parser.SetPartition(partition);
+        public void AddHighlight(string id, IHighlight highlight) {
+            parser.AddHighlight(id, highlight);
+        }
+        public void SetPartition(string ID) {
+            parser.SetPartition(ID, true);
         }
 
         public UndoManager UndoManager { get; private set; }

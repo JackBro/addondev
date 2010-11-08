@@ -133,10 +133,11 @@ namespace YYS.Parser {
         public PartRule() {
             token = TokenType.TXT;
         }
-        public PartRule(string start, string end, string id) {
+        public PartRule(string id, string start, string end, Attribute attr) {
+            this.id = id;
             this.start = start;
             this.end = end;
-            this.id = id;
+            this.attr = attr;
             token = TokenType.TXT;
         }
     }

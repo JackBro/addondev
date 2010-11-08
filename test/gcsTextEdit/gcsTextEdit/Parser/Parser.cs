@@ -48,20 +48,43 @@ namespace YYS.Parser {
 
         public void AddHighlight(string id, IHighlight highlight) {
             if (partitionDic.ContainsKey(id)) {
+                var part = partitionDic[id];
+                //part.Highlight = highlight;
+                var rr = highlight.getRules();
+                part.Highlight.getRules().AddRange(highlight.getRules());
+
+                var rules = part.Highlight.getRules();
+                int i = 0;
+
+                foreach (var rule in rules) {
+                    if (rule is PartRule) {
+                        PartRule prule = rule as PartRule;
+                        var partid = prule.id;
+                        var newpart = new Partition(prule, new DefaultHighlight(prule.attr));
+                        part.AddPartition(newpart);
+                        partitionDic.Add(partid, newpart);
+                    }
+                }
 
             } else {
+                var part = new Partition(id, highlight);
+                partitionDic.Add(id, part);
 
                 var rules = highlight.getRules();
                 foreach (var rule in rules) {
                     if (rule is PartRule) {
-
+                        PartRule prule = rule as PartRule;
+                        var partid = prule.id;
+                        var newpart = new Partition(prule, new DefaultHighlight(prule.attr));
+                        part.AddPartition(newpart);
+                        partitionDic.Add(partid, newpart);
                     }
                 }
             }
         }
-        public void AddHighlight(IHighlight highlight) {
 
-        }
+        //public void AddHighlight(IHighlight highlight) {
+        //}
 
         //private string curID = string.Empty;
         //public void setd(string id) {
@@ -74,24 +97,54 @@ namespace YYS.Parser {
         //    }
         //}
 
-        private AbstractPartition partition;
-        public void SetPartition(AbstractPartition partition) {
+        private Partition partition;
+        public void SetPartition(Partition partition) {
             if (this.partition != partition) {
                 this.partition = partition;
 
-                var highlight = this.partition.GetHighlight();
+                var highlight = this.partition.Highlight;
                 defaultAttr = highlight.getDefault();
 
                 lex.ClearRule();
 
                 var ch = this.partition.Children;
+                //var parent = this.partition.Parent;
+                //var ch = parent.Children;
                 foreach (var item in ch) {
-                    this.lex.AddPartRule(item.GetPartRule());
+                    //this.lex.AddPartRule(item.GetPartRule());
+                    this.lex.AddPartRule(item.rule);
                 }
                 this.lex.AddRule(highlight.getRules());
             }
         }
-        private AbstractPartition getPartition(string ID) {
+        public void SetPartition(string ID, bool force) {
+
+                if (partitionDic.ContainsKey(ID)) {
+                    if (force) {
+                        this.partition = partitionDic[ID];
+
+                        var highlight = this.partition.Highlight;
+                        defaultAttr = highlight.getDefault();
+
+                        lex.ClearRule();
+
+                        var ch = this.partition.Children;
+                        foreach (var item in ch) {
+                            //this.lex.AddPartRule(item.GetPartRule());
+                            this.lex.AddPartRule(item.rule);
+                        }
+                        this.lex.AddRule(highlight.getRules());
+                    }
+                    else {
+                        SetPartition(partitionDic[ID]);
+                    }
+            }
+        }
+
+        public void SetPartition(string ID) {
+            SetPartition(ID, false);
+        }
+        private Partition getPartition(string ID) {
             //var ch = this.partition.Children;
             //foreach (var item in ch) {
             //    if (item.ID == ID) {
@@ -100,7 +153,8 @@ namespace YYS.Parser {
             //}
             //return null;
 
-            return this.partition.GetChildren(ID);
+            //return this.partition.GetChildren(ID);
+            return partitionDic[ID];
         }
 
         //public int cmt;
@@ -154,6 +208,29 @@ namespace YYS.Parser {
                     case TokenType.Line:
                     case TokenType.Enclose:
                     case TokenType.Keyword: {
+
+                            {
+                                //int off = lex.Offset;
+                                //int len = line.Length - lex.OffsetLenAttr.t1;
+                                //lex.isNextLine = true;
+
+                                //cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = lex.isNextLine });
+                                //tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = len, attr = lex.OffsetLenAttr.t3 });
+                                if (tokens.Count > 0) {
+                                    int off = tokens[tokens.Count - 1].ad;
+                                    int len = tokens[tokens.Count - 1].len;
+                                    //tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
+                                    //tokens[tokens.Count - 1].len = lex.OffsetLenAttr.t2 - off;
+
+                                    tokens.Add(new Token { ad = off + len, len = lex.Offset - off + len, attr = defaultAttr });
+                                }
+                                else {
+                                    if (lex.Offset - lex.Value.Length - 1 > 0)
+                                        tokens.Add(new Token { ad = 0, len = lex.Offset - lex.Value.Length - 1, attr = defaultAttr });
+                                }
+                            }
+
+
                             tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
                         }
                         break;
@@ -209,7 +286,8 @@ namespace YYS.Parser {
                                 tokens.Add(new Token { ad = off + len, len = lex.Offset - off + len, attr = defaultAttr });
                             }
                             else{
-                                tokens.Add(new Token { ad = 0, len = lex.Offset, attr = defaultAttr });
+                                if (lex.Offset - lex.Value.Length - 1 > 0)
+                                tokens.Add(new Token { ad = 0, len = lex.Offset- lex.Value.Length-1, attr = defaultAttr });
                             }
                         }
 
@@ -218,7 +296,7 @@ namespace YYS.Parser {
                         //    setd(line.Block.PartID);
                         //}
 
-                        if (line.Block.PartID != this.partition.Parent.ID) {
+                        if (this.partition.Parent==null || (this.partition.Parent!=null && line.Block.PartID != this.partition.Parent.ID)) {
                             SetPartition(getPartition(line.Block.PartID));
                         }
                         break;
@@ -242,15 +320,19 @@ namespace YYS.Parser {
                             //}
                             if (tokens.Count > 0) {
                                 int off = tokens[tokens.Count - 1].ad;
-                                int len = tokens[tokens.Count - 1].len;
+                                int len = tokens[tokens.Count - 1].len ;
                                 //tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
                                 //tokens[tokens.Count - 1].len = lex.OffsetLenAttr.t2 - off;
 
-                                tokens.Add(new Token { ad = off + len, len = lex.Offset - off + len, attr = defaultAttr });
+                                tokens.Add(new Token { ad = off + len, len = lex.Offset - (off + len), attr = defaultAttr });
                             }
                             else if (line.Block.isLineHeadPart != 0) {
-                                tokens.Add(new Token { ad = 0, len = lex.Offset, attr = defaultAttr });
+                                tokens.Add(new Token { ad = 0, len = lex.Offset , attr = defaultAttr });
                             }
+                            else if (lex.scisNextLine) {
+                                tokens.Add(new Token { ad = 0, len = lex.Offset , attr = defaultAttr });
+                            }
+                            lex.scisNextLine = false;
                         }
 
                         isscnext = lex.scisNextLine; 

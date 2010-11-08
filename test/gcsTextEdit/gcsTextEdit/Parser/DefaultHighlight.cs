@@ -13,6 +13,10 @@ namespace YYS.Parser {
             //this.textcolor = textcolor;
             defaultAttr = new Attribute(textcolor);
         }
+        public DefaultHighlight(Attribute attr) {
+            //this.textcolor = textcolor;
+            defaultAttr = attr;
+        }
 
         #region IHighlight メンバ
 
@@ -25,7 +29,7 @@ namespace YYS.Parser {
                 rules = new List<Rule>();
                 //rules.Add(new EncloseRule("[[", "]]", new YYS.Parser.Attribute(Color.Red, AttrType.Image)));
                 //rules.Add(new EndLineRule("//", new YYS.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
-                //rules.Add(new MultiLineRule("/*", "*/", new YYS.Parser.Attribute(Color.Red)));
+                //rules.Add(new PartRule("default.comment", "/*", "*/", new YYS.Parser.Attribute(Color.Red)));
             }
             return rules;
         }

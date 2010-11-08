@@ -37,6 +37,10 @@ namespace test
             //edit.Document.AddPartition(new PartRule("#start", "#end", "test"));
             //edit.Document.AddPartition(new PartRule("/*", "*/", "test"));
             //edit.Document.setHighlight("test", new Highlight());
+            edit.Document.AddHighlight(Document.DEFAULT_ID, new Highlight2());
+            edit.Document.AddHighlight("default.comment", new Highlight());
+
+            edit.Document.SetPartition(Document.DEFAULT_ID);
             
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
@@ -271,7 +275,8 @@ namespace test
 //*/
 //#end";
 
-            edit.Text = @"/*ss
+            edit.Text = @"/*mmm*/
+/*ss
 zxcvbns*/mmm
 me";
 

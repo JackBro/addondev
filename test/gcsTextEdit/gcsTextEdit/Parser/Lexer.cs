@@ -29,9 +29,12 @@ namespace YYS.Parser {
 
         public void ClearRule() {
             ruleDic.Clear();
-            //multiRuleDic.Clear();
-            //multiRuleEndDic.Clear();
+            //partRuleDic.Clear();
+            //partRuleEndDic.Clear();
             keyWordRules.Clear();
+            
+            Value = string.Empty;
+
         }
 
         public void AddRule(List<Rule> rules) {
@@ -42,8 +45,9 @@ namespace YYS.Parser {
         public void AddRule(Rule rule) {
             if (rule is KeywordRule) {
                 keyWordRules.Add(rule as KeywordRule);
-            }
-            else {
+            }else if(rule is PartRule){
+                AddPartRule(rule as PartRule);
+            }else {
                 //if (rule is MultiLineRule) {
                 //    multiRuleDic.Add(((MultiLineRule)rule).start, (MultiLineRule)rule);
                 //    multiRuleEndDic.Add(((MultiLineRule)rule).end, (MultiLineRule)rule);
@@ -55,6 +59,7 @@ namespace YYS.Parser {
 
         public void AddPartRule(PartRule rule) {
             if (rule == null) return;
+            if (partRuleDic.ContainsKey(rule.start)) return;
 
             partRuleDic.Add(rule.start, rule);
             partRuleEndDic.Add(rule.end, rule);
@@ -78,6 +83,7 @@ namespace YYS.Parser {
                 else {
                     reader.Src = value;
                     tok = TokenType.TXT;
+                    Value = string.Empty;
                     value = null;
                     //isNextLine = false;
                 }
@@ -91,12 +97,18 @@ namespace YYS.Parser {
 
         public Lexer() {
             reader = new LexerReader();
+            Value = string.Empty;
         }
 
         public int Offset {
             get {
                 return reader.offset();
             }
+        }
+
+        public string Value {
+            get;
+            set;
         }
 
         public bool advance(Block preblock, Block curblock) {
@@ -144,11 +156,56 @@ namespace YYS.Parser {
                                                 }
                                                 //OffsetLenAttr = new Tuple<int, int, Attribute>(Offset, len, rule.attr);
                                                 reader.setoffset(Offset + text.Length);
+                                                Value = item.Value.start;
+                                                //reader.setoffset(Offset);
                                                 return true;
                                             }
                                         }
                                     }
                                 }
+                            }
+                            else if (scisNextLine) {
+                                int off = Offset;
+                                //while (c != -1) {
+                                    if (paruleEndKeys.Contains((char)c)) {
+                                        StringBuilder buf = new StringBuilder();
+                                        while (c != -1) {
+                                            buf.Append((char)c);
+
+                                            if (partRuleEndDic.ContainsKey(buf.ToString())) {
+                                                if (preblock.PartID == partRuleEndDic[buf.ToString()].id) {
+                                                    var Eenelem = partRuleEndDic[buf.ToString()];
+                                                    tok = TokenType.PartitionEnd;
+
+                                                    //curblock.PartID = Eenelem.id;
+                                                    //scisNextLine = false;
+
+                                                   
+                                                    //reader.setoffset(Offset + buf.ToString().Length);
+                                                    //reader.setoffset(off);
+                                                    //reader.setoffset(Offset);
+
+                                                    Value = buf.ToString();
+
+                                                    return true;
+                                                }
+                                            }
+                                            c = reader.read();
+                                        }
+                                    }
+                                //    c = reader.read();
+                                //}
+
+                                //Finish:
+
+                                //if (c == -1) {
+                                //    tok = TokenType.Partition;
+                                    //reader.setoffset(off);
+                                    //curblock.PartID = preblock.PartID;
+                                //    scisNextLine = true;
+                                //}
+                                //reader.setoffset(0);
+                                //c = reader.read();
                             }
                         }
                         else {
@@ -165,9 +222,12 @@ namespace YYS.Parser {
                                                     tok = TokenType.PartitionEnd;
 
                                                     curblock.PartID = Eenelem.id;
-                                                    scisNextLine = false;
+                                                    //scisNextLine = false;
 
-                                                    reader.setoffset(Offset + buf.ToString().Length);
+                                                    //reader.setoffset(Offset + buf.ToString().Length);
+                                                    //reader.setoffset(Offset);
+
+                                                    Value = buf.ToString();
 
                                                     return true;
                                                 }
@@ -202,6 +262,8 @@ namespace YYS.Parser {
                                                     scisNextLine = true;
                                                 }
                                                 reader.setoffset(Offset + text.Length);
+                                                Value = item.Value.start;
+                                                //reader.setoffset(Offset);
                                                 //break;
                                                 return true;
                                             }
@@ -344,6 +406,7 @@ namespace YYS.Parser {
                     int len = rule.getLen(s, reader);
                     reader.setoffset(offset + len);
                     OffsetLenAttr = new Tuple<int, int, Attribute>(offset, len, rule.attr);
+                    Value = s;
                     break;
                 }
             }
@@ -368,6 +431,7 @@ namespace YYS.Parser {
                         int len = rule.getLen(s, reader);
                         OffsetLenAttr = new Tuple<int, int, Attribute>(offset, len, rule.attr);
                         reader.setoffset(offset + len);
+                        Value = rule.start;
 
                         //if (rule is MultiLineRule) {
                         //    if (curblock != null) {
