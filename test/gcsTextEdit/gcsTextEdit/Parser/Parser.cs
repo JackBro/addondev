@@ -224,7 +224,7 @@ namespace YYS.Parser {
                         break;
 
                     case TokenType.PartitionStart: {
-                            line.Block.setDic(this.partition.ID, line.Block.partTransition, line.Block.isLineHeadPart);
+                            line.Block.setDic(this.partition.ID, line.Block.isLineHeadPart, isscnext);
                             if (this.partition.ID != Document.DEFAULT_ID) {
                             //    line.Block.isLineHeadPart = 0;
                             }
@@ -260,8 +260,10 @@ namespace YYS.Parser {
 
                         break;
                     case TokenType.Partition:
+                        line.Block.setDic(this.partition.ID, line.Block.isLineHeadPart, isscnext);
                         isscnext = lex.scisNextLine;
                         //setd(line.Block.PartID);
+                        
                         break;
                     case TokenType.PartitionEnd: {
                             if (tokens.Count > 0) {
@@ -292,8 +294,11 @@ namespace YYS.Parser {
                             //line.Block.isLineHeadPart = line.Block.st.Peek();
                             var tp = b.getDic(this.partition.ID);
                             line.Block.partTransition = tp.t1;
+                            isscnext = tp.t2;
+                           
                             //line.Block.isLineHeadPart = tp.t2;
-                            if (line.Block.partTransition == 3) {
+                            //if (line.Block.partTransition == 3) {
+                            if (line.Block.partTransition != 0) {
                                 //isscnext = true;
                                 //line.Block.isLineHeadPart = 1;
                                 //line.Block.PartID = this.partition.ID;

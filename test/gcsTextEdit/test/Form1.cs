@@ -277,6 +277,8 @@ namespace test
 
             edit.Text = @"/*mmm*/
 /*ss
+f/=fff
+ff=/
 zxcvbns*/mmm
 me";
 

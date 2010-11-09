@@ -13,17 +13,17 @@ namespace YYS.Parser {
     }
 
     public class Block {
-        private Dictionary<string, Tuple<int, int>> st = new Dictionary<string, Tuple<int, int>>();
-        public void setDic(string id, int partTransition, int isLineHeadPart) {
+        private Dictionary<string, Tuple<int, bool?>> st = new Dictionary<string, Tuple<int, bool?>>();
+        public void setDic(string id, int isLineHeadPart, bool? isnext) {
             if (id == Document.DEFAULT_ID) return;
             if (st.ContainsKey(id)) {
-                st[id] = new Tuple<int, int>(partTransition, isLineHeadPart);
+                st[id] = new Tuple<int, bool?>(isLineHeadPart, isnext);
             }
             else {
-                st.Add(id, new Tuple<int, int>(partTransition, isLineHeadPart));
+                st.Add(id, new Tuple<int, bool?>(isLineHeadPart, isnext));
             }
         }
-        public Tuple<int, int> getDic(string id) {
+        public Tuple<int, bool?> getDic(string id) {
             if(st.ContainsKey(id))
                 return st[id];
 
