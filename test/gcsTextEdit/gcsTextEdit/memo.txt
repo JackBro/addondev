@@ -1,4 +1,6 @@
 ﻿verttabbar-2.8.2-fx.xpi
+101012
+101108
 
 http://www.codeproject.com/KB/edit/TextEditorControl.aspx
 http://www.toy-box.biz/wikiplus/?Development%2FCSharp%2FICSharpCode.TextEditor

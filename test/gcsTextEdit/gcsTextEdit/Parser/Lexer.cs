@@ -14,6 +14,7 @@ namespace YYS.Parser {
 
         //public bool isNextLine = false;
         public bool scisNextLine = false;
+        public YYS.Parser.Attribute Attr { get; set; }
 
         private Dictionary<String, Rule> ruleDic = new Dictionary<String, Rule>();
 
@@ -29,8 +30,8 @@ namespace YYS.Parser {
 
         public void ClearRule() {
             ruleDic.Clear();
-            //partRuleDic.Clear();
-            //partRuleEndDic.Clear();
+            partRuleDic.Clear();
+            partRuleEndDic.Clear();
             keyWordRules.Clear();
             
             Value = string.Empty;
@@ -121,6 +122,7 @@ namespace YYS.Parser {
             if (Src.Length == 0 && curblock.isLineHeadPart == 1) {
                 curblock.PartID = preblock.PartID;
                 scisNextLine = true;
+                tok = TokenType.Partition;
             }
 
             int c = reader.read();
@@ -148,6 +150,7 @@ namespace YYS.Parser {
                                         var text = Src.Substring(Offset - 1, len);
                                         if (text.ToString() == item.Key) {
                                             tok = TokenType.PartitionStart;
+                                            Attr = item.Value.attr;
                                             if (curblock != null) {
                                                 curblock.PartID = item.Value.id;
                                                 scisNextLine = true;
@@ -161,92 +164,6 @@ namespace YYS.Parser {
                                     }
                                 }
                             }
-                        }
-                        else if (scisNextLine) {
-                            int off = Offset;
-                            //while (c != -1) {
-                            if (paruleEndKeys.Contains((char)c)) {
-                                StringBuilder buf = new StringBuilder();
-                                while (c != -1) {
-                                    buf.Append((char)c);
-
-                                    if (partRuleEndDic.ContainsKey(buf.ToString())) {
-                                        if (preblock.PartID == partRuleEndDic[buf.ToString()].id) {
-                                            var Eenelem = partRuleEndDic[buf.ToString()];
-                                            tok = TokenType.PartitionEnd;
-
-                                            //curblock.PartID = Eenelem.id;
-                                            //scisNextLine = false;
-
-
-                                            //reader.setoffset(Offset + buf.ToString().Length);
-                                            //reader.setoffset(off);
-                                            //reader.setoffset(Offset);
-
-                                            Value = buf.ToString();
-
-                                            return true;
-                                        }
-                                    }
-                                    c = reader.read();
-                                }
-                            }
-                            //    c = reader.read();
-                            //}
-
-                            //Finish:
-
-                            //if (c == -1) {
-                            //    tok = TokenType.Partition;
-                            //reader.setoffset(off);
-                            //curblock.PartID = preblock.PartID;
-                            //    scisNextLine = true;
-                            //}
-                            //reader.setoffset(0);
-                            //c = reader.read();
-                        }
-                        else {
-                            int off = Offset;
-                            //while (c != -1) {
-                            if (paruleStartKeys.Contains((char)c)) {
-                                StringBuilder buf = new StringBuilder();
-                                while (c != -1) {
-                                    buf.Append((char)c);
-
-                                    if (partRuleDic.ContainsKey(buf.ToString())) {
-                                        if (preblock.PartID == partRuleDic[buf.ToString()].id) {
-                                            var Eenelem = partRuleDic[buf.ToString()];
-                                            tok = TokenType.MultiLineStart;
-
-                                            //curblock.PartID = Eenelem.id;
-                                            //scisNextLine = false;
-
-
-                                            //reader.setoffset(Offset + buf.ToString().Length);
-                                            //reader.setoffset(off);
-                                            //reader.setoffset(Offset);
-
-                                            Value = buf.ToString();
-
-                                            return true;
-                                        }
-                                    }
-                                    c = reader.read();
-                                }
-                            }
-                            //    c = reader.read();
-                            //}
-
-                            //Finish:
-
-                            //if (c == -1) {
-                            //    tok = TokenType.Partition;
-                            //reader.setoffset(off);
-                            //curblock.PartID = preblock.PartID;
-                            //    scisNextLine = true;
-                            //}
-                            //reader.setoffset(0);
-                            //c = reader.read();
                         }
                     }
                     else {
@@ -264,6 +181,8 @@ namespace YYS.Parser {
 
                                                 curblock.PartID = Eenelem.id;
                                                 //scisNextLine = false;
+                                                Attr = Eenelem.attr;
+
 
                                                 //reader.setoffset(Offset + buf.ToString().Length);
                                                 //reader.setoffset(Offset);
@@ -284,6 +203,7 @@ namespace YYS.Parser {
                             if (c == -1) {
                                 tok = TokenType.Partition;
                                 curblock.PartID = preblock.PartID;
+                                
                                 scisNextLine = true;
                             }
                             reader.setoffset(0);
@@ -298,6 +218,7 @@ namespace YYS.Parser {
                                         var text = Src.Substring(Offset - 1, len);
                                         if (text.ToString() == item.Key) {
                                             tok = TokenType.PartitionStart;
+                                            Attr = item.Value.attr;
                                             if (curblock != null) {
                                                 //curblock.PartID = item.Key;
                                                 curblock.PartID = item.Value.id;

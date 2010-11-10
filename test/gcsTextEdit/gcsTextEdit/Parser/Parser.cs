@@ -172,24 +172,24 @@ namespace YYS.Parser {
             //line.Block.isLineHeadCmt = _cmt;
 
             bool? isscnext = null;
-            line.Block.isLineHeadPart = _sccmt;
 
-            if (line.Block.isLineHeadPart == 0) {
-                //line.Block.PartID = Document.DEFAULT_ID;
-                //setd(Document.DEFAULT_ID);
-                if (this.partition.Parent != null) {
-                    line.Block.PartID = this.partition.Parent.ID;
-                    SetPartition(this.partition.Parent);
-                }
-            }
-            else {
-                //line.Block.PartID = b.PartID;
-                //setd(b.PartID);
 
-                line.Block.PartID = b.PartID;
-                SetPartition(getPartition(line.Block.PartID));
+                line.Block.isLineHeadPart = _sccmt;
 
-            }
+                //if (line.Block.isLineHeadPart == 0) {
+                //    //line.Block.PartID = Document.DEFAULT_ID;
+                //    //setd(Document.DEFAULT_ID);
+                //    if (this.partition.Parent != null) {
+                //        line.Block.PartID = this.partition.Parent.ID;
+                //        SetPartition(this.partition.Parent);
+                //    }
+                //}
+                //else {
+                //    //line.Block.PartID = b.PartID;
+                //    //setd(b.PartID);
+                //    line.Block.PartID = b.PartID;
+                //    SetPartition(getPartition(line.Block.PartID));
+                //}
 
             lex.Src = line.Text;
 
@@ -212,22 +212,19 @@ namespace YYS.Parser {
                                 int off = tokens[tokens.Count - 1].ad;
                                 int len = tokens[tokens.Count - 1].len;
 
-                                tokens.Add(new Token { ad = off + len, len = lex.Offset - off + len, attr = defaultAttr });
+                                tokens.Add(new Token { type = tokentype, ad = off + len, len = lex.Offset - off + len, attr = defaultAttr });
                             }
                             else {
                                 if (lex.Offset - lex.Value.Length - 1 > 0)
-                                    tokens.Add(new Token { ad = 0, len = lex.Offset - lex.Value.Length - 1, attr = defaultAttr });
+                                    tokens.Add(new Token { type = tokentype, ad = 0, len = lex.Offset - lex.Value.Length - 1, attr = defaultAttr });
                             }
 
-                            tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
+                            tokens.Add(new Token { type = tokentype, ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
                         }
                         break;
 
                     case TokenType.PartitionStart: {
-                            line.Block.setDic(this.partition.ID, line.Block.isLineHeadPart, isscnext);
-                            if (this.partition.ID != Document.DEFAULT_ID) {
-                            //    line.Block.isLineHeadPart = 0;
-                            }
+
                         //int off = lex.Offset;
                             //int len = line.Length - lex.OffsetLenAttr.t1;
                             //lex.isNextLine = true;
@@ -237,30 +234,31 @@ namespace YYS.Parser {
                             if (tokens.Count > 0) {
                                 int off = tokens[tokens.Count - 1].ad;
                                 int len = tokens[tokens.Count - 1].len;
+                                var ttype = tokens[tokens.Count - 1].type;
                                 //tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
                                 //tokens[tokens.Count - 1].len = lex.OffsetLenAttr.t2 - off;
 
-                                tokens.Add(new Token { ad = off + len, len = lex.Offset - off + len, attr = defaultAttr });
+                                tokens.Add(new Token { type = tokentype, ad = off + len, len = lex.Offset - off + len, attr = lex.Attr });
                             }
                             else{
-                                if (lex.Offset - lex.Value.Length - 1 > 0)
-                                tokens.Add(new Token { ad = 0, len = lex.Offset- lex.Value.Length-1, attr = defaultAttr });
+                                //if (lex.Offset - lex.Value.Length - 1 > 0)
+                                tokens.Add(new Token { type = tokentype, ad = 0, len = lex.Offset - lex.Value.Length - 1, attr = lex.Attr });
                             }
                         }
 
                         isscnext = lex.scisNextLine;
+                        //isscnext = true;
                         //if (line.Block.PartID != Document.DEFAULT_ID) {
                         //    setd(line.Block.PartID);
                         //}
 
-                        if (this.partition.Parent==null || (this.partition.Parent!=null && line.Block.PartID != this.partition.Parent.ID)) {
-                            SetPartition(getPartition(line.Block.PartID));
-                        }
+                        //if (this.partition.Parent==null || (this.partition.Parent!=null && line.Block.PartID != this.partition.Parent.ID)) {
+                        //    SetPartition(getPartition(line.Block.PartID));
+                        //}
 
 
                         break;
                     case TokenType.Partition:
-                        line.Block.setDic(this.partition.ID, line.Block.isLineHeadPart, isscnext);
                         isscnext = lex.scisNextLine;
                         //setd(line.Block.PartID);
                         
@@ -269,43 +267,32 @@ namespace YYS.Parser {
                             if (tokens.Count > 0) {
                                 int off = tokens[tokens.Count - 1].ad;
                                 int len = tokens[tokens.Count - 1].len ;
+                                var ttype = tokens[tokens.Count - 1].type;
                                 //tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
                                 //tokens[tokens.Count - 1].len = lex.OffsetLenAttr.t2 - off;
-
-                                tokens.Add(new Token { ad = off + len, len = lex.Offset - (off + len), attr = defaultAttr });
+                                if (ttype == TokenType.PartitionStart) {
+                                    tokens[tokens.Count - 1].len = lex.Offset - (off + len);
+                                    tokens[tokens.Count - 1].type = tokentype;
+                                }
+                                else {
+                                    tokens.Add(new Token { type = tokentype, ad = off + len, len = lex.Offset - (off + len), attr = lex.Attr });
+                                }
                             }
                             else if (line.Block.isLineHeadPart != 0) {
-                                tokens.Add(new Token { ad = 0, len = lex.Offset , attr = defaultAttr });
+                                tokens.Add(new Token { type = tokentype, ad = 0, len = lex.Offset, attr = lex.Attr });
                             }
                             else if (lex.scisNextLine) {
-                                tokens.Add(new Token { ad = 0, len = lex.Offset , attr = defaultAttr });
+                                tokens.Add(new Token { type = tokentype, ad = 0, len = lex.Offset, attr = lex.Attr });
                             }
                             lex.scisNextLine = false;
                         }
 
                         isscnext = lex.scisNextLine; 
                         //setd(Document.DEFAULT_ID);
-                        
-                        SetPartition(partition.Parent);
-                        //if (partition.Parent != null) {
-                           
-                        //}
-                        if (b.getDic(this.partition.ID) != null) {
-                            //line.Block.isLineHeadPart = line.Block.st.Peek();
-                            var tp = b.getDic(this.partition.ID);
-                            line.Block.partTransition = tp.t1;
-                            isscnext = tp.t2;
-                           
-                            //line.Block.isLineHeadPart = tp.t2;
-                            //if (line.Block.partTransition == 3) {
-                            if (line.Block.partTransition != 0) {
-                                //isscnext = true;
-                                //line.Block.isLineHeadPart = 1;
-                                //line.Block.PartID = this.partition.ID;
-                                //_sccmt = 1;
-                            }
-                        }
-                        line.Block.PartID = partition.ID;
+
+                        //SetPartition(partition.Parent);
+                        //line.Block.PartID = partition.ID;
+
                         break;
                     default:
                         break;

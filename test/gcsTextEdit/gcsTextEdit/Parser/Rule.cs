@@ -7,28 +7,29 @@ using System.Drawing;
 namespace YYS.Parser {
 
     public class Token {
+        public TokenType type;
         public int ad;
         public int len;
         public Attribute attr;
     }
 
     public class Block {
-        private Dictionary<string, Tuple<int, bool?>> st = new Dictionary<string, Tuple<int, bool?>>();
-        public void setDic(string id, int isLineHeadPart, bool? isnext) {
-            if (id == Document.DEFAULT_ID) return;
-            if (st.ContainsKey(id)) {
-                st[id] = new Tuple<int, bool?>(isLineHeadPart, isnext);
-            }
-            else {
-                st.Add(id, new Tuple<int, bool?>(isLineHeadPart, isnext));
-            }
-        }
-        public Tuple<int, bool?> getDic(string id) {
-            if(st.ContainsKey(id))
-                return st[id];
+        //private Dictionary<string, Tuple<int, bool?>> st = new Dictionary<string, Tuple<int, bool?>>();
+        //public void setDic(string id, int isLineHeadPart, bool? isnext) {
+        //    //if (id == Document.DEFAULT_ID) return;
+        //    if (st.ContainsKey(id)) {
+        //        st[id] = new Tuple<int, bool?>(isLineHeadPart, isnext);
+        //    }
+        //    else {
+        //        st.Add(id, new Tuple<int, bool?>(isLineHeadPart, isnext));
+        //    }
+        //}
+        //public Tuple<int, bool?> getDic(string id) {
+        //    if(st.ContainsKey(id))
+        //        return st[id];
 
-            return null;
-        }
+        //    return null;
+        //}
         public string PartID;
         public int isLineHeadPart = 0;
         public int partTransition = 0;

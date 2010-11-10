@@ -376,6 +376,11 @@ namespace YYS {
                 //}while (i < tln() && pcmt != cmt);
             } while (i < tln() && scpcmt != sccmt);
 
+
+            int ss = s;
+            int se = i;
+
+
             return true;
         }
 
