@@ -381,7 +381,7 @@ namespace YYS
             //for (int tl = tmpTLMIN; a.top < v.YMAX; ++tl) {
 
                 //TODO test
-                string pa = doc_.line(tl).Block.PartID;
+                //string pa = doc_.line(tl).Block.PartID;
 
                 // 定数２
                 //string str = doc_.tl(tl).ToString();

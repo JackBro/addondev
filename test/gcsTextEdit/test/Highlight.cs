@@ -23,7 +23,7 @@ namespace test {
             //rules.Add(new EncloseRule("\"", "\"", new AsControls.Parser.Attribute(Color.Brown), '\\'));
             //rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
             rules.Add(new KeywordRule(new string[] { "if" }, new YYS.Parser.Attribute(Color.Blue, AttrType.Bold | AttrType.UnderLine)));
-            rules.Add(new PartRule("default.comment2", "/=", "=/", new YYS.Parser.Attribute(Color.DarkGreen)));
+            rules.Add(new MultiLineRule("default.comment2", "/=", "=/", new YYS.Parser.Attribute(Color.DarkGreen)));
             return rules;
         }
 
@@ -46,7 +46,7 @@ namespace test {
             //rules.Add(new MultiLineRule("/*", "*/", new YYS.Parser.Attribute(Color.Green)));
             //rules.Add(new EncloseRule("\"", "\"", new AsControls.Parser.Attribute(Color.Brown), '\\'));
             //rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
-            rules.Add(new PartRule("default.comment", "/*", "*/", new YYS.Parser.Attribute(Color.Red)));
+            rules.Add(new MultiLineRule("default.comment", "/*", "*/", new YYS.Parser.Attribute(Color.Red)));
 
 
             return rules;

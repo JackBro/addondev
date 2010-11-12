@@ -77,11 +77,9 @@
     <Compile Include="Painter.cs" />
     <Compile Include="Parser\DefaultHighlight.cs" />
     <Compile Include="Parser\IHighlight.cs" />
-    <Compile Include="Parser\DefaultPartition.cs" />
     <Compile Include="Parser\Lexer.cs" />
     <Compile Include="Parser\LexerReader.cs" />
     <Compile Include="Parser\Parser.cs" />
-    <Compile Include="Parser\AbstractPartition.cs" />
     <Compile Include="Parser\Partition.cs" />
     <Compile Include="Parser\Rule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

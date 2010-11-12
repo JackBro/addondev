@@ -7,35 +7,38 @@ using System.Drawing;
 namespace YYS.Parser {
 
     public class Token {
+        public string id;
+        public TokenType type;
+        public MultiLineType mtype;
         public int ad;
         public int len;
         public Attribute attr;
     }
 
     public class Block {
-        private Dictionary<string, Tuple<int, int>> st = new Dictionary<string, Tuple<int, int>>();
-        public void setDic(string id, int partTransition, int isLineHeadPart) {
-            if (id == Document.DEFAULT_ID) return;
-            if (st.ContainsKey(id)) {
-                st[id] = new Tuple<int, int>(partTransition, isLineHeadPart);
-            }
-            else {
-                st.Add(id, new Tuple<int, int>(partTransition, isLineHeadPart));
-            }
-        }
-        public Tuple<int, int> getDic(string id) {
-            if(st.ContainsKey(id))
-                return st[id];
+        //private Dictionary<string, Tuple<int, int>> st = new Dictionary<string, Tuple<int, int>>();
+        //public void setDic(string id, int partTransition, int isLineHeadPart) {
+        //    if (id == Document.DEFAULT_ID) return;
+        //    if (st.ContainsKey(id)) {
+        //        st[id] = new Tuple<int, int>(partTransition, isLineHeadPart);
+        //    }
+        //    else {
+        //        st.Add(id, new Tuple<int, int>(partTransition, isLineHeadPart));
+        //    }
+        //}
+        //public Tuple<int, int> getDic(string id) {
+        //    if(st.ContainsKey(id))
+        //        return st[id];
 
-            return null;
-        }
-        public string PartID;
-        public int isLineHeadPart = 0;
-        public int partTransition = 0;
+        //    return null;
+        //}
+        //public string PartID;
+        //public int isLineHeadPart = 0;
+        //public int partTransition = 0;
 
-        //public MultiLineRule mRule;
-        //public int isLineHeadCmt = 0;
-        //public int commentTransition = 0;
+        public MultiLineRule mRule;
+        public int isLineHeadCmt = 0;
+        public int commentTransition = 0;
 
         public Block() {
             //PartID = Document.DEFAULT_ID;
@@ -70,6 +73,8 @@ namespace YYS.Parser {
         EOS,
         TXT, // 普通の字
         MultiLine,
+        MultiLineOneLine,
+        MultiLineAllLine,
         MultiLineStart,
         MultiLineEnd,
         Enclose,
@@ -80,6 +85,13 @@ namespace YYS.Parser {
         PartitionStart,
         Partition,
         PartitionEnd
+    }
+
+    public enum MultiLineType {
+        Line,
+        Start,
+        All,
+        End
     }
 
     public abstract class Rule {
@@ -109,54 +121,56 @@ namespace YYS.Parser {
     }
 
     // /*..*/end
-    //public class MultiLineRule : Rule {
-    //    public string end;
-    //    public MultiLineRule() {
-    //        token = TokenType.MultiLine;
-    //    }
-    //    public MultiLineRule(string start, string end, Attribute attr) {
-    //        this.start = start;
-    //        this.end = end;
-    //        this.attr = attr;
-    //        token = TokenType.MultiLine;
-    //    }
-
-    //    public override bool Detected(string sequence, LexerReader reader) {
-    //        if (sequence == start) {
-    //            token = TokenType.MultiLineStart;
-    //            return true;
-    //        }
-    //        if (sequence == end) {
-    //            token = TokenType.MultiLineEnd;
-    //            return true;
-    //        }
-
-    //        return false;
-    //    }
-
-    //    public override int getLen(string sequence, LexerReader reader) {
-    //        if (sequence == this.start) {
-    //            return base.getLen(sequence, reader);
-    //        } else {
-    //            return reader.offset();
-    //        }
-    //    }
-    //}
-
-    public class PartRule : Rule {
+    public class MultiLineRule : Rule {
         public string id;
         public string end;
-        public PartRule() {
-            token = TokenType.TXT;
+        public MultiLineRule() {
+            token = TokenType.MultiLine;
         }
-        public PartRule(string id, string start, string end, Attribute attr) {
+        public MultiLineRule(string id, string start, string end, Attribute attr) {
             this.id = id;
             this.start = start;
             this.end = end;
             this.attr = attr;
-            token = TokenType.TXT;
+            token = TokenType.MultiLine;
+        }
+
+        public override bool Detected(string sequence, LexerReader reader) {
+            if (sequence == start) {
+                token = TokenType.MultiLineStart;
+                return true;
+            }
+            if (sequence == end) {
+                token = TokenType.MultiLineEnd;
+                return true;
+            }
+
+            return false;
+        }
+
+        public override int getLen(string sequence, LexerReader reader) {
+            if (sequence == this.start) {
+                return base.getLen(sequence, reader);
+            } else {
+                return reader.offset();
+            }
         }
     }
+
+    //public class PartRule : Rule {
+    //    public string id;
+    //    public string end;
+    //    public PartRule() {
+    //        token = TokenType.TXT;
+    //    }
+    //    public PartRule(string id, string start, string end, Attribute attr) {
+    //        this.id = id;
+    //        this.start = start;
+    //        this.end = end;
+    //        this.attr = attr;
+    //        token = TokenType.TXT;
+    //    }
+    //}
 
     //[[..]]end
     public class EncloseRule : Rule {

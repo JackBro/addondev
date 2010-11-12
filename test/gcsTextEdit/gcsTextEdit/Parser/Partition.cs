@@ -9,7 +9,7 @@ namespace YYS.Parser {
         public IHighlight Highlight;
 
         public Partition Parent;
-        public PartRule rule;
+        public MultiLineRule rule;
 
         public List<Partition> Children = new List<Partition>();
         public Partition GetChild(String ID) {
@@ -21,7 +21,7 @@ namespace YYS.Parser {
             return null;
         }
 
-        public Partition(PartRule rule, IHighlight Highlight) {
+        public Partition(MultiLineRule rule, IHighlight Highlight) {
             this.rule = rule;
             this.ID = this.rule.id;
             this.Highlight = Highlight;

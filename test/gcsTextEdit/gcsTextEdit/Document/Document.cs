@@ -320,8 +320,8 @@ namespace YYS {
         private bool ReParse(int s, int e) {
 
             int i;
-            //int cmt = text_[s].Block.isLineHeadCmt;
-            int sccmt = text_[s].Block.isLineHeadPart;
+            int cmt = text_[s].Block.isLineHeadCmt;
+            //int sccmt = text_[s].Block.isLineHeadPart;
             Block block = text_[s].Block;
             if (s > 0) {
                 block = text_[s - 1].Block;
@@ -329,57 +329,230 @@ namespace YYS {
 
             // まずは変更範囲を再解析
             for (i = s; i <= e; ++i) {
-
-                block = parser.Parse(text_[i], block, sccmt);
-                //cmt = parser.cmt;
-                sccmt = parser.sccmt;
+                block = parser.Parse(text_[i], block, cmt);
+                //block = parser.Parse(text_[i], block, sccmt);
+                cmt = parser.cmt;
+                //sccmt = parser.sccmt;
             }
 
             // コメントアウト状態に変化がなかったらここでお終い。
             //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
-            //if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.elem == block.elem))
-            if (i == tln() || (text_[i].Block.isLineHeadPart == sccmt && text_[i].Block.PartID == block.PartID))
+            if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
+                var ts = text_[i-1].Tokens;
+                foreach (var item in ts){
+                    if (item.type == TokenType.MultiLine) {
+                        ParsePart(item.id, i, i);
+                        break;
+                    }
+                }
+                //if (i == tln() || (text_[i].Block.isLineHeadPart == sccmt && text_[i].Block.PartID == block.PartID))
                 return false;
+            }
 
-            //int pcmt = 0;
-            //Rule prule = null;
+            int pcmt = 0;
+            Rule prule = null;
 
-            int scpcmt = 0;
-            string pID = string.Empty;
+            //int scpcmt = 0;
+            //string pID = string.Empty;
 
             // 例えば、/* が入力された場合などは、下の方の行まで
             // コメントアウト状態の変化を伝達する必要がある。
             do {
                 Line line = text_[i++];
-                //pcmt = line.Block.isLineHeadCmt;
-                //prule = line.Block.mRule;
+                pcmt = line.Block.isLineHeadCmt;
+                prule = line.Block.mRule;
 
-                scpcmt = line.Block.isLineHeadPart;
+                //scpcmt = line.Block.isLineHeadPart;
 
-                //block = parser.Parse(line, block, cmt);
-                block = parser.Parse(line, block, sccmt);
-                //cmt = parser.cmt;
-                sccmt = parser.sccmt;
+                block = parser.Parse(line, block, cmt);
+                //block = parser.Parse(line, block, sccmt);
+                cmt = parser.cmt;
+                //sccmt = parser.sccmt;
 
-                //if (pcmt == cmt) {
-                //    if (prule != block.mRule) {
-                //        pcmt--;
-                //    }
-                //}
-
-                if (scpcmt == sccmt) {
-                    if (pID != block.PartID) {
-                        scpcmt--;
+                if (pcmt == cmt) {
+                    if (prule != block.mRule) {
+                        pcmt--;
                     }
                 }
 
-                //}while (i < tln() && pcmt != cmt);
-            } while (i < tln() && scpcmt != sccmt);
+                //if (scpcmt == sccmt) {
+                //    if (pID != block.PartID) {
+                //        scpcmt--;
+                //    }
+                //}
+
+            }while (i < tln() && pcmt != cmt);
+            //} while (i < tln() && scpcmt != sccmt);
 
 
             int ss = s;
             int se = i;
 
+
+            return true;
+        }
+
+        private bool ReParse(int index, int s, int e) {
+            string id=null;
+            var h = getToken(text_[s], index);
+            if (h != null) {
+                if (h.type == TokenType.MultiLine) {
+                    var parent = parser.getPartition(h.id).Parent;
+                    if (parent == null) {
+                        id = Document.DEFAULT_ID;
+                    }
+                    else {
+                        id = parent.ID;
+                    }
+                }
+                else {
+                    id = h.id;
+                }
+            }
+            else {
+                id = Document.DEFAULT_ID;
+            }
+
+            if (id == null) {
+                id = Document.DEFAULT_ID;
+            }
+
+            Line.ID = id;
+            parser.SetPartition(id, false);
+
+            int i;
+            int cmt = text_[s].Block.isLineHeadCmt;
+            Block block = text_[s].Block;
+            if (s > 0) {
+                block = text_[s - 1].Block; //TODO
+            }
+
+            // まずは変更範囲を再解析
+            for (i = s; i <= e; ++i) {
+                block = parser.Parse(text_[i], block, cmt);
+                //block = parser.Parse(text_[i], block, sccmt);
+                cmt = parser.cmt;
+                //sccmt = parser.sccmt;
+            }
+
+            // コメントアウト状態に変化がなかったらここでお終い。
+            //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
+            if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
+                //var ts = text_[i].Tokens;
+                //foreach (var item in ts) {
+                //    if (item.type == TokenType.MultiLine) {
+                //        ParsePart(item.id, i, i);
+                //        break;
+                //    }
+                //}
+                for (int j = s; j <= e; ++j) {
+                    var ts = text_[j].Tokens;
+                    foreach (var item in ts) {
+                        if (item.type == TokenType.MultiLine) {
+                            ParsePart(item.id, j, j);
+                        }
+                    }
+                }
+                return false;
+            }
+
+            int pcmt = 0;
+            Rule prule = null;
+
+            //int scpcmt = 0;
+            //string pID = string.Empty;
+
+            // 例えば、/* が入力された場合などは、下の方の行まで
+            // コメントアウト状態の変化を伝達する必要がある。
+            do {
+                Line line = text_[i++];
+                pcmt = line.Block.isLineHeadCmt;
+                prule = line.Block.mRule;
+
+                //scpcmt = line.Block.isLineHeadPart;
+
+                block = parser.Parse(line, block, cmt);
+                //block = parser.Parse(line, block, sccmt);
+                cmt = parser.cmt;
+                //sccmt = parser.sccmt;
+
+                if (pcmt == cmt) {
+                    if (prule != block.mRule) {
+                        pcmt--;
+                    }
+                }
+
+                //if (scpcmt == sccmt) {
+                //    if (pID != block.PartID) {
+                //        scpcmt--;
+                //    }
+                //}
+
+            } while (i < tln() && pcmt != cmt);
+            //} while (i < tln() && scpcmt != sccmt);
+
+
+            int ss = s;
+            int se = i;
+
+
+            return true;
+        }
+
+        private Token getToken(Line line, int ad) {
+            var tokens = line.Tokens;
+            foreach (var token in tokens) {
+                if (token.ad<=ad) {
+
+                    return token;
+                }
+            }
+            return null;
+        }
+
+        private bool ParsePart(string id, int s, int e) {
+
+            Line.ID = id;
+            parser.SetPartition(id, false);
+
+            int i;
+            int cmt = text_[s].Block.isLineHeadCmt;
+            Block block = text_[s].Block;
+            if (s > 0) {
+                block = text_[s - 1].Block;
+            }
+
+            // まずは変更範囲を再解析
+            for (i = s; i <= e; ++i) {
+                block = parser.Parse(text_[i], block, cmt);
+                cmt = parser.cmt;
+            }
+
+            // コメントアウト状態に変化がなかったらここでお終い。
+            if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
+                return false;
+            }
+
+            int pcmt = 0;
+            Rule prule = null;
+
+            // 例えば、/* が入力された場合などは、下の方の行まで
+            // コメントアウト状態の変化を伝達する必要がある。
+            do {
+                Line line = text_[i++];
+                pcmt = line.Block.isLineHeadCmt;
+                prule = line.Block.mRule;
+
+                block = parser.Parse(line, block, cmt);
+                cmt = parser.cmt;
+
+                if (pcmt == cmt) {
+                    if (prule != block.mRule) {
+                        pcmt--;
+                    }
+                }
+
+            } while (i < tln() && pcmt != cmt);
 
             return true;
         }
@@ -430,7 +603,8 @@ namespace YYS {
                 e.ad = lineLen;
             }
 
-            return ReParse(s.tl, e.tl);
+            //return ReParse(s.tl, e.tl);
+            return ReParse(0, s.tl, e.tl);
         }
 
         internal bool DeletingOperation(ref DPos s, ref DPos e, out string undobuf) {

@@ -3,38 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using YYS;
+using YYS.Parser;
 
-namespace YYS.Parser {
+namespace AsControls.Parser {
 
     public class Lexer {
 
-        public Tuple<int, int, YYS.Parser.Attribute> OffsetLenAttr;
+        //public string Value { get; set; }
+        //public AsControls.Parser.Attribute Attr { get; set; }
+        //public Tuple<int, int> OffsetLen;
 
+        //public Tuple<int, int, YYS.Parser.Attribute> OffsetLenAttr;
+        public Tuple<int, int, Rule> OffsetLenAttr;
+
+        private TokenType tok;
         public LexerReader reader;
 
-        //public bool isNextLine = false;
+        //private Rule resultRule;
+
+        public bool isNextLine = false;
         public bool scisNextLine = false;
 
         private Dictionary<String, Rule> ruleDic = new Dictionary<String, Rule>();
 
-        //private Dictionary<String, MultiLineRule> multiRuleDic = new Dictionary<String, MultiLineRule>();
-        //private Dictionary<String, MultiLineRule> multiRuleEndDic = new Dictionary<String, MultiLineRule>();
+        private Dictionary<String, MultiLineRule> multiRuleDic = new Dictionary<String, MultiLineRule>();
+        private Dictionary<String, MultiLineRule> multiRuleEndDic = new Dictionary<String, MultiLineRule>();
 
         private List<KeywordRule> keyWordRules = new List<KeywordRule>();
 
-        private Dictionary<String, PartRule> partRuleDic = new Dictionary<String, PartRule>();
-        private Dictionary<String, PartRule> partRuleEndDic = new Dictionary<String, PartRule>();
+        //private Dictionary<String, ScanRule> scanRuleDic = new Dictionary<String, ScanRule>();
+        //private Dictionary<String, ScanRule> scanEndRuleDic = new Dictionary<String, ScanRule>();
         private string paruleStartKeys = string.Empty;
         private string paruleEndKeys = string.Empty;
 
         public void ClearRule() {
             ruleDic.Clear();
-            //partRuleDic.Clear();
-            //partRuleEndDic.Clear();
+            multiRuleDic.Clear();
+            multiRuleEndDic.Clear();
             keyWordRules.Clear();
-            
-            Value = string.Empty;
-
         }
 
         public void AddRule(List<Rule> rules) {
@@ -45,34 +52,41 @@ namespace YYS.Parser {
         public void AddRule(Rule rule) {
             if (rule is KeywordRule) {
                 keyWordRules.Add(rule as KeywordRule);
-            }else if(rule is PartRule){
-                AddPartRule(rule as PartRule);
-            }else {
-                //if (rule is MultiLineRule) {
-                //    multiRuleDic.Add(((MultiLineRule)rule).start, (MultiLineRule)rule);
-                //    multiRuleEndDic.Add(((MultiLineRule)rule).end, (MultiLineRule)rule);
+            }
+            else {
+                //if((rule as MultiLineRule)!=null){
+                if (rule is MultiLineRule) {
+                    multiRuleDic.Add(((MultiLineRule)rule).start, (MultiLineRule)rule);
+                    multiRuleEndDic.Add(((MultiLineRule)rule).end, (MultiLineRule)rule);
+                }
+
+                //if ((rule as KeywordRules) != null) {
+                //    KeywordRules ks = rule as KeywordRules;
+                //    var rules = ks.Rules();
+                //    foreach (var item in rules) {
+                //        ruleDic.Add(item.start, item);
+                //    }
                 //}
-
-                ruleDic.Add(rule.start, rule);
-            }
-        }
-
-        public void AddPartRule(PartRule rule) {
-            if (rule == null) return;
-            if (partRuleDic.ContainsKey(rule.start)) return;
-
-            partRuleDic.Add(rule.start, rule);
-            partRuleEndDic.Add(rule.end, rule);
-
-            foreach (var item in partRuleDic.Values) {
-                if (!paruleStartKeys.Contains(item.start[0])) {
-                    paruleStartKeys += item.start[0];
-                }
-                if (!paruleEndKeys.Contains(item.end[0])) {
-                    paruleEndKeys += item.end[0];
+                //else 
+                {
+                    ruleDic.Add(rule.start, rule);
                 }
             }
         }
+
+        //public void AddScanRule(ScanRule rule) {
+        //    scanRuleDic.Add(rule.start, rule);
+        //    scanEndRuleDic.Add(rule.end, rule);
+
+        //    foreach (var item in scanRuleDic.Values) {
+        //        if (!paruleStartKeys.Contains(item.start[0])) {
+        //            paruleStartKeys += item.start[0];
+        //        }
+        //        if (!paruleEndKeys.Contains(item.end[0])) {
+        //            paruleEndKeys += item.end[0];
+        //        }
+        //    }
+        //}
 
         public IText Src {
             get { return reader.Src; }
@@ -83,21 +97,28 @@ namespace YYS.Parser {
                 else {
                     reader.Src = value;
                     tok = TokenType.TXT;
-                    Value = string.Empty;
                     value = null;
-                    //isNextLine = false;
+                    isNextLine = false;
                 }
             }
         }
 
-        private TokenType tok;
         public TokenType token {
             get { return tok; }
         }
 
+        public Lexer(IText src) {
+            reader = new LexerReader(src);
+        }
+
+        public Lexer(LexerReader reader) {
+            this.reader = reader;
+        }
+
         public Lexer() {
             reader = new LexerReader();
-            Value = string.Empty;
+            //ruleFirstKeys = string.Empty;
+            //ruleEndKeys = string.Empty;
         }
 
         public int Offset {
@@ -106,23 +127,19 @@ namespace YYS.Parser {
             }
         }
 
-        public string Value {
-            get;
-            set;
-        }
-
         public bool advance(Block preblock, Block curblock) {
             tok = TokenType.TXT;
 
-            //if (Src.Length == 0 && curblock.isLineHeadCmt == 1) {
-            //    curblock.mRule = preblock.mRule;
-            //    isNextLine = true;
-            //}
-
-            if (Src.Length == 0 && curblock.isLineHeadPart == 1) {
-                curblock.PartID = preblock.PartID;
-                scisNextLine = true;
+            if (Src.Length == 0 && curblock.isLineHeadCmt == 1) {
+                curblock.mRule = preblock.mRule;
+                tok = TokenType.MultiLineAllLine;
+                isNextLine = true;
             }
+
+            //if (Src.Length == 0 && curblock.scisLineHeadCmt == 1) {
+            //    curblock.id = preblock.id;
+            //    scisNextLine = true;
+            //}
 
             int c = reader.read();
             if (c == -1) {
@@ -138,143 +155,9 @@ namespace YYS.Parser {
                     break;
 
                 default:
-                    //TODO test
-                    //if (curblock.isLineHeadCmt == 0) {
-                        if (curblock.isLineHeadPart == 0) {
-                            if (paruleStartKeys.Contains((char)c)) {
-                                char fc = (char)c;
-                                foreach (var item in partRuleDic) {
-                                    if (item.Key[0] == fc) {
-                                        var len = item.Value.start.Length;
-                                        if (Offset - 1 + len <= Src.Length) {
-                                            var text = Src.Substring(Offset - 1, len);
-                                            if (text.ToString() == item.Key) {
-                                                tok = TokenType.PartitionStart;
-                                                if (curblock != null) {
-                                                    curblock.PartID = item.Value.id;
-                                                    scisNextLine = true;
-                                                }
-                                                //OffsetLenAttr = new Tuple<int, int, Attribute>(Offset, len, rule.attr);
-                                                reader.setoffset(Offset + text.Length);
-                                                Value = item.Value.start;
-                                                //reader.setoffset(Offset);
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            //else if (scisNextLine) {
-                            //    int off = Offset;
-                            //    //while (c != -1) {
-                            //        if (paruleEndKeys.Contains((char)c)) {
-                            //            StringBuilder buf = new StringBuilder();
-                            //            while (c != -1) {
-                            //                buf.Append((char)c);
+                    
 
-                            //                if (partRuleEndDic.ContainsKey(buf.ToString())) {
-                            //                    if (preblock.PartID == partRuleEndDic[buf.ToString()].id) {
-                            //                        var Eenelem = partRuleEndDic[buf.ToString()];
-                            //                        tok = TokenType.PartitionEnd;
-
-                            //                        //curblock.PartID = Eenelem.id;
-                            //                        //scisNextLine = false;
-
-                                                   
-                            //                        //reader.setoffset(Offset + buf.ToString().Length);
-                            //                        //reader.setoffset(off);
-                            //                        //reader.setoffset(Offset);
-
-                            //                        Value = buf.ToString();
-
-                            //                        return true;
-                            //                    }
-                            //                }
-                            //                c = reader.read();
-                            //            }
-                            //        }
-                            //    //    c = reader.read();
-                            //    //}
-
-                            //    //Finish:
-
-                            //    //if (c == -1) {
-                            //    //    tok = TokenType.Partition;
-                            //        //reader.setoffset(off);
-                            //        //curblock.PartID = preblock.PartID;
-                            //    //    scisNextLine = true;
-                            //    //}
-                            //    //reader.setoffset(0);
-                            //    //c = reader.read();
-                            //}
-                        }
-                        else {
-                            if (Offset - 1 == 0) {
-                                while (c != -1) {
-                                    if (paruleEndKeys.Contains((char)c)) {
-                                        StringBuilder buf = new StringBuilder();
-                                        while (c != -1) {
-                                            buf.Append((char)c);
-
-                                            if (partRuleEndDic.ContainsKey(buf.ToString())) {
-                                                if (preblock.PartID == partRuleEndDic[buf.ToString()].id) {
-                                                    var Eenelem = partRuleEndDic[buf.ToString()];
-                                                    tok = TokenType.PartitionEnd;
-
-                                                    curblock.PartID = Eenelem.id;
-                                                    //scisNextLine = false;
-
-                                                    //reader.setoffset(Offset + buf.ToString().Length);
-                                                    //reader.setoffset(Offset);
-
-                                                    Value = buf.ToString();
-
-                                                    return true;
-                                                }
-                                            }
-                                            c = reader.read();
-                                        }
-                                    }
-                                    c = reader.read();
-                                }
-
-                                //Finish:
-
-                                if (c == -1) {
-                                    tok = TokenType.Partition;
-                                    curblock.PartID = preblock.PartID;
-                                    scisNextLine = true;
-                                }
-                                reader.setoffset(0);
-                                c = reader.read();
-                            }
-                            else if (paruleStartKeys.Contains((char)c)) {
-                                char fc = (char)c;
-                                foreach (var item in partRuleDic) {
-                                    if (item.Key[0] == fc) {
-                                        var len = item.Value.start.Length;
-                                        if (Offset - 1 + len <= Src.Length) {
-                                            var text = Src.Substring(Offset - 1, len);
-                                            if (text.ToString() == item.Key) {
-                                                tok = TokenType.PartitionStart;
-                                                if (curblock != null) {
-                                                    curblock.PartID = item.Key;
-                                                    scisNextLine = true;
-                                                }
-                                                reader.setoffset(Offset + text.Length);
-                                                Value = item.Value.start;
-                                                //reader.setoffset(Offset);
-                                                //break;
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    //}
-
-                    //if (curblock.isLineHeadCmt == 0) { //0: 行頭がブロックコメントの内部ではない
+                    if (curblock.isLineHeadCmt == 0) { //0: 行頭がブロックコメントの内部ではない
                         if (Char.IsDigit((char)c)) {
                             reader.unread();
                             lexDigit();
@@ -290,67 +173,71 @@ namespace YYS.Parser {
                             lexSymbol(curblock);
                             break;
                         }
-                    //}
-                    //else { //1: 行頭がブロックコメントの内部
+                    }
+                    else { //1: 行頭がブロックコメントの内部
 
-                    //    if (Offset - 1 == 0) {
-                    //        reader.unread();
-                    //        StringBuilder buf = new StringBuilder();
-                    //        while (true) {
-                    //            c = reader.read();
-                    //            if (c == -1) {
-                    //                break;
-                    //            }
-                    //            buf.Append((char)c);
+                        if (Offset - 1 == 0) {
+                            {
+                                reader.unread();
+                                StringBuilder buf = new StringBuilder();
+                                while (true) {
+                                    c = reader.read();
+                                    if (c == -1) {
+                                        break;
+                                    }
+                                    buf.Append((char)c);
 
-                    //            string s = buf.ToString();
-                    //            string end = preblock.mRule.end;
+                                    string s = buf.ToString();
+                                    string end = preblock.mRule.end;
 
-                    //            if (s.EndsWith(end)) {
-                    //                if (multiRuleEndDic.ContainsKey(end)) {
-                    //                    var rule = multiRuleEndDic[end];
-                    //                    if (rule.Detected(end, reader)) {
-                    //                        curblock.mRule = rule;
-                    //                        //isNextLine = false;
+                                    if (s.EndsWith(end)) {
+                                        if (multiRuleEndDic.ContainsKey(end)) {
+                                            var rule = multiRuleEndDic[end];
+                                            if (rule.Detected(end, reader)) {
+                                                curblock.mRule = rule;
+                                                //isNextLine = false;
 
-                    //                        tok = rule.token;
-                    //                        int len = rule.getLen(end, reader);
-                    //                        reader.setoffset(len);
-                    //                        OffsetLenAttr = new Tuple<int, int, Attribute>(0, len, rule.attr);
-                    //                        //break;
-                    //                        return true;
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
+                                                //tok = rule.token;
+                                                tok = TokenType.MultiLineEnd;
+                                                int len = rule.getLen(end, reader);
+                                                reader.setoffset(len);
+                                                OffsetLenAttr = new Tuple<int, int, Rule>(0, len, rule);
+                                                //break;
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
 
-                    //        if (c == -1 && preblock.mRule != null && multiRuleDic.ContainsKey(preblock.mRule.start)) {
-                    //            var enelem = multiRuleDic[preblock.mRule.start];
-                    //            curblock.mRule = preblock.mRule;
+                                if (c == -1 && preblock.mRule != null && multiRuleDic.ContainsKey(preblock.mRule.start)) {
+                                    var enelem = multiRuleDic[preblock.mRule.start];
+                                    curblock.mRule = preblock.mRule;
+                                    //isNextLine = true;
+                                    //tok = TokenType.MultiLineStart;
+                                    tok = TokenType.MultiLineAllLine;
+                                    OffsetLenAttr = new Tuple<int, int, Rule>(0, Src.Length, enelem);
 
-                    //            tok = TokenType.MultiLineStart;
-                    //            OffsetLenAttr = new Tuple<int, int, Attribute>(0, Src.Length, enelem.attr);
-
-                    //            reader.setoffset(Src.Length);
-                    //        }
-                    //        break;
-                    //    }
-                    //    else {
-                    //        if (Char.IsDigit((char)c)) {
-                    //            reader.unread();
-                    //            lexDigit();
-                    //        }
-                    //        else if (Util.isIdentifierPart((char)c)) {
-                    //            reader.unread();
-                    //            lexKeyWord();
-                    //        }
-                    //        else {
-                    //            reader.unread();
-                    //            lexSymbol(curblock);
-                    //        }
-                    //    }
-                    //}
-                    //break;
+                                    reader.setoffset(Src.Length);
+                                }
+                                break;
+                            }
+                        }
+                        else {
+                            if (Char.IsDigit((char)c)) {
+                                reader.unread();
+                                lexDigit();
+                            }
+                            else if (Util.isIdentifierPart((char)c)) {
+                                reader.unread();
+                                lexKeyWord();
+                            }
+                            else {
+                                reader.unread();
+                                lexSymbol(curblock);
+                            }
+                        }
+                    }
+                    break;
             }
             return true;
         }
@@ -405,8 +292,7 @@ namespace YYS.Parser {
                     tok = rule.token;
                     int len = rule.getLen(s, reader);
                     reader.setoffset(offset + len);
-                    OffsetLenAttr = new Tuple<int, int, Attribute>(offset, len, rule.attr);
-                    Value = s;
+                    OffsetLenAttr = new Tuple<int, int, Rule>(offset, len, rule);
                     break;
                 }
             }
@@ -429,32 +315,35 @@ namespace YYS.Parser {
                     if (rule.Detected(s, reader)) {
                         tok = rule.token;
                         int len = rule.getLen(s, reader);
-                        OffsetLenAttr = new Tuple<int, int, Attribute>(offset, len, rule.attr);
+                        OffsetLenAttr = new Tuple<int, int, Rule>(offset, len, rule);
                         reader.setoffset(offset + len);
-                        Value = rule.start;
 
-                        //if (rule is MultiLineRule) {
-                        //    if (curblock != null) {
-                        //        curblock.mRule = rule as MultiLineRule;
-                        //        //isNextLine = true;
-                        //    }
-                        //}
+                        if (rule is MultiLineRule) {
+                            if (curblock != null) {
+                                curblock.mRule = rule as MultiLineRule;
+                                tok = TokenType.MultiLineStart;
+                                //isNextLine = true;
+                            }
+                        }
                         break;
                     }
                 }
-                //else if (multiRuleEndDic.ContainsKey(s)) {
-                //    var rule = multiRuleEndDic[s];
-                //    if (rule.Detected(s, reader)) {
-                //        tok = rule.token;
-                //        int len = rule.getLen(s, reader);
-                //        OffsetLenAttr = new Tuple<int, int, Attribute>(offset, len, rule.attr);
-                //        reader.setoffset(offset + len);
-                //        if (curblock != null) {
-                //            curblock.mRule = rule as MultiLineRule;
-                //        }
-                //        break;
-                //    }
-                //}
+                else if (multiRuleEndDic.ContainsKey(s)) {
+                    var rule = multiRuleEndDic[s];
+                    if (rule.Detected(s, reader)) {
+                        //tok = rule.token;
+                        tok = TokenType.MultiLineEnd;
+                        int len = rule.getLen(s, reader);
+                        OffsetLenAttr = new Tuple<int, int, Rule>(offset, len, rule);
+                        reader.setoffset(offset + len);
+
+                        if (curblock != null) {
+                            curblock.mRule = rule as MultiLineRule;
+                        }
+
+                        break;
+                    }
+                }
             }
         }
     }

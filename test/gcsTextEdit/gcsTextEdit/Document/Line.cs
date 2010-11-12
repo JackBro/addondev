@@ -6,11 +6,36 @@ using YYS.Parser;
 
 namespace YYS
 {
+
     public class Line
     {
+        private static string id = Document.DEFAULT_ID;
+        public static string ID {
+            get { return Line.id; }
+            set { 
+                Line.id = value; 
+            }
+        }
         private IText text;
         private List<Token> tokens;
-        public Block Block { get; set; }
+
+        private Dictionary<string, Block> blockmap = new Dictionary<string, Block>();
+        public Block Block {
+            get {
+                if (!blockmap.ContainsKey(Line.id)) {
+                    blockmap.Add(Line.id, new Block());
+                }
+                return blockmap[Line.id]; 
+            }
+            set {
+                if (blockmap.ContainsKey(Line.id)) {
+                    blockmap[Line.id] = value;
+                }
+                else {
+                    blockmap.Add(Line.id, value);
+                }
+            }
+        }
 
         public List<Token> Tokens {
             get { return tokens; }
@@ -29,9 +54,10 @@ namespace YYS
 
         public Line(string text)
         {
-            Block = new Block();
+            //Block = new Block();
             this.text = new TextBuffer(text);
             tokens = new List<Token>();
+
         }
 
         public void SetText(string text)
