@@ -17,6 +17,8 @@ namespace YYS.Parser {
                 ch = 0;
                 cnt = 0;
                 unget_p = false;
+
+                ispart = false;
             }
         }
 
@@ -34,7 +36,10 @@ namespace YYS.Parser {
                 unget_p = false;
             }
             else {
-                if (cnt > src.Length - 1) {
+                if (ispart && cnt > end) {
+                    ch = -1;
+                }
+                else if (cnt > src.Length - 1) {
                     ch = -1;
                 }
                 else {
@@ -55,6 +60,18 @@ namespace YYS.Parser {
 
         public void setoffset(int offset) {
             cnt = offset;
+        }
+
+        private int start;
+        private int end;
+        private bool ispart;
+        public void SetRange(int start, int end) {
+            this.start = start;
+            this.end = end;
+
+            this.setoffset(start);
+            ispart = true;
+
         }
     }
 }

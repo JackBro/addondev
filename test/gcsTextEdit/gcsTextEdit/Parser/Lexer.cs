@@ -127,6 +127,16 @@ namespace AsControls.Parser {
             }
         }
 
+        private int start;
+        private int end;
+        public void SetRange(int start, int end) {
+            this.start = start;
+            this.end = end;
+
+            reader.setoffset(start);
+
+        }
+
         public bool advance(Block preblock, Block curblock) {
             tok = TokenType.TXT;
 
@@ -135,11 +145,6 @@ namespace AsControls.Parser {
                 tok = TokenType.MultiLineAllLine;
                 isNextLine = true;
             }
-
-            //if (Src.Length == 0 && curblock.scisLineHeadCmt == 1) {
-            //    curblock.id = preblock.id;
-            //    scisNextLine = true;
-            //}
 
             int c = reader.read();
             if (c == -1) {

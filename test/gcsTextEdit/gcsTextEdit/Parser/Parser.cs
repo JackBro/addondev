@@ -38,14 +38,7 @@ namespace YYS.Parser {
         private List<Token> tokens;
         private Attribute defaultAttr;
 
-        //private Dictionary<string, PartRule> scruledic = new Dictionary<string, PartRule>();
-        //private Dictionary<string, IHighlight> highlightDic = new Dictionary<string, IHighlight>();
         private Dictionary<string, Partition> partitionDic = new Dictionary<string, Partition>();
-
-        //public void AddPartition(PartRule rule) {
-        //    scruledic.Add(rule.id, rule);
-        //    lex.AddPartRule(rule);
-        //}
 
         public void AddHighlight(string id, IHighlight highlight) {
             if (partitionDic.ContainsKey(id)) {
@@ -82,20 +75,6 @@ namespace YYS.Parser {
                 }
             }
         }
-
-        //public void AddHighlight(IHighlight highlight) {
-        //}
-
-        //private string curID = string.Empty;
-        //public void setd(string id) {
-        //    if (curID != id) {
-        //        IHighlight highlight = highlightDic[id];
-        //        defaultAttr = highlight.getDefault();
-        //        lex.ClearRule();
-        //        this.lex.AddRule(highlight.getRules());
-        //        curID = id;
-        //    }
-        //}
 
         private Partition partition;
         public void SetPartition(Partition partition) {
@@ -158,13 +137,16 @@ namespace YYS.Parser {
         }
 
         public int cmt;
-        //public int sccmt;
 
         public Parser() {
             lex = new Lexer();
         }
 
         public Block Parse(Line line, Block b, int _cmt) {
+            return this.Parse(line, b, _cmt, 0, 0, false);
+        }
+
+        public Block Parse(Line line, Block b, int _cmt, int start, int end, bool ispart) {
 
             tokentype = TokenType.TXT;
             tokens = new List<Token>();
@@ -172,25 +154,6 @@ namespace YYS.Parser {
             List<Tuple<int, int, bool>> cmstrulrs = new List<Tuple<int, int, bool>>();
 
             line.Block.isLineHeadCmt = _cmt;
-
-            //bool? isscnext = null;
-            //line.Block.isLineHeadPart = _sccmt;
-
-            //if (line.Block.isLineHeadPart == 0) {
-            //    //line.Block.PartID = Document.DEFAULT_ID;
-            //    //setd(Document.DEFAULT_ID);
-            //    if (this.partition.Parent != null) {
-            //        line.Block.PartID = this.partition.Parent.ID;
-            //        SetPartition(this.partition.Parent);
-            //    }
-            //}
-            //else {
-            //    //line.Block.PartID = b.PartID;
-            //    //setd(b.PartID);
-
-            //    line.Block.PartID = b.PartID;
-            //    SetPartition(getPartition(line.Block.PartID));
-            //}
 
             lex.Src = line.Text;
 
@@ -210,30 +173,6 @@ namespace YYS.Parser {
                     case TokenType.Keyword: {
 
                            tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3.attr });
-
-                            //{
-                            //    //int off = lex.Offset;
-                            //    //int len = line.Length - lex.OffsetLenAttr.t1;
-                            //    //lex.isNextLine = true;
-
-                            //    //cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = lex.isNextLine });
-                            //    //tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = len, attr = lex.OffsetLenAttr.t3 });
-                            //    if (tokens.Count > 0) {
-                            //        int off = tokens[tokens.Count - 1].ad;
-                            //        int len = tokens[tokens.Count - 1].len;
-                            //        //tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
-                            //        //tokens[tokens.Count - 1].len = lex.OffsetLenAttr.t2 - off;
-
-                            //        tokens.Add(new Token { ad = off + len, len = lex.Offset - off + len, attr = defaultAttr });
-                            //    }
-                            //    else {
-                            //        if (lex.Offset - lex.Value.Length - 1 > 0)
-                            //            tokens.Add(new Token { ad = 0, len = lex.Offset - lex.Value.Length - 1, attr = defaultAttr });
-                            //    }
-                            //}
-
-
-                            //tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3 });
                         }
                         break;
 
@@ -284,77 +223,7 @@ namespace YYS.Parser {
                         }
                         break;
 
-                    //case TokenType.PartitionStart:
-                    //    {
-                    //        //int off = lex.Offset;
-                    //        //int len = line.Length - lex.OffsetLenAttr.t1;
-                    //        //lex.isNextLine = true;
-
-                    //        //cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = lex.isNextLine });
-                    //        //tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = len, attr = lex.OffsetLenAttr.t3 });
-                    //        if (tokens.Count > 0) {
-                    //            int off = tokens[tokens.Count - 1].ad;
-                    //            int len = tokens[tokens.Count - 1].len;
-                    //            //tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
-                    //            //tokens[tokens.Count - 1].len = lex.OffsetLenAttr.t2 - off;
-
-                    //            tokens.Add(new Token { ad = off + len, len = lex.Offset - off + len, attr = defaultAttr });
-                    //        }
-                    //        else{
-                    //            if (lex.Offset - lex.Value.Length - 1 > 0)
-                    //            tokens.Add(new Token { ad = 0, len = lex.Offset- lex.Value.Length-1, attr = defaultAttr });
-                    //        }
-                    //    }
-
-                    //    isscnext = lex.scisNextLine;
-                    //    //if (line.Block.PartID != Document.DEFAULT_ID) {
-                    //    //    setd(line.Block.PartID);
-                    //    //}
-
-                    //    if (this.partition.Parent==null || (this.partition.Parent!=null && line.Block.PartID != this.partition.Parent.ID)) {
-                    //        SetPartition(getPartition(line.Block.PartID));
-                    //    }
-                    //    break;
-                    //case TokenType.Partition:
-                    //    isscnext = lex.scisNextLine;
-                    //    //setd(line.Block.PartID);
-                    //    break;
-                    //case TokenType.PartitionEnd:
-
-                    //    {
-                    //        //int len = line.Length - lex.OffsetLenAttr.t1;
-                    //        //bool isnext = false;// lex.isNextLine;
-                    //        //lex.isNextLine = false;
-
-                    //        //if (cmstrulrs.Count > 0) {
-                    //        //    cmstrulrs[cmstrulrs.Count - 1].t3 = isnext;
-                    //        //}
-                    //        //else {
-                    //        //    int off = lex.Offset;
-                    //        //    cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = isnext });
-                    //        //}
-                    //        if (tokens.Count > 0) {
-                    //            int off = tokens[tokens.Count - 1].ad;
-                    //            int len = tokens[tokens.Count - 1].len ;
-                    //            //tokens[tokens.Count - 1].len = off + lex.OffsetLenAttr.t2;
-                    //            //tokens[tokens.Count - 1].len = lex.OffsetLenAttr.t2 - off;
-
-                    //            tokens.Add(new Token { ad = off + len, len = lex.Offset - (off + len), attr = defaultAttr });
-                    //        }
-                    //        else if (line.Block.isLineHeadPart != 0) {
-                    //            tokens.Add(new Token { ad = 0, len = lex.Offset , attr = defaultAttr });
-                    //        }
-                    //        else if (lex.scisNextLine) {
-                    //            tokens.Add(new Token { ad = 0, len = lex.Offset , attr = defaultAttr });
-                    //        }
-                    //        lex.scisNextLine = false;
-                    //    }
-
-                    //    isscnext = lex.scisNextLine; 
-                    //    //setd(Document.DEFAULT_ID);
-
-                    //    SetPartition(partition.Parent);
-                    //    break;
+                    
                     default:
                         break;
                 }
@@ -374,20 +243,6 @@ namespace YYS.Parser {
                 }
             }
             cmt = (line.Block.commentTransition >> _cmt) & 1;
-
-
-            //if (isscnext == null) {
-            //    line.Block.partTransition = 2;
-            //}
-            //else {
-            //    if ((bool)isscnext) {
-            //        line.Block.partTransition = 3;
-            //    }
-            //    else {
-            //        line.Block.partTransition = 0;
-            //    }
-            //}
-            //sccmt = (line.Block.partTransition >> _sccmt) & 1;
 
             if (tokens.Count > 0) {
 
@@ -416,7 +271,11 @@ namespace YYS.Parser {
                 tokens.Add(new Token { ad = 0, len = line.Length, attr = defaultAttr });
             }
 
-            line.Tokens = tokens;
+            if (ispart) {
+                line.Tokens.InsertRange();
+            } else {
+                line.Tokens = tokens;
+            }
 
             return line.Block;
         }

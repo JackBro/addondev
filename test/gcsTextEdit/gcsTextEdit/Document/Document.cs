@@ -438,21 +438,23 @@ namespace YYS {
             // コメントアウト状態に変化がなかったらここでお終い。
             //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
             if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
-                //var ts = text_[i].Tokens;
-                //foreach (var item in ts) {
-                //    if (item.type == TokenType.MultiLine) {
-                //        ParsePart(item.id, i, i);
-                //        break;
+                //for (int j = s; j <= e; ++j) {
+                //    var ts = text_[j].Tokens;
+                //    foreach (var item in ts) {
+                //        if (item.type == TokenType.MultiLine) {
+                //            ParsePart(item.id, j, j);
+                //        }
                 //    }
                 //}
-                for (int j = s; j <= e; ++j) {
-                    var ts = text_[j].Tokens;
-                    foreach (var item in ts) {
-                        if (item.type == TokenType.MultiLine) {
-                            ParsePart(item.id, j, j);
-                        }
-                    }
+
+                var lists = lines(s, e);
+                foreach (var list in lists) {
+                    var sline = list[0].t1;
+                    var eline = list[list.Count-1].t1;
+                    var token = list[0].t2;
+                    ParsePart(token.id, sline, eline);
                 }
+
                 return false;
             }
 
@@ -508,6 +510,48 @@ namespace YYS {
                 }
             }
             return null;
+        }
+
+        private List<List<Tuple<int, Token>>> lines(int s, int e) {
+            var lists = new List<List<Tuple<int, Token>>>();
+            Action<int, List<Token>> func = (linenum, tokens) => {
+                var list = new List<Token>(); 
+                foreach (var item in tokens) {
+                    if (item.type == TokenType.MultiLine) {
+                        switch (item.mtype) {
+                            case MultiLineType.Line:
+                                lists.Add(new List<Tuple<int, Token>>{ new Tuple<int, Token>(linenum, item) });
+                                break;
+                            case MultiLineType.Start:
+                                lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
+                                break;
+                            case MultiLineType.All:
+                                if (lists.Count > 0) {
+                                    lists[lists.Count - 1].Add(new Tuple<int, Token>(linenum, item));
+                                } else {
+                                    lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
+                                }
+                                break;
+                            case MultiLineType.End:
+                                if (lists.Count > 0) {
+                                    lists[lists.Count - 1].Add(new Tuple<int, Token>(linenum, item));
+                                } else {
+                                    lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            };
+
+            for (int i = s; i <= e; ++i) {
+                var ts = text_[i].Tokens;
+                func(i, ts);
+            }
+
+            return lists;
         }
 
         private bool ParsePart(string id, int s, int e) {
