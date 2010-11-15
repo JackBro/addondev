@@ -24,6 +24,7 @@ namespace test {
             //rules.Add(new EndLineRule("//", new AsControls.Parser.Attribute(Color.Pink, AttrType.UnderLine | AttrType.Strike)));
             rules.Add(new KeywordRule(new string[] { "if" }, new YYS.Parser.Attribute(Color.Blue, AttrType.Bold | AttrType.UnderLine)));
             rules.Add(new MultiLineRule("default.comment2", "/=", "=/", new YYS.Parser.Attribute(Color.DarkGreen)));
+            //rules.Add(new MultiLineRule("default.comment3", "/-", "-/", new YYS.Parser.Attribute(Color.DarkGray)));
             return rules;
         }
 

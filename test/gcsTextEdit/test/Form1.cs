@@ -266,17 +266,8 @@ namespace test
             edit.Wrap = YYS.WrapType.WindowWidth;
             WrapOnToolStripMenuItem.Checked = true;
 
-            
-//            edit.Text = @"/*sss*/
-//#start
-///*
-//e
-//ee
-//*/
-//#end";
 
-            edit.Text = @"/*mmm*/
-/*ss
+            edit.Text = @"/*ss
 f/=fff
 ff=/
 zxcvbns*/mmm
@@ -287,12 +278,6 @@ me";
             //csedit.Text = "生徒を\uD842\uDF9F\uD842\uDF9Fる";
             //csedit.Text = "生徒を\uD842\uDF9Fる\r\nmmmmhhhhhhhhhhhhhhhhhhhhhhmmmmmmmmm\r\nssssssssssssss";
 
-
-//            edit.Text = @"1234mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmテスト1234567890ABCDEFG
-//*/
-//mmmmmmmmmmmmmmmmmmmmmmmmmm
-//12
-//a";
             //csedit2.Name = "2";
             //csedit2.BackColor = Color.Brown;
             //csedit2.Dock = DockStyle.Top;

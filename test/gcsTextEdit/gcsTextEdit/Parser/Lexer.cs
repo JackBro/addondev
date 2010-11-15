@@ -144,6 +144,7 @@ namespace AsControls.Parser {
                 curblock.mRule = preblock.mRule;
                 tok = TokenType.MultiLineAllLine;
                 isNextLine = true;
+                return true;
             }
 
             int c = reader.read();

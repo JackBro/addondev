@@ -156,15 +156,20 @@ namespace YYS.Parser {
             line.Block.isLineHeadCmt = _cmt;
 
             lex.Src = line.Text;
+            if (ispart) {
+                lex.SetRange(start, end);
+            }
 
-            while (tokentype != TokenType.EOS) {
+            //while (tokentype != TokenType.EOS) {
+            while (lex.advance(b, line.Block)) {
+                tokentype = lex.token;
 
-                if (lex.advance(b, line.Block)) {
-                    tokentype = lex.token;
-                }
-                else {
-                    tokentype = TokenType.EOS;
-                }
+                //if (lex.advance(b, line.Block)) {
+                //    tokentype = lex.token;
+                //}
+                //else {
+                //    tokentype = TokenType.EOS;
+                //}
 
                 switch (tokentype) {
                     case TokenType.EndLine:
@@ -194,7 +199,12 @@ namespace YYS.Parser {
 
                             cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = lex.isNextLine });
                             var parid = ((MultiLineRule)(lex.OffsetLenAttr.t3)).id;
-                            tokens.Add(new Token { id = parid, type = TokenType.MultiLine, mtype = MultiLineType.All, ad = lex.OffsetLenAttr.t1, len = len, attr = lex.OffsetLenAttr.t3.attr });
+                            if (line.Length == 0) {
+                                tokens.Add(new Token { id = parid, type = TokenType.MultiLine, mtype = MultiLineType.All, ad = 0, len = 0, attr = lex.OffsetLenAttr.t3.attr });
+                            }
+                            else {
+                                tokens.Add(new Token { id = parid, type = TokenType.MultiLine, mtype = MultiLineType.All, ad = lex.OffsetLenAttr.t1, len = len, attr = lex.OffsetLenAttr.t3.attr });
+                            }
                         }
                         break;
 
@@ -228,6 +238,10 @@ namespace YYS.Parser {
                         break;
                 }
 
+                if (line.Length == 0) {
+                    break;
+                }
+
             }
 
             if (cmstrulrs.Count == 0) {
@@ -244,35 +258,55 @@ namespace YYS.Parser {
             }
             cmt = (line.Block.commentTransition >> _cmt) & 1;
 
-            if (tokens.Count > 0) {
+            //if (!ispart) {
 
-                var lastrule = tokens[tokens.Count - 1];
-                if (lastrule.ad + lastrule.len < line.Length) {
-                    tokens.Add(new Token { ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
-                }
+                if (tokens.Count > 0) {
 
-                List<Token> defaultRules = new List<Token>();
-                int index = 0;
-                for (int i = 0; i < tokens.Count; i++) {
-                    if (tokens[i].ad - index > 0) {
-                        defaultRules.Add(new Token { ad = index, len = tokens[i].ad - index, attr = defaultAttr });
+                    var lastrule = tokens[tokens.Count - 1];
+                    if (lastrule.ad + lastrule.len < line.Length) {
+                        tokens.Add(new Token { ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
                     }
-                    index = tokens[i].ad + tokens[i].len;
-                }
 
-                if (defaultRules.Count > 0) {
-                    tokens.AddRange(defaultRules);
-                    tokens.Sort((x, y) => {
-                        return x.ad < y.ad ? -1 : 1;
-                    });
+                    List<Token> defaultRules = new List<Token>();
+                    int index = 0;
+                    for (int i = 0; i < tokens.Count; i++) {
+                        if (tokens[i].ad - index > 0) {
+                            defaultRules.Add(new Token { ad = index, len = tokens[i].ad - index, attr = defaultAttr });
+                        }
+                        index = tokens[i].ad + tokens[i].len;
+                    }
+
+                    if (defaultRules.Count > 0) {
+                        tokens.AddRange(defaultRules);
+                        tokens.Sort((x, y) => {
+                            return x.ad < y.ad ? -1 : 1;
+                        });
+                    }
                 }
-            }
-            else {
-                tokens.Add(new Token { ad = 0, len = line.Length, attr = defaultAttr });
-            }
+                else {
+                    if (ispart) {
+                        tokens.Add(new Token { ad = start, len = end - start, attr = defaultAttr });
+                    }
+                    else {
+                        tokens.Add(new Token { ad = 0, len = line.Length, attr = defaultAttr });
+                    }
+                }
+            //}
 
             if (ispart) {
-                line.Tokens.InsertRange();
+                foreach (var token in line.Tokens) {
+                    if (token.ad == start && (token.ad + token.len) == end) {
+                        int index = line.Tokens.IndexOf(token);
+                        line.Tokens.Remove(token);
+                        tokens[0].type = token.type;
+                        foreach (var item in tokens) {
+                            item.id = token.id;
+                        }
+                        line.Tokens.InsertRange(index, tokens);
+                        break;
+                    }
+                }
+                
             } else {
                 line.Tokens = tokens;
             }
