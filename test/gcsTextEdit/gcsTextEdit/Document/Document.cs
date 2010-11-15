@@ -254,79 +254,79 @@ namespace YYS {
             return linenum == text_.Count - 1 ? true : false;
         }
 
-        private bool ReParse(int s, int e) {
+        //private bool ReParse(int s, int e) {
 
-            int i;
-            int cmt = text_[s].Block.isLineHeadCmt;
-            //int sccmt = text_[s].Block.isLineHeadPart;
-            Block block = text_[s].Block;
-            if (s > 0) {
-                block = text_[s - 1].Block;
-            }
+        //    int i;
+        //    int cmt = text_[s].Block.isLineHeadCmt;
+        //    //int sccmt = text_[s].Block.isLineHeadPart;
+        //    Block block = text_[s].Block;
+        //    if (s > 0) {
+        //        block = text_[s - 1].Block;
+        //    }
 
-            // まずは変更範囲を再解析
-            for (i = s; i <= e; ++i) {
-                block = parser.Parse(text_[i], block, cmt);
-                //block = parser.Parse(text_[i], block, sccmt);
-                cmt = parser.cmt;
-                //sccmt = parser.sccmt;
-            }
+        //    // まずは変更範囲を再解析
+        //    for (i = s; i <= e; ++i) {
+        //        block = parser.Parse(text_[i], block, cmt);
+        //        //block = parser.Parse(text_[i], block, sccmt);
+        //        cmt = parser.cmt;
+        //        //sccmt = parser.sccmt;
+        //    }
 
-            // コメントアウト状態に変化がなかったらここでお終い。
-            //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
-            if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
-                //var ts = text_[i-1].Tokens;
-                //foreach (var item in ts){
-                //    if (item.type == TokenType.MultiLine) {
-                //        ParsePart(item.id, i, i);
-                //        break;
-                //    }
-                //}
-
-
-
-                //if (i == tln() || (text_[i].Block.isLineHeadPart == sccmt && text_[i].Block.PartID == block.PartID))
-                return false;
-            }
-
-            int pcmt = 0;
-            Rule prule = null;
-
-            //int scpcmt = 0;
-            //string pID = string.Empty;
-
-            // 例えば、/* が入力された場合などは、下の方の行まで
-            // コメントアウト状態の変化を伝達する必要がある。
-            do {
-                Line line = text_[i++];
-                pcmt = line.Block.isLineHeadCmt;
-                prule = line.Block.mRule;
-
-                //scpcmt = line.Block.isLineHeadPart;
-
-                block = parser.Parse(line, block, cmt);
-                //block = parser.Parse(line, block, sccmt);
-                cmt = parser.cmt;
-                //sccmt = parser.sccmt;
-
-                if (pcmt == cmt) {
-                    if (prule != block.mRule) {
-                        pcmt--;
-                    }
-                }
-
-                //if (scpcmt == sccmt) {
-                //    if (pID != block.PartID) {
-                //        scpcmt--;
-                //    }
-                //}
-
-            }while (i < tln() && pcmt != cmt);
-            //} while (i < tln() && scpcmt != sccmt);
+        //    // コメントアウト状態に変化がなかったらここでお終い。
+        //    //if (i == tln() || text_[i].Block.isLineHeadCmt == cmt)
+        //    if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
+        //        //var ts = text_[i-1].Tokens;
+        //        //foreach (var item in ts){
+        //        //    if (item.type == TokenType.MultiLine) {
+        //        //        ParsePart(item.id, i, i);
+        //        //        break;
+        //        //    }
+        //        //}
 
 
-            return true;
-        }
+
+        //        //if (i == tln() || (text_[i].Block.isLineHeadPart == sccmt && text_[i].Block.PartID == block.PartID))
+        //        return false;
+        //    }
+
+        //    int pcmt = 0;
+        //    Rule prule = null;
+
+        //    //int scpcmt = 0;
+        //    //string pID = string.Empty;
+
+        //    // 例えば、/* が入力された場合などは、下の方の行まで
+        //    // コメントアウト状態の変化を伝達する必要がある。
+        //    do {
+        //        Line line = text_[i++];
+        //        pcmt = line.Block.isLineHeadCmt;
+        //        prule = line.Block.mRule;
+
+        //        //scpcmt = line.Block.isLineHeadPart;
+
+        //        block = parser.Parse(line, block, cmt);
+        //        //block = parser.Parse(line, block, sccmt);
+        //        cmt = parser.cmt;
+        //        //sccmt = parser.sccmt;
+
+        //        if (pcmt == cmt) {
+        //            if (prule != block.mRule) {
+        //                pcmt--;
+        //            }
+        //        }
+
+        //        //if (scpcmt == sccmt) {
+        //        //    if (pID != block.PartID) {
+        //        //        scpcmt--;
+        //        //    }
+        //        //}
+
+        //    }while (i < tln() && pcmt != cmt);
+        //    //} while (i < tln() && scpcmt != sccmt);
+
+
+        //    return true;
+        //}
 
         private bool ReParse(int index, int s, int e) {
             //string id=null;
@@ -374,7 +374,7 @@ namespace YYS {
 
             // まずは変更範囲を再解析
             for (i = s; i <= e; ++i) {
-                block = parser.Parse(text_[i], block, cmt);
+                block = parser.Parse(id, text_[i], block, cmt);
                 cmt = parser.cmt;
             }
 
@@ -390,15 +390,14 @@ namespace YYS {
             int ll = tln();
             if (id != Document.DEFAULT_ID) {
                 ll = lines(index, s, e);
-                ll = 3;
+                ll++;
+                int ii = 0;
             }
             if (i == ll || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
+            //if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
       
                 var lists = lines(s, e);
                 foreach (var list in lists) {
-                    var sline = list[0].t1;
-                    var eline = list[list.Count - 1].t1;
-                    var token = list[0].t2;
                     ParsePart(list);
                 }
                 
@@ -415,7 +414,7 @@ namespace YYS {
                 pcmt = line.Block.isLineHeadCmt;
                 prule = line.Block.mRule;
 
-                block = parser.Parse(line, block, cmt);
+                block = parser.Parse(id, line, block, cmt);
                 cmt = parser.cmt;
 
                 if (pcmt == cmt) {
@@ -424,7 +423,8 @@ namespace YYS {
                     }
                 }
 
-            } while (i < tln() && pcmt != cmt);
+            //} while (i < tln() && pcmt != cmt);
+            } while (i < ll && pcmt != cmt);
 
             int ss = s;
             int se = i;
@@ -437,64 +437,48 @@ namespace YYS {
             var tokens = line.Tokens;
 
             string id = null;
-            Token h =null;
+            //Token h =null;
 
             if (tokens.Count > 0) {
                 var last = tokens[tokens.Count - 1];
                 if (ad == (last.ad + last.len)) {
                     if (last.type == TokenType.MultiLine) {
-                        var part = parser.getPartition(last.id);
-                        if (part.Parent == null) {
-                            id = Document.DEFAULT_ID;
+                        if (last.mtype == MultiLineType.End) {
+                            var parent = parser.getPartition(last.id).Parent;
+                            if (parent == null) {
+                                id = Document.DEFAULT_ID;
+                            } else {
+                                id = parent.ID;
+                            }
+                        } else {
+                            id = last.id;
                         }
-                        else if (part.Parent.ID == null) {
-                            id = Document.DEFAULT_ID;
-                        }
-                        else {
-                            id = part.Parent.Parent.ID;
-                        }
-                        return id;
-                    }
-                    else if (last.id !=null) {
-                        var part = parser.getPartition(last.id);
-                        id = part.ID;
-                        return id;
+                    } else {
+                        id = last.id;
                     }
                 }
-            }
+            } 
 
-            foreach (var token in tokens) {
-                if (token.ad <= ad && ad<(token.ad+token.len)) {
+            if (id == null) {
 
-                    h = token;
-                    break;
-                    //return token;
-                }
-            }
-
-            if (h != null) {
-                if (h.type == TokenType.MultiLine) {
-                    var parent = parser.getPartition(h.id).Parent;
-                    if (parent == null) {
-                        id = Document.DEFAULT_ID;
-                    }
-                    else {
-                        id = parent.ID;
+                foreach (var token in tokens) {
+                    if (token.ad <= ad && ad < (token.ad + token.len)) {
+                        id = token.id;
+                        break;
                     }
                 }
-                else {
-                    if (h.id == null) {
-                        h.id = Document.DEFAULT_ID;
-                    }
-                    id = h.id;
-                }
-            }
-            else {
-                id = Document.DEFAULT_ID;
             }
 
             if (id == null) {
                 id = Document.DEFAULT_ID;
+            } else if (id != Document.DEFAULT_ID) {
+                var pa = parser.getPartition(id).Parent;
+                if (pa != null) {
+                    id = pa.ID;
+                }
+                if (id == null) {
+                    id = Document.DEFAULT_ID;
+                }
             }
 
             return id;
@@ -543,51 +527,30 @@ namespace YYS {
         }
 
         private int lines(int ad, int s, int e) {
-            var lists = new List<List<Tuple<int, Token>>>();
-            Func<int, List<Token>, bool> func = (linenum, tokens) => {
-                bool res = false;
-                var list = new List<Token>();
-                foreach (var item in tokens) {
-                    if (item.type == TokenType.MultiLine) {
-                        switch (item.mtype) {
-                            case MultiLineType.Line:
-                                lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
-                                res = true;
-                                break;
-                            case MultiLineType.Start:
-                                lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
-                                break;
-                            case MultiLineType.All:
-                                if (lists.Count > 0) {
-                                    lists[lists.Count - 1].Add(new Tuple<int, Token>(linenum, item));
-                                }
-                                else {
-                                    lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
-                                }
-                                break;
-                            case MultiLineType.End:
-                                if (lists.Count > 0) {
-                                    lists[lists.Count - 1].Add(new Tuple<int, Token>(linenum, item));
-                                }
-                                else {
-                                    lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
-                                }
-                                res = true;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    
-                }
-                return res;
-            };
+            //string id = null;
+            //Token ttoken = null;
+            //var ts = text_[s].Tokens;
+            //foreach (var item in ts) {
+            //    if (item.ad <= ad && ad < (item.ad + item.len)) {
+            //        id = item.id;
+            //       // break;
+            //    }
+            //    if (id != null && item.id != id) {
+            //        ttoken = item;
+            //    }
+            //}
 
-            for (int i = s; i < tln(); ++i) {
-                var ts = text_[i].Tokens;
-                if (func(i, ts)) {
-                    var l = lists[lists.Count-1];
-                    return l[l.Count-1].t1;
+            string id = getToken(text_[s], ad);
+
+            for (int i = s+1; i < tln(); ++i) {
+                var tss = text_[i].Tokens;
+                if (id != tss[0].id) {
+                    return s;
+                }
+                foreach (var item in tss) {
+                    if (id != item.id) {
+                        return i;
+                    }
                 }
             }
 
@@ -615,7 +578,7 @@ namespace YYS {
             for (i = s; i <= e; ++i) {
                 //block = parser.Parse(text_[i], block, cmt);
                 var token = list[i - s].t2;
-                block = parser.Parse(text_[i], block, cmt, token.ad, token.ad + token.len, true);
+                block = parser.Parse(id, text_[i], block, cmt, token.ad, token.ad + token.len, true);
                 cmt = parser.cmt;
             }
 
@@ -638,7 +601,7 @@ namespace YYS {
                 pcmt = line.Block.isLineHeadCmt;
                 prule = line.Block.mRule;
 
-                block = parser.Parse(line, block, cmt);
+                block = parser.Parse(id, line, block, cmt);
                 cmt = parser.cmt;
 
                 if (pcmt == cmt) {

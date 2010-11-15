@@ -142,11 +142,11 @@ namespace YYS.Parser {
             lex = new Lexer();
         }
 
-        public Block Parse(Line line, Block b, int _cmt) {
-            return this.Parse(line, b, _cmt, 0, 0, false);
+        public Block Parse(string id, Line line, Block b, int _cmt) {
+            return this.Parse(id, line, b, _cmt, 0, 0, false);
         }
 
-        public Block Parse(Line line, Block b, int _cmt, int start, int end, bool ispart) {
+        public Block Parse(string id, Line line, Block b, int _cmt, int start, int end, bool ispart) {
 
             tokentype = TokenType.TXT;
             tokens = new List<Token>();
@@ -177,7 +177,7 @@ namespace YYS.Parser {
                     case TokenType.Enclose:
                     case TokenType.Keyword: {
 
-                           tokens.Add(new Token { ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3.attr });
+                            tokens.Add(new Token { id = id, ad = lex.OffsetLenAttr.t1, len = lex.OffsetLenAttr.t2, attr = lex.OffsetLenAttr.t3.attr });
                         }
                         break;
 
@@ -264,14 +264,14 @@ namespace YYS.Parser {
 
                     var lastrule = tokens[tokens.Count - 1];
                     if (lastrule.ad + lastrule.len < line.Length) {
-                        tokens.Add(new Token { ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
+                        tokens.Add(new Token { id = id, ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
                     }
 
                     List<Token> defaultRules = new List<Token>();
                     int index = 0;
                     for (int i = 0; i < tokens.Count; i++) {
                         if (tokens[i].ad - index > 0) {
-                            defaultRules.Add(new Token { ad = index, len = tokens[i].ad - index, attr = defaultAttr });
+                            defaultRules.Add(new Token { id = id, ad = index, len = tokens[i].ad - index, attr = defaultAttr });
                         }
                         index = tokens[i].ad + tokens[i].len;
                     }
@@ -285,10 +285,10 @@ namespace YYS.Parser {
                 }
                 else {
                     if (ispart) {
-                        tokens.Add(new Token { ad = start, len = end - start, attr = defaultAttr });
+                        tokens.Add(new Token { id = id, ad = start, len = end - start, attr = defaultAttr });
                     }
                     else {
-                        tokens.Add(new Token { ad = 0, len = line.Length, attr = defaultAttr });
+                        tokens.Add(new Token { id = id, ad = 0, len = line.Length, attr = defaultAttr });
                     }
                 }
             //}
@@ -299,9 +299,11 @@ namespace YYS.Parser {
                         int index = line.Tokens.IndexOf(token);
                         line.Tokens.Remove(token);
                         tokens[0].type = token.type;
-                        foreach (var item in tokens) {
-                            item.id = token.id;
-                        }
+                        //foreach (var item in tokens) {
+                        //    if (item.id == null) {
+                        //        item.id = token.id;
+                        //    }
+                        //}
                         line.Tokens.InsertRange(index, tokens);
                         break;
                     }

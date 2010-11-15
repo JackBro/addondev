@@ -88,6 +88,7 @@ namespace YYS.Parser {
     }
 
     public enum MultiLineType {
+        None,
         Line,
         Start,
         All,
