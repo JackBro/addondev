@@ -143,7 +143,7 @@ namespace YYS.Parser {
         }
 
         public Block Parse(string id, Line line, Block b, int _cmt) {
-            return this.Parse(id, line, b, _cmt, 0, 0, false);
+            return this.Parse(id, line, b, _cmt, 0, line.Length, false);
         }
 
         public Block Parse(string id, Line line, Block b, int _cmt, int start, int end, bool ispart) {
@@ -183,7 +183,8 @@ namespace YYS.Parser {
 
                     case TokenType.MultiLineStart: {
                             int off = lex.Offset;
-                            int len = line.Length - lex.OffsetLenAttr.t1;
+                            //int len = line.Length - lex.OffsetLenAttr.t1;
+                            int len = end - lex.OffsetLenAttr.t1;
                             lex.isNextLine = true;
 
                             cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = lex.isNextLine });
@@ -194,7 +195,8 @@ namespace YYS.Parser {
 
                     case TokenType.MultiLineAllLine: {
                             int off = lex.Offset;
-                            int len = line.Length - lex.OffsetLenAttr.t1;
+                            //int len = line.Length - lex.OffsetLenAttr.t1;
+                            int len = end - lex.OffsetLenAttr.t1;
                             lex.isNextLine = true;
 
                             cmstrulrs.Add(new Tuple<int, int, bool> { t1 = off, t2 = len, t3 = lex.isNextLine });
@@ -209,7 +211,8 @@ namespace YYS.Parser {
                         break;
 
                     case TokenType.MultiLineEnd: {
-                            int len = line.Length - lex.OffsetLenAttr.t1;
+                            //int len = line.Length - lex.OffsetLenAttr.t1;
+                            int len = end - lex.OffsetLenAttr.t1;
                             bool isnext = false;// lex.isNextLine;
                             lex.isNextLine = false;
 
@@ -263,8 +266,11 @@ namespace YYS.Parser {
                 if (tokens.Count > 0) {
 
                     var lastrule = tokens[tokens.Count - 1];
-                    if (lastrule.ad + lastrule.len < line.Length) {
-                        tokens.Add(new Token { id = id, ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
+                    //if (lastrule.ad + lastrule.len < line.Length) {
+                    //    tokens.Add(new Token { id = id, ad = lastrule.ad + lastrule.len, len = line.Length - (lastrule.ad + lastrule.len), attr = defaultAttr });
+                    //}
+                    if (lastrule.ad + lastrule.len < end) {
+                        tokens.Add(new Token { id = id, ad = lastrule.ad + lastrule.len, len = end - (lastrule.ad + lastrule.len), attr = defaultAttr });
                     }
 
                     List<Token> defaultRules = new List<Token>();
@@ -288,7 +294,8 @@ namespace YYS.Parser {
                         tokens.Add(new Token { id = id, ad = start, len = end - start, attr = defaultAttr });
                     }
                     else {
-                        tokens.Add(new Token { id = id, ad = 0, len = line.Length, attr = defaultAttr });
+                        //tokens.Add(new Token { id = id, ad = 0, len = line.Length, attr = defaultAttr });
+                        tokens.Add(new Token { id = id, ad = 0, len = end, attr = defaultAttr });
                     }
                 }
             //}

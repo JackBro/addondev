@@ -37,6 +37,10 @@ namespace YYS
             }
         }
 
+        public Block GetBlock(string id) {
+            return blockmap[id];  
+        }
+
         public List<Token> Tokens {
             get { return tokens; }
             set { tokens = value; }

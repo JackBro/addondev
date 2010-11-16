@@ -365,11 +365,22 @@ namespace YYS {
             parser.SetPartition(id, false);
 
             int i;
-            int cmt = text_[s].Block.isLineHeadCmt;
             Block block = text_[s].Block;
+            if (id != Document.DEFAULT_ID) {
+                //if (block.mRule == null) {
+                //    block.commentTransition = 3;
+                //    block.isLineHeadCmt = 1;
+                //    block.mRule = text_[s - 1].Block.mRule; //TODO
+                //}
+            }
+            int cmt = text_[s].Block.isLineHeadCmt;
+            
             //var mm = block.mRule;
             if (s > 0) {
                 block = text_[s - 1].Block; //TODO
+                if (block.mRule == null && s>1) {
+                    block.mRule = text_[s - 2].Block.mRule; //TODO
+                }
             }
 
             // まずは変更範囲を再解析
@@ -396,7 +407,8 @@ namespace YYS {
             if (i == ll || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
             //if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
       
-                var lists = lines(s, e);
+                //var lists = lines(s, tln()==ll?e:ll);
+                var lists = lines(s, ll-1);
                 foreach (var list in lists) {
                     ParsePart(list);
                 }
@@ -414,7 +426,13 @@ namespace YYS {
                 pcmt = line.Block.isLineHeadCmt;
                 prule = line.Block.mRule;
 
-                block = parser.Parse(id, line, block, cmt);
+                if (i == ll) {
+                    block = parser.Parse(id, line, block, cmt, 0, las, true);
+                }
+                else {
+
+                    block = parser.Parse(id, line, block, cmt);
+                }
                 cmt = parser.cmt;
 
                 if (pcmt == cmt) {
@@ -443,8 +461,9 @@ namespace YYS {
                 var last = tokens[tokens.Count - 1];
                 if (ad == (last.ad + last.len)) {
                     if (last.type == TokenType.MultiLine) {
-                        if (last.mtype == MultiLineType.End) {
-                            var parent = parser.getPartition(last.id).Parent;
+                        //if (last.mtype == MultiLineType.End) {
+                        if(line.GetBlock(parser.getPartition(last.id).Parent.ID).commentTransition==0){
+                            var parent = parser.getPartition(last.id);
                             if (parent == null) {
                                 id = Document.DEFAULT_ID;
                             } else {
@@ -484,34 +503,70 @@ namespace YYS {
             return id;
         }
 
+        //private List<List<Tuple<int, Token>>> lines(int s, int e) {
+        //    var lists = new List<List<Tuple<int, Token>>>();
+        //    Action<int, List<Token>> func = (linenum, tokens) => {
+        //        var list = new List<Token>(); 
+        //        foreach (var item in tokens) {
+        //            if (item.type == TokenType.MultiLine) {
+        //                switch (item.mtype) {
+        //                    case MultiLineType.Line:
+        //                        lists.Add(new List<Tuple<int, Token>>{ new Tuple<int, Token>(linenum, item) });
+        //                        break;
+        //                    case MultiLineType.Start:
+        //                        lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
+        //                        break;
+        //                    case MultiLineType.All:
+        //                        if (lists.Count > 0) {
+        //                            lists[lists.Count - 1].Add(new Tuple<int, Token>(linenum, item));
+        //                        } else {
+        //                            lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
+        //                        }
+        //                        break;
+        //                    case MultiLineType.End:
+        //                        if (lists.Count > 0) {
+        //                            lists[lists.Count - 1].Add(new Tuple<int, Token>(linenum, item));
+        //                        } else {
+        //                            lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
+        //                        }
+        //                        break;
+        //                    default:
+        //                        break;
+        //                }
+        //            }
+        //        }
+        //    };
+
+        //    for (int i = s; i <= e; ++i) {
+        //        var ts = text_[i].Tokens;
+        //        func(i, ts);
+        //    }
+
+        //    return lists;
+        //}
+
         private List<List<Tuple<int, Token>>> lines(int s, int e) {
             var lists = new List<List<Tuple<int, Token>>>();
             Action<int, List<Token>> func = (linenum, tokens) => {
-                var list = new List<Token>(); 
+                var list = new List<Token>();
                 foreach (var item in tokens) {
                     if (item.type == TokenType.MultiLine) {
                         switch (item.mtype) {
                             case MultiLineType.Line:
-                                lists.Add(new List<Tuple<int, Token>>{ new Tuple<int, Token>(linenum, item) });
-                                break;
                             case MultiLineType.Start:
                                 lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
                                 break;
                             case MultiLineType.All:
-                                if (lists.Count > 0) {
-                                    lists[lists.Count - 1].Add(new Tuple<int, Token>(linenum, item));
-                                } else {
-                                    lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
-                                }
-                                break;
                             case MultiLineType.End:
                                 if (lists.Count > 0) {
                                     lists[lists.Count - 1].Add(new Tuple<int, Token>(linenum, item));
-                                } else {
+                                }
+                                else {
                                     lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
                                 }
                                 break;
                             default:
+                                //lists.Add(new List<Tuple<int, Token>> { new Tuple<int, Token>(linenum, item) });
                                 break;
                         }
                     }
@@ -526,6 +581,7 @@ namespace YYS {
             return lists;
         }
 
+        private int las = 0;
         private int lines(int ad, int s, int e) {
             //string id = null;
             //Token ttoken = null;
@@ -541,14 +597,30 @@ namespace YYS {
             //}
 
             string id = getToken(text_[s], ad);
+            var pa = parser.getPartition(id);
+            string paid = null;
+            if (pa != null) {
+                paid = pa.ID;
+            }
+            else {
+                paid = Document.DEFAULT_ID;
+            }
 
-            for (int i = s+1; i < tln(); ++i) {
+            for (int i = s+1; i < tln(); i++) {
                 var tss = text_[i].Tokens;
-                if (id != tss[0].id) {
-                    return s;
-                }
+                //if (tss[0].id == paid) {
+                //    return i;
+                //}
                 foreach (var item in tss) {
-                    if (id != item.id) {
+                    if (item.id==paid) {
+                        if (item == tss[0]) {
+                            var ltoken = text_[i - 1].Tokens[text_[i - 1].Tokens.Count-1];
+                            las = ltoken.ad + ltoken.len;
+                            return i - 1;
+                        }
+                        int index = tss.IndexOf(item);
+                        var tt = tss[index - 1];
+                        las = tt.ad + tt.len;
                         return i;
                     }
                 }
@@ -559,7 +631,8 @@ namespace YYS {
 
         //private bool ParsePart(string id, int s, int e) {
         private bool ParsePart(List<Tuple<int, Token>> list) {
-            string id = list[0].t2.id;
+            string id =  list[0].t2.id;
+            //string id = parser.getPartition(list[0].t2.id).Parent.ID;
             int s = list[0].t1;
             int e = list[list.Count - 1].t1;
             //int tln = 0;
@@ -602,6 +675,7 @@ namespace YYS {
                 prule = line.Block.mRule;
 
                 block = parser.Parse(id, line, block, cmt);
+                
                 cmt = parser.cmt;
 
                 if (pcmt == cmt) {
