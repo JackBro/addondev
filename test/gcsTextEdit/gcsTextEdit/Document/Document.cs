@@ -329,57 +329,53 @@ namespace YYS {
         //}
 
         private bool ReParse(int index, int s, int e) {
-            //string id=null;
-            //var h = getToken(text_[s], index);
-            //if (h != null) {
-            //    if (h.type == TokenType.MultiLine) {
-            //        var parent = parser.getPartition(h.id).Parent;
-            //        if (parent == null) {
-            //            id = Document.DEFAULT_ID;
-            //        }
-            //        else {
-            //            id = parent.ID;
-            //        }
-            //    }
-            //    else {
-            //        if (h.id == null) {
-            //            h.id = Document.DEFAULT_ID;
-            //        }
-            //        id = h.id;
-            //    }
-            //}
-            //else {
-            //    id = Document.DEFAULT_ID;
-            //}
 
-            //if (id == null) {
-            //    id = Document.DEFAULT_ID;
-            //}
             var id = getToken(text_[s], index);
-            //int tlnn = tln();
-            //if (id != Document.DEFAULT_ID) {
-            //    tlnn = 
-            //}
 
             Line.ID = id;
             parser.SetPartition(id, false);
 
             int i;
             Block block = text_[s].Block;
-            if (id != Document.DEFAULT_ID) {
-                //if (block.mRule == null) {
-                //    block.commentTransition = 3;
-                //    block.isLineHeadCmt = 1;
-                //    block.mRule = text_[s - 1].Block.mRule; //TODO
-                //}
-            }
             int cmt = text_[s].Block.isLineHeadCmt;
             
-            //var mm = block.mRule;
             if (s > 0) {
                 block = text_[s - 1].Block; //TODO
-                if (block.mRule == null && s>1) {
-                    block.mRule = text_[s - 2].Block.mRule; //TODO
+            }
+
+            if (id != Document.DEFAULT_ID) {
+                var tmpid = id;
+                var idlist = new List<string>();
+                while (true) {
+                    idlist.Add(tmpid);
+                    var parent = parser.getPartition(tmpid).Parent;
+                    if (parent == null) {
+                        idlist.Add(Document.DEFAULT_ID);
+                        break;
+                    }
+                    else if (parent.ID == Document.DEFAULT_ID) {
+                        idlist.Add(Document.DEFAULT_ID);
+                        break;
+                    }
+
+                    tmpid = parent.ID;
+                }
+                //var pid = parser.getPartition(id).Parent.ID;
+                for (int j = s; j <= e; ++j) {
+                    if (text_[j].GetBlockLength() < idlist.Count) {
+                        foreach (var item in idlist) {
+                            var pb = text_[j].GetBlock(item);
+                            if (pb == null) {
+                                Block nb = new Block();
+                                nb.isLineHeadCmt = 1;
+                                nb.commentTransition = 3;
+                                if (j > 0) {
+                                    nb.mRule = text_[j - 1].GetBlock(item).mRule;
+                                }
+                                text_[j].SetBlock(item, nb);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -401,14 +397,14 @@ namespace YYS {
             int ll = tln();
             if (id != Document.DEFAULT_ID) {
                 ll = lines(index, s, e);
-                ll++;
-                int ii = 0;
+                //ll++;
+                //int ii = 0;
             }
-            if (i == ll || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
+            if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
             //if (i == tln() || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
       
                 //var lists = lines(s, tln()==ll?e:ll);
-                var lists = lines(s, ll-1);
+                var lists = lines(s, ll);
                 foreach (var list in lists) {
                     ParsePart(list);
                 }
@@ -430,7 +426,6 @@ namespace YYS {
                     block = parser.Parse(id, line, block, cmt, 0, las, true);
                 }
                 else {
-
                     block = parser.Parse(id, line, block, cmt);
                 }
                 cmt = parser.cmt;
@@ -573,7 +568,7 @@ namespace YYS {
                 }
             };
 
-            for (int i = s; i <= e; ++i) {
+            for (int i = s; i < e; ++i) {
                 var ts = text_[i].Tokens;
                 func(i, ts);
             }

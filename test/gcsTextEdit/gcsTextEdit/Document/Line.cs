@@ -38,7 +38,23 @@ namespace YYS
         }
 
         public Block GetBlock(string id) {
-            return blockmap[id];  
+            if (blockmap.ContainsKey(id)) {
+                return blockmap[id];  
+            }
+            return null;
+        }
+
+        public void SetBlock(string id, Block value) {
+            if (blockmap.ContainsKey(id)) {
+                blockmap[id] = value;
+            }
+            else {
+                blockmap.Add(id, value);
+            }
+        }
+
+        public int GetBlockLength() {
+            return blockmap.Count;
         }
 
         public List<Token> Tokens {

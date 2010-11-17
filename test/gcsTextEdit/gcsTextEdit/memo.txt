@@ -1,4 +1,6 @@
-﻿verttabbar-2.8.2-fx.xpi
+﻿http://www.ipa.go.jp/software/open/ossc/seika_1005_1.html
+
+verttabbar-2.8.2-fx.xpi
 101012
 101108
 

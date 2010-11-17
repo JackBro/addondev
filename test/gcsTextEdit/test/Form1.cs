@@ -269,7 +269,9 @@ namespace test
 
             edit.Text = @"/*ss
 f/=fff
-ff=/
+fff
+f if f=/
+mmmmm
 zxcvbns*/mmm
 me";
 

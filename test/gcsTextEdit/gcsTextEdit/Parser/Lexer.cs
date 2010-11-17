@@ -334,20 +334,22 @@ namespace AsControls.Parser {
                         break;
                     }
                 }
-                else if (multiRuleEndDic.ContainsKey(s)) {
-                    var rule = multiRuleEndDic[s];
-                    if (rule.Detected(s, reader)) {
-                        //tok = rule.token;
-                        tok = TokenType.MultiLineEnd;
-                        int len = rule.getLen(s, reader);
-                        OffsetLenAttr = new Tuple<int, int, Rule>(offset, len, rule);
-                        reader.setoffset(offset + len);
+                else if (curblock.isLineHeadCmt != 0){
+                    if (multiRuleEndDic.ContainsKey(s)) {
+                        var rule = multiRuleEndDic[s];
+                        if (rule.Detected(s, reader)) {
+                            //tok = rule.token;
+                            tok = TokenType.MultiLineEnd;
+                            int len = rule.getLen(s, reader);
+                            OffsetLenAttr = new Tuple<int, int, Rule>(offset, len, rule);
+                            reader.setoffset(offset + len);
 
-                        if (curblock != null) {
-                            curblock.mRule = rule as MultiLineRule;
+                            if (curblock != null) {
+                                curblock.mRule = rule as MultiLineRule;
+                            }
+
+                            break;
                         }
-
-                        break;
                     }
                 }
             }
