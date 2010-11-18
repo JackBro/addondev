@@ -267,7 +267,8 @@ namespace test
             WrapOnToolStripMenuItem.Checked = true;
 
 
-            edit.Text = @"/*ss
+            edit.Text = @"/*mm*/mm
+/*ss
 f/=fff
 fff
 f if f=/

@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing;
 using YYS.Parser;
 
-namespace YYS.Parser {
+namespace YYS.Parser.NestParser {
 
     //public static class isLineHeadCommented {
     //    public static int firstout = 0;
@@ -31,7 +31,7 @@ namespace YYS.Parser {
     //    lastin
     //}
 
-    class Parser {
+    class Parser :IParser{
 
         private Lexer lex;
         private TokenType tokentype;

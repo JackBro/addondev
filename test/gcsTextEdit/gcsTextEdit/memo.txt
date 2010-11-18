@@ -1,4 +1,6 @@
-﻿http://www.ipa.go.jp/software/open/ossc/seika_1005_1.html
+﻿http://d.hatena.ne.jp/otn/20090825/p1
+
+http://www.ipa.go.jp/software/open/ossc/seika_1005_1.html
 
 verttabbar-2.8.2-fx.xpi
 101012
