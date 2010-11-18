@@ -1,4 +1,19 @@
-﻿http://d.hatena.ne.jp/otn/20090825/p1
+﻿http://seinen14sai.blog121.fc2.com/blog-entry-23.html
+http://miff.blog.so-net.ne.jp/2010-10-20#more
+http://d.hatena.ne.jp/masaki0303/20100509/1273384735
+http://www.ruby-ruby.info/ruby/317/
+http://futaweb.sakura.ne.jp/blog/ruby/ruby-on-rails%E3%82%A2%E3%83%97%E3%83%AA%E4%BD%9C%E6%88%90%E3%81%AE%E6%B5%81%E3%82%8C%E3%83%A1%E3%83%A2/
+http://cpractice.seesaa.net/category/7182632-1.html
+http://docs.dhtmlx.com/doku.php?id=dhtmlxcalendar:event_handling
+http://ja.w3support.net/index.php?db=so&id=247656
+http://dev.elevationblog.com/2009/7/23/event-calendar-rails-plugin/
+http://www19.atpages.jp/~taipeimaomao/pukiwikiplus/index.php?Ruby%20on%20Rails%A4%A2%A4%EC%A4%B3%A4%EC
+http://labs.agenda-style.jp/blog/2010/01/ruby-on-rails-tips-----4.html
+http://www.oiax.jp/rails/rails3.html
+http://thinkit.co.jp/story/2010/10/06/1792
+http://maskana.homedns.org/rails/pro
+
+http://d.hatena.ne.jp/otn/20090825/p1
 
 http://www.ipa.go.jp/software/open/ossc/seika_1005_1.html
 
