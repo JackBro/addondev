@@ -13,27 +13,27 @@ namespace YYS.Parser.Simple {
 
         #region IParser メンバ
 
-        public bool Parser(List<Line> text_, int ad, int s, int e) {
+        public bool Parse(List<Line> text, int ad, int s, int e) {
             //var id = getToken(text_[s], index);
             //Line.ID = id;
             //parser.SetPartition(id, false);
-            int tln = text_.Count;
+            int tln = text.Count;
 
             int i;
-            Block block = text_[s].Block;
-            int cmt = text_[s].Block.isLineHeadCmt;
+            Block block = text[s].Block;
+            int cmt = text[s].Block.isLineHeadCmt;
 
             if (s > 0) {
-                block = text_[s - 1].Block;
+                block = text[s - 1].Block;
             }
 
             // まずは変更範囲を再解析
             for (i = s; i <= e; ++i) {
-                block = ParseLine(text_[i], block, ref cmt, 0, text_[i].Length);
+                block = ParseLine(text[i], block, ref cmt, 0, text[i].Length);
                 //cmt = parser.cmt;
             }
 
-            if (i == tln || (text_[i].Block.isLineHeadCmt == cmt && text_[i].Block.mRule == block.mRule)) {
+            if (i == tln || (text[i].Block.isLineHeadCmt == cmt && text[i].Block.mRule == block.mRule)) {
                 return false;
             }
 
@@ -43,7 +43,7 @@ namespace YYS.Parser.Simple {
             // 例えば、/* が入力された場合などは、下の方の行まで
             // コメントアウト状態の変化を伝達する必要がある。
             do {
-                Line line = text_[i++];
+                Line line = text[i++];
                 pcmt = line.Block.isLineHeadCmt;
                 prule = line.Block.mRule;
 

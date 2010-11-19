@@ -329,8 +329,9 @@ namespace YYS {
             //doc_.setHighlight(new Highlight(this.ForeColor));
             //doc_.SetPartition(new Partition(new Highlight(this.ForeColor)));
             //doc_.SetPartition(new DefaultPartition(new DefaultHighlight(this.ForeColor)));
-            doc_.AddHighlight(Document.DEFAULT_ID, new DefaultHighlight(this.ForeColor));
-            doc_.SetPartition(Document.DEFAULT_ID);
+            //doc_.AddHighlight(Document.DEFAULT_ID, new DefaultHighlight(this.ForeColor));
+            //doc_.SetPartition(Document.DEFAULT_ID);
+            doc_.Parser.SetHighlight(new DefaultHighlight(this.ForeColor));
             //doc_.DocumentChanged += (sender, e) => {
             //    if (e.type == DocumentEventType.Clear) {
             //        this.MoveCursor(new DPos(0, 0));

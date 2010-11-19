@@ -83,6 +83,7 @@
     <Compile Include="Parser\Nest\NestParser.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Partition.cs" />
+    <Compile Include="Parser\Plane\PlaneParser.cs" />
     <Compile Include="Parser\Rule.cs" />
     <Compile Include="Parser\Simple\SimpleParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
