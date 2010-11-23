@@ -13,6 +13,12 @@ http://labs.agenda-style.jp/blog/2010/01/ruby-on-rails-tips-----4.html
 http://www.oiax.jp/rails/rails3.html
 http://thinkit.co.jp/story/2010/10/06/1792
 http://maskana.homedns.org/rails/pro
+http://d.hatena.ne.jp/TrinityT/20101120/1290264975
+http://d.hatena.ne.jp/takihiro/20101023/1287826698
+http://irohiroki.com/2010/08/29/rails3-routes
+http://www.func09.com/wordpress/archives/tag/rails3
+http://pinzolog.blogspot.com/search/label/rails
+http://d.hatena.ne.jp/hichiriki/20101026/1288107706
 
 http://d.hatena.ne.jp/otn/20090825/p1
 
