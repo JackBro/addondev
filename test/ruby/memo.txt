@@ -1,0 +1,39 @@
+
+http://walbrix.net/blog/2010/05/railsrxml-xml.html
+http://cpractice.seesaa.net/article/148021773.html
+http://stackoverflow.com/questions/2533240/any-way-to-colorize-specific-days-in-fullcalendar
+http://d.hatena.ne.jp/okinaka/20100728/1280329405
+http://fullcalendar.vinsol.com/
+http://sookibizviz.blog81.fc2.com/?mode=m&no=372
+https://github.com/bansalakhil/fullcalendar
+
+fullcalendar-1.4.9 selectable.html
+<style type='text/css'>
+
+	body {
+		margin-top: 40px;
+		text-align: center;
+		font-size: 14px;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		}
+
+	#calendar {
+		width: 900px;
+		margin: 0 auto;
+		}
+
+		.fc-grid .vacation {
+			background-color:#F00;
+		}
+
+		.fc-grid .fc-sun {
+			background-color:#F00;
+
+		}
+		.fc-grid .fc-sat {
+			background-color:blue;
+		}
+</style>
+
+fullcalendar.js L1478
+$("div.fc-day-number:contains('15')").parent().addClass("vacation");
