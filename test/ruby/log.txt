@@ -1,0 +1,56 @@
+public\javascripts
+	jquery-1.4.4.min.js
+	jquery-ui-1.8.6.custom.min.js
+	rails.js(https://github.com/indirect/jquery-rails)
+
+\config\application.rb
+    config.action_view.javascript_expansions[:defaults] = %w(jquery-1.4.4.min jquery-ui-1.8.6.custom.min rails application)
+application.html.erb
+  <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag 'fullcalendar', 'gcal' %>
+  <%= stylesheet_link_tag 'fullcalendar', 'jquery-ui', 'dialog' %>
+
+routes.rb
+  resources :events
+  match 'events/new' => 'events#new'
+  match 'events/edit' => 'events#edit'
+  match 'events/create' => 'events#create'
+  match 'events/update' => 'events#update'
+  match 'events/get_events' => 'events#get_events'
+
+application.js(http://chez-sugi.net/journal/20100907.html)
+	Element.update = function (element, html) {
+    $('#' + element).html(html);
+}
+
+new.js.rjs
+->$("#create_event_dialog").dialog is not  a function de error
+
+->jquery-ui-1.8.6.custom.zip down
+jquery-1.4.2.min.js, jquery-ui-1.8.6.custom.min.js no jquery-ui-1.8.6.custom.min.js wo
+copy to public\javascripts
+->OK
+*genninn
+fullcalrndarにはいっていたjquery-ui-1.8.6.custom.min.jsにはdialogの関数が定義されていなかった
+いｒかえたらOKになった
+
+
+new.js.erb
+page.replace_html 'create_event', :partial => 'form'
+page<< "$('#create_event_dialog').dialog({
+        title: 'New Event',
+        modal: true,
+        width: 500,
+        close: function(event, ui) { $('#create_event_dialog').dialog('destroy') }
+    });
+"
+->new.js.erbだと以下のえらーがでる
+エラー: missing ; before statement
+ソースファイル: http://localhost:3000/
+行: 0, 列: 5
+ソースコード:
+page.replace_html 'create_event', :partial => 'form'
+
+
+
+=>new.js.rjsにすると動作する 
