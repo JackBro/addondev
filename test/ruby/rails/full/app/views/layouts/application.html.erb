@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Full</title>
+  <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag 'fullcalendar', 'gcal' %>
+  <%= stylesheet_link_tag 'fullcalendar', 'jquery-ui', 'dialog' %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>

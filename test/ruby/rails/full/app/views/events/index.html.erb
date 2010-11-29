@@ -1,0 +1,81 @@
+<!--
+<p>
+  <%=link_to 'Create Event', {:action => :new}, :remote=>true, :before => "$('#loading').show()", :complete => "$('#loading').hide()" %>
+</p>
+-->
+
+<script>
+  $(document).ready(function(){
+  
+  	var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();
+  
+      // page is now ready, initialize the calendar...
+      $('#calendar').fullCalendar({
+	       header: {
+	           left: 'prev,next today',
+	           center: 'title',
+	           right: 'month,basicWeek,basicDay'
+	       },
+	
+	       titleFormat: {
+	           month: 'yyyy年 M月',
+	           week: '[yyyy年 ]M月 d日{ &#8212;[yyyy年 ][ M月] d日}',
+	           day: 'yyyy年 M月 d日 dddd'
+	       },
+	       columnFormat: {
+	           month: 'ddd',
+	           week: 'M/d（ddd）',
+	           day: 'M/d（ddd）'
+	       },
+	
+	       dayNames: ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'],
+	       dayNamesShort: ['日','月','火','水','木','金','土'],
+
+          editable: true,
+          //defaultView: 'agendaWeek',
+          defaultView: 'month',
+          height: 500,
+          slotMinutes: 15,
+          loading: function(bool){
+              if (bool) 
+                  $('#loading').show();
+              else 
+                  $('#loading').hide();
+          },
+          //dayClick: function(event) {
+		     	//dayClickEvent(event);
+		  		//},
+          events: "/events/get_events",
+          timeFormat: 'h:mm t{ - h:mm t} ',
+          dragOpacity: "0.5",
+          
+          eventClick: function(event, jsEvent, view){
+              showEventDetails(event);
+          },
+
+      });
+  });
+  
+  
+</script>
+<div>
+  <div id='calendar'>
+  </div>
+</div>
+<div id = "desc_dialog" style ="display:none;">
+  <div id = "event_desc">
+  </div>
+  <br/>
+  <br/>
+  <div id = "event_actions">
+    <span id = "edit_event"></span>
+    <span id = "delete_event"></span>
+  </div>
+</div>
+<div id = "create_event_dialog" style ="display:none;">
+  <div id = "create_event">
+  </div>
+</div>

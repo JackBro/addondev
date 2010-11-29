@@ -1,0 +1,59 @@
+<%= form_for @event, :url =>{:action => :create}, :remote => true, :before => "$('#creating_events').show();", :complete => "$('#creating_events').hide();" do |f| %>
+<p>
+	<%=select_tag('event_startHH',
+ 		options_for_select([
+ 			['00',0],['01',1],['02',2],['03',3],['04',4],['05',5],['06',6],['07',7],['08',8],['09',9],['10',10],['11',11],['12',12],['13',13],['14',14],['15',15],['16',16],['17',17],['18',18],['19',19],['20',20],['21',21],['22',22],['23',23]
+ 		], 8), 
+	) %>
+	:
+	<%= select_tag('event_startMM',
+ 		options_for_select([
+ 			['00',0],['15',15],['30',30],['45',45]
+ 		], 45), 
+	) %>
+
+-
+
+	<%= select_tag('event_endHH',
+ 		options_for_select([
+ 			['00',0],['01',1],['02',2],['03',3],['04',4],['05',5],['06',6],['07',7],['08',8],['09',9],['10',10],['11',11],['12',12],['13',13],['14',14],['15',15],['16',16],['17',17],['18',18],['19',19],['20',20],['21',21],['22',22],['23',23]
+ 		], 17), 
+	) %>
+	:
+	<%= select_tag('event_endMM',
+ 		options_for_select([
+ 			['00',0],['15',15],['30',30],['45',45]
+ 		], 15), 
+	) %>
+</p>
+
+<p>
+<!--
+  <%=f.label :title %>
+-->
+	time
+	<%= select_tag('event_time',
+ 	options_for_select([['7.75','7.75'],['8.75','8.75'],['9.75','9.75']]), 
+	) %>
+</p>
+
+<!--
+<p>
+  <%=f.label :starttime, 'Start Time' %>
+  <br/>
+  <%=f.datetime_select :starttime %>
+</p>
+<p>
+  <%=f.label :endtime, 'End Time' %>
+  <br/>
+  <%=f.datetime_select :endtime %>
+</p>
+-->
+<%=f.hidden_field :starttime, :value => @event.starttime %>
+<%=f.hidden_field :endtime, :value => @event.endtime %>
+
+<%=f.hidden_field :id, :value => @event.id %>
+<p>
+  <%=f.submit 'Create' %> <span id = "creating_events" style = "display:none;">Creating, Please wait...</span>
+</p>
+<%end %>
