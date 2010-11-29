@@ -1,3 +1,10 @@
+http://d.hatena.ne.jp/mothprog/20090331/1238494900
+https://github.com/binarylogic/authlogic
+http://www.binarylogic.com/2008/11/16/tutorial-reset-passwords-with-authlogic/
+http://d.hatena.ne.jp/kattton/20100326/1269596782
+http://wiki.usagee.co.jp/index.php?ruby/rails/RailsGuides%E3%82%92%E3%82%86%E3%81%A3%E3%81%8F%E3%82%8A%E5%92%8C%E8%A8%B3%E3%81%97%E3%81%A6%E3%81%BF%E3%81%9F%E3%82%88/Rails%20Routing%20from%20the%20Outside%20In
+http://www.oiax.jp/rails/rails3/finish_task.html
+
 http://www.serendip.ws/archives/4546
 
 http://chez-sugi.net/journal/20100907.html
