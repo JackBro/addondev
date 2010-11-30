@@ -1,3 +1,9 @@
+http://d.hatena.ne.jp/next49/20100905/p1
+http://www.oiax.jp/rails/rails3/authentication2.html
+https://github.com/plataformatec/devise
+http://mrjaba.posterous.com/rails-3-active-model-undefined-method-tokey-f
+
+
 http://d.hatena.ne.jp/mothprog/20090331/1238494900
 https://github.com/binarylogic/authlogic
 http://www.binarylogic.com/2008/11/16/tutorial-reset-passwords-with-authlogic/
