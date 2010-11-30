@@ -1,3 +1,10 @@
+http://d.hatena.ne.jp/yarb/20100803/p1
+http://efreedom.com/Question/1-3673701/Configure-Devise-Accept-Either-Email-Username-Login
+http://efreedom.com/Question/1-2997179/RoR-Devise-Sign-Username-Email
+http://stackoverflow.com/questions/3953945/rails-devise-signup-form-not-accepting-custom-username-field
+http://asciicasts.com/episodes/210-customizing-devise
+http://d.hatena.ne.jp/yarb/20101022/p1
+
 http://d.hatena.ne.jp/next49/20100905/p1
 http://www.oiax.jp/rails/rails3/authentication2.html
 https://github.com/plataformatec/devise
