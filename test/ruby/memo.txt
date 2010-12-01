@@ -1,3 +1,13 @@
+http://blog.plataformatec.com.br/2009/11/understanding-devise-roles/
+http://www.markrichman.com/2010/11/22/rails-devise-datamapper-authentication/
+http://stackoverflow.com/questions/3953945/rails-devise-signup-form-not-accepting-custom-username-field
+http://blog.blueblack.net/item_358
+http://www6.atpages.jp/~appsouko/souko/doc/ckw/ckw.html
+http://d.hatena.ne.jp/hideden/20071123/1195822428
+http://deflis.github.com/ckw-mod/
+http://d.hatena.ne.jp/t0m0/20101009/1286614739
+
+
 http://d.hatena.ne.jp/yarb/20100803/p1
 http://efreedom.com/Question/1-3673701/Configure-Devise-Accept-Either-Email-Username-Login
 http://efreedom.com/Question/1-2997179/RoR-Devise-Sign-Username-Email
