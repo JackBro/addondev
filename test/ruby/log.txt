@@ -54,3 +54,40 @@ page.replace_html 'create_event', :partial => 'form'
 
 
 =>new.js.rjsにすると動作する 
+
+///////////////////////////////////////////////////////////////////////////
+//Deviseインストール
+
+DevKit-4.5.0-20100819-1536-sfx.exe
+C:\DevKit
+ruby dk.rb init
+ruby dk.rb install
+
+Gemfile
+gem 'devise'
+
+bundle install
+
+//Devise
+http://www.oiax.jp/rails/rails3/authentication1.html
+*config/routes.rb
+add root :to => 'welcome#index'
+
+http://www.oiax.jp/rails/rails3/authentication2.html
+*config/routes.rb
+add
+  devise_for :users
+  get 'events', :to => 'events#index', :as => :user_root
+
+
+//mod user username, pass
+http://asciicasts.com/episodes/210-customizing-devise
+Customizing The Login Requirements
+
+->reg user, pass but  username is null in table
+*models/user.rb
+add :username
+attr_accessible :password, :remember_me, :username
+->OK
+
+
