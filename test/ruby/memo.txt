@@ -1,3 +1,6 @@
+http://d.hatena.ne.jp/a666666/20100211/1265832046
+http://d.hatena.ne.jp/shokai/20090623/1245738339
+
 http://blog.plataformatec.com.br/2009/11/understanding-devise-roles/
 http://www.markrichman.com/2010/11/22/rails-devise-datamapper-authentication/
 http://stackoverflow.com/questions/3953945/rails-devise-signup-form-not-accepting-custom-username-field
