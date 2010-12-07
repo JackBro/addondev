@@ -122,7 +122,7 @@ namespace YYS {
                     var ff = this.Font.FontFamily;
                     var size = this.Font.Size;
                     
-                    boldFont = new Font(ff, size, FontStyle.Bold);
+                    boldFont = new Font(ff, size-1, FontStyle.Bold); //TODO bold
                 }
                 return boldFont;
             }

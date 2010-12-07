@@ -25,5 +25,11 @@ namespace YYS.Parser.Plane {
         }
 
         #endregion
+
+        #region IParser メンバ
+
+        public event ReParseAllEventHandler ReParseAll;
+
+        #endregion
     }
 }

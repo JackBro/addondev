@@ -55,7 +55,7 @@ namespace YYS {
         private List<Line> text_;
 
         //Parser.Parser parser;
-        Parser.IParser parser;
+        //Parser.IParser parser;
 
         //public void setHighlight(IHighlight highlight) {
         //    parser.AddHighlight(Document.DEFAULT_ID, highlight);
@@ -75,7 +75,19 @@ namespace YYS {
         //public void SetPartition(string ID) {
         //    parser.SetPartition(ID, true);
         //}
-        public IParser Parser { get; set; }
+        private IParser parser;
+        public IParser Parser {
+            get { return parser; }
+            set {
+                parser = value;
+                parser.ReParseAll += ()=>{
+                    ReParse(0, 0, text_.Count - 1);
+                    //Fire_TEXTUPDATE(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length));
+                    Fire_TEXTUPDATE(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length), new DPos(tln() - 1, tl(tln() - 1).Length), true, false);
+                };
+            }
+        }
+
 
         public UndoManager UndoManager { get; private set; }
 
@@ -169,7 +181,7 @@ namespace YYS {
         
         public Document() {
             //parser = new YYS.Parser.Parser();
-            parser = new Parser.Plane.PlaneParser();
+            //parser = new Parser.Plane.PlaneParser();
 
             UndoManager = new UndoManager(this);
 
@@ -334,7 +346,8 @@ namespace YYS {
 
         private bool ReParse(int index, int s, int e) {
 
-            return parser.Parse(text_, index, s, e);
+            //return parser.Parse(text_, index, s, e);
+            return Parser.Parse(text_, index, s, e);
         }
 
 

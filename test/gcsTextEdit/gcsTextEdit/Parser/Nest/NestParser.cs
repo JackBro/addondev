@@ -679,5 +679,19 @@ namespace YYS.Parser.Nest {
         }
 
         #endregion
+
+        #region IParser メンバ
+
+        public void SetHighlight(IHighlight highlight) {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IParser メンバ
+
+        public event ReParseAllEventHandler ReParseAll;
+
+        #endregion
     }
 }

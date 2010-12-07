@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.ComponentModel;
 using YYS.Parser;
+using YYS.Parser.Plane;
 
 namespace YYS {
 
@@ -331,6 +332,7 @@ namespace YYS {
             //doc_.SetPartition(new DefaultPartition(new DefaultHighlight(this.ForeColor)));
             //doc_.AddHighlight(Document.DEFAULT_ID, new DefaultHighlight(this.ForeColor));
             //doc_.SetPartition(Document.DEFAULT_ID);
+            doc_.Parser = new PlaneParser();
             doc_.Parser.SetHighlight(new DefaultHighlight(this.ForeColor));
             //doc_.DocumentChanged += (sender, e) => {
             //    if (e.type == DocumentEventType.Clear) {

@@ -10,6 +10,7 @@ using YYS;
 using YYS.Parser;
 using System.IO;
 using System.Text.RegularExpressions;
+using YYS.Parser.Simple;
 
 namespace test
 {
@@ -19,6 +20,7 @@ namespace test
         private YYS.GCsTextEdit edit = new YYS.GCsTextEdit();
         private YYS.Search sr;
         private YYS.IncrementalSearch incsr;
+        private Dictionary<string, IHighlight> Highlights = new Dictionary<string, IHighlight>();
 
         public Form1()
         {
@@ -37,10 +39,14 @@ namespace test
             //edit.Document.AddPartition(new PartRule("#start", "#end", "test"));
             //edit.Document.AddPartition(new PartRule("/*", "*/", "test"));
             //edit.Document.setHighlight("test", new Highlight());
-            edit.Document.AddHighlight(Document.DEFAULT_ID, new Highlight2());
-            edit.Document.AddHighlight("default.comment", new Highlight());
+            //edit.Document.AddHighlight(Document.DEFAULT_ID, new Highlight2());
+            //edit.Document.AddHighlight("default.comment", new Highlight());
+            //edit.Document.SetPartition(Document.DEFAULT_ID);
 
-            edit.Document.SetPartition(Document.DEFAULT_ID);
+
+            edit.Document.Parser = new SimpleParser();
+            edit.Document.Parser.SetHighlight(new Highlight());
+
             
             //csedit.Dock = DockStyle.Top;
             edit.Dock = DockStyle.Fill;
@@ -164,6 +170,20 @@ namespace test
 
             ShowLineNumToolStripMenuItem.Click += (sender, e) => {
                 edit.ShowLineNumber = ShowLineNumToolStripMenuItem.Checked;
+            };
+
+            Highlights.Add("js", new JSHighlight());
+
+            TextToolStripMenuItem.Click += (sender, e) => {
+
+            };
+
+            CppToolStripMenuItem.Click += (sender, e) => {
+
+            };
+
+            JavaScriptToolStripMenuItem.Click += (sender, e) => {
+                edit.Document.Parser.SetHighlight(Highlights["js"]);
             };
 
             FindNextButton.Click += (sender, e) => {

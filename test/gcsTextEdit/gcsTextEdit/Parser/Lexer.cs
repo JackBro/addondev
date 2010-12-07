@@ -153,7 +153,8 @@ namespace YYS.Parser {
                                 if (rule.Detected(end, reader)) {
                                     curblock.mRule = rule;
                                     tok = TokenType.MultiLineEnd;
-                                    int len = rule.getLen(end, reader);
+                                    //int len = rule.getLen(end, reader);
+                                    int len = index + end.Length; 
                                     reader.setoffset(len);
                                     OffsetLenAttr = new Tuple<int, int, Rule>(0, len, rule);
                                     return true;

@@ -4,12 +4,18 @@ using System.Linq;
 using System.Text;
 
 namespace YYS.Parser.Simple {
-    class SimpleParser : IParser {
+
+
+    public class SimpleParser : IParser {
 
         private Lexer lex;
         private TokenType tokentype;
         private List<Token> tokens;
         private Attribute defaultAttr;
+
+        public SimpleParser() {
+            lex = new Lexer();
+        }
 
         #region IParser メンバ
 
@@ -200,5 +206,27 @@ namespace YYS.Parser.Simple {
 
             return line.Block;
         }
+
+        #region IParser メンバ
+
+        void IParser.SetHighlight(IHighlight highlight) {
+            defaultAttr = highlight.getDefault();
+            this.lex.AddRule(highlight.getRules());
+            if (ReParseAll != null) {
+                ReParseAll();
+            }
+        }
+
+        void IParser.AddHighlight(string partionID, IHighlight highlight) {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IParser メンバ
+
+        public event ReParseAllEventHandler ReParseAll;
+
+        #endregion
     }
 }
