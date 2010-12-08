@@ -349,6 +349,8 @@ namespace YYS {
             fnt().LineNumberLineColor = this.ForeColor;
             fnt().SpecialCharForeColor = Color.Gray;
 
+            fnt().canvas = cvs_;
+
             cur_ = new Cursor(this, new Caret(this.Handle));
 
             Initialize();

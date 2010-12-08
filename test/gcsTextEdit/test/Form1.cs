@@ -141,6 +141,14 @@ namespace test
                 edit.RectSelect = !edit.RectSelect;
             });
 
+            edit.KeyMap.setAction(Keys.Home, (editor) => {
+                editor.Home(false, false);
+            });
+
+            edit.KeyMap.setAction(Keys.End, (editor) => {
+                editor.End(false, false);
+            });
+
             //csedit.LinkClickEventHandler += (sender, e) => {
             //    MessageBox.Show(e.Link);
             //};
@@ -294,6 +302,7 @@ fff
 f if f=/
 mmmmm
 zxcvbns*/mmm
+function
 me";
 
             panel1.Controls.Add(edit);

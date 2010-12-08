@@ -110,23 +110,24 @@ namespace YYS {
 
                 LineWeight = (float)(this.font.Size/10.0);
 
-                DeleteObj(boldFont);
-                boldFont = null;
+                //DeleteObj(boldFont);
+                //boldFont = null;
             }
         }
 
-        private Font boldFont;
-        private Font BoldFont {
-            get {
-                if (boldFont == null) {
-                    var ff = this.Font.FontFamily;
-                    var size = this.Font.Size;
-                    
-                    boldFont = new Font(ff, size-1, FontStyle.Bold); //TODO bold
-                }
-                return boldFont;
-            }
-        }
+        //private Font boldFont;
+        //private Font BoldFont {
+        //    get {
+        //        if (boldFont == null) {
+        //            var ff = this.Font.FontFamily;
+        //            var size = this.Font.Size;
+        //            boldFont = new Font(ff, size, FontStyle.Bold);                    
+        //        }
+        //        return boldFont;
+        //    }
+        //}
+
+        internal Canvas canvas;
 
         public Painter(IntPtr hwnd, Font font) {
             hwnd_ = hwnd;
@@ -170,7 +171,7 @@ namespace YYS {
             //Marshal.FreeHGlobal(widthPtr);
             Win32API.ReleaseDC(hwnd_, dc_);
 
-            DeleteObj(this.boldFont);
+            //DeleteObj(this.boldFont);
             DeleteObject(hfont_);
         }
 
@@ -320,13 +321,36 @@ namespace YYS {
         //       //TextFormatFlags.NoPadding | TextFormatFlags.NoClipping 
         //       //     | TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPrefix); 
         //}
-        private TextFormatFlags textFlags = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix;
+        private TextFormatFlags textFlags = TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.Internal | TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix;
+        //private TextFormatFlags textFlags = TextFormatFlags.Left | TextFormatFlags.WordBreak | TextFormatFlags.Internal | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix;
         public void DrawText(Graphics g, string text, YYS.Parser.Attribute attr, int X, int Y) {
             if ((attr.type & AttrType.Bold) == AttrType.Bold) {
+
+                //TextRenderer.DrawText(g,
+                //   text,
+                //   this.BoldFont,
+                //   new Point(X, Y),
+                //   attr.color,
+                //   textFlags);
+                
+                //StringFormat sf = new StringFormat(StringFormat.GenericTypographic);
+                //sf.FormatFlags = StringFormatFlags.NoWrap;
+
+                ////var s = BoldFont.SizeInPoints * (96 / 72) * 0.17;
+                ////var pf = new PointF((float)(X), (float)Y);
+                //g.DrawString(text, this.Font, lineNumberBrush, new PointF(X, Y), sf);
+                //g.DrawString(text, this.Font, lineNumberBrush, new PointF((float)(X + 1), (float)(Y)), sf);
+
                 TextRenderer.DrawText(g,
                    text,
-                   this.BoldFont,
+                   this.Font,
                    new Point(X, Y),
+                   attr.color,
+                   textFlags);
+                TextRenderer.DrawText(g,
+                   text,
+                   this.Font,
+                   new Point(X + 1, Y),
                    attr.color,
                    textFlags);
             }
