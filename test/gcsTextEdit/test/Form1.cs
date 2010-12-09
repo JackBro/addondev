@@ -43,8 +43,8 @@ namespace test
             //edit.Document.AddHighlight("default.comment", new Highlight());
             //edit.Document.SetPartition(Document.DEFAULT_ID);
 
-
-            edit.Document.Parser = new SimpleParser();
+            var parser = new SimpleParser();
+            edit.Document.Parser = parser;
             edit.Document.Parser.SetHighlight(new Highlight());
 
             

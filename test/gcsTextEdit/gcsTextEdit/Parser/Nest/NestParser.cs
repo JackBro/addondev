@@ -690,7 +690,7 @@ namespace YYS.Parser.Nest {
 
         #region IParser メンバ
 
-        public event ReParseAllEventHandler ReParseAll;
+        public event HighlightChangeEventHandler HighlightChangeEvent;
 
         #endregion
     }

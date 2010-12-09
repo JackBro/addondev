@@ -212,8 +212,8 @@ namespace YYS.Parser.Simple {
         void IParser.SetHighlight(IHighlight highlight) {
             defaultAttr = highlight.getDefault();
             this.lex.AddRule(highlight.getRules());
-            if (ReParseAll != null) {
-                ReParseAll();
+            if (HighlightChangeEvent != null) {
+                HighlightChangeEvent();
             }
         }
 
@@ -225,7 +225,7 @@ namespace YYS.Parser.Simple {
 
         #region IParser メンバ
 
-        public event ReParseAllEventHandler ReParseAll;
+        public event HighlightChangeEventHandler HighlightChangeEvent;
 
         #endregion
     }

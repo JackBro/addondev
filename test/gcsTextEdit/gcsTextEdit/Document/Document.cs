@@ -42,6 +42,7 @@ namespace YYS {
     }
 
     public delegate void DocumentEventHandler(object sender, DocumentEventArgs e);
+    internal delegate void ParserChangeEventHandler(object sender);
     
     public class Document : IEnumerable<string> {
     //public class Document {
@@ -51,6 +52,7 @@ namespace YYS {
         public event DocumentEventHandler DocumentChanged;
 
         internal event TextUpdateEventHandler TextUpdateEvent;
+        internal event ParserChangeEventHandler ParserChangeEvent;
 
         private List<Line> text_;
 
@@ -80,14 +82,12 @@ namespace YYS {
             get { return parser; }
             set {
                 parser = value;
-                parser.ReParseAll += ()=>{
-                    ReParse(0, 0, text_.Count - 1);
-                    //Fire_TEXTUPDATE(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length));
-                    Fire_TEXTUPDATE(new DPos(0, 0), new DPos(tln() - 1, tl(tln() - 1).Length), new DPos(tln() - 1, tl(tln() - 1).Length), true, false);
-                };
+                parser.HighlightChangeEvent -= HighlighterChangeEvent;
+                parser.HighlightChangeEvent += HighlighterChangeEvent;
             }
         }
 
+        private HighlightChangeEventHandler HighlighterChangeEvent;
 
         public UndoManager UndoManager { get; private set; }
 
@@ -182,6 +182,12 @@ namespace YYS {
         public Document() {
             //parser = new YYS.Parser.Parser();
             //parser = new Parser.Plane.PlaneParser();
+            HighlighterChangeEvent = () => {
+                ReParse(0, 0, text_.Count - 1);
+                if (ParserChangeEvent != null) {
+                    ParserChangeEvent(this);
+                }
+            };
 
             UndoManager = new UndoManager(this);
 

@@ -342,6 +342,9 @@ namespace YYS {
             doc_.TextUpdateEvent += (s, e, e2, reparsed, nmlcmd) => {
                 on_text_update(s, e, e2, reparsed, nmlcmd);
             };
+            doc_.ParserChangeEvent += (sender) => {
+                this.Invalidate(false);
+            };
             //
             cvs_ = new Canvas(this, this.Font, ShowLineNumber);
             fnt().LineNumberForeColor = this.ForeColor;
