@@ -103,5 +103,11 @@ http://blog.myfinder.jp/2008/12/leopardmecab.html
 dicrc
 node-format-myfinder = %t\t%F-[0,1,2,3]\n
 
+/////////////////////////////////////////////////
+Aptana_RadRails_Setup_2.0.5.exe
+gem install ruby-debug-base19
+ruby-debug-ide19
+
+use debug-lib
 
 
