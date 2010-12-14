@@ -90,4 +90,18 @@ add :username
 attr_accessible :password, :remember_me, :username
 ->OK
 
+///////////////////////
+set PATH+="D:\program\glo\bin;C:\DevKit\bin;C:\DevKit\mingw\bin"
+
+http://stackoverflow.com/questions/1083451/debugging-in-ruby-1-9
+https://rubygems.org/gems/ruby-debug19
+http://webcache.googleusercontent.com/search?q=cache:ytnzxbETCD8J:forums.aptana.com/viewtopic.php%3Fp%3D35976+gems/ruby-debug-base-0.10.3-x86-mswin32/lib/ruby_debug.so+%28LoadError%29&cd=7&hl=ja&ct=clnk&gl=jp&client=firefox-a
+
+gem update ruby-debug-ide -v *
+
+http://blog.myfinder.jp/2008/12/leopardmecab.html
+dicrc
+node-format-myfinder = %t\t%F-[0,1,2,3]\n
+
+
 
