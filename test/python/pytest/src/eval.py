@@ -1,5 +1,6 @@
 #coding:utf-8
 import codecs
+import os
 from naivebayes import NaiveBayes
 
 # eval.py
@@ -37,4 +38,4 @@ def evaluate(trainfile, testfile):
     fp.close()
 
 if __name__ == "__main__":
-    evaluate("data/news20", "data/news20.t")
+    evaluate(os.path.join(os.getcwd(),"data\\news20"), os.path.join(os.getcwd(),"data\\news20.t"))

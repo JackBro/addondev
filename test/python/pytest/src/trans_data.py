@@ -1,5 +1,6 @@
 #coding:utf-8
 import sys
+import os
 from collections import defaultdict
 
 # trans_data.py
@@ -13,14 +14,14 @@ from collections import defaultdict
 def trans_data(labelfile, datafile, outfile):
     # カテゴリをロード
     category = []
-    fp = open("data/train.map")  # test.mapでも同じ
+    fp = open(os.path.join(os.getcwd(), "data\\train.map"))  # test.mapでも同じ
     for line in fp:
         line = line.rstrip()
         category.append(line.split()[0])
     fp.close()
     # ストップワードをロード
     stopwords = []
-    fp = open("data/stopwords.txt")
+    fp = open(os.path.join(os.getcwd(), "data\\stopwords.txt"))
     for line in fp:
         line = line.rstrip()
         stopwords.append(line)
@@ -28,7 +29,7 @@ def trans_data(labelfile, datafile, outfile):
     
     # ボキャブラリをロード
     vocabulary = []
-    fp = open("data/vocabulary.txt")
+    fp = open(os.path.join(os.getcwd(), "data\\vocabulary.txt"))
     for line in fp:
         line = line.rstrip()
         vocabulary.append(line)
@@ -72,6 +73,6 @@ def trans_data(labelfile, datafile, outfile):
 
 if __name__ == "__main__":
     # 訓練データを変換
-    trans_data("data/train.label", "data/train.data", "data/news20")
+    trans_data(os.path.join(os.getcwd(), "data\\train.label"), os.path.join(os.getcwd(), "data\\train.data"), os.path.join(os.getcwd(), "data\\news20"))
     # テストデータを変換
-    trans_data("data/test.label", "data/test.data", "data/news20.t")
+    trans_data(os.path.join(os.getcwd(), "data\\test.label"), os.path.join(os.getcwd(), "data\\test.data"), os.path.join(os.getcwd(), "data\\news20.t"))

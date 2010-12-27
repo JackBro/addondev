@@ -34,42 +34,53 @@ class TFIDF:
         word_cnt=self.js[word]
         return log(1.0 *self.N/word_cnt)
         
-    def calcidf(self, doc):
+    def calcidf(self, data):
         df_sum=0
         df_num=0
-        data = self.self(doc)
+        unkowndata =set()
+        #data = self.calctf(doc)
         for k in data.keys():
-            if self.js in k:
-                jsdata = self.js[k]
+            if data[k]['unkown']:
+                df = self.js[k]
                 tf=data[k]['tf']
-                df = d
-                d['tfidf']=defaultdict(float)
-                d['tfidf']=tf * log( float(self.N) /float(df) );
-            else:
                 
-            
+                df_sum+=df
+                df_num=+1
+                
+                data[k]['tfidf']=defaultdict(float)
+                data[k]['tfidf']=tf * log( float(self.N) /float(df) );
+            else:
+                unkowndata.add(k)
+                
+        for k in unkowndata:
+            tf=data[k]['tf']
+            df = df_sum / df_num
+            data[k]['tfidf']=defaultdict(float)   
+            data[k]['tfidf']=tf * log( float(self.N) /float(df) );
             
         
     def calctf(self, doc):
-        #self.unkown=set()
-        
-        wordcount ={{}}
+        #self.unkown=set()    
+        data ={}
         node = mecab.parseToNode(doc)
         while node:
             print "%s %s" % (node.surface, node.feature)
             if node.feature.split(",")[0] == "名詞":
-                if node.surface not in wordcount:
-                    wordcount[node.surface]['tf']=defaultdict(int)
-                    wordcount[node.surface]['tf']=0
+                if node.surface not in data:
+                    data[node.surface]={}
+                    data[node.surface]['tf']=defaultdict(int)
+                    data[node.surface]['tf']=0
                 
-                wordcount[node.surface]['tf']+=1
+                data[node.surface]['tf']+=1
                 
-                #if self.js not in node.surface:
-                #    self.unkown.add(node.surface)
+                if self.js not in node.surface:
+                    data[node.surface]['unkown']=defaultdict(bool)
+                    data[node.surface]['unkown']=True
+                    
                     
             node = node.next
-            wordcount.keys()
-        return wordcount
+            data.keys()
+        return data
             
         
 
