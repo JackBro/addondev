@@ -1,3 +1,10 @@
+http://www.ji2.co.jp/forensics/ForensicsAQ/artifact/GA_F002_NTFS.pdf
+Calmemo http://www.ric.hi-ho.ne.jp/many/
+http://www.installsetupconfig.com/win32programming/windowsvolumeapis1_21.html
+http://codeidol.com/other/inside-windows-2000/File-Systems/NTFS-On-Disk-Structure/
+http://pinvoke.net/default.aspx/Constants/WINBASE.html
+http://f32.aaa.livedoor.jp/~kobun/index.php?NTFS_VOLUME_DATA_BUFFER
+
 http://www.cse.scu.edu/~tschwarz/coen252_07Fall/Lectures/NTFS.html
 
 http://www.dreamincode.net/forums/blog/1017/entry-2587-stcroixskippers-blog/
