@@ -1,3 +1,8 @@
+http://iss.x0.com/software/Useful/ntfs.html
+http://docs.google.com/viewer?a=v&q=cache:ugqLH-de4RkJ:www.cse.scu.edu/~tschwarz/COEN252_09/PPtPre/NTFSMFTExample.ppt+mft+%24STANDARD_INFORMATION&hl=ja&gl=jp&pid=bl&srcid=ADGEEShcXhGx9KqMPseFwKtReXL3H1X8TECFdDWX0g4d8yHdke00vl6V0rz4cPf3NEk0VokthaVWWAV2boW3rEEk3bsamCZxNz2Lxuu9Tf5gdGGgzbLLvsOMrLbOEKgd0NKCTY-IRM6c&sig=AHIEtbSZTOGFrzeCSSq6nq8cZpGnOIisfw
+http://webcache.googleusercontent.com/search?q=cache:S5Iuu8AG8OgJ:sanantoniohackers.org/presentations/0x00/MFT.ppt+FILE_RECORD_HEADER+PATTRIBUTE&cd=7&hl=ja&ct=clnk&gl=jp&client=firefox-a
+http://files.codes-sources.com/fichier.aspx?id=50833&f=csharpfr_EXPLORER-MFT-PARTITION-NTFS___Page%2fSolution2%2fFileSystem%2fBase%2fFILENAME_ATTRIBUTE.cs
+
 http://www.ji2.co.jp/forensics/ForensicsAQ/artifact/GA_F002_NTFS.pdf
 Calmemo http://www.ric.hi-ho.ne.jp/many/
 http://www.installsetupconfig.com/win32programming/windowsvolumeapis1_21.html
