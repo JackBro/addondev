@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wv2", "wv2\wv2_2005.vcproj"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wv3", "wv3\wv3_2005.vcproj", "{DBC3EEE4-B26E-4965-B509-0820F269D438}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFTReader", "MFTReader\MFTReader.vcproj", "{CA8F251F-4945-4DBB-B1D5-F0C972458DDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{DBC3EEE4-B26E-4965-B509-0820F269D438}.Debug|Win32.Build.0 = Debug|Win32
 		{DBC3EEE4-B26E-4965-B509-0820F269D438}.Release|Win32.ActiveCfg = Release|Win32
 		{DBC3EEE4-B26E-4965-B509-0820F269D438}.Release|Win32.Build.0 = Release|Win32
+		{CA8F251F-4945-4DBB-B1D5-F0C972458DDD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CA8F251F-4945-4DBB-B1D5-F0C972458DDD}.Debug|Win32.Build.0 = Debug|Win32
+		{CA8F251F-4945-4DBB-B1D5-F0C972458DDD}.Release|Win32.ActiveCfg = Release|Win32
+		{CA8F251F-4945-4DBB-B1D5-F0C972458DDD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
