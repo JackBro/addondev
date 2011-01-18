@@ -274,6 +274,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 								fn->Name[fn->NameLength] = L'\0';
 								wprintf(L"FileName Name :%s\n", fn->Name) ;
+
+								LPWSTR lp = fn->Name;
+								wprintf(L"FileName Name :%s\n", lp) ;
 							}
 							break;
 						case AttributeStandardInformation:
