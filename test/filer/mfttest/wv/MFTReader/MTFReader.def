@@ -1,0 +1,4 @@
+LIBRARY "MTFReader.dll"
+
+EXPORTS
+	CallBackTenTimes		PRIVATE

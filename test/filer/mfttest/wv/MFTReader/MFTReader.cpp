@@ -3,6 +3,11 @@
 
 #include "stdafx.h"
 
+#include <windows.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifdef _MANAGED
 #pragma managed(push, off)
@@ -16,7 +21,21 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     return TRUE;
 }
 
+typedef void (__stdcall *CallBackTenTimesProc)( void );
+
+void __stdcall CallBackTenTimes( CallBackTenTimesProc proc )
+{
+    int i;
+    for( i=0; i<10; i++ )
+    {
+        proc();
+    }
+}
+
 #ifdef _MANAGED
 #pragma managed(pop)
 #endif
 
+#ifdef __cplusplus
+} // extern "C"
+#endif
