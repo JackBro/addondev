@@ -51,7 +51,20 @@ void __stdcall GetRecord( PMFT_FILE_RECORD &proc )
 	m_XArray[1].ChangeTime = 100;
 
 	proc = &m_XArray[0];
+
+	//SetSystemTime
 }
+
+void __stdcall GetRecordS(void*  proc )
+{
+	MFT_FILE_RECORD m_XArray;
+	m_XArray.index = 0;
+	m_XArray.ChangeTime = 10;
+
+	proc = &m_XArray;
+	//proc->index=100;
+}
+
 
 
 #ifdef _MANAGED

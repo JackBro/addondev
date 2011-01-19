@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace mftread {
     class Program {
@@ -11,9 +12,15 @@ namespace mftread {
             //CallBackTenTimes(
             //    new CallBackTenTimesProc(MyCallBackTenTimesProc)
             //);
+            RECORD sysTime = new RECORD();
+            IntPtr sysTimePtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(sysTime));
+
+            GetRecordS(ref sysTimePtr);
+            sysTime = (RECORD)Marshal.PtrToStructure(sysTimePtr, sysTime.GetType());
+
 
             IntPtr aryXPtr = IntPtr.Zero;
-            GetRecord(out aryXPtr);
+            GetRecord(ref aryXPtr);
             RECORD[] aryX = new RECORD[10];
 
             int size = Marshal.SizeOf(typeof(RECORD));
@@ -49,7 +56,10 @@ namespace mftread {
         }
 
         [DllImport("MFTReader.dll")]
-        static extern unsafe void GetRecord(out IntPtr proc);
+        static extern unsafe void GetRecord(ref IntPtr proc);
+
+        [DllImport("MFTReader.dll")]
+        static extern unsafe void GetRecordS(ref IntPtr proc);
     }
 
 }
