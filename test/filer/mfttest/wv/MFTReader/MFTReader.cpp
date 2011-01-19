@@ -15,9 +15,10 @@ extern "C" {
 #endif
 
 typedef struct {
-	ULONGLONG ChangeTime;
-
-}
+	int index;
+	int ChangeTime;
+	//LPWSTR Name;
+} MFT_FILE_RECORD, *PMFT_FILE_RECORD;
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -38,6 +39,19 @@ void __stdcall CallBackTenTimes( CallBackTenTimesProc proc )
     }
 }
 
+void __stdcall GetRecord( PMFT_FILE_RECORD &proc )
+{
+	MFT_FILE_RECORD m_XArray[10];
+	//m_XArray[0].Name = L"test0";
+	m_XArray[0].index = 0;
+	m_XArray[0].ChangeTime = 10;
+
+	//m_XArray[1].Name = L"test1";
+	m_XArray[1].index = 1;
+	m_XArray[1].ChangeTime = 100;
+
+	proc = &m_XArray[0];
+}
 
 
 #ifdef _MANAGED

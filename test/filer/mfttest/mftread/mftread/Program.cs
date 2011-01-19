@@ -8,9 +8,27 @@ using System.Runtime.InteropServices;
 namespace mftread {
     class Program {
         static void Main(string[] args) {
-            CallBackTenTimes(
-                new CallBackTenTimesProc(MyCallBackTenTimesProc)
-            );
+            //CallBackTenTimes(
+            //    new CallBackTenTimesProc(MyCallBackTenTimesProc)
+            //);
+
+            IntPtr aryXPtr = IntPtr.Zero;
+            GetRecord(out aryXPtr);
+            RECORD[] aryX = new RECORD[10];
+
+            int size = Marshal.SizeOf(typeof(RECORD));
+            for (int i = 0; i <10; i++) {
+                //ポインタを、sizeずつずらしていく。
+                IntPtr current = new IntPtr(aryXPtr.ToInt64() + (size * i));
+                //ポインタから構造体に変換して配列に格納。
+                aryX[i] = (RECORD)Marshal.PtrToStructure(current, typeof(RECORD));
+            }
+
+            //Marshal.FreeCoTaskMem(aryXPtr);
+
+            foreach (var item in aryX) {
+                Console.WriteLine(item.index);
+            }
         }
 
         static void MyCallBackTenTimesProc() {
@@ -21,6 +39,17 @@ namespace mftread {
 
         [DllImport("MFTReader.dll")]
         static extern unsafe void CallBackTenTimes(CallBackTenTimesProc proc);
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECORD {
+            public int index;
+            public int ChangeTime;
+            //public String name;
+        }
+
+        [DllImport("MFTReader.dll")]
+        static extern unsafe void GetRecord(out IntPtr proc);
     }
 
 }
