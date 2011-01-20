@@ -13,22 +13,25 @@ namespace mftread {
             //    new CallBackTenTimesProc(MyCallBackTenTimesProc)
             //);
             RECORD sysTime = new RECORD();
-            IntPtr sysTimePtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(sysTime));
+            //IntPtr sysTimePtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(sysTime));
 
-            GetRecordS(ref sysTimePtr);
-            sysTime = (RECORD)Marshal.PtrToStructure(sysTimePtr, sysTime.GetType());
+            //GetRecordS(ref sysTimePtr);
+            //sysTime = (RECORD)Marshal.PtrToStructure(sysTimePtr, sysTime.GetType());
 
 
-            IntPtr aryXPtr = IntPtr.Zero;
+            IntPtr aryXPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(sysTime)*10); //IntPtr.Zero;
             GetRecord(ref aryXPtr);
             RECORD[] aryX = new RECORD[10];
 
             int size = Marshal.SizeOf(typeof(RECORD));
             for (int i = 0; i <10; i++) {
                 //ポインタを、sizeずつずらしていく。
-                IntPtr current = new IntPtr(aryXPtr.ToInt64() + (size * i));
+                //IntPtr current = new IntPtr(aryXPtr.ToInt64() + (size * i));
+                IntPtr current = (IntPtr)((int)aryXPtr + (size * i));
                 //ポインタから構造体に変換して配列に格納。
                 aryX[i] = (RECORD)Marshal.PtrToStructure(current, typeof(RECORD));
+                //lstPointer = (IntPtr)((int)lstPointer + Marshal.SizeOf(lstArray[i]));
+
             }
 
             //Marshal.FreeCoTaskMem(aryXPtr);
