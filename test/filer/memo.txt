@@ -1,3 +1,15 @@
+http://www2u.biglobe.ne.jp/~kaduhiko/csharp_05.html
+http://ap.atmarkit.co.jp/bbs/core/fdotnet/15448
+http://www.atmarkit.co.jp/bbs/phpBB/viewtopic.php?topic=32627&forum=7
+http://www.atmarkit.co.jp/bbs/phpBB/viewtopic.php?topic=32071&forum=7&start=24
+http://hongliang.seesaa.net/article/7243455.html
+http://bbs.wankuma.com/index.cgi?mode=al2&namber=37225&KLOG=64
+http://wiki.onakasuita.org/pukiwiki/?DllImport
+http://ja.w3support.net/index.php?db=so&id=356851
+http://d.hatena.ne.jp/KrdLab/20061211/1165768253
+http://d.hatena.ne.jp/aont/20091004/1254672452
+http://www.atmarkit.co.jp/fcoding/index/stat.html
+
 http://aquarite.info/blog/2010/03/08/dllexport/
 http://gurizuri0505.halfmoon.jp/20100317/13794
 http://webcache.googleusercontent.com/search?q=cache:btKrzZvuXrEJ:nicoden.zxq.net/index.php%3FC%2520Sharp%252FTips%252F%E3%82%A2%E3%83%B3%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%89DLL%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF+C%23+dll+LPWSTR&cd=26&hl=ja&ct=clnk&gl=jp&client=firefox-a

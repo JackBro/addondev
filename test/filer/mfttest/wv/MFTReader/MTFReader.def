@@ -4,3 +4,6 @@ EXPORTS
 	CallBackTenTimes		PRIVATE
 	GetRecord		PRIVATE
 	GetRecordS      PRIVATE
+	customList      PRIVATE
+	customLists      PRIVATE
+	freeBuffer      PRIVATE
