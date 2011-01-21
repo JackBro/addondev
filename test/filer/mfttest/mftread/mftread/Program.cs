@@ -9,6 +9,10 @@ using System.Runtime.CompilerServices;
 namespace mftread {
     class Program {
         static void Main(string[] args) {
+
+            MFTReader r = new MFTReader();
+            r.read(new DriveInfo("c"));
+
             //CallBackTenTimes(
             //    new CallBackTenTimesProc(MyCallBackTenTimesProc)
             //);

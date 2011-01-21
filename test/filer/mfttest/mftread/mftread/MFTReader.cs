@@ -92,22 +92,34 @@ namespace mftread {
 
                 Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER olData = (Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER)Marshal.PtrToStructure(output_buffer, typeof(Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER));
                 Win32API.FILE_RECORD_HEADER p_file_record_header = new Win32API.FILE_RECORD_HEADER();
+
                 unsafe {
-
-
-                   
-
+                    //Win32API.FILE_RECORD_HEADER* p_file_record_header = null;
                     //IntPtr op = new IntPtr(&olData.FileRecordBuffer[0]);
                     fixed (byte *op = &olData.FileRecordBuffer[0]) {
+                   // fixed (Win32API.FILE_RECORD_HEADER* p_file_record_header = (Win32API.FILE_RECORD_HEADER*)&olData.FileRecordBuffer[0]) 
+                        //IntPtr ptr = Marshal.AllocHGlobal(sizeof(byte));
+                        //Marshal.StructureToPtr(olData.FileRecordBuffer, ptr, false);
                         //IntPtr aop = Marshal.Read(op);
                         //Marshal.Copy(new IntPtr[] { op }, p_file_record_header.AttributesOffset, pAttr, Marshal.SizeOf(attr));
-                        IntPtr ptr = (IntPtr)(*op);
-                        Marshal.StructureToPtr(p_file_record_header, ptr, true);
+                        //IntPtr ptr = new IntPtr(op);
+
+                        // 配列をピン止めしてGCの対象から外す
+                        //GCHandle gch = GCHandle.Alloc(olData.FileRecordBuffer, GCHandleType.Pinned);
+                        // 配列の先頭のアドレスを取得
+                        //IntPtr ptr = gch.AddrOfPinnedObject();
+
+                        IntPtr ptr = (IntPtr)(op);
+                        //Marshal.StructureToPtr(p_file_record_header, ptr, true);
+                        p_file_record_header = (Win32API.FILE_RECORD_HEADER)Marshal.PtrToStructure(ptr, typeof(Win32API.FILE_RECORD_HEADER));
                         
                         Win32API.RECORD_ATTRIBUTE attr = new Win32API.RECORD_ATTRIBUTE();
                         IntPtr pAttr = Marshal.AllocHGlobal(Marshal.SizeOf(attr));
-                        Marshal.Copy(new IntPtr[] { ptr }, p_file_record_header.AttributesOffset, pAttr, Marshal.SizeOf(attr));
+                        //Marshal.Copy(new IntPtr[] { ptr }, p_file_record_header.AttributesOffset, pAttr, Marshal.SizeOf(attr));
 
+                        IntPtr current = (IntPtr)((int)ptr + p_file_record_header.AttributesOffset);
+                        attr = (Win32API.RECORD_ATTRIBUTE)Marshal.PtrToStructure(current, typeof(Win32API.RECORD_ATTRIBUTE));
+                        int kk = 0;
                     }
 
                     //IntPtr op = (IntPtr)(&olData.FileRecordBuffer[0]);
