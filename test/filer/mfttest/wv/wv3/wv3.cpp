@@ -262,10 +262,10 @@ int _tmain(int argc, _TCHAR* argv[])
 							if (fn->NameType & WIN32_NAME || fn->NameType == 0)
 							{
 
-								if(p_file_record_header->Flags & 0x1){
-									wprintf(L"FileName Flags 0x1\n") ;
+								if(p_file_record_header->Flags & 0x2){
+									wprintf(L"FileName Directory\n") ;
 								}else{
-									wprintf(L"FileName Flags not 0x1\n") ;
+									wprintf(L"FileName File\n") ;
 								}
 								wprintf(L"FileName i : %u\n", i );
 								wprintf(L"FileName DirectoryFileReferenceNumber : %u\n", fn->DirectoryFileReferenceNumber );
@@ -275,8 +275,8 @@ int _tmain(int argc, _TCHAR* argv[])
 								fn->Name[fn->NameLength] = L'\0';
 								wprintf(L"FileName Name :%s\n", fn->Name) ;
 
-								LPWSTR lp = fn->Name;
-								wprintf(L"FileName Name :%s\n", lp) ;
+								//LPWSTR lp = fn->Name;
+								//wprintf(L"FileName Name :%s\n", lp) ;
 							}
 							break;
 						case AttributeStandardInformation:

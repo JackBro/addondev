@@ -7,3 +7,4 @@ EXPORTS
 	customList      PRIVATE
 	customLists      PRIVATE
 	freeBuffer      PRIVATE
+	GetMFT_File_Info PRIVATE

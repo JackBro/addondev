@@ -6,7 +6,30 @@ using System.IO;
 using System.Runtime.InteropServices;
 
 namespace mftread {
+
     public class MFTReader {
+
+        public delegate bool CallBackProc(int per);
+        [DllImport("MFTReader.dll")]
+        static extern unsafe void GetMFT_File_Info(string driveletter, out IntPtr pfile_info, ref UInt64 size, CallBackProc proc);
+
+
+        [DllImport("MFTReader.dll")]
+        static extern unsafe void freeBuffer(IntPtr p);
+
+        public event CallBackProc CallBackEvent;
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct MFT_FILE_INFO {
+            public UInt64 DirectoryFileReferenceNumber;
+            public bool IsDirectory;
+            [MarshalAsAttribute(UnmanagedType.LPWStr)]
+            public String Name;
+            public UInt64 CreationTime;
+            public UInt64 LastWriteTime;
+        }
+
+        /*
         public void read(DriveInfo driveInfo) {
             string pathRoot = string.Concat(@"\\.\", driveInfo.Name);
             pathRoot = @"\\.\c:";
@@ -138,7 +161,31 @@ namespace mftread {
             }
 
             Win32API.CloseHandle(hVolume);
-        }
+        }*/
 
+        public void GetFileInfo() {
+
+
+            IntPtr pListA = IntPtr.Zero;
+            UInt64 size = 0;
+
+            GetMFT_File_Info("c", out pListA, ref size, CallBackEvent);
+
+            MFT_FILE_INFO[] aryFileInfo = new MFT_FILE_INFO[size];
+            int ssize = Marshal.SizeOf(typeof(MFT_FILE_INFO));
+            for (int i = 0; i < (int)size; i++) {
+                //ポインタを、sizeずつずらしていく。
+                IntPtr current = new IntPtr(pListA.ToInt64() + (ssize * i));
+                //IntPtr current = (IntPtr)((int)pListA + (sizes * i));
+                //ポインタから構造体に変換して配列に格納。
+                aryFileInfo[i] = (MFT_FILE_INFO)Marshal.PtrToStructure(current, typeof(MFT_FILE_INFO));
+
+                //lstPointer = (IntPtr)((int)lstPointer + Marshal.SizeOf(lstArray[i]));
+            }
+
+            freeBuffer(pListA);
+        }
+        public void free() {
+        }
     }
 }

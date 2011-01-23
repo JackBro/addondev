@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mftread", "mftread\mftread.csproj", "{3D356E0E-F21A-4395-8EBF-A2E14FA0E2F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFTReaderWrap", "MFTReaderWrap\MFTReaderWrap.csproj", "{18965B04-6A3E-4EF6-9D23-77C5EF42FAE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{3D356E0E-F21A-4395-8EBF-A2E14FA0E2F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D356E0E-F21A-4395-8EBF-A2E14FA0E2F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D356E0E-F21A-4395-8EBF-A2E14FA0E2F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18965B04-6A3E-4EF6-9D23-77C5EF42FAE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18965B04-6A3E-4EF6-9D23-77C5EF42FAE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18965B04-6A3E-4EF6-9D23-77C5EF42FAE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18965B04-6A3E-4EF6-9D23-77C5EF42FAE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
