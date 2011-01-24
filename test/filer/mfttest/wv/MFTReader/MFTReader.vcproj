@@ -91,7 +91,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\mftread\bin\Debug"
+				CommandLine="copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\mftread\bin\Debug&#x0D;&#x0A;copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\MFTReaderTest\bin\Debug"
 			/>
 		</Configuration>
 		<Configuration

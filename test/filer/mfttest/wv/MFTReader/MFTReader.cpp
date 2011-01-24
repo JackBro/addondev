@@ -9,8 +9,6 @@
 #include <stdlib.h>
 #include <string>
 
-#define WIN32_NAME 1
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,7 +21,7 @@ void ErrorMessage(DWORD dwCode)
 {
     // get the error code...
     DWORD dwErrCode = dwCode;
-      DWORD dwNumChar;
+    DWORD dwNumChar;
  
     LPWSTR szErrString = NULL;  // will be allocated and filled by FormatMessage
  
@@ -79,62 +77,20 @@ void __stdcall CallBackTenTimes( CallBackTenTimesProc proc )
     }
 }
 
-void __stdcall GetRecord( MFT_FILE_INFO* &proc )
-{
-	MFT_FILE_INFO m_XArray[10];
-	//m_XArray[0].Name = L"test0";
-	m_XArray[0].DirectoryFileReferenceNumber = 0;
-	m_XArray[0].CreationTime = 10;
-
-	//m_XArray[1].Name = L"test1";
-	m_XArray[1].DirectoryFileReferenceNumber = 1;
-	m_XArray[1].CreationTime = 100;
-
-	proc = m_XArray;
-
-	//SetSystemTime
-}
-
-void __stdcall GetRecordS(void*  proc )
-{
-	MFT_FILE_INFO m_XArray;
-	m_XArray.DirectoryFileReferenceNumber = 0;
-	m_XArray.CreationTime = 10;
-
-	proc = &m_XArray;
-	//proc->index=100;
-}
-
-
-void __stdcall customList(MFT_FILE_INFO*& p)
-{
-	p = (MFT_FILE_INFO*)malloc(sizeof(MFT_FILE_INFO));
-	memset(p, 0, sizeof(MFT_FILE_INFO));
-	p->DirectoryFileReferenceNumber=100;
-	p->CreationTime=1000;
-}
-
-void __stdcall customLists(MFT_FILE_INFO*& p, int* size )
-{
-	p = (MFT_FILE_INFO*)malloc(sizeof(MFT_FILE_INFO)*2);
-	memset(p, 0, sizeof(MFT_FILE_INFO)*2);
-	p->DirectoryFileReferenceNumber=100;
-	p->CreationTime=1000;
-	p->Name = L"name1";
-
-	p[1].DirectoryFileReferenceNumber=200;
-	p[1].CreationTime=2000;
-	p[1].Name = L"name2";
-
-	*size = 10;
-}
-
 void __stdcall freeBuffer(void* p)
 {
 	free(p);
 }
 
-void __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, LONGLONG* size, CallBackProc proc)
+/*
+
+
+Return
+	0:OK
+	1:ERROR
+	2:Abort
+*/
+int __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, LONGLONG* size, CallBackProc proc, DWORD* errCode)
 {
 	HANDLE hVolume;
 	//LPWSTR lpDrive = L"\\\\.\\c:";
@@ -160,19 +116,21 @@ void __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, 
 
 	if(hVolume == INVALID_HANDLE_VALUE)
 	{
-		wprintf(L"CreateFile() failed!\n");
-		ErrorMessage(GetLastError());
-		if(CloseHandle(hVolume) != 0)
-			  wprintf(L"hVolume handle was closed successfully!\n");
-		else
+		//wprintf(L"CreateFile() failed!\n");
+		//ErrorMessage(GetLastError());
+		*errCode = GetLastError();
+		if(CloseHandle(hVolume) != 0){
+			 //wprintf(L"hVolume handle was closed successfully!\n");
+		}else
 		{
-			  wprintf(L"Failed to close hVolume handle!\n");
-			  ErrorMessage(GetLastError());
+			//wprintf(L"Failed to close hVolume handle!\n");
+			//ErrorMessage(GetLastError());
+			*errCode = GetLastError();
 		}
-		exit(1);
+		return 1;
 	}
-	else
-		wprintf(L"CreateFile() is pretty fine!\n");    
+	//else
+	//	wprintf(L"CreateFile() is pretty fine!\n");    
 
 	// a call to FSCTL_GET_NTFS_VOLUME_DATA returns the structure NTFS_VOLUME_DATA_BUFFER
 	bDioControl = DeviceIoControl(hVolume, FSCTL_GET_NTFS_VOLUME_DATA, NULL, 0, &ntfsVolData,
@@ -180,34 +138,36 @@ void __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, 
 
 	if(bDioControl == 0)
 	{
-		wprintf(L"DeviceIoControl() failed!\n");
-		ErrorMessage(GetLastError());
-		if(CloseHandle(hVolume) != 0)
-			  wprintf(L"hVolume handle was closed successfully!\n");
-		else
+		//wprintf(L"DeviceIoControl() failed!\n");
+		//ErrorMessage(GetLastError());
+		*errCode = GetLastError();
+		if(CloseHandle(hVolume) != 0){
+			  //wprintf(L"hVolume handle was closed successfully!\n");
+		}else
 		{
-			  wprintf(L"Failed to close hVolume handle!\n");
-			  ErrorMessage(GetLastError());
+			  //wprintf(L"Failed to close hVolume handle!\n");
+			  //ErrorMessage(GetLastError());
+			  *errCode = GetLastError();
 		}
-		exit(1);
+		return 1;
 	}
-	else
-		wprintf(L"DeviceIoControl(...,FSCTL_GET_NTFS_VOLUME_DATA,...) is working...\n\n");
+	//else
+	//	wprintf(L"DeviceIoControl(...,FSCTL_GET_NTFS_VOLUME_DATA,...) is working...\n\n");
 
-	wprintf(L"Volume Serial Number: 0X%.8X%.8X\n",ntfsVolData.VolumeSerialNumber.HighPart,ntfsVolData.VolumeSerialNumber.LowPart);
-	wprintf(L"The number of bytes in a cluster: %u\n",ntfsVolData.BytesPerCluster);
-	wprintf(L"The number of bytes in a file record segment: %u\n",ntfsVolData.BytesPerFileRecordSegment);
-	wprintf(L"The number of bytes in a sector: %u\n",ntfsVolData.BytesPerSector);
-	wprintf(L"The number of clusters in a file record segment: %u\n",ntfsVolData.ClustersPerFileRecordSegment);
-	wprintf(L"The number of free clusters in the specified volume: %u\n",ntfsVolData.FreeClusters);
-	wprintf(L"The starting logical cluster number of the master file table mirror: 0X%.8X%.8X\n",ntfsVolData.Mft2StartLcn.HighPart, ntfsVolData.Mft2StartLcn.LowPart);
-	wprintf(L"The starting logical cluster number of the master file table: 0X%.8X%.8X\n",ntfsVolData.MftStartLcn.HighPart, ntfsVolData.MftStartLcn.LowPart);
-	wprintf(L"The length of the master file table, in bytes: %u\n",ntfsVolData.MftValidDataLength);
-	wprintf(L"The ending logical cluster number of the master file table zone: 0X%.8X%.8X\n",ntfsVolData.MftZoneEnd.HighPart, ntfsVolData.MftZoneEnd.LowPart);
-	wprintf(L"The starting logical cluster number of the master file table zone: 0X%.8X%.8X\n",ntfsVolData.MftZoneStart.HighPart, ntfsVolData.MftZoneStart.LowPart);
-	wprintf(L"The number of sectors: %u\n",ntfsVolData.NumberSectors);
-	wprintf(L"Total Clusters (used and free): %u\n",ntfsVolData.TotalClusters);
-	wprintf(L"The number of reserved clusters: %u\n\n",ntfsVolData.TotalReserved);
+	//wprintf(L"Volume Serial Number: 0X%.8X%.8X\n",ntfsVolData.VolumeSerialNumber.HighPart,ntfsVolData.VolumeSerialNumber.LowPart);
+	//wprintf(L"The number of bytes in a cluster: %u\n",ntfsVolData.BytesPerCluster);
+	//wprintf(L"The number of bytes in a file record segment: %u\n",ntfsVolData.BytesPerFileRecordSegment);
+	//wprintf(L"The number of bytes in a sector: %u\n",ntfsVolData.BytesPerSector);
+	//wprintf(L"The number of clusters in a file record segment: %u\n",ntfsVolData.ClustersPerFileRecordSegment);
+	//wprintf(L"The number of free clusters in the specified volume: %u\n",ntfsVolData.FreeClusters);
+	//wprintf(L"The starting logical cluster number of the master file table mirror: 0X%.8X%.8X\n",ntfsVolData.Mft2StartLcn.HighPart, ntfsVolData.Mft2StartLcn.LowPart);
+	//wprintf(L"The starting logical cluster number of the master file table: 0X%.8X%.8X\n",ntfsVolData.MftStartLcn.HighPart, ntfsVolData.MftStartLcn.LowPart);
+	//wprintf(L"The length of the master file table, in bytes: %u\n",ntfsVolData.MftValidDataLength);
+	//wprintf(L"The ending logical cluster number of the master file table zone: 0X%.8X%.8X\n",ntfsVolData.MftZoneEnd.HighPart, ntfsVolData.MftZoneEnd.LowPart);
+	//wprintf(L"The starting logical cluster number of the master file table zone: 0X%.8X%.8X\n",ntfsVolData.MftZoneStart.HighPart, ntfsVolData.MftZoneStart.LowPart);
+	//wprintf(L"The number of sectors: %u\n",ntfsVolData.NumberSectors);
+	//wprintf(L"Total Clusters (used and free): %u\n",ntfsVolData.TotalClusters);
+	//wprintf(L"The number of reserved clusters: %u\n\n",ntfsVolData.TotalReserved);
 
 	num.QuadPart = 1024; // 1024 or 2048
 
@@ -218,10 +178,17 @@ void __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, 
 	total_file_count /= 1000; //test
 
 	pfile_info = (MFT_FILE_INFO*)malloc(sizeof(MFT_FILE_INFO)*total_file_count);
+	if(output_buffer == NULL)
+		{
+			  //wprintf(L"malloc() failed - insufficient memory!\n");
+			  //ErrorMessage(GetLastError());
+			  *errCode = GetLastError();
+			  return 1;
+		}
 	memset(pfile_info, 0, sizeof(MFT_FILE_INFO)*total_file_count);
 
-	wprintf(L"Total file count = %u\n", total_file_count);
-
+	//wprintf(L"Total file count = %u\n", total_file_count);
+	bool abort = false;
 	int per = 0;
 	for(i = 0; i < total_file_count;i++)
 	{
@@ -235,9 +202,10 @@ void __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, 
 
 		if(output_buffer == NULL)
 		{
-			  wprintf(L"malloc() failed - insufficient memory!\n");
-			  ErrorMessage(GetLastError());
-			  exit(1);
+			  //wprintf(L"malloc() failed - insufficient memory!\n");
+			  //ErrorMessage(GetLastError());
+			  *errCode = GetLastError();
+			  return 1;
 		}
 
 		bDioControl = DeviceIoControl(hVolume, 
@@ -276,24 +244,9 @@ void __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, 
 				{
 					case AttributeFileName:
 						fn = PFILENAME_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
-						if (fn->NameType & WIN32_NAME || fn->NameType == 0)
+						if (fn->NameType || fn->NameType == 0)
 						{
-
-							if(p_file_record_header->Flags & 0x1){
-								wprintf(L"FileName Flags 0x1\n") ;
-							}else{
-								wprintf(L"FileName Flags not 0x1\n") ;
-							}
-							wprintf(L"FileName i : %u\n", i );
-							wprintf(L"FileName DirectoryFileReferenceNumber : %u\n", fn->DirectoryFileReferenceNumber );
-							wprintf(L"FileName DataSize : %u\n", fn->DataSize );
-							
-
 							fn->Name[fn->NameLength] = L'\0';
-							wprintf(L"FileName Name :%s\n", fn->Name) ;
-
-							LPWSTR lp = fn->Name;
-							wprintf(L"FileName Name :%s\n", lp) ;
 							
 							pfile_info[i].DirectoryFileReferenceNumber = fn->DirectoryFileReferenceNumber;
 							if(p_file_record_header->Flags & 0x2){
@@ -308,13 +261,8 @@ void __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, 
 						break;
 					case AttributeStandardInformation:
 						si = PSTANDARD_INFORMATION(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
-						wprintf(L"StandardInformation CreationTime : %u\n", si->CreationTime );
-						wprintf(L"StandardInformation ChangeTime : %u\n", si->ChangeTime );
-						wprintf(L"StandardInformation LastAccessTime : %u\n", si->LastAccessTime );
-						wprintf(L"StandardInformation LastWriteTime : %u\n", si->LastWriteTime );
 						pfile_info[i].CreationTime = si->CreationTime;
 						pfile_info[i].LastWriteTime = si->LastAccessTime;
-
 						break;
 					default:
 						break;
@@ -327,30 +275,36 @@ void __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, 
 						attr = PATTRIBUTE(PUCHAR(attr) + sizeof(NONRESIDENT_ATTRIBUTE));
 			}
 		}
-		wprintf(L"\n");
 		
 		//if((CallBackProc!=NULL) && (per < i*100/total_file_count)){
 		if((per < i*100/total_file_count)){
 			per = i*100/total_file_count;
-			bool abort = CallBackProc(per);
-			if(abort)
+			abort = CallBackProc(per);
+			if(abort){
 				break;
+			}
 		}
 	}
 
 	// Let verify
-	wprintf(L"i\'s count = %u\n", i);
+	//wprintf(L"i\'s count = %u\n", i);
 
 	//======================
-	if(CloseHandle(hVolume) != 0)
-		wprintf(L"hVolume handle was closed successfully!\n");
+	if(CloseHandle(hVolume) != 0){
+		//wprintf(L"hVolume handle was closed successfully!\n");
+	}
 	else
 	{
-		wprintf(L"Failed to close hVolume handle!\n");
-		ErrorMessage(GetLastError());
+		//wprintf(L"Failed to close hVolume handle!\n");
+		//ErrorMessage(GetLastError());
+		*errCode = GetLastError();
+		free(output_buffer);
+		return 1;
 	}
 	// De-allocate the memory by malloc()
 	free(output_buffer);
+
+	return abort?2:0;
 }
 
 #ifdef _MANAGED

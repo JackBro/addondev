@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 
 namespace MFTReaderWrap {
-    public class MFTReader {
-        public delegate bool CallBackProc(int per);
 
+    public class MFTReader {
+
+        public event CallBackProc CallBackEvent;
+
+        public MFTReader() {
+        }
 
     }
 }
