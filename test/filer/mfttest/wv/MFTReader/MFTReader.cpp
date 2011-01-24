@@ -48,12 +48,14 @@ void ErrorMessage(DWORD dwCode)
 }
 
 typedef struct {
+	GUID ObjectId;
 	ULONGLONG DirectoryFileReferenceNumber;
 	bool IsDirectory;
 	LPWSTR Name;
 	ULONGLONG Size; 
 	ULONGLONG CreationTime;
 	ULONGLONG LastWriteTime;
+	ULONGLONG LastAccessTime;
 
 } MFT_FILE_INFO, *PMFT_FILE_INFO;
 
@@ -90,7 +92,7 @@ Return
 	1:ERROR
 	2:Abort
 */
-int __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, LONGLONG* size, CallBackProc proc, DWORD* errCode)
+int __stdcall GetMFTFileRecord(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, LONGLONG* size, CallBackProc proc, DWORD* errCode)
 {
 	HANDLE hVolume;
 	//LPWSTR lpDrive = L"\\\\.\\c:";
@@ -178,13 +180,12 @@ int __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, L
 	total_file_count /= 1000; //test
 
 	pfile_info = (MFT_FILE_INFO*)malloc(sizeof(MFT_FILE_INFO)*total_file_count);
-	if(output_buffer == NULL)
-		{
-			  //wprintf(L"malloc() failed - insufficient memory!\n");
-			  //ErrorMessage(GetLastError());
-			  *errCode = GetLastError();
-			  return 1;
-		}
+	if(pfile_info == NULL){
+		//wprintf(L"malloc() failed - insufficient memory!\n");
+		//ErrorMessage(GetLastError());
+		*errCode = GetLastError();
+		return 1;
+	}
 	memset(pfile_info, 0, sizeof(MFT_FILE_INFO)*total_file_count);
 
 	//wprintf(L"Total file count = %u\n", total_file_count);
@@ -232,6 +233,7 @@ int __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, L
 
 		PFILENAME_ATTRIBUTE fn;
 		PSTANDARD_INFORMATION si;
+		POBJECTID_ATTRIBUTE objid;
 
 		PATTRIBUTE attr = (PATTRIBUTE)((LPBYTE)p_file_record_header +  p_file_record_header->AttributesOffset); 
 
@@ -262,8 +264,12 @@ int __stdcall GetMFT_File_Info(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, L
 					case AttributeStandardInformation:
 						si = PSTANDARD_INFORMATION(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
 						pfile_info[i].CreationTime = si->CreationTime;
-						pfile_info[i].LastWriteTime = si->LastAccessTime;
+						pfile_info[i].LastWriteTime = si->LastWriteTime;
+						pfile_info[i].LastAccessTime = si->LastAccessTime;
 						break;
+					case AttributeObjectId:
+						objid = POBJECTID_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
+						pfile_info[i].ObjectId = objid->ObjectId;
 					default:
 						break;
 				};
