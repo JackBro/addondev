@@ -23,13 +23,27 @@ namespace MFTReaderWrap {
                 && driveinfo.DriveType !=DriveType.Removable) {
             }
             this.drive = driveinfo;
-            string drivechar = driveinfo.Name[0].ToString();
+            string drive = driveinfo.Name[0].ToString();
+            //drive = @"\\.\" + drive + ":";
+            drive = @"\\.\" + driveinfo.Name.Substring(0,2);
 
             UInt32 errorCode = 0;
             IntPtr pListA = IntPtr.Zero;
             UInt64 recordsize = 0;
 
-            Win32.GetMFTFileRecord(drivechar, out pListA, ref recordsize, CallBackEvent, ref errorCode);
+            StringBuilder message = new StringBuilder(255);
+            int ret = Win32.GetMFTFileRecord(drive, out pListA, ref recordsize, CallBackEvent, ref errorCode);
+            if (ret == 1) {
+                   
+                  Win32.FormatMessage(
+                    Win32.FORMAT_MESSAGE_FROM_SYSTEM,
+                    IntPtr.Zero,
+                    (uint)errorCode,
+                    0,
+                    message,
+                    message.Capacity,
+                    IntPtr.Zero);
+            }
 
             //Win32.MFT_FILE_INFO[] aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
             aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
@@ -51,13 +65,13 @@ namespace MFTReaderWrap {
             for (int i = 0; i < aryFileInfo.Count(); i++) {
                 if (aryFileInfo[i].Name != null) {
 
-                    List<UInt64> stack = new List<UInt64>();
+                    List<Int64> stack = new List<Int64>();
                     //var record = aryFileInfo[i];
-                    var parent = aryFileInfo[i].DirectoryFileReferenceNumber;
+                    Int32 parent = (Int32)aryFileInfo[i].DirectoryFileReferenceNumber;
                     while (parent != 5) {
                         stack.Add(parent);
                         //aryFileInfo[parent].Name;
-                        parent = aryFileInfo[parent].DirectoryFileReferenceNumber;
+                        parent = (Int32)aryFileInfo[parent].DirectoryFileReferenceNumber;
                     }
                     stack.Reverse();
 

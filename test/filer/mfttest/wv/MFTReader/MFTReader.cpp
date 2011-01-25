@@ -48,14 +48,15 @@ void ErrorMessage(DWORD dwCode)
 }
 
 typedef struct {
-	GUID ObjectId;
+	//GUID ObjectId;
 	ULONGLONG DirectoryFileReferenceNumber;
 	bool IsDirectory;
-	LPWSTR Name;
+
 	ULONGLONG Size; 
 	ULONGLONG CreationTime;
 	ULONGLONG LastWriteTime;
 	ULONGLONG LastAccessTime;
+	LPWSTR Name;
 
 } MFT_FILE_INFO, *PMFT_FILE_INFO;
 
@@ -92,13 +93,15 @@ Return
 	1:ERROR
 	2:Abort
 */
-int __stdcall GetMFTFileRecord(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, LONGLONG* size, CallBackProc proc, DWORD* errCode)
+int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGLONG* size, CallBackProc proc, DWORD* errCode)
 {
 	HANDLE hVolume;
 	//LPWSTR lpDrive = L"\\\\.\\c:";
-	LPWSTR lpDrive = L"\\\\.\\";
-	lstrcpyW(lpDrive, driveletter);
-	lstrcpyW(lpDrive, L":" ); 
+	//LPWSTR lpDrive = L"\\\\.\\";
+	//lstrcatW(lpDrive, driveletter);
+	//lstrcatW(lpDrive, L":" ); 
+	//wprintf(L"The lpDrive: %s\n",lpDrive);
+	//MessageBox(NULL, lpDrive, lpDrive, MB_OK);
 
 	NTFS_VOLUME_DATA_BUFFER ntfsVolData = {0};
 	BOOL bDioControl = FALSE;
@@ -189,7 +192,7 @@ int __stdcall GetMFTFileRecord(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, L
 	memset(pfile_info, 0, sizeof(MFT_FILE_INFO)*total_file_count);
 
 	//wprintf(L"Total file count = %u\n", total_file_count);
-	bool abort = false;
+	bool abort = 0;
 	int per = 0;
 	for(i = 0; i < total_file_count;i++)
 	{
@@ -233,7 +236,7 @@ int __stdcall GetMFTFileRecord(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, L
 
 		PFILENAME_ATTRIBUTE fn;
 		PSTANDARD_INFORMATION si;
-		POBJECTID_ATTRIBUTE objid;
+		//POBJECTID_ATTRIBUTE objid;
 
 		PATTRIBUTE attr = (PATTRIBUTE)((LPBYTE)p_file_record_header +  p_file_record_header->AttributesOffset); 
 
@@ -267,9 +270,9 @@ int __stdcall GetMFTFileRecord(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, L
 						pfile_info[i].LastWriteTime = si->LastWriteTime;
 						pfile_info[i].LastAccessTime = si->LastAccessTime;
 						break;
-					case AttributeObjectId:
-						objid = POBJECTID_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
-						pfile_info[i].ObjectId = objid->ObjectId;
+					//case AttributeObjectId:
+					//	objid = POBJECTID_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
+					//	pfile_info[i].ObjectId = objid->ObjectId;
 					default:
 						break;
 				};
@@ -285,13 +288,14 @@ int __stdcall GetMFTFileRecord(LPWSTR driveletter, MFT_FILE_INFO*& pfile_info, L
 		//if((CallBackProc!=NULL) && (per < i*100/total_file_count)){
 		if((per < i*100/total_file_count)){
 			per = i*100/total_file_count;
-			abort = CallBackProc(per);
+			abort = proc(per);
 			if(abort){
 				break;
 			}
 		}
 	}
 
+	*size = i;
 	// Let verify
 	//wprintf(L"i\'s count = %u\n", i);
 

@@ -116,6 +116,18 @@ typedef struct {
       WCHAR Name[1];
 } FILENAME_ATTRIBUTE, *PFILENAME_ATTRIBUTE;
 
+typedef struct {
+    GUID ObjectId;
+    union {
+        struct {
+            GUID BirthVolumeId;
+            GUID BirthObjectId;
+            GUID DomainId;
+        } ;
+        UCHAR ExtendedInfo[48];
+    };
+} OBJECTID_ATTRIBUTE, *POBJECTID_ATTRIBUTE;
+
 #define WIN32_NAME 1
  
 // Format the Win32 system error code to string
@@ -247,6 +259,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 			PFILENAME_ATTRIBUTE fn;
 			PSTANDARD_INFORMATION si;
+			POBJECTID_ATTRIBUTE objid;
 
 			PATTRIBUTE attr = (PATTRIBUTE)((LPBYTE)p_file_record_header +  p_file_record_header->AttributesOffset); 
 
@@ -261,6 +274,11 @@ int _tmain(int argc, _TCHAR* argv[])
 							fn = PFILENAME_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
 							if (fn->NameType & WIN32_NAME || fn->NameType == 0)
 							{
+								if(p_file_record_header->Flags & 0x1){
+									wprintf(L"FileName InUse\n") ;
+								}else{
+									wprintf(L"FileName NOt In Use\n") ;
+								}
 
 								if(p_file_record_header->Flags & 0x2){
 									wprintf(L"FileName Directory\n") ;
@@ -281,8 +299,21 @@ int _tmain(int argc, _TCHAR* argv[])
 							break;
 						case AttributeStandardInformation:
 							si = PSTANDARD_INFORMATION(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
-							wprintf(L"StandardInformation CreationTime : %u\n", si->CreationTime );
+							wprintf(L"#####StandardInformation CreationTime : %u\n", si->CreationTime );
 							break;
+						case AttributeObjectId:
+							objid = POBJECTID_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
+							wprintf(L"ObjectId Data1 : %u\n", objid->ObjectId.Data1 );
+							wprintf(L"ObjectId Data2 : %u\n", objid->ObjectId.Data2 );
+							wprintf(L"ObjectId Data3 : %u\n", objid->ObjectId.Data3 );
+							wprintf(L"ObjectId Data4[0] : %u\n", objid->ObjectId.Data4[0] );
+							wprintf(L"ObjectId Data4[1] : %u\n", objid->ObjectId.Data4[1] );
+							wprintf(L"ObjectId Data4[2] : %u\n", objid->ObjectId.Data4[2] );
+							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[3] );
+							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[4] );
+							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[5] );
+							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[6] );
+							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[7] );
 						default:
 							break;
 					};
