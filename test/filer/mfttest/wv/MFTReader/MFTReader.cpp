@@ -180,7 +180,7 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 	// the total entry count for the MFT
 	total_file_count = (ntfsVolData.MftValidDataLength.QuadPart/num.QuadPart);
 
-	total_file_count /= 1000; //test
+	//total_file_count /= 1000; //test
 
 	pfile_info = (MFT_FILE_INFO*)malloc(sizeof(MFT_FILE_INFO)*total_file_count);
 	if(pfile_info == NULL){
