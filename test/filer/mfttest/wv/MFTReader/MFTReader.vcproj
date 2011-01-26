@@ -91,7 +91,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\mftread\bin\Debug&#x0D;&#x0A;copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\MFTReaderTest\bin\Debug"
+				CommandLine="copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\mftread\bin\Debug&#x0D;&#x0A;copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\MFTReaderTest\bin\Debug&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -119,6 +119,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;MFTREADER_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -138,6 +139,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib&quot;"
+				ModuleDefinitionFile="MTFReader.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -167,6 +170,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\MFTReaderTest\bin\Debug&#x0D;&#x0A;copy $(TargetPath) D:\data\src\PDE\workrepository\plugins\test\filer\mfttest\mftread\MFTReaderTest\bin\Release"
 			/>
 		</Configuration>
 	</Configurations>

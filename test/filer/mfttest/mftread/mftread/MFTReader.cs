@@ -11,11 +11,11 @@ namespace mftread {
 
         public delegate bool CallBackProc(int per);
         [DllImport("MFTReader.dll")]
-        static extern unsafe void GetMFT_File_Info(string driveletter, out IntPtr pfile_info, ref UInt64 size, CallBackProc proc);
+        static extern void GetMFT_File_Info(string driveletter, out IntPtr pfile_info, ref UInt64 size, CallBackProc proc);
 
 
         [DllImport("MFTReader.dll")]
-        static extern unsafe void freeBuffer(IntPtr p);
+        static extern void freeBuffer(IntPtr p);
 
         public event CallBackProc CallBackEvent;
 

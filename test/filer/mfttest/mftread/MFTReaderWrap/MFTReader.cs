@@ -13,6 +13,13 @@ namespace MFTReaderWrap {
         private Win32.MFT_FILE_INFO[] aryFileInfo;
         private DriveInfo drive;
 
+        public int Count {
+            get {
+                if (aryFileInfo == null) return 0;
+                return aryFileInfo.Count();
+            }
+        }
+
         public MFTReader() {
         }
 
@@ -56,7 +63,8 @@ namespace MFTReaderWrap {
         }
 
         public List<MFTFile> GetFile() {
-            var baseticks = new DateTime(1601,01,01).Ticks;
+            TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
+            var baseticks = new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks;
 
             var list = new List<MFTFile>();
             
@@ -67,13 +75,14 @@ namespace MFTReaderWrap {
                 return list;
             }
 
-            for (int i = start; i < aryFileInfo.Count(); i++) {
+            int count = aryFileInfo.Count();
+            for (int i = start; i < count; i++) {
                 if (aryFileInfo[i].Name != null) {
 
                     List<Int64> stack = new List<Int64>();
                     //var record = aryFileInfo[i];
                     Int32 parent = (Int32)aryFileInfo[i].DirectoryFileReferenceNumber;
-                    while (parent != 5) {
+                    while (parent != 5 && parent < count) {
                         stack.Add(parent);
                         parent = (Int32)aryFileInfo[parent].DirectoryFileReferenceNumber;
                     }
@@ -93,9 +102,10 @@ namespace MFTReaderWrap {
                     file.Name = record.Name;
                     file.Size = (long)record.Size;
                     file.IsDirectory = record.IsDirectory;
-                    file.CreationTime = new DateTime((long)record.CreationTime - baseticks);
-                    file.LastAccessTime = new DateTime((long)record.LastAccessTime - baseticks);
-                    file.LastWriteTime = new DateTime((long)record.LastWriteTime - baseticks);
+
+                    file.CreationTime = new DateTime((long)record.CreationTime + baseticks);
+                    file.LastAccessTime = new DateTime((long)record.LastAccessTime + baseticks);
+                    file.LastWriteTime = new DateTime((long)record.LastWriteTime + baseticks);
                     list.Add(file);
                 }
             }

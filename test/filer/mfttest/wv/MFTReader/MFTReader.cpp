@@ -259,7 +259,9 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 							}else{
 								pfile_info[i].IsDirectory = false;
 							}
-							pfile_info[i].Name = fn->Name;
+		
+							pfile_info[i].Name = new WCHAR[lstrlenW(fn->Name)+1]; 
+							lstrcpyW(pfile_info[i].Name , fn->Name);
 							pfile_info[i].Size = fn->DataSize;
 
 						}
@@ -284,9 +286,10 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 						attr = PATTRIBUTE(PUCHAR(attr) + sizeof(NONRESIDENT_ATTRIBUTE));
 			}
 		}
+		free(output_buffer);
 		
 		//if((CallBackProc!=NULL) && (per < i*100/total_file_count)){
-		if((per < i*100/total_file_count)){
+		if(proc != NULL && (per < i*100/total_file_count)){
 			per = i*100/total_file_count;
 			abort = proc(per);
 			if(abort){
@@ -308,11 +311,13 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 		//wprintf(L"Failed to close hVolume handle!\n");
 		//ErrorMessage(GetLastError());
 		*errCode = GetLastError();
-		free(output_buffer);
+		//free(output_buffer);
 		return 1;
 	}
 	// De-allocate the memory by malloc()
-	free(output_buffer);
+	//free(output_buffer);
+
+	//_CrtDumpMemoryLeaks();
 
 	return abort?2:0;
 }

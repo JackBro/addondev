@@ -6,6 +6,16 @@
 #include <windows.h>
 #include <stdio.h>
 #include <winioctl.h>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define   new                   new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define   malloc(s)             _malloc_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)
+#define   calloc(c, s)          _calloc_dbg(c, s, _NORMAL_BLOCK, __FILE__, __LINE__)
+#define   realloc(p, s)         _realloc_dbg(p, s, _NORMAL_BLOCK, __FILE__, __LINE__)
+#define   _recalloc(p, c, s)    _recalloc_dbg(p, c, s, _NORMAL_BLOCK, __FILE__, __LINE__)
+#define   _expand(p, s)         _expand_dbg(p, s, _NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
  
 // These types should be stored in separate
 // include file, not done here
@@ -128,6 +138,19 @@ typedef struct {
     };
 } OBJECTID_ATTRIBUTE, *POBJECTID_ATTRIBUTE;
 
+typedef struct {
+	//GUID ObjectId;
+	ULONGLONG DirectoryFileReferenceNumber;
+	bool IsDirectory;
+
+	ULONGLONG Size; 
+	ULONGLONG CreationTime;
+	ULONGLONG LastWriteTime;
+	ULONGLONG LastAccessTime;
+	LPWSTR Name;
+
+} MFT_FILE_INFO, *PMFT_FILE_INFO;
+
 #define WIN32_NAME 1
  
 // Format the Win32 system error code to string
@@ -215,9 +238,10 @@ int _tmain(int argc, _TCHAR* argv[])
       // the total entry count for the MFT
       total_file_count = (ntfsVolData.MftValidDataLength.QuadPart/num.QuadPart);
  
-	  total_file_count /= 1000; //test
+	  total_file_count = 50; //test
       wprintf(L"Total file count = %u\n", total_file_count);
  
+	  MFT_FILE_INFO* pfile_info = (MFT_FILE_INFO*)malloc(sizeof(MFT_FILE_INFO)*total_file_count);
       for(i = 0; i < total_file_count;i++)
       {
             mftRecordInput.FileReferenceNumber.QuadPart = i;
@@ -293,6 +317,10 @@ int _tmain(int argc, _TCHAR* argv[])
 								fn->Name[fn->NameLength] = L'\0';
 								wprintf(L"FileName Name :%s\n", fn->Name) ;
 
+								//pfile_info[i].Name = (LPWSTR)malloc((lstrlenW(fn->Name)+1)*sizeof(WCHAR)); 
+								pfile_info[i].Name = new WCHAR[lstrlenW(fn->Name)+1]; 
+								lstrcpyW(pfile_info[i].Name , fn->Name);
+								pfile_info[i].Size = fn->DataSize;
 								//LPWSTR lp = fn->Name;
 								//wprintf(L"FileName Name :%s\n", lp) ;
 							}
@@ -301,19 +329,20 @@ int _tmain(int argc, _TCHAR* argv[])
 							si = PSTANDARD_INFORMATION(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
 							wprintf(L"#####StandardInformation CreationTime : %u\n", si->CreationTime );
 							break;
-						case AttributeObjectId:
-							objid = POBJECTID_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
-							wprintf(L"ObjectId Data1 : %u\n", objid->ObjectId.Data1 );
-							wprintf(L"ObjectId Data2 : %u\n", objid->ObjectId.Data2 );
-							wprintf(L"ObjectId Data3 : %u\n", objid->ObjectId.Data3 );
-							wprintf(L"ObjectId Data4[0] : %u\n", objid->ObjectId.Data4[0] );
-							wprintf(L"ObjectId Data4[1] : %u\n", objid->ObjectId.Data4[1] );
-							wprintf(L"ObjectId Data4[2] : %u\n", objid->ObjectId.Data4[2] );
-							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[3] );
-							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[4] );
-							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[5] );
-							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[6] );
-							wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[7] );
+						//case AttributeObjectId:
+						//	objid = POBJECTID_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
+						//	wprintf(L"ObjectId Data1 : %u\n", objid->ObjectId.Data1 );
+						//	wprintf(L"ObjectId Data2 : %u\n", objid->ObjectId.Data2 );
+						//	wprintf(L"ObjectId Data3 : %u\n", objid->ObjectId.Data3 );
+						//	wprintf(L"ObjectId Data4[0] : %u\n", objid->ObjectId.Data4[0] );
+						//	wprintf(L"ObjectId Data4[1] : %u\n", objid->ObjectId.Data4[1] );
+						//	wprintf(L"ObjectId Data4[2] : %u\n", objid->ObjectId.Data4[2] );
+						//	wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[3] );
+						//	wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[4] );
+						//	wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[5] );
+						//	wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[6] );
+						//	wprintf(L"ObjectId Data4[3] : %u\n", objid->ObjectId.Data4[7] );
+						//	break;
 						default:
 							break;
 					};
@@ -326,7 +355,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				}
 			}
 			wprintf(L"\n");
-
+			free(output_buffer);
       }
      
       // Let verify
@@ -341,8 +370,15 @@ int _tmain(int argc, _TCHAR* argv[])
             ErrorMessage(GetLastError());
       }
       // De-allocate the memory by malloc()
-      free(output_buffer);
+      //free(output_buffer);
+	  for(i = 0; i < total_file_count;i++){
+		  if(pfile_info[i].Name != NULL){
+			delete [] pfile_info[i].Name;
+		  }
+	  }
+	  free(pfile_info);
  
+	  _CrtDumpMemoryLeaks();
       return 0;
 }
 
