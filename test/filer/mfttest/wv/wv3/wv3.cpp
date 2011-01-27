@@ -245,10 +245,10 @@ int _tmain(int argc, _TCHAR* argv[])
       for(i = 0; i < total_file_count;i++)
       {
             mftRecordInput.FileReferenceNumber.QuadPart = i;
- 
+ //int kkk = sizeof(mftRecordInput);
             // prior to calling the DeviceIoControl() we need to load
             // an input record with which entry number we want
- 
+ //int kk = sizeof(NTFS_FILE_RECORD_OUTPUT_BUFFER)+ntfsVolData.BytesPerFileRecordSegment-1;
             // setup outputbuffer - FSCTL_GET_NTFS_FILE_RECORD depends on this
             output_buffer = (PNTFS_FILE_RECORD_OUTPUT_BUFFER)malloc(sizeof(NTFS_FILE_RECORD_OUTPUT_BUFFER)+ntfsVolData.BytesPerFileRecordSegment-1);
  
@@ -258,7 +258,7 @@ int _tmain(int argc, _TCHAR* argv[])
                   ErrorMessage(GetLastError());
                   exit(1);
             }
- 
+			DWORD ooo = FSCTL_GET_NTFS_FILE_RECORD;
             bDioControl = DeviceIoControl(hVolume, 
 				FSCTL_GET_NTFS_FILE_RECORD,
 				&mftRecordInput,
@@ -286,7 +286,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			POBJECTID_ATTRIBUTE objid;
 
 			PATTRIBUTE attr = (PATTRIBUTE)((LPBYTE)p_file_record_header +  p_file_record_header->AttributesOffset); 
-
+PRESIDENT_ATTRIBUTE preg;
 			int stop = min(8,p_file_record_header->NextAttributeNumber);
 			if(p_file_record_header->Ntfs.Type =='ELIF'){
 				while(true){
@@ -295,6 +295,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					switch(attr->AttributeType)
 					{
 						case AttributeFileName:
+							preg =  PRESIDENT_ATTRIBUTE(attr);
 							fn = PFILENAME_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
 							if (fn->NameType & WIN32_NAME || fn->NameType == 0)
 							{
@@ -326,6 +327,7 @@ int _tmain(int argc, _TCHAR* argv[])
 							}
 							break;
 						case AttributeStandardInformation:
+ preg = PRESIDENT_ATTRIBUTE(attr);
 							si = PSTANDARD_INFORMATION(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
 							wprintf(L"#####StandardInformation CreationTime : %u\n", si->CreationTime );
 							break;

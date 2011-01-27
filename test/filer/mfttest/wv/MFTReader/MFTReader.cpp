@@ -55,7 +55,8 @@ typedef struct {
 	ULONGLONG Size; 
 	ULONGLONG CreationTime;
 	ULONGLONG LastWriteTime;
-	ULONGLONG LastAccessTime;
+	//ULONGLONG LastAccessTime;
+	LPWSTR Path;
 	LPWSTR Name;
 
 } MFT_FILE_INFO, *PMFT_FILE_INFO;
@@ -222,7 +223,7 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 		// FSCTL_GET_NTFS_FILE_RECORD retrieves one MFT entry
 		// FILE_RECORD_HEADER is the Base struct for the MFT entry
 		// that we will work from
-		PFILE_RECORD_HEADER p_file_record_header =       (PFILE_RECORD_HEADER)output_buffer->FileRecordBuffer;
+		PFILE_RECORD_HEADER p_file_record_header = (PFILE_RECORD_HEADER)output_buffer->FileRecordBuffer;
 
 		PFILENAME_ATTRIBUTE fn;
 		PSTANDARD_INFORMATION si;
@@ -252,6 +253,7 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 		
 							pfile_info[i].Name = new WCHAR[lstrlenW(fn->Name)+1]; 
 							lstrcpyW(pfile_info[i].Name , fn->Name);
+							//pfile_info[i].Name = fn->Name;				
 							pfile_info[i].Size = fn->DataSize;
 
 						}
@@ -260,7 +262,7 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 						si = PSTANDARD_INFORMATION(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
 						pfile_info[i].CreationTime = si->CreationTime;
 						pfile_info[i].LastWriteTime = si->LastWriteTime;
-						pfile_info[i].LastAccessTime = si->LastAccessTime;
+						//pfile_info[i].LastAccessTime = si->LastAccessTime;
 						break;
 					//case AttributeObjectId:
 					//	objid = POBJECTID_ATTRIBUTE(PUCHAR(attr) + PRESIDENT_ATTRIBUTE(attr)->ValueOffset);
@@ -308,6 +310,7 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 	//free(output_buffer);
 
 	//_CrtDumpMemoryLeaks();
+	//free(pfile_info);
 
 	return abort?2:0;
 }

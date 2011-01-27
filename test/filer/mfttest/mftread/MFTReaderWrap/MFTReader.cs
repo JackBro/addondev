@@ -10,13 +10,12 @@ namespace MFTReaderWrap {
     public class MFTReader {
 
         public event CallBackProc CallBackEvent;
-        private Win32.MFT_FILE_INFO[] aryFileInfo;
+        //private Win32.MFT_FILE_INFO[] aryFileInfo;
         private DriveInfo drive;
-
-        public int Count {
+        private Int64 _count=0;
+        public Int64 Count {
             get {
-                if (aryFileInfo == null) return 0;
-                return aryFileInfo.Count();
+                return _count;
             }
         }
 
@@ -51,14 +50,16 @@ namespace MFTReaderWrap {
                   IntPtr.Zero);
             }
             else {
+                _count = (Int64)recordsize;
                 {
-                    aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
+                    Win32.MFT_FILE_INFO[] aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
                     Int64 size = Marshal.SizeOf(typeof(Win32.MFT_FILE_INFO));
                     for (Int64 i = 0; i < (Int64)recordsize; i++) {
                         IntPtr current = new IntPtr(pListA.ToInt64() + (size * i));
                         aryFileInfo[i] = (Win32.MFT_FILE_INFO)Marshal.PtrToStructure(current, typeof(Win32.MFT_FILE_INFO));
                     }
                 }
+
                 //unsafe {
                 //    aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
                 //    Int64 size = Marshal.SizeOf(typeof(Win32.MFT_FILE_INFO));
@@ -73,6 +74,7 @@ namespace MFTReaderWrap {
                 //    }
                 //}
             }
+         
             Win32.freeBuffer(pListA);
 
         }
@@ -92,7 +94,7 @@ namespace MFTReaderWrap {
         //    }
         //}
 
-        public List<MFTFile> GetFile() {
+        public List<MFTFile> GetFile(Win32.MFT_FILE_INFO[] aryFileInfo) {
             TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
             var baseticks = new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks;
 
@@ -134,7 +136,7 @@ namespace MFTReaderWrap {
                     file.IsDirectory = record.IsDirectory;
 
                     file.CreationTime = new DateTime((long)record.CreationTime + baseticks);
-                    file.LastAccessTime = new DateTime((long)record.LastAccessTime + baseticks);
+                    //file.LastAccessTime = new DateTime((long)record.LastAccessTime + baseticks);
                     file.LastWriteTime = new DateTime((long)record.LastWriteTime + baseticks);
                     list.Add(file);
                 }

@@ -39,8 +39,10 @@ namespace MFTReaderWrap {
             public ulong Size;
             public ulong CreationTime;
             public ulong LastWriteTime;
-            public ulong LastAccessTime;
+            //public ulong LastAccessTime;
 
+            [MarshalAsAttribute(UnmanagedType.LPWStr)]
+            public String Path;
             [MarshalAsAttribute(UnmanagedType.LPWStr)]
             public String Name;
         }
