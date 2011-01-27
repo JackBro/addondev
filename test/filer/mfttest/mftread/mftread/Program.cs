@@ -10,8 +10,8 @@ namespace mftread {
     class Program {
         static void Main(string[] args) {
 
-            //MFTReader r = new MFTReader();
-            //r.read(new DriveInfo("c"));
+            MFTReader r = new MFTReader();
+            r.read(new DriveInfo("c"));
 
             //CallBackTenTimes(
             //    new CallBackTenTimesProc(MyCallBackTenTimesProc)

@@ -1,6 +1,5 @@
 LIBRARY "MTFReader.dll"
 
 EXPORTS
-	CallBackTenTimes		PRIVATE
 	freeBuffer      PRIVATE
 	GetMFTFileRecord PRIVATE

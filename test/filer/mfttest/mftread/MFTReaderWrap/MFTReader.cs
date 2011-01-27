@@ -22,7 +22,7 @@ namespace MFTReaderWrap {
 
         public MFTReader() {
         }
-
+        IntPtr pListA ;
         public void Read(DriveInfo driveinfo) {
             if (driveinfo.DriveFormat != "NTFS") {
             }
@@ -35,7 +35,7 @@ namespace MFTReaderWrap {
             drive = @"\\.\" + driveinfo.Name.Substring(0,2);
 
             UInt32 errorCode = 0;
-            IntPtr pListA = IntPtr.Zero;
+            pListA = IntPtr.Zero;
             UInt64 recordsize = 0;
 
             StringBuilder message = new StringBuilder(255);
@@ -49,18 +49,48 @@ namespace MFTReaderWrap {
                   message,
                   message.Capacity,
                   IntPtr.Zero);
-            } else {
-
-                aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
-                Int64 size = Marshal.SizeOf(typeof(Win32.MFT_FILE_INFO));
-                for (Int64 i = 0; i < (Int64)recordsize; i++) {
-                    IntPtr current = new IntPtr(pListA.ToInt64() + (size * i));
-                    aryFileInfo[i] = (Win32.MFT_FILE_INFO)Marshal.PtrToStructure(current, typeof(Win32.MFT_FILE_INFO));
+            }
+            else {
+                {
+                    aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
+                    Int64 size = Marshal.SizeOf(typeof(Win32.MFT_FILE_INFO));
+                    for (Int64 i = 0; i < (Int64)recordsize; i++) {
+                        IntPtr current = new IntPtr(pListA.ToInt64() + (size * i));
+                        aryFileInfo[i] = (Win32.MFT_FILE_INFO)Marshal.PtrToStructure(current, typeof(Win32.MFT_FILE_INFO));
+                    }
                 }
+                //unsafe {
+                //    aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
+                //    Int64 size = Marshal.SizeOf(typeof(Win32.MFT_FILE_INFO));
+                //    IntPtr ptr = pListA;
+                //    for (Int64 i = 0; i < (Int64)recordsize; i++) {
+                //        //fixed (byte* p = &bytes[0]) {
+                //        //    Point* pt = (Point*)p;
+                //        //}
+                //        Win32.MFT_FILE_INFO obj = *(Win32.MFT_FILE_INFO*)ptr;
+                //        aryFileInfo[i] = obj;
+                //        ptr = new IntPtr(pListA.ToInt64() + (size * i));
+                //    }
+                //}
             }
             Win32.freeBuffer(pListA);
 
         }
+
+        
+        //[StructLayout(LayoutKind.Sequential)]
+        //struct Fuga {
+        //    public double A;
+        //    public double B;
+        //    public double C;
+        //    public string name;
+        //}
+        //void Test3_Pointer() {
+        //    IntPtr ptr= IntPtr.Zero;
+        //    unsafe {
+        //        Fuga obj = *(Fuga*)ptr;
+        //    }
+        //}
 
         public List<MFTFile> GetFile() {
             TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
@@ -109,8 +139,9 @@ namespace MFTReaderWrap {
                     list.Add(file);
                 }
             }
+            //aryFileInfo =null;
+            //Win32.freeBuffer(pListA);
             return list;
         }
-
     }
 }

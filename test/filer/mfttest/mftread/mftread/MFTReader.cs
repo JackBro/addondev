@@ -29,8 +29,8 @@ namespace mftread {
             public UInt64 LastWriteTime;
         }
 
-        /*
-        public void read(DriveInfo driveInfo) {
+
+        public unsafe void read(DriveInfo driveInfo) {
             string pathRoot = string.Concat(@"\\.\", driveInfo.Name);
             pathRoot = @"\\.\c:";
             var hVolume = Win32API.CreateFile(
@@ -89,6 +89,7 @@ namespace mftread {
 
             Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER ob = new Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER();
             int obSize = Marshal.SizeOf(ob) + ntfsVolData.BytesPerFileRecordSegment-1;
+            //int obSize = sizeof(Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER) + ntfsVolData.BytesPerFileRecordSegment - 1;
 
             Win32API.NTFS_FILE_RECORD_INPUT_BUFFER mftRecordInput = new Win32API.NTFS_FILE_RECORD_INPUT_BUFFER();
             int mftRecordInputSize = Marshal.SizeOf(mftRecordInput);
@@ -105,21 +106,24 @@ namespace mftread {
 
                 var bDioControl = Win32API.DeviceIoControl(
                     hVolume,
-                    Win32API.FSCTL_GET_NTFS_FILE_RECORD,
+                    //Win32API.FSCTL_GET_NTFS_FILE_RECORD,
+                    (uint)FSCTL.GET_NTFS_FILE_RECORD,
                     input_buffer,
                     mftRecordInputSize,
                     output_buffer,
                     obSize,
                     out lpBytesReturned,
                     IntPtr.Zero);
-
+                //unsafe {
                 Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER olData = (Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER)Marshal.PtrToStructure(output_buffer, typeof(Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER));
-                Win32API.FILE_RECORD_HEADER p_file_record_header = new Win32API.FILE_RECORD_HEADER();
+                //Win32API.FILE_RECORD_HEADER p_file_record_header = new Win32API.FILE_RECORD_HEADER();
+                Win32API.FILE_RECORD_HEADER* p_file_record_header;
 
-                unsafe {
+
                     //Win32API.FILE_RECORD_HEADER* p_file_record_header = null;
                     //IntPtr op = new IntPtr(&olData.FileRecordBuffer[0]);
-                    fixed (byte *op = &olData.FileRecordBuffer[0]) {
+                fixed (byte* ptr = &olData.FileRecordBuffer[0]) {
+
                    // fixed (Win32API.FILE_RECORD_HEADER* p_file_record_header = (Win32API.FILE_RECORD_HEADER*)&olData.FileRecordBuffer[0]) 
                         //IntPtr ptr = Marshal.AllocHGlobal(sizeof(byte));
                         //Marshal.StructureToPtr(olData.FileRecordBuffer, ptr, false);
@@ -131,16 +135,36 @@ namespace mftread {
                         //GCHandle gch = GCHandle.Alloc(olData.FileRecordBuffer, GCHandleType.Pinned);
                         // 配列の先頭のアドレスを取得
                         //IntPtr ptr = gch.AddrOfPinnedObject();
-
-                        IntPtr ptr = (IntPtr)(op);
+                        //IntPtr ptr = (IntPtr)(&olData.FileRecordBuffer[0]);
+                        //Point* pt = (Point*)p;
+                        //IntPtr ptr = (IntPtr)(op);
+                        //IntPtr ptr = (IntPtr)(&olData.FileRecordBuffer);
+                        //IntPtr ptr = new IntPtr(op);
                         //Marshal.StructureToPtr(p_file_record_header, ptr, true);
-                        p_file_record_header = (Win32API.FILE_RECORD_HEADER)Marshal.PtrToStructure(ptr, typeof(Win32API.FILE_RECORD_HEADER));
-                        
+                        //p_file_record_header = (Win32API.FILE_RECORD_HEADER)Marshal.PtrToStructure(ptr, typeof(Win32API.FILE_RECORD_HEADER));
+                        p_file_record_header = (Win32API.FILE_RECORD_HEADER*)ptr;
+
                         Win32API.RECORD_ATTRIBUTE attr = new Win32API.RECORD_ATTRIBUTE();
                         IntPtr pAttr = Marshal.AllocHGlobal(Marshal.SizeOf(attr));
                         //Marshal.Copy(new IntPtr[] { ptr }, p_file_record_header.AttributesOffset, pAttr, Marshal.SizeOf(attr));
 
-                        IntPtr current = (IntPtr)((int)ptr + p_file_record_header.AttributesOffset);
+                        unsafe {
+                            byte[] binary = olData.FileRecordBuffer;
+                            var adr = Marshal.AllocHGlobal(binary.Length);
+                            Marshal.Copy(binary, 0, adr, binary.Length);
+                            System.IntPtr pAttribute;
+
+                            Win32API.FILE_RECORD_HEADER* pHeader = (Win32API.FILE_RECORD_HEADER*)adr;
+                            IntPtr pFirstAttribute = new IntPtr((byte*)ptr + pHeader->AttributesOffset);
+                            Win32API.RECORD_ATTRIBUTE* pattr = (Win32API.RECORD_ATTRIBUTE*)pFirstAttribute;
+                            int kk2 = 0;
+                            //using (System.Runtime.InteropServices.HGlobal ptr = new System.Runtime.InteropServices.HGlobal(binary.Length)) {
+                             //   System.Runtime.InteropServices.Marshal.Copy(binary, 0, ptr.Address, binary.Length);
+                             //   System.WindowsNT.Devices.IO.FileTables1.FileRecordSegment segment = System.WindowsNT.Devices.IO.FileTables1.FileRecordSegment.FromPtr(ptr.Address, out pAttribute);
+                             //   return new System.WindowsNT.Devices.IO.FileTables1.FileRecord(referenceNumber, segment, System.WindowsNT.Devices.IO.FileTables1.MFTAttribute.AllFromPtr(pAttribute));
+                           // }
+                        }
+                        IntPtr current = (IntPtr)((int)ptr + p_file_record_header->AttributesOffset);
                         attr = (Win32API.RECORD_ATTRIBUTE)Marshal.PtrToStructure(current, typeof(Win32API.RECORD_ATTRIBUTE));
                         int kk = 0;
                     }
@@ -157,11 +181,11 @@ namespace mftread {
                     //IntPtr ptr = Marshal.AllocHGlobal(size);
                     //Marshal.StructureToPtr(obj, ptr, false);
                     //Marshal.StructureToPtr(attr, new IntPtr(op.ToPointer() +p_file_record_header.AttributesOffset), true);
-                }
+                //}
             }
 
             Win32API.CloseHandle(hVolume);
-        }*/
+        }
 
         public void GetFileInfo() {
 

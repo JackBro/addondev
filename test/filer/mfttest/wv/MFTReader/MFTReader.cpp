@@ -68,17 +68,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     return TRUE;
 }
 
-typedef void (__stdcall *CallBackTenTimesProc)( void );
 typedef bool (__stdcall *CallBackProc)( int per );
-
-void __stdcall CallBackTenTimes( CallBackTenTimesProc proc )
-{
-    int i;
-    for( i=0; i<10; i++ )
-    {
-        proc();
-    }
-}
 
 void __stdcall freeBuffer(void* p)
 {
