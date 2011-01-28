@@ -10,8 +10,13 @@ namespace mftread {
     class Program {
         static void Main(string[] args) {
 
+            ///List<mftread.MFT_FILE_INFO> mftfiles;
             MFTReader r = new MFTReader();
-            r.read(new DriveInfo("c"));
+            DateTime s = DateTime.Now;
+            var mftfiles = r.read(new DriveInfo("c"));
+            var tickgetfiles = DateTime.Now - s;
+            Console.WriteLine("read MFT is " + tickgetfiles.TotalMilliseconds.ToString() + "msec");
+            Console.WriteLine("file num = " + mftfiles.Length.ToString());
 
             //CallBackTenTimes(
             //    new CallBackTenTimesProc(MyCallBackTenTimesProc)

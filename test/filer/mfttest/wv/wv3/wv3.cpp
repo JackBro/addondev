@@ -238,7 +238,7 @@ int _tmain(int argc, _TCHAR* argv[])
       // the total entry count for the MFT
       total_file_count = (ntfsVolData.MftValidDataLength.QuadPart/num.QuadPart);
  
-	  total_file_count = 50; //test
+	  //total_file_count = 50; //test
       wprintf(L"Total file count = %u\n", total_file_count);
  
 	  MFT_FILE_INFO* pfile_info = (MFT_FILE_INFO*)malloc(sizeof(MFT_FILE_INFO)*total_file_count);
@@ -324,6 +324,10 @@ PRESIDENT_ATTRIBUTE preg;
 								pfile_info[i].Size = fn->DataSize;
 								//LPWSTR lp = fn->Name;
 								//wprintf(L"FileName Name :%s\n", lp) ;
+								if (lstrcmpW(fn->Name, L"3-chmode1.raw")==0) {
+								//if(i==28635){
+									int h=0;
+								}
 							}
 							break;
 						case AttributeStandardInformation:
@@ -373,12 +377,7 @@ PRESIDENT_ATTRIBUTE preg;
       }
       // De-allocate the memory by malloc()
       //free(output_buffer);
-	  for(i = 0; i < total_file_count;i++){
-		  if(pfile_info[i].Name != NULL){
-			delete [] pfile_info[i].Name;
-		  }
-	  }
-	  free(pfile_info);
+	  //free(pfile_info);
  
 	  _CrtDumpMemoryLeaks();
       return 0;

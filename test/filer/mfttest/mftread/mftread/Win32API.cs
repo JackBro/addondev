@@ -179,21 +179,6 @@ namespace mftread {
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 1)]
         public unsafe struct FILENAME_ATTRIBUTE {
-            //public RESIDENT_ATTRIBUTE Attribute;
-            //public ulong DirectoryFileReferenceNumber;
-            //public ulong CreationTime;
-            //public ulong ChangeTime;
-            //public ulong LastWriteTime;
-            //public ulong LastAccessTime;
-            //public ulong AllocatedSize;
-            //public ulong DataSize;
-            //public uint FileAttributes;
-            //public uint AlignmentOrReserved;
-            //public byte NameLength;
-            //public byte NameType;
-            //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
-            //public string Name; //WCHAR
-
             public UInt64 DirectoryFileReferenceNumber;
             public UInt64 CreationTime;
             public UInt64 ChangeTime;
@@ -207,7 +192,6 @@ namespace mftread {
             public Byte NameType;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string Name; //WCHAR
-            //public fixed WCHAR Name[1];
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -234,18 +218,6 @@ namespace mftread {
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         internal unsafe struct STANDARD_INFORMATION {
-            //public RESIDENT_ATTRIBUTE Attribute;
-            //public ulong CreationTime;
-            //public ulong ChangeTime;
-            //public ulong LastWriteTime;
-            //public ulong LastAccessTime;
-            //public uint FileAttributes;
-            //public fixed uint Alignment[3];
-            //public uint QuotaID;
-            //public uint SecurityID;
-            //public ulong QuotaCharge;
-            //public ulong USN;
-
             public UInt64 CreationTime;
             public UInt64 ChangeTime;
             public UInt64 LastWriteTime;

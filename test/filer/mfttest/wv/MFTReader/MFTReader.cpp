@@ -256,6 +256,7 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 							//pfile_info[i].Name = fn->Name;				
 							pfile_info[i].Size = fn->DataSize;
 
+
 						}
 						break;
 					case AttributeStandardInformation:
