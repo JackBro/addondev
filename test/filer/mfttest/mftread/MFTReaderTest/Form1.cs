@@ -14,7 +14,10 @@ namespace MFTReaderTest {
         
         private List<CheckBox> drivelist = new List<CheckBox>();
         private List<MFTFile> MFTFileList;
-        private List<MFTFile> ResultMFTFileList = new List<MFTFile>();
+        //private List<MFTFile> ResultMFTFileList = new List<MFTFile>();
+
+        private MFT.MFT_FILE_INFO[] mftfiles;
+        private List<MFT.MFT_FILE_INFO> ResultMFTFileList = new List<MFT.MFT_FILE_INFO>();
         
         public Form1() {
             InitializeComponent();
@@ -63,23 +66,27 @@ namespace MFTReaderTest {
         MFTReader r;
         DateTime s;
         private void button1_Click(object sender, EventArgs e) {
-
-            
-
             s = DateTime.Now;
-
-            r = new MFTReader();
-            r.CallBackEvent += new CallBackProc(r_CallBackEvent);
-            //r.Read(new DriveInfo("c"));
-            //var list = r.GetFile();
-            backgroundWorker1.WorkerSupportsCancellation = true;
-            backgroundWorker1.WorkerReportsProgress = true;
-            backgroundWorker1.RunWorkerAsync();            
+            if (DLLradioButton.Checked) {
+                r = new MFTReader();
+                r.CallBackEvent += new CallBackProc(r_CallBackEvent);
+                backgroundWorker1.WorkerSupportsCancellation = true;
+                backgroundWorker1.WorkerReportsProgress = true;
+                backgroundWorker1.RunWorkerAsync();
+            } else if(ClassradioButton.Checked) {
+                MFT.MFTReader mr = new MFT.MFTReader();
+                mftfiles = mr.read(new DriveInfo("c"));
+                //var mftfiles2 = mr.read(new DriveInfo("d"));
+                var tickgetrecode = DateTime.Now - s;
+                MessageBox.Show("MFT.MFTReader read() is " + tickgetrecode.TotalMilliseconds.ToString() + "msec\n" + mftfiles.Count().ToString());
+                //mftfiles = null;
+            }
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
+            //GC.Collect();
         }
 
         bool r_CallBackEvent(int per) {
-            //throw new NotImplementedException();
-            //this.Text = per.ToString();
             backgroundWorker1.ReportProgress(per);
             if (backgroundWorker1.CancellationPending) {
                 return true;
@@ -101,7 +108,7 @@ namespace MFTReaderTest {
                 return;
             }
             var tickgetrecode = DateTime.Now - s;
-            //MFTFileList = r.GetFile();
+            MFTFileList = r.GetFile();
             var tickgetfiles = DateTime.Now - s;
             MessageBox.Show("read MFT is " + tickgetrecode.TotalMilliseconds.ToString() + "msec\n" + "make file is " + tickgetfiles.TotalMilliseconds.ToString() + "msec\n" + r.Count.ToString());
         }
@@ -117,7 +124,7 @@ namespace MFTReaderTest {
                 var item = ResultMFTFileList[e.ItemIndex];
                 var listviewitem = new ListViewItem();
                 listviewitem.Text = item.Name;
-                listviewitem.SubItems.Add(item.Path);
+                listviewitem.SubItems.Add("");
                 listviewitem.SubItems.Add(item.Size.ToString());
                 listviewitem.SubItems.Add(item.CreationTime.ToLongDateString());
                 listviewitem.SubItems.Add(item.LastWriteTime.ToLongDateString());
@@ -133,14 +140,17 @@ namespace MFTReaderTest {
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyData == Keys.Return) {
+                DateTime ss = DateTime.Now;
                 ResultMFTFileList.Clear();
-                foreach (var item in MFTFileList) {
-                    if (item.Name.Contains(textBox1.Text)) {
+                //foreach (var item in MFTFileList) {
+                foreach (var item in mftfiles) {
+                    if (item.Name !=null && item.Name.Contains(textBox1.Text)) {
                         ResultMFTFileList.Add(item);
                         //listView1.VirtualListSize = ResultMFTFileList.Count;
                     }
                 }
-                listView1.VirtualListSize = 10;// ResultMFTFileList.Count;
+                var tickgetfiles = DateTime.Now - ss;
+                listView1.VirtualListSize = ResultMFTFileList.Count;
             }
         }
     }

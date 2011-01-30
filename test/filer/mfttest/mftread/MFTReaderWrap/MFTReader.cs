@@ -10,7 +10,8 @@ namespace MFTReaderWrap {
     public class MFTReader {
 
         public event CallBackProc CallBackEvent;
-        //private Win32.MFT_FILE_INFO[] aryFileInfo;
+        private Win32.MFT_FILE_INFO[] aryFileInfo;
+        
         private DriveInfo drive;
         private Int64 _count=0;
         public Int64 Count {
@@ -52,7 +53,8 @@ namespace MFTReaderWrap {
             else {
                 _count = (Int64)recordsize;
                 {
-                    Win32.MFT_FILE_INFO[] aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
+                    //Win32.MFT_FILE_INFO[] aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
+                    aryFileInfo = new Win32.MFT_FILE_INFO[recordsize];
                     Int64 size = Marshal.SizeOf(typeof(Win32.MFT_FILE_INFO));
                     for (Int64 i = 0; i < (Int64)recordsize; i++) {
                         IntPtr current = new IntPtr(pListA.ToInt64() + (size * i));
@@ -94,7 +96,8 @@ namespace MFTReaderWrap {
         //    }
         //}
 
-        public List<MFTFile> GetFile(Win32.MFT_FILE_INFO[] aryFileInfo) {
+        //public List<MFTFile> GetFile(Win32.MFT_FILE_INFO[] aryFileInfo) {
+        public List<MFTFile> GetFile() {
             TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
             var baseticks = new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks;
 
@@ -141,8 +144,13 @@ namespace MFTReaderWrap {
                     list.Add(file);
                 }
             }
-            //aryFileInfo =null;
+
             //Win32.freeBuffer(pListA);
+            aryFileInfo = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
             return list;
         }
     }

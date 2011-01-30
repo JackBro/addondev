@@ -5,20 +5,50 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace mftread {
+namespace MFT {
 
     public struct MFT_FILE_INFO {
-        public UInt64 ParentID;
+        //public Int32 ParentID;
         public bool IsDirectory;
+        public String Path;
         public String Name;
         public UInt64 Size;
-        public UInt64 CreationTime;
-        public UInt64 LastWriteTime;
+        public DateTime CreationTime;
+        public DateTime LastWriteTime;
+        //public ulong CreationTime;
+        //public ulong LastWriteTime;
     }
 
+    //public class CallBackEventArgs : EventArgs {
+    //    private Point location;
+    //    public string Link { get; private set; }
+    //    public MouseButtons Button { get; private set; }
+    //    public int Clicks { get; private set; }
+    //    public int X { get { return Location.X; } private set { location.X = value; } }
+    //    public int Y { get { return Location.Y; } private set { location.Y = value; } }
+    //    public Point Location { get { return location; } private set { location = value; } }
+    //    public int Delta { get; private set; }
+
+    //    public CallBackEventArgs(MouseEventArgs e, string link) {
+    //        Button = e.Button;
+    //        Clicks = e.Clicks;
+    //        Location = e.Location;
+    //        Delta = e.Delta;
+    //        Link = link;
+    //    }
+    //}
+
+
+    public delegate bool CallBackProc(int per);
+
     public class MFTReader {
+        public event CallBackProc CallBackEvent;
 
         public unsafe MFT_FILE_INFO[] read(DriveInfo driveInfo) {
+
+            TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
+            var baseticks = (ulong)(new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks);
+
             string pathRoot = string.Concat(@"\\.\", driveInfo.Name.Substring(0, 2));
 
             var hVolume = Win32API.CreateFile(
@@ -57,7 +87,7 @@ namespace mftread {
             Marshal.FreeHGlobal(volBuffer);
 
             if (ret) {
-                
+
                 //Console.WriteLine("Volume Serial Number: 0X%.8X%.8X\n", ntfsVolData.VolumeSerialNumber.HighPart, ntfsVolData.VolumeSerialNumber.LowPart);
                 Console.WriteLine("The number of bytes in a cluster: {0}", ntfsVolData.BytesPerCluster);
                 Console.WriteLine("The number of bytes in a file record segment: {0}", ntfsVolData.BytesPerFileRecordSegment);
@@ -78,6 +108,7 @@ namespace mftread {
             long total_file_count = (ntfsVolData.MftValidDataLength / QuadPart);
 
             //total_file_count = total_file_count / 1000; //test
+            Int32[] parentid = new Int32[total_file_count];
             MFT_FILE_INFO[] fileinfos = new MFT_FILE_INFO[total_file_count];
 
             Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER ob = new Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER();
@@ -129,20 +160,22 @@ namespace mftread {
                     Win32API.RECORD_ATTRIBUTE* attr = (Win32API.RECORD_ATTRIBUTE*)((int)ptr + p_file_record_header->AttributesOffset);
 
                     Win32API.STANDARD_INFORMATION* si;
-                    if (p_file_record_header->Ntfs.Type == 1162627398) {//'ELIF'){
+                    if (p_file_record_header->Ntfs.Type == 1162627398) {//'ELIF'
                         while (true) {
                             if (attr->AttributeType < 0 || (int)attr->AttributeType > 0x100) break;
-                           
+
                             switch (attr->AttributeType) {
                                 case Win32API.AttributeType.AttributeFileName:
                                     Win32API.RESIDENT_ATTRIBUTE* regsttr = (Win32API.RESIDENT_ATTRIBUTE*)attr;
                                     Win32API.FILENAME_ATTRIBUTE fattr =
                                         (Win32API.FILENAME_ATTRIBUTE)Marshal.PtrToStructure((IntPtr)((((byte*)attr) + regsttr->ValueOffset)), typeof(Win32API.FILENAME_ATTRIBUTE));
 
-                                    fileinfos[i].ParentID = fattr.DirectoryFileReferenceNumber;
+                                    //parentid[i] = (Int32)fattr.DirectoryFileReferenceNumber;
+                                    //fileinfos[i].ParentID = (Int32)fattr.DirectoryFileReferenceNumber;                                    
                                     fileinfos[i].IsDirectory = ((p_file_record_header->Flags & 0x2) == 2);
+                                    fileinfos[i].Name = fattr.Name.Substring(0, fattr.NameLength);
                                     //fileinfos[i].Name = fattr.Name;
-                                    fileinfos[i].Size = fattr.DataSize;
+                                    //fileinfos[i].Size = fattr.DataSize;
                                     break;
 
                                 case Win32API.AttributeType.AttributeStandardInformation:
@@ -150,17 +183,16 @@ namespace mftread {
                                     si = (Win32API.STANDARD_INFORMATION*)((byte*)attr + ((Win32API.RESIDENT_ATTRIBUTE*)attr)->ValueOffset);
                                     //Win32API.STANDARD_INFORMATION sattr =
                                     //(Win32API.STANDARD_INFORMATION)Marshal.PtrToStructure(new IntPtr(&attr + off->ValueOffset), typeof(Win32API.STANDARD_INFORMATION));
-                                    //var ctiem = si->CreationTime;
-                                    //var lwtiem = si->LastWriteTime;
-                                    fileinfos[i].CreationTime = si->CreationTime;
-                                    fileinfos[i].LastWriteTime = si->LastWriteTime;
+                                    //fileinfos[i].CreationTime = si->CreationTime;
+                                    //fileinfos[i].LastWriteTime = si->LastWriteTime;
+                                    fileinfos[i].CreationTime = new DateTime((long)(si->CreationTime + baseticks));
+                                    fileinfos[i].LastWriteTime =new DateTime((long)(si->LastWriteTime + baseticks));
                                     break;
                                 case Win32API.AttributeType.AttributeData:
                                     if (attr->NonResident == 1) {
 
                                         fileinfos[i].Size = ((Win32API.NONRESIDENT_ATTRIBUTE*)attr)->DataSize;
-                                    }
-                                    else {
+                                    } else {
                                         fileinfos[i].Size = ((Win32API.RESIDENT_ATTRIBUTE*)attr)->ValueLength;
                                     }
                                     break;
@@ -181,13 +213,40 @@ namespace mftread {
                         //    int h = 0;
                         //}
                     }
-                   
+
                 }
                 Marshal.FreeHGlobal(output_buffer);
                 Marshal.FreeHGlobal(input_buffer);
             }
 
             Win32API.CloseHandle(hVolume);
+
+            {
+                int start = 27;
+                StringBuilder buf = new StringBuilder();
+                var stack = new List<Int32>();
+                int count = fileinfos.Count();
+                for (int i = start; i < count; i++) {
+                    if (fileinfos[i].Name != null) {
+
+                        stack.Clear();
+                        var parent = parentid[i];
+                        while ((parent != 0 && parent != 5) && parent < count) {
+                            stack.Add(parent);
+                            parent = parentid[parent];
+                        }
+                        stack.Reverse();
+
+                        buf.Remove(0, buf.Length);
+                        buf.Append(driveInfo.Name);
+                        foreach (var item in stack) {
+                            buf.Append(fileinfos[item].Name);
+                            buf.Append(@"\");
+                        }
+                        fileinfos[i].Path = buf.ToString();
+                    }
+                }
+            }
 
             return fileinfos;
         }

@@ -56,7 +56,7 @@ typedef struct {
 	ULONGLONG CreationTime;
 	ULONGLONG LastWriteTime;
 	//ULONGLONG LastAccessTime;
-	LPWSTR Path;
+	//LPWSTR Path;
 	LPWSTR Name;
 
 } MFT_FILE_INFO, *PMFT_FILE_INFO;

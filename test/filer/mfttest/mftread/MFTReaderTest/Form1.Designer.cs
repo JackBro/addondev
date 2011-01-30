@@ -27,10 +27,14 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.CancelButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.ClassradioButton = new System.Windows.Forms.RadioButton();
+            this.DLLradioButton = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -68,24 +72,10 @@
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.CancelButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(0, 25);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(292, 26);
             this.panel1.TabIndex = 2;
-            // 
-            // listView1
-            // 
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.FullRowSelect = true;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 45);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(292, 228);
-            this.listView1.TabIndex = 3;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.VirtualMode = true;
-            this.listView1.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.listView1_RetrieveVirtualItem);
             // 
             // panel2
             // 
@@ -95,14 +85,60 @@
             this.panel2.Size = new System.Drawing.Size(192, 26);
             this.panel2.TabIndex = 0;
             // 
+            // listView1
+            // 
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.FullRowSelect = true;
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(0, 70);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(292, 203);
+            this.listView1.TabIndex = 3;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.VirtualMode = true;
+            this.listView1.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.listView1_RetrieveVirtualItem);
+            // 
             // textBox1
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox1.Location = new System.Drawing.Point(0, 26);
+            this.textBox1.Location = new System.Drawing.Point(0, 51);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(292, 19);
             this.textBox1.TabIndex = 4;
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.DLLradioButton);
+            this.panel3.Controls.Add(this.ClassradioButton);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(292, 25);
+            this.panel3.TabIndex = 5;
+            // 
+            // ClassradioButton
+            // 
+            this.ClassradioButton.AutoSize = true;
+            this.ClassradioButton.Location = new System.Drawing.Point(3, 6);
+            this.ClassradioButton.Name = "ClassradioButton";
+            this.ClassradioButton.Size = new System.Drawing.Size(50, 16);
+            this.ClassradioButton.TabIndex = 0;
+            this.ClassradioButton.TabStop = true;
+            this.ClassradioButton.Text = "class";
+            this.ClassradioButton.UseVisualStyleBackColor = true;
+            // 
+            // DLLradioButton
+            // 
+            this.DLLradioButton.AutoSize = true;
+            this.DLLradioButton.Location = new System.Drawing.Point(59, 6);
+            this.DLLradioButton.Name = "DLLradioButton";
+            this.DLLradioButton.Size = new System.Drawing.Size(35, 16);
+            this.DLLradioButton.TabIndex = 1;
+            this.DLLradioButton.TabStop = true;
+            this.DLLradioButton.Text = "dll";
+            this.DLLradioButton.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -112,9 +148,12 @@
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel3);
             this.Name = "Form1";
             this.Text = "Form1";
             this.panel1.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,6 +168,9 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.RadioButton DLLradioButton;
+        private System.Windows.Forms.RadioButton ClassradioButton;
     }
 }
 
