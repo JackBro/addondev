@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using MFTReaderWrap;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MFTReaderTest {
     public partial class Form1 : Form {
@@ -62,6 +63,16 @@ namespace MFTReaderTest {
                 }
 	        }
             //panel1.AutoSize = true;
+
+            //MFT.MFT_FILE_INFO[] files;
+            //BinaryFormatter bf = new BinaryFormatter();
+            //using (FileStream fs = new FileStream("temp.bin", FileMode.Open)) {
+            //    files = (MFT.MFT_FILE_INFO[])bf.Deserialize(fs);
+            //}
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
+            //GC.Collect();
+
         }
         MFTReader r;
         DateTime s;
@@ -75,11 +86,17 @@ namespace MFTReaderTest {
                 backgroundWorker1.RunWorkerAsync();
             } else if(ClassradioButton.Checked) {
                 MFT.MFTReader mr = new MFT.MFTReader();
+
                 mftfiles = mr.read(new DriveInfo("c"));
                 //var mftfiles2 = mr.read(new DriveInfo("d"));
                 var tickgetrecode = DateTime.Now - s;
                 MessageBox.Show("MFT.MFTReader read() is " + tickgetrecode.TotalMilliseconds.ToString() + "msec\n" + mftfiles.Count().ToString());
+
                 //mftfiles = null;
+                //BinaryFormatter bf = new BinaryFormatter();
+                //using (FileStream fs = new FileStream("temp.bin", FileMode.Create)) {
+                //    bf.Serialize(fs, mftfiles); 
+                //}
             }
             //GC.Collect();
             //GC.WaitForPendingFinalizers();
@@ -108,7 +125,7 @@ namespace MFTReaderTest {
                 return;
             }
             var tickgetrecode = DateTime.Now - s;
-            MFTFileList = r.GetFile();
+            //MFTFileList = r.GetFile();
             var tickgetfiles = DateTime.Now - s;
             MessageBox.Show("read MFT is " + tickgetrecode.TotalMilliseconds.ToString() + "msec\n" + "make file is " + tickgetfiles.TotalMilliseconds.ToString() + "msec\n" + r.Count.ToString());
         }

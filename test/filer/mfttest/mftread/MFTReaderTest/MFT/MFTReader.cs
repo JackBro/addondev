@@ -7,10 +7,11 @@ using System.Runtime.InteropServices;
 
 namespace MFT {
 
+    [Serializable]
     public struct MFT_FILE_INFO {
-        //public Int32 ParentID;
+        public Int32 ParentID;
         public bool IsDirectory;
-        public String Path;
+        //public String Path;
         public String Name;
         public UInt64 Size;
         public DateTime CreationTime;
@@ -108,7 +109,7 @@ namespace MFT {
             long total_file_count = (ntfsVolData.MftValidDataLength / QuadPart);
 
             //total_file_count = total_file_count / 1000; //test
-            Int32[] parentid = new Int32[total_file_count];
+            //Int32[] parentid = new Int32[total_file_count];
             MFT_FILE_INFO[] fileinfos = new MFT_FILE_INFO[total_file_count];
 
             Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER ob = new Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER();
@@ -166,14 +167,21 @@ namespace MFT {
 
                             switch (attr->AttributeType) {
                                 case Win32API.AttributeType.AttributeFileName:
-                                    Win32API.RESIDENT_ATTRIBUTE* regsttr = (Win32API.RESIDENT_ATTRIBUTE*)attr;
+                                    //Win32API.RESIDENT_ATTRIBUTE* regsttr = (Win32API.RESIDENT_ATTRIBUTE*)attr;
                                     Win32API.FILENAME_ATTRIBUTE fattr =
-                                        (Win32API.FILENAME_ATTRIBUTE)Marshal.PtrToStructure((IntPtr)((((byte*)attr) + regsttr->ValueOffset)), typeof(Win32API.FILENAME_ATTRIBUTE));
+                                        (Win32API.FILENAME_ATTRIBUTE)Marshal.PtrToStructure((IntPtr)((((byte*)attr) + ((Win32API.RESIDENT_ATTRIBUTE*)attr)->ValueOffset)), typeof(Win32API.FILENAME_ATTRIBUTE));
 
                                     //parentid[i] = (Int32)fattr.DirectoryFileReferenceNumber;
-                                    //fileinfos[i].ParentID = (Int32)fattr.DirectoryFileReferenceNumber;                                    
+                                    fileinfos[i].ParentID = (Int32)fattr.DirectoryFileReferenceNumber;                                    
                                     fileinfos[i].IsDirectory = ((p_file_record_header->Flags & 0x2) == 2);
                                     fileinfos[i].Name = fattr.Name.Substring(0, fattr.NameLength);
+                                    //if (fattr.NameLength > 3) {
+                                    //    fileinfos[i].Name = fattr.Name.Substring(0, fattr.NameLength);
+                                    //}
+                                    //else {
+                                    //    fileinfos[i].Name = fattr.Name.Substring(0, fattr.NameLength);
+                                    //}
+                                    
                                     //fileinfos[i].Name = fattr.Name;
                                     //fileinfos[i].Size = fattr.DataSize;
                                     break;
@@ -190,7 +198,6 @@ namespace MFT {
                                     break;
                                 case Win32API.AttributeType.AttributeData:
                                     if (attr->NonResident == 1) {
-
                                         fileinfos[i].Size = ((Win32API.NONRESIDENT_ATTRIBUTE*)attr)->DataSize;
                                     } else {
                                         fileinfos[i].Size = ((Win32API.RESIDENT_ATTRIBUTE*)attr)->ValueLength;
@@ -221,32 +228,32 @@ namespace MFT {
 
             Win32API.CloseHandle(hVolume);
 
-            {
-                int start = 27;
-                StringBuilder buf = new StringBuilder();
-                var stack = new List<Int32>();
-                int count = fileinfos.Count();
-                for (int i = start; i < count; i++) {
-                    if (fileinfos[i].Name != null) {
+            //{
+            //    int start = 27;
+            //    StringBuilder buf = new StringBuilder();
+            //    var stack = new List<Int32>();
+            //    int count = fileinfos.Count();
+            //    for (int i = start; i < count; i++) {
+            //        if (fileinfos[i].Name != null) {
 
-                        stack.Clear();
-                        var parent = parentid[i];
-                        while ((parent != 0 && parent != 5) && parent < count) {
-                            stack.Add(parent);
-                            parent = parentid[parent];
-                        }
-                        stack.Reverse();
+            //            stack.Clear();
+            //            var parent = parentid[i];
+            //            while ((parent != 0 && parent != 5) && parent < count) {
+            //                stack.Add(parent);
+            //                parent = parentid[parent];
+            //            }
+            //            stack.Reverse();
 
-                        buf.Remove(0, buf.Length);
-                        buf.Append(driveInfo.Name);
-                        foreach (var item in stack) {
-                            buf.Append(fileinfos[item].Name);
-                            buf.Append(@"\");
-                        }
-                        fileinfos[i].Path = buf.ToString();
-                    }
-                }
-            }
+            //            buf.Remove(0, buf.Length);
+            //            buf.Append(driveInfo.Name);
+            //            foreach (var item in stack) {
+            //                buf.Append(fileinfos[item].Name);
+            //                buf.Append(@"\");
+            //            }
+            //            fileinfos[i].Path = buf.ToString();
+            //        }
+            //    }
+            //}
 
             return fileinfos;
         }
