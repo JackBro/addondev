@@ -73,6 +73,15 @@ namespace MFT {
                 ref int pBytesReturned,
                 [In] ref NativeOverlapped lpOverlapped);
 
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern bool ReadFile(
+         IntPtr hFile,
+         IntPtr aBuffer,
+         UInt32 cbToRead,
+         ref UInt32 cbThatWereRead,
+         IntPtr pOverlapped);
+
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool

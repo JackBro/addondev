@@ -119,6 +119,9 @@ namespace MFT {
             Win32API.NTFS_FILE_RECORD_INPUT_BUFFER mftRecordInput = new Win32API.NTFS_FILE_RECORD_INPUT_BUFFER();
             int mftRecordInputSize = Marshal.SizeOf(mftRecordInput);
 
+
+            Win32API.FILE_RECORD_HEADER hdum = new Win32API.FILE_RECORD_HEADER();
+            int hdumSize = Marshal.SizeOf(hdum);
             for (long i = 0; i < total_file_count; i++) {
 
                 mftRecordInput.FileReferenceNumber = i;
@@ -139,6 +142,16 @@ namespace MFT {
                     out lpBytesReturned,
                     IntPtr.Zero);
 
+                IntPtr hp = Marshal.AllocHGlobal(hdumSize);
+                uint read = 0;
+
+                Marshal.StructureToPtr(hdum, hp, true);
+                //byte[] buffer = new byte[Marshal.SizeOf(hdum)];
+                //fixed (byte* p = buffer) {
+                    //ReadFile(readhandle, p, lpNumberOfBytesRead, &n, 0);
+                    Win32API.ReadFile(hVolume, hp, (uint)(1024 * ntfsVolData.BytesPerCluster), ref read, IntPtr.Zero);
+                    Win32API.FILE_RECORD_HEADER* ph = (Win32API.FILE_RECORD_HEADER*)((int)hp);
+                //}
                 //fixed (Win32API.NTFS_FILE_RECORD_INPUT_BUFFER* ptr = (&mftRecordInput)) {
                 //    var bDioControl = Win32API.DeviceIoControl(
                 //        hVolume,
@@ -154,6 +167,7 @@ namespace MFT {
                 Win32API.FILE_RECORD_HEADER* p_file_record_header;
 
                 var outbuff = Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER.FromPtr(output_buffer);
+                //byte* ptr = (byte*)output_buffer + (int)Marshal.OffsetOf(typeof(Win32API.NTFS_FILE_RECORD_OUTPUT_BUFFER), "FileRecordBuffer");
 
                 fixed (byte* ptr = &outbuff.FileRecordBuffer[0]) {
                     p_file_record_header = (Win32API.FILE_RECORD_HEADER*)ptr;
@@ -162,6 +176,8 @@ namespace MFT {
 
                     Win32API.STANDARD_INFORMATION* si;
                     if (p_file_record_header->Ntfs.Type == 1162627398) {//'ELIF'
+                        //int stop = Math.Min(8, (int)p_file_record_header->NextAttributeNumber);
+                        //for (int j=0;j<stop;j++){
                         while (true) {
                             if (attr->AttributeType < 0 || (int)attr->AttributeType > 0x100) break;
 
@@ -170,7 +186,6 @@ namespace MFT {
                                     //Win32API.RESIDENT_ATTRIBUTE* regsttr = (Win32API.RESIDENT_ATTRIBUTE*)attr;
                                     Win32API.FILENAME_ATTRIBUTE fattr =
                                         (Win32API.FILENAME_ATTRIBUTE)Marshal.PtrToStructure((IntPtr)((((byte*)attr) + ((Win32API.RESIDENT_ATTRIBUTE*)attr)->ValueOffset)), typeof(Win32API.FILENAME_ATTRIBUTE));
-
                                     //parentid[i] = (Int32)fattr.DirectoryFileReferenceNumber;
                                     fileinfos[i].ParentID = (Int32)fattr.DirectoryFileReferenceNumber;                                    
                                     fileinfos[i].IsDirectory = ((p_file_record_header->Flags & 0x2) == 2);
@@ -181,9 +196,9 @@ namespace MFT {
                                     //else {
                                     //    fileinfos[i].Name = fattr.Name.Substring(0, fattr.NameLength);
                                     //}
-                                    
                                     //fileinfos[i].Name = fattr.Name;
                                     //fileinfos[i].Size = fattr.DataSize;
+                                    //goto BB;
                                     break;
 
                                 case Win32API.AttributeType.AttributeStandardInformation:
@@ -213,7 +228,8 @@ namespace MFT {
                                 if (attr->NonResident == 1)//TRUE)
                                     attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)attr + sizeof(Win32API.NONRESIDENT_ATTRIBUTE));
                         }
-
+                    //BB:
+                    //    ;
                         //if (fileinfos[i].Name != null && fileinfos[i].Name.Contains("wv.ncb")) {
                         //    var f = fileinfos[i];
                         //    var ss = f.Size;

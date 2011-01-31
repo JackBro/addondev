@@ -88,7 +88,7 @@ namespace MFTReaderTest {
                 MFT.MFTReader mr = new MFT.MFTReader();
 
                 mftfiles = mr.read(new DriveInfo("c"));
-                //var mftfiles2 = mr.read(new DriveInfo("d"));
+                //mftfiles = mr.read(new DriveInfo("d"));
                 var tickgetrecode = DateTime.Now - s;
                 MessageBox.Show("MFT.MFTReader read() is " + tickgetrecode.TotalMilliseconds.ToString() + "msec\n" + mftfiles.Count().ToString());
 
