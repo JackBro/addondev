@@ -99,6 +99,28 @@ namespace mftread {
             [FieldOffset(16)]
             public IntPtr hEvent;
         }
+        //[StructLayout(LayoutKind.Sequential)]
+        //public struct OVERLAPPED {
+        //    public uint Internal;
+        //    public uint InternalHigh;
+        //    public uint Offset;
+        //    public uint OffsetHigh;
+        //    public IntPtr hEvent;
+        //}
+        //[StructLayout(LayoutKind.Sequential, Pack = 8)]
+        //public struct OVERLAPPED {
+        //    private IntPtr InternalLow;
+        //    private IntPtr InternalHigh;
+        //    public long Offset;
+        //    public IntPtr EventHandle;
+        //}
+        //public struct OVERLAPPED {
+        //    public UIntPtr Internal;
+        //    public UIntPtr InternalHigh;
+        //    public uint Offset;
+        //    public uint OffsetHigh;
+        //    public IntPtr EventHandle;
+        //}
 
         [DllImport("kernel32", SetLastError = true)]
         public static extern bool ReadFile(
@@ -115,6 +137,10 @@ namespace mftread {
          UInt32 cbToRead,
          ref UInt32 cbThatWereRead,
          ref OVERLAPPED lpOverlapped);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern unsafe int ReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead,
+          IntPtr numBytesRead, NativeOverlapped* overlapped);
 
 
         [DllImport("kernel32.dll")]
@@ -171,20 +197,72 @@ namespace mftread {
             public ulong USN;
         }
 
+        //[StructLayout(LayoutKind.Sequential, Pack = 1)]
+        //public struct FILE_RECORD_HEADER {
+        //    public NTFS_RECORD_HEADER Ntfs;
+        //    public ushort SequenceNumber;
+        //    public ushort LinkCount;
+        //    public ushort AttributesOffset;
+        //    public ushort Flags;
+        //    public ulong BytesInUse;
+        //    public ulong BytesAllocated;
+        //    public UInt64 BaseFileRecord;
+        //    public ushort NextAttributeNumber;
+        //}
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct FILE_RECORD_HEADER {
+            /// <summary>
+            /// An NTFS_RECORD_HEADER structure with a member Type of 'FILE'.
+            /// </summary>
             public NTFS_RECORD_HEADER Ntfs;
-            public ushort SequenceNumber;
-            public ushort LinkCount;
-            public ushort AttributesOffset;
-            public ushort Flags;
-            public ulong BytesInUse;
-            public ulong BytesAllocated;
-            public UInt64 BaseFileRecord;
-            public ushort NextAttributeNumber;
-        }
 
-        [Flags()]
+            /// <summary>
+            /// The number of time that the MFT entry has been used.
+            /// </summary>
+            public ushort SequenceNumber;
+
+            /// <summary>
+            /// The number of directory links to the MFT entry.
+            /// </summary>
+            public ushort LinkCount;
+
+            /// <summary>
+            /// Represent the offset in b ytes from the start of the structure to the first attribute of the MFT entry.
+            /// </summary>
+            public ushort AttributesOffset;
+
+            /// <summary>
+            /// A bit array of flags specifying properties of the MFT entry.
+            /// The values can be:
+            /// InUse = 0x1
+            /// Directory = 0x2
+            /// </summary>
+            public ushort Flags;
+
+            /// <summary>
+            /// The number of bytes used by the MFT entry.
+            /// </summary>
+            public uint BytesInUse;
+
+            /// <summary>
+            /// The number of bytes allocated for the MFT entry.
+            /// </summary>
+            public uint BytesAllocated;
+
+            /// <summary>
+            /// If the MFT entry contains attributes that overflowed a base MFT enrty,
+            /// this member contains the file reference number of the base entry.
+            /// Otherwise it contains zero.
+            /// </summary>
+            public ulong BaseFileRecord;
+
+            /// <summary>
+            /// The number that will be assigned to the next attribute added to the MFT entry.
+            /// </summary>
+            public ushort NextAttributeNumber;
+        } 
+
+        //[Flags()]
         public enum AttributeType : int {
             AttributeStandardInformation = 0x10,
             AttributeAttributeList = 0x20,
@@ -212,7 +290,7 @@ namespace mftread {
             public byte NameLength;
             public ushort NameOffset;
             public ushort Flags;
-            public short AttributeNumber;
+            public ushort AttributeNumber;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 1)]

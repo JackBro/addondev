@@ -47,8 +47,8 @@ namespace mftread {
 
              bootb = (Win32API.BOOT_BLOCK)Marshal.PtrToStructure(pbb, typeof(Win32API.BOOT_BLOCK));
              LoadMFT();
-             IntPtr pfile = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Win32API.FILE_RECORD_HEADER)));
-             Win32API.FILE_RECORD_HEADER* file = (Win32API.FILE_RECORD_HEADER*)MFT.ToPointer();
+             //IntPtr pfile = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Win32API.FILE_RECORD_HEADER)));
+             Win32API.FILE_RECORD_HEADER* file = (Win32API.FILE_RECORD_HEADER*)MFT;
              Win32API.STANDARD_INFORMATION* sisec;
              for (ulong index = 0; index < 10; index++) {
                  ReadFileRecord(index, file);
@@ -92,7 +92,7 @@ namespace mftread {
                                  break;
                          }
 
-                         if (attr->Length > 0 && attr->Length < (int)file->BytesInUse)
+                         if (attr->Length > 0 && attr->Length < file->BytesInUse)
                              attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)attr + attr->Length);
                          else
                              if (attr->NonResident == 1)//TRUE)
@@ -233,7 +233,7 @@ namespace mftread {
                                     break;
                             }
 
-                            if (attr->Length > 0 && attr->Length < (int)p_file_record_header->BytesInUse)
+                            if (attr->Length > 0 && attr->Length < p_file_record_header->BytesInUse)
                                 attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)attr + attr->Length);
                             else
                                 if (attr->NonResident == 1)//TRUE)
@@ -258,8 +258,8 @@ namespace mftread {
         }
         IntPtr MFT;
         UInt32 BytesPerFileRecord;
-        public void LoadMFT() {
-            uint h = 0x100;
+        public unsafe void LoadMFT() {
+            //uint h = 0x100;
             BytesPerFileRecord = bootb.ClustersPerFileRecord < 0x80 
                 ? bootb.ClustersPerFileRecord * bootb.SectorsPerCluster* bootb.BytesPerSector
                 : (uint)(1 << (int)(0x100 - bootb.ClustersPerFileRecord));
@@ -270,37 +270,98 @@ namespace mftread {
             //    int hh = (int)(0x100-bootb.ClustersPerFileRecord);
             //    BytesPerFileRecord = (uint)(1 << hh);
             //}
-            Win32API.FILE_RECORD_HEADER mft = new Win32API.FILE_RECORD_HEADER();
-            int MFTSize= Marshal.SizeOf(typeof(Win32API.FILE_RECORD_HEADER));
-            MFT = Marshal.AllocHGlobal(MFTSize);
-            Win32API.ZeroMemory(MFT, MFTSize);
+            //Win32API.FILE_RECORD_HEADER mft = new Win32API.FILE_RECORD_HEADER();
+            int MFTSize= Marshal.SizeOf(BytesPerFileRecord);
+            //MFT = Marshal.AllocHGlobal(MFTSize);
+            //Win32API.ZeroMemory(MFT, MFTSize);
+            MFT = Marshal.AllocHGlobal((int)BytesPerFileRecord);
+            Win32API.ZeroMemory(MFT, (int)BytesPerFileRecord);
+            
             //Marshal.StructureToPtr(mft, MFT, true);
 
-            ReadSector((long)((bootb.MftStartLcn) * (bootb.SectorsPerCluster)),
+            ReadSector((Int64)((bootb.MftStartLcn) * (bootb.SectorsPerCluster)),
                 (BytesPerFileRecord) / (bootb.BytesPerSector), MFT);
 
-            var nnn = (Win32API.FILE_RECORD_HEADER)Marshal.PtrToStructure(MFT, typeof(Win32API.FILE_RECORD_HEADER));
-
-            int bb = 0;
+            //Win32API.FILE_RECORD_HEADER* thismp = (Win32API.FILE_RECORD_HEADER*)MFT;
+            //var nnn = (Win32API.FILE_RECORD_HEADER)Marshal.PtrToStructure(MFT, typeof(Win32API.FILE_RECORD_HEADER));
+            //int bb = 0;
+            FixupUpdateSequenceArray((Win32API.FILE_RECORD_HEADER*)MFT);
         }
 
         public unsafe void ReadSector(Int64 sector, ulong count, IntPtr buffer) {
             uint n = 0;
-            //System.Threading.NativeOverlapped ov = new System.Threading.NativeOverlapped();
+
             Win32API.OVERLAPPED ov = new Win32API.OVERLAPPED();
             UInt64 q = (UInt64)sector * bootb.BytesPerSector;
-            //ov.OffsetHigh = (int)(sector * bootb.BytesPerSector & 0xffff0000);
-            //ov.OffsetLow = (int)(sector * bootb.BytesPerSector & 0x0000ffff);
-            ov.OffsetHigh = (uint)(q & 0x0000ffff);
-            ov.Offset = (uint)(q & 0xffff0000);
-            //ov.Pointer = (IntPtr)(0xc0000000);
+            ov.OffsetHigh = (uint)(q & 0xffffffff00000000);
+            ov.Offset = (uint)(q & 0x00000000ffffffff);
             Win32API.ReadFile(hVolume, buffer, (uint)count * bootb.BytesPerSector, ref n, ref ov);
+
+            //System.Threading.NativeOverlapped ov = new System.Threading.NativeOverlapped();
+            //ov.OffsetHigh = (int)(q & 0x0000ffff);
+            //ov.OffsetLow = (int)(q & 0xffff0000);
+            //IntPtr pov = Marshal.AllocHGlobal(Marshal.SizeOf(ov));
+            //Win32API.ZeroMemory(pov, Marshal.SizeOf(ov));
+            //Marshal.StructureToPtr(Marshal.SizeOf(ov), pov, true);
+            //Win32API.ReadFile(hVolume, buffer, (uint)count * bootb.BytesPerSector, ref n, pov);
+
+
+            //System.Threading.NativeOverlapped ov = new System.Threading.NativeOverlapped();
+            //UInt64 q = (UInt64)sector * bootb.BytesPerSector;
+            //ov.OffsetHigh = (int)(q & 0xffffffff00000000);
+            //ov.OffsetLow = (int)(q & 0x00000000ffffffff);
+            //Win32API.ReadFile(hVolume, buffer, (uint)count * bootb.BytesPerSector, IntPtr.Zero, &ov);
         }
 
         public unsafe void FixupUpdateSequenceArray(Win32API.FILE_RECORD_HEADER* file) {
+            //ulong i = 0;
+            //ushort* usa = (ushort*)((byte*)(file)+file->Ntfs.UsaOffset);
+            //ushort* sector = (ushort*)(file);
 
+            //for (i = 1; i < file->Ntfs.UsaCount; i++){
+            //    sector[255] = usa[i];
+            //    sector += 256;
+            //}
             
         }
+
+        unsafe void memcpy(byte* src, byte* dst, int bytesize) {
+            byte* sentinel = src + bytesize;
+            while (src < sentinel) {
+                dst[0] = src[0];
+                src++;
+                dst++;
+            }
+        }
+
+        static unsafe void CopyMemory(void* outDest, void* inSrc, uint inNumOfBytes) {
+            // 転送先をuint幅にalignする
+            const uint align = sizeof(uint) - 1;
+            uint offset = (uint)outDest & align;
+            // ↑ポインタは32bitとは限らないので本来このキャストはuintではダメだが、
+            // 今は下位2bitだけあればいいのでこれでOK。
+            if (offset != 0)
+                offset = align - offset;
+            offset = global::System.Math.Min(offset, inNumOfBytes);
+
+            // 先頭の余り部分をbyteでちまちまコピー
+            byte* srcBytes = (byte*)inSrc;
+            byte* dstBytes = (byte*)outDest;
+            for (uint i = 0; i < offset; i++)
+                dstBytes[i] = srcBytes[i];
+
+            // uintで一気に転送
+            uint* dst = (uint*)((byte*)outDest + offset);
+            uint* src = (uint*)((byte*)inSrc + offset);
+            uint numOfUInt = (inNumOfBytes - offset) / sizeof(uint);
+            for (uint i = 0; i < numOfUInt; i++)
+                dst[i] = src[i];
+
+            // 末尾の余り部分をbyteでちまちまコピー
+            for (uint i = offset + numOfUInt * sizeof(uint); i < inNumOfBytes; i++)
+                dstBytes[i] = srcBytes[i];
+        }
+
 
         public unsafe void ReadFileRecord(ulong index, Win32API.FILE_RECORD_HEADER* file) {
             ulong clusters = bootb.ClustersPerFileRecord;
@@ -313,12 +374,17 @@ namespace mftread {
             long m = (bootb.SectorsPerCluster * bootb.BytesPerSector / BytesPerFileRecord) - 1;
             long n = m > 0 ? ((long)(index) & m) : 0;
             //memcpy(file, p + n * BytesPerFileRecord, BytesPerFileRecord);
+
             //Marshal.Copy((int)p + n * BytesPerFileRecord, file, BytesPerFileRecord);
-
-            Win32API.FILE_RECORD_HEADER fattr = (Win32API.FILE_RECORD_HEADER)Marshal.PtrToStructure((IntPtr)(((byte*)p) + n * BytesPerFileRecord), typeof(Win32API.FILE_RECORD_HEADER));
+            //Win32API.FILE_RECORD_HEADER fattr = (Win32API.FILE_RECORD_HEADER)Marshal.PtrToStructure((IntPtr)((byte*)(p) + n * BytesPerFileRecord), typeof(Win32API.FILE_RECORD_HEADER));
+            //Marshal.StructureToPtr(fattr, (IntPtr)file, true);
             //parentid[i] = (Int32)fattr.DirectoryFileReferenceNumber;
-            int ll = 0;
 
+            //memcpy((byte*)(p.ToInt32() + n * BytesPerFileRecord), (byte*)file, (int)BytesPerFileRecord);
+            CopyMemory(file, (void*)((byte*)p.ToPointer() + n * BytesPerFileRecord) , BytesPerFileRecord);
+            int ll = 0;
+            Marshal.FreeHGlobal(p);
+            FixupUpdateSequenceArray(file);
         }
 
         public unsafe void ReadVCN(Win32API.FILE_RECORD_HEADER* file, Win32API.AttributeType type, 
@@ -332,10 +398,12 @@ namespace mftread {
             string name) 
         {
             Win32API.RECORD_ATTRIBUTE* attr=null;
-            for (attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)file + file->AttributesOffset);
+            //for (attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)file + file->AttributesOffset);
+            //    (int)attr->AttributeType != -1;
+            //    attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)attr + attr->Length)) {
+            for (attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)(file) + file->AttributesOffset);
                 (int)attr->AttributeType != -1;
-                attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)attr + attr->Length)) {
-
+                attr = (Win32API.RECORD_ATTRIBUTE*)((byte*)(attr) + attr->Length)) {
                 if (attr->AttributeType == type) {
                     if (name == null && attr->NameLength == 0)
                         return attr;
@@ -352,8 +420,7 @@ namespace mftread {
 
               UInt64 lcn=0, runcount=0;
               ulong readcount, left;
-              byte* bytes = (byte*)(buffer);
-                  
+              byte* bytes = (byte*)(buffer.ToPointer());
               for(left = count; left > 0; left -= readcount){
                     FindRun(attr, vcn, ref lcn, ref runcount);
                     readcount = (Math.Min(runcount, left));
@@ -368,7 +435,8 @@ namespace mftread {
                     }          
                     vcn += readcount;
                     bytes += n;
-              }          
+              }
+              //buffer = new IntPtr(bytes);
         }
 
         public void ReadLCN(ulong lcn, ulong count, IntPtr buffer) {
@@ -383,7 +451,7 @@ namespace mftread {
               if (vcn < attr->LowVCN || vcn > attr->HighVCN)
                     return false;
 
-              for (run = (byte*)((attr + attr->RunArrayOffset)); *run != 0; run += RunLength(run))
+              for (run = (byte*)((byte*)(attr) + attr->RunArrayOffset); *run != 0; run += RunLength(run))
               {
                     lcn += RunLCN(run);
                     count = RunCount(run);

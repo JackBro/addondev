@@ -100,8 +100,8 @@ BOOL FindRun(PNONRESIDENT_ATTRIBUTE attr, ULONGLONG vcn, PULONGLONG lcn, PULONGL
 
 PATTRIBUTE FindAttribute(PFILE_RECORD_HEADER file,ATTRIBUTE_TYPE type, PWSTR name)
 {
+
       PATTRIBUTE attr = NULL;
- 
       wprintf(L"FindAttribute() - Finding attributes...\n");
  
       for (attr = PATTRIBUTE(Padd(file, file->AttributesOffset));
@@ -217,15 +217,14 @@ VOID LoadMFT()
       MFT = PFILE_RECORD_HEADER(new UCHAR[BytesPerFileRecord]);
  
       ReadSector((bootb.MftStartLcn)*(bootb.SectorsPerCluster), (BytesPerFileRecord)/(bootb.BytesPerSector), MFT);
-
-      FixupUpdateSequenceArray(MFT);
+      //FixupUpdateSequenceArray(MFT);
 }
 
 VOID ReadVCN(PFILE_RECORD_HEADER file, ATTRIBUTE_TYPE type,ULONGLONG vcn, ULONG count, PVOID buffer)
 {
       PATTRIBUTE attrlist = NULL;
       PNONRESIDENT_ATTRIBUTE attr = PNONRESIDENT_ATTRIBUTE(FindAttribute(file, type, 0));
- 
+
       wprintf(L"In ReadVCN()...\n");
       if (attr == 0 || (vcn < attr->LowVcn || vcn > attr->HighVcn))
       {
@@ -233,6 +232,7 @@ VOID ReadVCN(PFILE_RECORD_HEADER file, ATTRIBUTE_TYPE type,ULONGLONG vcn, ULONG 
             attrlist = FindAttribute(file, AttributeAttributeList, 0);
             DebugBreak();
       }
+	  return;
       ReadExternalAttribute(attr, vcn, count, buffer);
 }
 
@@ -244,15 +244,18 @@ VOID ReadFileRecord(ULONG index, PFILE_RECORD_HEADER file)
       wprintf(L"ReadFileRecord() - Reading the file records..\n");
       if (clusters > 0x80)
             clusters = 1;
- 
+
       PUCHAR p = new UCHAR[bootb.BytesPerSector* bootb.SectorsPerCluster * clusters];
       ULONGLONG vcn = ULONGLONG(index) * BytesPerFileRecord/bootb.BytesPerSector/bootb.SectorsPerCluster;
       ReadVCN(MFT, AttributeData, vcn, clusters, p);
+	  
+	  return;
+
       LONG m = (bootb.SectorsPerCluster * bootb.BytesPerSector/BytesPerFileRecord) - 1;
       ULONG n = m > 0 ? (index & m) : 0;
       memcpy(file, p + n * BytesPerFileRecord, BytesPerFileRecord);
       delete [] p;
-      FixupUpdateSequenceArray(file);
+      //FixupUpdateSequenceArray(file);
 }
 ///////////////////////////////////////////
 
@@ -478,13 +481,12 @@ int __stdcall GetMFTFileRecord(LPWSTR lpDrive, MFT_FILE_INFO*& pfile_info, LONGL
 		//// FILE_RECORD_HEADER is the Base struct for the MFT entry
 		//// that we will work from
 		//PFILE_RECORD_HEADER p_file_record_header = (PFILE_RECORD_HEADER)output_buffer->FileRecordBuffer;
-
 		//////////////////
 		PFILE_RECORD_HEADER p_file_record_header = PFILE_RECORD_HEADER(new UCHAR[BytesPerFileRecord]);
 		//ULONG index=0;
 		ReadFileRecord(i, p_file_record_header);
 		//////////////////////////////
-
+return 0;
 		PFILENAME_ATTRIBUTE fn;
 		PSTANDARD_INFORMATION si;
 		//POBJECTID_ATTRIBUTE objid;

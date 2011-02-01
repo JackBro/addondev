@@ -133,6 +133,7 @@ VOID ReadSector(ULONGLONG sector, ULONG count, PVOID buffer)
       offset.QuadPart = sector * bootb.BytesPerSector;
       overlap.Offset = offset.LowPart;
       overlap.OffsetHigh = offset.HighPart;
+	  //overlap.Pointer = NULL;
       ReadFile(hVolume, buffer, count * bootb.BytesPerSector, &n, &overlap);
 
 	  int m=0;
