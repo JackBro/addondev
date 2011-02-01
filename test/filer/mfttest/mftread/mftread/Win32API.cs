@@ -79,6 +79,44 @@ namespace mftread {
             CloseHandle(
             IntPtr hObject);
 
+        [StructLayout(LayoutKind.Explicit, Size = 20)]
+        public struct OVERLAPPED {
+            [FieldOffset(0)]
+            public uint Internal;
+
+            [FieldOffset(4)]
+            public uint InternalHigh;
+
+            [FieldOffset(8)]
+            public uint Offset;
+
+            [FieldOffset(12)]
+            public uint OffsetHigh;
+
+            [FieldOffset(8)]
+            public IntPtr Pointer;
+
+            [FieldOffset(16)]
+            public IntPtr hEvent;
+        }
+
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern bool ReadFile(
+         IntPtr hFile,
+         IntPtr aBuffer,
+         UInt32 cbToRead,
+         ref UInt32 cbThatWereRead,
+         IntPtr pOverlapped);
+
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern bool ReadFile(
+         IntPtr hFile,
+         IntPtr aBuffer,
+         UInt32 cbToRead,
+         ref UInt32 cbThatWereRead,
+         ref OVERLAPPED lpOverlapped);
+
+
         [DllImport("kernel32.dll")]
         public static extern void ZeroMemory(IntPtr ptr, int size);
 
@@ -203,7 +241,7 @@ namespace mftread {
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal unsafe struct NONRESIDENT_ATTRIBUTE {
+        public unsafe struct NONRESIDENT_ATTRIBUTE {
             public RECORD_ATTRIBUTE Attribute;
             public ulong LowVCN;
             public ulong HighVCN;
@@ -217,7 +255,7 @@ namespace mftread {
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal unsafe struct STANDARD_INFORMATION {
+        public unsafe struct STANDARD_INFORMATION {
             public UInt64 CreationTime;
             public UInt64 ChangeTime;
             public UInt64 LastWriteTime;
@@ -228,6 +266,36 @@ namespace mftread {
             public ulong SecurityID;
             public Int64 QuotaCharge;
             public Int64 USN;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct BOOT_BLOCK {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+            public byte[] Jump;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+            public byte[] Format;
+            public ushort BytesPerSector;
+            public byte SectorsPerCluster;
+            public ushort BootSectors;
+            public byte Mbz1;
+            public ushort Mbz2;
+            public ushort Reserved1;
+            public Char MediaType;
+            public ushort Mbz3;
+            public ushort SectorsPerTrack;
+            public ushort NumberOfHeads;
+            public uint PartitionOffset;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+            public byte[] Reserved2;
+            public ulong TotalSectors;
+            public ulong MftStartLcn;
+            public ulong Mft2StartLcn;
+            public uint ClustersPerFileRecord;
+            public uint ClustersPerIndexBlock;
+            public ulong VolumeSerialNumber;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 430)]
+            public byte[] BootCode;
+            public ushort BootSignature;
         } 
     }
 }

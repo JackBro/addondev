@@ -43,6 +43,10 @@ namespace MFT {
     public delegate bool CallBackProc(int per);
 
     public class MFTReader {
+
+        DateTime s20, s50, s90;
+        TimeSpan sp20, sp50, sp90;
+
         public event CallBackProc CallBackEvent;
 
         public unsafe MFT_FILE_INFO[] read(DriveInfo driveInfo) {
@@ -120,9 +124,11 @@ namespace MFT {
             int mftRecordInputSize = Marshal.SizeOf(mftRecordInput);
 
 
-            Win32API.FILE_RECORD_HEADER hdum = new Win32API.FILE_RECORD_HEADER();
-            int hdumSize = Marshal.SizeOf(hdum);
+            //Win32API.FILE_RECORD_HEADER hdum = new Win32API.FILE_RECORD_HEADER();
+            //int hdumSize = Marshal.SizeOf(hdum);
             for (long i = 0; i < total_file_count; i++) {
+
+
 
                 mftRecordInput.FileReferenceNumber = i;
 
@@ -131,6 +137,13 @@ namespace MFT {
                 Marshal.StructureToPtr(mftRecordInput, input_buffer, true);
 
                 IntPtr output_buffer = Marshal.AllocHGlobal(obSize);
+
+                if (i == total_file_count * 0.2)
+                    s20 = DateTime.Now;
+                else if (i == total_file_count * 0.5)
+                    s50 = DateTime.Now;
+                else if (i == total_file_count * 0.9)
+                    s90 = DateTime.Now;
 
                 var bDioControl = Win32API.DeviceIoControl(
                     hVolume,
@@ -142,16 +155,17 @@ namespace MFT {
                     out lpBytesReturned,
                     IntPtr.Zero);
 
-                IntPtr hp = Marshal.AllocHGlobal(hdumSize);
-                uint read = 0;
 
-                Marshal.StructureToPtr(hdum, hp, true);
+                //IntPtr hp = Marshal.AllocHGlobal(hdumSize);
+                //uint read = 0;
+                //Marshal.StructureToPtr(hdum, hp, true);
                 //byte[] buffer = new byte[Marshal.SizeOf(hdum)];
                 //fixed (byte* p = buffer) {
-                    //ReadFile(readhandle, p, lpNumberOfBytesRead, &n, 0);
-                    Win32API.ReadFile(hVolume, hp, (uint)(1024 * ntfsVolData.BytesPerCluster), ref read, IntPtr.Zero);
-                    Win32API.FILE_RECORD_HEADER* ph = (Win32API.FILE_RECORD_HEADER*)((int)hp);
+                //    //ReadFile(readhandle, p, lpNumberOfBytesRead, &n, 0);
+                //    Win32API.ReadFile(hVolume, hp, (uint)(1024 * ntfsVolData.BytesPerCluster), ref read, IntPtr.Zero);
+                //    Win32API.FILE_RECORD_HEADER* ph = (Win32API.FILE_RECORD_HEADER*)((int)hp);
                 //}
+
                 //fixed (Win32API.NTFS_FILE_RECORD_INPUT_BUFFER* ptr = (&mftRecordInput)) {
                 //    var bDioControl = Win32API.DeviceIoControl(
                 //        hVolume,
@@ -163,6 +177,7 @@ namespace MFT {
                 //        out lpBytesReturned,
                 //        IntPtr.Zero);
                 //}
+
 
                 Win32API.FILE_RECORD_HEADER* p_file_record_header;
 
@@ -176,9 +191,9 @@ namespace MFT {
 
                     Win32API.STANDARD_INFORMATION* si;
                     if (p_file_record_header->Ntfs.Type == 1162627398) {//'ELIF'
-                        //int stop = Math.Min(8, (int)p_file_record_header->NextAttributeNumber);
-                        //for (int j=0;j<stop;j++){
-                        while (true) {
+                        int stop = Math.Min(8, (int)p_file_record_header->NextAttributeNumber);
+                        for (int j=0;j<stop;j++){
+                        //while (true) {
                             if (attr->AttributeType < 0 || (int)attr->AttributeType > 0x100) break;
 
                             switch (attr->AttributeType) {
@@ -240,9 +255,21 @@ namespace MFT {
                 }
                 Marshal.FreeHGlobal(output_buffer);
                 Marshal.FreeHGlobal(input_buffer);
+
+
+                if (i == total_file_count * 0.21)
+                    sp20 = DateTime.Now - s20;
+                else if (i == total_file_count * 0.51)
+                    sp50 = DateTime.Now - s50;
+                else if (i == total_file_count * 0.91)
+                    sp90 = DateTime.Now - s90;
             }
 
             Win32API.CloseHandle(hVolume);
+
+            var di20 = sp20.TotalMilliseconds;
+            var di50 = sp50.TotalMilliseconds;
+            var di90 = sp90.TotalMilliseconds;
 
             //{
             //    int start = 27;
