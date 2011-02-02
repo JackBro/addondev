@@ -127,7 +127,7 @@ namespace MFT {
             int per = 0;
             //Win32API.FILE_RECORD_HEADER hdum = new Win32API.FILE_RECORD_HEADER();
             //int hdumSize = Marshal.SizeOf(hdum);
-            long start = (long)(total_file_count * 0.8);
+            long start = 0;
             for (long i = start; i < total_file_count; i++) {
 
 
