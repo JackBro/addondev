@@ -123,10 +123,12 @@ namespace MFT {
             Win32API.NTFS_FILE_RECORD_INPUT_BUFFER mftRecordInput = new Win32API.NTFS_FILE_RECORD_INPUT_BUFFER();
             int mftRecordInputSize = Marshal.SizeOf(mftRecordInput);
 
-
+            bool abort = false;
+            int per = 0;
             //Win32API.FILE_RECORD_HEADER hdum = new Win32API.FILE_RECORD_HEADER();
             //int hdumSize = Marshal.SizeOf(hdum);
-            for (long i = 0; i < total_file_count; i++) {
+            long start = (long)(total_file_count * 0.8);
+            for (long i = start; i < total_file_count; i++) {
 
 
 
@@ -263,6 +265,14 @@ namespace MFT {
                     sp50 = DateTime.Now - s50;
                 else if (i == total_file_count * 0.91)
                     sp90 = DateTime.Now - s90;
+
+                if (CallBackEvent != null && (per < i * 100 / total_file_count)) {
+                    per = (int)(i * 100 / total_file_count);
+                    abort = CallBackEvent(per);
+                    if (abort) {
+                        break;
+                    }
+                }
             }
 
             Win32API.CloseHandle(hVolume);

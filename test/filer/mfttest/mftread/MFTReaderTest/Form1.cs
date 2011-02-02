@@ -86,7 +86,7 @@ namespace MFTReaderTest {
                 backgroundWorker1.RunWorkerAsync();
             } else if(ClassradioButton.Checked) {
                 MFT.MFTReader mr = new MFT.MFTReader();
-
+                mr.CallBackEvent += new MFT.CallBackProc(mr_CallBackEvent);
                 mftfiles = mr.read(new DriveInfo("c"));
                 //mftfiles = mr.read(new DriveInfo("d"));
                 var tickgetrecode = DateTime.Now - s;
@@ -101,6 +101,12 @@ namespace MFTReaderTest {
             //GC.Collect();
             //GC.WaitForPendingFinalizers();
             //GC.Collect();
+        }
+
+        bool mr_CallBackEvent(int per) {
+            //throw new NotImplementedException();
+            this.Text = per.ToString();
+            return false;
         }
 
         bool r_CallBackEvent(int per) {

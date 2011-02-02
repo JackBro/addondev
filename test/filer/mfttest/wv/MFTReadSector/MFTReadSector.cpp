@@ -178,15 +178,7 @@ VOID LoadMFT()
       BytesPerFileRecord = bootb.ClustersPerFileRecord < 0x80
             ? bootb.ClustersPerFileRecord* bootb.SectorsPerCluster
             * bootb.BytesPerSector: 1 << (0x100 - bootb.ClustersPerFileRecord);
- 
-if(bootb.ClustersPerFileRecord < 0x80)
-{
-BytesPerFileRecord = bootb.ClustersPerFileRecord* bootb.SectorsPerCluster*bootb.BytesPerSector;
-}
-else{
-	ULONG mm = 0x100 - bootb.ClustersPerFileRecord;
-	BytesPerFileRecord = 1 << (0x100 - bootb.ClustersPerFileRecord);
-}
+
 
       wprintf(L"\nBytes Per File Record = %u\n\n", BytesPerFileRecord);
       wprintf(L"======THESE INFO ARE NOT ACCURATE FOR DISPLAY LOL!=====\n");
