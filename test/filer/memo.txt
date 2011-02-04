@@ -1,3 +1,6 @@
+http://msdn.microsoft.com/ja-jp/netframework/dd282839
+http://code.google.com/p/protobuf-net/
+
 http://webcache.googleusercontent.com/search?q=cache:-dNBsSmm438J:fifnel.com/2008/10/09/1754/+C%2B%2B+protobuf&cd=24&hl=ja&ct=clnk&gl=jp&lr=lang_ja&client=firefox-a&source=www.google.co.jp
 
 http://neue.cc/2010/05/29_261.html
