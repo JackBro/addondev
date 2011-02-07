@@ -142,19 +142,23 @@ namespace wiki
                 Title="new",
                 Text=""
             };
-            var item = new ListViewItem();
-            item.Text = data.Title;
-            listView1.Items.Insert(0, item);
-            item.Selected = true;
-            item.Focused = true;
-            activeData = data;
+            //var item = new ListViewItem();
+            //item.Text = data.Title;
+            datas.Insert(0, data);
+            //listView1.Items.Insert(0, item);
+            //item.Selected = true;
+            //item.Focused = true;
+            //activeData = data;
+            listView1.Items[0].Selected = true;
 
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (listView1.SelectedItems.Count == 1) {
-                var item = listView1.SelectedItems[0];
-                activeData.Text = textBox1.Text;
+
+            if (listView1.SelectedIndices.Count == 1) {
+                var index = listView1.SelectedIndices[0];
+                var item = datas[index];
+                item.Text = textBox1.Text;
                 //item.SubItems
                 //textBox1.Text = text;
                 reBuild(textBox1.Text);
