@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja" >
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	<title> WikiParser Test </title>
+	<script type="text/javascript" src="WikiParser.js" ></script>
+<script type="text/javascript" >
+function testrebuild(){
+app.rebuild();
+}
+
+var app = {
+	rebuild : function()
+	{
+
+		//var source = this.getTxtSource().value;
+//var source = this.getTxtSource().textContent;
+var source = this.getTxtSource().innerText;
+/*
+var s = this.getTxtSource();
+var res="";
+for(var key in s){
+res+= key + " : " + s[key]+"\n";
+}
+alert(res);
+*/
+		var pageElement = this.getWikiParser().parse(source);
+		var container = this.getContainer()
+		while(container.childNodes.length > 0) 
+			container.removeChild(container.firstChild);
+		container.appendChild(pageElement);
+
+		return 
+	},
+	clearSource : function()
+	{
+		this.getTxtSource().value = '';
+		this.rebuild();
+	},
+	getWikiParser : function()
+	{
+		if(!this.wikiParser)
+			this.wikiParser = new WikiParser(document);
+		return this.wikiParser;
+	},
+	getTxtSource : function()
+	{
+		if(!this.txtSource)
+			this.txtSource = document.getElementById("txtSource");
+		return this.txtSource;
+	},
+	getContainer : function()
+	{
+		if(!this.container)
+			this.container = document.getElementById("container");
+		return this.container;
+	}
+}
+
+</script>
+
+</head>
+<body onload="app.rebuild();" >
+<!--
+<table width="96%" >
+<thead>
+	<tr>
+		<td valign="top" colspan="2" >
+		<form>
+		<input type="button" value="Parse" onclick="app.rebuild();" >
+		<input type="button" value="Clear" onclick="app.clearSource();" >
+		<input type="submit" value="Restore" >
+		</form>
+		</td>
+	</tr>
+	<tr>
+		<th> WikiText </th>
+		<th> HTML </th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<td valign="top" width="50%" >
+		<textarea id="txtSource" cols="50" rows="20" 
+			onkeyup="app.rebuild();" onchange="app.rebuild()" >
+!WikiParser Test
+		</textarea>
+		</td>
+		<td valign="top" >
+			<div id="container" />
+		</td>
+	</tr>
+</tbody>
+</table>
+-->
+<div id="txtSource" style ="display:none;">!WikiParser</div>
+<div id="container" />
+</body>
+
+</html>
