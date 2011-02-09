@@ -175,16 +175,6 @@ namespace wiki
             }
         }
 
-        private void listView1_VirtualItemsSelectionRangeChanged(object sender, ListViewVirtualItemsSelectionRangeChangedEventArgs e) {
-           // //e.IsSelected
-           // var s = e.StartIndex;
-           // //if (e.IsSelected) {
-           //     var text = datas[s].Text;
-           //     textBox1.Text = text;
-           //     reBuild(text);
-           //// }
-        }
-
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
             var s = e.ItemIndex;
             if (e.IsSelected) {
