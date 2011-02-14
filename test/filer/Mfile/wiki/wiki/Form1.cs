@@ -16,6 +16,8 @@ namespace wiki
         private ItemManager manager;
         private Dictionary<int, string> testmap = new Dictionary<int, string>();
         List<Data> datas = new List<Data>();
+        TabPage ItemAllTabPage;
+
         public Form1()
         {
             InitializeComponent();
@@ -68,12 +70,56 @@ namespace wiki
                 
             };
 
-            tabControl1.Selecting += (sender, e) => {
+            ItemTabControl.Selecting += (sender, e) => {
             };
             var ef = new EditForm();
             ef.FormClosing += (sender, e) => {
                 
             };
+
+            ItemAllTabPage = new TabPage("All");
+            ItemTabControl.TabPages.Add(ItemAllTabPage);
+
+
+        }
+
+        private Dictionary<TabPage, Data> dic;
+
+        private ListView CreateListViewTabPage(List<Data> items){
+
+            ListView listview = new ListView();
+            listview.View = View.Details;
+            listview.VirtualMode = true;
+            listview.VirtualListSize = 0;
+            listview.RetrieveVirtualItem += (sender, e) => {
+                if (e.ItemIndex < items.Count) {
+                    var data = items[e.ItemIndex];
+                    var item = new ListViewItem();
+                    item.Text = data.Title;
+                    e.Item = item;
+                }       
+            };
+            listview.ItemSelectionChanged += (sender, e) => {
+                var s = e.ItemIndex;
+                if (e.IsSelected) {
+                    var text = items[s].Text;
+                    textBox1.Text = text;
+                    if (MouseButtons == MouseButtons.Left) {
+
+                    } else if (MouseButtons == MouseButtons.Middle) {
+                    
+                    }
+                    reBuild(text);
+                }              
+            };
+
+            return listview;
+        }
+
+        private TabPage CreateBrowserTabPage() {
+            TabPage p = new TabPage();
+
+            return p;
         }
 
         void SetText(string text) {

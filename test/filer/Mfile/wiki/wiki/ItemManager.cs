@@ -16,6 +16,11 @@ namespace wiki {
 
         private List<Data> datas;
 
+        public void Load(){
+        }
+        public void Save(){
+        }
+
         public void Insert() {
             
         }
