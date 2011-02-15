@@ -50,19 +50,24 @@ namespace wiki
             foreach (var item in testmap) {
                 datas.Add(new Data { Text = item.Value });
             }
-            textBox1.Text = "!WikiParser TestTTTTTTT";
+            //textBox1.Text = "!WikiParser TestTTTTTTT";
             var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             webBrowser1.Navigate(p);
 
             webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
 
             //listView1.SelectedIndexChanged += new EventHandler(listView1_SelectedIndexChanged);
-
-            listView1.VirtualListSize = datas.Count;
+            //listView1.VirtualListSize = datas.Count;
 
             this.Load += (sender, e) => {
 
             };
+            this.FormClosing += (sender, e) => {
+                if (manager.IsDirty) {
+                    manager.Save();
+                }
+            };
+
             textBox1.TextChanged += (sender, e) => {
                 SetText(textBox1.Text);
             };
@@ -72,25 +77,43 @@ namespace wiki
 
             ItemTabControl.Selecting += (sender, e) => {
             };
-            var ef = new EditForm();
-            ef.FormClosing += (sender, e) => {
+
+            //ItemAllTabPage = new TabPage("All");
+            //ItemTabControl.TabPages.Add(ItemAllTabPage);
+
+            ItemTabControl.TabIndexChanged += (sender, e) => {
                 
             };
 
-            ItemAllTabPage = new TabPage("All");
-            ItemTabControl.TabPages.Add(ItemAllTabPage);
+            NewItemToolStripButton.Click += (sender, e) => {
+                CreateItem();
+            };
 
+            manager.DataPath = "data.bin";
+            manager.Load();
+            manager.eventHandler += (sender, e) => {
+                if (e.type == ChangeType.Add) {
+                    ItemTabControl.SelectedIndex = 0;
 
+                }
+            };
+
+            CreateListViewTabPage(manager.Filter(x => { return true; }));
+        }
+
+        private void CreateItem() {
+            manager.Insert(new Data { Title="new" });
         }
 
         private Dictionary<TabPage, Data> dic;
 
-        private ListView CreateListViewTabPage(List<Data> items){
+        private void CreateListViewTabPage(List<Data> items){
 
             ListView listview = new ListView();
             listview.View = View.Details;
             listview.VirtualMode = true;
-            listview.VirtualListSize = 0;
+            listview.VirtualListSize = items.Count;
+
             listview.RetrieveVirtualItem += (sender, e) => {
                 if (e.ItemIndex < items.Count) {
                     var data = items[e.ItemIndex];
@@ -103,17 +126,21 @@ namespace wiki
                 var s = e.ItemIndex;
                 if (e.IsSelected) {
                     var text = items[s].Text;
-                    textBox1.Text = text;
+                    //textBox1.Text = text;
                     if (MouseButtons == MouseButtons.Left) {
+                        SetText(text);
 
                     } else if (MouseButtons == MouseButtons.Middle) {
                     
                     }
-                    reBuild(text);
+                    //reBuild(text);
                 }              
             };
+            listview.Dock = DockStyle.Fill;
 
-            return listview;
+            var t = new TabPage();
+            t.Controls.Add(listview);
+            ItemTabControl.TabPages.Add(t);
         }
 
         private TabPage CreateBrowserTabPage() {
@@ -123,12 +150,13 @@ namespace wiki
         }
 
         void SetText(string text) {
-            if (listView1.SelectedIndices.Count == 1) {
-                var index = listView1.SelectedIndices[0];
-                var item = datas[index];
-                item.Text = text;
+            //if (listView1.SelectedIndices.Count == 1) {
+            //    var index = listView1.SelectedIndices[0];
+            //    var item = datas[index];
+            //    item.Text = text;
                 //reBuild(textBox1.Text);
-            } 
+                reBuild(text);
+            //} 
         }
 
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e) {
@@ -207,35 +235,6 @@ namespace wiki
 
         private void webBrowser1_ContextMenuStripChanged(object sender, EventArgs e) {
 
-        }
-
-        private Data activeData;
-        private void newItemToolStripMenuItem_Click(object sender, EventArgs e) {
-            var data = new Data {
-                Title="new",
-                Text=""
-            };
-            //var item = new ListViewItem();
-            //item.Text = data.Title;
-            datas.Insert(0, data);
-            //listView1.Items.Insert(0, item);
-            //item.Selected = true;
-            //item.Focused = true;
-            //activeData = data;
-            listView1.Items[0].Selected = true;
-
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
-
-            if (listView1.SelectedIndices.Count == 1) {
-                var index = listView1.SelectedIndices[0];
-                var item = datas[index];
-                item.Text = textBox1.Text;
-                //item.SubItems
-                //textBox1.Text = text;
-                reBuild(textBox1.Text);
-            }   
         }
 
         private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e) {
