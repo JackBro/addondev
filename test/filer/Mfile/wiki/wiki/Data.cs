@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ProtoBuf;
+using System.ComponentModel;
 
 namespace wiki {
 
@@ -10,11 +11,9 @@ namespace wiki {
     public class Data {
         [ProtoMember(1)]
         public long ID { get; set; }
-        [ProtoMember(2)]
-        public string Title { get; set; }
-        [ProtoMember(3)]
+        [ProtoMember(2), DefaultValue("")]
         public string Text { get; set; }
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public DateTime CreationTime { get; set; }
         //[ProtoMember(5)]
         //public DateTime LastWriteTime { get; set; }

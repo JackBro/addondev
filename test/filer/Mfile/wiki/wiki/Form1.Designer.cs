@@ -172,7 +172,6 @@
             this.newItemToolStripMenuItem.Name = "newItemToolStripMenuItem";
             this.newItemToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.newItemToolStripMenuItem.Text = "newItem";
-            this.newItemToolStripMenuItem.Click += new System.EventHandler(this.newItemToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
@@ -180,7 +179,6 @@
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 

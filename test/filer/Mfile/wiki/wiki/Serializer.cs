@@ -13,7 +13,16 @@ namespace wiki {
             } 
         }
 
-        public static T Deserialize<T>(string path) {
+        public static T Deserialize<T>(string path, T defaultValue) {
+            
+            if (!File.Exists(path)) {
+                return defaultValue;
+            }
+            FileInfo finfo = new FileInfo(path);
+            if (finfo.Length == 0) {
+                return defaultValue;
+            }
+
             T item;
             using (var file = File.OpenRead(path)) {
                 item = ProtoBuf.Serializer.Deserialize<T>(file);

@@ -14,9 +14,9 @@ namespace wiki
     public partial class Form1 : Form
     {
         private ItemManager manager;
-        private Dictionary<int, string> testmap = new Dictionary<int, string>();
-        List<Data> datas = new List<Data>();
-        TabPage ItemAllTabPage;
+        //private Dictionary<int, string> testmap = new Dictionary<int, string>();
+        //List<Data> datas = new List<Data>();
+        //TabPage ItemAllTabPage;
 
         public Form1()
         {
@@ -26,30 +26,30 @@ namespace wiki
             webBrowser1.IsWebBrowserContextMenuEnabled = false;
             
             webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
-            testmap[0] = @"!WikiParser TestTTTTTTT";
-            testmap[1] = @"!! List Test
+//            testmap[0] = @"!WikiParser TestTTTTTTT";
+//            testmap[1] = @"!! List Test
+//
+//* ListItem 1
+//* ListItem 2
+//* ListItem 3
+//** ListItem 3-1
+//** ListItem 3-2
+//* ListItem 4
+//** ListItem 4-1
+//** ListItem 4-2
+//*** ListItem 4-2-1
+//*** ListItem 4-2-2";
+//            testmap[2] = @"!! Link Test
+//
+//* http://www.google.co.jp/
+//* http://www.goo.ne.jp/img/logo/goo_top.gif
+//* [[ぐーぐる|http://www.google.co.jp/]]
+//* [[ぐー|http://www.goo.ne.jp/img/logo/goo_top.gif]]
+//* [[ページ名]]";
 
-* ListItem 1
-* ListItem 2
-* ListItem 3
-** ListItem 3-1
-** ListItem 3-2
-* ListItem 4
-** ListItem 4-1
-** ListItem 4-2
-*** ListItem 4-2-1
-*** ListItem 4-2-2";
-            testmap[2] = @"!! Link Test
-
-* http://www.google.co.jp/
-* http://www.goo.ne.jp/img/logo/goo_top.gif
-* [[ぐーぐる|http://www.google.co.jp/]]
-* [[ぐー|http://www.goo.ne.jp/img/logo/goo_top.gif]]
-* [[ページ名]]";
-
-            foreach (var item in testmap) {
-                datas.Add(new Data { Text = item.Value });
-            }
+//            foreach (var item in testmap) {
+//                datas.Add(new Data { Text = item.Value });
+//            }
             //textBox1.Text = "!WikiParser TestTTTTTTT";
             var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             webBrowser1.Navigate(p);
@@ -69,7 +69,17 @@ namespace wiki
             };
 
             textBox1.TextChanged += (sender, e) => {
-                SetText(textBox1.Text);
+                
+                if (dirty) {
+                    var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                    var items = listview.GetActive();
+                    if (items.Count == 1) {
+                        items[0].Text = textBox1.Text;
+                        manager.UpDate();
+                    }
+                }
+                dirty = true;
+                //SetText(textBox1.Text);
             };
             textBox1.LostFocus += (sender, e) => {
                 
@@ -89,12 +99,14 @@ namespace wiki
                 CreateItem();
             };
 
+            manager = new ItemManager();
             manager.DataPath = "data.bin";
             manager.Load();
             manager.eventHandler += (sender, e) => {
                 if (e.type == ChangeType.Add) {
                     ItemTabControl.SelectedIndex = 0;
-
+                    var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                    listview.AddItem(e.Item);
                 }
             };
 
@@ -102,32 +114,40 @@ namespace wiki
         }
 
         private void CreateItem() {
-            manager.Insert(new Data { Title="new" });
+            manager.Insert(new Data { Text="new" });
         }
 
-        private Dictionary<TabPage, Data> dic;
-
+        //private Dictionary<TabPage, Data> dic;
+        private bool dirty = false;
         private void CreateListViewTabPage(List<Data> items){
 
-            ListView listview = new ListView();
-            listview.View = View.Details;
-            listview.VirtualMode = true;
-            listview.VirtualListSize = items.Count;
+            //ListView listview = new ListView();
+            //listview.View = View.Details;
+            //ColumnHeader headerName = new ColumnHeader();
+            //headerName.Name = "name";
+            //headerName.Text = "name";
+            //listview.Columns.Add(headerName);
 
-            listview.RetrieveVirtualItem += (sender, e) => {
-                if (e.ItemIndex < items.Count) {
-                    var data = items[e.ItemIndex];
-                    var item = new ListViewItem();
-                    item.Text = data.Title;
-                    e.Item = item;
-                }       
-            };
+            //listview.FullRowSelect = true;
+            //listview.VirtualMode = true;
+            //listview.VirtualListSize = items.Count;
+
+            //listview.RetrieveVirtualItem += (sender, e) => {
+            //    if (e.ItemIndex < items.Count) {
+            //        var data = items[e.ItemIndex];
+            //        var item = new ListViewItem();
+            //        item.Text = data.Title;
+            //        e.Item = item;
+            //    }       
+            //};
+            var listview = new ListViewEx(items);
             listview.ItemSelectionChanged += (sender, e) => {
                 var s = e.ItemIndex;
                 if (e.IsSelected) {
                     var text = items[s].Text;
                     //textBox1.Text = text;
                     if (MouseButtons == MouseButtons.Left) {
+                        dirty = false;
                         SetText(text);
 
                     } else if (MouseButtons == MouseButtons.Middle) {
@@ -143,18 +163,13 @@ namespace wiki
             ItemTabControl.TabPages.Add(t);
         }
 
-        private TabPage CreateBrowserTabPage() {
-            TabPage p = new TabPage();
-
-            return p;
-        }
-
         void SetText(string text) {
             //if (listView1.SelectedIndices.Count == 1) {
             //    var index = listView1.SelectedIndices[0];
             //    var item = datas[index];
             //    item.Text = text;
                 //reBuild(textBox1.Text);
+            textBox1.Text = text;
                 reBuild(text);
             //} 
         }
@@ -192,31 +207,6 @@ namespace wiki
             
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            IHTMLDocument h;
-            IHTMLDocument2 h2;
-            IHTMLDocument3 h3 = webBrowser1.Document.DomDocument as IHTMLDocument3;
-            IHTMLDocument4 h4;
-            IHTMLDocument5 h5;
-
-            var em = h3.getElementById("txtSource");
-            var te = em.innerText;
-            em.innerText = textBox1.Text;
-            webBrowser1.Document.InvokeScript("testrebuild");
-
-            //webBrowser1.Update();// Refresh();
-            
-            //h2.body.innerText
-            //webBrowser1.Document.InvokeScript(
-            //webBrowser1.Document.DomDocument
-        }
-
         private void reBuild()
         {
             IHTMLDocument3 h3 = webBrowser1.Document.DomDocument as IHTMLDocument3;
@@ -237,23 +227,22 @@ namespace wiki
 
         }
 
-        private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e) {
-            if (e.ItemIndex < datas.Count) {
-                var data = datas[e.ItemIndex];
-                var item = new ListViewItem();
-                item.Text = data.Title;
+        //private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e) {
+        //    if (e.ItemIndex < datas.Count) {
+        //        var data = datas[e.ItemIndex];
+        //        var item = new ListViewItem();
+        //        item.Text = data.Title;
+        //        e.Item = item;
+        //    }
+        //}
 
-                e.Item = item;
-            }
-        }
-
-        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
-            var s = e.ItemIndex;
-            if (e.IsSelected) {
-                var text = datas[s].Text;
-                textBox1.Text = text;
-                reBuild(text);
-            }
-        }
+        //private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
+        //    var s = e.ItemIndex;
+        //    if (e.IsSelected) {
+        //        var text = datas[s].Text;
+        //        textBox1.Text = text;
+        //        reBuild(text);
+        //    }
+        //}
     }
 }

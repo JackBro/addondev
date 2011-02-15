@@ -24,7 +24,7 @@ namespace wiki {
         private List<Data> datas = new List<Data>();
 
         public void Load(){
-            datas = Serializer.Deserialize<List<Data>>(DataPath);      
+            datas = Serializer.Deserialize<List<Data>>(DataPath, new List<Data>());      
         }
         public void Save(){
             Serializer.Serialize<List<Data>>(DataPath, datas);
