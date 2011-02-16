@@ -18,6 +18,7 @@ namespace wiki {
             headerName.Name = "name";
             headerName.Text = "name";
             this.Columns.Add(headerName);
+            headerName.Width = -2;
 
             this.VirtualMode = true;
             this.VirtualListSize = items.Count;

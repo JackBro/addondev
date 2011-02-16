@@ -75,7 +75,7 @@ namespace wiki
                     var items = listview.GetActive();
                     if (items.Count == 1) {
                         items[0].Text = textBox1.Text;
-                        manager.UpDate();
+                        manager.UpDate(items[0]);
                     }
                 }
                 dirty = true;
@@ -103,23 +103,39 @@ namespace wiki
             manager.DataPath = "data.bin";
             manager.Load();
             manager.eventHandler += (sender, e) => {
-                if (e.type == ChangeType.Add) {
-                    ItemTabControl.SelectedIndex = 0;
-                    var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-                    listview.AddItem(e.Item);
+                //if (e.type == ChangeType.Add) {
+                //    ItemTabControl.SelectedIndex = 0;
+                //    var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                //    listview.AddItem(e.Item);
+                //}
+                switch (e.type) {
+                    case ChangeType.Add:
+                        {
+                            ItemTabControl.SelectedIndex = 0;
+                            var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                            listview.AddItem(e.Item);               
+                        }
+                        break;
+                    case ChangeType.UpDate:
+                        reBuild(e.Item.Text);
+                        break;
+                    case ChangeType.Delete:
+                        break;
+                    default:
+                        break;
                 }
             };
 
-            CreateListViewTabPage(manager.Filter(x => { return true; }));
+            CreateListViewTabPage("All", manager.Filter(x => { return true; }));
         }
 
         private void CreateItem() {
-            manager.Insert(new Data { Text="new" });
+            manager.Insert(new Data { Text="!" });
         }
 
         //private Dictionary<TabPage, Data> dic;
         private bool dirty = false;
-        private void CreateListViewTabPage(List<Data> items){
+        private void CreateListViewTabPage(string name, List<Data> items){
 
             //ListView listview = new ListView();
             //listview.View = View.Details;
@@ -158,7 +174,7 @@ namespace wiki
             };
             listview.Dock = DockStyle.Fill;
 
-            var t = new TabPage();
+            var t = new TabPage(name);
             t.Controls.Add(listview);
             ItemTabControl.TabPages.Add(t);
         }
@@ -204,6 +220,7 @@ namespace wiki
         void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             //throw new NotImplementedException();
+            var l = e.Url;
             
         }
 

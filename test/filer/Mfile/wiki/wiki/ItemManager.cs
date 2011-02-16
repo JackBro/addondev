@@ -41,10 +41,22 @@ namespace wiki {
         }
 
         public void Delete() {
+            IsDirty = true;
         }
 
-        public void UpDate() {
+        public void UpDate(Data item) {
+            IsDirty = true;
+            var index = datas.IndexOf(item);
+            if (eventHandler != null) {
+                eventHandler(this, new CallBackEventArgs { Index = index, Item = item, type = ChangeType.UpDate });
+            }
+        }
 
+        public long GetNewID() {
+            if(datas.Count == 0){
+                return 0;
+            }
+            return datas[datas.Count - 1].ID + 1;
         }
 
         public List<Data> Filter(Predicate<Data> pre) {
