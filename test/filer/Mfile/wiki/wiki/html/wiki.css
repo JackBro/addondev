@@ -1,0 +1,21 @@
+﻿.list {
+	border-top: 2px dashed #ff9d9d;
+	padding-top: 1px; 
+	width: 100%;
+}
+
+.tools {
+	background-color: gray;
+}
+
+.tools2 {
+	//padding: 2px;
+	//margin: 2px;
+	background-color: blue;
+}
+
+.operate {
+	margin: 3px;
+}
+
+:hover.operate  { background-color: #b03 }

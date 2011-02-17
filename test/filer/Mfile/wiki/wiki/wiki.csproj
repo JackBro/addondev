@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jint, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\lib\Jint\Jint.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net, Version=1.0.0.282, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\lib\protobuf-net\NET30\protobuf-net.dll</HintPath>
@@ -100,6 +104,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="html\wiki.css" />
     <Content Include="html\WikiParser.js" />
     <Content Include="html\wiki_parser.html" />
   </ItemGroup>

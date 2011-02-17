@@ -37,7 +37,7 @@ WikiParser.prototype.parse = function(inputString)
 		{
 			this.jumpToTopLevel();
 			var elementName = 'h' + RegExp.$1.length;
-			var element = this.document.createElement(elementName)
+			var element = this.document.createElement(elementName);
 			this.stack.top().appendChild(element);
 			this.stack.push(element)
 			this.inline(RegExp.$2);

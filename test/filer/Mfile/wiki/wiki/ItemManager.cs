@@ -84,8 +84,8 @@ namespace wiki {
         #region IComparer<Data> メンバ
 
         public int Compare(Data x, Data y) {
-            if (x.ID < x.ID) return -1;
-            if (x.ID > x.ID) return 1;
+            if (x.ID < y.ID) return -1;
+            if (x.ID > y.ID) return 1;
 
             return 0;
         }

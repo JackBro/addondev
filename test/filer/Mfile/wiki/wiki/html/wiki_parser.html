@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html
 	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja" >
 <head>
+	<meta http-equiv="content-style-type" content="text/css">
+	<link rel="stylesheet" href="wiki.css" type="text/css">
+
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
 	<title> WikiParser Test </title>
@@ -81,6 +84,7 @@ alert(res);
 		if(!c){
 			c = document.createElement('div');
 			c.id = id;
+			//c.className = "tools";
 			var b = this.getBody();
 			b.appendChild(c);
 		}
@@ -108,8 +112,8 @@ alert(res);
 			container.removeChild(container.firstChild);
 			
 			
-		var b = this.getBody();
-		/*
+		//var b = this.getBody();
+/*
 		var input=document.createElement('input');
 		input.type='button';
 		input.value = "edit";
@@ -122,17 +126,32 @@ location.href=cmd;
 		//input.onclick = "alert('test');location.href="+cmd;
 		container.appendChild(input);
 */
+		var line = document.createElement('hr');
+		//line.setAttribute("class", "list");
+		line.className = "list";
+		//<hr style="border-top: 2px dashed #ff9d9d;width: 100%;"> 
+		container.appendChild(line);
+
 		var tools = document.createElement('div');
 		tools.align="right";
-		var elem = document.createElement("a");
-		elem.href = "command://edit/id";
+		tools.className = "tools";
+
+		var eelem = document.createElement("a");
+		eelem.href = "command://edit/" + id;
 		var str = document.createTextNode("Edit");
-		elem.appendChild(str);
-		//elem.align="right"
-		tools.appendChild(elem);
-		container.appendChild(tools);
+		eelem.appendChild(str);
+		tools.appendChild(eelem);
+
+		var delem = document.createElement("a");
+		delem.href = "command://delete/" + id;
+		delem.className = "operate";
+		var str = document.createTextNode("Delete");
+		delem.appendChild(str);
+		tools.appendChild(delem);
 		
-			
+		container.appendChild(tools);
+
+		//pageElement.className = "tools2";
 		container.appendChild(pageElement);	
 		
 
@@ -145,6 +164,7 @@ location.href=cmd;
 </script>
 
 </head>
+
 <body >
 <!--
 <body onload="app.rebuild();" >

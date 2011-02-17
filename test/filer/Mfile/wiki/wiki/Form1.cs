@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using mshtml;
 using System.IO;
+using Jint;
+using System.Diagnostics;
 
 namespace wiki
 {
@@ -107,6 +109,16 @@ namespace wiki
             };
 
             NewItemToolStripButton.Click += (sender, e) => {
+                var en = new JintEngine();
+                en.DisableSecurity();
+                en.AllowClr = true;
+                en.SetFunction("square", new Action<string>(a => { MessageBox.Show(a); }));
+                object result = en.Run(@"
+square('test');
+System.Diagnostics.Process.Start('notepad.exe');
+return 21 * 2");
+                Console.WriteLine(result); // Displays 42
+                
                 CreateItem();
             };
 
