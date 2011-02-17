@@ -21,6 +21,10 @@ namespace wiki {
         public bool IsDirty = false;
 
         public string DataPath { get; set; }
+        public Data EditingData {
+            get;
+            set;
+        }
         private List<Data> datas = new List<Data>();
 
         public void Load(){
@@ -33,6 +37,7 @@ namespace wiki {
 
         public void Insert(Data data) {
             IsDirty = true;
+            data.ID = this.GetNewID();
             datas.Add(data);
             var index = datas.IndexOf(data);
             if (eventHandler != null) {
@@ -63,5 +68,28 @@ namespace wiki {
             return datas.FindAll(pre);
             //datas.FindAll(x => { return true; });
         }
+
+        public Data GetItem(long id){
+            var dydata = new Data { ID=id };
+            var index = datas.BinarySearch(dydata, new srarchID());
+            if (index > 0 && index < datas.Count)
+                return datas[index];
+
+            return null;
+        }
+    }
+
+    class srarchID : IComparer<Data> {
+        //x<y => -1、x>y => 1, x==y => 0
+        #region IComparer<Data> メンバ
+
+        public int Compare(Data x, Data y) {
+            if (x.ID < x.ID) return -1;
+            if (x.ID > x.ID) return 1;
+
+            return 0;
+        }
+
+        #endregion
     }
 }

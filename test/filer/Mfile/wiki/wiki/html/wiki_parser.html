@@ -9,9 +9,21 @@
 	<title> WikiParser Test </title>
 	<script type="text/javascript" src="WikiParser.js" ></script>
 <script type="text/javascript" >
+
 function testrebuild(){
+//alert(id + " : " + source);
 app.rebuild();
 }
+
+function testrebuildbyid(id, source){
+//alert(id + " : " + source);
+app.rebuildByID(id, source);
+}
+
+function test(message) { 
+    alert(message); 
+}
+
 
 var app = {
 	rebuild : function()
@@ -59,19 +71,84 @@ alert(res);
 			this.container = document.getElementById("container");
 		return this.container;
 	},
-  insert:fucntion(index){
-    
-  },
-  rebuild2:function(index, text){
-    
-  }
+	getBody : function(){
+		if(!this.body)
+			this.body = document.getElementsByTagName("body")[0];
+		return this.body;
+	},
+	getContainerByID : function(id){
+		var c = document.getElementById(id);
+		if(!c){
+			c = document.createElement('div');
+			c.id = id;
+			var b = this.getBody();
+			b.appendChild(c);
+		}
+		return c;
+	},
+/*
+	addContent : function(id, source){
+		var c = this.getContainerByID(id);
+		if(!c){
+			c = document.createElement('div');
+			c.id = id;
+		}
+		rebuildByID(id, source);
+	},
+	insert:function(index){
+		
+	},
+*/
+	rebuildByID:function(id, source){
+		var pageElement = this.getWikiParser().parse(source);
+		var container = this.getContainerByID(id);
+		//alert("pageElement = " + pageElement + " container = " + container);
+		
+		while(container.childNodes.length > 0) 
+			container.removeChild(container.firstChild);
+			
+			
+		var b = this.getBody();
+		/*
+		var input=document.createElement('input');
+		input.type='button';
+		input.value = "edit";
+		input.align="right"
+		var cmd = "command://edit/" + id;
+		input.onclick = function (){
+//alert('test');
+location.href=cmd;
+};
+		//input.onclick = "alert('test');location.href="+cmd;
+		container.appendChild(input);
+*/
+		var tools = document.createElement('div');
+		tools.align="right";
+		var elem = document.createElement("a");
+		elem.href = "command://edit/id";
+		var str = document.createTextNode("Edit");
+		elem.appendChild(str);
+		//elem.align="right"
+		tools.appendChild(elem);
+		container.appendChild(tools);
+		
+			
+		container.appendChild(pageElement);	
+		
+
+		//b.appendChild(container.appendChild(pageElement));	
+		//b.appendChild(container);	
+	}
+	
 }
 
 </script>
 
 </head>
-<body onload="app.rebuild();" >
+<body >
 <!--
+<body onload="app.rebuild();" >
+
 <table width="96%" >
 <thead>
 	<tr>

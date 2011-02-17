@@ -7,7 +7,9 @@ using System.Windows.Forms;
 namespace wiki {
     class ListViewEx : ListView {
         private List<Data> items;
-
+        public List<Data> DataItems{
+            get { return this.items; }
+        }
         public ListViewEx(List<Data> items) {
             this.items = items;
 
@@ -15,8 +17,8 @@ namespace wiki {
             this.HideSelection = false;
             this.View = View.Details;
             ColumnHeader headerName = new ColumnHeader();
-            headerName.Name = "name";
-            headerName.Text = "name";
+            headerName.Name = "title";
+            headerName.Text = "Title";
             this.Columns.Add(headerName);
             headerName.Width = -2;
 
@@ -27,7 +29,7 @@ namespace wiki {
                 if (e.ItemIndex < this.items.Count) {
                     var data = this.items[e.ItemIndex];
                     var item = new ListViewItem();
-                    item.Text = data.Text;
+                    item.Text = data.Title;
                     e.Item = item;
                 }
             };

@@ -23,9 +23,9 @@ namespace wiki
             InitializeComponent();
 
 
-            webBrowser1.IsWebBrowserContextMenuEnabled = false;
             
-            webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
+            
+            //webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
 //            testmap[0] = @"!WikiParser TestTTTTTTT";
 //            testmap[1] = @"!! List Test
 //
@@ -51,10 +51,7 @@ namespace wiki
 //                datas.Add(new Data { Text = item.Value });
 //            }
             //textBox1.Text = "!WikiParser TestTTTTTTT";
-            var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
-            webBrowser1.Navigate(p);
 
-            webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
 
             //listView1.SelectedIndexChanged += new EventHandler(listView1_SelectedIndexChanged);
             //listView1.VirtualListSize = datas.Count;
@@ -68,14 +65,28 @@ namespace wiki
                 }
             };
 
+            this.SizeChanged += (sender, e) => {
+
+                for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
+                    var page = ItemTabControl.TabPages[i];
+                    var listview = GetTabControl(page);
+                    listview.Columns["title"].Width = -2;
+                }
+            };
+
             textBox1.TextChanged += (sender, e) => {
                 
                 if (dirty) {
-                    var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-                    var items = listview.GetActive();
-                    if (items.Count == 1) {
-                        items[0].Text = textBox1.Text;
-                        manager.UpDate(items[0]);
+                    //var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                    //var items = listview.GetActive();
+                    //if (items.Count == 1) {
+                    //    items[0].Text = textBox1.Text;
+                    //    manager.UpDate(items[0]);
+                    //}
+                    var item = manager.EditingData;
+                    if (item != null) {
+                        item.Text = textBox1.Text;
+                        manager.UpDate(item);
                     }
                 }
                 dirty = true;
@@ -113,11 +124,12 @@ namespace wiki
                         {
                             ItemTabControl.SelectedIndex = 0;
                             var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-                            listview.AddItem(e.Item);               
+                            listview.AddItem(e.Item);
+                            reBuild(e.Item);
                         }
                         break;
                     case ChangeType.UpDate:
-                        reBuild(e.Item.Text);
+                        reBuild(e.Item);
                         break;
                     case ChangeType.Delete:
                         break;
@@ -126,16 +138,51 @@ namespace wiki
                 }
             };
 
-            CreateListViewTabPage("All", manager.Filter(x => { return true; }));
+            var newlistview = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
+            //reBuild(newlistview.DataItems);
+
+            webBrowser1.IsWebBrowserContextMenuEnabled = false;
+            var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
+            webBrowser1.Navigate(p);
+            webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
+
+            webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
+        }
+        void f() {
+            webBrowser1.DocumentCompleted -= new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
+
+
+            var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+           // reBuild(listview.DataItems);      
+        }
+        void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e) {
+            webBrowser1.DocumentCompleted -= webBrowser1_DocumentCompleted;
+            Console.WriteLine("webBrowser1_DocumentCompleted : " + e.Url);
+            //webBrowser1.Document.ContextMenuShowing += new HtmlElementEventHandler(Document_ContextMenuShowing);
+            //webBrowser1.Document.Click += new HtmlElementEventHandler(Document_Click);
+            var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+            reBuild(listview.DataItems);
+
         }
 
         private void CreateItem() {
-            manager.Insert(new Data { Text="!" });
+            manager.Insert(new Data { Text="!new" });
+
+            //webBrowser1.Document.InvokeScript("test", new String[] { "called from client code" });
+        }
+
+        private void CreateItemView(List<Data> items) {
+            var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+
+        }
+
+        private ListViewEx GetTabControl(TabPage page) {
+            return page.Controls[0] as ListViewEx; 
         }
 
         //private Dictionary<TabPage, Data> dic;
         private bool dirty = false;
-        private void CreateListViewTabPage(string name, List<Data> items){
+        private ListViewEx CreateListViewTabPage(string name, List<Data> items) {
 
             //ListView listview = new ListView();
             //listview.View = View.Details;
@@ -164,7 +211,7 @@ namespace wiki
                     //textBox1.Text = text;
                     if (MouseButtons == MouseButtons.Left) {
                         dirty = false;
-                        SetText(text);
+                        //SetText(text);
 
                     } else if (MouseButtons == MouseButtons.Middle) {
                     
@@ -172,28 +219,28 @@ namespace wiki
                     //reBuild(text);
                 }              
             };
+
             listview.Dock = DockStyle.Fill;
 
             var t = new TabPage(name);
             t.Controls.Add(listview);
             ItemTabControl.TabPages.Add(t);
+
+            return listview;
         }
 
-        void SetText(string text) {
-            //if (listView1.SelectedIndices.Count == 1) {
-            //    var index = listView1.SelectedIndices[0];
-            //    var item = datas[index];
-            //    item.Text = text;
-                //reBuild(textBox1.Text);
-            textBox1.Text = text;
-                reBuild(text);
-            //} 
-        }
+        //void SetText(string text) {
+        //    //if (listView1.SelectedIndices.Count == 1) {
+        //    //    var index = listView1.SelectedIndices[0];
+        //    //    var item = datas[index];
+        //    //    item.Text = text;
+        //        //reBuild(textBox1.Text);
+        //    textBox1.Text = text;
+        //        reBuild(text);
+        //    //} 
+        //}
 
-        void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e) {
-            webBrowser1.Document.ContextMenuShowing += new HtmlElementEventHandler(Document_ContextMenuShowing);
-            webBrowser1.Document.Click += new HtmlElementEventHandler(Document_Click);
-        }
+
 
         void Document_Click(object sender, HtmlElementEventArgs e) {
             //throw new NotImplementedException();
@@ -221,23 +268,42 @@ namespace wiki
         {
             //throw new NotImplementedException();
             var l = e.Url;
-            
+            e.Cancel = true;
+            EditItem(1);
         }
 
-        private void reBuild()
-        {
-            IHTMLDocument3 h3 = webBrowser1.Document.DomDocument as IHTMLDocument3;
-            var em = h3.getElementById("txtSource");
-            var te = em.innerText;
-            em.innerText = textBox1.Text;
-            webBrowser1.Document.InvokeScript("testrebuild");
+        private void EditItem(long id) {
+            var item = manager.GetItem(id);
+            if (item == null) return;
+            manager.EditingData = item;
+            dirty = false;
+            textBox1.Text = item.Text; 
         }
 
-        private void reBuild(string text) {
-            IHTMLDocument3 h3 = webBrowser1.Document.DomDocument as IHTMLDocument3;
-            var em = h3.getElementById("txtSource");
-            em.innerText = text;
-            webBrowser1.Document.InvokeScript("testrebuild");
+        //private void reBuild()
+        //{
+        //    IHTMLDocument3 h3 = webBrowser1.Document.DomDocument as IHTMLDocument3;
+        //    var em = h3.getElementById("txtSource");
+        //    var te = em.innerText;
+        //    em.innerText = textBox1.Text;
+        //    webBrowser1.Document.InvokeScript("testrebuild");
+        //}
+
+        //private void reBuild(string text) {
+        //    IHTMLDocument3 h3 = webBrowser1.Document.DomDocument as IHTMLDocument3;
+        //    var em = h3.getElementById("txtSource");
+        //    em.innerText = text;
+        //    webBrowser1.Document.InvokeScript("testrebuild");
+        //}
+
+        private void reBuild(List<Data> items) {
+            foreach (var item in items) {
+                webBrowser1.Document.InvokeScript("testrebuildbyid", new string[] { item.ID.ToString(), item.Text });
+            }
+        }
+
+        private void reBuild(Data item) {
+            webBrowser1.Document.InvokeScript("testrebuildbyid", new string[] { item.ID.ToString(), item.Text });
         }
 
         private void webBrowser1_ContextMenuStripChanged(object sender, EventArgs e) {
