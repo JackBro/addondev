@@ -180,6 +180,15 @@ WikiParser.prototype.parse = function(inputString)
 		{
 			this.jumpToTopLevel();
 		}
+    else if(/^>/.test(lines[i]) )
+    {
+      var element = document.createElement('font');
+	    element.setAttribute("color", "#FF0000");
+	    element.innerHTML = lines[i];
+      this.stack.top().appendChild(element);
+			var pElement= this.document.createElement('p')
+      this.stack.top().appendChild(pElement);
+    }
 		else
 		{
 			if ( this.stack.top().tagName.toLowerCase() != 'p')

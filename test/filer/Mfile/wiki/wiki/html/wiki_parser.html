@@ -27,6 +27,9 @@ function test(message) {
     alert(message); 
 }
 
+function testClearAll() { 
+   app.ClearAll();
+}
 
 var app = {
 	rebuild : function()
@@ -100,9 +103,14 @@ alert(res);
 		rebuildByID(id, source);
 	},
 	insert:function(index){
-		
+
 	},
 */
+	ClearAll : function(){
+		var body = this.getBody();
+		while(body.childNodes.length > 0) 
+			body.removeChild(body.firstChild);
+	},
 	rebuildByID:function(id, source){
 		var pageElement = this.getWikiParser().parse(source);
 		var container = this.getContainerByID(id);

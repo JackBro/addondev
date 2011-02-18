@@ -45,7 +45,7 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.NewItemToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.contextMenuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -89,7 +89,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.ItemTabControl);
-            this.splitContainer2.Panel1.Controls.Add(this.textBox2);
+            this.splitContainer2.Panel1.Controls.Add(this.comboBox1);
             // 
             // splitContainer2.Panel2
             // 
@@ -103,11 +103,11 @@
             this.ItemTabControl.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
             this.ItemTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ItemTabControl.ItemSize = new System.Drawing.Size(70, 20);
-            this.ItemTabControl.Location = new System.Drawing.Point(0, 19);
+            this.ItemTabControl.Location = new System.Drawing.Point(0, 20);
             this.ItemTabControl.Multiline = true;
             this.ItemTabControl.Name = "ItemTabControl";
             this.ItemTabControl.SelectedIndex = 0;
-            this.ItemTabControl.Size = new System.Drawing.Size(225, 411);
+            this.ItemTabControl.Size = new System.Drawing.Size(225, 410);
             this.ItemTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.ItemTabControl.TabIndex = 1;
             // 
@@ -205,13 +205,14 @@
             this.NewItemToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.NewItemToolStripButton.Text = "toolStripButton1";
             // 
-            // textBox2
+            // comboBox1
             // 
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox2.Location = new System.Drawing.Point(0, 0);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(225, 19);
-            this.textBox2.TabIndex = 1;
+            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(0, 0);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(225, 20);
+            this.comboBox1.TabIndex = 1;
             // 
             // Form1
             // 
@@ -227,7 +228,6 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -260,7 +260,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ToolStripButton NewItemToolStripButton;
         private System.Windows.Forms.WebBrowser webBrowser1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

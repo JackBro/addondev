@@ -104,22 +104,32 @@ namespace wiki
             //ItemAllTabPage = new TabPage("All");
             //ItemTabControl.TabPages.Add(ItemAllTabPage);
 
-            ItemTabControl.TabIndexChanged += (sender, e) => {
-                
+            ItemTabControl.SelectedIndexChanged += (sender, e) => {
+                var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                webBrowser1.Document.InvokeScript("testClearAll");
+                reBuild(listview.DataItems);
             };
 
+            var en = new JintEngine();
+            en.DisableSecurity();
+            en.AllowClr = true;
+            en.SetFunction("square", new Action(() => { CreateItem(); }));
+
             NewItemToolStripButton.Click += (sender, e) => {
-                var en = new JintEngine();
-                en.DisableSecurity();
-                en.AllowClr = true;
-                en.SetFunction("square", new Action<string>(a => { MessageBox.Show(a); }));
+//                var en = new JintEngine();
+//                en.DisableSecurity();
+//                en.AllowClr = true;
+//                en.SetFunction("square", new Action<string>(a => { MessageBox.Show(a); }));
+//                object result = en.Run(@"
+//square('test');
+//System.Diagnostics.Process.Start('notepad.exe');
+//return 21 * 2");
+//                Console.WriteLine(result); // Displays 42
+
                 object result = en.Run(@"
-square('test');
-System.Diagnostics.Process.Start('notepad.exe');
-return 21 * 2");
-                Console.WriteLine(result); // Displays 42
-                
-                CreateItem();
+                square();
+                return 21 * 2");               
+//                CreateItem();
             };
 
             manager = new ItemManager();
@@ -159,6 +169,23 @@ return 21 * 2");
             webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
 
             webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
+
+            comboBox1.AutoCompleteMode = AutoCompleteMode.Suggest;
+            comboBox1.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            var s = new AutoCompleteStringCollection();
+            s.Add("aaa");
+            s.Add("b");
+            comboBox1.AutoCompleteCustomSource = s;
+
+            comboBox1.KeyDown += (sender, e) => {
+                if (e.KeyCode == Keys.Return && comboBox1.Text.Length>0) {
+                    CreateListViewTabPage(comboBox1.Text, manager.Filter(x => 
+                    {
+                        return x.Text.Contains(comboBox1.Text);
+                        //return true; 
+                    }));
+                }
+            };
         }
         void f() {
             webBrowser1.DocumentCompleted -= new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
@@ -262,6 +289,7 @@ return 21 * 2");
         void Document_ContextMenuShowing(object sender, HtmlElementEventArgs e) {
             var ae = webBrowser1.Document.ActiveElement;
             var en = e;
+
         }
 
         //void listView1_SelectedIndexChanged(object sender, EventArgs e)
