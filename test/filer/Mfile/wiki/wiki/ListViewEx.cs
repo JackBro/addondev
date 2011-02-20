@@ -20,7 +20,13 @@ namespace wiki {
             headerName.Name = "title";
             headerName.Text = "Title";
             this.Columns.Add(headerName);
-            headerName.Width = -2;
+            //headerName.Width = -2;
+
+            ColumnHeader headerCreationTime = new ColumnHeader();
+            headerCreationTime.Name = "creationtime";
+            headerCreationTime.Text = "CreationTime";
+            this.Columns.Add(headerCreationTime);
+            //headerCreationTime.Width = -2;
 
             this.VirtualMode = true;
             this.VirtualListSize = items.Count;
@@ -30,6 +36,7 @@ namespace wiki {
                     var data = this.items[e.ItemIndex];
                     var item = new ListViewItem();
                     item.Text = data.Title;
+                    item.SubItems.Add(data.CreationTime.ToString("yyyy/MM/dd HH:mm:ss"));
                     e.Item = item;
                 }
             };

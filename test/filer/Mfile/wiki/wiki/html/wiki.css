@@ -9,8 +9,6 @@
 }
 
 .tools2 {
-	//padding: 2px;
-	//margin: 2px;
 	background-color: blue;
 }
 
@@ -19,3 +17,9 @@
 }
 
 :hover.operate  { background-color: #b03 }
+
+.URILink {
+	width: 100px;
+	height: 100px;
+}
+

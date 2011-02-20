@@ -442,6 +442,45 @@ WikiParser.prototype.createURILink = function(uri, label)
 		element.setAttribute('src', uri);
 		element.setAttribute('alt', label);
 		element.setAttribute('title', label);
+		
+		if(/^!/.test(label))
+		{
+			//element.setAttribute('class', 'URILink');
+			element.className = 'URILink';
+			var p = this.document.createElement('a');
+			p.setAttribute('title', "uri");
+			p.href = "javascript:void(0)";
+			p.className = 'thickbox';
+			//p.setAttribute('class','thickbox');
+			if(window.attachEvent){
+						p.attachEvent("onclick",function(){
+							//"var t = this.title || this.name || null;"
+							var t = label;
+							//+"var a = this.href || this.alt;"
+							var a = uri;
+							//+"var g = this.rel || false;"
+							var g =  false;
+							tb_show(t,a,g);
+							//this.blur();
+							//return false;
+						});
+			}else{
+						p.addEventListener("click",function(){
+							//"var t = this.title || this.name || null;"
+							var t = label;
+							//+"var a = this.href || this.alt;"
+							var a = uri;
+							//+"var g = this.rel || false;"
+							var g =  false;
+							tb_show(t,a,g);
+							this.blur();
+							//return false;
+						}, false);
+						
+			}
+			p.appendChild(element);
+			return p;
+		}
 	}
 	else
 	{

@@ -45,8 +45,15 @@ namespace wiki {
             }
         }
 
-        public void Delete() {
+        public void Delete(long id) {
             IsDirty = true;
+            var item = GetItem(id);
+            if (item != null) {
+                //datas.Remove(item);
+                if (eventHandler != null) {
+                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Delete });
+                }
+            }
         }
 
         public void UpDate(Data item) {

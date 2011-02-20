@@ -4,13 +4,21 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja" >
 <head>
+	<title> WikiParser Test </title>
+	
 	<meta http-equiv="content-style-type" content="text/css">
-	<link rel="stylesheet" href="wiki.css" type="text/css">
-
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
-	<title> WikiParser Test </title>
-	<script type="text/javascript" src="WikiParser.js" ></script>
+	
+	
+
+	<script type="text/javascript" src="js/jquery-1.5.min.js" ></script>
+	<script type="text/javascript" src="ThickBox/thickbox.js"></script>
+	<script type="text/javascript" src="js/WikiParser.js" ></script>
+	
+	<link rel="stylesheet" href="ThickBox/thickbox.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="wiki.css" type="text/css">
+
 <script type="text/javascript" >
 
 function testrebuild(){
@@ -29,6 +37,10 @@ function test(message) {
 
 function testClearAll() { 
    app.ClearAll();
+}
+
+function cs_Remove(id){
+	app.RemoveByID(id);
 }
 
 var app = {
@@ -106,6 +118,10 @@ alert(res);
 
 	},
 */
+	RemoveByID : function(id)
+	{
+		$('#' + id).remove();
+	},
 	ClearAll : function(){
 		var body = this.getBody();
 		while(body.childNodes.length > 0) 
