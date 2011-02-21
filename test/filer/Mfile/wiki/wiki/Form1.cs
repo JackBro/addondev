@@ -105,9 +105,14 @@ namespace wiki
                         {
                             ItemTabControl.SelectedIndex = 0;
                             var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-                            listview.AddItem(e.Item);
+                            var iindex = listview.AddItem(e.Item);
+                            if (iindex == (listview.DataItems.Count-1)) {
+                                reBuild(e.Item);
+                            } else {
+                                reBuild(listview.DataItems[iindex+1].ID, e.Item);
+                            }
                             //listview.AddItem(e.Index, e.Item);
-                            reBuild(e.Item);
+                            
                         }
                         break;
                     case ChangeType.UpDate:
@@ -143,10 +148,50 @@ namespace wiki
                 if (e.KeyCode == Keys.Return && comboBox1.Text.Length>0) {
                     CreateListViewTabPage(comboBox1.Text, manager.Filter(x => 
                     {
-                        return x.Text.Contains(comboBox1.Text);
-                        //return true; 
+                        return x.Text.Contains(comboBox1.Text);; 
                     }));
                 }
+            };
+
+            int max = 5;
+            PreToolStripButton.Click += (sender, e) => {
+                
+                var l = GetSelctedTabControl();
+                l.Page--;
+                var si = l.Page * max;
+                var cnt = l.DataItems.Count;
+                var last = (si + max) > cnt ? cnt : (si + max);
+                List<Data> elist = new List<Data>();
+                for (int i = si; i < last; i++) {
+                    elist.Add(l.DataItems[i]);
+                }
+                InvokeScript("js_ClearAll");
+                reBuild(elist);
+
+                if ((l.Page -1) * max <= 0) {
+                    PreToolStripButton.Enabled = false;
+                }
+                NextToolStripButton.Enabled = true;
+            };
+            NextToolStripButton.Click += (sender, e) => {
+
+                var l = GetSelctedTabControl();
+                l.Page++;
+
+                var si = l.Page * max;
+                var cnt = l.DataItems.Count;
+                var last = (si + max) > cnt ? cnt : (si + max);
+                List<Data> elist = new List<Data>();
+                for (int i = si; i < last; i++) {
+                    elist.Add(l.DataItems[i]);
+                }
+                InvokeScript("js_ClearAll");
+                reBuild(elist);
+
+                if ((l.Page + 1) * max >= l.DataItems.Count) {
+                    NextToolStripButton.Enabled = false;
+                }
+                PreToolStripButton.Enabled = true;
             };
         }
 
@@ -156,7 +201,13 @@ namespace wiki
             //webBrowser1.Document.ContextMenuShowing += new HtmlElementEventHandler(Document_ContextMenuShowing);
             //webBrowser1.Document.Click += new HtmlElementEventHandler(Document_Click);
             var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-            reBuild(listview.DataItems);
+            List<Data> elist = new List<Data>();
+            var last = listview.DataItems.Count < 5 ? listview.DataItems.Count : 5;
+            for (int i = 0; i < last; i++) {
+                elist.Add(listview.DataItems[i]);
+            }
+            reBuild(elist);
+            //reBuild(listview.DataItems);
 
         }
 
@@ -178,13 +229,12 @@ namespace wiki
             textBox1.Text = item.Text;
         }
 
-
-        //private void CreateItemView(List<Data> items) {
-        //    var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-        //}
-
         private ListViewEx GetTabControl(TabPage page) {
             return page.Controls[0] as ListViewEx; 
+        }
+
+        private ListViewEx GetSelctedTabControl() {
+            return GetTabControl(ItemTabControl.SelectedTab);
         }
 
         private bool dirty = false;
@@ -220,6 +270,8 @@ namespace wiki
             var bp = Path.GetFullPath(@"..\..\scripts");
             var rs = request.Scheme; //request.Split(new char[] { '/' });
             var path = Path.Combine(bp, rs+".js");
+            if (!File.Exists(path)) return;
+
             var script = File.ReadAllText(path);
             en.SetParameter("request", request.AbsoluteUri);
             //en.SetFunction("deleteitem", new Action<int>((id) => {
@@ -255,7 +307,6 @@ namespace wiki
             //EditItem(1);
         }
 
-
         private void reBuild(List<Data> items) {
             foreach (var item in items) {
                 //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
@@ -266,6 +317,10 @@ namespace wiki
         private void reBuild(Data item) {
             //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
             InvokeScript("js_BuildByID", new string[] { item.ToJsonString() });
+        }
+        private void reBuild(long insertBefore,  Data item) {
+            //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
+            InvokeScript("js_BuildInsertByID", new string[] {insertBefore.ToString(), item.ToJsonString() });
         }
 
         private void webBrowser1_ContextMenuStripChanged(object sender, EventArgs e) {

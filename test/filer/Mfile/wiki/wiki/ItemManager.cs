@@ -47,11 +47,11 @@ namespace wiki {
         //    }
         //}
         
-        public static void Insert(List<Data> list, Data item) {
+        public static int Insert(List<Data> list, Data item) {
             if (list.Count == 0) {
                 item.ID = 0;
                 list.Add(item);
-                return;
+                return 0;
             }
 
             var cmp = new DateTimeComparer();
@@ -63,9 +63,9 @@ namespace wiki {
                 int m = (r + l) >> 1;
                 //comp = this.datas[m].CompareTo(elem);
                 comp = cmp.Compare(list[m], item);
-                if (comp > 0) r = m - 1;
-                else if (comp < 0) l = m + 1;
-                else return; // 重複不可
+                if (comp < 0) r = m - 1;
+                else if (comp > 0) l = m + 1;
+                else return -1; // 重複不可
             }
 
             //comp = this.buffer[l].CompareTo(elem);
@@ -81,11 +81,18 @@ namespace wiki {
                 index = l + 1;
 
             //elem.ID = this.GetNewID();
-            list.Insert(index, item);      
+            list.Insert(index, item);
+
+            return index;
         }
 
         public void Insert(Data item) {
+            IsDirty = true;
             ItemManager.Insert(this.datas, item);
+            if (eventHandler != null) {
+                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Insert });
+            }
+
         }
         //public void Insert(Data elem) {
         //    IsDirty = true;

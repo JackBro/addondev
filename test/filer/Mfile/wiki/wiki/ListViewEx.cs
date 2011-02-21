@@ -7,10 +7,17 @@ using System.Windows.Forms;
 namespace wiki {
     class ListViewEx : ListView {
         private List<Data> items;
+
+        public int Page { get; set; }
+
         public List<Data> DataItems{
             get { return this.items; }
         }
+
         public ListViewEx(List<Data> items) {
+
+            Page = 0;
+
             this.items = items;
 
             this.FullRowSelect = true;
@@ -47,10 +54,11 @@ namespace wiki {
             this.VirtualListSize = items.Count;
         }
 
-        public void AddItem(Data item){
+        public int AddItem(Data item){
             //items.Add(item);
-            ItemManager.Insert(items, item);
+            var i = ItemManager.Insert(items, item);
             this.VirtualListSize = items.Count;
+            return i;
         }
 
         //public void AddItem(int index, Data item) {
