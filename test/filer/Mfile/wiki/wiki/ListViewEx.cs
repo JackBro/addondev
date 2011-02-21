@@ -48,9 +48,17 @@ namespace wiki {
         }
 
         public void AddItem(Data item){
-            items.Add(item);
+            //items.Add(item);
+            ItemManager.Insert(items, item);
             this.VirtualListSize = items.Count;
         }
+
+        //public void AddItem(int index, Data item) {
+        //    //items.Add(item);
+        //    //items.Insert(index, item);
+        //    ItemManager.Insert(items, item);
+        //    this.VirtualListSize = items.Count;
+        //}
 
         public void UpDate(Data item){
             

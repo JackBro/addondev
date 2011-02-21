@@ -20,8 +20,9 @@ namespace wiki
         JintEngine en = new JintEngine();
         public Form1(){
             InitializeComponent();
-            TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
-            baseticks = new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks;
+            //TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
+            //baseticks = new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks;
+            baseticks = 0;
 
             this.Load += (sender, e) => {
 
@@ -60,7 +61,8 @@ namespace wiki
 
             ItemTabControl.SelectedIndexChanged += (sender, e) => {
                 var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-                webBrowser1.Document.InvokeScript("testClearAll");
+                //webBrowser1.Document.InvokeScript("testClearAll");
+                InvokeScript("js_ClearAll");
                 reBuild(listview.DataItems);
             };
 
@@ -99,11 +101,12 @@ namespace wiki
             manager.Load();
             manager.eventHandler += (sender, e) => {
                 switch (e.type) {
-                    case ChangeType.Add:
+                    case ChangeType.Insert:
                         {
                             ItemTabControl.SelectedIndex = 0;
                             var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
                             listview.AddItem(e.Item);
+                            //listview.AddItem(e.Index, e.Item);
                             reBuild(e.Item);
                         }
                         break;
@@ -158,13 +161,13 @@ namespace wiki
         }
 
         private void CreateItem() {
-            manager.Insert(new Data { Text = "!new", CreationTime = new DateTime(DateTime.Now.Ticks+baseticks) });
+            manager.Insert(new Data { ID=manager.GetNewID(), Text = "!new", CreationTime = new DateTime(DateTime.Now.Ticks+baseticks) });
 
             //webBrowser1.Document.InvokeScript("test", new String[] { "called from client code" });
         }
         private void DeleteItem(long id) {
             manager.Delete(id);
-            webBrowser1.Document.InvokeScript("cs_Remove", new string[] { id.ToString() });
+            webBrowser1.Document.InvokeScript("js_Remove", new string[] { id.ToString() });
             
         }
         private void EditItem(long id) {
@@ -225,6 +228,13 @@ namespace wiki
             object result = en.Run(script);
             int k = 0;
         }
+
+        private Object InvokeScript(string function, params string[] param) {
+            return webBrowser1.Document.InvokeScript(function, param);
+        }
+        private Object InvokeScript(string function) {
+            return webBrowser1.Document.InvokeScript(function);
+        }
         
         void Document_Click(object sender, HtmlElementEventArgs e) {
             //throw new NotImplementedException();
@@ -248,12 +258,14 @@ namespace wiki
 
         private void reBuild(List<Data> items) {
             foreach (var item in items) {
-                webBrowser1.Document.InvokeScript("testrebuildbyid", new string[] { item.ID.ToString(), item.Text });
+                //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
+                InvokeScript("js_BuildByID", new string[] { item.ToJsonString() });
             }
         }
 
         private void reBuild(Data item) {
-            webBrowser1.Document.InvokeScript("testrebuildbyid", new string[] { item.ID.ToString(), item.Text });
+            //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
+            InvokeScript("js_BuildByID", new string[] { item.ToJsonString() });
         }
 
         private void webBrowser1_ContextMenuStripChanged(object sender, EventArgs e) {
@@ -265,6 +277,13 @@ namespace wiki
             f.Time = DateTime.Now;
             var res = f.ShowDialog();
             var restime = f.Time;
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e) {
+            manager.Insert(new Data { ID = manager.GetNewID(), Text = "after", CreationTime = new DateTime(DateTime.Now.Ticks * 2) });
+            //var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
+            //webBrowser1.Navigate(p);
+            //webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace wiki {
                 _text = value;
                 var index = _text.IndexOf("\n");
                 if (index > 0) {
-                    Title = _text.Substring(0, index);
+                    Title = _text.Substring(0, index).Trim(new char[]{'\r', '\n'});
                 }
                 else {
                     Title = _text;
@@ -37,5 +37,13 @@ namespace wiki {
         public DateTime CreationTime { get; set; }
         //[ProtoMember(5)]
         //public DateTime LastWriteTime { get; set; }
+
+        public string ToJsonString() {
+            var date = string.Format("{0} {1}", CreationTime.ToShortDateString(), CreationTime.ToLongTimeString());
+            var text = this.Text.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\\n");
+            var json = string.Format("\"id\":\"{0}\", \"title\":\"{1}\", \"date\":\"{2}\", \"text\":\"{3}\"", this.ID, this.Title, date, text);
+            json = "{" + json + "}";
+            return json;
+        }
     }
 }

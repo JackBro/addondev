@@ -113,6 +113,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="html\js\view.js" />
     <Content Include="html\wiki.css" />
     <Content Include="html\js\WikiParser.js" />
     <Content Include="html\ThickBox\loadingAnimation.gif" />

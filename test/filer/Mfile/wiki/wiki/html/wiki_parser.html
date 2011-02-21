@@ -10,183 +10,13 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
 	
-	
-
 	<script type="text/javascript" src="js/jquery-1.5.min.js" ></script>
 	<script type="text/javascript" src="ThickBox/thickbox.js"></script>
 	<script type="text/javascript" src="js/WikiParser.js" ></script>
-	
+	<script type="text/javascript" src="js/view.js" ></script>
+
 	<link rel="stylesheet" href="ThickBox/thickbox.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="wiki.css" type="text/css">
-
-<script type="text/javascript" >
-
-function testrebuild(){
-//alert(id + " : " + source);
-app.rebuild();
-}
-
-function testrebuildbyid(id, source){
-//alert(id + " : " + source);
-app.rebuildByID(id, source);
-}
-
-function test(message) { 
-    alert(message); 
-}
-
-function testClearAll() { 
-   app.ClearAll();
-}
-
-function cs_Remove(id){
-	app.RemoveByID(id);
-}
-
-var app = {
-	rebuild : function()
-	{
-
-		//var source = this.getTxtSource().value;
-//var source = this.getTxtSource().textContent;
-var source = this.getTxtSource().innerText;
-/*
-var s = this.getTxtSource();
-var res="";
-for(var key in s){
-res+= key + " : " + s[key]+"\n";
-}
-alert(res);
-*/
-		var pageElement = this.getWikiParser().parse(source);
-		var container = this.getContainer()
-		while(container.childNodes.length > 0) 
-			container.removeChild(container.firstChild);
-		container.appendChild(pageElement);
-
-		return 
-	},
-	clearSource : function()
-	{
-		this.getTxtSource().value = '';
-		this.rebuild();
-	},
-	getWikiParser : function()
-	{
-		if(!this.wikiParser)
-			this.wikiParser = new WikiParser(document);
-		return this.wikiParser;
-	},
-	getTxtSource : function()
-	{
-		if(!this.txtSource)
-			this.txtSource = document.getElementById("txtSource");
-		return this.txtSource;
-	},
-	getContainer : function()
-	{
-		if(!this.container)
-			this.container = document.getElementById("container");
-		return this.container;
-	},
-	getBody : function(){
-		if(!this.body)
-			this.body = document.getElementsByTagName("body")[0];
-		return this.body;
-	},
-	getContainerByID : function(id){
-		var c = document.getElementById(id);
-		if(!c){
-			c = document.createElement('div');
-			c.id = id;
-			//c.className = "tools";
-			var b = this.getBody();
-			b.appendChild(c);
-		}
-		return c;
-	},
-/*
-	addContent : function(id, source){
-		var c = this.getContainerByID(id);
-		if(!c){
-			c = document.createElement('div');
-			c.id = id;
-		}
-		rebuildByID(id, source);
-	},
-	insert:function(index){
-
-	},
-*/
-	RemoveByID : function(id)
-	{
-		$('#' + id).remove();
-	},
-	ClearAll : function(){
-		var body = this.getBody();
-		while(body.childNodes.length > 0) 
-			body.removeChild(body.firstChild);
-	},
-	rebuildByID:function(id, source){
-		var pageElement = this.getWikiParser().parse(source);
-		var container = this.getContainerByID(id);
-		//alert("pageElement = " + pageElement + " container = " + container);
-		
-		while(container.childNodes.length > 0) 
-			container.removeChild(container.firstChild);
-			
-			
-		//var b = this.getBody();
-/*
-		var input=document.createElement('input');
-		input.type='button';
-		input.value = "edit";
-		input.align="right"
-		var cmd = "command://edit/" + id;
-		input.onclick = function (){
-//alert('test');
-location.href=cmd;
-};
-		//input.onclick = "alert('test');location.href="+cmd;
-		container.appendChild(input);
-*/
-		var line = document.createElement('hr');
-		//line.setAttribute("class", "list");
-		line.className = "list";
-		//<hr style="border-top: 2px dashed #ff9d9d;width: 100%;"> 
-		container.appendChild(line);
-
-		var tools = document.createElement('div');
-		tools.align="right";
-		tools.className = "tools";
-
-		var eelem = document.createElement("a");
-		eelem.href = "command://edit/" + id;
-		var str = document.createTextNode("Edit");
-		eelem.appendChild(str);
-		tools.appendChild(eelem);
-
-		var delem = document.createElement("a");
-		delem.href = "command://delete/" + id;
-		delem.className = "operate";
-		var str = document.createTextNode("Delete");
-		delem.appendChild(str);
-		tools.appendChild(delem);
-		
-		container.appendChild(tools);
-
-		//pageElement.className = "tools2";
-		container.appendChild(pageElement);	
-		
-
-		//b.appendChild(container.appendChild(pageElement));	
-		//b.appendChild(container);	
-	}
-	
-}
-
-</script>
-
 </head>
 
 <body >
@@ -223,8 +53,9 @@ location.href=cmd;
 	</tr>
 </tbody>
 </table>
--->
+
 <div id="txtSource" style ="display:none;">!WikiParser</div>
+-->
 <div id="container" />
 </body>
 

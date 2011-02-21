@@ -5,13 +5,12 @@ using System.Text;
 
 namespace wiki {
     public enum ChangeType {
-        Add,
+        Insert,
         UpDate,
         Delete
     }
     public class CallBackEventArgs : EventArgs {
         public Data Item;
-        public int Index;
         public ChangeType type;
     }
     delegate void EventHandler(object sender, CallBackEventArgs e);
@@ -35,15 +34,105 @@ namespace wiki {
             IsDirty = false;
         }
 
-        public void Insert(Data data) {
-            IsDirty = true;
-            data.ID = this.GetNewID();
-            datas.Add(data);
-            var index = datas.IndexOf(data);
-            if (eventHandler != null) {
-                eventHandler(this, new CallBackEventArgs {Index=index, Item = data, type= ChangeType.Add }); 
+        //public void Insert(Data data) {
+        //    IsDirty = true;
+        //    data.ID = this.GetNewID();
+        //    var i = datas.BinarySearch(data, new DateTimeComparer());
+        //    i = i < 0 ? 0 : i;
+        //    datas.Insert(i, data);
+        //    //datas.Add(data);
+        //    var index = datas.IndexOf(data);
+        //    if (eventHandler != null) {
+        //        eventHandler(this, new CallBackEventArgs {Index=index, Item = data, type= ChangeType.Add }); 
+        //    }
+        //}
+        
+        public static void Insert(List<Data> list, Data item) {
+            if (list.Count == 0) {
+                item.ID = 0;
+                list.Add(item);
+                return;
             }
+
+            var cmp = new DateTimeComparer();
+
+            int r = list.Count - 1;
+            int l = 0;
+            int comp;
+            while (l < r) {
+                int m = (r + l) >> 1;
+                //comp = this.datas[m].CompareTo(elem);
+                comp = cmp.Compare(list[m], item);
+                if (comp > 0) r = m - 1;
+                else if (comp < 0) l = m + 1;
+                else return; // 重複不可
+            }
+
+            //comp = this.buffer[l].CompareTo(elem);
+            comp = cmp.Compare(list[l], item);
+
+            var index = comp;
+
+            if (comp < 0)
+                //this.datas.Insert(l, elem); 
+                index = l;
+            else if (comp > 0)
+                //this.datas.Insert(l + 1, elem);
+                index = l + 1;
+
+            //elem.ID = this.GetNewID();
+            list.Insert(index, item);      
         }
+
+        public void Insert(Data item) {
+            ItemManager.Insert(this.datas, item);
+        }
+        //public void Insert(Data elem) {
+        //    IsDirty = true;
+
+        //    if (this.datas.Count == 0) {
+        //        elem.ID = 0;
+        //        this.datas.Add(elem);
+        //        if (eventHandler != null) {
+        //            eventHandler(this, new CallBackEventArgs { Item = elem, type = ChangeType.Insert });
+        //        }
+        //        return;
+        //    }
+
+        //    var cmp = new DateTimeComparer();
+            
+        //    int r = this.datas.Count - 1;
+        //    int l = 0;
+        //    int comp;
+        //    while (l < r) {
+        //        int m = (r + l) >> 1;
+        //        //comp = this.datas[m].CompareTo(elem);
+        //        comp = cmp.Compare(this.datas[m], elem);
+        //        if (comp > 0) r = m - 1;
+        //        else if (comp < 0) l = m + 1;
+        //        else return; // 重複不可
+        //    }
+
+        //    //comp = this.buffer[l].CompareTo(elem);
+        //    comp = cmp.Compare(this.datas[l], elem);
+
+        //    var index = comp;
+
+        //    if (comp < 0)
+        //        //this.datas.Insert(l, elem); 
+        //        index = l;
+        //    else if (comp > 0)
+        //        //this.datas.Insert(l + 1, elem);
+        //        index = l + 1;
+
+        //    elem.ID = this.GetNewID();
+        //    this.datas.Insert(index, elem);
+
+        //    if (eventHandler != null) {
+        //        eventHandler(this, new CallBackEventArgs { Item = elem, type = ChangeType.Insert });
+        //    }
+        //}
+
 
         public void Delete(long id) {
             IsDirty = true;
@@ -60,7 +149,7 @@ namespace wiki {
             IsDirty = true;
             var index = datas.IndexOf(item);
             if (eventHandler != null) {
-                eventHandler(this, new CallBackEventArgs { Index = index, Item = item, type = ChangeType.UpDate });
+                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDate });
             }
         }
 
@@ -68,7 +157,14 @@ namespace wiki {
             if(datas.Count == 0){
                 return 0;
             }
-            return datas[datas.Count - 1].ID + 1;
+            //return datas[datas.Count - 1].ID + 1;
+
+            long mm = 0;
+            var max = datas.Max(new Func<Data, long>((x) => {
+                if (mm < x.ID) mm = x.ID;
+                return mm;
+            }));
+            return mm + 1;
         }
 
         public List<Data> Filter(Predicate<Data> pre) {
@@ -77,22 +173,45 @@ namespace wiki {
         }
 
         public Data GetItem(long id){
-            var dydata = new Data { ID=id };
-            var index = datas.BinarySearch(dydata, new srarchID());
-            if (index > 0 && index < datas.Count)
+            //var dydata = new Data { ID=id };
+            //long mm = 0;
+            //var max = datas.Max(new Func<Data, long>((x)=>{
+            //    if (mm < x.ID) mm = x.ID;
+            //    return mm;
+            //}));
+            //var index = datas.BinarySearch(dydata, new IDComparer());
+
+            var index = datas.FindIndex(new Predicate<Data>((x) => {
+                return x.ID == id;
+            }));
+
+            if (index >= 0 && index < datas.Count)
                 return datas[index];
 
             return null;
         }
     }
 
-    class srarchID : IComparer<Data> {
+    class IDComparer : IComparer<Data> {
         //x<y => -1、x>y => 1, x==y => 0
         #region IComparer<Data> メンバ
 
         public int Compare(Data x, Data y) {
             if (x.ID < y.ID) return -1;
             if (x.ID > y.ID) return 1;
+
+            return 0;
+        }
+
+        #endregion
+    }
+    class DateTimeComparer : IComparer<Data> {
+
+        #region IComparer<Data> メンバ
+
+        public int Compare(Data x, Data y) {
+            if (x.CreationTime.Ticks < y.CreationTime.Ticks) return -1;
+            if (x.CreationTime.Ticks > y.CreationTime.Ticks) return 1;
 
             return 0;
         }

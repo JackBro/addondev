@@ -1,7 +1,13 @@
 ﻿.list {
-	border-top: 2px dashed #ff9d9d;
+	border-top: 2px solid #ff9d9d;
 	padding-top: 1px; 
 	width: 100%;
+}
+
+.text {
+	border:3px #FF0000 solid;
+	padding: 5px;
+	margin: 10px;
 }
 
 .tools {
