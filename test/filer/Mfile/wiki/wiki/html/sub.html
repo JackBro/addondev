@@ -8,11 +8,30 @@
   <script type="text/javascript" src="js/jquery-1.5.min.js"></script>
   <!-- 1. チェックしたデータを配列に格納し本体ウィンドウの関数を呼び出す -->
   <script type="text/javascript">
-alert("sub");
+
 		//location.href = "test://test";
+		$(function(){
+			//alert("jq " + $('#TB_caption').text());
+			//	alert("test " + location.href);
+			//	location.href = "test://test";
+				//parent.jstest();
+			var cnt = parent.jstest(); //parent.jsview.getContainerByID(0);
+			var body = $('body')[0];
+			alert("cnt " + $(cnt).html());
+			body.appendChild(cnt);
+			var hr = document.createElement('hr');
+			hr.className = "list";
+			//body.appendChild(hr);
+		});
+
+		function test(){
+				alert("test " + location.href);
+		}
+
   </script>
 </head>
 <body>
+<!--
   <ul>
     <li>
       <input type="checkbox" name="sample1" value="1">
@@ -28,5 +47,6 @@ alert("sub");
     </li>
   </ul>
   <input type="button" value="追加する" onclick="javascript:p_submit()">
+-->
 </body>
 </html>

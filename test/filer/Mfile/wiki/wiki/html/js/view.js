@@ -15,6 +15,10 @@ function js_Remove(id){
 	jsview.Remove(id);
 }
 
+		function jstest(){
+				return jsview.getContainerByID(1);
+		}
+
 var jsview = {
 	getWikiParser : function()
 	{

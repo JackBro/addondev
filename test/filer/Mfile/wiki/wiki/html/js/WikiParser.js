@@ -449,8 +449,10 @@ WikiParser.prototype.createURILink = function(uri, label)
 			element.className = 'URILink';
 			var p = this.document.createElement('a');
 			p.setAttribute('title', "uri");
+
 			p.href = "javascript:void(0)";
-			p.className = 'thickbox';
+			//p.href = uri;
+			p.className = "thickbox";
 			
 			//p.setAttribute('class','thickbox');
 			$(p).click(function(event){
@@ -462,7 +464,7 @@ WikiParser.prototype.createURILink = function(uri, label)
 				var g =  false;
 				tb_show(t,a,g);
 				//this.blur();
-				//return false;
+				return false;
 			})
 
 			p.appendChild(element);
@@ -475,15 +477,23 @@ WikiParser.prototype.createURILink = function(uri, label)
 			var p = this.document.createElement('a');
 			p.setAttribute('title', "uri");
 			//p.setAttribute('href', "sub.html?TB_iframe=true&height=300&width=600");
-			p.href = 'sub.html?TB_iframe=true&height=300&width=600';
-			//p.href = "javascript:void(0)";
+			//p.href = 'sub.html?TB_iframe=true&height=100&width=200';
+			p.href = "javascript:void(0)";
 			p.className = 'thickbox';
 			//p.title="•\Ž¦‚·‚é"
 			var text = this.document.createTextNode("bmp");
 			p.appendChild(text);
-//			$(p).click(function(event){
-//					location.href = "sub.html?TB_iframe=true&height=300&width=600";
-//			})
+			$(p).click(function(event){
+				//"var t = this.title || this.name || null;"
+				var t = label;
+				//+"var a = this.href || this.alt;"
+				var a = 'sub.html?id=100&TB_iframe=true&height=100&width=200';
+				//+"var g = this.rel || false;"
+				var g =  false;
+				tb_show(t,a,g);
+				//this.blur();
+				return false;
+			})
 			return p;
 	}
 	else

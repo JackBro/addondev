@@ -304,7 +304,12 @@ namespace wiki
         void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             var l = e.Url;
-            if (!e.Url.AbsoluteUri.Contains("sub.html")) {
+            if (!e.Url.AbsoluteUri.Contains("sub.html") && !e.Url.AbsoluteUri.Contains(".jpg")) {
+                //e.Cancel = true;
+            }
+            if(e.Url.AbsoluteUri == "test://test/"){
+                //reBuild(GetSelctedTabControl().DataItems[0]);
+                //InvokeScript("test");
                 e.Cancel = true;
             }
             
