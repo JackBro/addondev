@@ -132,7 +132,9 @@ namespace wiki
 
             var newlistview = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
             //reBuild(newlistview.DataItems);
-
+            //webBrowser1.ScriptErrorsSuppressed = true;
+            //webBrowser1.ScrollBarsEnabled = true;
+            
             webBrowser1.IsWebBrowserContextMenuEnabled = false;
             var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             webBrowser1.Navigate(p);
@@ -302,7 +304,10 @@ namespace wiki
         void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             var l = e.Url;
-            e.Cancel = true;
+            if (!e.Url.AbsoluteUri.Contains("sub.html")) {
+                e.Cancel = true;
+            }
+            
             this.Request(e.Url);
             //EditItem(1);
         }

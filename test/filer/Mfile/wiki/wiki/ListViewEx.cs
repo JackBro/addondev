@@ -13,6 +13,22 @@ namespace wiki {
         public List<Data> DataItems{
             get { return this.items; }
         }
+        
+        public bool IsPre {
+            get {
+                return (Page > 0);
+            }
+        }
+
+        //public bool IsNext {
+        //    get {
+
+        //    }
+        //}
+
+        //public List<Data> GetCurrent() {
+            
+        //}
 
         public ListViewEx(List<Data> items) {
 
