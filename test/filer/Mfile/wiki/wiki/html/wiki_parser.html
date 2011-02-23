@@ -17,6 +17,48 @@
 
 	<link rel="stylesheet" href="ThickBox/thickbox.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="wiki.css" type="text/css">
+
+	<script type="text/javascript">
+		$(function(){
+			//alert("load");
+			var urlm = 'http://localhost:8088/resources/resource_id/';
+			//var data = {"key": "value"};
+/*
+			$.get(
+			    url,                 // 送信先
+			    null,
+			    function(data, status) {        // 通信成功時にデータを表示
+							alert("data = " + data);
+			    },
+			    "text" // 応答データ形式
+			);
+*/
+//jQuery.support.cors = true;
+$.support.cors = true;
+$.ajax({
+          	type: "GET",
+          	cache: false,
+async: false,
+          	data:"data=1",
+dataType:"text",
+        	url: 'http://localhost:8088/resources/resource_id/',
+		success: function(data){
+          	  alert("data = " + data);
+ 		},
+ 		error:function(XMLHttpRequest, textStatus, errorThrown){
+//var res = "";
+//for(key in data){
+//	res += data[key] + "\n";
+//}
+          	  alert("error textStatus = " + errorThrown);
+//alert("error");
+   		}
+});
+
+var strJson = $.toJSON(json);
+
+		});
+	</script>
 </head>
 
 <body >

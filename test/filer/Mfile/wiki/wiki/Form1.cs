@@ -13,13 +13,31 @@ using System.Diagnostics;
 
 namespace wiki
 {
+
+
     public partial class Form1 : Form
     {
         private ItemManager manager;
         private long baseticks;
+
+        private HttpServer httpServer;
+        private BackgroundWorker serveBW;
         JintEngine en = new JintEngine();
+        
+
         public Form1(){
             InitializeComponent();
+
+            httpServer = new HttpServer();
+            httpServer.RequestEvent += (sender, e) => {
+                var url = e.Request.RawUrl;
+                e.Response = "form cs";
+            };
+            serveBW = new BackgroundWorker();
+            serveBW.DoWork += (sender, e) => {
+                httpServer.start();
+            };
+            serveBW.RunWorkerAsync();
             //TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
             //baseticks = new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks;
             baseticks = 0;
@@ -129,6 +147,8 @@ namespace wiki
                         break;
                 }
             };
+
+            var te = manager.Filter(x => { return true; }).ToString();
 
             var newlistview = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
             //reBuild(newlistview.DataItems);
@@ -345,7 +365,8 @@ namespace wiki
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e) {
-            manager.Insert(new Data { ID = manager.GetNewID(), Text = "after", CreationTime = new DateTime(DateTime.Now.Ticks * 2) });
+            InvokeScript("jsview.jsmsg", new string[] { "jsview.jsmsg test" });
+            //manager.Insert(new Data { ID = manager.GetNewID(), Text = "after", CreationTime = new DateTime(DateTime.Now.Ticks * 2) });
             //var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             //webBrowser1.Navigate(p);
             //webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);

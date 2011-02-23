@@ -19,7 +19,8 @@ function js_Remove(id){
 				return jsview.getContainerByID(1);
 		}
 
-var jsview = {
+ jsview = {
+
 	getWikiParser : function()
 	{
 		if(!this.wikiParser)
@@ -52,54 +53,6 @@ var jsview = {
 	},
 
 	rebuildInsertByID:function(beforeid, value){
-/*
-		var json = null;
-		try {
-			json = $.parseJSON(value);
-		} catch(e) {
-			alert("error")
-		}
-		var source = json["text"];
-//alert(source);
-		var id = json["id"];
-
-		var pageElement = this.getWikiParser().parse(source);
-		var container = this.getContainerByID(id);
-		//alert("pageElement = " + pageElement + " container = " + container);
-		
-		while(container.childNodes.length > 0) 
-			container.removeChild(container.firstChild);
-
-		var hr = document.createElement('hr');
-		hr.className = "list";
-		container.appendChild(hr);
-
-		var date = document.createElement('div');
-		date.align="right";
-		date.className = "tools";
-		date.appendChild(document.createTextNode(json["date"]));
-		container.appendChild(date);
-
-		var tools = document.createElement('div');
-		tools.align="right";
-		tools.className = "tools";
-
-		var eelem = document.createElement("a");
-		eelem.href = "command://edit/" + id;
-		var str = document.createTextNode("Edit");
-		eelem.appendChild(str);
-		tools.appendChild(eelem);
-
-		var delem = document.createElement("a");
-		delem.href = "command://delete/" + id;
-		delem.className = "operate";
-		var str = document.createTextNode("Delete");
-		delem.appendChild(str);
-		tools.appendChild(delem);
-		
-		container.appendChild(tools);
-		container.appendChild(pageElement);	
-*/
 		var container = this.rebuildByID(value);
 		$('#' + beforeid).before(container);
 

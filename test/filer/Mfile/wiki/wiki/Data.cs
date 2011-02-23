@@ -38,6 +38,14 @@ namespace wiki {
         //[ProtoMember(5)]
         //public DateTime LastWriteTime { get; set; }
 
+        //public override string ToString() {
+        //    var date = string.Format("{0} {1}", CreationTime.ToShortDateString(), CreationTime.ToLongTimeString());
+        //    var text = this.Text.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\\n");
+        //    var json = string.Format("\"id\":\"{0}\", \"title\":\"{1}\", \"date\":\"{2}\", \"text\":\"{3}\"", this.ID, this.Title, date, text);
+        //    json = "{" + json + "}";
+        //    return json;
+        //}
+
         public string ToJsonString() {
             var date = string.Format("{0} {1}", CreationTime.ToShortDateString(), CreationTime.ToLongTimeString());
             var text = this.Text.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\\n");
