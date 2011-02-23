@@ -33,15 +33,15 @@
 			    "text" // 応答データ形式
 			);
 */
-//jQuery.support.cors = true;
+var requrl = 'http://localhost:8088/item/';
 $.support.cors = true;
 $.ajax({
           	type: "GET",
-          	cache: false,
+          	//cache: false,
 async: false,
-          	data:"data=1",
+//          	data:"data=1",
 dataType:"text",
-        	url: 'http://localhost:8088/resources/resource_id/',
+        	url: requrl,
 		success: function(data){
           	  alert("data = " + data);
  		},

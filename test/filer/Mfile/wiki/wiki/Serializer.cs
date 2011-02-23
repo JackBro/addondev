@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using ProtoBuf;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace wiki {
     public class Serializer {
@@ -28,6 +30,16 @@ namespace wiki {
                 item = ProtoBuf.Serializer.Deserialize<T>(file);
             }
             return item;
+        }
+    }
+
+    public class JsonSerializer {
+        public static string Serialize(Object obj){
+            return JsonConvert.SerializeObject(obj, new JavaScriptDateTimeConverter());
+        }
+
+        public static T Deserialize<T>(string json) {
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 }

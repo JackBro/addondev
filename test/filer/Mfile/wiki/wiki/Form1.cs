@@ -30,7 +30,10 @@ namespace wiki
 
             httpServer = new HttpServer();
             httpServer.RequestEvent += (sender, e) => {
-                var url = e.Request.RawUrl;
+                
+                var url = e.Request.RawUrl.Split(new string[]{"/"}, StringSplitOptions.RemoveEmptyEntries);
+                var methd = e.Request.HttpMethod;
+
                 e.Response = "form cs";
             };
             serveBW = new BackgroundWorker();
@@ -330,10 +333,10 @@ namespace wiki
             if(e.Url.AbsoluteUri == "test://test/"){
                 //reBuild(GetSelctedTabControl().DataItems[0]);
                 //InvokeScript("test");
-                e.Cancel = true;
+                //e.Cancel = true;
             }
             
-            this.Request(e.Url);
+            //this.Request(e.Url);
             //EditItem(1);
         }
 
