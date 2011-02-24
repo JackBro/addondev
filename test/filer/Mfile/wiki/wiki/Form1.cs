@@ -184,9 +184,9 @@ namespace wiki
             en = new JintEngine();
             en.DisableSecurity();
             en.AllowClr = true;
-            ren();
+            //ren();
             //en.Run("function test(){ return 10; }");
-            var r = en.Run(@"x=eval( [ ""hoge"":""hogehoge"", ""foo"":""j.png"" ]); return x;");
+            //var r = en.Run(@"x=eval( [ ""hoge"":""hogehoge"", ""foo"":""j.png"" ]); return x;");
             //var r2 = en.Run("return 100;");
             //var r3 = en.Run("x=test()*100; return x;");
             //en.SetFunction("testf", new Jint.Native.JsFunction());
@@ -263,6 +263,10 @@ namespace wiki
             webBrowser1.Navigate(p);
             webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
             //webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
+            webBrowser1.StatusTextChanged += (sender, e) => {
+                toolStripStatusLabel1.Text = webBrowser1.StatusText;
+            };
+            
 
             comboBox1.AutoCompleteMode = AutoCompleteMode.Suggest;
             comboBox1.AutoCompleteSource = AutoCompleteSource.CustomSource;
@@ -402,20 +406,22 @@ namespace wiki
             //    Console.WriteLine("deleteitem id = " + id.ToString());
             //}));
             object result = en.Run(script);
+            
             int k = 0;
         }
 
         void ren() {
-            var path = Path.GetFullPath(@"..\..\html\js\json2.js");
+            var path = Path.GetFullPath(@"..\..\scripts\test.js");
             //var path = Path.Combine(bp, rs + ".js");
             if (!File.Exists(path)) return;
 
             var script = File.ReadAllText(path);
-            //en.SetParameter("request", request.AbsoluteUri);
+            en.SetParameter("para", script);
             //en.SetFunction("deleteitem", new Action<int>((id) => {
             //    Console.WriteLine("deleteitem id = " + id.ToString());
             //}));
-            object result = en.Run(script);
+            var r = en.Run(@"x=eval( '(' + para + ')' ); return x[1].name;");
+            //var r = en.Run(@"x=eval(  para  ); return x[0].name;");
             int k = 0;
         }
 
@@ -433,7 +439,7 @@ namespace wiki
 
         void Document_ContextMenuShowing(object sender, HtmlElementEventArgs e) {
             var ae = webBrowser1.Document.ActiveElement;
-            var en = e;
+
 
         }
 
@@ -486,6 +492,12 @@ namespace wiki
             //var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             //webBrowser1.Navigate(p);
             //webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e) {
+            var ae = webBrowser1.Document.ActiveElement;
+            var h = ae.GetAttribute("href");
+            var mm=0;
         }
     }
 }

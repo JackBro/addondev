@@ -450,7 +450,7 @@ WikiParser.prototype.createURILink = function(uri, label)
 			var p = this.document.createElement('a');
 			p.setAttribute('title', "uri");
 
-			p.href = "javascript:void(0)";
+			p.href = "javascript:void(0)//" + uri;
 			//p.href = uri;
 			p.className = "thickbox";
 			
@@ -473,7 +473,6 @@ WikiParser.prototype.createURILink = function(uri, label)
 	}
 	else if (/(\.bmp)$/.test(uri))
 	{
-
 			var p = this.document.createElement('a');
 			p.setAttribute('title', "uri");
 			//p.setAttribute('href', "sub.html?TB_iframe=true&height=300&width=600");

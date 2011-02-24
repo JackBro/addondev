@@ -111,7 +111,7 @@ function js_Remove(id){
 			   	}
 			});
 			return false;
-		})
+		});
 
 		var delem = document.createElement("a");
 		delem.href = "javascript:void(0)";
