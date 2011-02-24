@@ -12,6 +12,7 @@
 	
 	<script type="text/javascript" src="js/jquery-1.5.min.js" ></script>
 	<script type="text/javascript" src="ThickBox/thickbox.js"></script>
+	<script type="text/javascript" src="js/jquery.json-2.2.min.js" ></script>
 	<script type="text/javascript" src="js/WikiParser.js" ></script>
 	<script type="text/javascript" src="js/view.js" ></script>
 
@@ -33,10 +34,11 @@
 			    "text" // 応答データ形式
 			);
 */
-var requrl = 'http://localhost:8088/item/';
+requrl = 'http://localhost:8088/item';
 $.support.cors = true;
 $.ajax({
           	type: "GET",
+          	//type: "DELETE",
           	//cache: false,
 async: false,
 //          	data:"data=1",
@@ -55,7 +57,7 @@ dataType:"text",
    		}
 });
 
-var strJson = $.toJSON(json);
+//var strJson = $.toJSON(json);
 
 		});
 	</script>

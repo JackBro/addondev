@@ -10,6 +10,7 @@ using mshtml;
 using System.IO;
 using Jint;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace wiki
 {
@@ -18,25 +19,117 @@ namespace wiki
     public partial class Form1 : Form
     {
         private ItemManager manager;
+        //private List<Data> CurrentList;
+
         private long baseticks;
 
         private HttpServer httpServer;
         private BackgroundWorker serveBW;
-        JintEngine en = new JintEngine();
         
+        JintEngine en = new JintEngine();
 
+        Regex regShow = new Regex(@"\/item\/(\d+)$", RegexOptions.Compiled);
+        Regex regEdit = new Regex(@"\/item\/(\d+)\/(edit)$", RegexOptions.Compiled);
+        Regex regExe = new Regex(@"\/item\/(exe)$", RegexOptions.Compiled);
+
+
+        private Dictionary<string, string> reqparam = new Dictionary<string, string>();
+       
         public Form1(){
             InitializeComponent();
 
+            //ItemTabControl.SelectedIndex = 0;
+            //ActiveListView = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+            //int ii = 0;
+            //CurrentList = ActiveListView.DataItems;
+
+            //var b = regshow.IsMatch("/item/55");
+            //var mm = regEdit.Match("/item/55/edit");
+            //var dd = m.Groups[1].Value;
+
+            //var b2 = regshow.IsMatch("/item/");
+
+            reqparam.Add("methd", string.Empty);
+            reqparam.Add("url", string.Empty);
+
             httpServer = new HttpServer();
             httpServer.RequestEvent += (sender, e) => {
-                
-                var url = e.Request.RawUrl.Split(new string[]{"/"}, StringSplitOptions.RemoveEmptyEntries);
-                var methd = e.Request.HttpMethod;
 
-                e.Response = "form cs";
+                //var url = e.Request.RawUrl.Split(new string[]{"/"}, StringSplitOptions.RemoveEmptyEntries);
+                var url = e.Request.RawUrl;
+                var methd = e.Request.HttpMethod;
+                e.Response = "OK";
+
+                var m = regShow.Match(url);
+                if (m.Success) {
+                    var id = long.Parse(m.Groups[1].Value);
+                    var item = manager.GetItem(id);
+                    var res =string.Empty;
+                    switch (methd) {
+                        case "DELETE":
+                            break;
+                        case "GET":
+                            List<Data> list = new List<Data>() { item };
+                            res = JsonSerializer.Serialize(list);
+                            break;
+                        default:
+                            break;
+                    }
+                    e.Response = res;
+                    return;
+                }
+
+                m = regExe.Match(url);
+                if (m.Success) {
+                    //e.Request.InputStream
+                    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+
+                    int k=0;
+                }
+
+                m = regEdit.Match(url);
+                if (m.Success) {
+                    var id = long.Parse(m.Groups[1].Value);
+
+                    //var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                    //List<Data> elist = new List<Data>();
+                    //var last = listview.DataItems.Count < 5 ? listview.DataItems.Count : 5;
+                    //for (int i = 0; i < last; i++) {
+                    //    elist.Add(listview.DataItems[i]);
+                    //}
+                    //List<Data> list = CurrentList;
+                    //ttt(ref list);
+
+                    //var list = Invoke(new SetFocusDelegate(ttt)) as List<Data>;
+                    //Invoke(new SetFocusDelegate(ttt));
+                    reqparam["methd"] = methd;
+                    reqparam["url"] = url;
+                    serveBW.ReportProgress(1, reqparam);
+                    //reBuild(elist);
+                    e.Response = "OK";
+                    //e.Response = JsonSerializer.Serialize(list);
+                    int k = 0;
+                }
+
             };
             serveBW = new BackgroundWorker();
+            serveBW.WorkerReportsProgress = true;
+            serveBW.ProgressChanged += (sender, e) => {
+                //var list = e.UserState as List<Data>;
+                //var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                //var last = listview.DataItems.Count < 5 ? listview.DataItems.Count : 5;
+                //for (int i = 0; i < last; i++) {
+                //    list.Add(listview.DataItems[i]);
+                //}
+                var param = e.UserState as Dictionary<string, string>;
+                var url = param["url"];
+
+                //this.EditItem(id);
+
+            };
+            //serveBW.RunWorkerCompleted += (sender, e) => {
+            //    int ee = 0;
+            //};
             serveBW.DoWork += (sender, e) => {
                 httpServer.start();
             };
@@ -45,7 +138,8 @@ namespace wiki
             //baseticks = new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks;
             baseticks = 0;
 
-            this.Load += (sender, e) => {
+            this.Load += (sender1, e1) => {
+                
 
             };
             this.FormClosing += (sender, e) => {
@@ -90,6 +184,12 @@ namespace wiki
             en = new JintEngine();
             en.DisableSecurity();
             en.AllowClr = true;
+            ren();
+            //en.Run("function test(){ return 10; }");
+            var r = en.Run(@"x=eval( [ ""hoge"":""hogehoge"", ""foo"":""j.png"" ]); return x;");
+            //var r2 = en.Run("return 100;");
+            //var r3 = en.Run("x=test()*100; return x;");
+            //en.SetFunction("testf", new Jint.Native.JsFunction());
             en.SetFunction("square", new Action(() => { CreateItem(); }));
             en.SetFunction("deleteitem", new Action<object>((id) => {
                 Console.WriteLine("deleteitem id = " + id.ToString());
@@ -162,7 +262,7 @@ namespace wiki
             var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             webBrowser1.Navigate(p);
             webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
-            webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
+            //webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
 
             comboBox1.AutoCompleteMode = AutoCompleteMode.Suggest;
             comboBox1.AutoCompleteSource = AutoCompleteSource.CustomSource;
@@ -233,7 +333,6 @@ namespace wiki
             }
             reBuild(elist);
             //reBuild(listview.DataItems);
-
         }
 
         private void CreateItem() {
@@ -299,6 +398,20 @@ namespace wiki
 
             var script = File.ReadAllText(path);
             en.SetParameter("request", request.AbsoluteUri);
+            //en.SetFunction("deleteitem", new Action<int>((id) => {
+            //    Console.WriteLine("deleteitem id = " + id.ToString());
+            //}));
+            object result = en.Run(script);
+            int k = 0;
+        }
+
+        void ren() {
+            var path = Path.GetFullPath(@"..\..\html\js\json2.js");
+            //var path = Path.Combine(bp, rs + ".js");
+            if (!File.Exists(path)) return;
+
+            var script = File.ReadAllText(path);
+            //en.SetParameter("request", request.AbsoluteUri);
             //en.SetFunction("deleteitem", new Action<int>((id) => {
             //    Console.WriteLine("deleteitem id = " + id.ToString());
             //}));

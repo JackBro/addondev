@@ -16,6 +16,7 @@ function js_Remove(id){
 }
 
 		function jstest(){
+			
 				return jsview.getContainerByID(1);
 		}
 
@@ -90,17 +91,55 @@ function js_Remove(id){
 		tools.className = "tools";
 
 		var eelem = document.createElement("a");
-		eelem.href = "command://edit/" + id;
+		//eelem.href = "command://edit/" + id;
+		eelem.href = "javascript:void(0)";
 		var str = document.createTextNode("Edit");
 		eelem.appendChild(str);
 		tools.appendChild(eelem);
+		$(eelem).click(function(event){
+			$.ajax({
+				type: "GET",
+				async: false,
+				dataType:"text",
+				url: requrl+ "/" + id + "/edit",
+				success: function(data){
+					alert("data = " + data);
+					
+				},
+				error:function(XMLHttpRequest, textStatus, errorThrown){
+					alert("error textStatus = " + errorThrown);
+			   	}
+			});
+			return false;
+		})
 
 		var delem = document.createElement("a");
-		delem.href = "command://delete/" + id;
+		delem.href = "javascript:void(0)";
+		//delem.href = "command://delete/" + id;
 		delem.className = "operate";
 		var str = document.createTextNode("Delete");
 		delem.appendChild(str);
 		tools.appendChild(delem);
+		$(delem).click(function(event){
+			$.ajax({
+				//type: "DELETE",
+				type: "POST",
+				async: false,
+				dataType:"text",
+				data:$.toJSON({ "hoge":"hogehoge", "foo":"file:///d/date/j.png" }),
+				//url: requrl+ "/" + id,
+				url: requrl+ "/exe",
+				success: function(data){
+					alert("data = " + data);
+					
+				},
+				error:function(XMLHttpRequest, textStatus, errorThrown){
+					alert("error textStatus = " + errorThrown);
+			   	}
+			});
+			return false;
+		})
+
 		
 		container.appendChild(tools);
 		container.appendChild(pageElement);	
