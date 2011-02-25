@@ -14,8 +14,6 @@ using System.Text.RegularExpressions;
 
 namespace wiki
 {
-
-
     public partial class Form1 : Form
     {
         private ItemManager manager;
@@ -62,14 +60,25 @@ namespace wiki
 
                 var m = regShow.Match(url);
                 if (m.Success) {
-                    var id = long.Parse(m.Groups[1].Value);
-                    var item = manager.GetItem(id);
+                    var idlist = new List<long>();
+                    var idstr = m.Groups[1].Value;
+                    if (idstr.IndexOf(',') > 0) {
+                        var ids = idstr.Split(',');
+                        foreach (var id in ids) {
+                            idlist.Add(long.Parse(id));
+                        }
+                    }else{
+                        var id = long.Parse(idstr);
+                        idlist.Add(id);
+                    }
+                    //var id = long.Parse(m.Groups[1].Value);
+                    var items = manager.GetItem(idlist);
                     var res =string.Empty;
                     switch (methd) {
                         case "DELETE":
                             break;
                         case "GET":
-                            List<Data> list = new List<Data>() { item };
+                            List<Data> list = items;// new List<Data>() { item };
                             res = JsonSerializer.Serialize(list);
                             break;
                         default:
@@ -211,10 +220,10 @@ namespace wiki
 //return 21 * 2");
 //                Console.WriteLine(result); // Displays 42
 
-                object result = en.Run(@"
-                square();
-                return 21 * 2");               
-//                CreateItem();
+//                object result = en.Run(@"
+//                square();
+//                return 21 * 2");               
+                CreateItem();
             };
 
             manager = new ItemManager();
@@ -230,7 +239,8 @@ namespace wiki
                             if (iindex == (listview.DataItems.Count-1)) {
                                 reBuild(e.Item);
                             } else {
-                                reBuild(listview.DataItems[iindex+1].ID, e.Item);
+                                //reBuild(listview.DataItems[iindex+1].ID, e.Item);
+                                reBuild(listview.DataItems[iindex + 1].ID, e.Item);
                             }
                             //listview.AddItem(e.Index, e.Item);
                             
@@ -340,7 +350,7 @@ namespace wiki
         }
 
         private void CreateItem() {
-            manager.Insert(new Data { ID=manager.GetNewID(), Text = "!new", CreationTime = new DateTime(DateTime.Now.Ticks+baseticks) });
+            manager.Insert(new Data { ID=manager.GetNewID(), Text = "!new", CreationTime = DateTime.Now });
 
             //webBrowser1.Document.InvokeScript("test", new String[] { "called from client code" });
         }
@@ -420,7 +430,7 @@ namespace wiki
             //en.SetFunction("deleteitem", new Action<int>((id) => {
             //    Console.WriteLine("deleteitem id = " + id.ToString());
             //}));
-            var r = en.Run(@"x=eval( '(' + para + ')' ); return x[1].name;");
+            var r = en.Run(@"x=eval( '(' + para + ')' ); return x[0].date;");
             //var r = en.Run(@"x=eval(  para  ); return x[0].name;");
             int k = 0;
         }
@@ -460,19 +470,24 @@ namespace wiki
         }
 
         private void reBuild(List<Data> items) {
-            foreach (var item in items) {
-                //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
-                InvokeScript("js_BuildByID", new string[] { item.ToJsonString() });
-            }
+            var json = JsonSerializer.Serialize(items);
+            InvokeScript("js_BuildByID", json);
+            //foreach (var item in items) {
+            //    //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
+            //    InvokeScript("js_BuildByID", item.ToJsonString());
+            //}
         }
 
         private void reBuild(Data item) {
+            var json = JsonSerializer.Serialize(item);
             //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
-            InvokeScript("js_BuildByID", new string[] { item.ToJsonString() });
+            InvokeScript("js_BuildByID", json);
         }
         private void reBuild(long insertBefore,  Data item) {
+            var json = JsonSerializer.Serialize(item);
             //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
-            InvokeScript("js_BuildInsertByID", new string[] {insertBefore.ToString(), item.ToJsonString() });
+            //InvokeScript("js_BuildInsertByID", new string[] {insertBefore.ToString(), item.ToJsonString() });
+            InvokeScript("js_BuildInsertByID", insertBefore.ToString(), json);
         }
 
         private void webBrowser1_ContextMenuStripChanged(object sender, EventArgs e) {

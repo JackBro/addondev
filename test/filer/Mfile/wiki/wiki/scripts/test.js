@@ -1,1 +1,1 @@
-[{"key":"value", "name":"mm"},{"key":"vlue2", "name":"zz"}]
+[{"key":"value", "date":new Date(1298343246572)}]

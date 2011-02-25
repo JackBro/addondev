@@ -197,6 +197,17 @@ namespace wiki {
 
             return null;
         }
+
+        public List<Data> GetItem(List<long> ids) {
+            var res = new List<Data>();
+            foreach (var id in ids) {
+                var data = this.GetItem(id);
+                if (data != null) {
+                    res.Add(data);
+                }
+            }
+            return res;
+        }
     }
 
     class IDComparer : IComparer<Data> {

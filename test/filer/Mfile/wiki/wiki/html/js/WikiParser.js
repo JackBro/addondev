@@ -1,6 +1,7 @@
-/************************************************************
+ï»¿/************************************************************
 Copyright (C) 2004-2006 Masahiko SAWAI All Rights Reserved. 
 ************************************************************/
+
 
 function WikiParser(document)
 {
@@ -180,6 +181,7 @@ WikiParser.prototype.parse = function(inputString)
 		{
 			this.jumpToTopLevel();
 		}
+/*
     else if(/^>/.test(lines[i]) )
     {
       var element = document.createElement('font');
@@ -189,6 +191,7 @@ WikiParser.prototype.parse = function(inputString)
 			var pElement= this.document.createElement('p')
       this.stack.top().appendChild(pElement);
     }
+*/
 		else
 		{
 			if ( this.stack.top().tagName.toLowerCase() != 'p')
@@ -315,19 +318,34 @@ WikiParser.prototype.inline = function(inlineString)
 			if (/^\]\]/.test(target))
 			{
 				var linkElement;
-				target = RegExp.rightContext
-				status = IN_NORMAL;
-				var strings = this.linkString.split('|', 2);
-				if (strings.length >= 2)
-				{ // URILink
-					var label = strings[0];
-					var uri = strings[1];
+				/*
+				if (/^(>>)(\d+)|(\d+|,)/.test(this.linkString))
+				{
+					var tmp = /^\]\]/.test(target);
+					target = RegExp.rightContext
+					status = IN_NORMAL;
+					var label = this.linkString;//.substring(2, this.linkString.length-2);
+					var uri = this.linkString;
 					linkElement = this.createURILink(uri, label);
+//alert(target);
 				}
 				else
-				{ // PageNameLink
-					linkElement = this.createPageNameLink(this.linkString);
-				}
+				{
+				*/
+					target = RegExp.rightContext
+					status = IN_NORMAL;
+					var strings = this.linkString.split('|', 2);
+					if (strings.length >= 2)
+					{ // URILink
+						var label = strings[0];
+						var uri = strings[1];
+						linkElement = this.createURILink(uri, label);
+					}
+					else
+					{ // PageNameLink
+						linkElement = this.createPageNameLink(this.linkString);
+					}
+				//}
 				this.stack.top().appendChild(linkElement);
 			}
 			else if (/^./.test(target))
@@ -479,7 +497,7 @@ WikiParser.prototype.createURILink = function(uri, label)
 			//p.href = 'sub.html?TB_iframe=true&height=100&width=200';
 			p.href = "javascript:void(0)";
 			p.className = 'thickbox';
-			//p.title="•\Ž¦‚·‚é"
+			//p.title="è¡¨ç¤ºã™ã‚‹"
 			var text = this.document.createTextNode("bmp");
 			p.appendChild(text);
 			$(p).click(function(event){
@@ -512,8 +530,24 @@ WikiParser.prototype.createPageNameLink = function(pageName)
 	var text = this.document.createTextNode(pageName);
 	element = this.document.createElement('a')
 	element.appendChild(text);
+	
+	if(/^(>>)([\d+|,]+)/.test(pageNames))
+	{
+		var ids = RegExp.$2;
+		element.setAttribute('href', 'javascript:void(0)');
+		$(element).click(function(event){
+			var t = text;
+			var a = 'sub.html?id=' + ids + '&TB_iframe=true&height=100&width=200';
+			var g =  false;
+			tb_show(t,a,g);
+			return false;
+		});
+	}
+	else
+	{
 	element.setAttribute('href', this.pageName2URI(pageName));
 	element.setAttribute('class', 'PageNameLink');
+	}
 	return element;
 }
 
