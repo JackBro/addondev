@@ -17,7 +17,6 @@ namespace wiki
     public partial class Form1 : Form
     {
         private ItemManager manager;
-        //private List<Data> CurrentList;
 
         private long baseticks;
 
@@ -25,35 +24,31 @@ namespace wiki
         private BackgroundWorker serveBW;
         
         JintEngine en = new JintEngine();
+        ScriptManager sm = new ScriptManager();
 
         Regex regShow = new Regex(@"\/item\/(\d+)$", RegexOptions.Compiled);
         Regex regEdit = new Regex(@"\/item\/(\d+)\/(edit)$", RegexOptions.Compiled);
         Regex regExe = new Regex(@"\/item\/(exe)$", RegexOptions.Compiled);
-
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
        
         public Form1(){
             InitializeComponent();
 
-            //ItemTabControl.SelectedIndex = 0;
-            //ActiveListView = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-            //int ii = 0;
-            //CurrentList = ActiveListView.DataItems;
+            sm.init();
+            sm.ScriptDir = Path.GetFullPath(@"..\..\scripts");
+            //Data d = new Data() {  ID=10, Text="test", Title="tttt", CreationTime=DateTime.Now};
+            //List<Data> ll = new List<Data>() { d };
+            //var jo = JsonSerializer.Serialize(d);
+            //sm.Run("test.js", jo);
 
-            //var b = regshow.IsMatch("/item/55");
-            //var mm = regEdit.Match("/item/55/edit");
-            //var dd = m.Groups[1].Value;
-
-            //var b2 = regshow.IsMatch("/item/");
-
-            reqparam.Add("methd", string.Empty);
+            reqparam.Add("method", string.Empty);
             reqparam.Add("url", string.Empty);
+            reqparam.Add("id", string.Empty);
+            reqparam.Add("data", string.Empty);
 
             httpServer = new HttpServer();
             httpServer.RequestEvent += (sender, e) => {
-
-                //var url = e.Request.RawUrl.Split(new string[]{"/"}, StringSplitOptions.RemoveEmptyEntries);
                 var url = e.Request.RawUrl;
                 var methd = e.Request.HttpMethod;
                 e.Response = "OK";
@@ -90,34 +85,25 @@ namespace wiki
 
                 m = regExe.Match(url);
                 if (m.Success) {
-                    //e.Request.InputStream
                     var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                    reqparam["method"] = "exe";
+                    reqparam["data"] = _RequestBody;
+                    serveBW.ReportProgress(1, reqparam);
 
-                    int k=0;
+                    e.Response = "OK";
+                    return;
                 }
 
                 m = regEdit.Match(url);
                 if (m.Success) {
-                    var id = long.Parse(m.Groups[1].Value);
+                    var id = m.Groups[1].Value;
 
-                    //var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-                    //List<Data> elist = new List<Data>();
-                    //var last = listview.DataItems.Count < 5 ? listview.DataItems.Count : 5;
-                    //for (int i = 0; i < last; i++) {
-                    //    elist.Add(listview.DataItems[i]);
-                    //}
-                    //List<Data> list = CurrentList;
-                    //ttt(ref list);
-
-                    //var list = Invoke(new SetFocusDelegate(ttt)) as List<Data>;
-                    //Invoke(new SetFocusDelegate(ttt));
-                    reqparam["methd"] = methd;
+                    reqparam["method"] = "edit";
                     reqparam["url"] = url;
+                    reqparam["id"] = id;
                     serveBW.ReportProgress(1, reqparam);
-                    //reBuild(elist);
                     e.Response = "OK";
-                    //e.Response = JsonSerializer.Serialize(list);
-                    int k = 0;
+                    return;
                 }
 
             };
@@ -131,8 +117,20 @@ namespace wiki
                 //    list.Add(listview.DataItems[i]);
                 //}
                 var param = e.UserState as Dictionary<string, string>;
-                var url = param["url"];
-
+                switch (param["method"]) {
+                    case "edit":
+                        var id = long.Parse(param["id"]);
+                        this.EditItem(id);
+                        break;
+                    case "exe":
+                        var args = reqparam["data"];
+                        sm.Run("test.js", args);
+                        break;
+                    default:
+                        break;
+                }
+                //var url = param["url"];
+                //var id = long.Parse(param["id"]);
                 //this.EditItem(id);
 
             };
@@ -416,22 +414,17 @@ namespace wiki
             //    Console.WriteLine("deleteitem id = " + id.ToString());
             //}));
             object result = en.Run(script);
-            
+
             int k = 0;
         }
 
         void ren() {
             var path = Path.GetFullPath(@"..\..\scripts\test.js");
-            //var path = Path.Combine(bp, rs + ".js");
             if (!File.Exists(path)) return;
 
             var script = File.ReadAllText(path);
             en.SetParameter("para", script);
-            //en.SetFunction("deleteitem", new Action<int>((id) => {
-            //    Console.WriteLine("deleteitem id = " + id.ToString());
-            //}));
             var r = en.Run(@"x=eval( '(' + para + ')' ); return x[0].date;");
-            //var r = en.Run(@"x=eval(  para  ); return x[0].name;");
             int k = 0;
         }
 
@@ -479,12 +472,17 @@ namespace wiki
         }
 
         private void reBuild(Data item) {
-            var json = JsonSerializer.Serialize(item);
+            //var json = JsonSerializer.Serialize(item);
+            var list = new List<Data>() { item };
+            var json = JsonSerializer.Serialize(list);
             //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
             InvokeScript("js_BuildByID", json);
         }
+
         private void reBuild(long insertBefore,  Data item) {
-            var json = JsonSerializer.Serialize(item);
+            //var json = JsonSerializer.Serialize(item);
+            var list = new List<Data>() { item };
+            var json = JsonSerializer.Serialize(list);
             //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
             //InvokeScript("js_BuildInsertByID", new string[] {insertBefore.ToString(), item.ToJsonString() });
             InvokeScript("js_BuildInsertByID", insertBefore.ToString(), json);

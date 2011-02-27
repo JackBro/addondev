@@ -1,4 +1,6 @@
-﻿/************************************************************
+﻿/// <reference path="jquery-1.5.min.js"/>
+
+/************************************************************
 Copyright (C) 2004-2006 Masahiko SAWAI All Rights Reserved. 
 ************************************************************/
 
@@ -461,8 +463,8 @@ WikiParser.prototype.createURILink = function(uri, label)
 		element.setAttribute('alt', label);
 		element.setAttribute('title', label);
 		
-		if(/^!/.test(label))
-		{
+		//if(/^!/.test(label))
+		//{
 			//element.setAttribute('class', 'URILink');
 			element.className = 'URILink';
 			var p = this.document.createElement('a');
@@ -487,32 +489,32 @@ WikiParser.prototype.createURILink = function(uri, label)
 
 			p.appendChild(element);
 			return p;
-		}
+		//}
 	}
-	else if (/(\.bmp)$/.test(uri))
-	{
-			var p = this.document.createElement('a');
-			p.setAttribute('title', "uri");
-			//p.setAttribute('href', "sub.html?TB_iframe=true&height=300&width=600");
-			//p.href = 'sub.html?TB_iframe=true&height=100&width=200';
-			p.href = "javascript:void(0)";
-			p.className = 'thickbox';
-			//p.title="表示する"
-			var text = this.document.createTextNode("bmp");
-			p.appendChild(text);
-			$(p).click(function(event){
-				//"var t = this.title || this.name || null;"
-				var t = label;
-				//+"var a = this.href || this.alt;"
-				var a = 'sub.html?id=100&TB_iframe=true&height=100&width=200';
-				//+"var g = this.rel || false;"
-				var g =  false;
-				tb_show(t,a,g);
-				//this.blur();
-				return false;
-			})
-			return p;
-	}
+//	else if (/(\.bmp)$/.test(uri))
+//	{
+//			var p = this.document.createElement('a');
+//			p.setAttribute('title', "uri");
+//			//p.setAttribute('href', "sub.html?TB_iframe=true&height=300&width=600");
+//			//p.href = 'sub.html?TB_iframe=true&height=100&width=200';
+//			p.href = "javascript:void(0)";
+//			p.className = 'thickbox';
+//			//p.title="表示する"
+//			var text = this.document.createTextNode("bmp");
+//			p.appendChild(text);
+//			$(p).click(function(event){
+//				//"var t = this.title || this.name || null;"
+//				var t = label;
+//				//+"var a = this.href || this.alt;"
+//				var a = 'sub.html?id=100&TB_iframe=true&height=100&width=200';
+//				//+"var g = this.rel || false;"
+//				var g =  false;
+//				tb_show(t,a,g);
+//				//this.blur();
+//				return false;
+//			})
+//			return p;
+//	}
 	else
 	{
 		var text = this.document.createTextNode(label);
@@ -524,31 +526,40 @@ WikiParser.prototype.createURILink = function(uri, label)
 	return element;
 }
 
-WikiParser.prototype.createPageNameLink = function(pageName)
-{
-	var element;
-	var text = this.document.createTextNode(pageName);
-	element = this.document.createElement('a')
-	element.appendChild(text);
-	
-	if(/^(>>)([\d+|,]+)/.test(pageNames))
-	{
-		var ids = RegExp.$2;
-		element.setAttribute('href', 'javascript:void(0)');
-		$(element).click(function(event){
-			var t = text;
-			var a = 'sub.html?id=' + ids + '&TB_iframe=true&height=100&width=200';
-			var g =  false;
-			tb_show(t,a,g);
-			return false;
-		});
-	}
-	else
-	{
-	element.setAttribute('href', this.pageName2URI(pageName));
-	element.setAttribute('class', 'PageNameLink');
-	}
-	return element;
+WikiParser.prototype.createPageNameLink = function (pageName) {
+    var element;
+    var text = this.document.createTextNode(pageName);
+    element = this.document.createElement('a')
+    element.appendChild(text);
+
+    if (/^(>>)([\d+|,]+)/.test(pageName)) {
+        var ids = RegExp.$2;
+        element.setAttribute('href', 'javascript:void(0)');
+        $(element).click(function (event) {
+            var t = text;
+            var a = 'sub.html?id=' + ids + '&TB_iframe=true&height=100&width=200';
+            var g = false;
+            tb_show(t, a, g);
+            return false;
+        });
+    }
+    else if (/^!(.+)/.test(pageName)) {
+        var b = RegExp.$1;
+        element.setAttribute('href', 'javascript:void(0)');
+        $(element).click(function (event) {
+            $.ajax({
+                type: 'post',
+                url: requrl+"/exe",
+                data: b
+            });
+            return false;
+        });
+    }
+    else {
+        element.setAttribute('href', this.pageName2URI(pageName));
+        element.setAttribute('class', 'PageNameLink');
+    }
+    return element;
 }
 
 WikiParser.prototype.jumpToTopLevel = function()
