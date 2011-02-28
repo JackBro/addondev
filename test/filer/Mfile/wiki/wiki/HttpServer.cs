@@ -19,8 +19,19 @@ namespace wiki {
         public event EventHandler<EventArgs> StopEvent;
 
         private HttpListener listener;
-        //public int Port {
-       // }
+
+        private int port;
+        public int Port {
+            get { return this.port; }
+            set {
+                this.port = value;
+
+            }
+        }
+
+        public HttpServer() {
+            Port = 8088;
+        }
 
         public void stop() {
             if (listener != null && listener.IsListening) {
@@ -32,8 +43,16 @@ namespace wiki {
         }
 
         public void start(){
-            string prefix = "http://localhost:8088/"; // 受け付けるURL
-            listener = new HttpListener();
+            if (listener != null) {
+                listener.Stop();
+                listener.Prefixes.Clear();
+            }
+            else {
+                listener = new HttpListener();
+            }
+            //string prefix = "http://localhost:8088/";
+            string prefix = "http://localhost:" + this.port.ToString() +"/";
+            //listener = new HttpListener();
             listener.Prefixes.Add(prefix); // プレフィックスの登録
 
             listener.Start();

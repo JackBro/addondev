@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace wiki
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private ItemManager manager;
 
@@ -32,7 +32,7 @@ namespace wiki
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
        
-        public Form1(){
+        public MainForm(){
             InitializeComponent();
 
             sm.init();
@@ -71,15 +71,17 @@ namespace wiki
                     var res =string.Empty;
                     switch (methd) {
                         case "DELETE":
+
                             break;
                         case "GET":
                             List<Data> list = items;// new List<Data>() { item };
                             res = JsonSerializer.Serialize(list);
+                            e.Response = res;
                             break;
                         default:
                             break;
                     }
-                    e.Response = res;
+                    
                     return;
                 }
 
@@ -187,6 +189,7 @@ namespace wiki
                 InvokeScript("js_ClearAll");
                 reBuild(listview.DataItems);
             };
+
 
             en = new JintEngine();
             en.DisableSecurity();
@@ -335,6 +338,7 @@ namespace wiki
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e) {
             webBrowser1.DocumentCompleted -= webBrowser1_DocumentCompleted;
             Console.WriteLine("webBrowser1_DocumentCompleted : " + e.Url);
+            InvokeScript("setPort", httpServer.Port.ToString());
             //webBrowser1.Document.ContextMenuShowing += new HtmlElementEventHandler(Document_ContextMenuShowing);
             //webBrowser1.Document.Click += new HtmlElementEventHandler(Document_Click);
             var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
@@ -383,7 +387,7 @@ namespace wiki
                     var text = items[s].Text;
                     //textBox1.Text = text;
                     if (MouseButtons == MouseButtons.Left) {
-                        dirty = false;
+                        //dirty = false;
                         //SetText(text);
 
                     } else if (MouseButtons == MouseButtons.Middle) {
@@ -391,6 +395,14 @@ namespace wiki
                     }
                     //reBuild(text);
                 }              
+            };
+            listview.DoubleClick += (sender, e) => {
+                if (listview.SelectedIndices.Count == 1) {
+                    var sel = listview.SelectedIndices[0];
+                    var id = listview.DataItems[sel].ID;
+                    var p = Path.GetFullPath(@"..\..\html\wiki_parser.html") + "#" + id;
+                    webBrowser1.Navigate(p);
+                }
             };
 
             listview.Dock = DockStyle.Fill;

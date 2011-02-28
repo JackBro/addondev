@@ -164,18 +164,22 @@ namespace wiki {
             if(datas.Count == 0){
                 return 0;
             }
-            //return datas[datas.Count - 1].ID + 1;
 
-            long mm = 0;
-            var max = datas.Max(new Func<Data, long>((x) => {
-                if (mm < x.ID) mm = x.ID;
-                return mm;
-            }));
-            return mm + 1;
+            //long mm = 0;
+            //var max = datas.Max(new Func<Data, long>((x) => {
+            //    if (mm < x.ID) mm = x.ID;
+            //    return mm;
+            //}));
+            //return mm + 1;
+
+            var maxid = datas.Max(n=>n.ID);
+            return maxid + 1;
+            
         }
 
         public List<Data> Filter(Predicate<Data> pre) {
             return datas.FindAll(pre);
+            //datas.Select(
             //datas.FindAll(x => { return true; });
         }
 

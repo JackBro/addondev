@@ -1,4 +1,20 @@
-﻿.list {
+﻿body {
+ /*
+ background-color:#E3E4E5;
+ background-image:url(haikei05.gif);
+ background-repeat:repeat;
+ color:#626264;
+*/
+ font-size:100%;
+ line-height:150%;
+ font-family:sans-serif;
+ padding:0 8% 0 8%;
+ margin:0;
+ width:auto;
+}
+
+
+.list {
 	border-top: 2px solid #ff9d9d;
 	padding-top: 1px; 
 	width: 100%;

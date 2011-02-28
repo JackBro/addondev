@@ -96,6 +96,10 @@ var jsview = {
         hr.className = "list";
         container.appendChild(hr);
 
+        var did = document.createElement('a');
+        did.id = id;
+        container.appendChild(did);
+
         var date = document.createElement('div');
         //date.align = "right";
         date.className = "tools";
@@ -117,7 +121,7 @@ var jsview = {
                 dataType: "text",
                 url: requrl + "/" + id + "/edit",
                 success: function (data) {
-                    alert("data = " + data);
+                    //alert("data = " + data);
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert("error textStatus = " + errorThrown);
@@ -139,7 +143,7 @@ var jsview = {
                 dataType: "text",
                 url: requrl + "/" + id,
                 success: function (data) {
-                    alert("data = " + data);
+                    //alert("data = " + data);
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert("error textStatus = " + errorThrown);

@@ -20,7 +20,11 @@
 	<link rel="stylesheet" href="wiki.css" type="text/css" />
 
 	<script type="text/javascript">
-	    requrl = 'http://localhost:8088/item';
+	    function setPort(port) {
+	        requrl = 'http://localhost:' + port + '/item';
+	    }
+
+	    //requrl = 'http://localhost:8088/item';
 	    $.support.cors = true;
 	    $(function () {
 	        
@@ -63,7 +67,7 @@ dataType:"text",
 });
 */
 		});
-	</script>
+    </script>
 </head>
 
 <body >
