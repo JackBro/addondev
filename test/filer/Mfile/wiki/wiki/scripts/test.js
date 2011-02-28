@@ -10,7 +10,22 @@
         "program": "C:\\Program Files"
     };
 
-    //var res = sprintf("{tera} -ini {program}\\\\file.txt", h);
+    function getExtention(fileName) {
+        var ret;
+        if (!fileName) {
+            return ret;
+        }
+        var fileTypes = fileName.split(".");
+        var len = fileTypes.length;
+        if (len === 0) {
+            return ret;
+        }
+        ret = fileTypes[len - 1];
+        return ret;
+    }
+    var e = { "txt": "D:\\program\\tpad\\TeraPad.exe",
+        "program": "C:\\Program Files"
+    };
 
     //if((^!.+).test(args)){
     //print("args = " + args);
@@ -25,7 +40,12 @@
         print(exefile + " -" + arg);
         cs_exe(exefile, arg);
     } else {
-        cs_exe(args);
+        var efile = e[getExtention(args)];
+        if (!efile){
+            cs_exe(args);
+        }else{
+            cs_exe(efile, args);
+        }
     }
 
     //arg = eval( '(' + args + ')');

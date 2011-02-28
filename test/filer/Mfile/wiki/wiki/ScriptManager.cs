@@ -50,13 +50,20 @@ namespace wiki {
             Exe(exe, args, null);
         }
         void Exe(string exe, string args, string WorkingDirectory) {
+            Exe(exe, args, WorkingDirectory, false);
+        }
+        void Exe(string exe, string args, string WorkingDirectory, bool wait) {
 
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = exe;
             if (args !=null) info.Arguments = args;
             if (WorkingDirectory != null) info.WorkingDirectory = WorkingDirectory;
-            Process.Start(info);
-
+            
+            //Process.Start(info);
+            Process p = new Process();
+            p.StartInfo = info;
+            p.Start();
+            if(wait) p.WaitForExit();
         }
     }
 }

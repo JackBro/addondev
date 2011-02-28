@@ -1,5 +1,6 @@
-﻿body {
- /*
+﻿
+body {
+/*
  background-color:#E3E4E5;
  background-image:url(haikei05.gif);
  background-repeat:repeat;
@@ -7,12 +8,17 @@
 */
  font-size:100%;
  line-height:150%;
+/*
  font-family:sans-serif;
+*/
+ font-family: 'Lucida Grande', 'ＭＳ ゴシック';
  padding:0 8% 0 8%;
  margin:0;
  width:auto;
 }
-
+ /*
+body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; line-height: 14px; }
+*/
 
 .list {
 	border-top: 2px solid #ff9d9d;

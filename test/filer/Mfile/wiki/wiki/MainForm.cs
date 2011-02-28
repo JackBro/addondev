@@ -35,6 +35,13 @@ namespace wiki
         public MainForm(){
             InitializeComponent();
 
+            Dictionary<string, string> tes = new Dictionary<string, string>();
+            tes.Add("key1", "1");
+            tes.Add("key2", "2");
+            var tt = JsonSerializer.Serialize(tes);
+
+            var dec = JsonSerializer.Deserialize<Dictionary<string, string>>(tt);
+
             sm.init();
             sm.ScriptDir = Path.GetFullPath(@"..\..\scripts");
             //Data d = new Data() {  ID=10, Text="test", Title="tttt", CreationTime=DateTime.Now};
@@ -126,6 +133,7 @@ namespace wiki
                         break;
                     case "exe":
                         var args = reqparam["data"];
+                        //var ddd = JsonSerializer.Deserialize<Dictionary<string, string>>(args);
                         sm.Run("test.js", args);
                         break;
                     default:
@@ -337,7 +345,7 @@ namespace wiki
 
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e) {
             webBrowser1.DocumentCompleted -= webBrowser1_DocumentCompleted;
-            Console.WriteLine("webBrowser1_DocumentCompleted : " + e.Url);
+            //Console.WriteLine("webBrowser1_DocumentCompleted : " + e.Url);
             InvokeScript("setPort", httpServer.Port.ToString());
             //webBrowser1.Document.ContextMenuShowing += new HtmlElementEventHandler(Document_ContextMenuShowing);
             //webBrowser1.Document.Click += new HtmlElementEventHandler(Document_Click);

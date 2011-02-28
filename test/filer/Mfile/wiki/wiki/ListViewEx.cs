@@ -39,6 +39,12 @@ namespace wiki {
             this.FullRowSelect = true;
             this.HideSelection = false;
             this.View = View.Details;
+
+            ColumnHeader headerID = new ColumnHeader();
+            headerID.Name = "id";
+            headerID.Text = "ID";
+            this.Columns.Add(headerID);
+
             ColumnHeader headerName = new ColumnHeader();
             headerName.Name = "title";
             headerName.Text = "Title";
@@ -58,7 +64,8 @@ namespace wiki {
                 if (e.ItemIndex < this.items.Count) {
                     var data = this.items[e.ItemIndex];
                     var item = new ListViewItem();
-                    item.Text = data.Title;
+                    item.Text = data.ID.ToString();
+                    item.SubItems.Add(data.Title);
                     item.SubItems.Add(data.CreationTime.ToString("yyyy/MM/dd HH:mm:ss"));
                     e.Item = item;
                 }
