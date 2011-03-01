@@ -35,13 +35,6 @@ namespace wiki
         public MainForm(){
             InitializeComponent();
 
-            Dictionary<string, string> tes = new Dictionary<string, string>();
-            tes.Add("key1", "1");
-            tes.Add("key2", "2");
-            var tt = JsonSerializer.Serialize(tes);
-
-            var dec = JsonSerializer.Deserialize<Dictionary<string, string>>(tt);
-
             sm.init();
             sm.ScriptDir = Path.GetFullPath(@"..\..\scripts");
             //Data d = new Data() {  ID=10, Text="test", Title="tttt", CreationTime=DateTime.Now};
@@ -119,12 +112,6 @@ namespace wiki
             serveBW = new BackgroundWorker();
             serveBW.WorkerReportsProgress = true;
             serveBW.ProgressChanged += (sender, e) => {
-                //var list = e.UserState as List<Data>;
-                //var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-                //var last = listview.DataItems.Count < 5 ? listview.DataItems.Count : 5;
-                //for (int i = 0; i < last; i++) {
-                //    list.Add(listview.DataItems[i]);
-                //}
                 var param = e.UserState as Dictionary<string, string>;
                 switch (param["method"]) {
                     case "edit":
@@ -218,20 +205,7 @@ namespace wiki
                 this.EditItem(long.Parse(id.ToString()));
             }));
 
-            NewItemToolStripButton.Click += (sender, e) => {
-//                var en = new JintEngine();
-//                en.DisableSecurity();
-//                en.AllowClr = true;
-//                en.SetFunction("square", new Action<string>(a => { MessageBox.Show(a); }));
-//                object result = en.Run(@"
-//square('test');
-//System.Diagnostics.Process.Start('notepad.exe');
-//return 21 * 2");
-//                Console.WriteLine(result); // Displays 42
-
-//                object result = en.Run(@"
-//                square();
-//                return 21 * 2");               
+            NewItemToolStripButton.Click += (sender, e) => {             
                 CreateItem();
             };
 
@@ -302,6 +276,9 @@ namespace wiki
             };
 
             int max = 5;
+
+            initPage();
+
             PreToolStripButton.Click += (sender, e) => {
                 
                 var l = GetSelctedTabControl();
@@ -341,6 +318,17 @@ namespace wiki
                 }
                 PreToolStripButton.Enabled = true;
             };
+        }
+
+        private void initPage() {
+            int max = 5;
+            var l = GetSelctedTabControl();
+            if ((l.Page -1) * max <= 0) {
+                PreToolStripButton.Enabled = false;
+            }
+            if ((l.Page + 1) * max >= l.DataItems.Count) {
+                NextToolStripButton.Enabled = false;
+            }
         }
 
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e) {
@@ -387,7 +375,7 @@ namespace wiki
 
         private bool dirty = false;
         private ListViewEx CreateListViewTabPage(string name, List<Data> items) {
-
+            
             var listview = new ListViewEx(items);
             listview.ItemSelectionChanged += (sender, e) => {
                 var s = e.ItemIndex;
