@@ -534,10 +534,11 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
 
     if (/^(>>)([\d+|,]+)/.test(pageName)) {
         var ids = RegExp.$2;
+        //alert(ids);
         element.setAttribute('href', 'javascript:void(0)');
         $(element).click(function (event) {
             var t = text;
-            var a = 'sub.html?id=' + ids + '&TB_iframe=true&height=100&width=200';
+            var a = 'sub.html?id=' + ids + '&requrl=' + requrl + '&TB_iframe=true&height=400&width=400';
             var g = false;
             tb_show(t, a, g);
             return false;
@@ -549,7 +550,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         $(element).click(function (event) {
             $.ajax({
                 type: 'post',
-                url: requrl+"/exe",
+                url: requrl + "/exe",
                 data: b
             });
             return false;

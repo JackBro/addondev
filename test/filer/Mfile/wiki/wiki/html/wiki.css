@@ -20,6 +20,9 @@ body {
 body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; line-height: 14px; }
 */
 
+:link { color: blue ! important }
+:visited { color: blue ! important }
+
 .list {
 	border-top: 2px solid #ff9d9d;
 	padding-top: 1px; 

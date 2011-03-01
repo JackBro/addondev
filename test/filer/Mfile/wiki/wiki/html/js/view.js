@@ -172,11 +172,9 @@ var jsview = {
 
         var b = this.getBody();
         var cont;
-        //alert(b);
         if (json instanceof Array) {
 
             for (var i in json) {
-                //alert(json[i]);
                 cont = this.rebuild(json[i]);
                 //c = document.getElementById(cont.id);
                 if (!document.getElementById(cont.id)) {
@@ -187,7 +185,6 @@ var jsview = {
             cont = this.rebuild(json[i]);
             //c = document.getElementById(cont.id);
             if (!document.getElementById(cont.id)) {
-                //alert(value);
                 b.appendChild(cont);
             }
         }

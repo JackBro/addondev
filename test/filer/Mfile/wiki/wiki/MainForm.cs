@@ -23,7 +23,7 @@ namespace wiki
         private HttpServer httpServer;
         private BackgroundWorker serveBW;
         
-        JintEngine en = new JintEngine();
+        //JintEngine en = new JintEngine();
         ScriptManager sm = new ScriptManager();
 
         Regex regShow = new Regex(@"\/item\/(\d+)$", RegexOptions.Compiled);
@@ -126,14 +126,8 @@ namespace wiki
                     default:
                         break;
                 }
-                //var url = param["url"];
-                //var id = long.Parse(param["id"]);
-                //this.EditItem(id);
-
             };
-            //serveBW.RunWorkerCompleted += (sender, e) => {
-            //    int ee = 0;
-            //};
+
             serveBW.DoWork += (sender, e) => {
                 httpServer.start();
             };
@@ -186,24 +180,24 @@ namespace wiki
             };
 
 
-            en = new JintEngine();
-            en.DisableSecurity();
-            en.AllowClr = true;
-            //ren();
-            //en.Run("function test(){ return 10; }");
-            //var r = en.Run(@"x=eval( [ ""hoge"":""hogehoge"", ""foo"":""j.png"" ]); return x;");
-            //var r2 = en.Run("return 100;");
-            //var r3 = en.Run("x=test()*100; return x;");
-            //en.SetFunction("testf", new Jint.Native.JsFunction());
-            en.SetFunction("square", new Action(() => { CreateItem(); }));
-            en.SetFunction("deleteitem", new Action<object>((id) => {
-                Console.WriteLine("deleteitem id = " + id.ToString());
-                this.DeleteItem(long.Parse(id.ToString()));
-            }));
-            en.SetFunction("edititem", new Action<object>((id) => {
-                Console.WriteLine("edititem id = " + id.ToString());
-                this.EditItem(long.Parse(id.ToString()));
-            }));
+            //en = new JintEngine();
+            //en.DisableSecurity();
+            //en.AllowClr = true;
+            ////ren();
+            ////en.Run("function test(){ return 10; }");
+            ////var r = en.Run(@"x=eval( [ ""hoge"":""hogehoge"", ""foo"":""j.png"" ]); return x;");
+            ////var r2 = en.Run("return 100;");
+            ////var r3 = en.Run("x=test()*100; return x;");
+            ////en.SetFunction("testf", new Jint.Native.JsFunction());
+            //en.SetFunction("square", new Action(() => { CreateItem(); }));
+            //en.SetFunction("deleteitem", new Action<object>((id) => {
+            //    Console.WriteLine("deleteitem id = " + id.ToString());
+            //    this.DeleteItem(long.Parse(id.ToString()));
+            //}));
+            //en.SetFunction("edititem", new Action<object>((id) => {
+            //    Console.WriteLine("edititem id = " + id.ToString());
+            //    this.EditItem(long.Parse(id.ToString()));
+            //}));
 
             NewItemToolStripButton.Click += (sender, e) => {             
                 CreateItem();
@@ -410,31 +404,30 @@ namespace wiki
             return listview;
         }
         
-        void Request(Uri request) {
-            var bp = Path.GetFullPath(@"..\..\scripts");
-            var rs = request.Scheme; //request.Split(new char[] { '/' });
-            var path = Path.Combine(bp, rs+".js");
-            if (!File.Exists(path)) return;
+        //void Request(Uri request) {
+        //    var bp = Path.GetFullPath(@"..\..\scripts");
+        //    var rs = request.Scheme; //request.Split(new char[] { '/' });
+        //    var path = Path.Combine(bp, rs+".js");
+        //    if (!File.Exists(path)) return;
 
-            var script = File.ReadAllText(path);
-            en.SetParameter("request", request.AbsoluteUri);
-            //en.SetFunction("deleteitem", new Action<int>((id) => {
-            //    Console.WriteLine("deleteitem id = " + id.ToString());
-            //}));
-            object result = en.Run(script);
+        //    var script = File.ReadAllText(path);
+        //    en.SetParameter("request", request.AbsoluteUri);
+        //    //en.SetFunction("deleteitem", new Action<int>((id) => {
+        //    //    Console.WriteLine("deleteitem id = " + id.ToString());
+        //    //}));
+        //    object result = en.Run(script);
+        //    int k = 0;
+        //}
 
-            int k = 0;
-        }
+        //void ren() {
+        //    var path = Path.GetFullPath(@"..\..\scripts\test.js");
+        //    if (!File.Exists(path)) return;
 
-        void ren() {
-            var path = Path.GetFullPath(@"..\..\scripts\test.js");
-            if (!File.Exists(path)) return;
-
-            var script = File.ReadAllText(path);
-            en.SetParameter("para", script);
-            var r = en.Run(@"x=eval( '(' + para + ')' ); return x[0].date;");
-            int k = 0;
-        }
+        //    var script = File.ReadAllText(path);
+        //    en.SetParameter("para", script);
+        //    var r = en.Run(@"x=eval( '(' + para + ')' ); return x[0].date;");
+        //    int k = 0;
+        //}
 
         private Object InvokeScript(string function, params string[] param) {
             return webBrowser1.Document.InvokeScript(function, param);
@@ -473,26 +466,17 @@ namespace wiki
         private void reBuild(List<Data> items) {
             var json = JsonSerializer.Serialize(items);
             InvokeScript("js_BuildByID", json);
-            //foreach (var item in items) {
-            //    //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
-            //    InvokeScript("js_BuildByID", item.ToJsonString());
-            //}
         }
 
         private void reBuild(Data item) {
-            //var json = JsonSerializer.Serialize(item);
             var list = new List<Data>() { item };
             var json = JsonSerializer.Serialize(list);
-            //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
             InvokeScript("js_BuildByID", json);
         }
 
         private void reBuild(long insertBefore,  Data item) {
-            //var json = JsonSerializer.Serialize(item);
             var list = new List<Data>() { item };
             var json = JsonSerializer.Serialize(list);
-            //webBrowser1.Document.InvokeScript("js_BuildByID", new string[] { item.ID.ToString(), item.Text });
-            //InvokeScript("js_BuildInsertByID", new string[] {insertBefore.ToString(), item.ToJsonString() });
             InvokeScript("js_BuildInsertByID", insertBefore.ToString(), json);
         }
 

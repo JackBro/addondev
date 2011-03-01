@@ -4,44 +4,36 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Untitled Document</title>
 
-  <!-- 必要なファイルの読み込み -->
-  <script type="text/javascript" src="js/jquery-1.5.min.js"></script>
-  <script type="text/javascript" src="js/view.js"></script>
-  <!-- 1. チェックしたデータを配列に格納し本体ウィンドウの関数を呼び出す -->
-  <script type="text/javascript">
-		$(function(){
-			//alert("jq " + $('#TB_caption').text());
-			//	alert("test " + location.href);
-			//	location.href = "test://test";
-			var query = parent.tb_parseQuery(location.href);
-			var ids = query['id'];
 
-			//var cnt = parent.jstest(); //parent.jsview.getContainerByID(0);
-			//var cnt = parent.jsview.getContainerByID(ids);
-			//var body = $('body')[0];
-			//alert("cnt " + $(cnt).html());
-			//body.appendChild(cnt);
-			//var hr = document.createElement('hr');
-			//hr.className = "list";
-			//body.appendChild(hr);
-			
-			$.ajax({
-				type: "GET",
-				async: false,
-				dataType:"text",
-				url: "http://localhost:8088/item/" + ids,
-				success: function(data){
-					alert("data = " + data);
-					//var json = $.toJSON(data);
-					//var cnt = parent.jsview.rebuildByID(data);
-					//body.appendChild(cnt);
-					jsview.rebuildByID(data);
-				},
-				error:function(XMLHttpRequest, textStatus, errorThrown){
-					alert("error textStatus = " + errorThrown);
-			   	}
-			});
-		});
+    <link rel="stylesheet" href="ThickBox/thickbox.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="wiki.css" type="text/css" />
+
+  <script type="text/javascript" src="js/jquery-1.5.min.js"></script>
+  <script type="text/javascript" src="ThickBox/thickbox.js"></script>
+  <script type="text/javascript" src="js/WikiParser.js" ></script>
+  <script type="text/javascript" src="js/view.js"></script>
+  <script type="text/javascript">
+      $(function () {
+          $.support.cors = true;
+
+          var val = location.search.replace(/\?/g, '');
+          var query = parent.tb_parseQuery(val);
+          var ids = query['id'];
+          var requrl = query['requrl'];
+
+          $.ajax({
+              type: "GET",
+              async: false,
+              dataType: "text",
+              url: requrl + '/' + ids,
+              success: function (value) {
+                  jsview.rebuildByID(value);
+              },
+              error: function (XMLHttpRequest, textStatus, errorThrown) {
+                  alert("error textStatus = " + errorThrown);
+              }
+          });
+      });
   </script>
 </head>
 <body>

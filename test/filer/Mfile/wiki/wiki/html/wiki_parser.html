@@ -24,89 +24,15 @@
 	        requrl = 'http://localhost:' + port + '/item';
 	    }
 
-	    //requrl = 'http://localhost:8088/item';
 	    $.support.cors = true;
 	    $(function () {
 	        
-        
-/*
-			//alert("load");
-			var urlm = 'http://localhost:8088/resources/resource_id/';
-			//var data = {"key": "value"};
-
-			$.get(
-			    url,                 // 送信先
-			    null,
-			    function(data, status) {        // 通信成功時にデータを表示
-							alert("data = " + data);
-			    },
-			    "text" // 応答データ形式
-			);
-
-
-$.support.cors = true;
-$.ajax({
-          	type: "GET",
-          	//type: "DELETE",
-          	//cache: false,
-async: false,
-//          	data:"data=1",
-dataType:"text",
-        	url: requrl,
-		success: function(data){
-          	  alert("data = " + data);
- 		},
- 		error:function(XMLHttpRequest, textStatus, errorThrown){
-//var res = "";
-//for(key in data){
-//	res += data[key] + "\n";
-//}
-          	  alert("error textStatus = " + errorThrown);
-//alert("error");
-   		}
-});
-*/
 		});
     </script>
 </head>
 
 <body >
-<!--
-<body onload="app.rebuild();" >
 
-<table width="96%" >
-<thead>
-	<tr>
-		<td valign="top" colspan="2" >
-		<form>
-		<input type="button" value="Parse" onclick="app.rebuild();" >
-		<input type="button" value="Clear" onclick="app.clearSource();" >
-		<input type="submit" value="Restore" >
-		</form>
-		</td>
-	</tr>
-	<tr>
-		<th> WikiText </th>
-		<th> HTML </th>
-	</tr>
-</thead>
-<tbody>
-	<tr>
-		<td valign="top" width="50%" >
-		<textarea id="txtSource" cols="50" rows="20" 
-			onkeyup="app.rebuild();" onchange="app.rebuild()" >
-!WikiParser Test
-		</textarea>
-		</td>
-		<td valign="top" >
-			<div id="container" />
-		</td>
-	</tr>
-</tbody>
-</table>
-
-<div id="txtSource" style ="display:none;">!WikiParser</div>
--->
 <div id="container" />
 </body>
 
