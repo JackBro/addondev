@@ -76,7 +76,7 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(169, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(169, 26);
             // 
             // toolStripMenuItem1
             // 
@@ -109,7 +109,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
             this.splitContainer2.Size = new System.Drawing.Size(678, 408);
-            this.splitContainer2.SplitterDistance = 225;
+            this.splitContainer2.SplitterDistance = 168;
             this.splitContainer2.TabIndex = 3;
             // 
             // ItemTabControl
@@ -121,7 +121,7 @@
             this.ItemTabControl.Multiline = true;
             this.ItemTabControl.Name = "ItemTabControl";
             this.ItemTabControl.SelectedIndex = 0;
-            this.ItemTabControl.Size = new System.Drawing.Size(225, 388);
+            this.ItemTabControl.Size = new System.Drawing.Size(168, 388);
             this.ItemTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.ItemTabControl.TabIndex = 1;
             // 
@@ -131,7 +131,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(0, 0);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(225, 20);
+            this.comboBox1.Size = new System.Drawing.Size(168, 20);
             this.comboBox1.TabIndex = 1;
             // 
             // splitContainer1
@@ -148,7 +148,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.EditorPanel);
-            this.splitContainer1.Size = new System.Drawing.Size(449, 408);
+            this.splitContainer1.Size = new System.Drawing.Size(506, 408);
             this.splitContainer1.SplitterDistance = 224;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -159,7 +159,7 @@
             this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(449, 224);
+            this.webBrowser1.Size = new System.Drawing.Size(506, 224);
             this.webBrowser1.TabIndex = 0;
             // 
             // EditorPanel
@@ -169,7 +169,7 @@
             this.EditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EditorPanel.Location = new System.Drawing.Point(0, 0);
             this.EditorPanel.Name = "EditorPanel";
-            this.EditorPanel.Size = new System.Drawing.Size(449, 180);
+            this.EditorPanel.Size = new System.Drawing.Size(506, 180);
             this.EditorPanel.TabIndex = 1;
             // 
             // textBox1
@@ -178,7 +178,7 @@
             this.textBox1.Location = new System.Drawing.Point(0, 25);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(449, 155);
+            this.textBox1.Size = new System.Drawing.Size(506, 155);
             this.textBox1.TabIndex = 0;
             // 
             // toolStrip2
@@ -187,7 +187,7 @@
             this.toolStripButton2});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(449, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(506, 25);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -325,7 +325,7 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(114, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -335,7 +335,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

@@ -76,7 +76,6 @@ var jsview = {
     },
 
     rebuildInsertByID: function (beforeid, value) {
-        //var container = this.rebuildByID(value);
         var container = this.rebuild(value);
         $('#' + beforeid).before(container);
 
@@ -95,7 +94,9 @@ var jsview = {
         $(container).unbind('click');
         $(container).click(function () {
             $('.tools2').removeClass('tools2');
-            $(container).addClass('tools2');
+            //$(container).addClass('tools2');
+            $('#date' + id).addClass('tools2');
+            $('#tools' + id).addClass('tools2');
         });
 
 
@@ -108,12 +109,13 @@ var jsview = {
         container.appendChild(did);
 
         var date = document.createElement('div');
-        //date.align = "right";
+        date.id = 'date' + id;
         date.className = "tools";
         date.appendChild(document.createTextNode(id + " " + creationtime.toLocaleString()));
         container.appendChild(date);
 
         var tools = document.createElement('div');
+        tools.id = 'tools' + id;
         tools.align = "right";
         tools.className = "tools";
 
@@ -139,7 +141,6 @@ var jsview = {
 
         var delem = document.createElement("a");
         delem.href = "javascript:void(0)";
-        //delem.href = "command://delete/" + id;
         delem.className = "operate";
         delem.appendChild(document.createTextNode("Delete"));
         tools.appendChild(delem);
@@ -168,7 +169,6 @@ var jsview = {
         var json = null;
         if (typeof value == 'string') {
             try {
-                //json = $.parseJSON(value);
                 json = eval(value);
             } catch (e) {
 
@@ -183,14 +183,12 @@ var jsview = {
 
             for (var i in json) {
                 cont = this.rebuild(json[i]);
-                //c = document.getElementById(cont.id);
                 if (!document.getElementById(cont.id)) {
                     b.appendChild(cont);
                 }
             }
         } else {
             cont = this.rebuild(json[i]);
-            //c = document.getElementById(cont.id);
             if (!document.getElementById(cont.id)) {
                 b.appendChild(cont);
             }

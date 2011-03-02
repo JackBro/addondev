@@ -25,7 +25,6 @@ namespace wiki
 
         private Config config = new Config();
         
-        //JintEngine en = new JintEngine();
         ScriptManager sm = new ScriptManager();
 
         Regex regShow = new Regex(@"\/item\/(\d+)$", RegexOptions.Compiled);
@@ -40,17 +39,11 @@ namespace wiki
         public MainForm(){
             InitializeComponent();
 
-            var hh = 0 % 3;
-
             config.htmlPath = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
 
             sm.init();
             sm.ScriptDir = config.ScriptDirPath;
-            //Data d = new Data() {  ID=10, Text="test", Title="tttt", CreationTime=DateTime.Now};
-            //List<Data> ll = new List<Data>() { d };
-            //var jo = JsonSerializer.Serialize(d);
-            //sm.Run("test.js", jo);
 
             reqparam.Add("method", string.Empty);
             reqparam.Add("url", string.Empty);
@@ -134,19 +127,21 @@ namespace wiki
             serveBW = new BackgroundWorker();
             serveBW.WorkerReportsProgress = true;
             serveBW.ProgressChanged += (sender, e) => {
-                var param = e.UserState as Dictionary<string, string>;
+                var param = e.UserState as Dictionary<string, string>; 
                 switch (param["method"]) {
-                    case "edit":
-                        var id = long.Parse(param["id"]);
-                        this.EditItem(id);
+                    case "edit": {
+                            var id = long.Parse(param["id"]);
+                            this.EditItem(id);
+                        }
                         break;
                     case "exe":
-                        var args = reqparam["data"];
-                        //var ddd = JsonSerializer.Deserialize<Dictionary<string, string>>(args);
+                        var args = param["data"];
                         sm.Run("test.js", args);
                         break;
-                    case "move":
-
+                    case "move": {
+                            var id = long.Parse(param["id"]);
+                            this.Moves(id);
+                        }
                         break;
                     default:
                         break;
@@ -456,28 +451,14 @@ namespace wiki
         private TabPage CreateListViewTabPage(string name, List<Data> items) {
             
             var listview = new ListViewEx(items);
-            listview.ItemSelectionChanged += (sender, e) => {
-                var s = e.ItemIndex;
-                if (e.IsSelected) {
-                    var text = items[s].Text;
-                    //textBox1.Text = text;
-                    if (MouseButtons == MouseButtons.Left) {
-                        //dirty = false;
-                        //SetText(text);
-
-                    } else if (MouseButtons == MouseButtons.Middle) {
-                    
-                    }
-                    //reBuild(text);
-                }              
-            };
             listview.DoubleClick += (sender, e) => {
                 if (listview.SelectedIndices.Count == 1) {
-                    var sel = listview.SelectedIndices[0];
-                    var id = listview.DataItems[sel].ID;
-                    //var p = Path.GetFullPath(@"..\..\html\wiki_parser.html") + "#" + id;
-                    var p = config.htmlPath + "#" + id;
-                    webBrowser1.Navigate(p);
+                    var selindex = listview.SelectedIndices[0];
+                    var id = listview.DataItems[selindex].ID;
+                    //var p = config.htmlPath + "#" + id;
+                    //webBrowser1.Navigate(p);
+
+                    this.Moves(id);
                 }
             };
 

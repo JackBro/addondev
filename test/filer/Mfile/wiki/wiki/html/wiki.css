@@ -7,12 +7,12 @@ body {
  color:#626264;
 */
  font-size:100%;
- line-height:150%;
+ line-height:100%;
 /*
  font-family:sans-serif;
 */
  font-family: 'Lucida Grande', 'ＭＳ ゴシック';
- padding:0 8% 0 8%;
+ padding:0 2% 0 2%;
  margin:0;
  width:auto;
 }
@@ -32,7 +32,7 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 .text {
 	border:3px #FF0000 solid;
 	padding: 5px;
-	margin: 10px;
+	margin: 5px;
 }
 
 .tools {
@@ -40,7 +40,10 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 }
 
 .tools2 {
-	background-color: blue;
+	background-color:ActiveCaption;
+	/*
+    border-style:solid;
+    border-width:thin; */
 }
 
 .operate {
