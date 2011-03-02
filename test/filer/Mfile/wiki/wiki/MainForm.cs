@@ -22,6 +22,8 @@ namespace wiki
 
         private HttpServer httpServer;
         private BackgroundWorker serveBW;
+
+        private Config config = new Config();
         
         //JintEngine en = new JintEngine();
         ScriptManager sm = new ScriptManager();
@@ -29,14 +31,22 @@ namespace wiki
         Regex regShow = new Regex(@"\/item\/(\d+)$", RegexOptions.Compiled);
         Regex regEdit = new Regex(@"\/item\/(\d+)\/(edit)$", RegexOptions.Compiled);
         Regex regExe = new Regex(@"\/item\/(exe)$", RegexOptions.Compiled);
+        Regex regMove = new Regex(@"\/item\/(\d+)\/(move)$", RegexOptions.Compiled);
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
+
+        private TabPage AllPage;
        
         public MainForm(){
             InitializeComponent();
 
+            var hh = 0 % 3;
+
+            config.htmlPath = Path.GetFullPath(@"..\..\html\wiki_parser.html");
+            config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
+
             sm.init();
-            sm.ScriptDir = Path.GetFullPath(@"..\..\scripts");
+            sm.ScriptDir = config.ScriptDirPath;
             //Data d = new Data() {  ID=10, Text="test", Title="tttt", CreationTime=DateTime.Now};
             //List<Data> ll = new List<Data>() { d };
             //var jo = JsonSerializer.Serialize(d);
@@ -108,6 +118,18 @@ namespace wiki
                     return;
                 }
 
+                m = regMove.Match(url);
+                if (m.Success) {
+                    var id = m.Groups[1].Value;
+
+                    reqparam["method"] = "move";
+                    reqparam["url"] = url;
+                    reqparam["id"] = id;
+                    serveBW.ReportProgress(1, reqparam);
+                    e.Response = "OK";
+                    return;
+                }
+
             };
             serveBW = new BackgroundWorker();
             serveBW.WorkerReportsProgress = true;
@@ -122,6 +144,9 @@ namespace wiki
                         var args = reqparam["data"];
                         //var ddd = JsonSerializer.Deserialize<Dictionary<string, string>>(args);
                         sm.Run("test.js", args);
+                        break;
+                    case "move":
+
                         break;
                     default:
                         break;
@@ -174,9 +199,11 @@ namespace wiki
 
             ItemTabControl.SelectedIndexChanged += (sender, e) => {
                 var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                var list = getCurrentPageDatas(listview, config.Show);
                 //webBrowser1.Document.InvokeScript("testClearAll");
                 InvokeScript("js_ClearAll");
-                reBuild(listview.DataItems);
+                //reBuild(listview.DataItems);
+                reBuild(list);
             };
 
 
@@ -240,13 +267,13 @@ namespace wiki
 
             var te = manager.Filter(x => { return true; }).ToString();
 
-            var newlistview = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
+            AllPage = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
             //reBuild(newlistview.DataItems);
             //webBrowser1.ScriptErrorsSuppressed = true;
             //webBrowser1.ScrollBarsEnabled = true;
             
             webBrowser1.IsWebBrowserContextMenuEnabled = false;
-            var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
+            var p = config.htmlPath;// Path.GetFullPath(@"..\..\html\wiki_parser.html");
             webBrowser1.Navigate(p);
             webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
             //webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
@@ -277,13 +304,15 @@ namespace wiki
                 
                 var l = GetSelctedTabControl();
                 l.Page--;
-                var si = l.Page * max;
-                var cnt = l.DataItems.Count;
-                var last = (si + max) > cnt ? cnt : (si + max);
-                List<Data> elist = new List<Data>();
-                for (int i = si; i < last; i++) {
-                    elist.Add(l.DataItems[i]);
-                }
+
+                //var si = l.Page * max;
+                //var cnt = l.DataItems.Count;
+                //var last = (si + max) > cnt ? cnt : (si + max);
+                //List<Data> elist = new List<Data>();
+                //for (int i = si; i < last; i++) {
+                //    elist.Add(l.DataItems[i]);
+                //}
+                var elist = getCurrentPageDatas(l, max);
                 InvokeScript("js_ClearAll");
                 reBuild(elist);
 
@@ -297,13 +326,14 @@ namespace wiki
                 var l = GetSelctedTabControl();
                 l.Page++;
 
-                var si = l.Page * max;
-                var cnt = l.DataItems.Count;
-                var last = (si + max) > cnt ? cnt : (si + max);
-                List<Data> elist = new List<Data>();
-                for (int i = si; i < last; i++) {
-                    elist.Add(l.DataItems[i]);
-                }
+                //var si = l.Page * max;
+                //var cnt = l.DataItems.Count;
+                //var last = (si + max) > cnt ? cnt : (si + max);
+                //List<Data> elist = new List<Data>();
+                //for (int i = si; i < last; i++) {
+                //    elist.Add(l.DataItems[i]);
+                //}
+                var elist = getCurrentPageDatas(l, max);
                 InvokeScript("js_ClearAll");
                 reBuild(elist);
 
@@ -311,6 +341,11 @@ namespace wiki
                     NextToolStripButton.Enabled = false;
                 }
                 PreToolStripButton.Enabled = true;
+            };
+
+            this.KeyPreview = true;
+            this.KeyDown+=(sender, e)=>{
+                var k=0;
             };
         }
 
@@ -359,6 +394,56 @@ namespace wiki
             textBox1.Text = item.Text;
         }
 
+        private List<Data> getCurrentPageDatas(ListViewEx listview, int max) {
+            var si = listview.Page * max;
+            var cnt = listview.DataItems.Count;
+            var last = (si + max) > cnt ? cnt : (si + max);
+            var list = new List<Data>();
+            for (int i = si; i < last; i++) {
+                list.Add(listview.DataItems[i]);
+            }
+            return list;
+        }
+
+        private void Moves(long id) {
+            var view = GetSelctedTabControl();
+            var index = view.DataItems.FindIndex((n) => {
+                return (n.ID == id);
+            });
+            if (index == -1) {
+                ItemTabControl.SelectedTab = AllPage;
+                view = GetSelctedTabControl();
+                index = view.DataItems.FindIndex((n) => {
+                    return (n.ID == id);
+                });
+            }
+
+            //if (index != -1) {
+                index++;
+                var page = 0;
+                if (index <= config.Show) {
+                    page = 0;
+                }
+                else {
+                    if (index % config.Show == 0) {
+                        page = index / config.Show-1;
+                    }
+                    else {
+                        page = index / config.Show;
+                    }
+                }
+                if (view.Page != page) {
+                    var list = getCurrentPageDatas(view, config.Show);
+                    reBuild(list);
+                }
+                var p = config.htmlPath + "#" + id;
+                webBrowser1.Navigate(p);
+
+            //}
+            //else {
+            //}
+        }
+
         private ListViewEx GetTabControl(TabPage page) {
             return page.Controls[0] as ListViewEx; 
         }
@@ -368,7 +453,7 @@ namespace wiki
         }
 
         private bool dirty = false;
-        private ListViewEx CreateListViewTabPage(string name, List<Data> items) {
+        private TabPage CreateListViewTabPage(string name, List<Data> items) {
             
             var listview = new ListViewEx(items);
             listview.ItemSelectionChanged += (sender, e) => {
@@ -390,7 +475,8 @@ namespace wiki
                 if (listview.SelectedIndices.Count == 1) {
                     var sel = listview.SelectedIndices[0];
                     var id = listview.DataItems[sel].ID;
-                    var p = Path.GetFullPath(@"..\..\html\wiki_parser.html") + "#" + id;
+                    //var p = Path.GetFullPath(@"..\..\html\wiki_parser.html") + "#" + id;
+                    var p = config.htmlPath + "#" + id;
                     webBrowser1.Navigate(p);
                 }
             };
@@ -401,7 +487,7 @@ namespace wiki
             t.Controls.Add(listview);
             ItemTabControl.TabPages.Add(t);
 
-            return listview;
+            return t;
         }
         
         //void Request(Uri request) {

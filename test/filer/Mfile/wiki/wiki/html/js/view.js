@@ -92,6 +92,13 @@ var jsview = {
         while (container.childNodes.length > 0)
             container.removeChild(container.firstChild);
 
+        $(container).unbind('click');
+        $(container).click(function () {
+            $('.tools2').removeClass('tools2');
+            $(container).addClass('tools2');
+        });
+
+
         var hr = document.createElement('hr');
         hr.className = "list";
         container.appendChild(hr);

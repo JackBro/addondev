@@ -13,5 +13,8 @@ namespace wiki {
         public Size WindowSize { get; set; }
         public int ListViewW { get; set; }
         public int BrowserH { get; set; }
+
+        public string htmlPath { get; set; }
+        public string ScriptDirPath { get; set; }
     }
 }
