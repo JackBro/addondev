@@ -13,7 +13,7 @@ body {
 */
  font-family: 'Lucida Grande', 'ＭＳ ゴシック';
  padding:0 2% 0 2%;
- margin:0;
+ margin:5;
  width:auto;
 }
  /*
@@ -39,11 +39,14 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 	background-color: gray;
 }
 
-.tools2 {
+.tools2 
+{
+    /*
 	background-color:ActiveCaption;
-	/*
+
     border-style:solid;
-    border-width:thin; */
+    border-width:thin;*/
+    background-color: gray;
 }
 
 .operate {

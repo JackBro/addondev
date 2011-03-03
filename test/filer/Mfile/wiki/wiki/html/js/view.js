@@ -94,9 +94,9 @@ var jsview = {
         $(container).unbind('click');
         $(container).click(function () {
             $('.tools2').removeClass('tools2');
-            //$(container).addClass('tools2');
-            $('#date' + id).addClass('tools2');
-            $('#tools' + id).addClass('tools2');
+            $(container).addClass('tools2');
+            //$('#date' + id).addClass('tools2');
+            //$('#tools' + id).addClass('tools2');
         });
 
 

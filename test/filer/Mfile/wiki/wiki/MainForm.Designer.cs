@@ -39,7 +39,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.EditorPanel = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -64,7 +63,6 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.EditorPanel.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -148,6 +146,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.EditorPanel);
+            this.splitContainer1.Panel2.Controls.Add(this.toolStrip2);
             this.splitContainer1.Size = new System.Drawing.Size(506, 408);
             this.splitContainer1.SplitterDistance = 224;
             this.splitContainer1.TabIndex = 1;
@@ -164,22 +163,11 @@
             // 
             // EditorPanel
             // 
-            this.EditorPanel.Controls.Add(this.textBox1);
-            this.EditorPanel.Controls.Add(this.toolStrip2);
             this.EditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EditorPanel.Location = new System.Drawing.Point(0, 0);
+            this.EditorPanel.Location = new System.Drawing.Point(0, 25);
             this.EditorPanel.Name = "EditorPanel";
-            this.EditorPanel.Size = new System.Drawing.Size(506, 180);
+            this.EditorPanel.Size = new System.Drawing.Size(506, 155);
             this.EditorPanel.TabIndex = 1;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(0, 25);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(506, 155);
-            this.textBox1.TabIndex = 0;
             // 
             // toolStrip2
             // 
@@ -344,9 +332,8 @@
             this.splitContainer2.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
-            this.EditorPanel.ResumeLayout(false);
-            this.EditorPanel.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -374,7 +361,6 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.TabControl ItemTabControl;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ToolStripButton NewItemToolStripButton;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.ComboBox comboBox1;

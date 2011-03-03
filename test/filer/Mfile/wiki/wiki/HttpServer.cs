@@ -70,6 +70,8 @@ namespace wiki {
                     resString = reqArgs.Response;
                 }
                 
+                //if(resString)
+
                 Encoding enc = Encoding.UTF8;
                 byte[] buffer = enc.GetBytes(resString);
                 res.OutputStream.Write(buffer, 0, buffer.Length);

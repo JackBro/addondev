@@ -79,6 +79,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AzukiControlEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Config.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="DateTimeForm.cs">

@@ -19,212 +19,189 @@ WikiParser.prototype.linkString = null;
 WikiParser.prototype.cursorPosition = 0;
 WikiParser.prototype.nodeAtCursorPosition = null;
 
-WikiParser.prototype.parse = function(inputString)
-{
-	var re = RegExp("\r\n");
-	while(re.test(inputString)) inputString = inputString.replace(re, "\n");
+WikiParser.prototype.parse = function (inputString) {
+    var re = RegExp("\r\n");
+    while (re.test(inputString)) inputString = inputString.replace(re, "\n");
 
-	// clear stack
-	var i;
-	for (i = this.stack.length-1;i >= 0;i--) this.stack.pop()
+    // clear stack
+    var i;
+    for (i = this.stack.length - 1; i >= 0; i--) this.stack.pop()
 
-	var pageElement = this.document.createElement('div');
-	this.stack.push(pageElement);
-	this.nodeAtCursorPosition = null;
+    var pageElement = this.document.createElement('div');
+    this.stack.push(pageElement);
+    this.nodeAtCursorPosition = null;
 
-	var characterCount = 0;
-	var lines = inputString.split("\n")
-	for (i = 0; i < lines.length; i++) 
-	{
-		if(/^(!{1,5})(.*)$/.test(lines[i]) )
-		{
-			this.jumpToTopLevel();
-			var elementName = 'h' + RegExp.$1.length;
-			var element = this.document.createElement(elementName);
-			this.stack.top().appendChild(element);
-			this.stack.push(element)
-			this.inline(RegExp.$2);
-			this.stack.pop()
-		}
-		else if(/^----/.test(lines[i]) )
-		{
-			var element = this.document.createElement('hr')
-			this.stack.top().appendChild(element);
-		}
-		else if(/^""(.*)$/.test(lines[i]) )
-		{
-			if ( this.stack.top().tagName.toLowerCase() != 'blockquote')
-			{
-				this.jumpToTopLevel();
-				var element;
-				element = this.document.createElement('blockquote')
-				this.stack.top().appendChild(element);
-				this.stack.push(element)
-			}
-			var textNode = this.document.createTextNode(RegExp.$1 + "\r\n");
-			this.stack.top().appendChild(textNode);
-		}
-		else if(/^ (.*)$/.test(lines[i]) )
-		{
-			if ( this.stack.top().tagName.toLowerCase() != 'pre')
-			{
-				this.jumpToTopLevel();
-				var element;
-				element = this.document.createElement('pre')
-				this.stack.top().appendChild(element);
-				this.stack.push(element)
-			}
-			var textNode = this.document.createTextNode(RegExp.$1 + "\r\n");
-			this.stack.top().appendChild(textNode);
-		}
-		else if(/^([*#]{1,3})(.*)/.test(lines[i]) )
-		{
-			var newTagName = (RegExp.$1.substring(0, 1) == '#') ? 'ol' : 'ul'
-			var level = RegExp.$1.length
-			var j, listCount = 0;
-			for (j = this.stack.length-1;j >= 0;j--)
-			{
-				if ((this.stack[j].tagName.toLowerCase() == 'ul') ||
+    var characterCount = 0;
+    var lines = inputString.split("\n")
+    for (i = 0; i < lines.length; i++) {
+        if (/^(!{1,5})(.*)$/.test(lines[i])) {
+            this.jumpToTopLevel();
+            var elementName = 'h' + RegExp.$1.length;
+            var element = this.document.createElement(elementName);
+            this.stack.top().appendChild(element);
+            this.stack.push(element)
+            this.inline(RegExp.$2);
+            this.stack.pop()
+        }
+        else if (/^----/.test(lines[i])) {
+            var element = this.document.createElement('hr')
+            this.stack.top().appendChild(element);
+        }
+        else if (/^""(.*)$/.test(lines[i])) {
+            if (this.stack.top().tagName.toLowerCase() != 'blockquote') {
+                this.jumpToTopLevel();
+                var element;
+                element = this.document.createElement('blockquote')
+                this.stack.top().appendChild(element);
+                this.stack.push(element)
+            }
+            var textNode = this.document.createTextNode(RegExp.$1 + "\r\n");
+            this.stack.top().appendChild(textNode);
+        }
+        else if (/^ (.*)$/.test(lines[i])) {
+            if (this.stack.top().tagName.toLowerCase() != 'pre') {
+                this.jumpToTopLevel();
+                var element;
+                element = this.document.createElement('pre')
+                this.stack.top().appendChild(element);
+                this.stack.push(element)
+            }
+            var textNode = this.document.createTextNode(RegExp.$1 + "\r\n");
+            this.stack.top().appendChild(textNode);
+        }
+        else if (/^([*#]{1,3})(.*)/.test(lines[i])) {
+            var newTagName = (RegExp.$1.substring(0, 1) == '#') ? 'ol' : 'ul'
+            var level = RegExp.$1.length
+            var j, listCount = 0;
+            for (j = this.stack.length - 1; j >= 0; j--) {
+                if ((this.stack[j].tagName.toLowerCase() == 'ul') ||
 					(this.stack[j].tagName.toLowerCase() == 'ol'))
-					listCount++;
-			}
+                    listCount++;
+            }
 
-			if (listCount == 0) this.jumpToTopLevel();
+            if (listCount == 0) this.jumpToTopLevel();
 
-			if (level > listCount)
-			{
-				var className = newTagName + '_' + String(level);
-				var j;
-				for (j = level;j > listCount;j--)
-				{
-					if ((this.stack.top().tagName.toLowerCase() == 'ul') ||
-						(this.stack.top().tagName.toLowerCase() == 'ol'))
-					{
-						var listItem = this.document.createElement('li')
-						listItem.setAttribute('class', className);
-						this.stack.top().appendChild(listItem);
-						this.stack.push(listItem)
-					}
+            if (level > listCount) {
+                var className = newTagName + '_' + String(level);
+                var j;
+                for (j = level; j > listCount; j--) {
+                    if ((this.stack.top().tagName.toLowerCase() == 'ul') ||
+						(this.stack.top().tagName.toLowerCase() == 'ol')) {
+                        var listItem = this.document.createElement('li')
+                        listItem.setAttribute('class', className);
+                        this.stack.top().appendChild(listItem);
+                        this.stack.push(listItem)
+                    }
 
-					var element = this.document.createElement(newTagName)
-					element.setAttribute('class', className);
-					this.stack.top().appendChild(element);
-					this.stack.push(element)
-				}
-			}
-			else if (level <= listCount)
-			{
-				this.stack.pop();
-				for (j = listCount;j > level;j--)
-				{
-					this.stack.pop();
-					this.stack.pop();
-				}
-			}
+                    var element = this.document.createElement(newTagName)
+                    element.setAttribute('class', className);
+                    this.stack.top().appendChild(element);
+                    this.stack.push(element)
+                }
+            }
+            else if (level <= listCount) {
+                this.stack.pop();
+                for (j = listCount; j > level; j--) {
+                    this.stack.pop();
+                    this.stack.pop();
+                }
+            }
 
-			if (this.stack.top().tagName.toLowerCase() != newTagName)
-			{
-				this.stack.pop();
-				var element = this.document.createElement(newTagName)
-				element.setAttribute('class', className);
-				this.stack.top().appendChild(element);
-				this.stack.push(element)
-			}
+            if (this.stack.top().tagName.toLowerCase() != newTagName) {
+                this.stack.pop();
+                var element = this.document.createElement(newTagName)
+                element.setAttribute('class', className);
+                this.stack.top().appendChild(element);
+                this.stack.push(element)
+            }
 
-			var listItem = this.document.createElement('li')
-			listItem.setAttribute('class', newTagName + '_' + String(level));
-			this.stack.top().appendChild(listItem);
-			this.stack.push(listItem)
-			this.inline(RegExp.$2);
-		}
-		else if(/^:(.+)/.test(lines[i]) )
-		{
-			if (this.stack.top().tagName.toLowerCase() != 'dl') 
-			{
-				this.jumpToTopLevel();
-				var element = this.document.createElement('dl')
-				this.stack.top().appendChild(element);
-				this.stack.push(element)
-			}
-			var strings = RegExp.$1.split(':', 2);
-			var dtString = strings[0];
-			var ddString = strings[1];
+            var listItem = this.document.createElement('li')
+            listItem.setAttribute('class', newTagName + '_' + String(level));
+            this.stack.top().appendChild(listItem);
+            this.stack.push(listItem)
+            this.inline(RegExp.$2);
+        }
+        else if (/^:(.+)/.test(lines[i])) {
+            if (this.stack.top().tagName.toLowerCase() != 'dl') {
+                this.jumpToTopLevel();
+                var element = this.document.createElement('dl')
+                this.stack.top().appendChild(element);
+                this.stack.push(element)
+            }
+            var strings = RegExp.$1.split(':', 2);
+            var dtString = strings[0];
+            var ddString = strings[1];
 
-			var dtElement = this.document.createElement('dt')
-			this.stack.top().appendChild(dtElement);
-			dtElement.appendChild(this.document.createTextNode(dtString));
+            var dtElement = this.document.createElement('dt')
+            this.stack.top().appendChild(dtElement);
+            dtElement.appendChild(this.document.createTextNode(dtString));
 
-			var ddElement= this.document.createElement('dd')
-			var pElement= this.document.createElement('p')
-			this.stack.top().appendChild(ddElement);
-			this.stack.push(ddElement);
-			this.stack.top().appendChild(pElement);
-			this.stack.push(pElement);
-			this.inline(ddString)
-			this.stack.pop();
-			this.stack.pop();
-		}
-		else if(/^,(.+)$/.test(lines[i]) )
-		{
-			if (this.stack.top().tagName.toLowerCase() != 'tbody') 
-			{
-				this.jumpToTopLevel();
-				var table = this.document.createElement('table')
-				table.setAttribute('border', '1');
-				this.stack.top().appendChild(table);
-				this.stack.push(table)
-				var tbody = this.document.createElement('tbody')
-				this.stack.top().appendChild(tbody);
-				this.stack.push(tbody)
-			}
-			this.tableLine(RegExp.$1);
-		}
-		else if(/^\s*$/.test(lines[i]) )
-		{
-			this.jumpToTopLevel();
-		}
-/*
-    else if(/^>/.test(lines[i]) )
-    {
-      var element = document.createElement('font');
-	    element.setAttribute("color", "#FF0000");
-	    element.innerHTML = lines[i];
-      this.stack.top().appendChild(element);
-			var pElement= this.document.createElement('p')
-      this.stack.top().appendChild(pElement);
+            var ddElement = this.document.createElement('dd')
+            var pElement = this.document.createElement('p')
+            this.stack.top().appendChild(ddElement);
+            this.stack.push(ddElement);
+            this.stack.top().appendChild(pElement);
+            this.stack.push(pElement);
+            this.inline(ddString)
+            this.stack.pop();
+            this.stack.pop();
+        }
+        else if (/^,(.+)$/.test(lines[i])) {
+            if (this.stack.top().tagName.toLowerCase() != 'tbody') {
+                this.jumpToTopLevel();
+                var table = this.document.createElement('table')
+                table.setAttribute('border', '1');
+                this.stack.top().appendChild(table);
+                this.stack.push(table)
+                var tbody = this.document.createElement('tbody')
+                this.stack.top().appendChild(tbody);
+                this.stack.push(tbody)
+            }
+            this.tableLine(RegExp.$1);
+        }
+        else if (/^\s*$/.test(lines[i])) {
+            this.jumpToTopLevel();
+        }
+        /*
+        else if(/^>/.test(lines[i]) )
+        {
+        var element = document.createElement('font');
+        element.setAttribute("color", "#FF0000");
+        element.innerHTML = lines[i];
+        this.stack.top().appendChild(element);
+        var pElement= this.document.createElement('p')
+        this.stack.top().appendChild(pElement);
+        }
+        */
+        else {
+            if (this.stack.top().tagName.toLowerCase() != 'p') {
+                this.jumpToTopLevel();
+                var element = this.document.createElement('p')
+                this.stack.top().appendChild(element);
+                this.stack.push(element)
+            }
+            this.inline(lines[i]);
+        }
+
+        //	set this.nodeAtCursorPosition
+        characterCount += lines[i].length + 1;
+        if (this.nodeAtCursorPosition == null && characterCount >= this.cursorPosition) {
+            var lastNode = pageElement;
+            while (lastNode.lastChild && lastNode.lastChild.nodeName != '#text')
+                lastNode = lastNode.lastChild;
+            this.nodeAtCursorPosition = lastNode;
+        }
     }
-*/
-		else
-		{
-			if ( this.stack.top().tagName.toLowerCase() != 'p')
-			{
-				this.jumpToTopLevel();
-				var element = this.document.createElement('p')
-				this.stack.top().appendChild(element);
-				this.stack.push(element)
-			}
-			this.inline(lines[i]);
-		}
 
-		//	set this.nodeAtCursorPosition
-		characterCount += lines[i].length+1;
-		if (this.nodeAtCursorPosition == null && characterCount >= this.cursorPosition) 
-		{
-			var lastNode = pageElement;
-			while(lastNode.lastChild && lastNode.lastChild.nodeName != '#text') 
-				lastNode = lastNode.lastChild;
-			this.nodeAtCursorPosition = lastNode;
-		}
-	}
-			
-//	pageElement.normalize();
-	return pageElement;
+    //	pageElement.normalize();
+    return pageElement;
 }
 
 WikiParser.prototype.inline = function(inlineString)
 {
 	var IN_NORMAL = 0;
 	var IN_LINK = 1;
+	var IN_FRAME = 2;
 	var startLevel = this.stack.length;
 	var target = inlineString + ' ';
 	var status = IN_NORMAL
@@ -309,7 +286,10 @@ WikiParser.prototype.inline = function(inlineString)
 				target = RegExp.rightContext
 				var text = this.document.createTextNode(RegExp.lastMatch);
 				this.stack.top().appendChild(text);
-			}
+            }
+            else if (/^(\{\{)(.*)$/.test(lines[i])) {
+
+            }
 			else
 			{
 				alert('not match!! : ' + target);

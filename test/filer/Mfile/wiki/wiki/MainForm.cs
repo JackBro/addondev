@@ -11,9 +11,13 @@ using System.IO;
 using Jint;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using Sgry.Azuki.WinForms;
+using System.Runtime.InteropServices;
 
 namespace wiki
 {
+
+
     public partial class MainForm : Form
     {
         private ItemManager manager;
@@ -35,9 +39,18 @@ namespace wiki
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
 
         private TabPage AllPage;
+
+        private AzukiControlEx Editor;
        
         public MainForm(){
             InitializeComponent();
+
+            Editor = new AzukiControlEx();
+            Editor.Dock = DockStyle.Fill;
+            EditorPanel.Controls.Add(Editor);
+
+            Editor.ShowsLineNumber = true;
+            
 
             config.htmlPath = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
@@ -54,7 +67,7 @@ namespace wiki
             httpServer.RequestEvent += (sender, e) => {
                 var url = e.Request.RawUrl;
                 var methd = e.Request.HttpMethod;
-                e.Response = "OK";
+                e.Response = "accept";
 
                 var m = regShow.Match(url);
                 if (m.Success) {
@@ -74,7 +87,9 @@ namespace wiki
                     var res =string.Empty;
                     switch (methd) {
                         case "DELETE":
-
+                            reqparam["method"] = "delete";
+                            reqparam["id"] = m.Groups[1].Value;
+                            serveBW.ReportProgress(1, reqparam);
                             break;
                         case "GET":
                             List<Data> list = items;// new List<Data>() { item };
@@ -95,7 +110,7 @@ namespace wiki
                     reqparam["data"] = _RequestBody;
                     serveBW.ReportProgress(1, reqparam);
 
-                    e.Response = "OK";
+                    //e.Response = "OK";
                     return;
                 }
 
@@ -107,7 +122,7 @@ namespace wiki
                     reqparam["url"] = url;
                     reqparam["id"] = id;
                     serveBW.ReportProgress(1, reqparam);
-                    e.Response = "OK";
+                    //e.Response = "OK";
                     return;
                 }
 
@@ -119,7 +134,7 @@ namespace wiki
                     reqparam["url"] = url;
                     reqparam["id"] = id;
                     serveBW.ReportProgress(1, reqparam);
-                    e.Response = "OK";
+                    //e.Response = "OK";
                     return;
                 }
 
@@ -132,6 +147,11 @@ namespace wiki
                     case "edit": {
                             var id = long.Parse(param["id"]);
                             this.EditItem(id);
+                        }
+                        break;
+                    case "delete": {
+                            var id = long.Parse(param["id"]);
+                            this.DeleteItem(id);
                         }
                         break;
                     case "exe":
@@ -174,18 +194,18 @@ namespace wiki
             //    }
             //};
 
-            textBox1.TextChanged += (sender, e) => {
+            Editor.TextChanged += (sender, e) => {
                 
                 if (dirty) {
                     var item = manager.EditingData;
                     if (item != null) {
-                        item.Text = textBox1.Text;
+                        item.Text = Editor.Text;
                         manager.UpDate(item);
                     }
                 }
                 dirty = true;
             };
-            textBox1.LostFocus += (sender, e) => {
+            Editor.LostFocus += (sender, e) => {
                 
             };
 
@@ -254,6 +274,7 @@ namespace wiki
                             var listview = GetTabControl(page);
                             listview.DeleteItem(e.Item);
                         }
+                        InvokeScript("js_Remove", e.Item.ID.ToString());
                         break;
                     default:
                         break;
@@ -373,20 +394,16 @@ namespace wiki
 
         private void CreateItem() {
             manager.Insert(new Data { ID=manager.GetNewID(), Text = "!new", CreationTime = DateTime.Now });
-
-            //webBrowser1.Document.InvokeScript("test", new String[] { "called from client code" });
         }
         private void DeleteItem(long id) {
-            manager.Delete(id);
-            webBrowser1.Document.InvokeScript("js_Remove", new string[] { id.ToString() });
-            
+            manager.Delete(id);   
         }
         private void EditItem(long id) {
             var item = manager.GetItem(id);
             if (item == null) return;
             manager.EditingData = item;
             dirty = false;
-            textBox1.Text = item.Text;
+            Editor.Text = item.Text;
         }
 
         private List<Data> getCurrentPageDatas(ListViewEx listview, int max) {
@@ -572,4 +589,6 @@ namespace wiki
             var mm=0;
         }
     }
+
+    
 }
