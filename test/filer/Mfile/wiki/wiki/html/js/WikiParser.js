@@ -287,9 +287,8 @@ WikiParser.prototype.inline = function(inlineString)
 				var text = this.document.createTextNode(RegExp.lastMatch);
 				this.stack.top().appendChild(text);
             }
-            else if (/^(\{\{)(.*)$/.test(lines[i])) {
-
-            }
+//            else if (/^(\{\{)(.*)$/.test(lines[i])) {
+//            }
 			else
 			{
 				alert('not match!! : ' + target);
@@ -512,6 +511,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
     element = this.document.createElement('a')
     element.appendChild(text);
 
+
     if (/^(>>)([\d+|,]+)/.test(pageName)) {
         var ids = RegExp.$2;
         //alert(ids);
@@ -524,6 +524,18 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
             return false;
         });
     }
+//    else if (/^(>>>c)(\d+)/.test(pageName)) {
+//        var b = RegExp.$2;
+//        element.setAttribute('href', 'javascript:void(0)');
+//        $(element).click(function (event) {
+//            $.ajax({
+//                type: 'post',
+//                url: requrl + "/exe",
+//                data: b
+//            });
+//            return false;
+//        });        
+//    }
     else if (/^!(.+)/.test(pageName)) {
         var b = RegExp.$1;
         element.setAttribute('href', 'javascript:void(0)');
