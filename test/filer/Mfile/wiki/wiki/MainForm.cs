@@ -45,6 +45,29 @@ namespace wiki
         public MainForm(){
             InitializeComponent();
 
+
+    
+            var re = Regex.Replace("[[mtestm]]", @"[^\[\[]*(test)[^\]\]]*", "<<test");
+
+            var re2 = Regex.Replace("mtestm", @"[^\[\[]*test[^\]\]]*", "[[<<test]]");
+
+            var repstr = "[[<<test]]";
+            var tt = "[[mtestm]]mtestm";
+            var mm = Regex.Match(tt, @"[^\[\[]*(test)[^\]\]]*");
+
+            while (true) {
+                if (mm.Success) {
+                    var g1 = mm.Groups[1];
+                    var gi = g1.Index;
+                    var gl = g1.Length;
+
+                    mm = mm.NextMatch();
+                } else {
+                    break;
+                }
+            }
+
+
             Editor = new AzukiControlEx();
             Editor.Dock = DockStyle.Fill;
             EditorPanel.Controls.Add(Editor);
@@ -567,6 +590,17 @@ namespace wiki
         private void webBrowser1_ContextMenuStripChanged(object sender, EventArgs e) {
 
         }
+
+        //private string cnv(List<Data> items) {
+            
+        //    items.ForEach(n => {
+        //        n.Text.
+        //    });
+        //    foreach (var item in items) {
+                
+        //    }
+        //    var json = JsonSerializer.Serialize(list);
+        //}
 
         private void timeToolStripMenuItem_Click(object sender, EventArgs e) {
             DateTimeForm f = new DateTimeForm();
