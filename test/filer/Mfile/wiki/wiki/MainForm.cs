@@ -290,6 +290,10 @@ namespace wiki
                         break;
                     case ChangeType.UpDate:
                         reBuild(e.Item);
+
+                        //var cf = InvokeScript("js_getComeFrom");
+                        //var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(cf.ToString());
+                        //Console.WriteLine("cf = " + cf);
                         break;
                     case ChangeType.Delete:
                         for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
@@ -335,6 +339,9 @@ namespace wiki
                 }
             };
 
+
+            
+            /*
             int max = 5;
 
             initPage();
@@ -381,11 +388,8 @@ namespace wiki
                 }
                 PreToolStripButton.Enabled = true;
             };
-
-            this.KeyPreview = true;
-            this.KeyDown+=(sender, e)=>{
-                var k=0;
-            };
+            */
+ 
         }
 
         private void initPage() {
@@ -405,14 +409,23 @@ namespace wiki
             InvokeScript("setPort", httpServer.Port.ToString());
             //webBrowser1.Document.ContextMenuShowing += new HtmlElementEventHandler(Document_ContextMenuShowing);
             //webBrowser1.Document.Click += new HtmlElementEventHandler(Document_Click);
+            
+            
+            //var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+            //List<Data> elist = new List<Data>();
+            //var last = listview.DataItems.Count < 5 ? listview.DataItems.Count : 5;
+            //for (int i = 0; i < last; i++) {
+            //    elist.Add(listview.DataItems[i]);
+            //}
+            //reBuild(elist);
+
             var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-            List<Data> elist = new List<Data>();
-            var last = listview.DataItems.Count < 5 ? listview.DataItems.Count : 5;
-            for (int i = 0; i < last; i++) {
-                elist.Add(listview.DataItems[i]);
+            
+            var items = listview.DataItems;
+            if (items.Count > 0) {
+                listview.Items[0].Selected = true;
+                //reBuild(items[0]);
             }
-            reBuild(elist);
-            //reBuild(listview.DataItems);
         }
 
         private void CreateItem() {
@@ -441,6 +454,9 @@ namespace wiki
         }
 
         private void Moves(long id) {
+            var item = manager.GetItem(id);
+            reBuild(item);
+            /*
             var view = GetSelctedTabControl();
             var index = view.DataItems.FindIndex((n) => {
                 return (n.ID == id);
@@ -477,6 +493,7 @@ namespace wiki
             //}
             //else {
             //}
+             * */
         }
 
         private ListViewEx GetTabControl(TabPage page) {
@@ -491,6 +508,15 @@ namespace wiki
         private TabPage CreateListViewTabPage(string name, List<Data> items) {
             
             var listview = new ListViewEx(items);
+
+            listview.SelectedIndexChanged += (sender, e) => {
+                if (listview.SelectedIndices.Count == 1) {
+                    var selindex = listview.SelectedIndices[0];
+                    var item = listview.DataItems[selindex];
+                    reBuild(item);
+
+                }
+            };
             listview.DoubleClick += (sender, e) => {
                 if (listview.SelectedIndices.Count == 1) {
                     var selindex = listview.SelectedIndices[0];
@@ -576,14 +602,18 @@ namespace wiki
         }
 
         private void reBuild(Data item) {
-            var list = new List<Data>() { item };
-            var json = JsonSerializer.Serialize(list);
+            //var list = new List<Data>() { item };
+            //var json = JsonSerializer.Serialize(list);
+            //InvokeScript("js_BuildByID", json);
+            var json = JsonSerializer.Serialize(item);
             InvokeScript("js_BuildByID", json);
         }
 
         private void reBuild(long insertBefore,  Data item) {
-            var list = new List<Data>() { item };
-            var json = JsonSerializer.Serialize(list);
+            //var list = new List<Data>() { item };
+            //var json = JsonSerializer.Serialize(list);
+            //InvokeScript("js_BuildInsertByID", insertBefore.ToString(), json);
+            var json = JsonSerializer.Serialize(item);
             InvokeScript("js_BuildInsertByID", insertBefore.ToString(), json);
         }
 

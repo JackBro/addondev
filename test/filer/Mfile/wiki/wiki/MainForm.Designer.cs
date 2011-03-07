@@ -55,6 +55,7 @@
             this.PreToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ToggleSelectToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.contextMenuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -244,7 +245,8 @@
             this.toolStripButton1,
             this.NextToolStripButton,
             this.PageToolStripLabel,
-            this.PreToolStripButton});
+            this.PreToolStripButton,
+            this.ToggleSelectToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(678, 25);
@@ -313,6 +315,16 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(114, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
+            // ToggleSelectToolStripButton
+            // 
+            this.ToggleSelectToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ToggleSelectToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ToggleSelectToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("ToggleSelectToolStripButton.Image")));
+            this.ToggleSelectToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ToggleSelectToolStripButton.Name = "ToggleSelectToolStripButton";
+            this.ToggleSelectToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.ToggleSelectToolStripButton.Text = "Select";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -374,6 +386,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripButton ToggleSelectToolStripButton;
     }
 }
 

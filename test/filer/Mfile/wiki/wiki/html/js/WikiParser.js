@@ -9,17 +9,21 @@ function WikiParser(document)
 {
 	this.document = document;
 	this.stack = new Array();
-	this.stack.top = function()
-	{
-		return this.length > 0 ? this[this.length-1] : null;
-	}
+	this.stack.top = function () {
+	    return this.length > 0 ? this[this.length - 1] : null;
+	};
+	this.id = 0;
+	this.cf = {};
 }
 
 WikiParser.prototype.linkString = null;
 WikiParser.prototype.cursorPosition = 0;
 WikiParser.prototype.nodeAtCursorPosition = null;
 
-WikiParser.prototype.parse = function (inputString) {
+WikiParser.prototype.parse = function (inputString, id) {
+    this.id = id;
+    this.cf = {};
+
     var re = RegExp("\r\n");
     while (re.test(inputString)) inputString = inputString.replace(re, "\n");
 
@@ -260,6 +264,7 @@ WikiParser.prototype.inline = function(inlineString)
 				var linkElement = this.createURILink(uri, uri);
 				this.stack.top().appendChild(linkElement);
 			}
+            /*
 			else if (/^([A-Z][a-z0-9]+){2,}/.test(target))
 			{ // WikiName
 				target = RegExp.rightContext;
@@ -267,6 +272,7 @@ WikiParser.prototype.inline = function(inlineString)
 				var linkElement = this.createPageNameLink(wikiName);
 				this.stack.top().appendChild(linkElement);
 			}
+            */
 			else if (/^\[\[/.test(target))
 			{
 				target = RegExp.rightContext;
@@ -524,18 +530,32 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
             return false;
         });
     }
-//    else if (/^(>>>c)(\d+)/.test(pageName)) {
-//        var b = RegExp.$2;
-//        element.setAttribute('href', 'javascript:void(0)');
-//        $(element).click(function (event) {
-//            $.ajax({
-//                type: 'post',
-//                url: requrl + "/exe",
-//                data: b
-//            });
-//            return false;
-//        });        
-//    }
+    //    else if (/^(>>>)(.*)/.test(pageName)) {
+    //        var b = RegExp.$2;
+    //        element.setAttribute('href', 'javascript:void(0)');
+    //        $(element).click(function (event) {
+    //            $.ajax({
+    //                type: 'post',
+    //                url: requrl + "/goto",
+    //                data: b
+    //            });
+    //            return false;
+    //        });        
+    //    }
+    else if (/^(<<<)(.*)/.test(pageName)) { //come-from
+        var b = RegExp.$2;
+        this.cf[b] = b;
+
+        element.setAttribute('href', 'javascript:void(0)');
+        $(element).click(function (event) {
+            $.ajax({
+                type: 'post',
+                url: requrl + "/comefrom/" + this.id,
+                data: b
+            });
+            return false;
+        });
+    }
     else if (/^!(.+)/.test(pageName)) {
         var b = RegExp.$1;
         element.setAttribute('href', 'javascript:void(0)');

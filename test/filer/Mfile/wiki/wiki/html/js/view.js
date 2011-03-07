@@ -2,17 +2,22 @@
 /// <reference path="jquery-1.5.min.js"/>
 /// <reference path="jquery.json-2.2.min.js"/>
 
-function js_BuildByID(source){
+function js_BuildByID(source) {
+    jsview.ClearAll();
+    jsview.rebuildByID(source);
+}
+
+function js_BuildByID(source, comefrom) {
+    jsview.ClearAll();
     jsview.rebuildByID(source);
 }
 
 function js_BuildInsertByID(insertBefore, value) {
     //jsview.rebuildInsertByID(insertBefore, source);
-    
     var json = null;
     if (typeof value == 'string') {
         try {
-            json = eval(value);
+            json = eval( '(' + value + ')');
         } catch (e) {
 
         }
@@ -29,7 +34,7 @@ function js_BuildInsertByID(insertBefore, value) {
             insertid = container.id;
         }
     } else {
-        alert(json.Text);
+        //alert(json.Text);
         container = jsview.rebuild(json);
         $('#' + insertid).before(container);
     }
@@ -43,7 +48,66 @@ function js_Remove(id){
 	jsview.Remove(id);
 }
 
+function js_getComeFrom() {
+    //alert("js_getComeFrom " + jsview.cf);
+    return $.toJSON(jsview.cf);
+}
+
+function cnvJson(jsons, comefromwords) {
+    var myRe = new RegExp("\\[\\[(.*?)\\]\\]", "g");
+    var words = comefromwords.join('|');
+    var repRex = new RegExp(words, "g");
+    for (var i in jsons) {
+        var text = jsons[i]["Text"];
+
+        var links = new Array;
+        var myArray;
+        while ((myArray = myRe.exec(str)) != null) {
+            var index = myRe.lastIndex - myArray[0].length;
+            links.push({ "index": index, "last": myRe.lastIndex });
+        }
+        var myRepRex = new RegExp("tes|d2", "g");
+        str1 = str.replace(myRepRex,
+            function () {
+                var ihs = false;
+                var index = arguments[arguments.length - 2];
+                var len = arguments[0].length;
+                for (var ln in links) {
+                    if (index >= links[ln]["index"] && (index + len) <= links[ln]["last"]) {
+                        ihs = true;
+                        //return "<<<" + arguments[0];
+                        break;
+                    }
+                }
+                if (ihs == false) {
+                    return "<<<" + arguments[0];
+                } else {
+                    return arguments[0];
+                }
+            });
+        jsons[i]["Text"] = str1;
+    }
+}
+
+var Util = {
+    cnvJson: function (value, comefromwords) {
+        var json = null;
+        if (typeof value == 'string') {
+            try {
+                json = eval('(' + value + ')');
+            } catch (e) {
+
+            }
+        } else {
+            json = value;
+        }
+        return json;
+    }
+
+}
+
 var jsview = {
+    cf: null,
 
     getWikiParser: function () {
         if (!this.wikiParser)
@@ -85,19 +149,22 @@ var jsview = {
         var source = json["Text"];
         var id = json["ID"];
         var creationtime = json["CreationTime"];
-        var pageElement = this.getWikiParser().parse(source);
+        var pageElement = this.getWikiParser().parse(source, id);
+        this.cf = this.getWikiParser().cf;
+        //alert(this.cf);
+
         var container = this.getContainerByID(id);
 
         while (container.childNodes.length > 0)
             container.removeChild(container.firstChild);
 
-        $(container).unbind('click');
-        $(container).click(function () {
-            $('.tools2').removeClass('tools2');
-            $(container).addClass('tools2');
-            //$('#date' + id).addClass('tools2');
-            //$('#tools' + id).addClass('tools2');
-        });
+        //        $(container).unbind('click');
+        //        $(container).click(function () {
+        //            $('.tools2').removeClass('tools2');
+        //            $(container).addClass('tools2');
+        //            //$('#date' + id).addClass('tools2');
+        //            //$('#tools' + id).addClass('tools2');
+        //        });
 
 
         var hr = document.createElement('hr');
@@ -169,7 +236,7 @@ var jsview = {
         var json = null;
         if (typeof value == 'string') {
             try {
-                json = eval(value);
+                json = eval('(' + value + ')');
             } catch (e) {
 
             }
@@ -188,7 +255,7 @@ var jsview = {
                 }
             }
         } else {
-            cont = this.rebuild(json[i]);
+            cont = this.rebuild(json);
             if (!document.getElementById(cont.id)) {
                 b.appendChild(cont);
             }
