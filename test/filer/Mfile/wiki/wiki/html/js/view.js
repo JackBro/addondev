@@ -2,29 +2,36 @@
 /// <reference path="jquery-1.5.min.js"/>
 /// <reference path="jquery.json-2.2.min.js"/>
 
-function js_BuildByID(source) {
-    jsview.ClearAll();
-    jsview.rebuildByID(source);
-}
+//function js_BuildByID(source) {
+//    jsview.ClearAll();
+//    jsview.rebuildByID(source);
+//}
 
 function js_BuildByID(source, comefrom) {
     jsview.ClearAll();
-    jsview.rebuildByID(source);
+    if (!comefrom) {
+        alert("js_BuildByID source");
+        jsview.rebuildByID(Util.toJson(source));
+    } else {
+        //alert("js_BuildByID source, comefrom");
+        var jsons = cnvJson(source, comefrom);
+        alert(jsons["Text"]);
+        jsview.rebuildByID(jsons);
+    }
 }
 
 function js_BuildInsertByID(insertBefore, value) {
     //jsview.rebuildInsertByID(insertBefore, source);
-    var json = null;
-    if (typeof value == 'string') {
-        try {
-            json = eval( '(' + value + ')');
-        } catch (e) {
-
-        }
-    } else {
-        json = value;
-    }
-
+//    var json = null;
+//    if (typeof value == 'string') {
+//        try {
+//            json = eval( '(' + value + ')');
+//        } catch (e) {
+//        }
+//    } else {
+//        json = value;
+//    }
+    var json = Util.toJson(source);
     var container;
     var insertid = insertBefore
     if (json instanceof Array) {
@@ -53,21 +60,25 @@ function js_getComeFrom() {
     return $.toJSON(jsview.cf);
 }
 
-function cnvJson(jsons, comefromwords) {
+function cnvJson(value, comefromvalue) {
+
+    var jsons = Util.toJson(value);
+    var comefromwords = Util.toJson(comefromvalue);
     var myRe = new RegExp("\\[\\[(.*?)\\]\\]", "g");
     var words = comefromwords.join('|');
     var repRex = new RegExp(words, "g");
-    for (var i in jsons) {
-        var text = jsons[i]["Text"];
+
+    function myfunction(json) {
+        var text = json["Text"];
 
         var links = new Array;
         var myArray;
-        while ((myArray = myRe.exec(str)) != null) {
+        while ((myArray = myRe.exec(text)) != null) {
             var index = myRe.lastIndex - myArray[0].length;
             links.push({ "index": index, "last": myRe.lastIndex });
         }
-        var myRepRex = new RegExp("tes|d2", "g");
-        str1 = str.replace(myRepRex,
+
+        var reptext = text.replace(repRex,
             function () {
                 var ihs = false;
                 var index = arguments[arguments.length - 2];
@@ -75,22 +86,61 @@ function cnvJson(jsons, comefromwords) {
                 for (var ln in links) {
                     if (index >= links[ln]["index"] && (index + len) <= links[ln]["last"]) {
                         ihs = true;
-                        //return "<<<" + arguments[0];
                         break;
                     }
                 }
                 if (ihs == false) {
-                    return "<<<" + arguments[0];
+                    return "[[<<" + arguments[0] + "]]";
                 } else {
                     return arguments[0];
                 }
             });
-        jsons[i]["Text"] = str1;
+            json["Text"] = reptext;        
     }
+
+    if (jsons instanceof Array) {
+        for (var i in jsons) {
+            myfunction(jsons[i]);
+        }
+    } else {
+        myfunction(jsons);
+    }
+
+    return jsons;
+
+//    for (var i in jsons) {
+//        var text = jsons[i]["Text"];
+
+//        var links = new Array;
+//        var myArray;
+//        while ((myArray = myRe.exec(str)) != null) {
+//            var index = myRe.lastIndex - myArray[0].length;
+//            links.push({ "index": index, "last": myRe.lastIndex });
+//        }
+
+//        str1 = str.replace(repRex,
+//            function () {
+//                var ihs = false;
+//                var index = arguments[arguments.length - 2];
+//                var len = arguments[0].length;
+//                for (var ln in links) {
+//                    if (index >= links[ln]["index"] && (index + len) <= links[ln]["last"]) {
+//                        ihs = true;
+//                        break;
+//                    }
+//                }
+//                if (ihs == false) {
+//                    return "[[<<" + arguments[0] + "]]";
+//                } else {
+//                    return arguments[0];
+//                }
+//            });
+//        jsons[i]["Text"] = str1;
+//    }
 }
 
 var Util = {
-    cnvJson: function (value, comefromwords) {
+    toJson: function (value) {
         var json = null;
         if (typeof value == 'string') {
             try {

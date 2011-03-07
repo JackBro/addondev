@@ -530,19 +530,8 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
             return false;
         });
     }
-    //    else if (/^(>>>)(.*)/.test(pageName)) {
-    //        var b = RegExp.$2;
-    //        element.setAttribute('href', 'javascript:void(0)');
-    //        $(element).click(function (event) {
-    //            $.ajax({
-    //                type: 'post',
-    //                url: requrl + "/goto",
-    //                data: b
-    //            });
-    //            return false;
-    //        });        
-    //    }
-    else if (/^(<<<)(.*)/.test(pageName)) { //come-from
+
+    else if (/^(<{3})(.*)/.test(pageName)) { //come-from
         var b = RegExp.$2;
         this.cf[b] = b;
 
@@ -550,7 +539,26 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         $(element).click(function (event) {
             $.ajax({
                 type: 'post',
-                url: requrl + "/comefrom/" + this.id,
+                url: requrl + "/" + this.id + "/comefrom" ,
+                data: b
+            });
+            return false;
+        });
+    }
+    else if (/^(<{2})(.*)/.test(pageName)) { //come-from
+        //element
+
+        var b = RegExp.$2;
+
+        $(text).remove();
+        var utext = this.document.createTextNode(b);
+        element.appendChild(utext);
+
+        element.setAttribute('href', 'javascript:void(0)');
+        $(element).click(function (event) {
+            $.ajax({
+                type: 'post',
+                url: requrl + "/" + this.id + "/comefrom",
                 data: b
             });
             return false;

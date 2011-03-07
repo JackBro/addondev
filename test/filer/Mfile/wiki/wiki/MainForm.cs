@@ -35,6 +35,7 @@ namespace wiki
         Regex regEdit = new Regex(@"\/item\/(\d+)\/(edit)$", RegexOptions.Compiled);
         Regex regExe = new Regex(@"\/item\/(exe)$", RegexOptions.Compiled);
         Regex regMove = new Regex(@"\/item\/(\d+)\/(move)$", RegexOptions.Compiled);
+        Regex regComeFrom = new Regex(@"\/item\/(\d+)\/(comefrom)$", RegexOptions.Compiled);
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
 
@@ -47,25 +48,25 @@ namespace wiki
 
 
     
-            var re = Regex.Replace("[[mtestm]]", @"[^\[\[]*(test)[^\]\]]*", "<<test");
+            //var re = Regex.Replace("[[mtestm]]", @"[^\[\[]*(test)[^\]\]]*", "<<test");
 
-            var re2 = Regex.Replace("mtestm", @"[^\[\[]*test[^\]\]]*", "[[<<test]]");
+            //var re2 = Regex.Replace("mtestm", @"[^\[\[]*test[^\]\]]*", "[[<<test]]");
 
-            var repstr = "[[<<test]]";
-            var tt = "[[mtestm]]mtestm";
-            var mm = Regex.Match(tt, @"[^\[\[]*(test)[^\]\]]*");
+            //var repstr = "[[<<test]]";
+            //var tt = "[[mtestm]]mtestm";
+            //var mm = Regex.Match(tt, @"[^\[\[]*(test)[^\]\]]*");
 
-            while (true) {
-                if (mm.Success) {
-                    var g1 = mm.Groups[1];
-                    var gi = g1.Index;
-                    var gl = g1.Length;
+            //while (true) {
+            //    if (mm.Success) {
+            //        var g1 = mm.Groups[1];
+            //        var gi = g1.Index;
+            //        var gl = g1.Length;
 
-                    mm = mm.NextMatch();
-                } else {
-                    break;
-                }
-            }
+            //        mm = mm.NextMatch();
+            //    } else {
+            //        break;
+            //    }
+            //}
 
 
             Editor = new AzukiControlEx();
@@ -157,7 +158,15 @@ namespace wiki
                     reqparam["url"] = url;
                     reqparam["id"] = id;
                     serveBW.ReportProgress(1, reqparam);
-                    //e.Response = "OK";
+                    return;
+                }
+
+                m = regComeFrom.Match(url);
+                if (m.Success) {
+                    reqparam["method"] = "comefrom";
+                    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                    reqparam["data"] = _RequestBody;
+                    serveBW.ReportProgress(1, reqparam);
                     return;
                 }
 
@@ -185,6 +194,10 @@ namespace wiki
                             var id = long.Parse(param["id"]);
                             this.Moves(id);
                         }
+                        break;
+                    case "comefrom": {
+                            
+                    }
                         break;
                     default:
                         break;
@@ -513,6 +526,9 @@ namespace wiki
                 if (listview.SelectedIndices.Count == 1) {
                     var selindex = listview.SelectedIndices[0];
                     var item = listview.DataItems[selindex];
+                    var cf = InvokeScript("js_getComeFrom");
+                    var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(cf.ToString());
+                    Console.WriteLine("cf = " + cf);
                     reBuild(item);
 
                 }
@@ -605,8 +621,10 @@ namespace wiki
             //var list = new List<Data>() { item };
             //var json = JsonSerializer.Serialize(list);
             //InvokeScript("js_BuildByID", json);
+            List<string> wo = new List<string>() { "test", "FireBug" };
+            var words = JsonSerializer.Serialize(wo);
             var json = JsonSerializer.Serialize(item);
-            InvokeScript("js_BuildByID", json);
+            InvokeScript("js_BuildByID", json, words);
         }
 
         private void reBuild(long insertBefore,  Data item) {
