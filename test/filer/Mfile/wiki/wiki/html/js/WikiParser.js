@@ -201,153 +201,156 @@ WikiParser.prototype.parse = function (inputString, id) {
     return pageElement;
 }
 
-WikiParser.prototype.inline = function(inlineString)
-{
-	var IN_NORMAL = 0;
-	var IN_LINK = 1;
-	var IN_FRAME = 2;
-	var startLevel = this.stack.length;
-	var target = inlineString + ' ';
-	var status = IN_NORMAL
-	while (target && target.length > 0)
-	{
-//		alert('WikiParser#inline target : "' + target + '" len : ' + target.length );
-		if (status == IN_NORMAL)
-		{
-			if ( /^\'\'\'/.test(target))
-			{
-				target = RegExp.rightContext
-				if (this.stack.top().tagName.toLowerCase() != 'strong')
-				{
-					var element = this.document.createElement('strong')
-					this.stack.top().appendChild(element);
-					this.stack.push(element)
-				}
-				else
-				{
-					this.stack.pop();
-				}
-			}
-			else if (/^\'\'/.test(target))
-			{
-				target = RegExp.rightContext
-				if (this.stack.top().tagName.toLowerCase() != 'em')
-				{
-					var element = this.document.createElement('em')
-					this.stack.top().appendChild(element);
-					this.stack.push(element)
-				}
-				else
-				{
-					this.stack.pop();
-				}
-			}
-			else if (/^==/.test(target))
-			{
-				target = RegExp.rightContext
-				if (this.stack.top().tagName.toLowerCase() != 's')
-				{
-					var element = this.document.createElement('s')
-					this.stack.top().appendChild(element);
-					this.stack.push(element)
-				}
-				else
-				{
-					this.stack.pop();
-				}
-			}
-			else if (/^((http|https|ftp|mailto):\/\/[\/\%\+\-_.\!~*\'()a-zA-Z\d;?:@&=$,#]+)/.test(target) || 
-				/^mailto:[\/\%\+\-_.\!~*\'()a-zA-Z\d;?:@&=$,]+/.test(target) )
-			{
-				target = RegExp.rightContext
-				var uri = RegExp.lastMatch;
-				var linkElement = this.createURILink(uri, uri);
-				this.stack.top().appendChild(linkElement);
-			}
-            /*
-			else if (/^([A-Z][a-z0-9]+){2,}/.test(target))
-			{ // WikiName
-				target = RegExp.rightContext;
-				var wikiName = RegExp.lastMatch;
-				var linkElement = this.createPageNameLink(wikiName);
-				this.stack.top().appendChild(linkElement);
-			}
-            */
-			else if (/^\[\[/.test(target))
-			{
-				target = RegExp.rightContext;
-				if (/\]\]/.test(RegExp.rightContext))
-				{
-					this.linkString = ''
-					status = IN_LINK;
-				}
-				else
-				{
-					var text = this.document.createTextNode(RegExp.lastMatch);
-					this.stack.top().appendChild(text);
-				}
-			}
-			else if (/^./.test(target))
-			{
-				target = RegExp.rightContext
-				var text = this.document.createTextNode(RegExp.lastMatch);
-				this.stack.top().appendChild(text);
-            }
-//            else if (/^(\{\{)(.*)$/.test(lines[i])) {
-//            }
-			else
-			{
-				alert('not match!! : ' + target);
-			}
-		}
-		else if (status == IN_LINK)
-		{
-			if (/^\]\]/.test(target))
-			{
-				var linkElement;
-				/*
-				if (/^(>>)(\d+)|(\d+|,)/.test(this.linkString))
-				{
-					var tmp = /^\]\]/.test(target);
-					target = RegExp.rightContext
-					status = IN_NORMAL;
-					var label = this.linkString;//.substring(2, this.linkString.length-2);
-					var uri = this.linkString;
-					linkElement = this.createURILink(uri, label);
-//alert(target);
-				}
-				else
-				{
-				*/
-					target = RegExp.rightContext
-					status = IN_NORMAL;
-					var strings = this.linkString.split('|', 2);
-					if (strings.length >= 2)
-					{ // URILink
-						var label = strings[0];
-						var uri = strings[1];
-						linkElement = this.createURILink(uri, label);
-					}
-					else
-					{ // PageNameLink
-						linkElement = this.createPageNameLink(this.linkString);
-					}
-				//}
-				this.stack.top().appendChild(linkElement);
-			}
-			else if (/^./.test(target))
-			{
-				target = RegExp.rightContext
-				this.linkString += RegExp.lastMatch;
-			}
-		}
-	}
-	var i;
-	for (i = this.stack.length;i > startLevel;i--) this.stack.pop()
-//	this.stack.top().normalize();
+WikiParser.prototype.inline = function (inlineString) {
+    var textStack = "";
 
-//	alert('inline end');
-	return ;
+    var IN_NORMAL = 0;
+    var IN_LINK = 1;
+    var IN_FRAME = 2;
+    var startLevel = this.stack.length;
+    var target = inlineString + ' ';
+    var status = IN_NORMAL
+    while (target && target.length > 0) {
+        //		alert('WikiParser#inline target : "' + target + '" len : ' + target.length );
+        if (status == IN_NORMAL) {
+            if (/^\'\'\'/.test(target)) {
+                if (textStack != "") {
+                    this.stack.top().appendChild(this.document.createTextNode(textStack));
+                    textStack = "";
+                }
+
+                target = RegExp.rightContext
+                if (this.stack.top().tagName.toLowerCase() != 'strong') {
+                    var element = this.document.createElement('strong')
+                    this.stack.top().appendChild(element);
+                    this.stack.push(element)
+                }
+                else {
+                    this.stack.pop();
+                }
+            }
+            else if (/^\'\'/.test(target)) {
+
+                if (textStack != "") {
+                    this.stack.top().appendChild(this.document.createTextNode(textStack));
+                    textStack = "";
+                }
+
+                target = RegExp.rightContext
+                if (this.stack.top().tagName.toLowerCase() != 'em') {
+                    var element = this.document.createElement('em')
+                    this.stack.top().appendChild(element);
+                    this.stack.push(element)
+                }
+                else {
+                    this.stack.pop();
+                }
+            }
+            else if (/^==/.test(target)) {
+                if (textStack != "") {
+                    this.stack.top().appendChild(this.document.createTextNode(textStack));
+                    textStack = "";
+                }
+
+                target = RegExp.rightContext
+                if (this.stack.top().tagName.toLowerCase() != 's') {
+                    var element = this.document.createElement('s')
+                    this.stack.top().appendChild(element);
+                    this.stack.push(element)
+                }
+                else {
+                    this.stack.pop();
+                }
+            }
+            else if (/^((http|https|ftp|mailto):\/\/[\/\%\+\-_.\!~*\'()a-zA-Z\d;?:@&=$,#]+)/.test(target) ||
+				/^mailto:[\/\%\+\-_.\!~*\'()a-zA-Z\d;?:@&=$,]+/.test(target)) {
+                target = RegExp.rightContext
+                var uri = RegExp.lastMatch;
+                var linkElement = this.createURILink(uri, uri);
+                this.stack.top().appendChild(linkElement);
+            }
+            /*
+            else if (/^([A-Z][a-z0-9]+){2,}/.test(target))
+            { // WikiName
+            target = RegExp.rightContext;
+            var wikiName = RegExp.lastMatch;
+            var linkElement = this.createPageNameLink(wikiName);
+            this.stack.top().appendChild(linkElement);
+            }
+            */
+            else if (/^\[\[/.test(target)) {
+                target = RegExp.rightContext;
+                if (/\]\]/.test(RegExp.rightContext)) {
+                    this.linkString = ''
+                    status = IN_LINK;
+                }
+                else {
+                    var text = this.document.createTextNode(RegExp.lastMatch);
+                    this.stack.top().appendChild(text);
+                }
+            }
+            else if (/^./.test(target)) {
+                target = RegExp.rightContext
+                //var text = this.document.createTextNode(RegExp.lastMatch);
+                //this.stack.top().appendChild(text);
+                textStack += RegExp.lastMatch;
+            }
+            //            else if (/^(\{\{)(.*)$/.test(lines[i])) {
+            //            }
+            else {
+                alert('not match!! : ' + target);
+            }
+        }
+        else if (status == IN_LINK) {
+            if (/^\]\]/.test(target)) {
+                this.stack.top().appendChild(this.document.createTextNode(textStack));
+                textStack = "";
+
+                var linkElement;
+                /*
+                if (/^(>>)(\d+)|(\d+|,)/.test(this.linkString))
+                {
+                var tmp = /^\]\]/.test(target);
+                target = RegExp.rightContext
+                status = IN_NORMAL;
+                var label = this.linkString;//.substring(2, this.linkString.length-2);
+                var uri = this.linkString;
+                linkElement = this.createURILink(uri, label);
+                //alert(target);
+                }
+                else
+                {
+                */
+                target = RegExp.rightContext
+                status = IN_NORMAL;
+                var strings = this.linkString.split('|', 2);
+                if (strings.length >= 2) { // URILink
+                    var label = strings[0];
+                    var uri = strings[1];
+                    linkElement = this.createURILink(uri, label);
+                }
+                else { // PageNameLink
+                    linkElement = this.createPageNameLink(this.linkString);
+                }
+                //}
+                this.stack.top().appendChild(linkElement);
+            }
+            else if (/^./.test(target)) {
+                target = RegExp.rightContext
+                this.linkString += RegExp.lastMatch;
+            }
+        }
+    }
+    if (textStack != "") {
+        this.stack.top().appendChild(this.document.createTextNode(textStack));
+    }
+
+    var i;
+    for (i = this.stack.length; i > startLevel; i--) this.stack.pop()
+    //	this.stack.top().normalize();
+
+    //	alert('inline end');
+    return;
 }
 
 WikiParser.prototype.tableLine = function(tableLineString)
@@ -517,8 +520,19 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
     element = this.document.createElement('a')
     element.appendChild(text);
 
+    if (/^>>>(.+)/.test(pageName)) {
+        var b = RegExp.$1;
 
-    if (/^(>>)([\d+|,]+)/.test(pageName)) {
+        element.setAttribute('href', 'javascript:void(0) //goto ' + b);
+        $(element).click(function (event) {
+            $.ajax({
+                type: 'post',
+                url: requrl + "/goto",
+                data: b
+            });
+            return false;
+        });
+    }else if (/^(>{2})([\d+|,]+)/.test(pageName)) {
         var ids = RegExp.$2;
         //alert(ids);
         element.setAttribute('href', 'javascript:void(0)');
@@ -530,9 +544,8 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
             return false;
         });
     }
-
-    else if (/^(<{3})(.*)/.test(pageName)) { //come-from
-        var b = RegExp.$2;
+    else if (/^<<<(.*)/.test(pageName)) { //come-from
+        var b = RegExp.$1;
 
         if ($.inArray(b, this.cf) == -1) {
             this.cf.push(b);
@@ -549,8 +562,6 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         });
     }
     else if (/^(<{2})(.*)/.test(pageName)) { //come-from
-        //element
-
         var b = RegExp.$2;
 
         $(text).remove();

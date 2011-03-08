@@ -16,8 +16,6 @@ using System.Runtime.InteropServices;
 
 namespace wiki
 {
-
-
     public partial class MainForm : Form
     {
         private ItemManager manager;
@@ -35,6 +33,7 @@ namespace wiki
         Regex regEdit = new Regex(@"\/item\/(\d+)\/(edit)$", RegexOptions.Compiled);
         Regex regExe = new Regex(@"\/item\/(exe)$", RegexOptions.Compiled);
         Regex regMove = new Regex(@"\/item\/(\d+)\/(move)$", RegexOptions.Compiled);
+        Regex regGoto = new Regex(@"\/item\/(goto)$", RegexOptions.Compiled);
         Regex regComeFrom = new Regex(@"\/item\/(\d+)\/(comefrom)$", RegexOptions.Compiled);
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
@@ -45,29 +44,6 @@ namespace wiki
        
         public MainForm(){
             InitializeComponent();
-
-
-    
-            //var re = Regex.Replace("[[mtestm]]", @"[^\[\[]*(test)[^\]\]]*", "<<test");
-
-            //var re2 = Regex.Replace("mtestm", @"[^\[\[]*test[^\]\]]*", "[[<<test]]");
-
-            //var repstr = "[[<<test]]";
-            //var tt = "[[mtestm]]mtestm";
-            //var mm = Regex.Match(tt, @"[^\[\[]*(test)[^\]\]]*");
-
-            //while (true) {
-            //    if (mm.Success) {
-            //        var g1 = mm.Groups[1];
-            //        var gi = g1.Index;
-            //        var gl = g1.Length;
-
-            //        mm = mm.NextMatch();
-            //    } else {
-            //        break;
-            //    }
-            //}
-
 
             config.htmlPath = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
@@ -172,6 +148,15 @@ namespace wiki
                     return;
                 }
 
+                m = regGoto.Match(url);
+                if (m.Success) {
+                    reqparam["method"] = "goto";
+                    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                    reqparam["data"] = _RequestBody;
+                    serveBW.ReportProgress(1, reqparam);
+                    return;
+                }
+
             };
             serveBW = new BackgroundWorker();
             serveBW.WorkerReportsProgress = true;
@@ -195,6 +180,11 @@ namespace wiki
                     case "move": {
                             var id = long.Parse(param["id"]);
                             this.Moves(id);
+                        }
+                        break;
+                    case "goto": {
+                            var word = param["data"];
+                            
                         }
                         break;
                     case "comefrom": {
