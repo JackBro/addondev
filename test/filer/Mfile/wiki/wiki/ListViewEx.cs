@@ -106,5 +106,12 @@ namespace wiki {
 
             return nulldata;
         }
+
+        public Data GetSelectedItem() {
+            if (this.SelectedIndices.Count == 1) {
+                return this.items[this.SelectedIndices[0]];
+            }
+            return null;
+        }
     }
 }

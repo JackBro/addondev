@@ -27,7 +27,7 @@
               dataType: "text",
               url: requrl + '/' + ids,
               success: function (value) {
-                  jsview.rebuildByID(value);
+                  jsview.rebuildByID(Util.toJson(value));
               },
               error: function (XMLHttpRequest, textStatus, errorThrown) {
                   alert("error textStatus = " + errorThrown);

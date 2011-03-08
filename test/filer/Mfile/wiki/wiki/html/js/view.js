@@ -10,12 +10,12 @@
 function js_BuildByID(source, comefrom) {
     jsview.ClearAll();
     if (!comefrom) {
-        alert("js_BuildByID source");
+        //alert("js_BuildByID source");
         jsview.rebuildByID(Util.toJson(source));
     } else {
         //alert("js_BuildByID source, comefrom");
         var jsons = cnvJson(source, comefrom);
-        alert(jsons["Text"]);
+        //alert(jsons["Text"]);
         jsview.rebuildByID(jsons);
     }
 }
@@ -144,9 +144,11 @@ var Util = {
         var json = null;
         if (typeof value == 'string') {
             try {
-                json = eval('(' + value + ')');
+                //json = eval('(' + value + ')');
+                //alert("toJson " + value);
+                json = $.evalJSON(value);
             } catch (e) {
-
+                alert(e);
             }
         } else {
             json = value;
@@ -282,24 +284,26 @@ var jsview = {
         return container;
     },
 
-    rebuildByID: function (value) {
-        var json = null;
-        if (typeof value == 'string') {
-            try {
-                json = eval('(' + value + ')');
-            } catch (e) {
-
-            }
-        } else {
-            json = value;
-        }
+    rebuildByID: function (json) {
+//        var json = null;
+//        if (typeof value == 'string') {
+//            try {
+//                json = eval('(' + value + ')');
+//            } catch (e) {
+//                alert(e);
+//            }
+//        } else {
+//            alert(value);
+//            json = value;
+//        }
 
         var b = this.getBody();
         var cont;
         if (json instanceof Array) {
-
+            
             for (var i in json) {
                 cont = this.rebuild(json[i]);
+                
                 if (!document.getElementById(cont.id)) {
                     b.appendChild(cont);
                 }

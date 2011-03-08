@@ -1,3 +1,7 @@
+http://d.hatena.ne.jp/deeeki/20090319/jqueryhighlight
+http://randomactsofcoding.blogspot.com/2009/08/parsewikijs-javascript-wiki-parsing.html
+http://remysharp.com/2008/04/01/wiki-to-html-using-javascript/
+
 http://www.asp.net/ajaxlibrary/cdn.ashx
 http://webtech-walker.com/archive/2010/02/15094126.html
 

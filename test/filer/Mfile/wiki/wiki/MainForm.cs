@@ -69,6 +69,10 @@ namespace wiki
             //}
 
 
+            config.htmlPath = Path.GetFullPath(@"..\..\html\wiki_parser.html");
+            config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
+            config.Show = 5;
+
             Editor = new AzukiControlEx();
             Editor.Dock = DockStyle.Fill;
             EditorPanel.Controls.Add(Editor);
@@ -76,8 +80,6 @@ namespace wiki
             Editor.ShowsLineNumber = true;
             
 
-            config.htmlPath = Path.GetFullPath(@"..\..\html\wiki_parser.html");
-            config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
 
             sm.init();
             sm.ScriptDir = config.ScriptDirPath;
@@ -303,10 +305,11 @@ namespace wiki
                         break;
                     case ChangeType.UpDate:
                         reBuild(e.Item);
-
-                        //var cf = InvokeScript("js_getComeFrom");
-                        //var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(cf.ToString());
+                       
+                        var cf = InvokeScript("js_getComeFrom");
+                        var list = JsonSerializer.Deserialize<List<string>>(cf.ToString());
                         //Console.WriteLine("cf = " + cf);
+                        config.ComeFormWords.Union(list);
                         break;
                     case ChangeType.Delete:
                         for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
@@ -321,7 +324,7 @@ namespace wiki
                 }
             };
 
-            var te = manager.Filter(x => { return true; }).ToString();
+            //var te = manager.Filter(x => { return true; }).ToString();
 
             AllPage = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
             //reBuild(newlistview.DataItems);
@@ -352,7 +355,25 @@ namespace wiki
                 }
             };
 
-
+            ToggleListToolStripButton.Click += (sender, e) => {
+                ToggleListToolStripButton.Checked = !ToggleListToolStripButton.Checked;
+                var islist = ToggleListToolStripButton.Checked;
+                if (islist) {
+                    initPage();
+                    var listview =  GetSelctedTabControl();
+                    List<Data> list = new List<Data>();
+                    var last = listview.DataItems.Count < config.Show ? listview.DataItems.Count : config.Show;
+                    for (int i = 0; i < last; i++) {
+                        list.Add(listview.DataItems[i]);
+                    }
+                    reBuild(list);
+                }
+                else {
+                    var listview = GetSelctedTabControl();
+                    var item = listview.GetSelectedItem();
+                    reBuild(item);
+                }
+            };
             
             /*
             int max = 5;
@@ -406,7 +427,7 @@ namespace wiki
         }
 
         private void initPage() {
-            int max = 5;
+            int max = config.Show;
             var l = GetSelctedTabControl();
             if ((l.Page -1) * max <= 0) {
                 PreToolStripButton.Enabled = false;
@@ -658,17 +679,20 @@ namespace wiki
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e) {
-            InvokeScript("jsview.jsmsg", new string[] { "jsview.jsmsg test" });
+            //InvokeScript("jsview.jsmsg", new string[] { "jsview.jsmsg test" });
             //manager.Insert(new Data { ID = manager.GetNewID(), Text = "after", CreationTime = new DateTime(DateTime.Now.Ticks * 2) });
             //var p = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             //webBrowser1.Navigate(p);
             //webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
+           
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e) {
             var ae = webBrowser1.Document.ActiveElement;
             var h = ae.GetAttribute("href");
             var mm=0;
+            
+            
         }
     }
 

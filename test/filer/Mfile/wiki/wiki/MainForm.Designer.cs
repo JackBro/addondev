@@ -49,13 +49,13 @@
             this.timeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.NewItemToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.ReloadToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.NextToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.PageToolStripLabel = new System.Windows.Forms.ToolStripLabel();
             this.PreToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.ToggleListToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ToggleSelectToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.contextMenuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -242,11 +242,11 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.NewItemToolStripButton,
-            this.toolStripButton1,
+            this.ReloadToolStripButton,
             this.NextToolStripButton,
             this.PageToolStripLabel,
             this.PreToolStripButton,
-            this.ToggleSelectToolStripButton});
+            this.ToggleListToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(678, 25);
@@ -262,15 +262,15 @@
             this.NewItemToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.NewItemToolStripButton.Text = "toolStripButton1";
             // 
-            // toolStripButton1
+            // ReloadToolStripButton
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(40, 22);
-            this.toolStripButton1.Text = "reload";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.ReloadToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ReloadToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("ReloadToolStripButton.Image")));
+            this.ReloadToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ReloadToolStripButton.Name = "ReloadToolStripButton";
+            this.ReloadToolStripButton.Size = new System.Drawing.Size(44, 22);
+            this.ReloadToolStripButton.Text = "Reload";
+            this.ReloadToolStripButton.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // NextToolStripButton
             // 
@@ -299,6 +299,16 @@
             this.PreToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.PreToolStripButton.Text = "<";
             // 
+            // ToggleListToolStripButton
+            // 
+            this.ToggleListToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ToggleListToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ToggleListToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("ToggleListToolStripButton.Image")));
+            this.ToggleListToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ToggleListToolStripButton.Name = "ToggleListToolStripButton";
+            this.ToggleListToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.ToggleListToolStripButton.Text = "List";
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -314,16 +324,6 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(114, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
-            // 
-            // ToggleSelectToolStripButton
-            // 
-            this.ToggleSelectToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ToggleSelectToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ToggleSelectToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("ToggleSelectToolStripButton.Image")));
-            this.ToggleSelectToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ToggleSelectToolStripButton.Name = "ToggleSelectToolStripButton";
-            this.ToggleSelectToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.ToggleSelectToolStripButton.Text = "Select";
             // 
             // MainForm
             // 
@@ -377,7 +377,7 @@
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ToolStripMenuItem timeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton ReloadToolStripButton;
         private System.Windows.Forms.Panel EditorPanel;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton NextToolStripButton;
@@ -386,7 +386,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripButton ToggleSelectToolStripButton;
+        private System.Windows.Forms.ToolStripButton ToggleListToolStripButton;
     }
 }
 

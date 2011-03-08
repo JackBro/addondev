@@ -22,7 +22,7 @@ WikiParser.prototype.nodeAtCursorPosition = null;
 
 WikiParser.prototype.parse = function (inputString, id) {
     this.id = id;
-    this.cf = {};
+    this.cf = [];
 
     var re = RegExp("\r\n");
     while (re.test(inputString)) inputString = inputString.replace(re, "\n");
@@ -533,13 +533,16 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
 
     else if (/^(<{3})(.*)/.test(pageName)) { //come-from
         var b = RegExp.$2;
-        this.cf[b] = b;
+
+        if ($.inArray(b, this.cf) == -1) {
+            this.cf.push(b);
+        }
 
         element.setAttribute('href', 'javascript:void(0)');
         $(element).click(function (event) {
             $.ajax({
                 type: 'post',
-                url: requrl + "/" + this.id + "/comefrom" ,
+                url: requrl + "/" + this.id + "/comefrom",
                 data: b
             });
             return false;

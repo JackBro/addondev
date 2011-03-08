@@ -16,5 +16,12 @@ namespace wiki {
 
         public string htmlPath { get; set; }
         public string ScriptDirPath { get; set; }
+
+        public List<string> ComeFormWords { get; set; }
+
+
+        public Config() {
+            ComeFormWords = new List<string>();
+        }
     }
 }
