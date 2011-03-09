@@ -1,3 +1,5 @@
+http://haineault.com/media/jquery/ui-timepickr/page/
+
 http://freefielder.jp/tate/tateEdit/doc.html
 
 http://d.hatena.ne.jp/deeeki/20090319/jqueryhighlight
