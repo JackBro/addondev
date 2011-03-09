@@ -89,6 +89,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Config.cs" />
+    <Compile Include="control\SplitButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="control\SplitButton.Designer.cs">
+      <DependentUpon>SplitButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data.cs" />
     <Compile Include="control\DateTimeForm.cs">
       <SubType>Form</SubType>
@@ -114,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="control\DateTimeForm.resx">
       <DependentUpon>DateTimeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="control\SplitButton.resx">
+      <DependentUpon>SplitButton.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

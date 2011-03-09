@@ -56,6 +56,10 @@
             this.ToggleListToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SearchPanel = new System.Windows.Forms.Panel();
+            this.SearchButtonPanel = new System.Windows.Forms.Panel();
+            this.SearchContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -68,6 +72,8 @@
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.SearchPanel.SuspendLayout();
+            this.SearchContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -102,7 +108,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.ItemTabControl);
-            this.splitContainer2.Panel1.Controls.Add(this.comboBox1);
+            this.splitContainer2.Panel1.Controls.Add(this.SearchPanel);
             // 
             // splitContainer2.Panel2
             // 
@@ -126,11 +132,11 @@
             // 
             // comboBox1
             // 
-            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(0, 0);
+            this.comboBox1.Location = new System.Drawing.Point(31, 0);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(185, 20);
+            this.comboBox1.Size = new System.Drawing.Size(154, 20);
             this.comboBox1.TabIndex = 1;
             // 
             // splitContainer1
@@ -325,6 +331,38 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(114, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
+            // SearchPanel
+            // 
+            this.SearchPanel.Controls.Add(this.comboBox1);
+            this.SearchPanel.Controls.Add(this.SearchButtonPanel);
+            this.SearchPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.SearchPanel.Location = new System.Drawing.Point(0, 0);
+            this.SearchPanel.Name = "SearchPanel";
+            this.SearchPanel.Size = new System.Drawing.Size(185, 20);
+            this.SearchPanel.TabIndex = 1;
+            // 
+            // SearchButtonPanel
+            // 
+            this.SearchButtonPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.SearchButtonPanel.Location = new System.Drawing.Point(0, 0);
+            this.SearchButtonPanel.Name = "SearchButtonPanel";
+            this.SearchButtonPanel.Size = new System.Drawing.Size(31, 20);
+            this.SearchButtonPanel.TabIndex = 2;
+            // 
+            // SearchContextMenuStrip
+            // 
+            this.SearchContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2});
+            this.SearchContextMenuStrip.Name = "SearchContextMenuStrip";
+            this.SearchContextMenuStrip.Size = new System.Drawing.Size(169, 48);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.CheckOnClick = true;
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItem2.Text = "toolStripMenuItem2";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -354,6 +392,8 @@
             this.toolStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.SearchPanel.ResumeLayout(false);
+            this.SearchContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,6 +427,10 @@
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripButton ToggleListToolStripButton;
+        private System.Windows.Forms.Panel SearchPanel;
+        private System.Windows.Forms.Panel SearchButtonPanel;
+        private System.Windows.Forms.ContextMenuStrip SearchContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }
 }
 

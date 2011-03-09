@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Sgry.Azuki.WinForms;
 using System.Runtime.InteropServices;
+using wiki.control;
 
 namespace wiki
 {
@@ -54,8 +55,14 @@ namespace wiki
             EditorPanel.Controls.Add(Editor);
 
             Editor.ShowsLineNumber = true;
-            
 
+            SplitButton sb = new SplitButton();
+            sb.Menu = SearchContextMenuStrip;
+            sb.ToggleButton.Click += (sender, e) => {
+                
+            };
+            sb.Dock = DockStyle.Fill;
+            SearchButtonPanel.Controls.Add(sb);
 
             sm.init();
             sm.ScriptDir = config.ScriptDirPath;
