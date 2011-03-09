@@ -79,15 +79,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzukiControlEx.cs">
+    <Compile Include="ConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigForm.Designer.cs">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="control\AzukiControlEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Config.cs" />
     <Compile Include="Data.cs" />
-    <Compile Include="DateTimeForm.cs">
+    <Compile Include="control\DateTimeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DateTimeForm.Designer.cs">
+    <Compile Include="control\DateTimeForm.Designer.cs">
       <DependentUpon>DateTimeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
@@ -98,12 +104,15 @@
     </Compile>
     <Compile Include="HttpServer.cs" />
     <Compile Include="ItemManager.cs" />
-    <Compile Include="ListViewEx.cs">
+    <Compile Include="control\ListViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="DateTimeForm.resx">
+    <EmbeddedResource Include="ConfigForm.resx">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="control\DateTimeForm.resx">
       <DependentUpon>DateTimeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
@@ -129,6 +138,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ScriptManager.cs" />
+    <Compile Include="Search.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>

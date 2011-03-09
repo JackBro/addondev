@@ -314,9 +314,10 @@ namespace wiki
                 }
             };
 
-            //var te = manager.Filter(x => { return true; }).ToString();
 
-            AllPage = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
+            var all = new SearchAll();
+            //AllPage = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
+            AllPage = CreateListViewTabPage("All", manager.Filter(all.getSearch()));
             //reBuild(newlistview.DataItems);
             //webBrowser1.ScriptErrorsSuppressed = true;
             //webBrowser1.ScrollBarsEnabled = true;
