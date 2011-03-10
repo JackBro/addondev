@@ -13,7 +13,7 @@ function WikiParser(document)
 	    return this.length > 0 ? this[this.length - 1] : null;
 	};
 	this.id = 0;
-	this.cf = {};
+	//this.cf = {};
 }
 
 WikiParser.prototype.linkString = null;

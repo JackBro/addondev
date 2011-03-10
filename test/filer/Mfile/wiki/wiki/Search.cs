@@ -69,4 +69,26 @@ namespace wiki {
             };
         }
     }
+
+    class SearchMigemo : Search {
+        private Regex reg;
+        private string pattern;
+        public new String Pattern {
+            get { return this.pattern; }
+            set {
+                this.pattern = value;
+                reg = new Regex(this.pattern, RegexOptions.Compiled);
+            }
+        }
+
+        public SearchMigemo() {
+            this.Mode = SearchMode.Migemo;
+        }
+
+        public override Predicate<Data> getSearch() {
+            return x => {
+                return reg.IsMatch(x.Text);
+            };
+        }
+    }
 }

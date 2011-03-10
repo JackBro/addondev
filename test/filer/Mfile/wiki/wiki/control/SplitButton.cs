@@ -16,13 +16,9 @@ namespace wiki.control {
                 this.menu = value;
             }
         }
+
         public SplitButton() {
             InitializeComponent();
-           
- 
-            ToggleButton.Click += (sender, e) => {
-
-            };
 
             DropDownButton.Click += (sender, e) => {
                 if (menu == null) return;

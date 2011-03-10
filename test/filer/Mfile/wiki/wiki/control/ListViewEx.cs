@@ -12,6 +12,10 @@ namespace wiki {
 
         public List<Data> DataItems{
             get { return this.items; }
+            set {
+                this.items = value;
+                this.VirtualListSize = items.Count;
+            }
         }
         
         public bool IsPre {
@@ -37,6 +41,7 @@ namespace wiki {
             this.items = items;
 
             this.FullRowSelect = true;
+            this.MultiSelect = false;
             this.HideSelection = false;
             this.View = View.Details;
 
@@ -73,8 +78,9 @@ namespace wiki {
         }
 
         public void DeleteItem(Data item) {
-            items.Remove(item);
-            this.VirtualListSize = items.Count;
+            if (items.Remove(item)) {
+                this.VirtualListSize = items.Count;
+            }
         }
 
         public int AddItem(Data item){

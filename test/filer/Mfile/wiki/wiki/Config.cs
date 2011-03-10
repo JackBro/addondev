@@ -19,6 +19,7 @@ namespace wiki {
 
         public List<string> ComeFormWords { get; set; }
 
+        public string NewTemplete { get; set; }
 
         public Config() {
             ComeFormWords = new List<string>();

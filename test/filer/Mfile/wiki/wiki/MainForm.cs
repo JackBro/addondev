@@ -56,13 +56,17 @@ namespace wiki
 
             Editor.ShowsLineNumber = true;
 
-            SplitButton sb = new SplitButton();
-            sb.Menu = SearchContextMenuStrip;
-            sb.ToggleButton.Click += (sender, e) => {
-                
+            Editor.ImeOnOffEvent += (sender, e) => {
+                if (Editor.Document.AnchorIndex > 0) {
+                    Editor.SetSelection(Editor.Document.AnchorIndex, Editor.Document.AnchorIndex-1);
+                    Editor.Delete();
+                }
             };
-            sb.Dock = DockStyle.Fill;
-            SearchButtonPanel.Controls.Add(sb);
+            CloseEditorToolStripButton.Click += (sender, e) => {
+                ViewEditorSplitContainer.Panel2Collapsed = true;
+            };
+
+            initSearch();
 
             sm.init();
             sm.ScriptDir = config.ScriptDirPath;
@@ -118,8 +122,6 @@ namespace wiki
                     reqparam["method"] = "exe";
                     reqparam["data"] = _RequestBody;
                     serveBW.ReportProgress(1, reqparam);
-
-                    //e.Response = "OK";
                     return;
                 }
 
@@ -131,7 +133,6 @@ namespace wiki
                     reqparam["url"] = url;
                     reqparam["id"] = id;
                     serveBW.ReportProgress(1, reqparam);
-                    //e.Response = "OK";
                     return;
                 }
 
@@ -191,7 +192,8 @@ namespace wiki
                         break;
                     case "goto": {
                             var word = param["data"];
-                            
+                            var s = CreateSearchObj(word, SearchMode.Normal);
+                            ItemTabControl.SelectedTab = CreateListViewTabPage(word, s);
                         }
                         break;
                     case "comefrom": {
@@ -255,7 +257,7 @@ namespace wiki
                 //reBuild(listview.DataItems);
                 reBuild(list);
             };
-
+            //ItemTabControl.MouseDown
 
             //en = new JintEngine();
             //en.DisableSecurity();
@@ -287,17 +289,19 @@ namespace wiki
                 switch (e.type) {
                     case ChangeType.Insert:
                         {
-                            ItemTabControl.SelectedIndex = 0;
-                            var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                            //ItemTabControl.SelectedIndex = 0;
+                            ItemTabControl.SelectedTab = AllPage;
+                            //var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+                            var listview = GetTabControl(AllPage);
                             var iindex = listview.AddItem(e.Item);
-                            if (iindex == (listview.DataItems.Count-1)) {
+                            if (iindex == (listview.DataItems.Count - 1)) {
                                 reBuild(e.Item);
-                            } else {
+                            }
+                            else {
                                 //reBuild(listview.DataItems[iindex+1].ID, e.Item);
                                 reBuild(listview.DataItems[iindex + 1].ID, e.Item);
                             }
-                            //listview.AddItem(e.Index, e.Item);
-                            
+                            //listview.AddItem(e.Index, e.Item);         
                         }
                         break;
                     case ChangeType.UpDate:
@@ -310,8 +314,7 @@ namespace wiki
                         break;
                     case ChangeType.Delete:
                         for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
-                            var page = ItemTabControl.TabPages[i];
-                            var listview = GetTabControl(page);
+                            var listview = GetTabControl(ItemTabControl.TabPages[i]);
                             listview.DeleteItem(e.Item);
                         }
                         InvokeScript("js_Remove", e.Item.ID.ToString());
@@ -324,7 +327,7 @@ namespace wiki
 
             var all = new SearchAll();
             //AllPage = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
-            AllPage = CreateListViewTabPage("All", manager.Filter(all.getSearch()));
+            AllPage = CreateListViewTabPage("All", all);
             //reBuild(newlistview.DataItems);
             //webBrowser1.ScriptErrorsSuppressed = true;
             //webBrowser1.ScrollBarsEnabled = true;
@@ -338,20 +341,6 @@ namespace wiki
                 toolStripStatusLabel1.Text = webBrowser1.StatusText;
             };
             
-
-            comboBox1.AutoCompleteMode = AutoCompleteMode.Suggest;
-            comboBox1.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            var s = new AutoCompleteStringCollection();
-            comboBox1.AutoCompleteCustomSource = s;
-
-            comboBox1.KeyDown += (sender, e) => {
-                if (e.KeyCode == Keys.Return && comboBox1.Text.Length>0) {
-                    CreateListViewTabPage(comboBox1.Text, manager.Filter(x => 
-                    {
-                        return x.Text.Contains(comboBox1.Text);; 
-                    }));
-                }
-            };
 
             ToggleListToolStripButton.Click += (sender, e) => {
                 ToggleListToolStripButton.Checked = !ToggleListToolStripButton.Checked;
@@ -469,6 +458,9 @@ namespace wiki
         private void EditItem(long id) {
             var item = manager.GetItem(id);
             if (item == null) return;
+
+            this.OpenEditor();
+
             manager.EditingData = item;
             dirty = false;
             Editor.Text = item.Text;
@@ -536,7 +528,63 @@ namespace wiki
             return GetTabControl(ItemTabControl.SelectedTab);
         }
 
+        private Dictionary<Search, TabPage> searchtabdic = new Dictionary<Search, TabPage>(); 
         private bool dirty = false;
+        private TabPage CreateListViewTabPage(string name, Search search) {
+
+            foreach (var item in searchtabdic.Keys) {
+                if(item.Equals(search)){
+                    var p = searchtabdic[search];
+                    var lv = GetTabControl(p);
+                    lv.DataItems = manager.Filter(search.getSearch());
+                    return p;
+                }
+            }
+
+           
+            var items = manager.Filter(search.getSearch());
+            var listview = new ListViewEx(items);
+
+            listview.MouseUp += (sender, e) => {
+                var item = listview.GetItemAt(e.X, e.Y);
+                if (item == null && listview.FocusedItem !=null) {
+                    listview.FocusedItem.Selected = true;
+                }
+            };
+
+            listview.SelectedIndexChanged += (sender, e) => {
+                if (listview.SelectedIndices.Count == 1) {
+                    var selindex = listview.SelectedIndices[0];
+                    var item = listview.DataItems[selindex];
+                    //var cf = InvokeScript("js_getComeFrom");
+                    //var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(cf.ToString());
+                    //Console.WriteLine("cf = " + cf);
+                    reBuild(item);
+
+                }
+            };
+            listview.DoubleClick += (sender, e) => {
+                if (listview.SelectedIndices.Count == 1) {
+                    var selindex = listview.SelectedIndices[0];
+                    var id = listview.DataItems[selindex].ID;
+                    //var p = config.htmlPath + "#" + id;
+                    //webBrowser1.Navigate(p);
+
+                    this.Moves(id);
+                }
+            };
+
+            listview.Dock = DockStyle.Fill;
+
+            var t = new TabPage(name);
+            t.Controls.Add(listview);
+            ItemTabControl.TabPages.Add(t);
+
+            searchtabdic.Add(search, t);
+
+            return t;
+        }
+
         private TabPage CreateListViewTabPage(string name, List<Data> items) {
             
             var listview = new ListViewEx(items);
@@ -545,9 +593,9 @@ namespace wiki
                 if (listview.SelectedIndices.Count == 1) {
                     var selindex = listview.SelectedIndices[0];
                     var item = listview.DataItems[selindex];
-                    var cf = InvokeScript("js_getComeFrom");
-                    var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(cf.ToString());
-                    Console.WriteLine("cf = " + cf);
+                    //var cf = InvokeScript("js_getComeFrom");
+                    //var dic = JsonSerializer.Deserialize<List<string>>(cf.ToString());
+                    //Console.WriteLine("cf = " + cf);
                     reBuild(item);
 
                 }
@@ -691,6 +739,10 @@ namespace wiki
             var mm=0;
             
             
+        }
+
+        private void OpenEditor() {
+            ViewEditorSplitContainer.Panel2Collapsed = false;
         }
     }
 

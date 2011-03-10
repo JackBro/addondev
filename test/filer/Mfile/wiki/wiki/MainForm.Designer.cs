@@ -30,17 +30,19 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.BrowserContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.ListViewSplitContainer = new System.Windows.Forms.SplitContainer();
             this.ItemTabControl = new System.Windows.Forms.TabControl();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.SearchPanel = new System.Windows.Forms.Panel();
+            this.SearchComboBox = new System.Windows.Forms.ComboBox();
+            this.SearchButtonPanel = new System.Windows.Forms.Panel();
+            this.ViewEditorSplitContainer = new System.Windows.Forms.SplitContainer();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.EditorPanel = new System.Windows.Forms.Panel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.CloseEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,32 +58,32 @@
             this.ToggleListToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.SearchPanel = new System.Windows.Forms.Panel();
-            this.SearchButtonPanel = new System.Windows.Forms.Panel();
             this.SearchContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1.SuspendLayout();
+            this.NormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RegexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MigemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.ListViewSplitContainer.Panel1.SuspendLayout();
+            this.ListViewSplitContainer.Panel2.SuspendLayout();
+            this.ListViewSplitContainer.SuspendLayout();
+            this.SearchPanel.SuspendLayout();
+            this.ViewEditorSplitContainer.Panel1.SuspendLayout();
+            this.ViewEditorSplitContainer.Panel2.SuspendLayout();
+            this.ViewEditorSplitContainer.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.SearchPanel.SuspendLayout();
             this.SearchContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // contextMenuStrip1
+            // BrowserContextMenuStrip
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.BrowserContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(169, 26);
+            this.BrowserContextMenuStrip.Name = "contextMenuStrip1";
+            this.BrowserContextMenuStrip.Size = new System.Drawing.Size(169, 26);
             // 
             // toolStripMenuItem1
             // 
@@ -92,30 +94,30 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.splitContainer2);
+            this.panel2.Controls.Add(this.ListViewSplitContainer);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 49);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(747, 469);
             this.panel2.TabIndex = 0;
             // 
-            // splitContainer2
+            // ListViewSplitContainer
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
+            this.ListViewSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListViewSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.ListViewSplitContainer.Name = "ListViewSplitContainer";
             // 
-            // splitContainer2.Panel1
+            // ListViewSplitContainer.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.ItemTabControl);
-            this.splitContainer2.Panel1.Controls.Add(this.SearchPanel);
+            this.ListViewSplitContainer.Panel1.Controls.Add(this.ItemTabControl);
+            this.ListViewSplitContainer.Panel1.Controls.Add(this.SearchPanel);
             // 
-            // splitContainer2.Panel2
+            // ListViewSplitContainer.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(747, 469);
-            this.splitContainer2.SplitterDistance = 185;
-            this.splitContainer2.TabIndex = 3;
+            this.ListViewSplitContainer.Panel2.Controls.Add(this.ViewEditorSplitContainer);
+            this.ListViewSplitContainer.Size = new System.Drawing.Size(747, 469);
+            this.ListViewSplitContainer.SplitterDistance = 185;
+            this.ListViewSplitContainer.TabIndex = 3;
             // 
             // ItemTabControl
             // 
@@ -130,37 +132,55 @@
             this.ItemTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.ItemTabControl.TabIndex = 1;
             // 
-            // comboBox1
+            // SearchPanel
             // 
-            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(31, 0);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(154, 20);
-            this.comboBox1.TabIndex = 1;
+            this.SearchPanel.Controls.Add(this.SearchComboBox);
+            this.SearchPanel.Controls.Add(this.SearchButtonPanel);
+            this.SearchPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.SearchPanel.Location = new System.Drawing.Point(0, 0);
+            this.SearchPanel.Name = "SearchPanel";
+            this.SearchPanel.Size = new System.Drawing.Size(185, 20);
+            this.SearchPanel.TabIndex = 1;
             // 
-            // splitContainer1
+            // SearchComboBox
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.SearchComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SearchComboBox.FormattingEnabled = true;
+            this.SearchComboBox.Location = new System.Drawing.Point(31, 0);
+            this.SearchComboBox.Name = "SearchComboBox";
+            this.SearchComboBox.Size = new System.Drawing.Size(154, 20);
+            this.SearchComboBox.TabIndex = 1;
             // 
-            // splitContainer1.Panel1
+            // SearchButtonPanel
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.webBrowser1);
+            this.SearchButtonPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.SearchButtonPanel.Location = new System.Drawing.Point(0, 0);
+            this.SearchButtonPanel.Name = "SearchButtonPanel";
+            this.SearchButtonPanel.Size = new System.Drawing.Size(31, 20);
+            this.SearchButtonPanel.TabIndex = 2;
             // 
-            // splitContainer1.Panel2
+            // ViewEditorSplitContainer
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.EditorPanel);
-            this.splitContainer1.Panel2.Controls.Add(this.toolStrip2);
-            this.splitContainer1.Size = new System.Drawing.Size(558, 469);
-            this.splitContainer1.SplitterDistance = 257;
-            this.splitContainer1.TabIndex = 1;
+            this.ViewEditorSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ViewEditorSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.ViewEditorSplitContainer.Name = "ViewEditorSplitContainer";
+            this.ViewEditorSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // ViewEditorSplitContainer.Panel1
+            // 
+            this.ViewEditorSplitContainer.Panel1.Controls.Add(this.webBrowser1);
+            // 
+            // ViewEditorSplitContainer.Panel2
+            // 
+            this.ViewEditorSplitContainer.Panel2.Controls.Add(this.EditorPanel);
+            this.ViewEditorSplitContainer.Panel2.Controls.Add(this.toolStrip2);
+            this.ViewEditorSplitContainer.Size = new System.Drawing.Size(558, 469);
+            this.ViewEditorSplitContainer.SplitterDistance = 257;
+            this.ViewEditorSplitContainer.TabIndex = 1;
             // 
             // webBrowser1
             // 
-            this.webBrowser1.ContextMenuStrip = this.contextMenuStrip1;
+            this.webBrowser1.ContextMenuStrip = this.BrowserContextMenuStrip;
             this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
@@ -179,22 +199,22 @@
             // toolStrip2
             // 
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton2});
+            this.CloseEditorToolStripButton});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(558, 25);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
-            // toolStripButton2
+            // CloseEditorToolStripButton
             // 
-            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton2.Text = "toolStripButton2";
+            this.CloseEditorToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.CloseEditorToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.CloseEditorToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("CloseEditorToolStripButton.Image")));
+            this.CloseEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CloseEditorToolStripButton.Name = "CloseEditorToolStripButton";
+            this.CloseEditorToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.CloseEditorToolStripButton.Text = "Close";
             // 
             // menuStrip1
             // 
@@ -267,6 +287,7 @@
             this.NewItemToolStripButton.Name = "NewItemToolStripButton";
             this.NewItemToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.NewItemToolStripButton.Text = "toolStripButton1";
+            this.NewItemToolStripButton.ToolTipText = "New";
             // 
             // ReloadToolStripButton
             // 
@@ -331,37 +352,33 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(114, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // SearchPanel
-            // 
-            this.SearchPanel.Controls.Add(this.comboBox1);
-            this.SearchPanel.Controls.Add(this.SearchButtonPanel);
-            this.SearchPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.SearchPanel.Location = new System.Drawing.Point(0, 0);
-            this.SearchPanel.Name = "SearchPanel";
-            this.SearchPanel.Size = new System.Drawing.Size(185, 20);
-            this.SearchPanel.TabIndex = 1;
-            // 
-            // SearchButtonPanel
-            // 
-            this.SearchButtonPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.SearchButtonPanel.Location = new System.Drawing.Point(0, 0);
-            this.SearchButtonPanel.Name = "SearchButtonPanel";
-            this.SearchButtonPanel.Size = new System.Drawing.Size(31, 20);
-            this.SearchButtonPanel.TabIndex = 2;
-            // 
             // SearchContextMenuStrip
             // 
             this.SearchContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2});
+            this.NormalToolStripMenuItem,
+            this.RegexToolStripMenuItem,
+            this.MigemoToolStripMenuItem});
             this.SearchContextMenuStrip.Name = "SearchContextMenuStrip";
-            this.SearchContextMenuStrip.Size = new System.Drawing.Size(169, 48);
+            this.SearchContextMenuStrip.Size = new System.Drawing.Size(110, 70);
             // 
-            // toolStripMenuItem2
+            // NormalToolStripMenuItem
             // 
-            this.toolStripMenuItem2.CheckOnClick = true;
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(168, 22);
-            this.toolStripMenuItem2.Text = "toolStripMenuItem2";
+            this.NormalToolStripMenuItem.CheckOnClick = true;
+            this.NormalToolStripMenuItem.Name = "NormalToolStripMenuItem";
+            this.NormalToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.NormalToolStripMenuItem.Text = "Normal";
+            // 
+            // RegexToolStripMenuItem
+            // 
+            this.RegexToolStripMenuItem.Name = "RegexToolStripMenuItem";
+            this.RegexToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.RegexToolStripMenuItem.Text = "Regex";
+            // 
+            // MigemoToolStripMenuItem
+            // 
+            this.MigemoToolStripMenuItem.Name = "MigemoToolStripMenuItem";
+            this.MigemoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.MigemoToolStripMenuItem.Text = "Migemo";
             // 
             // MainForm
             // 
@@ -375,15 +392,16 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Form1";
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.BrowserContextMenuStrip.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            this.splitContainer1.ResumeLayout(false);
+            this.ListViewSplitContainer.Panel1.ResumeLayout(false);
+            this.ListViewSplitContainer.Panel2.ResumeLayout(false);
+            this.ListViewSplitContainer.ResumeLayout(false);
+            this.SearchPanel.ResumeLayout(false);
+            this.ViewEditorSplitContainer.Panel1.ResumeLayout(false);
+            this.ViewEditorSplitContainer.Panel2.ResumeLayout(false);
+            this.ViewEditorSplitContainer.Panel2.PerformLayout();
+            this.ViewEditorSplitContainer.ResumeLayout(false);
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -392,7 +410,6 @@
             this.toolStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.SearchPanel.ResumeLayout(false);
             this.SearchContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -402,8 +419,8 @@
         #endregion
 
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.SplitContainer ListViewSplitContainer;
+        private System.Windows.Forms.ContextMenuStrip BrowserContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -412,10 +429,10 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.TabControl ItemTabControl;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer ViewEditorSplitContainer;
         private System.Windows.Forms.ToolStripButton NewItemToolStripButton;
         private System.Windows.Forms.WebBrowser webBrowser1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox SearchComboBox;
         private System.Windows.Forms.ToolStripMenuItem timeToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton ReloadToolStripButton;
         private System.Windows.Forms.Panel EditorPanel;
@@ -424,13 +441,15 @@
         private System.Windows.Forms.ToolStripButton PreToolStripButton;
         private System.Windows.Forms.ToolStripLabel PageToolStripLabel;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton CloseEditorToolStripButton;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripButton ToggleListToolStripButton;
         private System.Windows.Forms.Panel SearchPanel;
         private System.Windows.Forms.Panel SearchButtonPanel;
         private System.Windows.Forms.ContextMenuStrip SearchContextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem NormalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RegexToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MigemoToolStripMenuItem;
     }
 }
 

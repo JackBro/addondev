@@ -25,6 +25,7 @@ namespace wiki {
         const int VK_PROCESSKEY = 0xE5;
 
         const int VK_A = 0x41;
+        const int VK_N = 0x4E;
         const int VK_Z = 0x5A;
 
         int prekey = 'a';
@@ -45,7 +46,7 @@ namespace wiki {
 
                         prekey = key;
                         st = DateTime.Now;
-                        if (key == prekeybk && (DateTime.Now - bk).TotalMilliseconds < 200) {
+                        if (key == prekeybk && key != VK_N && (DateTime.Now - bk).TotalMilliseconds < 200) {
                             this.ImeMode = this.ImeMode == ImeMode.On || this.ImeMode == ImeMode.Hiragana ? ImeMode.Off : ImeMode.On;
                             if (ImeOnOffEvent != null) {
                                 ImeOnOffEvent(this, new ImeOnOffEventArgs() { Mode = this.ImeMode });
@@ -66,6 +67,8 @@ namespace wiki {
 
                         prekeys = keyCode;
                         st = DateTime.Now;
+
+                        //Console.WriteLine((DateTime.Now - bk).TotalMilliseconds);
 
                         if (keyCode == prekeybk && (DateTime.Now - bk).TotalMilliseconds < 200) {
                             //var tic = DateTime.Now - bk;
