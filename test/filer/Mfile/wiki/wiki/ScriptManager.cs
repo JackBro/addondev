@@ -23,9 +23,6 @@ namespace wiki {
             en.SetFunction("cs_exe", new Action<string, string>(Exe));
             en.SetFunction("cs_exe", new Action<string, string, string>(Exe));
 
-
-
-
         }
 
         public void Run(string filename, string args) {
