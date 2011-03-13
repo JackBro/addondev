@@ -532,7 +532,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
             });
             return false;
         });
-    }else if (/^(>{2})([\d+|,]+)/.test(pageName)) {
+    } else if (/^(>{2})([\d+|,]+)/.test(pageName)) {
         var ids = RegExp.$2;
         //alert(ids);
         element.setAttribute('href', 'javascript:void(0)');
@@ -588,6 +588,20 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
                 data: b
             });
             return false;
+        });
+    }
+    else if (/^->(\d+)/.test(pageName)) {
+        var b = RegExp.$1;
+        
+        if (this.id == b) return element;
+
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: requrl + '/' + b,
+            success: function (value) {
+                jsview.rebuildByID(Util.toJson(value), element);
+            }
         });
     }
     else {

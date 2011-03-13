@@ -197,7 +197,7 @@ var jsview = {
 
     },
 
-    rebuild: function (json) {
+    rebuild: function (json, parent) {
         var source = json["Text"];
         var id = json["ID"];
         var creationtime = json["CreationTime"];
@@ -205,7 +205,12 @@ var jsview = {
         this.cf = this.getWikiParser().cf;
         //alert(this.cf);
 
-        var container = this.getContainerByID(id);
+        var container;
+        if (!parent) {
+            container = this.getContainerByID(id);
+        } else {
+            container = parent;
+        }
 
         while (container.childNodes.length > 0)
             container.removeChild(container.firstChild);
@@ -285,25 +290,25 @@ var jsview = {
     },
 
     rebuildByID: function (json) {
-//        var json = null;
-//        if (typeof value == 'string') {
-//            try {
-//                json = eval('(' + value + ')');
-//            } catch (e) {
-//                alert(e);
-//            }
-//        } else {
-//            alert(value);
-//            json = value;
-//        }
+        //        var json = null;
+        //        if (typeof value == 'string') {
+        //            try {
+        //                json = eval('(' + value + ')');
+        //            } catch (e) {
+        //                alert(e);
+        //            }
+        //        } else {
+        //            alert(value);
+        //            json = value;
+        //        }
 
         var b = this.getBody();
         var cont;
         if (json instanceof Array) {
-            
+
             for (var i in json) {
                 cont = this.rebuild(json[i]);
-                
+
                 if (!document.getElementById(cont.id)) {
                     b.appendChild(cont);
                 }
