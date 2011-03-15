@@ -342,9 +342,9 @@ namespace wiki
             };
             
 
-            ToggleListToolStripButton.Click += (sender, e) => {
-                ToggleListToolStripButton.Checked = !ToggleListToolStripButton.Checked;
-                var islist = ToggleListToolStripButton.Checked;
+            ToggleShowToolStripButton.Click += (sender, e) => {
+                ToggleShowToolStripButton.Checked = !ToggleShowToolStripButton.Checked;
+                var islist = ToggleShowToolStripButton.Checked;
                 if (islist) {
                     initPage();
                     var listview =  GetSelctedTabControl();

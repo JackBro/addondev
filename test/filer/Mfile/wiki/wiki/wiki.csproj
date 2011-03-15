@@ -142,6 +142,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -177,6 +178,9 @@
     <Content Include="html\ThickBox\thickbox.css" />
     <Content Include="html\ThickBox\thickbox.js" />
     <Content Include="html\wiki_parser.html" />
+    <Content Include="resources\arrow_small_down_b.png" />
+    <Content Include="resources\win_show_detail.png" />
+    <Content Include="resources\win_show_largeIcon.png" />
     <Content Include="scripts\command.js" />
   </ItemGroup>
   <ItemGroup>
