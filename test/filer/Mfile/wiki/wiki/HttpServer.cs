@@ -19,6 +19,7 @@ namespace wiki {
         public event EventHandler<EventArgs> StopEvent;
 
         private HttpListener listener;
+        private bool isbusy;
 
         private int port;
         public int Port {
@@ -29,13 +30,15 @@ namespace wiki {
             }
         }
 
-        public HttpServer() {
-            Port = 8088;
+        public HttpServer(int port) {
+            this.Port = port;
         }
 
         public void stop() {
             if (listener != null && listener.IsListening) {
-                listener.Close();
+                //isbusy = false;
+                //listener.Close();
+                listener.Stop();
                 if (StopEvent != null) {
                     StopEvent(this, new EventArgs());
                 }
@@ -56,27 +59,58 @@ namespace wiki {
             listener.Prefixes.Add(prefix); // プレフィックスの登録
 
             listener.Start();
+            isbusy = true;
+            //listener.BeginGetContext(OnGetContext, listener);
 
-            while (true) {
+            while (isbusy) {
                 HttpListenerContext context = listener.GetContext();
                 HttpListenerRequest req = context.Request;
                 HttpListenerResponse res = context.Response;
 
-                string resString = "tttt";
+                string resString = "accept";
                 Console.WriteLine(req.RawUrl);
                 if (RequestEvent != null) {
                     reqArgs = new RequestEventArgs { Request = req };
                     RequestEvent(this, reqArgs);
                     resString = reqArgs.Response;
                 }
-                
+
                 //if(resString)
 
                 Encoding enc = Encoding.UTF8;
                 byte[] buffer = enc.GetBytes(resString);
                 res.OutputStream.Write(buffer, 0, buffer.Length);
                 res.Close();
-            }        
+            }
+
+            //listener.Close();
+        }
+
+        private void OnGetContext(IAsyncResult ar) {
+            try {
+                HttpListenerContext context = ((HttpListener)ar.AsyncState).EndGetContext(ar);
+                OnRequest(context);
+                listener.BeginGetContext(OnGetContext, listener);
+            } catch (HttpListenerException e) {
+                //Debug.WriteLine(e);
+            }
+        }
+        private void OnRequest(HttpListenerContext context) {
+            HttpListenerRequest req = context.Request;
+            HttpListenerResponse res = context.Response;
+
+            string resString = "accept";
+            Console.WriteLine(req.RawUrl);
+            if (RequestEvent != null) {
+                reqArgs = new RequestEventArgs { Request = req };
+                RequestEvent(this, reqArgs);
+                resString = reqArgs.Response;
+            }
+
+            Encoding enc = Encoding.UTF8;
+            byte[] buffer = enc.GetBytes(resString);
+            res.OutputStream.Write(buffer, 0, buffer.Length);
+            res.Close();
         }
     }
 }

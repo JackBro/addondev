@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="wiki.css" type="text/css" />
 
   <script type="text/javascript" src="js/jquery-1.5.min.js"></script>
+  <script type="text/javascript" src="js/jquery.json-2.2.min.js"></script>
   <script type="text/javascript" src="ThickBox/thickbox.js"></script>
   <script type="text/javascript" src="js/WikiParser.js" ></script>
   <script type="text/javascript" src="js/view.js"></script>
@@ -24,13 +25,24 @@
           $.ajax({
               type: "GET",
               async: false,
+              cache:false,
               dataType: "text",
               url: requrl + '/' + ids,
               success: function (value) {
-                  jsview.rebuildByID(Util.toJson(value));
+                //jsview.rebuildByID(Util.toJson(value));
+								var json = Util.toJson(value);
+								var body = jsview.getBody();
+								if (json instanceof Array) {
+									for (var i in json) {
+										body.appendChild(jsview.quote(json[i]));
+									}
+								}else{
+									//var elem = jsview.quote(json);
+									body.appendChild(jsview.quote(json));
+								}
               },
               error: function (XMLHttpRequest, textStatus, errorThrown) {
-                  alert("error textStatus = " + errorThrown);
+              	alert("error textStatus = " + errorThrown);
               }
           });
       });

@@ -60,3 +60,7 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 	height: 100px;
 }
 
+.quote {
+	border:1px #FF0000 solid;
+  background-color: gray;
+}

@@ -31,7 +31,7 @@ function js_BuildInsertByID(insertBefore, value) {
 //    } else {
 //        json = value;
 //    }
-    var json = Util.toJson(source);
+    var json = Util.toJson(value);
     var container;
     var insertid = insertBefore
     if (json instanceof Array) {
@@ -46,6 +46,11 @@ function js_BuildInsertByID(insertBefore, value) {
         $('#' + insertid).before(container);
     }
 }
+
+function js_editContent(value) {
+    jsview.editContent(Util.toJson(value));
+}
+
 
 function js_ClearAll() {
    jsview.ClearAll();
@@ -144,18 +149,59 @@ var Util = {
         var json = null;
         if (typeof value == 'string') {
             try {
-                //json = eval('(' + value + ')');
+                json = eval('(' + value + ')');
                 //alert("toJson " + value);
-                json = $.evalJSON(value);
+                //json = $.evalJSON(value);
             } catch (e) {
-                alert(e);
+                alert("Util.toJson = " + e);
             }
         } else {
             json = value;
         }
         return json;
-    }
+    },
 
+		parseParams : function(value){
+			var json ={};
+			
+			if(value.indexOf(',')>=0){
+				var params = value.split(',');
+				for(var i in params){
+					var ps = params[i];
+					if (/e\s*:\s*(.+),*/.test(ps)) {
+						json["e"]=RegExp.$1;
+					}else if(/a\s*:\s*(.+),*/.test(ps)) {
+						json["a"]=RegExp.$1;
+					}else if(/fs\s*:\s*(.+),*/.test(ps)) {
+						var res = [];
+						var fs = RegExp.$1;
+						if(fs.indexOf(';')>=0 && /^\[(.+)\]$,*/.test(fs)){
+							//fs = fs.replace(/;/g, ',');
+							var reg = RegExp.$1;
+							fs = reg.replace(/\s*;\s*/g, ';');
+							fss = fs.split(';');
+							for(var j in fss){
+								res.push($.quoteString(fss[j]));
+							}
+							json["fs"]=res;
+						}else{
+							res.push($.quoteString(fs));
+							json["fs"]=res;
+						}
+					
+					}else if(/wd\s*:\s*(.+),*/.test(ps)) {
+						json["wd"]=RegExp.$1;
+					}else if(/wait\s*:\s*(.+),*/.test(ps)) {
+						json["wait"]=RegExp.$1;
+					}
+				}
+				json["fileonly"]=false;
+			}else{
+				json["e"]=value;
+				json["fileonly"]=true;
+			}
+			return json;
+		}
 }
 
 var jsview = {
@@ -165,6 +211,9 @@ var jsview = {
         if (!this.wikiParser)
             this.wikiParser = new WikiParser(document);
         return this.wikiParser;
+    },
+    getWikiParserP: function (parent) {
+        return new WikiParser(parent);
     },
     getBody: function () {
         if (!this.body)
@@ -197,20 +246,50 @@ var jsview = {
 
     },
 
-    rebuild: function (json, parent) {
+		quote: function (json) {
         var source = json["Text"];
         var id = json["ID"];
         var creationtime = json["CreationTime"];
         var pageElement = this.getWikiParser().parse(source, id);
+
+        var container = document.createElement('div');
+
+        var title = document.createElement('div');
+        title.className = "tools";
+        title.appendChild(document.createTextNode(id + " " + creationtime.toLocaleString()));
+        container.appendChild(title);
+        container.appendChild(pageElement);
+        return container;
+		},
+
+		editContent : function(json){
+      var text = json["Text"];
+      var id = json["ID"];
+			var container = document.getElementById(id);//$('#' + id);
+			var pageElement = this.getWikiParser().parse(text, id);
+			$('#page' + id).remove();
+			pageElement.id = 'page' + id;
+			container.appendChild(pageElement);
+this.cf = this.getWikiParser().cf;
+		},
+
+    rebuild: function (json) {
+        var source = json["Text"];
+        var id = json["ID"];
+        var creationtime = json["CreationTime"];
+        var pageElement = this.getWikiParser().parse(source, id);
+				pageElement.id = 'page' + id;
         this.cf = this.getWikiParser().cf;
         //alert(this.cf);
 
         var container;
-        if (!parent) {
+//        if (!pparent) {
+//alert("!pparent = " + pparent);
             container = this.getContainerByID(id);
-        } else {
-            container = parent;
-        }
+//        } else {
+//alert("pparent = " + pparent);
+//            container = pparent;
+//        }
 
         while (container.childNodes.length > 0)
             container.removeChild(container.firstChild);
@@ -250,6 +329,7 @@ var jsview = {
         $(eelem).click(function (event) {
             $.ajax({
                 type: "GET",
+                cache:false,
                 async: false,
                 dataType: "text",
                 url: requrl + "/" + id + "/edit",
@@ -272,6 +352,7 @@ var jsview = {
             $.ajax({
                 type: "DELETE",
                 async: false,
+                cache:false,
                 dataType: "text",
                 url: requrl + "/" + id,
                 success: function (data) {

@@ -527,6 +527,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         $(element).click(function (event) {
             $.ajax({
                 type: 'post',
+                cache:false,
                 url: requrl + "/goto",
                 data: b
             });
@@ -555,6 +556,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         $(element).click(function (event) {
             $.ajax({
                 type: 'post',
+                cache:false,
                 url: requrl + "/" + this.id + "/comefrom",
                 data: b
             });
@@ -572,6 +574,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         $(element).click(function (event) {
             $.ajax({
                 type: 'post',
+                cache:false,
                 url: requrl + "/" + this.id + "/comefrom",
                 data: b
             });
@@ -579,13 +582,24 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         });
     }
     else if (/^!(.+)/.test(pageName)) {
-        var b = RegExp.$1;
+        //var b = RegExp.$1;
+				try{
+					var j = Util.parseParams(RegExp.$1);
+				}catch(e){
+						var res ="";
+						for(var n in e){
+							res += n + " : " +e[n] + "\n";
+						}
+						alert("Util.parseParams " + res);
+				}
         element.setAttribute('href', 'javascript:void(0)');
         $(element).click(function (event) {
             $.ajax({
                 type: 'post',
+                cache:false,
                 url: requrl + "/exe",
-                data: b
+                data: $.toJSON(j)
+								//data: b
             });
             return false;
         });
@@ -595,12 +609,22 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         
         if (this.id == b) return element;
 
+//$(text).remove();
+        element = this.document.createElement('div');
+        //element.setAttribute('class', 'quote');
+        element.className = 'quote';
+        //$(element).setclass('quote');
+    //element.appendChild(text);
+
         $.ajax({
             type: 'GET',
-            async: false,
+            //async: false,
+            dataType: "text",
+            cache:false,
             url: requrl + '/' + b,
             success: function (value) {
-                jsview.rebuildByID(Util.toJson(value), element);
+              var page = jsview.quote(Util.toJson(value)[0]);
+							element.appendChild(page);
             }
         });
     }
