@@ -87,6 +87,15 @@ namespace wiki {
 
             return base.PreProcessMessage(ref msg);
         }
+        public event KeyEventHandler PreKeyDown;
+        protected override void OnKeyDown(KeyEventArgs e) {
+            if (PreKeyDown != null) {
+                PreKeyDown(this, e);
+            }
+            if (!e.Handled) {
+                base.OnKeyDown(e);
+            }
+        }
 
         
     }
