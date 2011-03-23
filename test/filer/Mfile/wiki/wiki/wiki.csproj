@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1B8C0BB2-EB2A-4770-95FD-DE29B7CC8DE6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -96,6 +96,12 @@
     <Compile Include="control\CompleForm.Designer.cs">
       <DependentUpon>CompleForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="control\SearchControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="control\SearchControl.Designer.cs">
+      <DependentUpon>SearchControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="control\SplitButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -142,6 +148,9 @@
     <EmbeddedResource Include="control\DateTimeForm.resx">
       <DependentUpon>DateTimeForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="control\SearchControl.resx">
+      <DependentUpon>SearchControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="control\SplitButton.resx">
       <DependentUpon>SplitButton.cs</DependentUpon>

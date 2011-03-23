@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using wiki.control;
 
 namespace wiki {
     partial class MainForm {
         private AzukiControlEx _editor;
+        private SearchControl _editorSearchControl;
         internal AzukiControlEx Editor {
             get { return _editor; }
         }
@@ -37,6 +39,49 @@ namespace wiki {
             CloseEditorToolStripButton.Click += (sender, e) => {
                 ViewEditorSplitContainer.Panel2Collapsed = true;
             };
+
+            EditorSearchToolStripButton.CheckedChanged += (sender, e) => {
+                if (EditorSearchToolStripButton.Checked) {
+                    if (_editorSearchControl == null) {
+                        _editorSearchControl = new SearchControl();
+                        _editorSearchControl.Dock = DockStyle.Bottom;
+                        _editorSearchControl.SearchComboBox.TextChanged += new System.EventHandler(SearchComboBox_TextChanged);
+                        _editorSearchControl.NextButton.Click += (ss, se) => {
+                            FindNext();
+                        };
+                        _editorSearchControl.PrevButton.Click += (ss, se) => {
+                            FindPrev();
+                        };
+                    }
+                    EditorPanel.Controls.Add(_editorSearchControl);
+                }
+                else {
+                    if (_editorSearchControl != null) {
+                        EditorPanel.Controls.Remove(_editorSearchControl);
+                    }
+                }
+            };
+        }
+
+        void SearchComboBox_TextChanged(object sender, EventArgs e) {
+            FindNext();
+        }
+
+        void FindNext() {
+            var pattern = _editorSearchControl.SearchComboBox.Text;
+            var res = _editor.Document.FindNext(pattern, _editor.Document.AnchorIndex, false);
+            if (res != null) {
+                _editor.Document.SetSelection(res.End, res.Begin);
+                _editor.ScrollToCaret();
+            }
+        }
+        void FindPrev() {
+            var pattern = _editorSearchControl.SearchComboBox.Text;
+            var res = _editor.Document.FindPrev(pattern, _editor.Document.AnchorIndex, false);
+            if (res != null) {
+                _editor.Document.SetSelection(res.Begin, res.End);
+                _editor.ScrollToCaret();
+            }
         }
     }
 }

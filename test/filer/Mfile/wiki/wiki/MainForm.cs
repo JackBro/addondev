@@ -27,6 +27,8 @@ namespace wiki
         private BackgroundWorker serveBW;
 
         private Config config;
+
+        SearchControl _browserSearchControl;
         
         ScriptManager sm = new ScriptManager();
 
@@ -462,6 +464,31 @@ namespace wiki
                 //manager.Insert(new Data { ID = manager.GetNewID(), Text = "after", CreationTime = new DateTime(DateTime.Now.Ticks * 2) });
                 webBrowser1.Navigate(config.htmlPath);
                 webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
+            };
+
+            
+            BrowserSearchToolStripButton.CheckedChanged += (sender, e) => {
+                if (BrowserSearchToolStripButton.Checked) {
+                    if (_browserSearchControl == null) {
+                        _browserSearchControl = new SearchControl();
+                        _browserSearchControl.Dock = DockStyle.Bottom;
+                        _browserSearchControl.NextButton.Click += (ss, se) => {
+                            
+                            var collect = webBrowser1.Document.All;
+                            HtmlDocument doc = webBrowser1.Document;
+                            mshtml.IHTMLDocument2 doc2 = doc.DomDocument as mshtml.IHTMLDocument2;
+                            var textRange = doc2.selection.createRange() as mshtml.IHTMLTxtRange;
+                            mshtml.IHTMLElement iee;
+                            IHTMLDOMNode child;
+                            
+
+                        };
+                    }
+                    ViewEditorSplitContainer.Panel1.Controls.Add(_browserSearchControl);
+                }
+                else {
+                    ViewEditorSplitContainer.Panel1.Controls.Remove(_browserSearchControl);
+                }
             };
  
         }

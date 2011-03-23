@@ -28,7 +28,10 @@ namespace wiki {
 
         public List<string> ComeFormWords { get; set; }
 
-        public string NewTemplete { get; set; }
+        public string ItemTemplete { get; set; }
+
+        public bool IsUseMigemo { get; set; }
+        public string MigemoDicPath { get; set; }
 
         public Config() {
             ComeFormWords = new List<string>();
