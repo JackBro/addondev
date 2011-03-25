@@ -118,6 +118,9 @@
     <Compile Include="MainForm.Action.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MainForm.Browser.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,6 +174,10 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="Migemo\dict\han2zen.dat" />
+    <None Include="Migemo\dict\hira2kata.dat" />
+    <None Include="Migemo\dict\migemo-dict" />
+    <None Include="Migemo\dict\roma2hira.dat" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -183,7 +190,7 @@
     <Compile Include="ScriptManager.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="Serializer.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Migemo\Migemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MSHTML">
@@ -196,6 +203,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="html\js\jquery.incrementalsearch.js" />
     <Content Include="html\js\view.js" />
     <Content Include="html\wiki.css" />
     <Content Include="html\js\WikiParser.js" />

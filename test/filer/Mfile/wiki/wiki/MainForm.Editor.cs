@@ -61,6 +61,16 @@ namespace wiki {
                     }
                 }
             };
+
+            EditorWrapToolStripButton.CheckedChanged += (sender, e) => {
+                if (EditorWrapToolStripButton.Checked) {
+                    Editor.ViewType = Sgry.Azuki.ViewType.WrappedProportional;
+                    Editor.ViewWidth = Editor.ClientSize.Width - Editor.View.HRulerUnitWidth * 2;
+                }
+                else {
+                    Editor.ViewType = Sgry.Azuki.ViewType.Proportional;
+                }
+            };
         }
 
         void SearchComboBox_TextChanged(object sender, EventArgs e) {

@@ -21,8 +21,8 @@ namespace wiki {
         };
         public static Action<MainForm> Paste = (form) => {
             if (Clipboard.ContainsImage()) {
-                var image = Clipboard.GetImage();
-                image.Save("0.png", ImageFormat.Png);
+                //var image = Clipboard.GetImage();
+                //image.Save("0.png", ImageFormat.Png);
             } else if (Clipboard.ContainsText()) {
                 form.Editor.Paste();
             }
@@ -37,7 +37,6 @@ namespace wiki {
 
         public static Action<MainForm> Comple = (form) => {
             var f = new CompleForm(form);
-            //var f = new CompleWindow(form);
             f.Show();
         };
     }

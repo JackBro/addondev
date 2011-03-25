@@ -14,12 +14,14 @@ using System.Text.RegularExpressions;
 using Sgry.Azuki.WinForms;
 using System.Runtime.InteropServices;
 using wiki.control;
+using KaoriYa.Migemo;
 
 namespace wiki
 {
     public partial class MainForm : Form
     {
         private ItemManager manager;
+        private Migemo migemo;
 
         private long baseticks;
 
@@ -28,7 +30,7 @@ namespace wiki
 
         private Config config;
 
-        SearchControl _browserSearchControl;
+        //SearchControl _browserSearchControl;
         
         ScriptManager sm = new ScriptManager();
 
@@ -61,10 +63,12 @@ namespace wiki
             //config = new Config();
             config.htmlPath = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
+            config.MigemoDictPath = Path.GetFullPath(@"..\..\migemo\dict\migemo-dict");
 
             initKeyMap();
             initEditor();
             initSearch();
+            initBrowser();
 
             sm.init();
             sm.ScriptDir = config.ScriptDirPath;
@@ -366,7 +370,9 @@ namespace wiki
                 ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_largeIcon;
                 ToggleShowToolStripSplitButton.Text = "Large";
             }
-
+            this.KeyDown += (sender, e) => {
+                var ee = e.KeyValue;
+            };
             
             ToggleShowToolStripSplitButton.ButtonClick += (sender, e) => {
                 ShowLargeToolStripMenuItem.Checked = !ShowLargeToolStripMenuItem.Checked;
@@ -467,29 +473,29 @@ namespace wiki
             };
 
             
-            BrowserSearchToolStripButton.CheckedChanged += (sender, e) => {
-                if (BrowserSearchToolStripButton.Checked) {
-                    if (_browserSearchControl == null) {
-                        _browserSearchControl = new SearchControl();
-                        _browserSearchControl.Dock = DockStyle.Bottom;
-                        _browserSearchControl.NextButton.Click += (ss, se) => {
+            //BrowserSearchToolStripButton.CheckedChanged += (sender, e) => {
+            //    if (BrowserSearchToolStripButton.Checked) {
+            //        if (_browserSearchControl == null) {
+            //            _browserSearchControl = new SearchControl();
+            //            _browserSearchControl.Dock = DockStyle.Bottom;
+            //            _browserSearchControl.NextButton.Click += (ss, se) => {
                             
-                            var collect = webBrowser1.Document.All;
-                            HtmlDocument doc = webBrowser1.Document;
-                            mshtml.IHTMLDocument2 doc2 = doc.DomDocument as mshtml.IHTMLDocument2;
-                            var textRange = doc2.selection.createRange() as mshtml.IHTMLTxtRange;
-                            mshtml.IHTMLElement iee;
-                            IHTMLDOMNode child;
+            //                var collect = webBrowser1.Document.All;
+            //                HtmlDocument doc = webBrowser1.Document;
+            //                mshtml.IHTMLDocument2 doc2 = doc.DomDocument as mshtml.IHTMLDocument2;
+            //                var textRange = doc2.selection.createRange() as mshtml.IHTMLTxtRange;
+            //                mshtml.IHTMLElement iee;
+            //                IHTMLDOMNode child;
                             
 
-                        };
-                    }
-                    ViewEditorSplitContainer.Panel1.Controls.Add(_browserSearchControl);
-                }
-                else {
-                    ViewEditorSplitContainer.Panel1.Controls.Remove(_browserSearchControl);
-                }
-            };
+            //            };
+            //        }
+            //        ViewEditorSplitContainer.Panel1.Controls.Add(_browserSearchControl);
+            //    }
+            //    else {
+            //        ViewEditorSplitContainer.Panel1.Controls.Remove(_browserSearchControl);
+            //    }
+            //};
  
         }
 
@@ -784,6 +790,13 @@ namespace wiki
             
             //this.Request(e.Url);
             //EditItem(1);
+        }
+
+        private Migemo getMigemo() {
+            if (migemo == null) {
+                migemo = new Migemo(config.MigemoDictPath);
+            }
+            return migemo;
         }
 
         private void reBuild(List<Data> items) {

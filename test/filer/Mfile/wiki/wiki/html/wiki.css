@@ -64,3 +64,5 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 	border:1px #FF0000 solid;
   background-color: gray;
 }
+
+.highlight { background-color: yellow }

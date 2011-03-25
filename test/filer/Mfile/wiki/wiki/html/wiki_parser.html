@@ -26,8 +26,14 @@
 
 	    $.support.cors = true;
 	    $(function () {
-	        
-		  });
+
+	    });
+	    function js_incrementalSearch(pat) {
+	        $('#container').removeHighlight().incrementalSearch(pat);
+	        if ($('.highlight').length) {
+	            $('.highlight').inwindow();
+	        }           
+	    }
     </script>
 </head>
 

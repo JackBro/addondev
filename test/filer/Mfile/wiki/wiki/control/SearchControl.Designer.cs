@@ -26,7 +26,7 @@
             this.SearchComboBox = new System.Windows.Forms.ComboBox();
             this.NextButton = new System.Windows.Forms.Button();
             this.PrevButton = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.MIgemoCheckBox = new System.Windows.Forms.CheckBox();
             this.CloseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -37,13 +37,13 @@
             this.SearchComboBox.FormattingEnabled = true;
             this.SearchComboBox.Location = new System.Drawing.Point(25, 3);
             this.SearchComboBox.Name = "SearchComboBox";
-            this.SearchComboBox.Size = new System.Drawing.Size(181, 20);
+            this.SearchComboBox.Size = new System.Drawing.Size(153, 20);
             this.SearchComboBox.TabIndex = 0;
             // 
             // NextButton
             // 
             this.NextButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NextButton.Location = new System.Drawing.Point(212, 3);
+            this.NextButton.Location = new System.Drawing.Point(183, 3);
             this.NextButton.Name = "NextButton";
             this.NextButton.Size = new System.Drawing.Size(56, 23);
             this.NextButton.TabIndex = 1;
@@ -53,22 +53,23 @@
             // PrevButton
             // 
             this.PrevButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PrevButton.Location = new System.Drawing.Point(274, 3);
+            this.PrevButton.Location = new System.Drawing.Point(245, 3);
             this.PrevButton.Name = "PrevButton";
             this.PrevButton.Size = new System.Drawing.Size(56, 23);
             this.PrevButton.TabIndex = 2;
             this.PrevButton.Text = "Prev";
             this.PrevButton.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // MIgemoCheckBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(3, 29);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(63, 16);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "Migemo";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.MIgemoCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MIgemoCheckBox.AutoSize = true;
+            this.MIgemoCheckBox.Location = new System.Drawing.Point(307, 7);
+            this.MIgemoCheckBox.Name = "MIgemoCheckBox";
+            this.MIgemoCheckBox.Size = new System.Drawing.Size(63, 16);
+            this.MIgemoCheckBox.TabIndex = 3;
+            this.MIgemoCheckBox.Text = "Migemo";
+            this.MIgemoCheckBox.UseVisualStyleBackColor = true;
             // 
             // CloseButton
             // 
@@ -85,12 +86,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.CloseButton);
-            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.PrevButton);
             this.Controls.Add(this.NextButton);
+            this.Controls.Add(this.MIgemoCheckBox);
             this.Controls.Add(this.SearchComboBox);
             this.Name = "SearchControl";
-            this.Size = new System.Drawing.Size(333, 52);
+            this.Size = new System.Drawing.Size(376, 30);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -98,10 +99,10 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBox1;
         internal System.Windows.Forms.Button CloseButton;
         internal System.Windows.Forms.ComboBox SearchComboBox;
         internal System.Windows.Forms.Button NextButton;
         internal System.Windows.Forms.Button PrevButton;
+        internal System.Windows.Forms.CheckBox MIgemoCheckBox;
     }
 }

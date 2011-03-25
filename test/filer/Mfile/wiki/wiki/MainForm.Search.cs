@@ -102,16 +102,16 @@ namespace wiki {
             Search s = null;
             switch (mode) {
                 case SearchMode.Normal:
-                    s = new SearchNormal();
-                    s.Pattern = pattern;
+                    s = new SearchNormal(pattern);
+                    //s.Pattern = pattern;
                     break;
                 case SearchMode.Regex:
-                    s = new SearchRegex();
-                    s.Pattern = pattern;
+                    s = new SearchRegex(pattern);
+                    //s.Pattern = pattern;
                     break;
                 case SearchMode.Migemo:
-                    s = new SearchMigemo();
-                    s.Pattern = pattern;
+                    s = new SearchMigemo(getMigemo().Query(pattern));
+                    //s.Pattern = getMigemo().Query(pattern);
                     break;
                 default:
                     break;

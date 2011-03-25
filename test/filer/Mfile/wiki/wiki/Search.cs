@@ -38,8 +38,9 @@ namespace wiki {
     }
 
     class SearchNormal : Search{
-        public SearchNormal() {
+        public SearchNormal(String Pattern) {
             this.Mode = SearchMode.Normal;
+            this.Pattern = Pattern;
         }
         public override Predicate<Data> getSearch() {
             return x => {
@@ -50,17 +51,11 @@ namespace wiki {
 
     class SearchRegex : Search {
         private Regex reg;
-        private string pattern;
-        public new String Pattern {
-            get { return this.pattern; }
-            set {
-                this.pattern = value;
-                reg = new Regex(this.pattern, RegexOptions.Compiled);
-            }
-        }
 
-        public SearchRegex() {
+        public SearchRegex(String Pattern) {
             this.Mode = SearchMode.Regex;
+            this.Pattern = Pattern;
+            reg = new Regex(this.Pattern, RegexOptions.Compiled);
         }
 
         public override Predicate<Data> getSearch() {
@@ -72,17 +67,11 @@ namespace wiki {
 
     class SearchMigemo : Search {
         private Regex reg;
-        private string pattern;
-        public new String Pattern {
-            get { return this.pattern; }
-            set {
-                this.pattern = value;
-                reg = new Regex(this.pattern, RegexOptions.Compiled);
-            }
-        }
 
-        public SearchMigemo() {
+        public SearchMigemo(String Pattern) {
             this.Mode = SearchMode.Migemo;
+            this.Pattern = Pattern;
+            reg = new Regex(this.Pattern, RegexOptions.Compiled);
         }
 
         public override Predicate<Data> getSearch() {
