@@ -50,6 +50,7 @@ namespace wiki
         public MainForm(){
             InitializeComponent();
 
+
             try {	        
         		config = XMLSerializer.Deserialize<Config>(Config.SettingPath);
 	        }
@@ -559,6 +560,11 @@ namespace wiki
                 //reBuild(items[0]);
                 ToggleShow(config.ShowType);
             }
+
+
+            //this.webBrowser1.Document.MouseDown += (ss, se) => {
+            //    var ee = e;
+            //};
         }
 
         internal void CreateItem() {

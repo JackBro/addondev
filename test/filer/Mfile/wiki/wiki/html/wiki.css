@@ -65,4 +65,6 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
   background-color: gray;
 }
 
-.highlight { background-color: yellow }
+.selecthighlight { background-color: yellow }
+.curselecthighlight { background-color: Lime }
+.inchighlight { background-color: Lime }

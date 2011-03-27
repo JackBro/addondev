@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="wiki.css"/>
 
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
-	<title> WikiParser Test </title>
+    <title> WikiParser Test </title>
 	<script type="text/javascript" src="js/jquery-1.5.min.js" ></script>
 	<script type="text/javascript" src="js/jquery.json-2.2.min.js" ></script>
 	<script type="text/javascript" src="js/WikiParser.js" ></script>
@@ -16,78 +16,113 @@
     <script type="text/javascript" src="js/jquery.textchange.min.js" ></script>
     <script type="text/javascript" src="js/jquery.scrollinwindow.js" ></script>
 	<script type="text/javascript" >
+	    var searchOffset;
 	    $(function () {
+	        searchOffset = { left: 0, top: 0 };
+
+	        $("#container").mousedown(function (event) {
+	            //pageX	ページの左上を0とした横位置
+	            //pageY	ページの左上を0とした縦位置
+	            //clientX	ブラウザのドキュメント表示領域の左上を0とした横位置
+	            //clientY	ブラウザのドキュメント表示領域の左上を0とした縦位置
+	            //alert(event.pageX + " : " + event.pageY + " : " + event.clientX + " : " + event.clientY);
+	            var cntoffset = $('#container').offset();
+	            searchOffset = { left: event.pageX, top: event.pageY };
+	            $('#container').searchReset();
+	        });
+
 
 	        $('#incrementalSearch').bind('textchange', function (event, previousText) {
+
+//	            var offset;
+//	            if ($('.curselecthighlight').length) {
+//	                offset = $('.curselecthighlight').offset();
+//	                $('#container').searchReset();
+//	            }
 	            var val = $(this).val();
-	            $('#container').removeHighlight().incrementalSearch(val);
-	            if ($('.highlight').length) {
-	                $('.highlight').inwindow();
+	            $('#container').removeHighlight().incrementalSearch(val, offset);
+	            if ($('.inchighlight').length) {
+	                $('.inchighlight').inwindow();
 	            }
 	        });
 	    });
 
-function searchNext() {
-    var val = $('#incrementalSearch').val();
-    $('#container').removeHighlight().incrementalSearch(val);
-    if ($('.highlight').length) {
-        $('.highlight').inwindow();
-    }
-}
-function searchPrev() {
+        function searchNext() {
+            var val = $('#incrementalSearch').val();
+            //val = new RegExp(/obj\./);
+            $('#container').search(val, false, searchOffset);
 
-}
+            if ($('.curselecthighlight').length) {
+                $('.curselecthighlight').inwindow();
+            }
+        }
 
-var app = {
-	rebuild : function()
-	{
-		var source = this.getTxtSource().value;
-		var pageElement = this.getWikiParser().parse(source);
-		var container = this.getContainer()
-		while(container.childNodes.length > 0) 
-			container.removeChild(container.firstChild);
-		container.appendChild(pageElement);
+        function searchPrev() {
+            var val = $('#incrementalSearch').val();
 
+            $('#container').search(val, true);
 
-		return 
-	},
-	clearSource : function()
-	{
-		this.getTxtSource().value = '';
-		this.rebuild();
-	},
-	getWikiParser : function()
-	{
-		if(!this.wikiParser)
-			this.wikiParser = new WikiParser(document);
-		return this.wikiParser;
-	},
-	getTxtSource : function()
-	{
-		if(!this.txtSource)
-			this.txtSource = document.getElementById("txtSource");
-		return this.txtSource;
-	},
-	getContainer : function()
-	{
-		if(!this.container)
-			this.container = document.getElementById("container");
-		return this.container;
-	}
-}
+            if ($('.curselecthighlight').length) {
+                $('.curselecthighlight').inwindow();
+            }
+        }
 
-</script>
+        var app = {
+	        rebuild : function()
+	        {
+		        var source = this.getTxtSource().value;
+		        var pageElement = this.getWikiParser().parse(source);
+		        var container = this.getContainer()
+		        while(container.childNodes.length > 0) 
+			        container.removeChild(container.firstChild);
+		        container.appendChild(pageElement);
+		        return 
+	        },
+	        clearSource : function()
+	        {
+		        this.getTxtSource().value = '';
+		        this.rebuild();
+	        },
+	        getWikiParser : function()
+	        {
+		        if(!this.wikiParser)
+			        this.wikiParser = new WikiParser(document);
+		        return this.wikiParser;
+	        },
+	        getTxtSource : function()
+	        {
+		        if(!this.txtSource)
+			        this.txtSource = document.getElementById("txtSource");
+		        return this.txtSource;
+	        },
+	        getContainer : function()
+	        {
+		        if(!this.container)
+			        this.container = document.getElementById("container");
+		        return this.container;
+	        }
+        }
 
+    </script>
 </head>
+
 <body onload="app.rebuild();" >
+
+<div id="serachdiv" style="position: fixed; width:100%;">
+	<div style="float:left; ">search</div> 
+	<input style="width:50%;" type="text" name="NAMAE" id="incrementalSearch" />
+	<button onclick="searchNext()">Next</button>
+	<button onclick="searchPrev()">Prev</button>
+</div>
+
 <table width="96%" >
 <thead>
 	<tr>
 		<td valign="top" colspan="2" >
 		<form>
-		<input type="button" value="Parse" onclick="app.rebuild();" >
-		<input type="button" value="Clear" onclick="app.clearSource();" >
-		<input type="submit" value="Restore" >
+		<input type="button" value="Parse" onclick="app.rebuild();" />
+		<input type="button" value="Clear" onclick="app.clearSource();" />
+		<input type="submit" value="Restore" />
 		</form>
 		</td>
 	</tr>
@@ -96,13 +131,8 @@ var app = {
 		<th> HTML </th>
 	</tr>
 </thead>
+
 <tbody>
-<div id="serachdiv" style="position: fixed; width:100%;">
-	<div style="float:left; ">search</div> 
-	<input style="width:50%;" type=text name="NAMAE" id="incrementalSearch">
-	<button onclick="searchNext()">Next</button>
-	<button onclick="alert('OK')">Prev</button>
-</div>
 	<tr>
 		<td valign="top" width="50%" >
 		<textarea id="txtSource" cols="50" rows="20" 
@@ -184,7 +214,6 @@ CSV 形式が表になります。
 	</tr>
 </tbody>
 </table>
-
 
 </body>
 </html>
