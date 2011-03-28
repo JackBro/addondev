@@ -26,7 +26,7 @@ namespace wiki {
             ConfigTreeView.NodeMouseClick += (sender, e) => {
                 if (configpanels.ContainsKey(e.Node.Name)) {
                     var cp = configpanels[e.Node.Name];
-                    cp.BringToFront();
+                    //cp.BringToFront();
                 }
             };
         }

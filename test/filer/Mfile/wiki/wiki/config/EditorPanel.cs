@@ -16,7 +16,21 @@ namespace wiki {
                 var res = EditorFontDialog.ShowDialog();
                 if (res == DialogResult.OK) {
                     var EditorFont = EditorFontDialog.Font;
-                    FontTextBox.Text = EditorFont.Name;
+                    FontNameLabel.Text = EditorFont.Name;
+                }
+            };
+
+            FontColorButton.Click += (sender, e) => {
+                var res = EditorColorDialog.ShowDialog();
+                if (res == DialogResult.OK) {
+                    FonColorLabel.BackColor = EditorColorDialog.Color;
+                }
+            };
+
+            BackColorButton.Click += (sender, e) => {
+                var res = EditorColorDialog.ShowDialog();
+                if (res == DialogResult.OK) {
+                    BackColorLabel.BackColor = EditorColorDialog.Color;
                 }
             };
         }
