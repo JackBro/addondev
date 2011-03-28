@@ -100,6 +100,7 @@ konkon
             //if (selelems.length>0){
             nextSearch(jQuery(this), prev);
         } else {
+            //alert("search firstSearch prev= " + prev);
             firstSearch(jQuery(this), pat, prev, offset);
         }
     };
@@ -117,7 +118,7 @@ konkon
             for (var i = 0; i < len; i++) {
                 var elemoffset = jQuery(selelems[i]).offset();
 
-                if ((elemoffset.top >= startoffset.top - h / 2 && elemoffset.left >= startoffset.left) 
+                if ((elemoffset.top >= startoffset.top - h / 2 && elemoffset.left >= startoffset.left)
                     || elemoffset.top >= startoffset.top - h / 2) {
                     elem = selelems[i];
                     if (prev && i > 0) {
@@ -175,12 +176,14 @@ konkon
     };
 
     jQuery.fn.incrementalSearch = function (pat, startoffset) {
-         selelems = [];
+        selelems = [];
 
-	    if ($('.' + CUR_SEL_HIGHLIGHT).length) {
-	        startoffset = $('.' + CUR_SEL_HIGHLIGHT).offset();
-	        jQuery(this).searchReset();
-	    }
+        if ($('.' + CUR_SEL_HIGHLIGHT).length) {
+            startoffset = $('.' + CUR_SEL_HIGHLIGHT).offset();
+            jQuery(this).searchReset();
+        } else {
+            startoffset = jQuery.extend({ left: 0, top: 0 }, startoffset);
+        }
 
         var isstring = typeof pat == 'string';
         if (isstring) {
@@ -198,7 +201,7 @@ konkon
             return spannode;
         }
 
-        startoffset = jQuery.extend({ left: 0, top: 0 }, startoffset);
+
 
         function innerHighlight(node, pat, cindex) {
             var skip = 0;
@@ -224,7 +227,7 @@ konkon
                         var h = jQuery(spannode).height();
                         var elemoffset = jQuery(spannode).offset();
                         //if (elemoffset.left >= startoffset.left && elemoffset.top >= startoffset.top) {
-                        if ((elemoffset.top >= startoffset.top - h / 2 && elemoffset.left >= startoffset.left) 
+                        if ((elemoffset.top >= startoffset.top - h / 2 && elemoffset.left >= startoffset.left)
                             || elemoffset.top >= startoffset.top - h / 2) {
                             incSearchElemIndex = cindex;
                             incSearchPos = pos;

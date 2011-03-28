@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
 namespace wiki {
-    public partial class ConfigForm : Form {
-        public Font EditorFont { get; private set; }
-
-        public ConfigForm() {
+    public partial class EditorPanel : UserControl {
+        public EditorPanel() {
             InitializeComponent();
 
             FontSelectButton.Click += (sender, e) => {
                 var res = EditorFontDialog.ShowDialog();
                 if (res == DialogResult.OK) {
-                    EditorFont = EditorFontDialog.Font;
+                    var EditorFont = EditorFontDialog.Font;
                     FontTextBox.Text = EditorFont.Name;
                 }
             };

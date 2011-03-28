@@ -26,7 +26,7 @@
             this.SearchComboBox = new System.Windows.Forms.ComboBox();
             this.NextButton = new System.Windows.Forms.Button();
             this.PrevButton = new System.Windows.Forms.Button();
-            this.MIgemoCheckBox = new System.Windows.Forms.CheckBox();
+            this.MigemoCheckBox = new System.Windows.Forms.CheckBox();
             this.CloseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -60,16 +60,16 @@
             this.PrevButton.Text = "Prev";
             this.PrevButton.UseVisualStyleBackColor = true;
             // 
-            // MIgemoCheckBox
+            // MigemoCheckBox
             // 
-            this.MIgemoCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MIgemoCheckBox.AutoSize = true;
-            this.MIgemoCheckBox.Location = new System.Drawing.Point(307, 7);
-            this.MIgemoCheckBox.Name = "MIgemoCheckBox";
-            this.MIgemoCheckBox.Size = new System.Drawing.Size(63, 16);
-            this.MIgemoCheckBox.TabIndex = 3;
-            this.MIgemoCheckBox.Text = "Migemo";
-            this.MIgemoCheckBox.UseVisualStyleBackColor = true;
+            this.MigemoCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MigemoCheckBox.AutoSize = true;
+            this.MigemoCheckBox.Location = new System.Drawing.Point(307, 7);
+            this.MigemoCheckBox.Name = "MigemoCheckBox";
+            this.MigemoCheckBox.Size = new System.Drawing.Size(63, 16);
+            this.MigemoCheckBox.TabIndex = 3;
+            this.MigemoCheckBox.Text = "Migemo";
+            this.MigemoCheckBox.UseVisualStyleBackColor = true;
             // 
             // CloseButton
             // 
@@ -88,7 +88,7 @@
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.PrevButton);
             this.Controls.Add(this.NextButton);
-            this.Controls.Add(this.MIgemoCheckBox);
+            this.Controls.Add(this.MigemoCheckBox);
             this.Controls.Add(this.SearchComboBox);
             this.Name = "SearchControl";
             this.Size = new System.Drawing.Size(376, 30);
@@ -103,6 +103,6 @@
         internal System.Windows.Forms.ComboBox SearchComboBox;
         internal System.Windows.Forms.Button NextButton;
         internal System.Windows.Forms.Button PrevButton;
-        internal System.Windows.Forms.CheckBox MIgemoCheckBox;
+        internal System.Windows.Forms.CheckBox MigemoCheckBox;
     }
 }

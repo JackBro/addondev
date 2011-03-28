@@ -31,16 +31,9 @@
 	            $('#container').searchReset();
 	        });
 
-
 	        $('#incrementalSearch').bind('textchange', function (event, previousText) {
-
-//	            var offset;
-//	            if ($('.curselecthighlight').length) {
-//	                offset = $('.curselecthighlight').offset();
-//	                $('#container').searchReset();
-//	            }
 	            var val = $(this).val();
-	            $('#container').removeHighlight().incrementalSearch(val, offset);
+	            $('#container').removeHighlight().incrementalSearch(val, searchOffset);
 	            if ($('.inchighlight').length) {
 	                $('.inchighlight').inwindow();
 	            }
@@ -108,13 +101,13 @@
 
 <body onload="app.rebuild();" >
 
-<div id="serachdiv" style="position: fixed; width:100%;">
+<div id="serachdiv" style="position:fixed; top:0px; left:0px; width:100%; background-color:Gray;">
 	<div style="float:left; ">search</div> 
 	<input style="width:50%;" type="text" name="NAMAE" id="incrementalSearch" />
 	<button onclick="searchNext()">Next</button>
 	<button onclick="searchPrev()">Prev</button>
 </div>
-
+<div style="height:20pt;"> </div>
 <table width="96%" >
 <thead>
 	<tr>

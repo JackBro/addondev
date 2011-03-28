@@ -51,6 +51,8 @@
             this.RedoToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.EditorSearchToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.EditorWrapToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,8 +76,7 @@
             this.NormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RegexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MigemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.EditorWrapToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -305,6 +306,21 @@
             this.EditorSearchToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.EditorSearchToolStripButton.Text = "Search";
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // EditorWrapToolStripButton
+            // 
+            this.EditorWrapToolStripButton.CheckOnClick = true;
+            this.EditorWrapToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.EditorWrapToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("EditorWrapToolStripButton.Image")));
+            this.EditorWrapToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.EditorWrapToolStripButton.Name = "EditorWrapToolStripButton";
+            this.EditorWrapToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.EditorWrapToolStripButton.Text = "Wrap";
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -362,7 +378,8 @@
             this.PreToolStripButton,
             this.ToggleShowToolStripSplitButton,
             this.toolStripSeparator1,
-            this.BrowserSearchToolStripButton});
+            this.BrowserSearchToolStripButton,
+            this.OptionToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(747, 25);
@@ -501,20 +518,14 @@
             this.MigemoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.MigemoToolStripMenuItem.Text = "Migemo";
             // 
-            // toolStripSeparator4
+            // OptionToolStripButton
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // EditorWrapToolStripButton
-            // 
-            this.EditorWrapToolStripButton.CheckOnClick = true;
-            this.EditorWrapToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.EditorWrapToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("EditorWrapToolStripButton.Image")));
-            this.EditorWrapToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.EditorWrapToolStripButton.Name = "EditorWrapToolStripButton";
-            this.EditorWrapToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.EditorWrapToolStripButton.Text = "Wrap";
+            this.OptionToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.OptionToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("OptionToolStripButton.Image")));
+            this.OptionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.OptionToolStripButton.Name = "OptionToolStripButton";
+            this.OptionToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.OptionToolStripButton.Text = "Option";
             // 
             // MainForm
             // 
@@ -600,6 +611,7 @@
         private System.Windows.Forms.ToolStripButton BrowserSearchToolStripButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton EditorWrapToolStripButton;
+        private System.Windows.Forms.ToolStripButton OptionToolStripButton;
     }
 }
 

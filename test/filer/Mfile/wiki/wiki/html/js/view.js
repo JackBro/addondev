@@ -216,8 +216,10 @@ var jsview = {
         return new WikiParser(parent);
     },
     getBody: function () {
-        if (!this.body)
-            this.body = document.getElementsByTagName("body")[0];
+        if (!this.body) {
+            //this.body = document.getElementsByTagName("body")[0];
+            this.body = document.getElementById('container');//$("#container");
+        }
         return this.body;
     },
     getContainerByID: function (id) {
@@ -246,7 +248,7 @@ var jsview = {
 
     },
 
-		quote: function (json) {
+    quote: function (json) {
         var source = json["Text"];
         var id = json["ID"];
         var creationtime = json["CreationTime"];
@@ -260,36 +262,36 @@ var jsview = {
         container.appendChild(title);
         container.appendChild(pageElement);
         return container;
-		},
+    },
 
-		editContent : function(json){
-      var text = json["Text"];
-      var id = json["ID"];
-			var container = document.getElementById(id);//$('#' + id);
-			var pageElement = this.getWikiParser().parse(text, id);
-			$('#page' + id).remove();
-			pageElement.id = 'page' + id;
-			container.appendChild(pageElement);
-this.cf = this.getWikiParser().cf;
-		},
+    editContent: function (json) {
+        var text = json["Text"];
+        var id = json["ID"];
+        var container = document.getElementById(id); //$('#' + id);
+        var pageElement = this.getWikiParser().parse(text, id);
+        $('#page' + id).remove();
+        pageElement.id = 'page' + id;
+        container.appendChild(pageElement);
+        this.cf = this.getWikiParser().cf;
+    },
 
     rebuild: function (json) {
         var source = json["Text"];
         var id = json["ID"];
         var creationtime = json["CreationTime"];
         var pageElement = this.getWikiParser().parse(source, id);
-				pageElement.id = 'page' + id;
+        pageElement.id = 'page' + id;
         this.cf = this.getWikiParser().cf;
         //alert(this.cf);
 
         var container;
-//        if (!pparent) {
-//alert("!pparent = " + pparent);
-            container = this.getContainerByID(id);
-//        } else {
-//alert("pparent = " + pparent);
-//            container = pparent;
-//        }
+        //        if (!pparent) {
+        //alert("!pparent = " + pparent);
+        container = this.getContainerByID(id);
+        //        } else {
+        //alert("pparent = " + pparent);
+        //            container = pparent;
+        //        }
 
         while (container.childNodes.length > 0)
             container.removeChild(container.firstChild);
@@ -329,7 +331,7 @@ this.cf = this.getWikiParser().cf;
         $(eelem).click(function (event) {
             $.ajax({
                 type: "GET",
-                cache:false,
+                cache: false,
                 async: false,
                 dataType: "text",
                 url: requrl + "/" + id + "/edit",
@@ -352,7 +354,7 @@ this.cf = this.getWikiParser().cf;
             $.ajax({
                 type: "DELETE",
                 async: false,
-                cache:false,
+                cache: false,
                 dataType: "text",
                 url: requrl + "/" + id,
                 success: function (data) {

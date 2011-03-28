@@ -11,8 +11,10 @@
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
 	
 	<script type="text/javascript" src="js/jquery-1.5.min.js" ></script>
+    <script type="text/javascript" src="js/jquery.json-2.2.min.js" ></script>
+    <script type="text/javascript" src="js/jquery.incrementalsearch.js" ></script>
+    <script type="text/javascript" src="js/jquery.scrollinwindow.js" ></script>
 	<script type="text/javascript" src="ThickBox/thickbox.js"></script>
-	<script type="text/javascript" src="js/jquery.json-2.2.min.js" ></script>
 	<script type="text/javascript" src="js/WikiParser.js" ></script>
 	<script type="text/javascript" src="js/view.js" ></script>
 
@@ -20,19 +22,51 @@
 	<link rel="stylesheet" href="wiki.css" type="text/css" />
 
 	<script type="text/javascript">
+	    $.support.cors = true;
+
+	    var searchOffset = { left: 0, top: 0 };
+	    $(function () {
+	        $("#container").mousedown(function (event) {
+	            searchOffset = { left: event.pageX, top: event.pageY };
+	            $('#container').searchReset();
+	        });
+	    });
+
 	    function setPort(port) {
 	        requrl = 'http://localhost:' + port + '/item';
 	    }
 
-	    $.support.cors = true;
-	    $(function () {
+	    function js_incrementalSearch(pat, isregx) {
+	        if (isregx == 'true') {
+	            pat = new RegExp(pat);
+	        }
+	        $('#container').removeHighlight().incrementalSearch(pat, searchOffset);
+	        if ($('.inchighlight').length) {
+	            $('.inchighlight').inwindow();
+	        }
+	    }
 
-	    });
-	    function js_incrementalSearch(pat) {
-	        $('#container').removeHighlight().incrementalSearch(pat);
-	        if ($('.highlight').length) {
-	            $('.highlight').inwindow();
-	        }           
+	    function js_searchNext(pat, isregx) {
+	        if (isregx == 'true') {
+	            pat = new RegExp(pat);
+	        }
+	        $('#container').search(pat, false, searchOffset);
+
+	        if ($('.curselecthighlight').length) {
+	            $('.curselecthighlight').inwindow();
+	        }
+	    }
+
+	    function js_searchPrev(pat, isregx) {
+	        if (isregx == 'true') {
+	            pat = new RegExp(pat);
+	        }
+
+	        $('#container').search(pat, true, searchOffset);
+
+	        if ($('.curselecthighlight').length) {
+	            $('.curselecthighlight').inwindow();
+	        }
 	    }
     </script>
 </head>

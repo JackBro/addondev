@@ -350,7 +350,7 @@ namespace wiki
             //reBuild(newlistview.DataItems);
             //webBrowser1.ScriptErrorsSuppressed = true;
             //webBrowser1.ScrollBarsEnabled = true;
-            
+            webBrowser1.ScriptErrorsSuppressed = true;
             webBrowser1.IsWebBrowserContextMenuEnabled = false;
             var p = config.htmlPath;// Path.GetFullPath(@"..\..\html\wiki_parser.html");
             webBrowser1.Navigate(p);
@@ -358,6 +358,12 @@ namespace wiki
             //webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
             webBrowser1.StatusTextChanged += (sender, e) => {
                 toolStripStatusLabel1.Text = webBrowser1.StatusText;
+            };
+            webBrowser1.Navigated+=(s,e)=>{
+                webBrowser1.Document.Window.Error += (ss, se) => {
+                    //se.
+                    se.Handled = true;
+                };
             };
 
             if (config.ShowType == ShowType.List) {
@@ -473,30 +479,11 @@ namespace wiki
                 webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
             };
 
-            
-            //BrowserSearchToolStripButton.CheckedChanged += (sender, e) => {
-            //    if (BrowserSearchToolStripButton.Checked) {
-            //        if (_browserSearchControl == null) {
-            //            _browserSearchControl = new SearchControl();
-            //            _browserSearchControl.Dock = DockStyle.Bottom;
-            //            _browserSearchControl.NextButton.Click += (ss, se) => {
-                            
-            //                var collect = webBrowser1.Document.All;
-            //                HtmlDocument doc = webBrowser1.Document;
-            //                mshtml.IHTMLDocument2 doc2 = doc.DomDocument as mshtml.IHTMLDocument2;
-            //                var textRange = doc2.selection.createRange() as mshtml.IHTMLTxtRange;
-            //                mshtml.IHTMLElement iee;
-            //                IHTMLDOMNode child;
-                            
 
-            //            };
-            //        }
-            //        ViewEditorSplitContainer.Panel1.Controls.Add(_browserSearchControl);
-            //    }
-            //    else {
-            //        ViewEditorSplitContainer.Panel1.Controls.Remove(_browserSearchControl);
-            //    }
-            //};
+            OptionToolStripButton.Click += (sender, e) => {
+                var cf = new ConfigForm();
+                cf.ShowDialog();
+            };
  
         }
 
@@ -561,10 +548,19 @@ namespace wiki
                 ToggleShow(config.ShowType);
             }
 
+            //webBrowser1.Document.Window.Error += new HtmlElementErrorEventHandler(Window_Error);
 
+            //webBrowser1.Document.Window.Error += (ss, se) => {
+            //    //se.
+            //    se.Handled = true;
+            //};
             //this.webBrowser1.Document.MouseDown += (ss, se) => {
             //    var ee = e;
             //};
+        }
+
+        void Window_Error(object sender, HtmlElementErrorEventArgs e) {
+            throw new NotImplementedException();
         }
 
         internal void CreateItem() {

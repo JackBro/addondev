@@ -18,16 +18,16 @@ namespace wiki {
                         _browserSearchControl.SearchComboBox.TextChanged += (ss, se) => {
                             var cmbbox = ss as ComboBox;
                             pat = cmbbox.Text;
-                            if (_browserSearchControl.MIgemoCheckBox.Checked) {
+                            if (_browserSearchControl.MigemoCheckBox.Checked) {
                                 pat = getMigemo().Query(cmbbox.Text);
                             }
-                            InvokeScript("js_incrementalSearch", pat);
+                            InvokeScript("js_incrementalSearch", pat, _browserSearchControl.MigemoCheckBox.Checked.ToString());
                         };
                         _browserSearchControl.NextButton.Click += (ss, se) => {
-                            InvokeScript("js_searchNext", pat);
+                            InvokeScript("js_searchNext", pat, _browserSearchControl.MigemoCheckBox.Checked.ToString());
                         };
                         _browserSearchControl.PrevButton.Click += (ss, se) => {
-                            InvokeScript("js_searchPrev", pat);
+                            InvokeScript("js_searchPrev", pat, _browserSearchControl.MigemoCheckBox.Checked.ToString());
                         };
 
                         _browserSearchControl.CloseButton.Click += (ss, se) => {
