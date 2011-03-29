@@ -81,6 +81,18 @@ namespace wiki.Properties {
             }
         }
         
+        /// <summary>
+        ///   test
+        /// test
+        ///　test
+        ///	test に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string EditorPreviewText {
+            get {
+                return ResourceManager.GetString("EditorPreviewText", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap win_show_detail {
             get {
                 object obj = ResourceManager.GetObject("win_show_detail", resourceCulture);

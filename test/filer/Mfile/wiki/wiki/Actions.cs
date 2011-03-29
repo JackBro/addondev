@@ -20,7 +20,14 @@ namespace wiki {
             form.Editor.Copy();
         };
         public static Action<MainForm> Paste = (form) => {
-            if (Clipboard.ContainsImage()) {
+            if (Clipboard.ContainsFileDropList()) {
+                var text = string.Empty;
+                var files = Clipboard.GetFileDropList();
+                foreach (string fileName in files) {
+                    text += fileName + Environment.NewLine;
+                }
+                form.Editor.Document.Replace(text);
+            }else if (Clipboard.ContainsImage()) {
                 //var image = Clipboard.GetImage();
                 //image.Save("0.png", ImageFormat.Png);
             } else if (Clipboard.ContainsText()) {

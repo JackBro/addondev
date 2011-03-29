@@ -481,8 +481,8 @@ namespace wiki
 
 
             OptionToolStripButton.Click += (sender, e) => {
-                var cf = new ConfigForm();
-                cf.ShowDialog();
+                var cf = new ConfigForm(config);
+                cf.Show(this);
             };
  
         }

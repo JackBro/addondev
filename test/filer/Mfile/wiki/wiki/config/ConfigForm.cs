@@ -11,9 +11,14 @@ namespace wiki {
     public partial class ConfigForm : Form {
         public Font EditorFont { get; private set; }
         private Dictionary<string, UserControl> configpanels = new Dictionary<string, UserControl>();
+        private Config config;
 
-        public ConfigForm() {
+        public ConfigForm(Config config) {
+            this.config = config;
+
             InitializeComponent();
+
+
 
             //var node = ConfigTreeView.Nodes["EditorNode"];
             //var p = new EditorPanel();
@@ -21,7 +26,7 @@ namespace wiki {
             //ConfigPanel.Controls.Add(p);
             //configpanels.Add("EditorNode", p);
             //configpanels
-            createPanel("EditorNode", new EditorPanel());
+            createPanel("EditorNode", new EditorConfig(config));
 
             ConfigTreeView.NodeMouseClick += (sender, e) => {
                 if (configpanels.ContainsKey(e.Node.Name)) {
