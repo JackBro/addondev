@@ -79,6 +79,9 @@ namespace wiki {
 
         public bool EdiorWrap { get; set; }
 
+        [XmlIgnore]
+        public List<string> CompleList;
+
 
         public Config() {
             ComeFormWords = new List<string>();
@@ -98,6 +101,8 @@ namespace wiki {
             EditorBackColorText = ColorTranslator.ToHtml(SystemColors.Window);
 
             _editorFont = System.Windows.Forms.SystemInformation.MenuFont;
+
+            CompleList = new List<string>();
         }
     }
 }

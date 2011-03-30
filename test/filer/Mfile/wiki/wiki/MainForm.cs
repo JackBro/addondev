@@ -236,6 +236,9 @@ namespace wiki
                 if (manager.IsDirty) {
                     manager.Save();
                 }
+                if (migemo != null) {
+                    migemo.Dispose();
+                }
                 //serveBW.CancelAsync();
                 //serveBW.ReportProgress(0);
                 //httpServer.stop();
@@ -429,7 +432,7 @@ namespace wiki
 
             initPage();
             */
-            PreToolStripButton.Click += (sender, e) => {
+            PrevPageToolStripButton.Click += (sender, e) => {
                 
                 var l = GetSelctedTabControl();
                 l.Page--;
@@ -446,11 +449,11 @@ namespace wiki
                 reBuild(elist);
 
                 if ((l.Page - 1) * config.ShowNum <= 0) {
-                    PreToolStripButton.Enabled = false;
+                    PrevPageToolStripButton.Enabled = false;
                 }
-                NextToolStripButton.Enabled = true;
+                NextPageToolStripButton.Enabled = true;
             };
-            NextToolStripButton.Click += (sender, e) => {
+            NextPageToolStripButton.Click += (sender, e) => {
 
                 var l = GetSelctedTabControl();
                 l.Page++;
@@ -467,9 +470,9 @@ namespace wiki
                 reBuild(elist);
 
                 if ((l.Page + 1) * config.ShowNum >= l.DataItems.Count) {
-                    NextToolStripButton.Enabled = false;
+                    NextPageToolStripButton.Enabled = false;
                 }
-                PreToolStripButton.Enabled = true;
+                PrevPageToolStripButton.Enabled = true;
             };
 
             ReloadToolStripButton.Click += (sender, e) => {
@@ -489,16 +492,16 @@ namespace wiki
 
         private void initPage() {
             if (config.ShowType == ShowType.Large) {
-                PreToolStripButton.Enabled = false;
-                NextToolStripButton.Enabled = false;
+                PrevPageToolStripButton.Enabled = false;
+                NextPageToolStripButton.Enabled = false;
             } else if (config.ShowType == ShowType.List) {
                 int max = config.ShowNum;
                 var l = GetSelctedTabControl();
                 if ((l.Page - 1) * max <= 0) {
-                    PreToolStripButton.Enabled = false;
+                    PrevPageToolStripButton.Enabled = false;
                 }
                 if ((l.Page + 1) * max >= l.DataItems.Count) {
-                    NextToolStripButton.Enabled = false;
+                    NextPageToolStripButton.Enabled = false;
                 }
             }
         }

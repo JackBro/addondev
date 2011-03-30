@@ -42,9 +42,9 @@
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.EditorPanel = new System.Windows.Forms.Panel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.CopyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.CutToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.CloseEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.CopyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.PasteToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.UndoToolStripButto = new System.Windows.Forms.ToolStripButton();
@@ -59,12 +59,14 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.NewItemToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.ReloadToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.NextToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.NextPageToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.PageToolStripLabel = new System.Windows.Forms.ToolStripLabel();
-            this.PreToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.PrevPageToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.ToggleShowToolStripSplitButton = new System.Windows.Forms.ToolStripSplitButton();
             this.ShowListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShowLargeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,6 +79,7 @@
             this.NormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RegexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MigemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -231,6 +234,15 @@
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
+            // CopyToolStripButton
+            // 
+            this.CopyToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.CopyToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("CopyToolStripButton.Image")));
+            this.CopyToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CopyToolStripButton.Name = "CopyToolStripButton";
+            this.CopyToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.CopyToolStripButton.Text = "Copy";
+            // 
             // CutToolStripButton
             // 
             this.CutToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -249,15 +261,6 @@
             this.CloseEditorToolStripButton.Name = "CloseEditorToolStripButton";
             this.CloseEditorToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.CloseEditorToolStripButton.Text = "Close";
-            // 
-            // CopyToolStripButton
-            // 
-            this.CopyToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CopyToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("CopyToolStripButton.Image")));
-            this.CopyToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.CopyToolStripButton.Name = "CopyToolStripButton";
-            this.CopyToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.CopyToolStripButton.Text = "Copy";
             // 
             // PasteToolStripButton
             // 
@@ -325,7 +328,9 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.viewToolStripMenuItem,
+            this.ToolToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(747, 24);
@@ -368,14 +373,28 @@
             this.timeToolStripMenuItem.Text = "Time";
             this.timeToolStripMenuItem.Click += new System.EventHandler(this.timeToolStripMenuItem_Click);
             // 
+            // ToolToolStripMenuItem
+            // 
+            this.ToolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OptionToolStripMenuItem});
+            this.ToolToolStripMenuItem.Name = "ToolToolStripMenuItem";
+            this.ToolToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.ToolToolStripMenuItem.Text = "Tool";
+            // 
+            // OptionToolStripMenuItem
+            // 
+            this.OptionToolStripMenuItem.Name = "OptionToolStripMenuItem";
+            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.OptionToolStripMenuItem.Text = "Option";
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.NewItemToolStripButton,
             this.ReloadToolStripButton,
-            this.NextToolStripButton,
+            this.NextPageToolStripButton,
             this.PageToolStripLabel,
-            this.PreToolStripButton,
+            this.PrevPageToolStripButton,
             this.ToggleShowToolStripSplitButton,
             this.toolStripSeparator1,
             this.BrowserSearchToolStripButton,
@@ -405,15 +424,15 @@
             this.ReloadToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.ReloadToolStripButton.Text = "Reload";
             // 
-            // NextToolStripButton
+            // NextPageToolStripButton
             // 
-            this.NextToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.NextToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NextToolStripButton.Image = global::wiki.Properties.Resources.arrow_small_r;
-            this.NextToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NextToolStripButton.Name = "NextToolStripButton";
-            this.NextToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.NextToolStripButton.Text = ">";
+            this.NextPageToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.NextPageToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NextPageToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("NextPageToolStripButton.Image")));
+            this.NextPageToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NextPageToolStripButton.Name = "NextPageToolStripButton";
+            this.NextPageToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.NextPageToolStripButton.Text = "Next";
             // 
             // PageToolStripLabel
             // 
@@ -422,15 +441,15 @@
             this.PageToolStripLabel.Size = new System.Drawing.Size(81, 22);
             this.PageToolStripLabel.Text = "toolStripLabel1";
             // 
-            // PreToolStripButton
+            // PrevPageToolStripButton
             // 
-            this.PreToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.PreToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.PreToolStripButton.Image = global::wiki.Properties.Resources.arrow_small_l;
-            this.PreToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.PreToolStripButton.Name = "PreToolStripButton";
-            this.PreToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.PreToolStripButton.Text = "<";
+            this.PrevPageToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.PrevPageToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.PrevPageToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("PrevPageToolStripButton.Image")));
+            this.PrevPageToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.PrevPageToolStripButton.Name = "PrevPageToolStripButton";
+            this.PrevPageToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.PrevPageToolStripButton.Text = "Prev";
             // 
             // ToggleShowToolStripSplitButton
             // 
@@ -527,6 +546,12 @@
             this.MigemoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.MigemoToolStripMenuItem.Text = "Migemo";
             // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -584,8 +609,8 @@
         private System.Windows.Forms.ToolStripButton ReloadToolStripButton;
         private System.Windows.Forms.Panel EditorPanel;
         private System.Windows.Forms.ToolStrip toolStrip2;
-        private System.Windows.Forms.ToolStripButton NextToolStripButton;
-        private System.Windows.Forms.ToolStripButton PreToolStripButton;
+        private System.Windows.Forms.ToolStripButton NextPageToolStripButton;
+        private System.Windows.Forms.ToolStripButton PrevPageToolStripButton;
         private System.Windows.Forms.ToolStripLabel PageToolStripLabel;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripButton CloseEditorToolStripButton;
@@ -612,6 +637,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton EditorWrapToolStripButton;
         private System.Windows.Forms.ToolStripButton OptionToolStripButton;
+        private System.Windows.Forms.ToolStripMenuItem ToolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem OptionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
     }
 }
 
