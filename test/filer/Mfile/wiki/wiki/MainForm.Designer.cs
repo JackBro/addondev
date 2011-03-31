@@ -81,6 +81,8 @@
             this.RegexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MigemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -95,6 +97,9 @@
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SearchContextMenuStrip.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // BrowserContextMenuStrip
@@ -115,9 +120,9 @@
             // 
             this.panel2.Controls.Add(this.ListViewSplitContainer);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 49);
+            this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(747, 469);
+            this.panel2.Size = new System.Drawing.Size(657, 469);
             this.panel2.TabIndex = 0;
             // 
             // ListViewSplitContainer
@@ -134,8 +139,8 @@
             // ListViewSplitContainer.Panel2
             // 
             this.ListViewSplitContainer.Panel2.Controls.Add(this.ViewEditorSplitContainer);
-            this.ListViewSplitContainer.Size = new System.Drawing.Size(747, 469);
-            this.ListViewSplitContainer.SplitterDistance = 185;
+            this.ListViewSplitContainer.Size = new System.Drawing.Size(657, 469);
+            this.ListViewSplitContainer.SplitterDistance = 162;
             this.ListViewSplitContainer.TabIndex = 3;
             // 
             // ItemTabControl
@@ -147,7 +152,7 @@
             this.ItemTabControl.Multiline = true;
             this.ItemTabControl.Name = "ItemTabControl";
             this.ItemTabControl.SelectedIndex = 0;
-            this.ItemTabControl.Size = new System.Drawing.Size(185, 449);
+            this.ItemTabControl.Size = new System.Drawing.Size(162, 449);
             this.ItemTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.ItemTabControl.TabIndex = 1;
             // 
@@ -158,7 +163,7 @@
             this.SearchPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.SearchPanel.Location = new System.Drawing.Point(0, 0);
             this.SearchPanel.Name = "SearchPanel";
-            this.SearchPanel.Size = new System.Drawing.Size(185, 20);
+            this.SearchPanel.Size = new System.Drawing.Size(162, 20);
             this.SearchPanel.TabIndex = 1;
             // 
             // SearchComboBox
@@ -167,7 +172,7 @@
             this.SearchComboBox.FormattingEnabled = true;
             this.SearchComboBox.Location = new System.Drawing.Point(31, 0);
             this.SearchComboBox.Name = "SearchComboBox";
-            this.SearchComboBox.Size = new System.Drawing.Size(154, 20);
+            this.SearchComboBox.Size = new System.Drawing.Size(131, 20);
             this.SearchComboBox.TabIndex = 1;
             // 
             // SearchButtonPanel
@@ -193,7 +198,7 @@
             // 
             this.ViewEditorSplitContainer.Panel2.Controls.Add(this.EditorPanel);
             this.ViewEditorSplitContainer.Panel2.Controls.Add(this.EditorToolStrip);
-            this.ViewEditorSplitContainer.Size = new System.Drawing.Size(558, 469);
+            this.ViewEditorSplitContainer.Size = new System.Drawing.Size(491, 469);
             this.ViewEditorSplitContainer.SplitterDistance = 257;
             this.ViewEditorSplitContainer.TabIndex = 1;
             // 
@@ -204,7 +209,7 @@
             this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(558, 257);
+            this.webBrowser1.Size = new System.Drawing.Size(491, 257);
             this.webBrowser1.TabIndex = 0;
             // 
             // EditorPanel
@@ -212,7 +217,7 @@
             this.EditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EditorPanel.Location = new System.Drawing.Point(0, 25);
             this.EditorPanel.Name = "EditorPanel";
-            this.EditorPanel.Size = new System.Drawing.Size(558, 183);
+            this.EditorPanel.Size = new System.Drawing.Size(491, 183);
             this.EditorPanel.TabIndex = 1;
             // 
             // EditorToolStrip
@@ -231,7 +236,7 @@
             this.EditorWrapToolStripButton});
             this.EditorToolStrip.Location = new System.Drawing.Point(0, 0);
             this.EditorToolStrip.Name = "EditorToolStrip";
-            this.EditorToolStrip.Size = new System.Drawing.Size(558, 25);
+            this.EditorToolStrip.Size = new System.Drawing.Size(491, 25);
             this.EditorToolStrip.TabIndex = 1;
             this.EditorToolStrip.Text = "EditorToolStrip";
             // 
@@ -558,12 +563,39 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 49);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.listView1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.panel2);
+            this.splitContainer1.Size = new System.Drawing.Size(747, 469);
+            this.splitContainer1.SplitterDistance = 86;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // listView1
+            // 
+            this.listView1.AutoArrange = false;
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.Location = new System.Drawing.Point(0, 0);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(86, 469);
+            this.listView1.TabIndex = 0;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(747, 540);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -589,6 +621,9 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.SearchContextMenuStrip.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -647,6 +682,8 @@
         private System.Windows.Forms.ToolStripMenuItem OptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ListView listView1;
     }
 }
 
