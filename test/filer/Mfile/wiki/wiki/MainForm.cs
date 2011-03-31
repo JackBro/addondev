@@ -43,7 +43,7 @@ namespace wiki
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
 
-        private TabPage AllPage;
+        private TabPage AllPage, DustPage;
 
         //private AzukiControlEx Editor;
        
@@ -65,6 +65,11 @@ namespace wiki
             config.htmlPath = Path.GetFullPath(@"..\..\html\wiki_parser.html");
             config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
             config.MigemoDictPath = Path.GetFullPath(@"..\..\migemo\dict\migemo-dict");
+
+            this.WindowState = config.WindowState;
+            if (config.WindowState != FormWindowState.Maximized) {
+                this.Size = config.WindowSize;
+            }
 
             initKeyMap();
             initEditor();
@@ -242,16 +247,11 @@ namespace wiki
                 //serveBW.CancelAsync();
                 //serveBW.ReportProgress(0);
                 //httpServer.stop();
+                config.WindowState = this.WindowState;
+                config.WindowSize = this.Size;
+
                 XMLSerializer.Serialize<Config>(Config.SettingPath, config);
             };
-
-            //this.SizeChanged += (sender, e) => {
-            //    for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
-            //        var page = ItemTabControl.TabPages[i];
-            //        var listview = GetTabControl(page);
-            //        listview.Columns["title"].Width = -2;
-            //    }
-            //};
 
             _editor.TextChanged += (sender, e) => {
                 
@@ -350,6 +350,9 @@ namespace wiki
             //var all = new SearchAll();
             //AllPage = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
             AllPage = CreateListViewTabPage("All", new SearchAll());
+            //dust
+            DustPage = CreateListViewTabPage("Dust",new List<Data>());
+
             //reBuild(newlistview.DataItems);
             //webBrowser1.ScriptErrorsSuppressed = true;
             //webBrowser1.ScrollBarsEnabled = true;
@@ -562,10 +565,6 @@ namespace wiki
             //};
         }
 
-        void Window_Error(object sender, HtmlElementErrorEventArgs e) {
-            throw new NotImplementedException();
-        }
-
         internal void CreateItem() {
             manager.Insert(new Data { ID=manager.GetNewID(), Text = "!new", CreationTime = DateTime.Now });
         }
@@ -702,6 +701,27 @@ namespace wiki
 
             return t;
         }
+
+        //private TabPage CreateDustTabPage(string name, List<Data> items) {
+        //    var listview = new ListViewEx(items);
+        //    listview.SelectedIndexChanged += (sender, e) => {
+        //        if (config.ShowType == ShowType.Large && listview.SelectedIndices.Count == 1) {
+        //            var selindex = listview.SelectedIndices[0];
+        //            var item = listview.DataItems[selindex];
+        //            //var cf = InvokeScript("js_getComeFrom");
+        //            //var dic = JsonSerializer.Deserialize<List<string>>(cf.ToString());
+        //            //Console.WriteLine("cf = " + cf);
+        //            reBuild(item);
+
+        //        }
+        //    };
+        //    listview.Dock = DockStyle.Fill;
+
+        //    var t = new TabPage(name);
+        //    t.Controls.Add(listview);
+        //    ItemTabControl.TabPages.Add(t);
+        //    return t;       
+        //}
 
         private TabPage CreateListViewTabPage(string name, List<Data> items) {
             

@@ -86,6 +86,8 @@ namespace wiki {
         public Config() {
             ComeFormWords = new List<string>();
             this.WindowState = FormWindowState.Normal;
+            this.WindowSize = new Size(Screen.PrimaryScreen.WorkingArea.Width / 2, Screen.PrimaryScreen.WorkingArea.Height / 2); 
+
             this.Port = 8088;
             this.ShowNum = 20;
             this.ShowType = ShowType.List;

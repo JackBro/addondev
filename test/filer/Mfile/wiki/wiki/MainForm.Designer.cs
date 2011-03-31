@@ -41,7 +41,7 @@
             this.ViewEditorSplitContainer = new System.Windows.Forms.SplitContainer();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.EditorPanel = new System.Windows.Forms.Panel();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.EditorToolStrip = new System.Windows.Forms.ToolStrip();
             this.CopyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.CutToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.CloseEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -59,6 +59,7 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -79,7 +80,7 @@
             this.NormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RegexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MigemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -89,7 +90,7 @@
             this.ViewEditorSplitContainer.Panel1.SuspendLayout();
             this.ViewEditorSplitContainer.Panel2.SuspendLayout();
             this.ViewEditorSplitContainer.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
+            this.EditorToolStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -191,7 +192,7 @@
             // ViewEditorSplitContainer.Panel2
             // 
             this.ViewEditorSplitContainer.Panel2.Controls.Add(this.EditorPanel);
-            this.ViewEditorSplitContainer.Panel2.Controls.Add(this.toolStrip2);
+            this.ViewEditorSplitContainer.Panel2.Controls.Add(this.EditorToolStrip);
             this.ViewEditorSplitContainer.Size = new System.Drawing.Size(558, 469);
             this.ViewEditorSplitContainer.SplitterDistance = 257;
             this.ViewEditorSplitContainer.TabIndex = 1;
@@ -214,9 +215,9 @@
             this.EditorPanel.Size = new System.Drawing.Size(558, 183);
             this.EditorPanel.TabIndex = 1;
             // 
-            // toolStrip2
+            // EditorToolStrip
             // 
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.EditorToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CopyToolStripButton,
             this.CutToolStripButton,
             this.CloseEditorToolStripButton,
@@ -228,11 +229,11 @@
             this.EditorSearchToolStripButton,
             this.toolStripSeparator4,
             this.EditorWrapToolStripButton});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(558, 25);
-            this.toolStrip2.TabIndex = 1;
-            this.toolStrip2.Text = "toolStrip2";
+            this.EditorToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.EditorToolStrip.Name = "EditorToolStrip";
+            this.EditorToolStrip.Size = new System.Drawing.Size(558, 25);
+            this.EditorToolStrip.TabIndex = 1;
+            this.EditorToolStrip.Text = "EditorToolStrip";
             // 
             // CopyToolStripButton
             // 
@@ -373,6 +374,12 @@
             this.timeToolStripMenuItem.Text = "Time";
             this.timeToolStripMenuItem.Click += new System.EventHandler(this.timeToolStripMenuItem_Click);
             // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
             // ToolToolStripMenuItem
             // 
             this.ToolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -384,7 +391,7 @@
             // OptionToolStripMenuItem
             // 
             this.OptionToolStripMenuItem.Name = "OptionToolStripMenuItem";
-            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.OptionToolStripMenuItem.Text = "Option";
             // 
             // toolStrip1
@@ -546,11 +553,10 @@
             this.MigemoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.MigemoToolStripMenuItem.Text = "Migemo";
             // 
-            // viewToolStripMenuItem
+            // contextMenuStrip1
             // 
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
-            this.viewToolStripMenuItem.Text = "View";
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // MainForm
             // 
@@ -574,8 +580,8 @@
             this.ViewEditorSplitContainer.Panel2.ResumeLayout(false);
             this.ViewEditorSplitContainer.Panel2.PerformLayout();
             this.ViewEditorSplitContainer.ResumeLayout(false);
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
+            this.EditorToolStrip.ResumeLayout(false);
+            this.EditorToolStrip.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -608,7 +614,7 @@
         private System.Windows.Forms.ToolStripMenuItem timeToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton ReloadToolStripButton;
         private System.Windows.Forms.Panel EditorPanel;
-        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStrip EditorToolStrip;
         private System.Windows.Forms.ToolStripButton NextPageToolStripButton;
         private System.Windows.Forms.ToolStripButton PrevPageToolStripButton;
         private System.Windows.Forms.ToolStripLabel PageToolStripLabel;
@@ -640,6 +646,7 @@
         private System.Windows.Forms.ToolStripMenuItem ToolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem OptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 

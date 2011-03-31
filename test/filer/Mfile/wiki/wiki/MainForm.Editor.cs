@@ -45,6 +45,9 @@ namespace wiki {
                     if (_editorSearchControl == null) {
                         _editorSearchControl = new SearchControl();
                         _editorSearchControl.Dock = DockStyle.Bottom;
+                        _editorSearchControl.CloseButton.Click += (ss, ee) => {
+                            EditorSearchToolStripButton.Checked = false;
+                        };
                         _editorSearchControl.SearchComboBox.TextChanged += new System.EventHandler(SearchComboBox_TextChanged);
                         _editorSearchControl.NextButton.Click += (ss, se) => {
                             FindNext();
