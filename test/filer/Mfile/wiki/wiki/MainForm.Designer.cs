@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Trust", 1);
             this.BrowserContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -46,6 +47,7 @@
             this.CutToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.CloseEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.PasteToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.EditorDateToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.UndoToolStripButto = new System.Windows.Forms.ToolStripButton();
             this.RedoToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -82,7 +84,10 @@
             this.MigemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.CategoryListView = new System.Windows.Forms.ListView();
+            this.ImageList24 = new System.Windows.Forms.ImageList(this.components);
+            this.NewFileToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.TabPanel = new System.Windows.Forms.Panel();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -100,6 +105,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.TabPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // BrowserContextMenuStrip
@@ -133,7 +139,7 @@
             // 
             // ListViewSplitContainer.Panel1
             // 
-            this.ListViewSplitContainer.Panel1.Controls.Add(this.ItemTabControl);
+            this.ListViewSplitContainer.Panel1.Controls.Add(this.TabPanel);
             this.ListViewSplitContainer.Panel1.Controls.Add(this.SearchPanel);
             // 
             // ListViewSplitContainer.Panel2
@@ -148,7 +154,7 @@
             this.ItemTabControl.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
             this.ItemTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ItemTabControl.ItemSize = new System.Drawing.Size(70, 20);
-            this.ItemTabControl.Location = new System.Drawing.Point(0, 20);
+            this.ItemTabControl.Location = new System.Drawing.Point(0, 0);
             this.ItemTabControl.Multiline = true;
             this.ItemTabControl.Name = "ItemTabControl";
             this.ItemTabControl.SelectedIndex = 0;
@@ -227,6 +233,7 @@
             this.CutToolStripButton,
             this.CloseEditorToolStripButton,
             this.PasteToolStripButton,
+            this.EditorDateToolStripButton,
             this.toolStripSeparator2,
             this.UndoToolStripButto,
             this.RedoToolStripButton,
@@ -276,6 +283,15 @@
             this.PasteToolStripButton.Name = "PasteToolStripButton";
             this.PasteToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.PasteToolStripButton.Text = "Paste";
+            // 
+            // EditorDateToolStripButton
+            // 
+            this.EditorDateToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.EditorDateToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("EditorDateToolStripButton.Image")));
+            this.EditorDateToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.EditorDateToolStripButton.Name = "EditorDateToolStripButton";
+            this.EditorDateToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.EditorDateToolStripButton.Text = "Date";
             // 
             // toolStripSeparator2
             // 
@@ -410,7 +426,8 @@
             this.ToggleShowToolStripSplitButton,
             this.toolStripSeparator1,
             this.BrowserSearchToolStripButton,
-            this.OptionToolStripButton});
+            this.OptionToolStripButton,
+            this.NewFileToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(747, 25);
@@ -571,7 +588,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.listView1);
+            this.splitContainer1.Panel1.Controls.Add(this.CategoryListView);
             // 
             // splitContainer1.Panel2
             // 
@@ -580,15 +597,44 @@
             this.splitContainer1.SplitterDistance = 86;
             this.splitContainer1.TabIndex = 1;
             // 
-            // listView1
+            // CategoryListView
             // 
-            this.listView1.AutoArrange = false;
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(86, 469);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.CategoryListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CategoryListView.HideSelection = false;
+            this.CategoryListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1});
+            this.CategoryListView.LargeImageList = this.ImageList24;
+            this.CategoryListView.Location = new System.Drawing.Point(0, 0);
+            this.CategoryListView.MultiSelect = false;
+            this.CategoryListView.Name = "CategoryListView";
+            this.CategoryListView.Size = new System.Drawing.Size(86, 469);
+            this.CategoryListView.TabIndex = 0;
+            this.CategoryListView.UseCompatibleStateImageBehavior = false;
+            // 
+            // ImageList24
+            // 
+            this.ImageList24.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ImageList24.ImageStream")));
+            this.ImageList24.TransparentColor = System.Drawing.Color.Transparent;
+            this.ImageList24.Images.SetKeyName(0, "doc_lines_stright_icon24.png");
+            this.ImageList24.Images.SetKeyName(1, "trash_icon24.png");
+            // 
+            // NewFileToolStripButton
+            // 
+            this.NewFileToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NewFileToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("NewFileToolStripButton.Image")));
+            this.NewFileToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NewFileToolStripButton.Name = "NewFileToolStripButton";
+            this.NewFileToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.NewFileToolStripButton.Text = "toolStripButton1";
+            // 
+            // TabPanel
+            // 
+            this.TabPanel.Controls.Add(this.ItemTabControl);
+            this.TabPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TabPanel.Location = new System.Drawing.Point(0, 20);
+            this.TabPanel.Name = "TabPanel";
+            this.TabPanel.Size = new System.Drawing.Size(162, 449);
+            this.TabPanel.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -624,6 +670,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.TabPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -683,7 +730,11 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView CategoryListView;
+        private System.Windows.Forms.ImageList ImageList24;
+        private System.Windows.Forms.ToolStripButton EditorDateToolStripButton;
+        private System.Windows.Forms.ToolStripButton NewFileToolStripButton;
+        private System.Windows.Forms.Panel TabPanel;
     }
 }
 

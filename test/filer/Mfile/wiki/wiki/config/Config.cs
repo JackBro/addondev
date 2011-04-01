@@ -17,11 +17,17 @@ namespace wiki {
 
     public class Config {
         public static string SettingPath = "setting.xml";
+
+        public List<string> Categorys { get; set; }
+
         public int ShowNum { get; set; }
         public ShowType ShowType { get; set; }
         public int Port { get; set; }
+
         public FormWindowState WindowState { get; set; }
         public Size WindowSize { get; set; }
+
+        public int CategoryListViewW { get; set; }
         public int ListViewW { get; set; }
         public int BrowserH { get; set; }
 
@@ -84,9 +90,16 @@ namespace wiki {
 
 
         public Config() {
+
+            Categorys = new List<string>();
+
             ComeFormWords = new List<string>();
             this.WindowState = FormWindowState.Normal;
             this.WindowSize = new Size(Screen.PrimaryScreen.WorkingArea.Width / 2, Screen.PrimaryScreen.WorkingArea.Height / 2); 
+            this.CategoryListViewW = 80;
+            this.ListViewW = 200;
+            this.BrowserH = this.WindowSize.Height / 2;
+            
 
             this.Port = 8088;
             this.ShowNum = 20;

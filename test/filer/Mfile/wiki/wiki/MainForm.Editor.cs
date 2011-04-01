@@ -74,6 +74,18 @@ namespace wiki {
                     Editor.ViewType = Sgry.Azuki.ViewType.Proportional;
                 }
             };
+
+            EditorDateToolStripButton.Click += (s, e) => {
+                if (manager.EditingData == null) return;
+
+                var tform = new DateTimeForm();
+                tform.Time = manager.EditingData.CreationTime;
+                var res = tform.ShowDialog(this);
+                if (res == DialogResult.OK) {
+                    var mtime = tform.Time;
+
+                }
+            };
         }
 
         void SearchComboBox_TextChanged(object sender, EventArgs e) {

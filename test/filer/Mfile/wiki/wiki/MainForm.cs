@@ -20,7 +20,9 @@ namespace wiki
 {
     public partial class MainForm : Form
     {
+        private Category category;
         private ItemManager manager;
+        private Dictionary<string, TabControl> Tabs = new Dictionary<string,TabControl>();
         private Migemo migemo;
 
         private long baseticks;
@@ -41,9 +43,11 @@ namespace wiki
         Regex regGoto = new Regex(@"\/item\/(goto)$", RegexOptions.Compiled);
         Regex regComeFrom = new Regex(@"\/item\/(\d+)\/(comefrom)$", RegexOptions.Compiled);
 
+        Regex regNew = new Regex(@"\/item\/(new)$", RegexOptions.Compiled);
+
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
 
-        private TabPage AllPage, DustPage;
+        private TabPage AllPage;
 
         //private AzukiControlEx Editor;
        
@@ -70,6 +74,9 @@ namespace wiki
             if (config.WindowState != FormWindowState.Maximized) {
                 this.Size = config.WindowSize;
             }
+            splitContainer1.SplitterDistance = config.CategoryListViewW;
+            ViewEditorSplitContainer.SplitterDistance = config.BrowserH;
+            ListViewSplitContainer.SplitterDistance = config.ListViewW;
 
             initKeyMap();
             initEditor();
@@ -249,6 +256,9 @@ namespace wiki
                 //httpServer.stop();
                 config.WindowState = this.WindowState;
                 config.WindowSize = this.Size;
+                config.CategoryListViewW = splitContainer1.SplitterDistance;
+                config.BrowserH = ViewEditorSplitContainer.SplitterDistance;
+                config.ListViewW = ListViewSplitContainer.SplitterDistance;
 
                 XMLSerializer.Serialize<Config>(Config.SettingPath, config);
             };
@@ -264,74 +274,38 @@ namespace wiki
                 }
                 dirty = true;
             };
-            _editor.LostFocus += (sender, e) => {
-                
-            };
 
-            ItemTabControl.Selecting += (sender, e) => {
-            };
-
-            ItemTabControl.SelectedIndexChanged += (sender, e) => {
-                var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-                var list = getCurrentPageDatas(listview, config.ShowNum);
-                //webBrowser1.Document.InvokeScript("testClearAll");
-                InvokeScript("js_ClearAll");
-                //reBuild(listview.DataItems);
-                reBuild(list);
-            };
-            //ItemTabControl.MouseDown
-
-            //en = new JintEngine();
-            //en.DisableSecurity();
-            //en.AllowClr = true;
-            ////ren();
-            ////en.Run("function test(){ return 10; }");
-            ////var r = en.Run(@"x=eval( [ ""hoge"":""hogehoge"", ""foo"":""j.png"" ]); return x;");
-            ////var r2 = en.Run("return 100;");
-            ////var r3 = en.Run("x=test()*100; return x;");
-            ////en.SetFunction("testf", new Jint.Native.JsFunction());
-            //en.SetFunction("square", new Action(() => { CreateItem(); }));
-            //en.SetFunction("deleteitem", new Action<object>((id) => {
-            //    Console.WriteLine("deleteitem id = " + id.ToString());
-            //    this.DeleteItem(long.Parse(id.ToString()));
-            //}));
-            //en.SetFunction("edititem", new Action<object>((id) => {
-            //    Console.WriteLine("edititem id = " + id.ToString());
-            //    this.EditItem(long.Parse(id.ToString()));
-            //}));
+            //ItemTabControl.SelectedIndexChanged += (sender, e) => {
+            //    var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
+            //    var list = getCurrentPageDatas(listview, config.ShowNum);
+            //    InvokeScript("js_ClearAll");
+            //    reBuild(list);
+            //};
 
             NewItemToolStripButton.Click += (sender, e) => {             
                 CreateItem();
             };
 
-            manager = new ItemManager();
-            manager.DataPath = "data.bin";
-            manager.Load();
-            manager.eventHandler += (sender, e) => {
+            category = new Category();
+            category.eventHandler = (sender, e) => {
                 switch (e.type) {
                     case ChangeType.Insert:
                         {
-                            //ItemTabControl.SelectedIndex = 0;
                             ItemTabControl.SelectedTab = AllPage;
-                            //var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
                             var listview = GetTabControl(AllPage);
                             var iindex = listview.AddItem(e.Item);
                             if (iindex == (listview.DataItems.Count - 1)) {
                                 reBuild(e.Item);
                             }
                             else {
-                                //reBuild(listview.DataItems[iindex+1].ID, e.Item);
                                 reBuild(listview.DataItems[iindex + 1].ID, e.Item);
-                            }
-                            //listview.AddItem(e.Index, e.Item);         
+                            }    
                         }
                         break;
                     case ChangeType.UpDate:
-                        //reBuild(e.Item);
                         editContent(e.Item);
                         var cf = InvokeScript("js_getComeFrom");
                         var list = JsonSerializer.Deserialize<List<string>>(cf.ToString());
-                        //Console.WriteLine("cf = " + cf);
                         config.ComeFormWords.Union(list);
                         break;
                     case ChangeType.Delete:
@@ -345,13 +319,54 @@ namespace wiki
                         break;
                 }
             };
+            if (config.Categorys.Count == 0) {
+                config.Categorys.Add("new");
+            }
+            foreach (var item in config.Categorys) {
+                CategoryListView.Items.Add(item);
+            }
+            category.Load(config.Categorys);
+
+            //manager = new ItemManager();
+            //manager.DataPath = "data.bin";
+            //manager.Load();
+            //manager.eventHandler += (sender, e) => {
+            //    switch (e.type) {
+            //        case ChangeType.Insert:
+            //            {
+            //                ItemTabControl.SelectedTab = AllPage;
+            //                var listview = GetTabControl(AllPage);
+            //                var iindex = listview.AddItem(e.Item);
+            //                if (iindex == (listview.DataItems.Count - 1)) {
+            //                    reBuild(e.Item);
+            //                }
+            //                else {
+            //                    reBuild(listview.DataItems[iindex + 1].ID, e.Item);
+            //                }    
+            //            }
+            //            break;
+            //        case ChangeType.UpDate:
+            //            editContent(e.Item);
+            //            var cf = InvokeScript("js_getComeFrom");
+            //            var list = JsonSerializer.Deserialize<List<string>>(cf.ToString());
+            //            config.ComeFormWords.Union(list);
+            //            break;
+            //        case ChangeType.Delete:
+            //            for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
+            //                var listview = GetTabControl(ItemTabControl.TabPages[i]);
+            //                listview.DeleteItem(e.Item);
+            //            }
+            //            InvokeScript("js_Remove", e.Item.ID.ToString());
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //};
 
 
             //var all = new SearchAll();
             //AllPage = CreateListViewTabPage("All", manager.Filter(x => { return true; }));
             AllPage = CreateListViewTabPage("All", new SearchAll());
-            //dust
-            DustPage = CreateListViewTabPage("Dust",new List<Data>());
 
             //reBuild(newlistview.DataItems);
             //webBrowser1.ScriptErrorsSuppressed = true;
@@ -490,7 +505,26 @@ namespace wiki
                 var cf = new ConfigForm(config);
                 cf.Show(this);
             };
+
+            NewFileToolStripButton.Click += (s, e) => {
+
+            };
+            CategoryListView.ItemSelectionChanged += (s, e) => {
+
+            };
  
+        }
+
+        TabControl getTabControl(string name) {
+            if (!Tabs.ContainsKey(name)) {
+                var t = new TabControl();
+                t.Dock = DockStyle.Fill;
+                TabPanel.Controls.Add(t);
+                Tabs.Add(name, t);
+            }
+            var tab = Tabs[name];
+            tab.BringToFront();
+            return tab;
         }
 
         private void initPage() {
@@ -648,7 +682,7 @@ namespace wiki
 
         private Dictionary<Search, TabPage> searchtabdic = new Dictionary<Search, TabPage>(); 
         private bool dirty = false;
-        private TabPage CreateListViewTabPage(string name, Search search) {
+        private TabPage CreateListViewTabPage(string title, Search search) {
 
             foreach (var item in searchtabdic.Keys) {
                 if(item.Equals(search)){
@@ -669,37 +703,37 @@ namespace wiki
                 }
             };
 
-            listview.SelectedIndexChanged += (sender, e) => {
-                if (config.ShowType== ShowType.Large && listview.SelectedIndices.Count == 1) {
-                    var selindex = listview.SelectedIndices[0];
-                    var item = listview.DataItems[selindex];
-                    //var cf = InvokeScript("js_getComeFrom");
-                    //var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(cf.ToString());
-                    //Console.WriteLine("cf = " + cf);
-                    reBuild(item);
-
-                }
-            };
+            //listview.SelectedIndexChanged += (sender, e) => {
+            //    if (config.ShowType== ShowType.Large && listview.SelectedIndices.Count == 1) {
+            //        var selindex = listview.SelectedIndices[0];
+            //        var item = listview.DataItems[selindex];
+            //        //var cf = InvokeScript("js_getComeFrom");
+            //        //var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(cf.ToString());
+            //        //Console.WriteLine("cf = " + cf);
+            //        reBuild(item);
+            //    }
+            //};
             listview.DoubleClick += (sender, e) => {
                 if (config.ShowType == ShowType.List && listview.SelectedIndices.Count == 1) {
                     var selindex = listview.SelectedIndices[0];
                     var id = listview.DataItems[selindex].ID;
-                    //var p = config.htmlPath + "#" + id;
-                    //webBrowser1.Navigate(p);
-
                     this.Moves(id);
                 }
             };
 
             listview.Dock = DockStyle.Fill;
 
-            var t = new TabPage(name);
+            var t = new TabPage(title);
             t.Controls.Add(listview);
             ItemTabControl.TabPages.Add(t);
 
             searchtabdic.Add(search, t);
 
             return t;
+        }
+
+        private string getSelectedCategory() {
+            return CategoryListView.SelectedItems[0].Name;
         }
 
         //private TabPage CreateDustTabPage(string name, List<Data> items) {
