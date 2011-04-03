@@ -74,8 +74,12 @@ namespace wiki {
                     }
                     var sobj = CreateSearchObj(text, mode);
 
-                    var p = CreateListViewTabPage(text, sobj);
-                    ItemTabControl.SelectedTab = p;
+                    var t = getTabControl(getSelectedCategory());
+                    var p = CreateListViewTabPage(getSelectedCategory(), t, sobj);                
+                    t.TabPages.Add(p);
+                    t.BringToFront();
+                    t.SelectedTab = p;
+                    //ItemTabControl.SelectedTab = p;
                 }
             };
         }

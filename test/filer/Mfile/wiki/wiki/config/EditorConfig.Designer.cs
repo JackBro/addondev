@@ -35,20 +35,21 @@
             this.ShowZenSpaceCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.NewButton = new System.Windows.Forms.Button();
-            this.EditButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
+            this.EditButton = new System.Windows.Forms.Button();
+            this.NewButton = new System.Windows.Forms.Button();
+            this.CompleListBox = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // FontSelectButton
             // 
-            this.FontSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FontSelectButton.Location = new System.Drawing.Point(316, 20);
+            this.FontSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.FontSelectButton.Location = new System.Drawing.Point(298, 19);
             this.FontSelectButton.Name = "FontSelectButton";
-            this.FontSelectButton.Size = new System.Drawing.Size(75, 23);
+            this.FontSelectButton.Size = new System.Drawing.Size(122, 23);
             this.FontSelectButton.TabIndex = 4;
             this.FontSelectButton.Text = "Font";
             this.FontSelectButton.UseVisualStyleBackColor = true;
@@ -56,35 +57,37 @@
             // BackColorButton
             // 
             this.BackColorButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BackColorButton.Location = new System.Drawing.Point(316, 77);
+            this.BackColorButton.Location = new System.Drawing.Point(345, 77);
             this.BackColorButton.Name = "BackColorButton";
             this.BackColorButton.Size = new System.Drawing.Size(75, 23);
             this.BackColorButton.TabIndex = 3;
-            this.BackColorButton.Text = "Color";
+            this.BackColorButton.Text = "BackColor";
             this.BackColorButton.UseVisualStyleBackColor = true;
             // 
             // FontColorButton
             // 
             this.FontColorButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FontColorButton.Location = new System.Drawing.Point(316, 48);
+            this.FontColorButton.Location = new System.Drawing.Point(345, 48);
             this.FontColorButton.Name = "FontColorButton";
             this.FontColorButton.Size = new System.Drawing.Size(75, 23);
             this.FontColorButton.TabIndex = 2;
-            this.FontColorButton.Text = "Color";
+            this.FontColorButton.Text = "ForeColor";
             this.FontColorButton.UseVisualStyleBackColor = true;
             // 
             // panel
             // 
-            this.panel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             this.panel.Location = new System.Drawing.Point(5, 17);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(287, 220);
+            this.panel.Size = new System.Drawing.Size(286, 175);
             this.panel.TabIndex = 5;
             // 
             // ShowTabCheckBox
             // 
+            this.ShowTabCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ShowTabCheckBox.AutoSize = true;
-            this.ShowTabCheckBox.Location = new System.Drawing.Point(322, 106);
+            this.ShowTabCheckBox.Location = new System.Drawing.Point(345, 110);
             this.ShowTabCheckBox.Name = "ShowTabCheckBox";
             this.ShowTabCheckBox.Size = new System.Drawing.Size(43, 16);
             this.ShowTabCheckBox.TabIndex = 6;
@@ -93,8 +96,9 @@
             // 
             // ShowEolCheckBox
             // 
+            this.ShowEolCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ShowEolCheckBox.AutoSize = true;
-            this.ShowEolCheckBox.Location = new System.Drawing.Point(322, 128);
+            this.ShowEolCheckBox.Location = new System.Drawing.Point(345, 132);
             this.ShowEolCheckBox.Name = "ShowEolCheckBox";
             this.ShowEolCheckBox.Size = new System.Drawing.Size(40, 16);
             this.ShowEolCheckBox.TabIndex = 7;
@@ -103,8 +107,9 @@
             // 
             // ShowSpaceCheckBox
             // 
+            this.ShowSpaceCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ShowSpaceCheckBox.AutoSize = true;
-            this.ShowSpaceCheckBox.Location = new System.Drawing.Point(322, 150);
+            this.ShowSpaceCheckBox.Location = new System.Drawing.Point(345, 154);
             this.ShowSpaceCheckBox.Name = "ShowSpaceCheckBox";
             this.ShowSpaceCheckBox.Size = new System.Drawing.Size(55, 16);
             this.ShowSpaceCheckBox.TabIndex = 8;
@@ -113,8 +118,9 @@
             // 
             // ShowZenSpaceCheckBox
             // 
+            this.ShowZenSpaceCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ShowZenSpaceCheckBox.AutoSize = true;
-            this.ShowZenSpaceCheckBox.Location = new System.Drawing.Point(322, 172);
+            this.ShowZenSpaceCheckBox.Location = new System.Drawing.Point(345, 176);
             this.ShowZenSpaceCheckBox.Name = "ShowZenSpaceCheckBox";
             this.ShowZenSpaceCheckBox.Size = new System.Drawing.Size(74, 16);
             this.ShowZenSpaceCheckBox.TabIndex = 9;
@@ -135,59 +141,66 @@
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(5);
-            this.groupBox1.Size = new System.Drawing.Size(415, 242);
+            this.groupBox1.Size = new System.Drawing.Size(428, 201);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox1.Text = "View";
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.DeleteButton);
             this.groupBox2.Controls.Add(this.EditButton);
             this.groupBox2.Controls.Add(this.NewButton);
-            this.groupBox2.Controls.Add(this.listBox1);
-            this.groupBox2.Location = new System.Drawing.Point(0, 248);
+            this.groupBox2.Controls.Add(this.CompleListBox);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Location = new System.Drawing.Point(0, 201);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(375, 203);
+            this.groupBox2.Size = new System.Drawing.Size(428, 203);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "groupBox2";
+            this.groupBox2.Text = "Comple";
             // 
-            // listBox1
+            // DeleteButton
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(6, 18);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(282, 172);
-            this.listBox1.TabIndex = 0;
-            // 
-            // NewButton
-            // 
-            this.NewButton.Location = new System.Drawing.Point(294, 18);
-            this.NewButton.Name = "NewButton";
-            this.NewButton.Size = new System.Drawing.Size(75, 23);
-            this.NewButton.TabIndex = 1;
-            this.NewButton.Text = "New";
-            this.NewButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.DeleteButton.Location = new System.Drawing.Point(344, 167);
+            this.DeleteButton.Name = "DeleteButton";
+            this.DeleteButton.Size = new System.Drawing.Size(75, 23);
+            this.DeleteButton.TabIndex = 3;
+            this.DeleteButton.Text = "Delete";
+            this.DeleteButton.UseVisualStyleBackColor = true;
             // 
             // EditButton
             // 
-            this.EditButton.Location = new System.Drawing.Point(294, 47);
+            this.EditButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.EditButton.Location = new System.Drawing.Point(344, 47);
             this.EditButton.Name = "EditButton";
             this.EditButton.Size = new System.Drawing.Size(75, 23);
             this.EditButton.TabIndex = 2;
             this.EditButton.Text = "Edit";
             this.EditButton.UseVisualStyleBackColor = true;
             // 
-            // DeleteButton
+            // NewButton
             // 
-            this.DeleteButton.Location = new System.Drawing.Point(294, 167);
-            this.DeleteButton.Name = "DeleteButton";
-            this.DeleteButton.Size = new System.Drawing.Size(75, 23);
-            this.DeleteButton.TabIndex = 3;
-            this.DeleteButton.Text = "Delete";
-            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.NewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.NewButton.Location = new System.Drawing.Point(344, 18);
+            this.NewButton.Name = "NewButton";
+            this.NewButton.Size = new System.Drawing.Size(75, 23);
+            this.NewButton.TabIndex = 1;
+            this.NewButton.Text = "New";
+            this.NewButton.UseVisualStyleBackColor = true;
+            // 
+            // CompleListBox
+            // 
+            this.CompleListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CompleListBox.FormattingEnabled = true;
+            this.CompleListBox.ItemHeight = 12;
+            this.CompleListBox.Location = new System.Drawing.Point(6, 18);
+            this.CompleListBox.Name = "CompleListBox";
+            this.CompleListBox.Size = new System.Drawing.Size(332, 172);
+            this.CompleListBox.TabIndex = 0;
             // 
             // EditorConfig
             // 
@@ -197,7 +210,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "EditorConfig";
-            this.Size = new System.Drawing.Size(415, 463);
+            this.Size = new System.Drawing.Size(428, 438);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -219,7 +232,7 @@
         private System.Windows.Forms.CheckBox ShowZenSpaceCheckBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox CompleListBox;
         private System.Windows.Forms.Button EditButton;
         private System.Windows.Forms.Button NewButton;
         private System.Windows.Forms.Button DeleteButton;

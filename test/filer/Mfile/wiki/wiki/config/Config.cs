@@ -26,6 +26,7 @@ namespace wiki {
 
         public FormWindowState WindowState { get; set; }
         public Size WindowSize { get; set; }
+        public Point WindowPos { get; set; }
 
         public int CategoryListViewW { get; set; }
         public int ListViewW { get; set; }
@@ -33,6 +34,7 @@ namespace wiki {
 
         public string htmlPath { get; set; }
         public string ScriptDirPath { get; set; }
+        public string DataDirPath { get; set; }
 
         public List<string> ComeFormWords { get; set; }
 
@@ -95,7 +97,11 @@ namespace wiki {
 
             ComeFormWords = new List<string>();
             this.WindowState = FormWindowState.Normal;
-            this.WindowSize = new Size(Screen.PrimaryScreen.WorkingArea.Width / 2, Screen.PrimaryScreen.WorkingArea.Height / 2); 
+            this.WindowSize = new Size(Screen.PrimaryScreen.WorkingArea.Width / 2, Screen.PrimaryScreen.WorkingArea.Height / 2);
+            this.WindowPos = new Point(
+                (Screen.PrimaryScreen.WorkingArea.Width - this.WindowSize.Width)/2,
+                (Screen.PrimaryScreen.WorkingArea.Height - this.WindowSize.Height) / 2);
+            
             this.CategoryListViewW = 80;
             this.ListViewW = 200;
             this.BrowserH = this.WindowSize.Height / 2;

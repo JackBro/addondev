@@ -67,13 +67,6 @@ namespace wiki.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap arrow_small_r {
-            get {
-                object obj = ResourceManager.GetObject("arrow_small_r", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         /// <summary>
         ///   test
         /// test

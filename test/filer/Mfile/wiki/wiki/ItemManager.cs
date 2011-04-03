@@ -3,16 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.FileIO;
 
 namespace wiki {
 
     class Category {
-
+        private string datapath;
+        public string DataDir { 
+            get{
+                return datapath;
+            } 
+            set{
+                datapath = value;
+                if (!Directory.Exists(datapath)) {
+                    Directory.CreateDirectory(datapath);
+                }
+            } 
+        }
+        private readonly string Trust = "Trust";
         private Dictionary<string, ItemManager> manager = new Dictionary<string, ItemManager>();
         public EventHandler eventHandler;
         public void Load(List<string> names) {
             foreach (var name in names) {
                 var m = new ItemManager();
+                m.DataPath = Path.Combine(DataDir, name);
                 m.eventHandler += eventHandler;
                 m.Name = name;
                 m.Load();
@@ -23,7 +38,9 @@ namespace wiki {
         public void Save() {
             var lists = manager.ToList();
             foreach (var item in lists) {
-                item.Value.Save();
+                if (item.Value.IsDirty) {
+                    item.Value.Save();
+                }
             }
         }
         public void Save(string name) {
@@ -32,16 +49,64 @@ namespace wiki {
             }
         }
 
-        public ItemManager create(string name) {
-            var m = new ItemManager();
-            manager.Add(name, m);
-            return m;
+        //public ItemManager create(string name) {
+        //    var m = new ItemManager();
+        //    manager.Add(name, m);
+        //    return m;
+        //}
+
+        public void DeleteFile(string name) {
+            if (manager.ContainsKey(name)) {
+                manager.Remove(name);
+                var file = Path.Combine(this.DataDir, name);
+                if (File.Exists(file)) {
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+                        file,
+                        UIOption.OnlyErrorDialogs,
+                        RecycleOption.SendToRecycleBin);
+                }
+            }
         }
 
-        public void delete(string name) {
+        public void DeleteItem(string name, long id) {
+            if (manager.ContainsKey(name)) {
+                var m = manager[name];
+                if (name == Trust) {
+                    m.Remove(id);
+                } else {
+                    if (manager.ContainsKey(Trust)) {
+                        var d = m.GetItem(id);
+                        m.Remove(id);
+
+                        manager[Trust].Insert(d);
+                    }
+                }
+            }
+        }
+
+        public long GetNewID() {
+            int s = 0;
+            foreach (var m in manager.Values) {
+                s+=m.GetDataCount();
+            }
+            if (s == 0) return 0;
+
+            var id = manager.Values.Max(n => {
+                return n.GetMaxID();
+            });
+            id++;
+            return id ;
         }
 
         public ItemManager getManger(string name) {
+            if (!manager.ContainsKey(name)) {
+                var m = new ItemManager();
+                m.DataPath = Path.Combine(DataDir, name); //name;
+                m.eventHandler += eventHandler;
+                m.Name = name;
+                m.IsDirty = true;
+                manager.Add(name, m);
+            }
             return manager[name];
         }
     }
@@ -73,16 +138,18 @@ namespace wiki {
         private List<Data> datas = new List<Data>();
 
         public void Load(){
-            datas = Serializer.Deserialize<List<Data>>(DataPath, new List<Data>());
+            datas = XMLSerializer.Deserialize<List<Data>>(DataPath + ".xml", new List<Data>());
+            //datas = Serializer.Deserialize<List<Data>>(DataPath, new List<Data>());
         }
         public void Save(){
-            Serializer.Serialize<List<Data>>(DataPath, datas);
+            XMLSerializer.Serialize<List<Data>>(DataPath + ".xml", datas);
+            //Serializer.Serialize<List<Data>>(DataPath, datas);
             IsDirty = false;
         }
         
         public static int Insert(List<Data> list, Data item) {
             if (list.Count == 0) {
-                item.ID = 0;
+                //item.ID = 0;
                 list.Add(item);
                 return 0;
             }
@@ -123,11 +190,11 @@ namespace wiki {
 
         }
 
-        public void Delete(long id) {
+        public void Remove(long id) {
             IsDirty = true;
             var item = GetItem(id);
             if (item != null) {
-                //datas.Remove(item);
+                datas.Remove(item);
                 if (eventHandler != null) {
                     eventHandler(this, new CallBackEventArgs { Name = this.Name, Item = item, type = ChangeType.Delete });
                 }
@@ -150,6 +217,16 @@ namespace wiki {
             var maxid = datas.Max(n=>n.ID);
             return maxid + 1;
             
+        }
+
+        public int GetDataCount() {
+            return datas.Count;
+        }
+
+        public long GetMaxID() {
+            if (datas.Count == 0) return 0;
+
+            return datas.Max(n => n.ID);
         }
 
         public List<Data> Filter(Predicate<Data> pre) {

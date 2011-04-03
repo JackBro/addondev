@@ -30,12 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Trust", 1);
             this.BrowserContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.ListViewSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.ItemTabControl = new System.Windows.Forms.TabControl();
+            this.TabPanel = new System.Windows.Forms.Panel();
             this.SearchPanel = new System.Windows.Forms.Panel();
             this.SearchComboBox = new System.Windows.Forms.ComboBox();
             this.SearchButtonPanel = new System.Windows.Forms.Panel();
@@ -65,6 +64,7 @@
             this.ToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.NewFileToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.NewItemToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.ReloadToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.NextPageToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -82,12 +82,16 @@
             this.NormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RegexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MigemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.CategoryListView = new System.Windows.Forms.ListView();
+            this.CategoryContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CategoryNewFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CategoryDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ImageList24 = new System.Windows.Forms.ImageList(this.components);
-            this.NewFileToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.TabPanel = new System.Windows.Forms.Panel();
+            this.TabListViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.TabListViewNewItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TabListViewDeleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TabListViewEditItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -105,7 +109,8 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.TabPanel.SuspendLayout();
+            this.CategoryContextMenuStrip.SuspendLayout();
+            this.TabListViewContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // BrowserContextMenuStrip
@@ -149,18 +154,13 @@
             this.ListViewSplitContainer.SplitterDistance = 162;
             this.ListViewSplitContainer.TabIndex = 3;
             // 
-            // ItemTabControl
+            // TabPanel
             // 
-            this.ItemTabControl.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
-            this.ItemTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ItemTabControl.ItemSize = new System.Drawing.Size(70, 20);
-            this.ItemTabControl.Location = new System.Drawing.Point(0, 0);
-            this.ItemTabControl.Multiline = true;
-            this.ItemTabControl.Name = "ItemTabControl";
-            this.ItemTabControl.SelectedIndex = 0;
-            this.ItemTabControl.Size = new System.Drawing.Size(162, 449);
-            this.ItemTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            this.ItemTabControl.TabIndex = 1;
+            this.TabPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TabPanel.Location = new System.Drawing.Point(0, 20);
+            this.TabPanel.Name = "TabPanel";
+            this.TabPanel.Size = new System.Drawing.Size(162, 449);
+            this.TabPanel.TabIndex = 1;
             // 
             // SearchPanel
             // 
@@ -412,12 +412,13 @@
             // OptionToolStripMenuItem
             // 
             this.OptionToolStripMenuItem.Name = "OptionToolStripMenuItem";
-            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.OptionToolStripMenuItem.Text = "Option";
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.NewFileToolStripButton,
             this.NewItemToolStripButton,
             this.ReloadToolStripButton,
             this.NextPageToolStripButton,
@@ -426,13 +427,21 @@
             this.ToggleShowToolStripSplitButton,
             this.toolStripSeparator1,
             this.BrowserSearchToolStripButton,
-            this.OptionToolStripButton,
-            this.NewFileToolStripButton});
+            this.OptionToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(747, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // NewFileToolStripButton
+            // 
+            this.NewFileToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.NewFileToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("NewFileToolStripButton.Image")));
+            this.NewFileToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.NewFileToolStripButton.Name = "NewFileToolStripButton";
+            this.NewFileToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.NewFileToolStripButton.Text = "NewFile";
             // 
             // NewItemToolStripButton
             // 
@@ -497,14 +506,14 @@
             // 
             this.ShowListToolStripMenuItem.Image = global::wiki.Properties.Resources.win_show_detail;
             this.ShowListToolStripMenuItem.Name = "ShowListToolStripMenuItem";
-            this.ShowListToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.ShowListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ShowListToolStripMenuItem.Text = "List";
             // 
             // ShowLargeToolStripMenuItem
             // 
             this.ShowLargeToolStripMenuItem.Image = global::wiki.Properties.Resources.win_show_largeIcon;
             this.ShowLargeToolStripMenuItem.Name = "ShowLargeToolStripMenuItem";
-            this.ShowLargeToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.ShowLargeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ShowLargeToolStripMenuItem.Text = "Large";
             // 
             // toolStripSeparator1
@@ -521,6 +530,7 @@
             this.BrowserSearchToolStripButton.Name = "BrowserSearchToolStripButton";
             this.BrowserSearchToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.BrowserSearchToolStripButton.Text = "toolStripButton1";
+            this.BrowserSearchToolStripButton.ToolTipText = "Search";
             // 
             // OptionToolStripButton
             // 
@@ -575,11 +585,6 @@
             this.MigemoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.MigemoToolStripMenuItem.Text = "Migemo";
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -599,10 +604,10 @@
             // 
             // CategoryListView
             // 
+            this.CategoryListView.AutoArrange = false;
+            this.CategoryListView.ContextMenuStrip = this.CategoryContextMenuStrip;
             this.CategoryListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CategoryListView.HideSelection = false;
-            this.CategoryListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
             this.CategoryListView.LargeImageList = this.ImageList24;
             this.CategoryListView.Location = new System.Drawing.Point(0, 0);
             this.CategoryListView.MultiSelect = false;
@@ -611,6 +616,26 @@
             this.CategoryListView.TabIndex = 0;
             this.CategoryListView.UseCompatibleStateImageBehavior = false;
             // 
+            // CategoryContextMenuStrip
+            // 
+            this.CategoryContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CategoryNewFileToolStripMenuItem,
+            this.CategoryDeleteToolStripMenuItem});
+            this.CategoryContextMenuStrip.Name = "CategoryContextMenuStrip";
+            this.CategoryContextMenuStrip.Size = new System.Drawing.Size(123, 48);
+            // 
+            // CategoryNewFileToolStripMenuItem
+            // 
+            this.CategoryNewFileToolStripMenuItem.Name = "CategoryNewFileToolStripMenuItem";
+            this.CategoryNewFileToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.CategoryNewFileToolStripMenuItem.Text = "NewFile";
+            // 
+            // CategoryDeleteToolStripMenuItem
+            // 
+            this.CategoryDeleteToolStripMenuItem.Name = "CategoryDeleteToolStripMenuItem";
+            this.CategoryDeleteToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.CategoryDeleteToolStripMenuItem.Text = "DeleteFile";
+            // 
             // ImageList24
             // 
             this.ImageList24.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ImageList24.ImageStream")));
@@ -618,23 +643,32 @@
             this.ImageList24.Images.SetKeyName(0, "doc_lines_stright_icon24.png");
             this.ImageList24.Images.SetKeyName(1, "trash_icon24.png");
             // 
-            // NewFileToolStripButton
+            // TabListViewContextMenuStrip
             // 
-            this.NewFileToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.NewFileToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("NewFileToolStripButton.Image")));
-            this.NewFileToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.NewFileToolStripButton.Name = "NewFileToolStripButton";
-            this.NewFileToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.NewFileToolStripButton.Text = "toolStripButton1";
+            this.TabListViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TabListViewNewItemToolStripMenuItem,
+            this.TabListViewDeleteItemToolStripMenuItem,
+            this.TabListViewEditItemToolStripMenuItem});
+            this.TabListViewContextMenuStrip.Name = "TabListViewContextMenuStrip";
+            this.TabListViewContextMenuStrip.Size = new System.Drawing.Size(130, 70);
             // 
-            // TabPanel
+            // TabListViewNewItemToolStripMenuItem
             // 
-            this.TabPanel.Controls.Add(this.ItemTabControl);
-            this.TabPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabPanel.Location = new System.Drawing.Point(0, 20);
-            this.TabPanel.Name = "TabPanel";
-            this.TabPanel.Size = new System.Drawing.Size(162, 449);
-            this.TabPanel.TabIndex = 1;
+            this.TabListViewNewItemToolStripMenuItem.Name = "TabListViewNewItemToolStripMenuItem";
+            this.TabListViewNewItemToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.TabListViewNewItemToolStripMenuItem.Text = "New Item";
+            // 
+            // TabListViewDeleteItemToolStripMenuItem
+            // 
+            this.TabListViewDeleteItemToolStripMenuItem.Name = "TabListViewDeleteItemToolStripMenuItem";
+            this.TabListViewDeleteItemToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.TabListViewDeleteItemToolStripMenuItem.Text = "Delete Item";
+            // 
+            // TabListViewEditItemToolStripMenuItem
+            // 
+            this.TabListViewEditItemToolStripMenuItem.Name = "TabListViewEditItemToolStripMenuItem";
+            this.TabListViewEditItemToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.TabListViewEditItemToolStripMenuItem.Text = "Edit Item";
             // 
             // MainForm
             // 
@@ -670,7 +704,8 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.TabPanel.ResumeLayout(false);
+            this.CategoryContextMenuStrip.ResumeLayout(false);
+            this.TabListViewContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -688,7 +723,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.TabControl ItemTabControl;
         private System.Windows.Forms.SplitContainer ViewEditorSplitContainer;
         private System.Windows.Forms.ToolStripButton NewItemToolStripButton;
         private System.Windows.Forms.WebBrowser webBrowser1;
@@ -728,13 +762,19 @@
         private System.Windows.Forms.ToolStripMenuItem ToolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem OptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListView CategoryListView;
         private System.Windows.Forms.ImageList ImageList24;
         private System.Windows.Forms.ToolStripButton EditorDateToolStripButton;
         private System.Windows.Forms.ToolStripButton NewFileToolStripButton;
         private System.Windows.Forms.Panel TabPanel;
+        private System.Windows.Forms.ContextMenuStrip CategoryContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem CategoryNewFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem CategoryDeleteToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip TabListViewContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem TabListViewNewItemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem TabListViewDeleteItemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem TabListViewEditItemToolStripMenuItem;
     }
 }
 

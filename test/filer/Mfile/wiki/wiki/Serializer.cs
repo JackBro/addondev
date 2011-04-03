@@ -58,7 +58,7 @@ namespace wiki {
                 if (fs != null) fs.Close();
             }
         }
-        public static T Deserialize<T>(string path) {
+        public static T Deserialize<T>(string path, T defaultValue) {
             XmlSerializer seri = new XmlSerializer(typeof(T));
             if (File.Exists(path)) {
                 FileStream fs=null;
@@ -73,7 +73,7 @@ namespace wiki {
                     if(fs!=null) fs.Close();
                 }
             } else {
-                return default(T);
+                return defaultValue;
             }
         }
     }

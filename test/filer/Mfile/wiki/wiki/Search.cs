@@ -31,6 +31,7 @@ namespace wiki {
     class SearchAll : Search {
         public SearchAll() {
             this.Mode = SearchMode.All;
+            this.Pattern = "All";
         }
         public override Predicate<Data> getSearch() {
             return x => { return true; };

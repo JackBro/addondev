@@ -14,6 +14,7 @@ namespace wiki {
     public partial class EditorConfig : UserControl {
         public Config config { get; set; }
         private AzukiControl editor;
+        //private bool 
         public EditorConfig(Config config) {
             this.config = config;
 
@@ -27,7 +28,8 @@ namespace wiki {
                 var res = EditorFontDialog.ShowDialog();
                 if (res == DialogResult.OK) {
                     var EditorFont = EditorFontDialog.Font;
-                    FontSelectButton.Text = EditorFont.Name;
+                    FontSelectButton.Text = EditorFont.Name + "(" + EditorFont.Size + ")";
+                    editor.Font = EditorFont;
                 }
             };
 
@@ -52,10 +54,10 @@ namespace wiki {
                 editor.View.DrawsEolCode = ShowEolCheckBox.Checked;
             };
             ShowSpaceCheckBox.CheckedChanged += (s, e) => {
-                editor.View.DrawsTab = ShowTabCheckBox.Checked;
+                editor.View.DrawsSpace = ShowSpaceCheckBox.Checked;
             };
             ShowZenSpaceCheckBox.CheckedChanged += (s, e) => {
-                editor.View.DrawsTab = ShowTabCheckBox.Checked;
+                editor.View.DrawsFullWidthSpace = ShowZenSpaceCheckBox.Checked;
             };
 
             //
@@ -63,19 +65,19 @@ namespace wiki {
                 var edit = new CompleEditForm();
                 var res = edit.ShowDialog(this);
                 if (res == DialogResult.OK) {
-                    listBox1.Items.Add(edit.Code);
+                    CompleListBox.Items.Add(edit.Code);
                 }
             };
             EditButton.Click += (s, e) => {
                 var edit = new CompleEditForm();
-                edit.Code = listBox1.SelectedItem.ToString();
+                edit.Code = CompleListBox.SelectedItem.ToString();
                 var res = edit.ShowDialog(this);
                 if (res == DialogResult.OK) {
-                    listBox1.SelectedItem = edit.Code;
+                    CompleListBox.SelectedItem = edit.Code;
                 }
             };
             DeleteButton.Click += (s, e) => {
-                listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+                CompleListBox.Items.RemoveAt(CompleListBox.SelectedIndex);
             };
 
             this.Load += (s, e) => {
@@ -93,6 +95,21 @@ namespace wiki {
                 ShowSpaceCheckBox.Checked = editor.DrawsSpace;
                 ShowZenSpaceCheckBox.Checked = editor.DrawsFullWidthSpace;
             };
+            this.Disposed += (s, e) => {
+                if (editor != null) {
+                    editor.Dispose();
+                }
+            };
+        }
+
+        public void Accept() {
+            config.ShowTab = editor.View.DrawsTab;
+            config.ShowEol = editor.View.DrawsEofMark;
+            config.ShowSpace = editor.View.DrawsSpace;
+            config.ShowZenSpace = editor.View.DrawsFullWidthSpace;
+
+            config.EditorFontColor = editor.ForeColor;
+            config.EditorBackColor = editor.BackColor;
         }
     }
 }

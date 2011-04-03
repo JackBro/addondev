@@ -78,8 +78,9 @@ namespace wiki {
         }
 
         public void DeleteItem(Data item) {
-            if (items.Remove(item)) {
+            if (this.items.Remove(item)) {
                 this.VirtualListSize = items.Count;
+                
             }
         }
 

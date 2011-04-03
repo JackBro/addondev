@@ -76,6 +76,7 @@ namespace wiki {
             };
 
             EditorDateToolStripButton.Click += (s, e) => {
+                var manager = category.getManger(getSelectedCategory());
                 if (manager.EditingData == null) return;
 
                 var tform = new DateTimeForm();

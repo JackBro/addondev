@@ -12,7 +12,7 @@ namespace wiki {
         public Font EditorFont { get; private set; }
         private Dictionary<string, UserControl> configpanels = new Dictionary<string, UserControl>();
         private Config config;
-
+        private EditorConfig editorconfig;
         public ConfigForm(Config config) {
             this.config = config;
 
@@ -26,13 +26,22 @@ namespace wiki {
             //ConfigPanel.Controls.Add(p);
             //configpanels.Add("EditorNode", p);
             //configpanels
-            createPanel("EditorNode", new EditorConfig(config));
+            editorconfig = new EditorConfig(config);
+            createPanel("EditorNode", editorconfig);
 
             ConfigTreeView.NodeMouseClick += (sender, e) => {
                 if (configpanels.ContainsKey(e.Node.Name)) {
                     var cp = configpanels[e.Node.Name];
                     //cp.BringToFront();
                 }
+            };
+
+            this.OKButton.Click += (s, e) => {
+                editorconfig.Accept();
+
+            };
+            this.CancelButton.Click += (s, e) => {
+
             };
         }
 
