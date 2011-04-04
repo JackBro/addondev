@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace wiki {
-    enum SearchMode {
+    public enum SearchMode {
         All,
         Normal,
         Regex,

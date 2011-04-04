@@ -9,6 +9,8 @@ using Microsoft.VisualBasic.FileIO;
 namespace wiki {
 
     class Category {
+        public static string Trust = "Trust";
+
         private string datapath;
         public string DataDir { 
             get{
@@ -21,7 +23,7 @@ namespace wiki {
                 }
             } 
         }
-        private readonly string Trust = "Trust";
+        //private readonly string Trust = "Trust";
         private Dictionary<string, ItemManager> manager = new Dictionary<string, ItemManager>();
         public EventHandler eventHandler;
         public void Load(List<string> names) {

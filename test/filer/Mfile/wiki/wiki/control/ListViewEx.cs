@@ -10,6 +10,8 @@ namespace wiki {
 
         public int Page { get; set; }
 
+        public Search search { get; set; }
+
         public List<Data> DataItems{
             get { return this.items; }
             set {
@@ -19,20 +21,8 @@ namespace wiki {
         }
         
         public bool IsPre {
-            get {
-                return (Page > 0);
-            }
+            get { return (Page > 0); }
         }
-
-        //public bool IsNext {
-        //    get {
-
-        //    }
-        //}
-
-        //public List<Data> GetCurrent() {
-            
-        //}
 
         public ListViewEx(List<Data> items) {
 
@@ -60,7 +50,11 @@ namespace wiki {
             headerCreationTime.Name = "creationtime";
             headerCreationTime.Text = "CreationTime";
             this.Columns.Add(headerCreationTime);
-            //headerCreationTime.Width = -2;
+            headerCreationTime.Width = 200;
+
+            this.SizeChanged += (s, e) => {
+                headerName.Width = this.Width - headerCreationTime.Width - headerID.Width- 5;
+            };
 
             this.VirtualMode = true;
             this.VirtualListSize = items.Count;
@@ -91,16 +85,10 @@ namespace wiki {
             return i;
         }
 
-        //public void AddItem(int index, Data item) {
-        //    //items.Add(item);
-        //    //items.Insert(index, item);
-        //    ItemManager.Insert(items, item);
-        //    this.VirtualListSize = items.Count;
-        //}
-
         public void UpDate(Data item){
             
         }
+
         private List<Data> nulldata = new List<Data>();
         public List<Data> GetActive() {
             if (this.SelectedIndices.Count > 0) {

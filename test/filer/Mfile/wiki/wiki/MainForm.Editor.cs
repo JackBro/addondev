@@ -29,15 +29,16 @@ namespace wiki {
             };
 
             _editor.KeyDown += (sender, e) => {
-                if(_KeyMap.ContainsKey(e.KeyData)){
-                    _KeyMap[e.KeyData](this);
+                if(_EditorKeyMap.ContainsKey(e.KeyData)){
+                    _EditorKeyMap[e.KeyData](this);
                     e.Handled = true;
                     e.SuppressKeyPress = true;
                 }
             };
 
             CloseEditorToolStripButton.Click += (sender, e) => {
-                ViewEditorSplitContainer.Panel2Collapsed = true;
+                //ViewEditorSplitContainer.Panel2Collapsed = true;
+                CloseEditor();
             };
 
             EditorSearchToolStripButton.CheckedChanged += (sender, e) => {
@@ -108,6 +109,14 @@ namespace wiki {
                 _editor.Document.SetSelection(res.Begin, res.End);
                 _editor.ScrollToCaret();
             }
+        }
+
+        internal void CloseEditor() {
+            ViewEditorSplitContainer.Panel2Collapsed = true;
+        }
+
+        internal void OpenEditor() {
+            ViewEditorSplitContainer.Panel2Collapsed = false;
         }
     }
 }

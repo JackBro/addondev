@@ -23,8 +23,12 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 :link { color: blue ! important }
 :visited { color: blue ! important }
 
-.list {
+.list 
+{
+/*
 	border-top: 2px solid #ff9d9d;
+*/
+    border-top: 2px solid #D3D3D3;
 	padding-top: 1px; 
 	width: 100%;
 }
@@ -36,14 +40,17 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 }
 
 .tools {
-	background-color: gray;
+	background-color: #D3D3D3;
+	font-size: medium; 
 }
 
 .operate {
 	margin: 3px;
 }
 
+/*
 :hover.operate  { background-color: #b03 }
+*/
 
 .URILink {
 	width: 100px;

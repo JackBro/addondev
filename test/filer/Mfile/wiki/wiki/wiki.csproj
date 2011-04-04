@@ -59,10 +59,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\lib\json-net\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net, Version=1.0.0.282, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\lib\protobuf-net\NET30\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -250,9 +246,11 @@
     <Content Include="resources\cog_icon16.png" />
     <Content Include="resources\delete_icon16.png" />
     <Content Include="resources\doc_empty_icon16.png" />
+    <Content Include="resources\doc_lines_stright_icon16.png" />
     <Content Include="resources\doc_lines_stright_icon24.png" />
     <Content Include="resources\doc_lines_stright_icon32.png" />
     <Content Include="resources\doc_new_icon16.png" />
+    <Content Include="resources\horizontal16.png" />
     <Content Include="resources\redo_icon16.png" />
     <Content Include="resources\reload_icon16.png" />
     <Content Include="resources\sq_br_down_icon16.png" />
@@ -261,6 +259,7 @@
     <Content Include="resources\trash_icon24.png" />
     <Content Include="resources\trash_icon32.png" />
     <Content Include="resources\undo_icon16.png" />
+    <Content Include="resources\vertical16.png" />
     <Content Include="resources\win_show_detail.png" />
     <Content Include="resources\win_show_largeIcon.png" />
     <Content Include="resources\wrap16.png" />

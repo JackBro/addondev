@@ -20,10 +20,12 @@ namespace wiki {
 
             InitializeComponent();
             editor = new AzukiControl();
+            editor.ShowsHScrollBar = false;
             editor.Dock = DockStyle.Fill;
             editor.Text = Resources.EditorPreviewText;
             panel.Controls.Add(editor);
 
+            FontSelectButton.Text = this.config.EditorFont.Name + "(" + this.config.EditorFont.Size + ")";
             FontSelectButton.Click += (sender, e) => {
                 var res = EditorFontDialog.ShowDialog();
                 if (res == DialogResult.OK) {

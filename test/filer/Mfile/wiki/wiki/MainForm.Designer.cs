@@ -92,6 +92,11 @@
             this.TabListViewNewItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewDeleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewEditItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.VerticalToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.HorizontalToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.EditorInfoToolStripLabel = new System.Windows.Forms.ToolStripLabel();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -141,6 +146,7 @@
             this.ListViewSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListViewSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.ListViewSplitContainer.Name = "ListViewSplitContainer";
+            this.ListViewSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // ListViewSplitContainer.Panel1
             // 
@@ -159,7 +165,7 @@
             this.TabPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabPanel.Location = new System.Drawing.Point(0, 20);
             this.TabPanel.Name = "TabPanel";
-            this.TabPanel.Size = new System.Drawing.Size(162, 449);
+            this.TabPanel.Size = new System.Drawing.Size(657, 142);
             this.TabPanel.TabIndex = 1;
             // 
             // SearchPanel
@@ -169,7 +175,7 @@
             this.SearchPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.SearchPanel.Location = new System.Drawing.Point(0, 0);
             this.SearchPanel.Name = "SearchPanel";
-            this.SearchPanel.Size = new System.Drawing.Size(162, 20);
+            this.SearchPanel.Size = new System.Drawing.Size(657, 20);
             this.SearchPanel.TabIndex = 1;
             // 
             // SearchComboBox
@@ -178,7 +184,7 @@
             this.SearchComboBox.FormattingEnabled = true;
             this.SearchComboBox.Location = new System.Drawing.Point(31, 0);
             this.SearchComboBox.Name = "SearchComboBox";
-            this.SearchComboBox.Size = new System.Drawing.Size(131, 20);
+            this.SearchComboBox.Size = new System.Drawing.Size(626, 20);
             this.SearchComboBox.TabIndex = 1;
             // 
             // SearchButtonPanel
@@ -204,8 +210,8 @@
             // 
             this.ViewEditorSplitContainer.Panel2.Controls.Add(this.EditorPanel);
             this.ViewEditorSplitContainer.Panel2.Controls.Add(this.EditorToolStrip);
-            this.ViewEditorSplitContainer.Size = new System.Drawing.Size(491, 469);
-            this.ViewEditorSplitContainer.SplitterDistance = 257;
+            this.ViewEditorSplitContainer.Size = new System.Drawing.Size(657, 303);
+            this.ViewEditorSplitContainer.SplitterDistance = 166;
             this.ViewEditorSplitContainer.TabIndex = 1;
             // 
             // webBrowser1
@@ -215,7 +221,7 @@
             this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(491, 257);
+            this.webBrowser1.Size = new System.Drawing.Size(657, 166);
             this.webBrowser1.TabIndex = 0;
             // 
             // EditorPanel
@@ -223,7 +229,7 @@
             this.EditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EditorPanel.Location = new System.Drawing.Point(0, 25);
             this.EditorPanel.Name = "EditorPanel";
-            this.EditorPanel.Size = new System.Drawing.Size(491, 183);
+            this.EditorPanel.Size = new System.Drawing.Size(657, 108);
             this.EditorPanel.TabIndex = 1;
             // 
             // EditorToolStrip
@@ -240,10 +246,11 @@
             this.toolStripSeparator3,
             this.EditorSearchToolStripButton,
             this.toolStripSeparator4,
-            this.EditorWrapToolStripButton});
+            this.EditorWrapToolStripButton,
+            this.EditorInfoToolStripLabel});
             this.EditorToolStrip.Location = new System.Drawing.Point(0, 0);
             this.EditorToolStrip.Name = "EditorToolStrip";
-            this.EditorToolStrip.Size = new System.Drawing.Size(491, 25);
+            this.EditorToolStrip.Size = new System.Drawing.Size(657, 25);
             this.EditorToolStrip.TabIndex = 1;
             this.EditorToolStrip.Text = "EditorToolStrip";
             // 
@@ -412,7 +419,7 @@
             // OptionToolStripMenuItem
             // 
             this.OptionToolStripMenuItem.Name = "OptionToolStripMenuItem";
-            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.OptionToolStripMenuItem.Text = "Option";
             // 
             // toolStrip1
@@ -427,6 +434,10 @@
             this.ToggleShowToolStripSplitButton,
             this.toolStripSeparator1,
             this.BrowserSearchToolStripButton,
+            this.toolStripSeparator5,
+            this.HorizontalToolStripButton,
+            this.VerticalToolStripButton,
+            this.toolStripSeparator6,
             this.OptionToolStripButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
@@ -506,14 +517,14 @@
             // 
             this.ShowListToolStripMenuItem.Image = global::wiki.Properties.Resources.win_show_detail;
             this.ShowListToolStripMenuItem.Name = "ShowListToolStripMenuItem";
-            this.ShowListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ShowListToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.ShowListToolStripMenuItem.Text = "List";
             // 
             // ShowLargeToolStripMenuItem
             // 
             this.ShowLargeToolStripMenuItem.Image = global::wiki.Properties.Resources.win_show_largeIcon;
             this.ShowLargeToolStripMenuItem.Name = "ShowLargeToolStripMenuItem";
-            this.ShowLargeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ShowLargeToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.ShowLargeToolStripMenuItem.Text = "Large";
             // 
             // toolStripSeparator1
@@ -670,6 +681,41 @@
             this.TabListViewEditItemToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.TabListViewEditItemToolStripMenuItem.Text = "Edit Item";
             // 
+            // VerticalToolStripButton
+            // 
+            this.VerticalToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.VerticalToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("VerticalToolStripButton.Image")));
+            this.VerticalToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.VerticalToolStripButton.Name = "VerticalToolStripButton";
+            this.VerticalToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.VerticalToolStripButton.Text = "Vertical";
+            // 
+            // HorizontalToolStripButton
+            // 
+            this.HorizontalToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.HorizontalToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("HorizontalToolStripButton.Image")));
+            this.HorizontalToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.HorizontalToolStripButton.Name = "HorizontalToolStripButton";
+            this.HorizontalToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.HorizontalToolStripButton.Text = "Horizontal";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            // 
+            // EditorInfoToolStripLabel
+            // 
+            this.EditorInfoToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.EditorInfoToolStripLabel.Name = "EditorInfoToolStripLabel";
+            this.EditorInfoToolStripLabel.Size = new System.Drawing.Size(81, 22);
+            this.EditorInfoToolStripLabel.Text = "toolStripLabel1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -763,7 +809,6 @@
         private System.Windows.Forms.ToolStripMenuItem OptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListView CategoryListView;
         private System.Windows.Forms.ImageList ImageList24;
         private System.Windows.Forms.ToolStripButton EditorDateToolStripButton;
         private System.Windows.Forms.ToolStripButton NewFileToolStripButton;
@@ -775,6 +820,12 @@
         private System.Windows.Forms.ToolStripMenuItem TabListViewNewItemToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem TabListViewDeleteItemToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem TabListViewEditItemToolStripMenuItem;
+        internal System.Windows.Forms.ListView CategoryListView;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripButton HorizontalToolStripButton;
+        private System.Windows.Forms.ToolStripButton VerticalToolStripButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripLabel EditorInfoToolStripLabel;
     }
 }
 

@@ -26,8 +26,6 @@ namespace wiki
         private Dictionary<string, TabControl> Tabs = new Dictionary<string,TabControl>();
         private Migemo migemo;
 
-        private long baseticks;
-
         private HttpServer httpServer;
         private BackgroundWorker serveBW;
 
@@ -45,18 +43,18 @@ namespace wiki
         Regex regNew = new Regex(@"\/item\/(new)$", RegexOptions.Compiled);
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
-       
-        public MainForm(){
+
+        public MainForm() {
             InitializeComponent();
 
 
             try {
                 config = XMLSerializer.Deserialize<Config>(Config.SettingPath, new Config());
-	        }
-	        catch (Exception){
-		        //throw;
+            }
+            catch (Exception) {
+                //throw;
                 config = null;
-	        }
+            }
             if (config == null) {
                 config = new Config();
             }
@@ -73,12 +71,18 @@ namespace wiki
             this.Location = config.WindowPos;
             splitContainer1.SplitterDistance = config.CategoryListViewW;
             ViewEditorSplitContainer.SplitterDistance = config.BrowserH;
-            ListViewSplitContainer.SplitterDistance = config.ListViewW;
+            ListViewSplitContainer.Orientation = config.TabListView_BrowserOri;
+            ListViewSplitContainer.SplitterDistance = config.ListViewSize;
+
+
 
             initKeyMap();
             initEditor();
             initSearch();
             initBrowser();
+
+            EditorWrapToolStripButton.Checked = config.EdiorWrap;
+            CloseEditor();
 
             sm.init();
             sm.ScriptDir = config.ScriptDirPath;
@@ -92,7 +96,7 @@ namespace wiki
             httpServer = new HttpServer(config.Port);
             httpServer.RequestEvent += (sender, e) => {
                 var url = e.Request.RawUrl;
-                if(url.IndexOf('?')>=0){
+                if (url.IndexOf('?') >= 0) {
                     url = e.Request.RawUrl.Split('?')[0];
                 }
                 var methd = e.Request.HttpMethod;
@@ -107,14 +111,14 @@ namespace wiki
                         foreach (var id in ids) {
                             idlist.Add(long.Parse(id));
                         }
-                    }else{
+                    }
+                    else {
                         var id = long.Parse(idstr);
                         idlist.Add(id);
                     }
-                    //var id = long.Parse(m.Groups[1].Value);
                     var manager = category.getManger(getSelectedCategory());
                     var items = manager.GetItem(idlist);
-                    var res =string.Empty;
+                    var res = string.Empty;
                     switch (methd) {
                         case "DELETE":
                             reqparam["method"] = "delete";
@@ -129,7 +133,7 @@ namespace wiki
                         default:
                             break;
                     }
-                    
+
                     return;
                 }
 
@@ -191,7 +195,7 @@ namespace wiki
                 //    httpServer.stop();
                 //    return;
                 //}
-                var param = e.UserState as Dictionary<string, string>; 
+                var param = e.UserState as Dictionary<string, string>;
                 switch (param["method"]) {
                     case "edit": {
                             var id = long.Parse(param["id"]);
@@ -221,8 +225,8 @@ namespace wiki
                         }
                         break;
                     case "comefrom": {
-                            
-                    }
+
+                        }
                         break;
                     default:
                         break;
@@ -233,15 +237,12 @@ namespace wiki
                 httpServer.start();
             };
             serveBW.RunWorkerCompleted += (sender, e) => {
-                
+
             };
             serveBW.RunWorkerAsync();
-            //TimeSpan utcOffset = System.TimeZoneInfo.Local.BaseUtcOffset;
-            //baseticks = new DateTime(1601, 01, 01).Ticks + utcOffset.Ticks;
-            baseticks = 0;
 
             this.Load += (sender1, e1) => {
-                
+
 
             };
             this.FormClosing += (sender, e) => {
@@ -261,13 +262,33 @@ namespace wiki
                 config.WindowPos = this.Location;
                 config.CategoryListViewW = splitContainer1.SplitterDistance;
                 config.BrowserH = ViewEditorSplitContainer.SplitterDistance;
-                config.ListViewW = ListViewSplitContainer.SplitterDistance;
+                config.TabListView_BrowserOri = ListViewSplitContainer.Orientation;
+                config.ListViewSize = ListViewSplitContainer.SplitterDistance;
 
+                config.EdiorWrap = EditorWrapToolStripButton.Checked;
+
+                var TabList = new Dictionary<string, List<KeyValuePair<string, SearchMode>>>();
+                foreach (var key in Tabs.Keys) {
+                    var list = new List<KeyValuePair<string, SearchMode>>();
+                    var tabs = Tabs[key].TabPages;
+                    for (int i = 0; i < tabs.Count; i++) {
+                        var listview = GetTabListViewControl(tabs[i]);
+                        var s = listview.search;
+                        if (s.Mode != SearchMode.All) {
+                            var mode = s.Mode;
+                            var pt = s.Pattern;
+                            list.Add(new KeyValuePair<string, SearchMode>(pt, mode));
+                        }
+                    }
+                    TabList.Add(key, list);
+
+                }
+                config.TabListJson = JsonSerializer.Serialize(TabList);
                 XMLSerializer.Serialize<Config>(Config.SettingPath, config);
             };
 
             _editor.TextChanged += (sender, e) => {
-                
+
                 if (dirty) {
                     var manager = category.getManger(getSelectedCategory());
                     var item = manager.EditingData;
@@ -279,14 +300,7 @@ namespace wiki
                 dirty = true;
             };
 
-            //ItemTabControl.SelectedIndexChanged += (sender, e) => {
-            //    var listview = ItemTabControl.SelectedTab.Controls[0] as ListViewEx;
-            //    var list = getCurrentPageDatas(listview, config.ShowNum);
-            //    InvokeScript("js_ClearAll");
-            //    reBuild(list);
-            //};
-
-            NewItemToolStripButton.Click += (sender, e) => {             
+            NewItemToolStripButton.Click += (sender, e) => {
                 CreateItem();
             };
 
@@ -298,8 +312,7 @@ namespace wiki
             category.DataDir = config.DataDirPath;
             category.eventHandler = (sender, e) => {
                 switch (e.type) {
-                    case ChangeType.Insert:
-                        {
+                    case ChangeType.Insert: {
                             if (Tabs[e.Name] == GetCurrentTabControl()) {
                                 //ItemTabControl.SelectedTab = AllPage;
                                 GetCurrentTabControl().SelectedIndex = 0;
@@ -307,11 +320,13 @@ namespace wiki
                                 var iindex = listview.AddItem(e.Item);
                                 if (iindex == (listview.DataItems.Count - 1)) {
                                     reBuild(e.Item);
-                                } else {
+                                }
+                                else {
                                     reBuild(listview.DataItems[iindex + 1].ID, e.Item);
                                 }
                                 this.EditItem(e.Item.ID);
-                            } else {
+                            }
+                            else {
                                 //var tabc = Tabs[e.Name];
                                 var listview = GetTabListViewControl(Tabs[e.Name].TabPages[0]);
                                 listview.AddItem(e.Item);
@@ -331,7 +346,7 @@ namespace wiki
                             for (int i = 0; i < item.TabPages.Count; i++) {
                                 var listview = GetTabListViewControl(item.TabPages[i]);
                                 listview.DeleteItem(e.Item);
-                            }                            
+                            }
                         }
                         //for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
                         //    var listview = GetTabListViewControl(ItemTabControl.TabPages[i]);
@@ -354,27 +369,40 @@ namespace wiki
             }
             category.Load(config.Categorys);
 
-            foreach (var c in config.Categorys) {
-                //CategoryListView.Items.Add(item);
-                var item = new ListViewItem(c, c == "Trust" ? 1 : 0);
-                item.Name = c;
-                CategoryListView.Items.Add(item);
-                getTabControl(c);
-            }
+            {
+                var TabList = JsonSerializer.Deserialize<Dictionary<string, List<KeyValuePair<string, SearchMode>>>>(config.TabListJson);
+                foreach (var c in config.Categorys) {
+                    //CategoryListView.Items.Add(item);
+                    var item = new ListViewItem(c, c == "Trust" ? 1 : 0);
+                    item.Name = c;
+                    CategoryListView.Items.Add(item);
+                    var tabc = getTabControl(c);
+                    if (TabList.ContainsKey(c)) {
+                        var list = TabList[c];
+                        foreach (var l in list) {
+                            var sobj = CreateSearchObj(l.Key, l.Value);
+                            var p = CreateListViewTabPage(c, tabc, sobj);
+                            tabc.TabPages.Add(p);
+                            //t.BringToFront();
+                            //t.SelectedTab = p;
+                        }
+                    }
+                }
 
+            }
             //reBuild(newlistview.DataItems);
             //webBrowser1.ScriptErrorsSuppressed = true;
             //webBrowser1.ScrollBarsEnabled = true;
             webBrowser1.ScriptErrorsSuppressed = true;
             webBrowser1.IsWebBrowserContextMenuEnabled = false;
-            var p = config.htmlPath;// Path.GetFullPath(@"..\..\html\wiki_parser.html");
-            webBrowser1.Navigate(p);
+            //var p = config.htmlPath;// Path.GetFullPath(@"..\..\html\wiki_parser.html");
+            webBrowser1.Navigate(config.htmlPath);
             webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
             //webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
             webBrowser1.StatusTextChanged += (sender, e) => {
                 toolStripStatusLabel1.Text = webBrowser1.StatusText;
             };
-            webBrowser1.Navigated+=(s,e)=>{
+            webBrowser1.Navigated += (s, e) => {
                 webBrowser1.Document.Window.Error += (ss, se) => {
                     //se.
                     se.Handled = true;
@@ -386,7 +414,8 @@ namespace wiki
                 ShowListToolStripMenuItem.Checked = true;
                 ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_detail;
                 ToggleShowToolStripSplitButton.Text = "List";
-            } else if (config.ShowType == ShowType.Large) {
+            }
+            else if (config.ShowType == ShowType.Large) {
                 ShowLargeToolStripMenuItem.Checked = true;
                 ShowListToolStripMenuItem.Checked = false;
                 ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_largeIcon;
@@ -395,7 +424,7 @@ namespace wiki
             this.KeyDown += (sender, e) => {
                 var ee = e.KeyValue;
             };
-            
+
             ToggleShowToolStripSplitButton.ButtonClick += (sender, e) => {
                 ShowLargeToolStripMenuItem.Checked = !ShowLargeToolStripMenuItem.Checked;
                 ShowListToolStripMenuItem.Checked = !ShowListToolStripMenuItem.Checked;
@@ -441,7 +470,7 @@ namespace wiki
             };
 
             PrevPageToolStripButton.Click += (sender, e) => {
-                
+
                 var l = GetSelctedTabListViewControl();
                 l.Page--;
 
@@ -482,6 +511,14 @@ namespace wiki
                 cf.Show(this);
             };
 
+            HorizontalToolStripButton.Click += (sender, e) => {
+                ListViewSplitContainer.Orientation = Orientation.Horizontal;
+            };
+
+            VerticalToolStripButton.Click += (sender, e) => {
+                ListViewSplitContainer.Orientation = Orientation.Vertical;
+            };
+
             CategoryContextMenuStrip.Opened += (s, e) => {
                 if (CategoryListView.SelectedItems.Count > 0) {
                     var item = CategoryListView.SelectedItems[0];
@@ -495,7 +532,7 @@ namespace wiki
                 CreateNewFile("new");
             };
             CategoryDeleteToolStripMenuItem.Click += (sender, e) => {
-                if(CategoryListView.SelectedItems.Count>0){
+                if (CategoryListView.SelectedItems.Count > 0) {
                     var name = CategoryListView.SelectedItems[0].Name;
                     DeleteFile(name);
                 }
@@ -515,6 +552,14 @@ namespace wiki
                         InvokeScript("js_ClearAll");
                         reBuild(datas);
                     }
+                }
+            };
+
+            CategoryListView.KeyDown += (s, e) => {
+                if (_CategoryLsitViewKeyMap.ContainsKey(e.KeyData)) {
+                    _CategoryLsitViewKeyMap[e.KeyData](this);
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
                 }
             };
         }
@@ -619,7 +664,7 @@ namespace wiki
             //};
         }
 
-        private void CreateNewFile(string name) {
+        internal void CreateNewFile(string name) {
             if (CategoryListView.Items.IndexOfKey(name) >= 0) {
                 int index=2;
                 while(true){
@@ -631,39 +676,54 @@ namespace wiki
                 }
                 name = name + index.ToString();
             }
-            if (!config.Categorys.Contains(name)) {
-                config.Categorys.Add(name);
+
+
+            var removeitem = new List<ListViewItem>();
+            for (int i = 0; i < CategoryListView.Items.Count; i++){
+                removeitem.Add(CategoryListView.Items[i]);
+			}
+
+            foreach (var litem in removeitem){
+		        CategoryListView.Items.Remove(litem);   
             }
 
             var item = new ListViewItem(name, 0);
             item.Name = name;
-            CategoryListView.Items.Add(item);
+            removeitem.Insert(0, item);
+            //CategoryListView.Items.Add(item);
 
-            var removeitem = new List<ListViewItem>();
-            for (int i = 0; i < CategoryListView.Items.Count-1; i++)
-			{
-                removeitem.Add(CategoryListView.Items[i]);
-			    //CategoryListView.Items.Remove(it);
-                //CategoryListView.Items.Add(it);
-			}
-            foreach (var litem in removeitem)
-            {
-		        CategoryListView.Items.Remove(litem);
+            foreach (var litem in removeitem) {
                 CategoryListView.Items.Add(litem);
             }
-            //foreach (var litem in removeitem)
-            //{
-		        
+
+            config.Categorys.Clear();
+            for (int i = 0; i < CategoryListView.Items.Count; i++) {
+                config.Categorys.Add(CategoryListView.Items[i].Name);
+            }
+            //if (!config.Categorys.Contains(name)) {
+            //    config.Categorys.Add(name);
             //}
 
             item.Selected = true;
         }
 
-        private void DeleteFile(string name) {
+        internal void DeleteFile(string name) {
             var index = CategoryListView.Items.IndexOfKey(name);
             if (index >= 0) {
                 CategoryListView.Items.RemoveAt(index);
                 category.DeleteFile(name);
+                
+                var removeitem = new List<ListViewItem>();
+                for (int i = 0; i < CategoryListView.Items.Count; i++) {
+                    removeitem.Add(CategoryListView.Items[i]);
+                }
+                foreach (var litem in removeitem) {
+                    CategoryListView.Items.Remove(litem);
+                }
+                foreach (var litem in removeitem) {
+                    CategoryListView.Items.Add(litem);
+                }
+
                 CategoryListView.Items[0].Selected = true;
             }
             config.Categorys.Remove(name);
@@ -686,6 +746,7 @@ namespace wiki
             if (item == null) return;
 
             this.OpenEditor();
+            EditorInfoToolStripLabel.Text = "Editing id = " + id.ToString();
 
             manager.EditingData = item;
             dirty = false;
@@ -763,26 +824,36 @@ namespace wiki
         }
 
         //private Dictionary<Search, TabPage> searchtabdic = new Dictionary<Search, TabPage>();
-        private Dictionary<TabControl, Dictionary<Search, TabPage>> searchtabdic = new Dictionary<TabControl, Dictionary<Search, TabPage>>();
+        //private Dictionary<TabControl, Dictionary<Search, TabPage>> searchtabdic = new Dictionary<TabControl, Dictionary<Search, TabPage>>();
         private bool dirty = false;
         private TabPage CreateListViewTabPage(string categoryname, TabControl tabcontrol, Search search) {
-            if (searchtabdic.ContainsKey(tabcontrol)) {
-                var dic = searchtabdic[tabcontrol];
-                foreach (var item in dic.Keys) {
-                    if (item.Equals(search)) {
-                        var p = dic[search];
-                        var lv = GetTabListViewControl(p);
-                        var manager = category.getManger(getSelectedCategory());
-                        lv.DataItems = manager.Filter(search.getSearch());
-                        return p;
-                    }
+            //if (searchtabdic.ContainsKey(tabcontrol)) {
+            //    var dic = searchtabdic[tabcontrol];
+            //    foreach (var item in dic.Keys) {
+            //        if (item.Equals(search)) {
+            //            var p = dic[search];
+            //            var lv = GetTabListViewControl(p);
+            //            var manager = category.getManger(getSelectedCategory());
+            //            lv.DataItems = manager.Filter(search.getSearch());
+            //            return p;
+            //        }
+            //    }
+            //} else {
+            //    searchtabdic.Add(tabcontrol, new Dictionary<Search, TabPage>());
+            //}
+            for (int i = 0; i < tabcontrol.TabPages.Count; i++) {
+                var tabpage = tabcontrol.TabPages[i];
+                var lw = GetTabListViewControl(tabpage);
+                if (lw.search == search) {
+                    var manager = category.getManger(getSelectedCategory());
+                    lw.DataItems = manager.Filter(search.getSearch());
+                    return tabpage;
                 }
-            } else {
-                searchtabdic.Add(tabcontrol, new Dictionary<Search, TabPage>());
             }
 
             var items = category.getManger(categoryname).Filter(search.getSearch());
             var listview = new ListViewEx(items);
+            listview.search = search;
 
             listview.MouseUp += (sender, e) => {
                 var item = listview.GetItemAt(e.X, e.Y);
@@ -815,7 +886,7 @@ namespace wiki
             t.Controls.Add(listview);
             //ItemTabControl.TabPages.Add(t);
 
-            searchtabdic[tabcontrol].Add(search, t);
+            //searchtabdic[tabcontrol].Add(search, t);
 
             return t;
         }
@@ -824,86 +895,6 @@ namespace wiki
             //return CategoryListView.SelectedItems[0].Text;
             return this.categoryname;
         }
-
-        //private TabPage CreateDustTabPage(string name, List<Data> items) {
-        //    var listview = new ListViewEx(items);
-        //    listview.SelectedIndexChanged += (sender, e) => {
-        //        if (config.ShowType == ShowType.Large && listview.SelectedIndices.Count == 1) {
-        //            var selindex = listview.SelectedIndices[0];
-        //            var item = listview.DataItems[selindex];
-        //            //var cf = InvokeScript("js_getComeFrom");
-        //            //var dic = JsonSerializer.Deserialize<List<string>>(cf.ToString());
-        //            //Console.WriteLine("cf = " + cf);
-        //            reBuild(item);
-
-        //        }
-        //    };
-        //    listview.Dock = DockStyle.Fill;
-
-        //    var t = new TabPage(name);
-        //    t.Controls.Add(listview);
-        //    ItemTabControl.TabPages.Add(t);
-        //    return t;       
-        //}
-
-        //private TabPage CreateListViewTabPage(string name, List<Data> items) {
-            
-        //    var listview = new ListViewEx(items);
-
-        //    //listview.SelectedIndexChanged += (sender, e) => {
-        //    //    if (config.ShowType == ShowType.Large && listview.SelectedIndices.Count == 1) {
-        //    //        var selindex = listview.SelectedIndices[0];
-        //    //        var item = listview.DataItems[selindex];
-        //    //        //var cf = InvokeScript("js_getComeFrom");
-        //    //        //var dic = JsonSerializer.Deserialize<List<string>>(cf.ToString());
-        //    //        //Console.WriteLine("cf = " + cf);
-        //    //        reBuild(item);
-        //    //    }
-        //    //};
-        //    listview.DoubleClick += (sender, e) => {
-        //        if (config.ShowType == ShowType.List && listview.SelectedIndices.Count == 1) {
-        //            var selindex = listview.SelectedIndices[0];
-        //            var id = listview.DataItems[selindex].ID;
-        //            //var p = config.htmlPath + "#" + id;
-        //            //webBrowser1.Navigate(p);
-
-        //            this.Moves(id);
-        //        }
-        //    };
-
-        //    listview.Dock = DockStyle.Fill;
-
-        //    var t = new TabPage(name);
-        //    t.Controls.Add(listview);
-        //    //ItemTabControl.TabPages.Add(t);
-
-        //    return t;
-        //}
-        
-        //void Request(Uri request) {
-        //    var bp = Path.GetFullPath(@"..\..\scripts");
-        //    var rs = request.Scheme; //request.Split(new char[] { '/' });
-        //    var path = Path.Combine(bp, rs+".js");
-        //    if (!File.Exists(path)) return;
-
-        //    var script = File.ReadAllText(path);
-        //    en.SetParameter("request", request.AbsoluteUri);
-        //    //en.SetFunction("deleteitem", new Action<int>((id) => {
-        //    //    Console.WriteLine("deleteitem id = " + id.ToString());
-        //    //}));
-        //    object result = en.Run(script);
-        //    int k = 0;
-        //}
-
-        //void ren() {
-        //    var path = Path.GetFullPath(@"..\..\scripts\test.js");
-        //    if (!File.Exists(path)) return;
-
-        //    var script = File.ReadAllText(path);
-        //    en.SetParameter("para", script);
-        //    var r = en.Run(@"x=eval( '(' + para + ')' ); return x[0].date;");
-        //    int k = 0;
-        //}
 
         private Object InvokeScript(string function, params string[] param) {
             return webBrowser1.Document.InvokeScript(function, param);
@@ -978,17 +969,6 @@ namespace wiki
 
         }
 
-        //private string cnv(List<Data> items) {
-            
-        //    items.ForEach(n => {
-        //        n.Text.
-        //    });
-        //    foreach (var item in items) {
-                
-        //    }
-        //    var json = JsonSerializer.Serialize(list);
-        //}
-
         private void timeToolStripMenuItem_Click(object sender, EventArgs e) {
             DateTimeForm f = new DateTimeForm();
             f.Time = DateTime.Now;
@@ -999,15 +979,10 @@ namespace wiki
         private void toolStripMenuItem1_Click(object sender, EventArgs e) {
             var ae = webBrowser1.Document.ActiveElement;
             var h = ae.GetAttribute("href");
-            
-            var mm=0;
-           
+          
             
         }
 
-        private void OpenEditor() {
-            ViewEditorSplitContainer.Panel2Collapsed = false;
-        }
     }
 
     

@@ -9,6 +9,8 @@ using System.ComponentModel;
 
 namespace wiki {
 
+
+
     public enum ShowType
     {
         Large,
@@ -20,6 +22,11 @@ namespace wiki {
 
         public List<string> Categorys { get; set; }
 
+        //[XmlIgnore]
+        //public Dictionary<string, List<KeyValuePair<string, SearchMode>>> TabList { get; set; }
+        public string TabListJson { get; set; }
+        //public KeyValuePair<string, List<KeyValuePair<string, SearchMode>>> TabList { get; set; }
+
         public int ShowNum { get; set; }
         public ShowType ShowType { get; set; }
         public int Port { get; set; }
@@ -29,7 +36,8 @@ namespace wiki {
         public Point WindowPos { get; set; }
 
         public int CategoryListViewW { get; set; }
-        public int ListViewW { get; set; }
+        public Orientation TabListView_BrowserOri { get; set; }
+        public int ListViewSize { get; set; }
         public int BrowserH { get; set; }
 
         public string htmlPath { get; set; }
@@ -94,6 +102,7 @@ namespace wiki {
         public Config() {
 
             Categorys = new List<string>();
+            //TabList = new Dictionary<string, List<KeyValuePair<string, SearchMode>>>();
 
             ComeFormWords = new List<string>();
             this.WindowState = FormWindowState.Normal;
@@ -103,9 +112,9 @@ namespace wiki {
                 (Screen.PrimaryScreen.WorkingArea.Height - this.WindowSize.Height) / 2);
             
             this.CategoryListViewW = 80;
-            this.ListViewW = 200;
-            this.BrowserH = this.WindowSize.Height / 2;
-            
+            TabListView_BrowserOri = Orientation.Horizontal;
+            this.ListViewSize = this.WindowSize.Height / 3;
+            this.BrowserH = this.WindowSize.Height / 3;
 
             this.Port = 8088;
             this.ShowNum = 20;
@@ -124,6 +133,8 @@ namespace wiki {
             _editorFont = System.Windows.Forms.SystemInformation.MenuFont;
 
             CompleList = new List<string>();
+
+            
         }
     }
 }

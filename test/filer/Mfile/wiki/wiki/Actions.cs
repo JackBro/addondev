@@ -46,5 +46,15 @@ namespace wiki {
             var f = new CompleForm(form);
             f.Show();
         };
+
+        //cat
+        public static Action<MainForm> DeleteFile = (form) => {
+            var items = form.CategoryListView.SelectedItems;
+            for (int i = 0; i < items.Count; i++) {
+                if (items[i].Name != Category.Trust) {
+                    form.DeleteFile(items[i].Name);
+                }
+            }
+        };
     }
 }
