@@ -376,15 +376,18 @@ namespace wiki
                     var item = new ListViewItem(c, c == "Trust" ? 1 : 0);
                     item.Name = c;
                     CategoryListView.Items.Add(item);
-                    var tabc = getTabControl(c);
-                    if (TabList.ContainsKey(c)) {
-                        var list = TabList[c];
-                        foreach (var l in list) {
-                            var sobj = CreateSearchObj(l.Key, l.Value);
-                            var p = CreateListViewTabPage(c, tabc, sobj);
-                            tabc.TabPages.Add(p);
-                            //t.BringToFront();
-                            //t.SelectedTab = p;
+
+                    if (TabList != null) {
+                        var tabc = getTabControl(c);
+                        if (TabList.ContainsKey(c)) {
+                            var list = TabList[c];
+                            foreach (var l in list) {
+                                var sobj = CreateSearchObj(l.Key, l.Value);
+                                var p = CreateListViewTabPage(c, tabc, sobj);
+                                tabc.TabPages.Add(p);
+                                //t.BringToFront();
+                                //t.SelectedTab = p;
+                            }
                         }
                     }
                 }
@@ -562,6 +565,35 @@ namespace wiki
                     e.SuppressKeyPress = true;
                 }
             };
+
+            CategoryListView.AllowDrop = true;
+            CategoryListView.DragEnter += (s, e) => {
+                if (e.Data.GetDataPresent(typeof(Data)))
+                    e.Effect = DragDropEffects.Move;
+                else
+                    e.Effect = DragDropEffects.None;
+
+            };
+            CategoryListView.DragOver += (s, e) => {
+                var point = CategoryListView.PointToClient(new Point(e.X, e.Y));
+                var item = CategoryListView.GetItemAt(point.X, point.Y);
+                if (e.Data.GetDataPresent(typeof(Data)) && (item != null && item.Name != getSelectedCategory()))
+                    e.Effect = DragDropEffects.Move;
+                else
+                    e.Effect = DragDropEffects.None;
+
+            };
+            CategoryListView.DragDrop += (s, e) => {
+                if (e.Data.GetDataPresent(typeof(Data))) {
+                    var data = (Data)e.Data.GetData(typeof(Data));
+                    var point = CategoryListView.PointToClient(new Point(e.X, e.Y));
+                    var item = CategoryListView.GetItemAt(point.X, point.Y);
+                    if (item != null && item.Name != getSelectedCategory()) {
+                        DeleteItem(data.ID);
+                        category.getManger(item.Name).Insert(data);
+                    }
+                }
+            };
         }
 
         TabControl getTabControl(string categoryname) {
@@ -677,7 +709,6 @@ namespace wiki
                 name = name + index.ToString();
             }
 
-
             var removeitem = new List<ListViewItem>();
             for (int i = 0; i < CategoryListView.Items.Count; i++){
                 removeitem.Add(CategoryListView.Items[i]);
@@ -690,7 +721,6 @@ namespace wiki
             var item = new ListViewItem(name, 0);
             item.Name = name;
             removeitem.Insert(0, item);
-            //CategoryListView.Items.Add(item);
 
             foreach (var litem in removeitem) {
                 CategoryListView.Items.Add(litem);
@@ -700,9 +730,6 @@ namespace wiki
             for (int i = 0; i < CategoryListView.Items.Count; i++) {
                 config.Categorys.Add(CategoryListView.Items[i].Name);
             }
-            //if (!config.Categorys.Contains(name)) {
-            //    config.Categorys.Add(name);
-            //}
 
             item.Selected = true;
         }
@@ -877,6 +904,19 @@ namespace wiki
                     var selindex = listview.SelectedIndices[0];
                     var id = listview.DataItems[selindex].ID;
                     this.Moves(id);
+                }
+            };
+
+            listview.MouseDown += (s, e) => {
+                //listview.DoDragDrop();
+            };
+            listview.MouseMove += (s, e) => {
+                if (e.Button == MouseButtons.Left) {
+                    if(listview.SelectedIndices.Count>0){
+                        var index = listview.SelectedIndices[0];
+                        var data = listview.DataItems[index];
+                        listview.DoDragDrop(data, DragDropEffects.Move);
+                    }
                 }
             };
 

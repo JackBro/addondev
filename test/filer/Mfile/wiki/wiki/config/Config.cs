@@ -101,8 +101,9 @@ namespace wiki {
 
         public Config() {
 
-            Categorys = new List<string>();
+            this.Categorys = new List<string>();
             //TabList = new Dictionary<string, List<KeyValuePair<string, SearchMode>>>();
+            this.TabListJson = string.Empty;
 
             ComeFormWords = new List<string>();
             this.WindowState = FormWindowState.Normal;
