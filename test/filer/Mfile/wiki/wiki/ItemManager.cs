@@ -79,10 +79,15 @@ namespace wiki {
                     if (manager.ContainsKey(Trust)) {
                         var d = m.GetItem(id);
                         m.Remove(id);
-
                         manager[Trust].Insert(d);
                     }
                 }
+            }
+        }
+
+        public void ClearItem(string name) {
+            if (manager.ContainsKey(name)) {
+                manager[name].Clear();
             }
         }
 
@@ -116,7 +121,8 @@ namespace wiki {
     public enum ChangeType {
         Insert,
         UpDate,
-        Delete
+        Delete,
+        Clear
     }
     public class CallBackEventArgs : EventArgs {
         public string Name;
@@ -200,6 +206,13 @@ namespace wiki {
                 if (eventHandler != null) {
                     eventHandler(this, new CallBackEventArgs { Name = this.Name, Item = item, type = ChangeType.Delete });
                 }
+            }
+        }
+        public void Clear() {
+            IsDirty = true;
+            datas.Clear();
+            if (eventHandler != null) {
+                eventHandler(this, new CallBackEventArgs { Name = this.Name, type = ChangeType.Clear });
             }
         }
 

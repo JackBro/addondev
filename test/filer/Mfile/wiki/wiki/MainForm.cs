@@ -369,6 +369,9 @@ namespace wiki
                             InvokeScript("js_Remove", e.Item.ID.ToString());
                         }
                         break;
+                    case ChangeType.Clear:
+                        InvokeScript("js_ClearAll");
+                        break;
                     default:
                         break;
                 }
@@ -541,10 +544,13 @@ namespace wiki
 
             CategoryContextMenuStrip.Opened += (s, e) => {
                 if (CategoryListView.SelectedItems.Count > 0) {
+                    CategoryContextMenuStrip.Enabled = true;
                     var item = CategoryListView.SelectedItems[0];
-                    if (item.Name == "Trust") {
-                        CategoryDeleteToolStripMenuItem.Enabled = false;
-                    }
+                    CategoryNewFileToolStripMenuItem.Enabled = item.Name != Category.Trust;
+                    CategoryDeleteToolStripMenuItem.Enabled = item.Name != Category.Trust;
+                    CategoryEmptyToolStripMenuItem.Enabled = item.Name == Category.Trust;
+                } else {
+                    CategoryContextMenuStrip.Enabled = false;
                 }
             };
 
@@ -556,6 +562,9 @@ namespace wiki
                     var name = CategoryListView.SelectedItems[0].Name;
                     DeleteFile(name);
                 }
+            };
+            CategoryEmptyToolStripMenuItem.Click += (sender, e) => {
+                this.ClearItem();
             };
 
             CategoryListView.Items[0].Selected = true;
@@ -861,9 +870,39 @@ namespace wiki
         internal void DeleteItem() {
             var lv = GetSelctedTabListViewControl();
             if (lv.SelectedIndices.Count > 0) {
-                var index = lv.SelectedIndices[0];
-                this.DeleteItem(lv.DataItems[index].ID);
+                for (int i = 0; i < lv.SelectedIndices.Count; i++) {
+                    var index = lv.SelectedIndices[i];
+                    this.DeleteItem(lv.DataItems[index].ID);
+                }
+                //var index = lv.SelectedIndices[0];
+                //this.DeleteItem(lv.DataItems[index].ID);
             }
+        }
+        internal void ClearItem() {
+            var cate = getSelectedCategory();
+            if (cate == Category.Trust) {
+                TabPage alltabpage = null;
+                var list = new List<TabPage>();
+                var tabc = getTabControl(cate);
+                for (int i = 0; i < tabc.TabPages.Count; i++) {
+                    if (GetTabListViewControl(tabc.TabPages[i]).search.Mode == SearchMode.All) {
+                        alltabpage = tabc.TabPages[i];
+                    } else {
+                        list.Add(tabc.TabPages[i]);
+                    }
+                }
+                tabc.SelectedTab = alltabpage;
+                foreach (var tabpage in list) {
+                    tabc.TabPages.Remove(tabpage);
+                }
+
+                GetTabListViewControl(alltabpage).ClearItem(); ;
+                //var cnt = lv.DataItems.Count;
+                //for (int i = 0; i < cnt; i++) {
+                //    this.DeleteItem(lv.DataItems[i].ID);
+                //}
+                category.ClearItem(cate);
+            }   
         }
         internal void EditItem(long id) {
             var manager = category.getManger(getSelectedCategory());
@@ -979,6 +1018,9 @@ namespace wiki
 
             var items = category.getManger(categoryname).Filter(search.getSearch());
             var listview = new ListViewEx(items);
+            if (categoryname == Category.Trust) {
+                listview.MultiSelect = true;
+            }
             listview.search = search;
             listview.ContextMenuStrip = TabListViewContextMenuStrip;
 

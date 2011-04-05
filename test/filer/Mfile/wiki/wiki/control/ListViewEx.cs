@@ -78,6 +78,11 @@ namespace wiki {
             }
         }
 
+        public void ClearItem() {
+            this.items.Clear();
+            this.VirtualListSize = 0;
+        }
+
         public int AddItem(Data item){
             //items.Add(item);
             var i = ItemManager.Insert(items, item);

@@ -98,6 +98,7 @@
             this.TabListViewDeleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewEditItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewEditDateTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CategoryEmptyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -668,20 +669,21 @@
             // 
             this.CategoryContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CategoryNewFileToolStripMenuItem,
-            this.CategoryDeleteToolStripMenuItem});
+            this.CategoryDeleteToolStripMenuItem,
+            this.CategoryEmptyToolStripMenuItem});
             this.CategoryContextMenuStrip.Name = "CategoryContextMenuStrip";
-            this.CategoryContextMenuStrip.Size = new System.Drawing.Size(123, 48);
+            this.CategoryContextMenuStrip.Size = new System.Drawing.Size(153, 92);
             // 
             // CategoryNewFileToolStripMenuItem
             // 
             this.CategoryNewFileToolStripMenuItem.Name = "CategoryNewFileToolStripMenuItem";
-            this.CategoryNewFileToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.CategoryNewFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.CategoryNewFileToolStripMenuItem.Text = "NewFile";
             // 
             // CategoryDeleteToolStripMenuItem
             // 
             this.CategoryDeleteToolStripMenuItem.Name = "CategoryDeleteToolStripMenuItem";
-            this.CategoryDeleteToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.CategoryDeleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.CategoryDeleteToolStripMenuItem.Text = "DeleteFile";
             // 
             // ImageList24
@@ -704,26 +706,32 @@
             // TabListViewNewItemToolStripMenuItem
             // 
             this.TabListViewNewItemToolStripMenuItem.Name = "TabListViewNewItemToolStripMenuItem";
-            this.TabListViewNewItemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.TabListViewNewItemToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.TabListViewNewItemToolStripMenuItem.Text = "New Item";
             // 
             // TabListViewDeleteItemToolStripMenuItem
             // 
             this.TabListViewDeleteItemToolStripMenuItem.Name = "TabListViewDeleteItemToolStripMenuItem";
-            this.TabListViewDeleteItemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.TabListViewDeleteItemToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.TabListViewDeleteItemToolStripMenuItem.Text = "Delete Item";
             // 
             // TabListViewEditItemToolStripMenuItem
             // 
             this.TabListViewEditItemToolStripMenuItem.Name = "TabListViewEditItemToolStripMenuItem";
-            this.TabListViewEditItemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.TabListViewEditItemToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.TabListViewEditItemToolStripMenuItem.Text = "Edit Item";
             // 
             // TabListViewEditDateTimeToolStripMenuItem
             // 
             this.TabListViewEditDateTimeToolStripMenuItem.Name = "TabListViewEditDateTimeToolStripMenuItem";
-            this.TabListViewEditDateTimeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.TabListViewEditDateTimeToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.TabListViewEditDateTimeToolStripMenuItem.Text = "Edit DateTime";
+            // 
+            // CategoryEmptyToolStripMenuItem
+            // 
+            this.CategoryEmptyToolStripMenuItem.Name = "CategoryEmptyToolStripMenuItem";
+            this.CategoryEmptyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.CategoryEmptyToolStripMenuItem.Text = "Empty";
             // 
             // MainForm
             // 
@@ -836,6 +844,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripLabel EditorInfoToolStripLabel;
         private System.Windows.Forms.ToolStripMenuItem TabListViewEditDateTimeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem CategoryEmptyToolStripMenuItem;
     }
 }
 
