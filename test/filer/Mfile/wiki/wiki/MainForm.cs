@@ -15,11 +15,22 @@ using Sgry.Azuki.WinForms;
 using System.Runtime.InteropServices;
 using wiki.control;
 using KaoriYa.Migemo;
+using System.Collections;
 
 namespace wiki
 {
     public partial class MainForm : Form
     {
+        private class ListViewIndexComparer : IComparer {
+            #region IComparer メンバ
+
+            public int Compare(object x, object y) {
+                return ((ListViewItem)x).Index - ((ListViewItem)y).Index;
+            }
+
+            #endregion
+        }
+
         private string categoryname;
         private Category category;
 
@@ -191,10 +202,11 @@ namespace wiki
             serveBW.WorkerReportsProgress = true;
             serveBW.WorkerSupportsCancellation = true;
             serveBW.ProgressChanged += (sender, e) => {
-                //if (serveBW.CancellationPending) {
-                //    httpServer.stop();
-                //    return;
-                //}
+
+                if (serveBW.CancellationPending) {
+                    httpServer.stop();
+                    return;
+                }
                 var param = e.UserState as Dictionary<string, string>;
                 switch (param["method"]) {
                     case "edit": {
@@ -254,9 +266,10 @@ namespace wiki
                 if (migemo != null) {
                     migemo.Dispose();
                 }
-                //serveBW.CancelAsync();
-                //serveBW.ReportProgress(0);
+                serveBW.CancelAsync();
+                serveBW.ReportProgress(0);
                 //httpServer.stop();
+
                 config.WindowState = this.WindowState;
                 config.WindowSize = this.Size;
                 config.WindowPos = this.Location;
@@ -511,7 +524,11 @@ namespace wiki
 
             OptionToolStripButton.Click += (sender, e) => {
                 var cf = new ConfigForm(config);
-                cf.Show(this);
+                cf.StartPosition = FormStartPosition.CenterParent;
+                var res = cf.ShowDialog(this);
+                if (res == DialogResult.OK) {
+                }
+                cf.Close();
             };
 
             HorizontalToolStripButton.Click += (sender, e) => {
@@ -566,9 +583,20 @@ namespace wiki
                 }
             };
 
+            CategoryListView.ListViewItemSorter = new ListViewIndexComparer();
             CategoryListView.AllowDrop = true;
+
+            CategoryListView.MouseMove += (s, e) => {
+                if (e.Button == MouseButtons.Left) {
+                    if (CategoryListView.SelectedItems.Count > 0) {
+                        var item = CategoryListView.SelectedItems[0];
+                        CategoryListView.DoDragDrop(item.Name, DragDropEffects.Move);
+                    }
+                }
+            };
+
             CategoryListView.DragEnter += (s, e) => {
-                if (e.Data.GetDataPresent(typeof(Data)))
+                if (e.Data.GetDataPresent(typeof(Data)) || e.Data.GetDataPresent(typeof(string)))
                     e.Effect = DragDropEffects.Move;
                 else
                     e.Effect = DragDropEffects.None;
@@ -578,6 +606,8 @@ namespace wiki
                 var point = CategoryListView.PointToClient(new Point(e.X, e.Y));
                 var item = CategoryListView.GetItemAt(point.X, point.Y);
                 if (e.Data.GetDataPresent(typeof(Data)) && (item != null && item.Name != getSelectedCategory()))
+                    e.Effect = DragDropEffects.Move;
+                else if(e.Data.GetDataPresent(typeof(string)) && (item.Name != getSelectedCategory()))
                     e.Effect = DragDropEffects.Move;
                 else
                     e.Effect = DragDropEffects.None;
@@ -593,6 +623,54 @@ namespace wiki
                         category.getManger(item.Name).Insert(data);
                     }
                 }
+                else if (e.Data.GetDataPresent(typeof(string))) {
+                    var name = (string)e.Data.GetData(typeof(string));
+                    var point = CategoryListView.PointToClient(new Point(e.X, e.Y));
+                    var item = CategoryListView.GetItemAt(point.X, point.Y);
+
+                    var index = CategoryListView.Items.IndexOfKey(name);
+                    if (index >= 0) {
+                        var key = item.Name;
+                        var removeitem = CategoryListView.Items[index];
+
+                        var i = CategoryListView.Items.IndexOfKey(item.Name);
+                        if (i == 0 || (i < CategoryListView.Items.Count - 1)) {
+                            CategoryListView.Items.Remove(removeitem);
+                            var ni = CategoryListView.Items.IndexOfKey(item.Name);
+                            var ins = i == 0 ? 0 : ni + 1;
+                            CategoryListView.Items.Insert(ins, removeitem);
+                            config.Categorys.Remove(name);
+                            config.Categorys.Insert(ins, name);
+                            //CategoryListView.Sort();
+                        }
+
+                        removeitem.Selected = true;
+                    }
+                }
+            };
+
+            CategoryListView.BeforeLabelEdit += (s, e) => {
+
+            };
+            CategoryListView.AfterLabelEdit += (s, e) => {
+                //e.CancelEdit = true;
+            };
+
+            TabListViewEditItemToolStripMenuItem.Click += (s, e) => {
+                var lv = GetSelctedTabListViewControl();
+                if (lv.SelectedIndices.Count > 0) {
+                    var index = lv.SelectedIndices[0];
+                    EditItem(lv.DataItems[index].ID);
+                }
+            };
+            TabListViewNewItemToolStripMenuItem.Click += (s, e) => {
+                this.CreateItem();
+            };
+            TabListViewDeleteItemToolStripMenuItem.Click += (s, e) => {
+                this.DeleteItem();
+            };
+            TabListViewEditDateTimeToolStripMenuItem.Click += (s, e) => {
+                this.EditDateTime();
             };
         }
 
@@ -709,22 +787,26 @@ namespace wiki
                 name = name + index.ToString();
             }
 
-            var removeitem = new List<ListViewItem>();
-            for (int i = 0; i < CategoryListView.Items.Count; i++){
-                removeitem.Add(CategoryListView.Items[i]);
-			}
+            //var removeitem = new List<ListViewItem>();
+            //for (int i = 0; i < CategoryListView.Items.Count; i++){
+            //    removeitem.Add(CategoryListView.Items[i]);
+            //}
 
-            foreach (var litem in removeitem){
-		        CategoryListView.Items.Remove(litem);   
-            }
+            //foreach (var litem in removeitem){
+            //    CategoryListView.Items.Remove(litem);   
+            //}
+
+            //var item = new ListViewItem(name, 0);
+            //item.Name = name;
+            //removeitem.Insert(0, item);
+
+            //foreach (var litem in removeitem) {
+            //    CategoryListView.Items.Add(litem);
+            //}
 
             var item = new ListViewItem(name, 0);
             item.Name = name;
-            removeitem.Insert(0, item);
-
-            foreach (var litem in removeitem) {
-                CategoryListView.Items.Add(litem);
-            }
+            CategoryListView.Items.Insert(0, item);
 
             config.Categorys.Clear();
             for (int i = 0; i < CategoryListView.Items.Count; i++) {
@@ -737,19 +819,28 @@ namespace wiki
         internal void DeleteFile(string name) {
             var index = CategoryListView.Items.IndexOfKey(name);
             if (index >= 0) {
+
+                try {
+                    category.DeleteFile(name);
+                }
+                catch (Exception) {
+                    MessageBox.Show("DeleteFile ERROR");
+                    return;
+                }
+
                 CategoryListView.Items.RemoveAt(index);
-                category.DeleteFile(name);
+               
                 
-                var removeitem = new List<ListViewItem>();
-                for (int i = 0; i < CategoryListView.Items.Count; i++) {
-                    removeitem.Add(CategoryListView.Items[i]);
-                }
-                foreach (var litem in removeitem) {
-                    CategoryListView.Items.Remove(litem);
-                }
-                foreach (var litem in removeitem) {
-                    CategoryListView.Items.Add(litem);
-                }
+                //var removeitem = new List<ListViewItem>();
+                //for (int i = 0; i < CategoryListView.Items.Count; i++) {
+                //    removeitem.Add(CategoryListView.Items[i]);
+                //}
+                //foreach (var litem in removeitem) {
+                //    CategoryListView.Items.Remove(litem);
+                //}
+                //foreach (var litem in removeitem) {
+                //    CategoryListView.Items.Add(litem);
+                //}
 
                 CategoryListView.Items[0].Selected = true;
             }
@@ -762,12 +853,19 @@ namespace wiki
             //manager.Insert(new Data { ID=manager.GetNewID(), Text = "!new", CreationTime = DateTime.Now });
             manager.Insert(new Data { ID = id, Text = "!new", CreationTime = DateTime.Now });
         }
-        private void DeleteItem(long id) {
+        internal void DeleteItem(long id) {
             //var manager = category.getManger(getSelectedCategory());
             //manager.Remove(id);
             category.DeleteItem(getSelectedCategory(), id);
         }
-        private void EditItem(long id) {
+        internal void DeleteItem() {
+            var lv = GetSelctedTabListViewControl();
+            if (lv.SelectedIndices.Count > 0) {
+                var index = lv.SelectedIndices[0];
+                this.DeleteItem(lv.DataItems[index].ID);
+            }
+        }
+        internal void EditItem(long id) {
             var manager = category.getManger(getSelectedCategory());
             var item = manager.GetItem(id);
             if (item == null) return;
@@ -778,6 +876,7 @@ namespace wiki
             manager.EditingData = item;
             dirty = false;
             _editor.Text = item.Text;
+            _editor.Focus();
         }
 
         private List<Data> getCurrentPageDatas(ListViewEx listview, int max) {
@@ -881,6 +980,7 @@ namespace wiki
             var items = category.getManger(categoryname).Filter(search.getSearch());
             var listview = new ListViewEx(items);
             listview.search = search;
+            listview.ContextMenuStrip = TabListViewContextMenuStrip;
 
             listview.MouseUp += (sender, e) => {
                 var item = listview.GetItemAt(e.X, e.Y);
@@ -907,9 +1007,6 @@ namespace wiki
                 }
             };
 
-            listview.MouseDown += (s, e) => {
-                //listview.DoDragDrop();
-            };
             listview.MouseMove += (s, e) => {
                 if (e.Button == MouseButtons.Left) {
                     if(listview.SelectedIndices.Count>0){
@@ -1010,10 +1107,7 @@ namespace wiki
         }
 
         private void timeToolStripMenuItem_Click(object sender, EventArgs e) {
-            DateTimeForm f = new DateTimeForm();
-            f.Time = DateTime.Now;
-            var res = f.ShowDialog();
-            var restime = f.Time;
+
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e) {

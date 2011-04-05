@@ -77,16 +77,7 @@ namespace wiki {
             };
 
             EditorDateToolStripButton.Click += (s, e) => {
-                var manager = category.getManger(getSelectedCategory());
-                if (manager.EditingData == null) return;
-
-                var tform = new DateTimeForm();
-                tform.Time = manager.EditingData.CreationTime;
-                var res = tform.ShowDialog(this);
-                if (res == DialogResult.OK) {
-                    var mtime = tform.Time;
-
-                }
+                EditDateTime();
             };
         }
 
@@ -109,6 +100,26 @@ namespace wiki {
                 _editor.Document.SetSelection(res.Begin, res.End);
                 _editor.ScrollToCaret();
             }
+        }
+
+        internal void EditDateTime() {
+            var manager = category.getManger(getSelectedCategory());
+            if (manager.EditingData == null) return;
+
+            var tform = new DateTimeForm();
+            tform.Time = manager.EditingData.CreationTime;
+            tform.StartPosition = FormStartPosition.CenterParent;
+            var res = tform.ShowDialog(this);
+            if (res == DialogResult.OK) {
+                var mtime = tform.Time;
+                if (mtime != manager.EditingData.CreationTime) {
+                    var data = manager.EditingData;
+                    manager.Remove(data.ID);
+                    data.CreationTime = mtime;
+                    manager.Insert(data);
+                }
+            }
+            tform.Close();
         }
 
         internal void CloseEditor() {

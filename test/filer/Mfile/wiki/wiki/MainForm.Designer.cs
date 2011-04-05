@@ -54,6 +54,7 @@
             this.EditorSearchToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.EditorWrapToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.EditorInfoToolStripLabel = new System.Windows.Forms.ToolStripLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,6 +76,10 @@
             this.ShowLargeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.BrowserSearchToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.HorizontalToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.VerticalToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -92,11 +97,7 @@
             this.TabListViewNewItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewDeleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewEditItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.VerticalToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.HorizontalToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.EditorInfoToolStripLabel = new System.Windows.Forms.ToolStripLabel();
+            this.TabListViewEditDateTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -353,6 +354,13 @@
             this.EditorWrapToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.EditorWrapToolStripButton.Text = "Wrap";
             // 
+            // EditorInfoToolStripLabel
+            // 
+            this.EditorInfoToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.EditorInfoToolStripLabel.Name = "EditorInfoToolStripLabel";
+            this.EditorInfoToolStripLabel.Size = new System.Drawing.Size(81, 22);
+            this.EditorInfoToolStripLabel.Text = "toolStripLabel1";
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -543,6 +551,34 @@
             this.BrowserSearchToolStripButton.Text = "toolStripButton1";
             this.BrowserSearchToolStripButton.ToolTipText = "Search";
             // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // HorizontalToolStripButton
+            // 
+            this.HorizontalToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.HorizontalToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("HorizontalToolStripButton.Image")));
+            this.HorizontalToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.HorizontalToolStripButton.Name = "HorizontalToolStripButton";
+            this.HorizontalToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.HorizontalToolStripButton.Text = "Horizontal";
+            // 
+            // VerticalToolStripButton
+            // 
+            this.VerticalToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.VerticalToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("VerticalToolStripButton.Image")));
+            this.VerticalToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.VerticalToolStripButton.Name = "VerticalToolStripButton";
+            this.VerticalToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.VerticalToolStripButton.Text = "Vertical";
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            // 
             // OptionToolStripButton
             // 
             this.OptionToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -619,6 +655,7 @@
             this.CategoryListView.ContextMenuStrip = this.CategoryContextMenuStrip;
             this.CategoryListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CategoryListView.HideSelection = false;
+            this.CategoryListView.LabelEdit = true;
             this.CategoryListView.LargeImageList = this.ImageList24;
             this.CategoryListView.Location = new System.Drawing.Point(0, 0);
             this.CategoryListView.MultiSelect = false;
@@ -659,62 +696,34 @@
             this.TabListViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TabListViewNewItemToolStripMenuItem,
             this.TabListViewDeleteItemToolStripMenuItem,
-            this.TabListViewEditItemToolStripMenuItem});
+            this.TabListViewEditItemToolStripMenuItem,
+            this.TabListViewEditDateTimeToolStripMenuItem});
             this.TabListViewContextMenuStrip.Name = "TabListViewContextMenuStrip";
-            this.TabListViewContextMenuStrip.Size = new System.Drawing.Size(130, 70);
+            this.TabListViewContextMenuStrip.Size = new System.Drawing.Size(144, 92);
             // 
             // TabListViewNewItemToolStripMenuItem
             // 
             this.TabListViewNewItemToolStripMenuItem.Name = "TabListViewNewItemToolStripMenuItem";
-            this.TabListViewNewItemToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.TabListViewNewItemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.TabListViewNewItemToolStripMenuItem.Text = "New Item";
             // 
             // TabListViewDeleteItemToolStripMenuItem
             // 
             this.TabListViewDeleteItemToolStripMenuItem.Name = "TabListViewDeleteItemToolStripMenuItem";
-            this.TabListViewDeleteItemToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.TabListViewDeleteItemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.TabListViewDeleteItemToolStripMenuItem.Text = "Delete Item";
             // 
             // TabListViewEditItemToolStripMenuItem
             // 
             this.TabListViewEditItemToolStripMenuItem.Name = "TabListViewEditItemToolStripMenuItem";
-            this.TabListViewEditItemToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.TabListViewEditItemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.TabListViewEditItemToolStripMenuItem.Text = "Edit Item";
             // 
-            // VerticalToolStripButton
+            // TabListViewEditDateTimeToolStripMenuItem
             // 
-            this.VerticalToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.VerticalToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("VerticalToolStripButton.Image")));
-            this.VerticalToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.VerticalToolStripButton.Name = "VerticalToolStripButton";
-            this.VerticalToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.VerticalToolStripButton.Text = "Vertical";
-            // 
-            // HorizontalToolStripButton
-            // 
-            this.HorizontalToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.HorizontalToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("HorizontalToolStripButton.Image")));
-            this.HorizontalToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.HorizontalToolStripButton.Name = "HorizontalToolStripButton";
-            this.HorizontalToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.HorizontalToolStripButton.Text = "Horizontal";
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
-            // 
-            // EditorInfoToolStripLabel
-            // 
-            this.EditorInfoToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.EditorInfoToolStripLabel.Name = "EditorInfoToolStripLabel";
-            this.EditorInfoToolStripLabel.Size = new System.Drawing.Size(81, 22);
-            this.EditorInfoToolStripLabel.Text = "toolStripLabel1";
+            this.TabListViewEditDateTimeToolStripMenuItem.Name = "TabListViewEditDateTimeToolStripMenuItem";
+            this.TabListViewEditDateTimeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.TabListViewEditDateTimeToolStripMenuItem.Text = "Edit DateTime";
             // 
             // MainForm
             // 
@@ -826,6 +835,7 @@
         private System.Windows.Forms.ToolStripButton VerticalToolStripButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripLabel EditorInfoToolStripLabel;
+        private System.Windows.Forms.ToolStripMenuItem TabListViewEditDateTimeToolStripMenuItem;
     }
 }
 

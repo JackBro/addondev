@@ -36,9 +36,9 @@ namespace wiki {
 
         public void stop() {
             if (listener != null && listener.IsListening) {
-                //isbusy = false;
+                isbusy = false;
                 //listener.Close();
-                listener.Stop();
+                //listener.Stop();
                 if (StopEvent != null) {
                     StopEvent(this, new EventArgs());
                 }
@@ -83,34 +83,34 @@ namespace wiki {
                 res.Close();
             }
 
-            //listener.Close();
+            listener.Close();
         }
 
-        private void OnGetContext(IAsyncResult ar) {
-            try {
-                HttpListenerContext context = ((HttpListener)ar.AsyncState).EndGetContext(ar);
-                OnRequest(context);
-                listener.BeginGetContext(OnGetContext, listener);
-            } catch (HttpListenerException e) {
-                //Debug.WriteLine(e);
-            }
-        }
-        private void OnRequest(HttpListenerContext context) {
-            HttpListenerRequest req = context.Request;
-            HttpListenerResponse res = context.Response;
+        //private void OnGetContext(IAsyncResult ar) {
+        //    try {
+        //        HttpListenerContext context = ((HttpListener)ar.AsyncState).EndGetContext(ar);
+        //        OnRequest(context);
+        //        listener.BeginGetContext(OnGetContext, listener);
+        //    } catch (HttpListenerException e) {
+        //        //Debug.WriteLine(e);
+        //    }
+        //}
+        //private void OnRequest(HttpListenerContext context) {
+        //    HttpListenerRequest req = context.Request;
+        //    HttpListenerResponse res = context.Response;
 
-            string resString = "accept";
-            Console.WriteLine(req.RawUrl);
-            if (RequestEvent != null) {
-                reqArgs = new RequestEventArgs { Request = req };
-                RequestEvent(this, reqArgs);
-                resString = reqArgs.Response;
-            }
+        //    string resString = "accept";
+        //    Console.WriteLine(req.RawUrl);
+        //    if (RequestEvent != null) {
+        //        reqArgs = new RequestEventArgs { Request = req };
+        //        RequestEvent(this, reqArgs);
+        //        resString = reqArgs.Response;
+        //    }
 
-            Encoding enc = Encoding.UTF8;
-            byte[] buffer = enc.GetBytes(resString);
-            res.OutputStream.Write(buffer, 0, buffer.Length);
-            res.Close();
-        }
+        //    Encoding enc = Encoding.UTF8;
+        //    byte[] buffer = enc.GetBytes(resString);
+        //    res.OutputStream.Write(buffer, 0, buffer.Length);
+        //    res.Close();
+        //}
     }
 }

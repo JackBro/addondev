@@ -46,7 +46,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Azuki, Version=1.6.1.28988, Culture=neutral, PublicKeyToken=46b77eb7f2d82aba, processorArchitecture=MSIL">
+    <Reference Include="Azuki, Version=1.6.2.47, Culture=neutral, PublicKeyToken=46b77eb7f2d82aba, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\lib\Azuki\Azuki.dll</HintPath>
     </Reference>

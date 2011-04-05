@@ -18,8 +18,6 @@ namespace wiki {
 
             InitializeComponent();
 
-
-
             //var node = ConfigTreeView.Nodes["EditorNode"];
             //var p = new EditorPanel();
             //p.Dock= DockStyle.Fill;
@@ -41,7 +39,7 @@ namespace wiki {
 
             };
             this.CancelButton.Click += (s, e) => {
-
+                this.Close();
             };
         }
 
