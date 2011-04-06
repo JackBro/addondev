@@ -6,13 +6,17 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using wiki.config;
 
 namespace wiki {
     public partial class ConfigForm : Form {
         public Font EditorFont { get; private set; }
+
         private Dictionary<string, UserControl> configpanels = new Dictionary<string, UserControl>();
         private Config config;
         private EditorConfig editorconfig;
+        private MainConfig mainconfig;
+
         public ConfigForm(Config config) {
             this.config = config;
 
@@ -24,18 +28,22 @@ namespace wiki {
             //ConfigPanel.Controls.Add(p);
             //configpanels.Add("EditorNode", p);
             //configpanels
+            mainconfig = new MainConfig();
+            createPanel("MainNode", mainconfig);
+            
             editorconfig = new EditorConfig(config);
             createPanel("EditorNode", editorconfig);
 
             ConfigTreeView.NodeMouseClick += (sender, e) => {
                 if (configpanels.ContainsKey(e.Node.Name)) {
                     var cp = configpanels[e.Node.Name];
-                    //cp.BringToFront();
+                    cp.BringToFront();
                 }
             };
 
             this.OKButton.Click += (s, e) => {
                 editorconfig.Accept();
+                config.SnippetList = editorconfig.SnippetList;
 
             };
             this.CancelButton.Click += (s, e) => {

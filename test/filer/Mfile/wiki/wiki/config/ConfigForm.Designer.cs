@@ -23,10 +23,10 @@
         /// コード エディタで変更しないでください。
         /// </summary>
         private void InitializeComponent() {
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("ノード0");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("ノード2");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Editor", new System.Windows.Forms.TreeNode[] {
-            treeNode8});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Main");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("ノード2");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Editor", new System.Windows.Forms.TreeNode[] {
+            treeNode2});
             this.panel1 = new System.Windows.Forms.Panel();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
@@ -71,15 +71,15 @@
             this.ConfigTreeView.Dock = System.Windows.Forms.DockStyle.Left;
             this.ConfigTreeView.Location = new System.Drawing.Point(0, 0);
             this.ConfigTreeView.Name = "ConfigTreeView";
-            treeNode7.Name = "ノード0";
-            treeNode7.Text = "ノード0";
-            treeNode8.Name = "ノード2";
-            treeNode8.Text = "ノード2";
-            treeNode9.Name = "EditorNode";
-            treeNode9.Text = "Editor";
+            treeNode1.Name = "MainNode";
+            treeNode1.Text = "Main";
+            treeNode2.Name = "ノード2";
+            treeNode2.Text = "ノード2";
+            treeNode3.Name = "EditorNode";
+            treeNode3.Text = "Editor";
             this.ConfigTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode7,
-            treeNode9});
+            treeNode1,
+            treeNode3});
             this.ConfigTreeView.Size = new System.Drawing.Size(121, 303);
             this.ConfigTreeView.TabIndex = 3;
             // 

@@ -43,8 +43,12 @@ namespace wiki {
         };
 
         public static Action<MainForm> Comple = (form) => {
-            var f = new CompleForm(form);
+            var f = new SnippetForm(form, form.config.SnippetList);
+            //f.FormClosed += (s, e) => {
+            //    form.Editor.Document.IsReadOnly = false;
+            //};
             f.Show();
+            
         };
 
         //cat

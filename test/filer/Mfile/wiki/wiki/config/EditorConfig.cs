@@ -13,6 +13,16 @@ using wiki.config;
 namespace wiki {
     public partial class EditorConfig : UserControl {
         public Config config { get; set; }
+        public List<string> SnippetList {
+            get {
+                var ret = new List<string>(); 
+                var cnt = SnippetListBox.Items.Count;
+                for (int i = 0; i < cnt; i++){
+			        ret.Add(SnippetListBox.Items[i].ToString());
+                }
+                return ret;
+            }
+        }
         private AzukiControl editor;
         //private bool 
         public EditorConfig(Config config) {
@@ -63,23 +73,29 @@ namespace wiki {
             };
 
             //
+            foreach (var item in this.config.SnippetList){
+                SnippetListBox.Items.Add(item);
+            }
+           
             NewButton.Click += (s, e) => {
-                var edit = new CompleEditForm();
+                var edit = new SnippetEditForm();
+                edit.StartPosition = FormStartPosition.CenterParent;
                 var res = edit.ShowDialog(this);
                 if (res == DialogResult.OK) {
-                    CompleListBox.Items.Add(edit.Code);
+                    SnippetListBox.Items.Add(edit.Code);
                 }
+                edit.Close();
             };
             EditButton.Click += (s, e) => {
-                var edit = new CompleEditForm();
-                edit.Code = CompleListBox.SelectedItem.ToString();
+                var edit = new SnippetEditForm();
+                edit.Code = SnippetListBox.SelectedItem.ToString();
                 var res = edit.ShowDialog(this);
                 if (res == DialogResult.OK) {
-                    CompleListBox.SelectedItem = edit.Code;
+                    SnippetListBox.SelectedItem = edit.Code;
                 }
             };
             DeleteButton.Click += (s, e) => {
-                CompleListBox.Items.RemoveAt(CompleListBox.SelectedIndex);
+                SnippetListBox.Items.RemoveAt(SnippetListBox.SelectedIndex);
             };
 
             this.Load += (s, e) => {

@@ -21,7 +21,9 @@ namespace wiki {
                             if (_browserSearchControl.MigemoCheckBox.Checked) {
                                 pat = getMigemo().Query(cmbbox.Text);
                             }
-                            InvokeScript("js_incrementalSearch", pat, _browserSearchControl.MigemoCheckBox.Checked.ToString());
+                            if (pat.Length > 0) {
+                                InvokeScript("js_incrementalSearch", pat, _browserSearchControl.MigemoCheckBox.Checked.ToString());
+                            }
                         };
                         _browserSearchControl.NextButton.Click += (ss, se) => {
                             InvokeScript("js_searchNext", pat, _browserSearchControl.MigemoCheckBox.Checked.ToString());

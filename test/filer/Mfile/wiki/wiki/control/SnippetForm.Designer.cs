@@ -1,5 +1,5 @@
 ﻿namespace wiki.control {
-    partial class CompleForm {
+    partial class SnippetForm {
         /// <summary>
         /// 必要なデザイナ変数です。
         /// </summary>
@@ -28,23 +28,23 @@
             // 
             // listBox
             // 
-            this.listBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox.FormattingEnabled = true;
             this.listBox.ItemHeight = 12;
-            this.listBox.Location = new System.Drawing.Point(0, 0);
+            this.listBox.Location = new System.Drawing.Point(3, 3);
             this.listBox.Margin = new System.Windows.Forms.Padding(0);
             this.listBox.Name = "listBox";
-            this.listBox.Size = new System.Drawing.Size(208, 194);
+            this.listBox.Size = new System.Drawing.Size(202, 184);
             this.listBox.TabIndex = 0;
             // 
-            // CompleForm
+            // SnippetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(208, 195);
             this.Controls.Add(this.listBox);
-            this.Name = "CompleForm";
+            this.Name = "SnippetForm";
+            this.Padding = new System.Windows.Forms.Padding(3);
             this.ShowInTaskbar = false;
             this.Text = "CompleForm";
             this.ResumeLayout(false);

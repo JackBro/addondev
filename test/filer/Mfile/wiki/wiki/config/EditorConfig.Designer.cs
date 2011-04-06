@@ -38,7 +38,7 @@
             this.DeleteButton = new System.Windows.Forms.Button();
             this.EditButton = new System.Windows.Forms.Button();
             this.NewButton = new System.Windows.Forms.Button();
-            this.CompleListBox = new System.Windows.Forms.ListBox();
+            this.SnippetListBox = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -151,7 +151,7 @@
             this.groupBox2.Controls.Add(this.DeleteButton);
             this.groupBox2.Controls.Add(this.EditButton);
             this.groupBox2.Controls.Add(this.NewButton);
-            this.groupBox2.Controls.Add(this.CompleListBox);
+            this.groupBox2.Controls.Add(this.SnippetListBox);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox2.Location = new System.Drawing.Point(0, 201);
             this.groupBox2.Name = "groupBox2";
@@ -190,17 +190,17 @@
             this.NewButton.Text = "New";
             this.NewButton.UseVisualStyleBackColor = true;
             // 
-            // CompleListBox
+            // SnippetListBox
             // 
-            this.CompleListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.SnippetListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CompleListBox.FormattingEnabled = true;
-            this.CompleListBox.ItemHeight = 12;
-            this.CompleListBox.Location = new System.Drawing.Point(6, 18);
-            this.CompleListBox.Name = "CompleListBox";
-            this.CompleListBox.Size = new System.Drawing.Size(332, 172);
-            this.CompleListBox.TabIndex = 0;
+            this.SnippetListBox.FormattingEnabled = true;
+            this.SnippetListBox.ItemHeight = 12;
+            this.SnippetListBox.Location = new System.Drawing.Point(6, 18);
+            this.SnippetListBox.Name = "SnippetListBox";
+            this.SnippetListBox.Size = new System.Drawing.Size(332, 172);
+            this.SnippetListBox.TabIndex = 0;
             // 
             // EditorConfig
             // 
@@ -232,7 +232,7 @@
         private System.Windows.Forms.CheckBox ShowZenSpaceCheckBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ListBox CompleListBox;
+        private System.Windows.Forms.ListBox SnippetListBox;
         private System.Windows.Forms.Button EditButton;
         private System.Windows.Forms.Button NewButton;
         private System.Windows.Forms.Button DeleteButton;

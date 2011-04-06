@@ -81,8 +81,8 @@
             this.VerticalToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.WikiStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.BrowserToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.SearchContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.NormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RegexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,13 +92,15 @@
             this.CategoryContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CategoryNewFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CategoryDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CategoryEmptyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ImageList24 = new System.Windows.Forms.ImageList(this.components);
             this.TabListViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.TabListViewNewItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewDeleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewEditItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewEditDateTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.CategoryEmptyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SpacerToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ScriptErrorToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -111,7 +113,7 @@
             this.EditorToolStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.WikiStatusStrip.SuspendLayout();
             this.SearchContextMenuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -589,21 +591,23 @@
             this.OptionToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.OptionToolStripButton.Text = "Option";
             // 
-            // statusStrip1
+            // WikiStatusStrip
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 518);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(747, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
+            this.WikiStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.BrowserToolStripStatusLabel,
+            this.SpacerToolStripStatusLabel,
+            this.ScriptErrorToolStripStatusLabel});
+            this.WikiStatusStrip.Location = new System.Drawing.Point(0, 518);
+            this.WikiStatusStrip.Name = "WikiStatusStrip";
+            this.WikiStatusStrip.Size = new System.Drawing.Size(747, 22);
+            this.WikiStatusStrip.TabIndex = 2;
+            this.WikiStatusStrip.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // BrowserToolStripStatusLabel
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(114, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.BrowserToolStripStatusLabel.Name = "BrowserToolStripStatusLabel";
+            this.BrowserToolStripStatusLabel.Size = new System.Drawing.Size(114, 17);
+            this.BrowserToolStripStatusLabel.Text = "toolStripStatusLabel1";
             // 
             // SearchContextMenuStrip
             // 
@@ -672,19 +676,25 @@
             this.CategoryDeleteToolStripMenuItem,
             this.CategoryEmptyToolStripMenuItem});
             this.CategoryContextMenuStrip.Name = "CategoryContextMenuStrip";
-            this.CategoryContextMenuStrip.Size = new System.Drawing.Size(153, 92);
+            this.CategoryContextMenuStrip.Size = new System.Drawing.Size(123, 70);
             // 
             // CategoryNewFileToolStripMenuItem
             // 
             this.CategoryNewFileToolStripMenuItem.Name = "CategoryNewFileToolStripMenuItem";
-            this.CategoryNewFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.CategoryNewFileToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.CategoryNewFileToolStripMenuItem.Text = "NewFile";
             // 
             // CategoryDeleteToolStripMenuItem
             // 
             this.CategoryDeleteToolStripMenuItem.Name = "CategoryDeleteToolStripMenuItem";
-            this.CategoryDeleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.CategoryDeleteToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.CategoryDeleteToolStripMenuItem.Text = "DeleteFile";
+            // 
+            // CategoryEmptyToolStripMenuItem
+            // 
+            this.CategoryEmptyToolStripMenuItem.Name = "CategoryEmptyToolStripMenuItem";
+            this.CategoryEmptyToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.CategoryEmptyToolStripMenuItem.Text = "Empty";
             // 
             // ImageList24
             // 
@@ -727,11 +737,18 @@
             this.TabListViewEditDateTimeToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.TabListViewEditDateTimeToolStripMenuItem.Text = "Edit DateTime";
             // 
-            // CategoryEmptyToolStripMenuItem
+            // SpacerToolStripStatusLabel
             // 
-            this.CategoryEmptyToolStripMenuItem.Name = "CategoryEmptyToolStripMenuItem";
-            this.CategoryEmptyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.CategoryEmptyToolStripMenuItem.Text = "Empty";
+            this.SpacerToolStripStatusLabel.Name = "SpacerToolStripStatusLabel";
+            this.SpacerToolStripStatusLabel.Size = new System.Drawing.Size(473, 17);
+            this.SpacerToolStripStatusLabel.Spring = true;
+            // 
+            // ScriptErrorToolStripStatusLabel
+            // 
+            this.ScriptErrorToolStripStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ScriptErrorToolStripStatusLabel.Name = "ScriptErrorToolStripStatusLabel";
+            this.ScriptErrorToolStripStatusLabel.Size = new System.Drawing.Size(114, 17);
+            this.ScriptErrorToolStripStatusLabel.Text = "toolStripStatusLabel3";
             // 
             // MainForm
             // 
@@ -739,7 +756,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(747, 540);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.WikiStatusStrip);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -761,8 +778,8 @@
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.WikiStatusStrip.ResumeLayout(false);
+            this.WikiStatusStrip.PerformLayout();
             this.SearchContextMenuStrip.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -797,9 +814,9 @@
         private System.Windows.Forms.ToolStripButton NextPageToolStripButton;
         private System.Windows.Forms.ToolStripButton PrevPageToolStripButton;
         private System.Windows.Forms.ToolStripLabel PageToolStripLabel;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip WikiStatusStrip;
         private System.Windows.Forms.ToolStripButton CloseEditorToolStripButton;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel BrowserToolStripStatusLabel;
         private System.Windows.Forms.Panel SearchPanel;
         private System.Windows.Forms.Panel SearchButtonPanel;
         private System.Windows.Forms.ContextMenuStrip SearchContextMenuStrip;
@@ -845,6 +862,8 @@
         private System.Windows.Forms.ToolStripLabel EditorInfoToolStripLabel;
         private System.Windows.Forms.ToolStripMenuItem TabListViewEditDateTimeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem CategoryEmptyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel SpacerToolStripStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel ScriptErrorToolStripStatusLabel;
     }
 }
 

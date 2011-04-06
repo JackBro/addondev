@@ -29,6 +29,9 @@ namespace wiki {
             };
 
             _editor.KeyDown += (sender, e) => {
+                if (_editor.IsReadOnly) {
+                    _editor.IsReadOnly = false;
+                }
                 if(_EditorKeyMap.ContainsKey(e.KeyData)){
                     _EditorKeyMap[e.KeyData](this);
                     e.Handled = true;

@@ -8,12 +8,12 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace wiki.config {
-    public partial class CompleEditForm : Form {
+    public partial class SnippetEditForm : Form {
         public string Code {
             get { return TextBox.Text; }
             set { TextBox.Text = value; }
         }
-        public CompleEditForm() {
+        public SnippetEditForm() {
             InitializeComponent();
 
             OKbutton.Click += (s, e) => {

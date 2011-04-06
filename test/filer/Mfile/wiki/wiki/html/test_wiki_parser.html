@@ -33,6 +33,7 @@
 
 	        $('#incrementalSearch').bind('textchange', function (event, previousText) {
 	            var val = $(this).val();
+	            val = new RegExp(val);
 	            $('#container').removeHighlight().incrementalSearch(val, searchOffset);
 	            if ($('.inchighlight').length) {
 	                $('.inchighlight').inwindow();

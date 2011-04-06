@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.ComponentModel;
+using System.IO;
 
 namespace wiki {
 
@@ -96,7 +97,20 @@ namespace wiki {
         public bool EdiorWrap { get; set; }
 
         [XmlIgnore]
-        public List<string> CompleList;
+        public string SnippetListPath { get; set; }
+        [XmlIgnore]
+        public List<string> SnippetList;
+        public void LoadSnippetList() {
+            if (File.Exists(SnippetListPath)) {
+                SnippetList = XMLSerializer.Deserialize<List<string>>(SnippetListPath, new List<string>());
+            }
+            else {
+                SnippetList = new List<string>();
+            }
+        }
+        public void SaveSnippetList() {
+            XMLSerializer.Serialize<List<string>>(SnippetListPath, SnippetList);
+        }
 
 
         public Config() {
@@ -133,7 +147,7 @@ namespace wiki {
 
             _editorFont = System.Windows.Forms.SystemInformation.MenuFont;
 
-            CompleList = new List<string>();
+            SnippetList = new List<string>();
 
             
         }

@@ -37,8 +37,9 @@
 	    }
 
 	    function js_incrementalSearch(pat, isregx) {
-	        if (isregx == 'true') {
+	        if (isregx.toUpperCase() == 'TRUE') {
 	            pat = new RegExp(pat);
+	            alert(pat);
 	        }
 	        $('#container').removeHighlight().incrementalSearch(pat, searchOffset);
 	        if ($('.inchighlight').length) {
@@ -47,7 +48,7 @@
 	    }
 
 	    function js_searchNext(pat, isregx) {
-	        if (isregx == 'true') {
+	        if (isregx.toUpperCase() == 'TRUE') {
 	            pat = new RegExp(pat);
 	        }
 	        $('#container').search(pat, false, searchOffset);
@@ -58,7 +59,7 @@
 	    }
 
 	    function js_searchPrev(pat, isregx) {
-	        if (isregx == 'true') {
+	        if (isregx.toUpperCase() == 'TRUE') {
 	            pat = new RegExp(pat);
 	        }
 

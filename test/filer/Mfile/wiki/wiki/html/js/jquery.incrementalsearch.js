@@ -291,7 +291,7 @@ konkon
         var jindex = 0;
         return this.each(function () {
             exi = 0;
-            innerHighlight(this, pat.toUpperCase(), jindex);
+            innerHighlight(this, pat, jindex);
             jindex++;
             if (exi == 1) {
                 return;

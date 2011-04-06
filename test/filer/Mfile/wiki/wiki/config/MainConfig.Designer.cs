@@ -25,25 +25,36 @@
         private void InitializeComponent() {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.PingButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.PingButton);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Location = new System.Drawing.Point(29, 19);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.Size = new System.Drawing.Size(352, 100);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(106, 35);
+            this.textBox1.Location = new System.Drawing.Point(6, 33);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 19);
             this.textBox1.TabIndex = 0;
+            // 
+            // PingButton
+            // 
+            this.PingButton.Location = new System.Drawing.Point(134, 33);
+            this.PingButton.Name = "PingButton";
+            this.PingButton.Size = new System.Drawing.Size(50, 19);
+            this.PingButton.TabIndex = 1;
+            this.PingButton.Text = "button1";
+            this.PingButton.UseVisualStyleBackColor = true;
             // 
             // MainConfig
             // 
@@ -62,5 +73,6 @@
 
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button PingButton;
     }
 }

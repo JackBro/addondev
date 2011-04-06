@@ -1,5 +1,5 @@
 ﻿namespace wiki.config {
-    partial class CompleEditForm {
+    partial class SnippetEditForm {
         /// <summary>
         /// 必要なデザイナ変数です。
         /// </summary>

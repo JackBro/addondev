@@ -40,7 +40,7 @@ namespace wiki
         private HttpServer httpServer;
         private BackgroundWorker serveBW;
 
-        private Config config;
+        internal Config config;
         
         ScriptManager sm = new ScriptManager();
 
@@ -74,7 +74,8 @@ namespace wiki
             config.ScriptDirPath = Path.GetFullPath(@"..\..\scripts");
             config.MigemoDictPath = Path.GetFullPath(@"..\..\migemo\dict\migemo-dict");
             config.DataDirPath = Path.GetFullPath(@".\data");
-
+            config.SnippetListPath = Path.GetFullPath(@".\SnippetList.xml");
+            config.LoadSnippetList();
             this.WindowState = config.WindowState;
             if (config.WindowState != FormWindowState.Maximized) {
                 this.Size = config.WindowSize;
@@ -280,6 +281,8 @@ namespace wiki
 
                 config.EdiorWrap = EditorWrapToolStripButton.Checked;
 
+                config.SaveSnippetList();
+
                 var TabList = new Dictionary<string, List<KeyValuePair<string, SearchMode>>>();
                 foreach (var key in Tabs.Keys) {
                     var list = new List<KeyValuePair<string, SearchMode>>();
@@ -419,12 +422,16 @@ namespace wiki
             webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
             //webBrowser1.Navigating += new WebBrowserNavigatingEventHandler(webBrowser1_Navigating);
             webBrowser1.StatusTextChanged += (sender, e) => {
-                toolStripStatusLabel1.Text = webBrowser1.StatusText;
+                BrowserToolStripStatusLabel.Text = webBrowser1.StatusText;
+            };
+            ScriptErrorToolStripStatusLabel.Click+=(s,e)=>{
+
             };
             webBrowser1.Navigated += (s, e) => {
                 webBrowser1.Document.Window.Error += (ss, se) => {
                     //se.
                     se.Handled = true;
+                    ScriptErrorToolStripStatusLabel.Text = "ScriptError";
                 };
             };
 
@@ -1109,7 +1116,7 @@ namespace wiki
             //EditItem(1);
         }
 
-        private Migemo getMigemo() {
+        internal Migemo getMigemo() {
             if (migemo == null) {
                 migemo = new Migemo(config.MigemoDictPath);
             }
