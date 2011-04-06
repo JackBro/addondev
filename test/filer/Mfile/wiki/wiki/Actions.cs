@@ -43,15 +43,13 @@ namespace wiki {
         };
 
         public static Action<MainForm> Comple = (form) => {
+            if (form.config.SnippetList.Count == 0) return;
+
             var f = new SnippetForm(form, form.config.SnippetList);
-            //f.FormClosed += (s, e) => {
-            //    form.Editor.Document.IsReadOnly = false;
-            //};
             f.Show();
             
         };
 
-        //cat
         public static Action<MainForm> DeleteFile = (form) => {
             var items = form.CategoryListView.SelectedItems;
             for (int i = 0; i < items.Count; i++) {

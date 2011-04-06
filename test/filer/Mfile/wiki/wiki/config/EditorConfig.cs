@@ -23,9 +23,17 @@ namespace wiki {
                 return ret;
             }
         }
+        public bool IsFontChanged { get; set; }
+        public bool IsColorChanged { get; set; }
+        public bool IsViewChanged { get; set; }
+
         private AzukiControl editor;
-        //private bool 
+
         public EditorConfig(Config config) {
+            IsFontChanged = false;
+            IsColorChanged = false;
+            IsViewChanged = false;
+
             this.config = config;
 
             InitializeComponent();
@@ -42,6 +50,8 @@ namespace wiki {
                     var EditorFont = EditorFontDialog.Font;
                     FontSelectButton.Text = EditorFont.Name + "(" + EditorFont.Size + ")";
                     editor.Font = EditorFont;
+
+                    IsFontChanged = true;
                 }
             };
 
@@ -49,6 +59,7 @@ namespace wiki {
                 var res = EditorColorDialog.ShowDialog();
                 if (res == DialogResult.OK) {
                     editor.ForeColor = EditorColorDialog.Color;
+                    IsColorChanged = true;
                 }
             };
 
@@ -56,20 +67,25 @@ namespace wiki {
                 var res = EditorColorDialog.ShowDialog();
                 if (res == DialogResult.OK) {
                     editor.BackColor = EditorColorDialog.Color;
+                    IsColorChanged = true;
                 }
             };
 
             ShowTabCheckBox.CheckedChanged += (s, e) => {
                 editor.View.DrawsTab = ShowTabCheckBox.Checked;
+                IsViewChanged = true;
             };
             ShowEolCheckBox.CheckedChanged += (s, e) => {
                 editor.View.DrawsEolCode = ShowEolCheckBox.Checked;
+                IsViewChanged = true;
             };
             ShowSpaceCheckBox.CheckedChanged += (s, e) => {
                 editor.View.DrawsSpace = ShowSpaceCheckBox.Checked;
+                IsViewChanged = true;
             };
             ShowZenSpaceCheckBox.CheckedChanged += (s, e) => {
                 editor.View.DrawsFullWidthSpace = ShowZenSpaceCheckBox.Checked;
+                IsViewChanged = true;
             };
 
             //
@@ -121,13 +137,19 @@ namespace wiki {
         }
 
         public void Accept() {
-            config.ShowTab = editor.View.DrawsTab;
-            config.ShowEol = editor.View.DrawsEofMark;
-            config.ShowSpace = editor.View.DrawsSpace;
-            config.ShowZenSpace = editor.View.DrawsFullWidthSpace;
+            config.SnippetList = this.SnippetList;
 
-            config.EditorFontColor = editor.ForeColor;
-            config.EditorBackColor = editor.BackColor;
+            if (IsViewChanged) {
+                config.ShowTab = editor.View.DrawsTab;
+                config.ShowEol = editor.View.DrawsEofMark;
+                config.ShowSpace = editor.View.DrawsSpace;
+                config.ShowZenSpace = editor.View.DrawsFullWidthSpace;
+            }
+
+            if (IsColorChanged) {
+                config.EditorFontColor = editor.ForeColor;
+                config.EditorBackColor = editor.BackColor;
+            }
         }
     }
 }

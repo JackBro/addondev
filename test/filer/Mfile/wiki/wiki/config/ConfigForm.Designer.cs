@@ -23,10 +23,8 @@
         /// コード エディタで変更しないでください。
         /// </summary>
         private void InitializeComponent() {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Main");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("ノード2");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Editor", new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Main");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Editor");
             this.panel1 = new System.Windows.Forms.Panel();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
@@ -71,15 +69,13 @@
             this.ConfigTreeView.Dock = System.Windows.Forms.DockStyle.Left;
             this.ConfigTreeView.Location = new System.Drawing.Point(0, 0);
             this.ConfigTreeView.Name = "ConfigTreeView";
-            treeNode1.Name = "MainNode";
-            treeNode1.Text = "Main";
-            treeNode2.Name = "ノード2";
-            treeNode2.Text = "ノード2";
-            treeNode3.Name = "EditorNode";
-            treeNode3.Text = "Editor";
+            treeNode3.Name = "MainNode";
+            treeNode3.Text = "Main";
+            treeNode4.Name = "EditorNode";
+            treeNode4.Text = "Editor";
             this.ConfigTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode3});
+            treeNode3,
+            treeNode4});
             this.ConfigTreeView.Size = new System.Drawing.Size(121, 303);
             this.ConfigTreeView.TabIndex = 3;
             // 
@@ -96,6 +92,7 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(398, 333);
             this.Controls.Add(this.ConfigPanel);
             this.Controls.Add(this.ConfigTreeView);

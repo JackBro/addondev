@@ -14,20 +14,15 @@ namespace wiki {
 
         private Dictionary<string, UserControl> configpanels = new Dictionary<string, UserControl>();
         private Config config;
-        private EditorConfig editorconfig;
-        private MainConfig mainconfig;
+        internal EditorConfig editorconfig;
+        internal MainConfig mainconfig;
 
         public ConfigForm(Config config) {
-            this.config = config;
 
             InitializeComponent();
 
-            //var node = ConfigTreeView.Nodes["EditorNode"];
-            //var p = new EditorPanel();
-            //p.Dock= DockStyle.Fill;
-            //ConfigPanel.Controls.Add(p);
-            //configpanels.Add("EditorNode", p);
-            //configpanels
+            this.config = config;
+
             mainconfig = new MainConfig();
             createPanel("MainNode", mainconfig);
             
@@ -43,10 +38,13 @@ namespace wiki {
 
             this.OKButton.Click += (s, e) => {
                 editorconfig.Accept();
-                config.SnippetList = editorconfig.SnippetList;
+                
+                DialogResult = DialogResult.OK;
+                this.Close();
 
             };
             this.CancelButton.Click += (s, e) => {
+                DialogResult = DialogResult.Cancel;
                 this.Close();
             };
         }

@@ -58,7 +58,6 @@ namespace wiki
         public MainForm() {
             InitializeComponent();
 
-
             try {
                 config = XMLSerializer.Deserialize<Config>(Config.SettingPath, new Config());
             }
@@ -85,14 +84,19 @@ namespace wiki
             ViewEditorSplitContainer.SplitterDistance = config.BrowserH;
             ListViewSplitContainer.Orientation = config.TabListView_BrowserOri;
             ListViewSplitContainer.SplitterDistance = config.ListViewSize;
-
-
-
+            
             initKeyMap();
             initEditor();
             initSearch();
             initBrowser();
 
+            Editor.Font = config.EditorFont;
+            Editor.ForeColor = config.EditorFontColor;
+            Editor.BackColor = config.EditorBackColor;
+            Editor.DrawsTab = config.ShowTab;
+            Editor.DrawsSpace = config.ShowSpace;
+            Editor.DrawsFullWidthSpace = config.ShowZenSpace;
+            Editor.DrawsEolCode = config.ShowEol;
             EditorWrapToolStripButton.Checked = config.EdiorWrap;
             CloseEditor();
 
@@ -537,6 +541,19 @@ namespace wiki
                 cf.StartPosition = FormStartPosition.CenterParent;
                 var res = cf.ShowDialog(this);
                 if (res == DialogResult.OK) {
+                    if (cf.editorconfig.IsFontChanged) {
+                        Editor.Font = config.EditorFont;
+                    }
+                    if (cf.editorconfig.IsColorChanged) {
+                        Editor.ForeColor = config.EditorFontColor;
+                        Editor.BackColor = config.EditorBackColor;
+                    }
+                    if (cf.editorconfig.IsViewChanged) {
+                        Editor.DrawsTab = config.ShowTab;
+                        Editor.DrawsSpace = config.ShowSpace;
+                        Editor.DrawsFullWidthSpace = config.ShowZenSpace;
+                        Editor.DrawsEolCode = config.ShowEol;
+                    }
                 }
                 cf.Close();
             };
@@ -1025,6 +1042,7 @@ namespace wiki
 
             var items = category.getManger(categoryname).Filter(search.getSearch());
             var listview = new ListViewEx(items);
+
             if (categoryname == Category.Trust) {
                 listview.MultiSelect = true;
             }

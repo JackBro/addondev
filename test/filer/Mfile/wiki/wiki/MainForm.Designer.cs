@@ -83,6 +83,8 @@
             this.OptionToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.WikiStatusStrip = new System.Windows.Forms.StatusStrip();
             this.BrowserToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SpacerToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ScriptErrorToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.SearchContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.NormalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RegexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -99,8 +101,6 @@
             this.TabListViewDeleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewEditItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabListViewEditDateTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SpacerToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ScriptErrorToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.BrowserContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.ListViewSplitContainer.Panel1.SuspendLayout();
@@ -609,6 +609,19 @@
             this.BrowserToolStripStatusLabel.Size = new System.Drawing.Size(114, 17);
             this.BrowserToolStripStatusLabel.Text = "toolStripStatusLabel1";
             // 
+            // SpacerToolStripStatusLabel
+            // 
+            this.SpacerToolStripStatusLabel.Name = "SpacerToolStripStatusLabel";
+            this.SpacerToolStripStatusLabel.Size = new System.Drawing.Size(504, 17);
+            this.SpacerToolStripStatusLabel.Spring = true;
+            // 
+            // ScriptErrorToolStripStatusLabel
+            // 
+            this.ScriptErrorToolStripStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ScriptErrorToolStripStatusLabel.Name = "ScriptErrorToolStripStatusLabel";
+            this.ScriptErrorToolStripStatusLabel.Size = new System.Drawing.Size(114, 17);
+            this.ScriptErrorToolStripStatusLabel.Text = "toolStripStatusLabel3";
+            // 
             // SearchContextMenuStrip
             // 
             this.SearchContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -736,19 +749,6 @@
             this.TabListViewEditDateTimeToolStripMenuItem.Name = "TabListViewEditDateTimeToolStripMenuItem";
             this.TabListViewEditDateTimeToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.TabListViewEditDateTimeToolStripMenuItem.Text = "Edit DateTime";
-            // 
-            // SpacerToolStripStatusLabel
-            // 
-            this.SpacerToolStripStatusLabel.Name = "SpacerToolStripStatusLabel";
-            this.SpacerToolStripStatusLabel.Size = new System.Drawing.Size(473, 17);
-            this.SpacerToolStripStatusLabel.Spring = true;
-            // 
-            // ScriptErrorToolStripStatusLabel
-            // 
-            this.ScriptErrorToolStripStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ScriptErrorToolStripStatusLabel.Name = "ScriptErrorToolStripStatusLabel";
-            this.ScriptErrorToolStripStatusLabel.Size = new System.Drawing.Size(114, 17);
-            this.ScriptErrorToolStripStatusLabel.Text = "toolStripStatusLabel3";
             // 
             // MainForm
             // 
