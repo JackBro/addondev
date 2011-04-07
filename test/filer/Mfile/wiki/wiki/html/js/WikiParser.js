@@ -41,9 +41,9 @@ WikiParser.prototype.parse = function (inputString, id) {
     for (i = 0; i < lines.length; i++) {
 
         if (/^>>/.test(lines[i])) {
-
+            i++;
             while (i < lines.length) {
-                qstack.push(lines[i]);
+
                 if (/^<</.test(lines[i])) {
                     var qelem = this.document.createElement('div');
                     $(qelem).addClass('quote');
@@ -58,6 +58,7 @@ WikiParser.prototype.parse = function (inputString, id) {
                     qstack = [];
                     break;
                 }
+                qstack.push(lines[i]);
                 i++;
             }
             if (i >= lines.length) {
