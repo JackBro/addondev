@@ -23,6 +23,7 @@ WikiParser.prototype.nodeAtCursorPosition = null;
 WikiParser.prototype.parse = function (inputString, id) {
     this.id = id;
     this.cf = [];
+    var qstack = [];
 
     var re = RegExp("\r\n");
     while (re.test(inputString)) inputString = inputString.replace(re, "\n");
@@ -38,6 +39,62 @@ WikiParser.prototype.parse = function (inputString, id) {
     var characterCount = 0;
     var lines = inputString.split("\n")
     for (i = 0; i < lines.length; i++) {
+
+        if (/^>>/.test(lines[i])) {
+
+            while (i < lines.length) {
+                qstack.push(lines[i]);
+                if (/^<</.test(lines[i])) {
+                    var qelem = this.document.createElement('div');
+                    $(qelem).addClass('quote');
+                    var qtext = "";
+                    for (var k in qstack) {
+                        //qtext += qstack[i] + '\n';
+                        qtext = qstack[k] + '\n';
+                        qelem.appendChild(this.document.createTextNode(qtext));
+                        qelem.appendChild(this.document.createElement("br"));
+                    }
+                    this.stack.top().appendChild(qelem);
+                    qstack = [];
+                    break;
+                }
+                i++;
+            }
+            if (i >= lines.length) {
+                var qelem = this.document.createElement('div');
+                $(qelem).addClass('quote');
+                var qtext = "";
+                for (var k in qstack) {
+                    //qtext += qstack[i] + '\n';
+                    qtext = qstack[k] + '\n';
+                    qelem.appendChild(this.document.createTextNode(qtext));
+                    qelem.appendChild(this.document.createElement("br"));
+                }
+                this.stack.top().appendChild(qelem);
+                qstack = [];
+                break;
+            }
+            i++;
+            //$(qelem).click(function () {
+            //    alert($(this).text())
+            //});
+        }
+        //        else if (/^<</.test(lines[i])) {
+        //            qstack.push(lines[i]);
+        //            IN_Q = 0;
+        //            var qelem = this.document.createElement('div');
+        //            $(qelem).addClass('quote');
+        //            var qtext = "";
+        //            for (var i in qstack) {
+        //                qtext += qstack[i];
+        //            }
+        //            
+        //            qelem.appendChild(this.document.createTextNode(qtext));
+        //            this.stack.top().appendChild(qelem);
+        //            qstack = [];
+        //            continue;
+        //        }
+
         if (/^(!{1,5})(.*)$/.test(lines[i])) {
             this.jumpToTopLevel();
             var elementName = 'h' + RegExp.$1.length;

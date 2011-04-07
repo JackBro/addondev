@@ -138,7 +138,10 @@ namespace wiki {
 
         public void Accept() {
             config.SnippetList = this.SnippetList;
-
+            if (IsFontChanged) {
+                config.EditorFont = editor.Font;
+            }
+            
             if (IsViewChanged) {
                 config.ShowTab = editor.View.DrawsTab;
                 config.ShowEol = editor.View.DrawsEofMark;

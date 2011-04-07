@@ -19,7 +19,7 @@ namespace wiki {
     }
 
     public class Config {
-        public static string SettingPath = "setting.xml";
+        public static string SettingPath = "wiki.xml";
 
         public List<string> Categorys { get; set; }
 

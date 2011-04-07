@@ -59,7 +59,7 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 
 .quote {
 	border:1px #FF0000 solid;
-  background-color: gray;
+	background-color: gray;
 }
 
 .selecthighlight { background-color: yellow }

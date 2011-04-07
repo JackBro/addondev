@@ -23,7 +23,7 @@ namespace wiki {
 
             this.config = config;
 
-            mainconfig = new MainConfig();
+            mainconfig = new MainConfig(config);
             createPanel("MainNode", mainconfig);
             
             editorconfig = new EditorConfig(config);

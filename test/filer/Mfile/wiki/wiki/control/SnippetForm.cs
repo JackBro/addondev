@@ -31,21 +31,13 @@ namespace wiki.control {
 
             form.Editor.TextChanged += new System.EventHandler(Editor_TextChanged);
             form.Editor.MouseDown += new MouseEventHandler(Editor_MouseDown);
-            //form.Editor.keyp
             form.Editor.PreKeyDown += new KeyEventHandler(Editor_PreKeyDown);
-            //form.Editor.PreviewKeyDown += new PreviewKeyDownEventHandler(Editor_PreviewKeyDown);
-            //form.KeyPreview = true;
-            //form.PreviewKeyDown += new PreviewKeyDownEventHandler(form_PreviewKeyDown);
                 
             this.Shown += (sender, e) => {
                 form.Editor.Focus();
             };
             this.FormClosing += (sender, e) => {
-                //form.Editor.TextChanged -= Editor_TextChanged;
-                //form.Editor.MouseDown -= Editor_MouseDown;
-                //form.Editor.PreKeyDown -= Editor_PreKeyDown;
-                Unload();
-               
+                Unload();   
             };
             listBox.DoubleClick += (sender, e) => {
 
@@ -53,9 +45,7 @@ namespace wiki.control {
             this.Snippetlist.ForEach(n=>{
                  listBox.Items.Add(n);
             });
-            //foreach (var item in this.comlelist.) {
-            //    listBox.Items.Add(item);
-            //}
+
             if (listBox.Items.Count > 0) listBox.SelectedIndex = 0;
             var h = listBox.ItemHeight * (listBox.Items.Count)-5;
             this.Height = h == 0 ? listBox.ItemHeight : h;
@@ -205,21 +195,11 @@ namespace wiki.control {
                     break;
                 case Keys.Tab:
                 case Keys.Return:
-                    //form.Editor.TextChanged -= Editor_TextChanged;
-                    //form.Editor.MouseDown -= Editor_MouseDown;
-                    //isunload = true;
                     Unload();
-                    //e.SuppressKeyPress = false;
                     var end = form.Editor.Document.AnchorIndex;
                     form.Editor.Document.Replace(listBox.SelectedItem.ToString(), startOffset, end);
-                    //e.Handled = true;
                     form.Editor.Document.IsReadOnly = true;
-                    //e.SuppressKeyPress = false;
-                    //form.Editor.PreKeyDown -= Editor_PreKeyDown;
                     Close();
-                    //if (DeteEvent != null) {
-                        
-                    //}
                     break;
                 default:
                     e.Handled = false;
@@ -236,25 +216,18 @@ namespace wiki.control {
             if (len > 0) {
                 var q = form.getMigemo().Query(form.Editor.Document.GetTextInRange(startOffset, form.Editor.Document.AnchorIndex));
                 var regx = new Regex(q, RegexOptions.Compiled);
-
-                //var cnt = listBox.Items.Count;
-                //for (int i = cnt-1; i >=0; i--){
-                //    if(!regx.IsMatch(listBox.Items[i].ToString())){
-                //        listBox.Items.RemoveAt(i);
-                //    }
-                //}
                 listBox.Items.Clear();
-                foreach (var item in Snippetlist) {
-                    if (regx.IsMatch(item)) {
-                        listBox.Items.Add(item);
+                Snippetlist.ForEach(n => {
+                    if (regx.IsMatch(n)) {
+                        listBox.Items.Add(n);
                     }
-                }
+                });
             }
             else {
                 listBox.Items.Clear();
-                foreach (var item in Snippetlist) {
-                    listBox.Items.Add(item);
-                }
+                Snippetlist.ForEach(n => {
+                    listBox.Items.Add(n);
+                });
             }
             if (listBox.Items.Count > 0) listBox.SelectedIndex = 0;
             var h = listBox.ItemHeight * (listBox.Items.Count +1) + 3;
@@ -262,7 +235,6 @@ namespace wiki.control {
             //Height = h == 0 ? listBox.ItemHeight : h;
             var ns = new Size(this.ClientSize.Width, h == 0 ? listBox.ItemHeight : h);
             this.ClientSize = ns;
-
             //listBox.Height = h;     
         }
 

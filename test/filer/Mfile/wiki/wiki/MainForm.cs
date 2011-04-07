@@ -251,10 +251,20 @@ namespace wiki
             };
 
             serveBW.DoWork += (sender, e) => {
-                httpServer.start();
+                try {
+                    httpServer.start();
+                }
+                //catch (System.Net.HttpListenerException ex) {
+                catch (Exception ex) {
+                    throw;
+                }     
             };
             serveBW.RunWorkerCompleted += (sender, e) => {
-
+                if (e.Error is System.Net.HttpListenerException) {
+                    var ret = MessageBox.Show("port", "ERROR", MessageBoxButtons.OKCancel);
+                    this.Option();
+                }
+                
             };
             serveBW.RunWorkerAsync();
 
@@ -537,25 +547,7 @@ namespace wiki
 
 
             OptionToolStripButton.Click += (sender, e) => {
-                var cf = new ConfigForm(config);
-                cf.StartPosition = FormStartPosition.CenterParent;
-                var res = cf.ShowDialog(this);
-                if (res == DialogResult.OK) {
-                    if (cf.editorconfig.IsFontChanged) {
-                        Editor.Font = config.EditorFont;
-                    }
-                    if (cf.editorconfig.IsColorChanged) {
-                        Editor.ForeColor = config.EditorFontColor;
-                        Editor.BackColor = config.EditorBackColor;
-                    }
-                    if (cf.editorconfig.IsViewChanged) {
-                        Editor.DrawsTab = config.ShowTab;
-                        Editor.DrawsSpace = config.ShowSpace;
-                        Editor.DrawsFullWidthSpace = config.ShowZenSpace;
-                        Editor.DrawsEolCode = config.ShowEol;
-                    }
-                }
-                cf.Close();
+                Option();
             };
 
             HorizontalToolStripButton.Click += (sender, e) => {
@@ -805,6 +797,33 @@ namespace wiki
             //this.webBrowser1.Document.MouseDown += (ss, se) => {
             //    var ee = e;
             //};
+        }
+
+        internal void Option() {
+            var cf = new ConfigForm(config);
+            cf.StartPosition = FormStartPosition.CenterParent;
+            var res = cf.ShowDialog(this);
+            if (res == DialogResult.OK) {
+                if (cf.editorconfig.IsFontChanged) {
+                    Editor.Font = config.EditorFont;
+                }
+                if (cf.editorconfig.IsColorChanged) {
+                    Editor.ForeColor = config.EditorFontColor;
+                    Editor.BackColor = config.EditorBackColor;
+                }
+                if (cf.editorconfig.IsViewChanged) {
+                    Editor.DrawsTab = config.ShowTab;
+                    Editor.DrawsSpace = config.ShowSpace;
+                    Editor.DrawsFullWidthSpace = config.ShowZenSpace;
+                    Editor.DrawsEolCode = config.ShowEol;
+                }
+                if (cf.mainconfig.IsPortChanged) {
+                    if (serveBW.IsBusy) {
+                        
+                    }
+                }
+            }
+            cf.Close();
         }
 
         internal void CreateNewFile(string name) {

@@ -10,14 +10,51 @@ using System.Net.NetworkInformation;
 
 namespace wiki.config {
     public partial class MainConfig : UserControl {
-        public MainConfig() {
+        public bool IsPortChanged { get; set; }
+        private Config config;
+        public MainConfig(Config config) {
             InitializeComponent();
 
-            PingButton.Click += (s, e) => {
-                PingButton.Text = PortCheck("localhost", int.Parse(textBox1.Text), 2).ToString();
+            IsPortChanged = false;
+
+            this.config = config;
+            PortTextBox.Text = this.config.Port.ToString();
+            //PortTextBox.KeyPress += (s, e) => {
+            //    if (e.KeyChar < '0' || e.KeyChar > '9') {
+            //        e.Handled = true;
+            //    }
+            //};
+            PortSearchButton.Click += (s, e) => {
+                var port = 0;
+                try {
+                    port = int.Parse(PortTextBox.Text);
+                }
+                catch (Exception) {
+                    MessageBox.Show("ERROR");
+                    return;
+                    //throw;
+                }
+                
+                var ret = true;
+                while (ret) {
+                    ret = PortCheck("localhost", port, 2);
+                    if (port > 10000 || !ret) {
+                        break;
+                    }
+                    port++;
+                }
+                string msg = "OK";
+                if (!ret) {
+                    PortTextBox.Text = port.ToString();
+                    IsPortChanged = true;
+                }
+                else {
+                    msg = "NG";
+                }
+                MessageBox.Show(msg);
             };
         }
-        //接続ホスト /// 接続ポート /// タイムアウト ///
+
         private bool PortCheck(string host, int port, int timeout) {
 
             System.Net.Sockets.TcpClient tcp = new System.Net.Sockets.TcpClient();
