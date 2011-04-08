@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using Jint;
 using System.IO;
+using System.Windows.Forms;
 
 namespace wiki {
     class ScriptManager {
@@ -18,17 +19,26 @@ namespace wiki {
             en.AllowClr = true;
 
             en.SetFunction("print", new Action<object>(Console.WriteLine));
+            en.SetFunction("alert", new Action<object>(n=>{
+                MessageBox.Show(n.ToString());
+            }));
 
             //en.SetFunction("cs_exe", new Action<string>(Exe));
             //en.SetFunction("cs_exe", new Action<string, string>(Exe));
             //en.SetFunction("cs_exeWait", new Action<string, string, string>(ExeWait));
             //en.SetFunction("cs_exe", new Action<string, string, string>(Exe));
-            en.SetFunction("cs_exeWait", new Action<string, string, string, bool>(ExeWait));
+            en.SetFunction("cs_exeWait", new Action<string, string, bool, string>(ExeWait));
+
+            en.SetFunction("cs_process", new Action<string, string, bool, string>(ExeWait));
 
         }
 
         public void Run(string filename) {
             Run(filename, null);
+        }
+
+        public void Eval(string script) {
+            object result = en.Run(script);
         }
 
         public void Run(string filename, string args) {
@@ -45,32 +55,13 @@ namespace wiki {
             object result = en.Run(script);
         }
 
-        //void Exe(string exe) {
-        //    ExeWait(exe, null, null, "false");
-        //}
-
-        //void Exe(string exe, string args) {
-        //    ExeWait(exe, args, null, "false");
-        //}
-        //void ExeWait(string exe, string args, string wait) {
-        //    ExeWait(exe, args, null, wait);
-        //}
-
-        //void Exe(string exe, string args, string WorkingDirectory) {
-        //    ExeWait(exe, args, WorkingDirectory, "false");
-        //}
-
-        //void Exe(string exe, string args, string WorkingDirectory, string wait) {
-        //    Exe(exe, args, WorkingDirectory, bool.Parse(wait));
-        //}
-
-        void ExeWait(string exe, string args, string WorkingDirectory, bool wait) {
+        void ExeWait(string exe, string args, bool wait, string workingdir) {
 
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = exe;
             if (args !=null) info.Arguments = args;
-            if (WorkingDirectory != null) info.WorkingDirectory = WorkingDirectory;
-            
+            if (workingdir != null) info.WorkingDirectory = workingdir;
+
             //Process.Start(info);
             Process p = new Process();
             p.StartInfo = info;

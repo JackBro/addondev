@@ -105,6 +105,25 @@ namespace wiki {
             return id ;
         }
 
+        public Data getItem(long id){
+            foreach (var m in manager.Values) {
+                var item = m.GetItem(id);
+                if (item != null) return item;
+            }
+            return null;
+        }
+
+        public List<Data> GetItem(List<long> ids) {
+            var res = new List<Data>();
+            foreach (var id in ids) {
+                var data = this.getItem(id);
+                if (data != null) {
+                    res.Add(data);
+                }
+            }
+            return res;
+        }
+
         public ItemManager getManger(string name) {
             if (!manager.ContainsKey(name)) {
                 var m = new ItemManager();

@@ -23,10 +23,7 @@ namespace wiki {
 
         public List<string> Categorys { get; set; }
 
-        //[XmlIgnore]
-        //public Dictionary<string, List<KeyValuePair<string, SearchMode>>> TabList { get; set; }
         public string TabListJson { get; set; }
-        //public KeyValuePair<string, List<KeyValuePair<string, SearchMode>>> TabList { get; set; }
 
         public int ShowNum { get; set; }
         public ShowType ShowType { get; set; }
@@ -116,7 +113,6 @@ namespace wiki {
         public Config() {
 
             this.Categorys = new List<string>();
-            //TabList = new Dictionary<string, List<KeyValuePair<string, SearchMode>>>();
             this.TabListJson = string.Empty;
 
             ComeFormWords = new List<string>();

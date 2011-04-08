@@ -28,6 +28,7 @@ namespace wiki {
         const int VK_N = 0x4E;
         const int VK_Z = 0x5A;
 
+        public int interval = 50;
         int prekey = 'a';
         DateTime st = DateTime.Now;
 
@@ -46,7 +47,8 @@ namespace wiki {
 
                         prekey = key;
                         st = DateTime.Now;
-                        if (key == prekeybk && key != VK_N && (DateTime.Now - bk).TotalMilliseconds < 200) {
+                        //if (key == prekeybk && key != VK_N && (DateTime.Now - bk).TotalMilliseconds < 200) {
+                        if (key != prekeybk && key != VK_N && (DateTime.Now - bk).TotalMilliseconds < interval) {
                             this.ImeMode = this.ImeMode == ImeMode.On || this.ImeMode == ImeMode.Hiragana ? ImeMode.Off : ImeMode.On;
                             if (ImeOnOffEvent != null) {
                                 ImeOnOffEvent(this, new ImeOnOffEventArgs() { Mode = this.ImeMode });
@@ -70,7 +72,8 @@ namespace wiki {
 
                         //Console.WriteLine((DateTime.Now - bk).TotalMilliseconds);
 
-                        if (keyCode == prekeybk && (DateTime.Now - bk).TotalMilliseconds < 200) {
+                        //if (keyCode == prekeybk && (DateTime.Now - bk).TotalMilliseconds < 200) {
+                        if (keyCode != prekeybk && (DateTime.Now - bk).TotalMilliseconds < interval) {
                             //var tic = DateTime.Now - bk;
                             //Console.WriteLine(tic.TotalMilliseconds);
                             //if (tic.TotalMilliseconds < 200) {

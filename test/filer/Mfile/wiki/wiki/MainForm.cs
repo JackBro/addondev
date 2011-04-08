@@ -52,6 +52,7 @@ namespace wiki
         Regex regComeFrom = new Regex(@"\/item\/(\d+)\/(comefrom)$", RegexOptions.Compiled);
 
         Regex regNew = new Regex(@"\/item\/(new)$", RegexOptions.Compiled);
+        Regex regScript = new Regex(@"\/item\/(script)$", RegexOptions.Compiled);
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
 
@@ -132,8 +133,9 @@ namespace wiki
                         var id = long.Parse(idstr);
                         idlist.Add(id);
                     }
-                    var manager = category.getManger(getSelectedCategory());
-                    var items = manager.GetItem(idlist);
+                    //var manager = category.getManger(getSelectedCategory());
+                    //var items = manager.GetItem(idlist);
+                    var items = category.GetItem(idlist);
                     var res = string.Empty;
                     switch (methd) {
                         case "DELETE":
@@ -157,6 +159,15 @@ namespace wiki
                 if (m.Success) {
                     var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
                     reqparam["method"] = "exe";
+                    reqparam["data"] = _RequestBody;
+                    serveBW.ReportProgress(1, reqparam);
+                    return;
+                }
+
+                m = regScript.Match(url);
+                if (m.Success) {
+                    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                    reqparam["method"] = "script";
                     reqparam["data"] = _RequestBody;
                     serveBW.ReportProgress(1, reqparam);
                     return;
@@ -227,6 +238,10 @@ namespace wiki
                     case "exe":
                         var args = param["data"];
                         sm.Run("test.js", args);
+                        break;
+                    case "script":
+                        var script = param["data"];
+                        sm.Eval(script);
                         break;
                     case "move": {
                             var id = long.Parse(param["id"]);
@@ -439,12 +454,14 @@ namespace wiki
                 BrowserToolStripStatusLabel.Text = webBrowser1.StatusText;
             };
             ScriptErrorToolStripStatusLabel.Click+=(s,e)=>{
-
+               
+                
             };
             webBrowser1.Navigated += (s, e) => {
                 webBrowser1.Document.Window.Error += (ss, se) => {
                     //se.
                     se.Handled = true;
+                    
                     ScriptErrorToolStripStatusLabel.Text = "ScriptError";
                 };
             };
@@ -559,15 +576,19 @@ namespace wiki
             };
 
             CategoryContextMenuStrip.Opened += (s, e) => {
+                
                 if (CategoryListView.SelectedItems.Count > 0) {
-                    CategoryContextMenuStrip.Enabled = true;
+                    //CategoryContextMenuStrip.Enabled = true;
                     var item = CategoryListView.SelectedItems[0];
-                    CategoryNewFileToolStripMenuItem.Enabled = item.Name != Category.Trust;
+                    //CategoryNewFileToolStripMenuItem.Enabled = item.Name != Category.Trust;
                     CategoryDeleteToolStripMenuItem.Enabled = item.Name != Category.Trust;
                     CategoryEmptyToolStripMenuItem.Enabled = item.Name == Category.Trust;
                 } else {
-                    CategoryContextMenuStrip.Enabled = false;
+                    //CategoryContextMenuStrip.Enabled = false;
+                    CategoryDeleteToolStripMenuItem.Enabled = false;
+                    CategoryEmptyToolStripMenuItem.Enabled = false;
                 }
+                //CategoryNewFileToolStripMenuItem.Enabled = true;
             };
 
             CategoryNewFileToolStripMenuItem.Click += (sender, e) => {

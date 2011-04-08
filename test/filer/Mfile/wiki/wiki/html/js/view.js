@@ -218,7 +218,7 @@ var jsview = {
     getBody: function () {
         if (!this.body) {
             //this.body = document.getElementsByTagName("body")[0];
-            this.body = document.getElementById('container');//$("#container");
+            this.body = document.getElementById('container'); //$("#container");
         }
         return this.body;
     },
@@ -248,11 +248,17 @@ var jsview = {
 
     },
 
-    quote: function (json) {
+    quote: function (json, doc) {
+
         var source = json["Text"];
         var id = json["ID"];
         var creationtime = json["CreationTime"];
-        var pageElement = this.getWikiParser().parse(source, id);
+        var pageElement;
+        if (doc) {
+            pageElement = new WikiParser(document).parse(source, id);
+        } else {
+            pageElement = this.getWikiParser().parse(source, id);
+        }
 
         var container = document.createElement('div');
 

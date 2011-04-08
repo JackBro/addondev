@@ -23,7 +23,54 @@ WikiParser.prototype.nodeAtCursorPosition = null;
 WikiParser.prototype.parse = function (inputString, id) {
     this.id = id;
     this.cf = [];
-    var qstack = [];
+
+    function createQElem(stack) {
+        //var _requrl = requrl;
+        var qelem = this.document.createElement('div');
+        $(qelem).addClass('quote');
+
+        var aelem = document.createElement("a");
+        //$(aelem).attr('align','right');
+        var script = "";
+        aelem.href = "javascript:void(0)";
+        aelem.appendChild(document.createTextNode("execute"));
+        $(aelem).click(function (event) {
+            //alert(requrl + "/script");
+            //alert($(qelem).text());
+            $.ajax({
+                type: "POST",
+                cache: false,
+                async: false,
+                dataType: "text",
+                data: script,
+                url: requrl + "/script",
+                success: function (data) {
+                    //alert("data = " + data);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error textStatus = " + errorThrown);
+                }
+            });
+            return false;
+        });
+        $(qelem).append(aelem);
+
+        var preelem = this.document.createElement('pre');
+        qelem.appendChild(preelem);
+        var qtext = "";
+        for (var k in stack) {
+            script += stack[k] + "\n";
+            qtext = stack[k];
+            preelem.appendChild(this.document.createTextNode(qtext));
+            preelem.appendChild(this.document.createElement('br'));
+        }
+
+        //preelem.appendChild(this.document.createTextNode(qtext));
+
+        return qelem;
+    }
+
+
 
     var re = RegExp("\r\n");
     while (re.test(inputString)) inputString = inputString.replace(re, "\n");
@@ -40,61 +87,44 @@ WikiParser.prototype.parse = function (inputString, id) {
     var lines = inputString.split("\n")
     for (i = 0; i < lines.length; i++) {
 
-        if (/^>>/.test(lines[i])) {
+        if (/^>>$/.test(lines[i])) {
+            var qstack = [];
+            var fineend = false;
             i++;
             while (i < lines.length) {
-
                 if (/^<</.test(lines[i])) {
-                    var qelem = this.document.createElement('div');
-                    $(qelem).addClass('quote');
-                    var qtext = "";
-                    for (var k in qstack) {
-                        //qtext += qstack[i] + '\n';
-                        qtext = qstack[k] + '\n';
-                        qelem.appendChild(this.document.createTextNode(qtext));
-                        qelem.appendChild(this.document.createElement("br"));
-                    }
-                    this.stack.top().appendChild(qelem);
+                    this.stack.top().appendChild(createQElem(qstack));
                     qstack = [];
+                    fineend = true;
+                    i++;
                     break;
                 }
                 qstack.push(lines[i]);
                 i++;
             }
-            if (i >= lines.length) {
-                var qelem = this.document.createElement('div');
-                $(qelem).addClass('quote');
-                var qtext = "";
-                for (var k in qstack) {
-                    //qtext += qstack[i] + '\n';
-                    qtext = qstack[k] + '\n';
-                    qelem.appendChild(this.document.createTextNode(qtext));
-                    qelem.appendChild(this.document.createElement("br"));
+            //alert("ines.length=" + lines.length + " i=" + i);
+            if (i == lines.length || i == lines.length - 1) {
+                if (!fineend) {
+                    //alert("lines.length");
+                    this.stack.top().appendChild(createQElem(qstack));
+                    qstack = [];
                 }
-                this.stack.top().appendChild(qelem);
-                qstack = [];
-                break;
+                //i++;
+                if (i == lines.length) break;
             }
-            i++;
-            //$(qelem).click(function () {
-            //    alert($(this).text())
-            //});
+            //            else if (i == lines.length - 1) {
+            //                if (!fineend) {
+            //                    alert("lines.length-1");
+            //                    this.stack.top().appendChild(createQElem(qstack));
+            //                    qstack = [];
+            //                }
+            //            } 
+            //            else {
+            //                i++;
+            //            }
         }
-        //        else if (/^<</.test(lines[i])) {
-        //            qstack.push(lines[i]);
-        //            IN_Q = 0;
-        //            var qelem = this.document.createElement('div');
-        //            $(qelem).addClass('quote');
-        //            var qtext = "";
-        //            for (var i in qstack) {
-        //                qtext += qstack[i];
-        //            }
-        //            
-        //            qelem.appendChild(this.document.createTextNode(qtext));
-        //            this.stack.top().appendChild(qelem);
-        //            qstack = [];
-        //            continue;
-        //        }
+
+
 
         if (/^(!{1,5})(.*)$/.test(lines[i])) {
             this.jumpToTopLevel();
@@ -224,6 +254,30 @@ WikiParser.prototype.parse = function (inputString, id) {
         else if (/^\s*$/.test(lines[i])) {
             this.jumpToTopLevel();
         }
+        else if (/^>>(\d+)$/.test(lines[i])) {
+            var mm;
+            $.ajax({
+                type: "GET",
+                async: false,
+                cache: false,
+                dataType: "text",
+                url: requrl + "/" + RegExp.$1,
+                success: function (data) {
+                    var json = Util.toJson(data);
+                    if (json.length > 0) {
+                        mm = jsview.quote(json[0], document);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error textStatus = " + errorThrown);
+                }
+            });
+
+            //alert($(mm).text());
+            //qelem.appendChild($('#page' + RegExp.$1));
+            $(mm).addClass('quote');
+            this.stack.top().appendChild(mm);
+        }
         /*
         else if(/^>/.test(lines[i]) )
         {
@@ -246,12 +300,14 @@ WikiParser.prototype.parse = function (inputString, id) {
         }
 
         //	set this.nodeAtCursorPosition
-        characterCount += lines[i].length + 1;
-        if (this.nodeAtCursorPosition == null && characterCount >= this.cursorPosition) {
-            var lastNode = pageElement;
-            while (lastNode.lastChild && lastNode.lastChild.nodeName != '#text')
-                lastNode = lastNode.lastChild;
-            this.nodeAtCursorPosition = lastNode;
+        if (i < lines.length) {
+            characterCount += lines[i].length + 1;
+            if (this.nodeAtCursorPosition == null && characterCount >= this.cursorPosition) {
+                var lastNode = pageElement;
+                while (lastNode.lastChild && lastNode.lastChild.nodeName != '#text')
+                    lastNode = lastNode.lastChild;
+                this.nodeAtCursorPosition = lastNode;
+            }
         }
     }
 
@@ -584,7 +640,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         element.setAttribute('href', 'javascript:void(0) //goto ' + b);
         $(element).click(function (event) {
             $.ajax({
-                type: 'post',
+                type: 'POST',
                 cache:false,
                 url: requrl + "/goto",
                 data: b
@@ -613,7 +669,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         element.setAttribute('href', 'javascript:void(0)');
         $(element).click(function (event) {
             $.ajax({
-                type: 'post',
+                type: 'POST',
                 cache:false,
                 url: requrl + "/" + this.id + "/comefrom",
                 data: b
@@ -631,7 +687,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         element.setAttribute('href', 'javascript:void(0)');
         $(element).click(function (event) {
             $.ajax({
-                type: 'post',
+                type: 'POST',
                 cache:false,
                 url: requrl + "/" + this.id + "/comefrom",
                 data: b
@@ -653,7 +709,7 @@ WikiParser.prototype.createPageNameLink = function (pageName) {
         element.setAttribute('href', 'javascript:void(0)');
         $(element).click(function (event) {
             $.ajax({
-                type: 'post',
+                type: 'POST',
                 cache:false,
                 url: requrl + "/exe",
                 data: $.toJSON(j)
