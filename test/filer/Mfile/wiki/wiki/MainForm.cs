@@ -860,23 +860,6 @@ namespace wiki
                 name = name + index.ToString();
             }
 
-            //var removeitem = new List<ListViewItem>();
-            //for (int i = 0; i < CategoryListView.Items.Count; i++){
-            //    removeitem.Add(CategoryListView.Items[i]);
-            //}
-
-            //foreach (var litem in removeitem){
-            //    CategoryListView.Items.Remove(litem);   
-            //}
-
-            //var item = new ListViewItem(name, 0);
-            //item.Name = name;
-            //removeitem.Insert(0, item);
-
-            //foreach (var litem in removeitem) {
-            //    CategoryListView.Items.Add(litem);
-            //}
-
             var item = new ListViewItem(name, 0);
             item.Name = name;
             CategoryListView.Items.Insert(0, item);
@@ -895,26 +878,11 @@ namespace wiki
 
                 try {
                     category.DeleteFile(name);
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     MessageBox.Show("DeleteFile ERROR");
                     return;
                 }
-
                 CategoryListView.Items.RemoveAt(index);
-               
-                
-                //var removeitem = new List<ListViewItem>();
-                //for (int i = 0; i < CategoryListView.Items.Count; i++) {
-                //    removeitem.Add(CategoryListView.Items[i]);
-                //}
-                //foreach (var litem in removeitem) {
-                //    CategoryListView.Items.Remove(litem);
-                //}
-                //foreach (var litem in removeitem) {
-                //    CategoryListView.Items.Add(litem);
-                //}
-
                 CategoryListView.Items[0].Selected = true;
             }
             config.Categorys.Remove(name);

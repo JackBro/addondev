@@ -713,8 +713,8 @@
             // 
             this.ImageList24.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ImageList24.ImageStream")));
             this.ImageList24.TransparentColor = System.Drawing.Color.Transparent;
-            this.ImageList24.Images.SetKeyName(0, "doc_lines_stright_icon24.png");
-            this.ImageList24.Images.SetKeyName(1, "trash_icon24.png");
+            this.ImageList24.Images.SetKeyName(0, "Text.png");
+            this.ImageList24.Images.SetKeyName(1, "Trash.png");
             // 
             // TabListViewContextMenuStrip
             // 
