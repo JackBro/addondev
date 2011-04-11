@@ -421,88 +421,88 @@ namespace wiki {
         #endregion
     }
 
-    //class Items {
-    //    public event EventHandler eventHandler;
+    class Items {
+        public event EventHandler eventHandler;
 
-    //    private Dictionary<int, string> category = new Dictionary<int, string>();
-    //    private IDComparer idcomp = new IDComparer();
-    //    List<Data> list = new List<Data>();
+        private Dictionary<int, string> category = new Dictionary<int, string>();
+        private IDComparer idcomp = new IDComparer();
+        List<Data> list = new List<Data>();
 
-    //    public Items() {
-    //        category.Add(0, "Trust");
-    //    }
+        public Items() {
+            category.Add(0, "Trust");
+        }
 
-    //    public void AddCate() {
-            
-    //    }
+        public void AddCate() {
 
-    //    public void sort() {
-    //        list.Sort(idcomp);
-    //    }
-    //    public long getNewID() {
-    //        return list.Last().ID + 1;
-    //    }
+        }
 
-    //    public void Create(string text, DateTime creation, int category) {
-    //        var item = new Data { ID = getNewID(), Text = text, CreationTime = creation };
-    //        list.Add(item);
-    //        if (eventHandler != null) {
-    //            eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Insert });
-    //        }
-    //    }
-    //    public Data Read(long id) {
-    //        var data =
-    //            from p in list
-    //            where p.ID == id
-    //            select p;
-    //        if (data.Count() == 0) return null;
+        public void sort() {
+            list.Sort(idcomp);
+        }
+        public long getNewID() {
+            return list.Last().ID + 1;
+        }
 
-    //        return data.ElementAt(0);
-    //    }
-    //    public List<Data> Read(int category) {
-    //        var datas =
-    //            from p in list
-    //            where p.Category == category
-    //            select p;
+        public void Create(string text, DateTime creation, int category) {
+            var item = new Data { ID = getNewID(), Text = text, CreationTime = creation };
+            list.Add(item);
+            if (eventHandler != null) {
+                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Insert });
+            }
+        }
+        public Data Read(long id) {
+            var data =
+                from p in list
+                where p.ID == id
+                select p;
+            if (data.Count() == 0) return null;
 
-    //        return datas.ToList();
-    //    }
-    //    public void UpDate(long id, string text) {
-    //        var item = Read(id);
-    //        if (item != null) {
-    //            item.Text = text;
-    //            if (eventHandler != null) {
-    //                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateText });
-    //            }
-    //        }
-    //    }
-    //    public void UpDate(long id, DateTime creationtime) {
-    //        var item = Read(id);
-    //        if (item != null) {
-    //            item.CreationTime = creationtime;
-    //            if (eventHandler != null) {
-    //                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateCreationTime });
-    //            }
-    //        }
-    //    }
-    //    public void UpDate(long id, int category) {
-    //        var item = Read(id);
-    //        if (item != null) {
-    //            item.Category = category;
-    //            if (eventHandler != null) {
-    //                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateCategory });
-    //            }
-    //        }
-    //    }
-    //    public void Delete(long id) {
-    //        var item = Read(id);
-    //        if (item != null) {
-    //            list.Remove(item);
-    //            if (eventHandler != null) {
-    //                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Delete });
-    //            }
-    //        }
-    //    }
+            return data.ElementAt(0);
+        }
+        public List<Data> Read(int category) {
+            var datas =
+                from p in list
+                where p.Category == category
+                select p;
 
-    //}
+            return datas.ToList();
+        }
+        public void UpDate(long id, string text) {
+            var item = Read(id);
+            if (item != null) {
+                item.Text = text;
+                if (eventHandler != null) {
+                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateText });
+                }
+            }
+        }
+        public void UpDate(long id, DateTime creationtime) {
+            var item = Read(id);
+            if (item != null) {
+                item.CreationTime = creationtime;
+                if (eventHandler != null) {
+                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateCreationTime });
+                }
+            }
+        }
+        public void UpDate(long id, int category) {
+            var item = Read(id);
+            if (item != null) {
+                item.Category = category;
+                if (eventHandler != null) {
+                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateCategory });
+                }
+            }
+        }
+        public void Delete(long id) {
+            var item = Read(id);
+            if (item != null) {
+                list.Remove(item);
+                if (eventHandler != null) {
+                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Delete });
+                }
+            }
+        }
+
+    }
 }

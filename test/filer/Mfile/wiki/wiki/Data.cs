@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace wiki {
 
@@ -38,11 +39,17 @@ namespace wiki {
     //    //public DateTime LastWriteTime { get; set; }
     //}
 
+    public class CategoryData {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+
     public class Data {
         public long ID { get; set; }
 
-        //public int Category { get; set; }
+        public int CategoryID { get; set; }
 
+        [XmlIgnore]
         public string Title { get; set; }
 
         private string _text;
