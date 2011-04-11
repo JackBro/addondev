@@ -34,7 +34,8 @@ namespace wiki
         private string categoryname;
         private Category category;
 
-        private Dictionary<string, TabControl> Tabs = new Dictionary<string,TabControl>();
+        //private Dictionary<string, TabControl> Tabs = new Dictionary<string,TabControl>();
+        //private Dictionary<int, TabControl> Tabs = new Dictionary<int, TabControl>();
         private Migemo migemo;
 
         private HttpServer httpServer;
@@ -313,11 +314,27 @@ namespace wiki
                 config.SaveSnippetList();
 
                 var TabList = new Dictionary<string, List<KeyValuePair<string, SearchMode>>>();
-                foreach (var key in Tabs.Keys) {
+                //foreach (var key in Tabs.Keys) {
+                //    var list = new List<KeyValuePair<string, SearchMode>>();
+                //    var tabs = Tabs[key].TabPages;
+                //    for (int i = 0; i < tabs.Count; i++) {
+                //        var listview = GetTabListViewControl(tabs[i]);
+                //        var s = listview.search;
+                //        if (s.Mode != SearchMode.All) {
+                //            var mode = s.Mode;
+                //            var pt = s.Pattern;
+                //            list.Add(new KeyValuePair<string, SearchMode>(pt, mode));
+                //        }
+                //    }
+                //    TabList.Add(key, list);
+                //}
+
+                for (int i = 0; i < CategoryListView.Items.Count; i++) {
                     var list = new List<KeyValuePair<string, SearchMode>>();
-                    var tabs = Tabs[key].TabPages;
-                    for (int i = 0; i < tabs.Count; i++) {
-                        var listview = GetTabListViewControl(tabs[i]);
+                    var item = CategoryListView.Items[i];
+                    var tabs = ((TabControl)TabPanel.Controls[item.Name]).TabPages;
+                    for (int j = 0; j < tabs.Count; j++) {
+                        var listview = GetTabListViewControl(tabs[j]);
                         var s = listview.search;
                         if (s.Mode != SearchMode.All) {
                             var mode = s.Mode;
@@ -325,9 +342,9 @@ namespace wiki
                             list.Add(new KeyValuePair<string, SearchMode>(pt, mode));
                         }
                     }
-                    TabList.Add(key, list);
-
+                    TabList.Add(item.Name, list);
                 }
+
                 config.TabListJson = JsonSerializer.Serialize(TabList);
                 XMLSerializer.Serialize<Config>(Config.SettingPath, config);
             };
@@ -358,7 +375,8 @@ namespace wiki
             category.eventHandler = (sender, e) => {
                 switch (e.type) {
                     case ChangeType.Insert: {
-                            if (Tabs[e.Name] == GetCurrentTabControl()) {
+                            //if (Tabs[e.Name] == GetCurrentTabControl()) {
+                            if (TabPanel.Controls[e.Name] == GetCurrentTabControl()) {
                                 //ItemTabControl.SelectedTab = AllPage;
                                 GetCurrentTabControl().SelectedIndex = 0;
                                 var listview = GetSelctedTabListViewControl();// GetTabListViewControl(AllPage);
@@ -373,13 +391,16 @@ namespace wiki
                             }
                             else {
                                 //var tabc = Tabs[e.Name];
-                                var listview = GetTabListViewControl(Tabs[e.Name].TabPages[0]);
+
+                                //var listview = GetTabListViewControl(Tabs[e.Name].TabPages[0]);
+                                var listview = GetTabListViewControl(((TabControl)TabPanel.Controls[e.Name]).TabPages[0]);
                                 listview.AddItem(e.Item);
                             }
                         }
                         break;
                     case ChangeType.UpDate:
-                        if (Tabs[e.Name] == GetCurrentTabControl()) {
+                        //if (Tabs[e.Name] == GetCurrentTabControl()) {
+                        if (TabPanel.Controls[e.Name] == GetCurrentTabControl()) {
                             editContent(e.Item);
                             var cf = InvokeScript("js_getComeFrom");
                             var list = JsonSerializer.Deserialize<List<string>>(cf.ToString());
@@ -387,19 +408,33 @@ namespace wiki
                         }
                         break;
                     case ChangeType.Delete:
-                        foreach (var item in Tabs.Values) {
-                            for (int i = 0; i < item.TabPages.Count; i++) {
-                                var listview = GetTabListViewControl(item.TabPages[i]);
+                        //foreach (var item in Tabs.Values) {
+                        //    for (int i = 0; i < item.TabPages.Count; i++) {
+                        //        var listview = GetTabListViewControl(item.TabPages[i]);
+                        //        listview.DeleteItem(e.Item);
+                        //    }
+                        //}
+                        ////for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
+                        ////    var listview = GetTabListViewControl(ItemTabControl.TabPages[i]);
+                        ////    listview.DeleteItem(e.Item);
+                        ////}
+                        //if (Tabs[e.Name] == GetCurrentTabControl()) {
+                        //    InvokeScript("js_Remove", e.Item.ID.ToString());
+                        //}
+
+                       
+                        for (int i = 0; i < CategoryListView.Items.Count; i++) {
+                            var item = CategoryListView.Items[i];
+                            var tabpages = ((TabControl)TabPanel.Controls[item.Name]).TabPages;
+                            for (int j = 0; j < tabpages.Count; j++) {
+                                var listview = GetTabListViewControl(tabpages[j]);
                                 listview.DeleteItem(e.Item);
                             }
                         }
-                        //for (int i = 0; i < ItemTabControl.TabPages.Count; i++) {
-                        //    var listview = GetTabListViewControl(ItemTabControl.TabPages[i]);
-                        //    listview.DeleteItem(e.Item);
-                        //}
-                        if (Tabs[e.Name] == GetCurrentTabControl()) {
+                        if (e.Name == GetCurrentTabControl().Name) {
                             InvokeScript("js_Remove", e.Item.ID.ToString());
                         }
+
                         break;
                     case ChangeType.Clear:
                         InvokeScript("js_ClearAll");
@@ -700,6 +735,16 @@ namespace wiki
             };
             CategoryListView.AfterLabelEdit += (s, e) => {
                 //e.CancelEdit = true;
+                if (File.Exists(Path.Combine(config.DataDirPath, e.Label + ".xml"))) {
+                    e.CancelEdit = true;
+                }
+                else {
+                    var item = CategoryListView.Items[e.Item];
+                    if (category.RenameFile(item.Name, e.Label)) {
+                        item.Text = e.Label;
+                        item.Name = e.Label;
+                    }
+                }
             };
 
             TabListViewEditItemToolStripMenuItem.Click += (s, e) => {
@@ -721,8 +766,11 @@ namespace wiki
         }
 
         TabControl getTabControl(string categoryname) {
-            if (!Tabs.ContainsKey(categoryname)) {
+            if (TabPanel.Controls[categoryname] == null){
+            //if(category.getCategoryID(categoryname)<0){
+            //if (!Tabs.ContainsKey(categoryname)) {
                 var t = new TabControl();
+                t.Name = categoryname;
                 t.Appearance = TabAppearance.FlatButtons;
                 t.Multiline = true;
                 t.ItemSize = new Size(70, 20);
@@ -736,10 +784,11 @@ namespace wiki
                 };
                 t.Dock = DockStyle.Fill;
                 TabPanel.Controls.Add(t);
-                Tabs.Add(categoryname, t);
+                //Tabs.Add(categoryname, t);
             }
-            var tab = Tabs[categoryname];           
-            return tab;
+            return TabPanel.Controls[categoryname] as TabControl;
+            //var tab = Tabs[categoryname];           
+            //return tab;
         }
 
         private void saveItem() {

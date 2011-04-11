@@ -10,6 +10,7 @@ namespace wiki {
 
     class Category {
         public static string Trust = "Trust";
+        public static string Ext = ".xml";
 
         private string datapath;
         public string DataDir { 
@@ -24,31 +25,58 @@ namespace wiki {
             } 
         }
         //private readonly string Trust = "Trust";
-        private Dictionary<string, ItemManager> manager = new Dictionary<string, ItemManager>();
+        private Dictionary<int, string> category = new Dictionary<int, string>();
+        private Dictionary<int, ItemManager> manager = new Dictionary<int, ItemManager>();
+        //private Dictionary<string, ItemManager> manager = new Dictionary<string, ItemManager>();
         public EventHandler eventHandler;
         public void Load(List<string> names) {
+            var i=0;
             foreach (var name in names) {
                 var m = new ItemManager();
-                m.DataPath = Path.Combine(DataDir, name);
+                //m.DataPath = Path.Combine(DataDir, name);
                 m.eventHandler += eventHandler;
                 m.Name = name;
-                m.Load();
-                manager.Add(name, m);
+                m.Load(DataDir);
+                category.Add(i, name);
+                //manager.Add(name, m);
+                manager.Add(i, m);
+                i++;
             }
+        }
+
+        public int getCategoryID(string categoryname) {
+            if (category.Values.Contains(categoryname)) {
+                var cat = from p in category.Keys
+                          where category[p] == categoryname
+                          select p;
+                if (cat.Count() > 0) {
+                    return cat.ElementAt(0);
+                }
+            }
+            return -1;
         }
 
         public void Save() {
             var lists = manager.ToList();
             foreach (var item in lists) {
                 if (item.Value.IsDirty) {
-                    item.Value.Save();
+                    item.Value.Save(DataDir);
                 }
             }
         }
         public void Save(string name) {
-            if (manager.ContainsKey(name)) {
-                manager[name].Save();
+            if (category.Values.Contains(name)) {
+                var cat = from p in category.Keys
+                          where category[p] == name
+                          select p;
+
+                if (cat.Count()>0 && manager.ContainsKey(cat.ElementAt(0))) {
+                    manager[cat.ElementAt(0)].Save(DataDir);
+                }
             }
+            //if (manager.ContainsKey(name)) {
+            //    manager[name].Save();
+            //}
         }
 
         //public ItemManager create(string name) {
@@ -56,10 +84,27 @@ namespace wiki {
         //    manager.Add(name, m);
         //    return m;
         //}
+        public bool RenameFile(string from, string to) {
+            var topath = Path.Combine(this.DataDir, to + Ext);
+            if (File.Exists(topath)) {
+                return false;
+            }
+            var frompath = Path.Combine(this.DataDir, from + Ext);
+            File.Move(frompath, topath);
+
+            var id = getCategoryID(from);
+            if (id >= 0) {
+                category[id] = to;
+                manager[id].Name = to;
+                manager[id].IsDirty = true;
+            }
+            return true;
+        }
 
         public void DeleteFile(string name) {
-            if (manager.ContainsKey(name)) {
-                manager.Remove(name);
+            var id = getCategoryID(name);
+            if (id >= 0) {
+                manager.Remove(id);
                 var file = Path.Combine(this.DataDir, name);
                 if (File.Exists(file)) {
                     Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
@@ -68,27 +113,56 @@ namespace wiki {
                         RecycleOption.SendToRecycleBin);
                 }
             }
+            //if (manager.ContainsKey(name)) {
+            //    manager.Remove(name);
+            //    var file = Path.Combine(this.DataDir, name);
+            //    if (File.Exists(file)) {
+            //        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+            //            file,
+            //            UIOption.OnlyErrorDialogs,
+            //            RecycleOption.SendToRecycleBin);
+            //    }
+            //}
         }
 
         public void DeleteItem(string name, long id) {
-            if (manager.ContainsKey(name)) {
-                var m = manager[name];
+            var cid = getCategoryID(name);
+            if (cid >= 0) {
+                var m = manager[cid];
                 if (name == Trust) {
                     m.Remove(id);
-                } else {
-                    if (manager.ContainsKey(Trust)) {
+                }
+                else {
+                    var tid = getCategoryID(Trust);
+                    if (tid >= 0) {
                         var d = m.GetItem(id);
                         m.Remove(id);
-                        manager[Trust].Insert(d);
+                        manager[tid].Insert(d);
                     }
                 }
             }
+            //if (manager.ContainsKey(name)) {
+            //    var m = manager[name];
+            //    if (name == Trust) {
+            //        m.Remove(id);
+            //    } else {
+            //        if (manager.ContainsKey(Trust)) {
+            //            var d = m.GetItem(id);
+            //            m.Remove(id);
+            //            manager[Trust].Insert(d);
+            //        }
+            //    }
+            //}
         }
 
         public void ClearItem(string name) {
-            if (manager.ContainsKey(name)) {
-                manager[name].Clear();
+            var id = getCategoryID(name);
+            if (id >= 0) {
+                manager[id].Clear();
             }
+            //if (manager.ContainsKey(name)) {
+            //    manager[name].Clear();
+            //}
         }
 
         public long GetNewID() {
@@ -124,22 +198,50 @@ namespace wiki {
             return res;
         }
 
+        private int getNewCategoryID() {
+            var i=0;
+            while(category.ContainsKey(i)){
+                i++;
+            }
+            return i;
+        }
+
         public ItemManager getManger(string name) {
-            if (!manager.ContainsKey(name)) {
+            var id = getCategoryID(name);
+            if (id < 0) {
+                id = getNewCategoryID();
+                category.Add(id, name);
+            }
+            if(!manager.ContainsKey(id)){
                 var m = new ItemManager();
-                m.DataPath = Path.Combine(DataDir, name); //name;
+                //m.DataPath = Path.Combine(DataDir, name); //name;
                 m.eventHandler += eventHandler;
                 m.Name = name;
                 m.IsDirty = true;
-                manager.Add(name, m);
+
+                manager.Add(id, m);
+
             }
-            return manager[name];
+            return manager[id];
+
+            //if (!manager.ContainsKey(name)) {
+            //    var m = new ItemManager();
+            //    m.DataPath = Path.Combine(DataDir, name); //name;
+            //    m.eventHandler += eventHandler;
+            //    m.Name = name;
+            //    m.IsDirty = true;
+            //    manager.Add(name, m);
+            //}
+            //return manager[name];
         }
     }
 
     public enum ChangeType {
         Insert,
         UpDate,
+        //UpDateText,
+        //UpDateCreationTime,
+        //UpDateCategory,
         Delete,
         Clear
     }
@@ -156,7 +258,7 @@ namespace wiki {
 
 
         public string Name { get; set; }
-        public string DataPath { get; set; }
+        //public string DataPath { get; set; }
         public Data EditingData {
             get;
             set;
@@ -164,13 +266,15 @@ namespace wiki {
 
         private List<Data> datas = new List<Data>();
 
-        public void Load(){
-            datas = XMLSerializer.Deserialize<List<Data>>(DataPath + ".xml", new List<Data>());
+        public void Load(string DataDir) {
+            datas = XMLSerializer.Deserialize<List<Data>>(Path.Combine(DataDir, Name + Category.Ext), new List<Data>());
             //datas = Serializer.Deserialize<List<Data>>(DataPath, new List<Data>());
         }
-        public void Save(){
-            XMLSerializer.Serialize<List<Data>>(DataPath + ".xml", datas);
-            //Serializer.Serialize<List<Data>>(DataPath, datas);
+        public void Save(string DataDir) {
+            if (IsDirty) {
+                XMLSerializer.Serialize<List<Data>>(Path.Combine(DataDir, Name + Category.Ext), datas);
+                //Serializer.Serialize<List<Data>>(DataPath, datas);
+            }
             IsDirty = false;
         }
         
@@ -316,4 +420,89 @@ namespace wiki {
 
         #endregion
     }
+
+    //class Items {
+    //    public event EventHandler eventHandler;
+
+    //    private Dictionary<int, string> category = new Dictionary<int, string>();
+    //    private IDComparer idcomp = new IDComparer();
+    //    List<Data> list = new List<Data>();
+
+    //    public Items() {
+    //        category.Add(0, "Trust");
+    //    }
+
+    //    public void AddCate() {
+            
+    //    }
+
+    //    public void sort() {
+    //        list.Sort(idcomp);
+    //    }
+    //    public long getNewID() {
+    //        return list.Last().ID + 1;
+    //    }
+
+    //    public void Create(string text, DateTime creation, int category) {
+    //        var item = new Data { ID = getNewID(), Text = text, CreationTime = creation };
+    //        list.Add(item);
+    //        if (eventHandler != null) {
+    //            eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Insert });
+    //        }
+    //    }
+    //    public Data Read(long id) {
+    //        var data =
+    //            from p in list
+    //            where p.ID == id
+    //            select p;
+    //        if (data.Count() == 0) return null;
+
+    //        return data.ElementAt(0);
+    //    }
+    //    public List<Data> Read(int category) {
+    //        var datas =
+    //            from p in list
+    //            where p.Category == category
+    //            select p;
+
+    //        return datas.ToList();
+    //    }
+    //    public void UpDate(long id, string text) {
+    //        var item = Read(id);
+    //        if (item != null) {
+    //            item.Text = text;
+    //            if (eventHandler != null) {
+    //                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateText });
+    //            }
+    //        }
+    //    }
+    //    public void UpDate(long id, DateTime creationtime) {
+    //        var item = Read(id);
+    //        if (item != null) {
+    //            item.CreationTime = creationtime;
+    //            if (eventHandler != null) {
+    //                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateCreationTime });
+    //            }
+    //        }
+    //    }
+    //    public void UpDate(long id, int category) {
+    //        var item = Read(id);
+    //        if (item != null) {
+    //            item.Category = category;
+    //            if (eventHandler != null) {
+    //                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateCategory });
+    //            }
+    //        }
+    //    }
+    //    public void Delete(long id) {
+    //        var item = Read(id);
+    //        if (item != null) {
+    //            list.Remove(item);
+    //            if (eventHandler != null) {
+    //                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Delete });
+    //            }
+    //        }
+    //    }
+
+    //}
 }

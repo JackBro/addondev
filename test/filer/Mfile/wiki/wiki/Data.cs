@@ -41,6 +41,8 @@ namespace wiki {
     public class Data {
         public long ID { get; set; }
 
+        //public int Category { get; set; }
+
         public string Title { get; set; }
 
         private string _text;
