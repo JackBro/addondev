@@ -9,8 +9,11 @@ using Microsoft.VisualBasic.FileIO;
 namespace wiki {
 
     class Category {
+        public static string categoryfile = "category.xml";
         public static string Trust = "Trust";
         public static string Ext = ".xml";
+
+        public long EditingID { get; set; }
 
         private string datapath;
         public string DataDir { 
@@ -24,66 +27,200 @@ namespace wiki {
                 }
             } 
         }
-        //private readonly string Trust = "Trust";
-        private Dictionary<int, string> category = new Dictionary<int, string>();
+        public List<CategoryData> categorylist { get; set; }
+        private List<Data> datalist = new List<Data>();
         private Dictionary<int, ItemManager> manager = new Dictionary<int, ItemManager>();
-        //private Dictionary<string, ItemManager> manager = new Dictionary<string, ItemManager>();
         public EventHandler eventHandler;
-        public void Load(List<string> names) {
-            var i=0;
-            foreach (var name in names) {
+
+        public void Load() {
+            categorylist = XMLSerializer.Deserialize<List<CategoryData>>(Path.Combine(DataDir, categoryfile), new List<CategoryData>() { new CategoryData() { ID = 0, Name = "Trust" } });
+            foreach (var item in categorylist) {
+                var name = item.Name;
                 var m = new ItemManager();
-                //m.DataPath = Path.Combine(DataDir, name);
+                m.Datas = XMLSerializer.Deserialize<List<Data>>(Path.Combine(DataDir, name + Category.Ext), new List<Data>());
+                m.CategoryID = item.ID;
                 m.eventHandler += eventHandler;
-                m.Name = name;
-                m.Load(DataDir);
-                category.Add(i, name);
-                //manager.Add(name, m);
-                manager.Add(i, m);
-                i++;
+                datalist.AddRange(m.Datas);
+                manager.Add(item.ID, m);
+            }
+            datalist.Sort(new IDComparer());
+        }
+
+        public void Save() {
+            XMLSerializer.Serialize<List<CategoryData>>(Path.Combine(DataDir, categoryfile), categorylist);
+
+            var lists = manager.ToList();
+            foreach (var item in lists) {
+                if (item.Value.IsDirty) {
+                    var name = getCategoryName(item.Key);
+                    XMLSerializer.Serialize<List<Data>>(Path.Combine(DataDir, name + Category.Ext), item.Value.Datas);
+                }
+            }
+        }
+
+        void m_eventHandler(object sender, CallBackEventArgs e) {
+            //throw new NotImplementedException();
+            if (e.type == ChangeType.Create) {
             }
         }
 
         public int getCategoryID(string categoryname) {
-            if (category.Values.Contains(categoryname)) {
-                var cat = from p in category.Keys
-                          where category[p] == categoryname
-                          select p;
-                if (cat.Count() > 0) {
-                    return cat.ElementAt(0);
-                }
-            }
-            return -1;
+
+            var cat = categorylist.Find(n => {
+                return n.Name == categoryname;
+            });
+            if (cat == null) return -1;
+            return cat.ID;
+        }
+        public string getCategoryName(int id) {
+            var cat = categorylist.Find(n => {
+                return n.ID == id;
+            });
+            return cat.Name;
+
         }
 
-        public void Save() {
-            var lists = manager.ToList();
-            foreach (var item in lists) {
-                if (item.Value.IsDirty) {
-                    item.Value.Save(DataDir);
+        public List<Data> Filter(string categoryname, Predicate<Data> pre) {
+            var ds = manager[getCategoryID(categoryname)].Datas;
+            return ds.FindAll(pre);
+        }
+
+        public void Create(string text, DateTime creatiomtime, string categoryname) {
+            var item = new Data { ID=GetNewID(), Text = text, CreationTime= creatiomtime };
+            datalist.Add(item);
+            manager[getCategoryID(categoryname)].Insert(item);
+        }
+
+        public Data Read(long id) {
+            return datalist.Find(n => {
+                return n.ID == id;
+            });
+        }
+
+        public void UpDateText(long id, string text) {
+            var item = GetItem(id);
+            item.Text = text;
+            foreach (var mana in manager.Values) {
+                if (mana.UpDate(item, ChangeType.UpDateText)) {
+                    break;
                 }
             }
         }
-        public void Save(string name) {
-            if (category.Values.Contains(name)) {
-                var cat = from p in category.Keys
-                          where category[p] == name
-                          select p;
 
-                if (cat.Count()>0 && manager.ContainsKey(cat.ElementAt(0))) {
-                    manager[cat.ElementAt(0)].Save(DataDir);
+        public void UpDateCreationTime(long id, DateTime creationtime) {
+            var item = GetItem(id);
+            item.CreationTime = creationtime;
+            foreach (var mana in manager.Values) {
+                if (mana.UpDate(item, ChangeType.UpDateCreationTime)) {
+                    break;
                 }
             }
-            //if (manager.ContainsKey(name)) {
-            //    manager[name].Save();
+        }
+
+        public void UpDateCategory(long id, int fromid, int toid) {
+            var item = GetItem(id);
+            foreach (var mana in manager.Values) {
+                if (mana.UpDate(item, fromid, toid)) {
+                    mana.Remove(item);
+                    if (manager.ContainsKey(toid)) {
+                        manager[toid].Insert(item);
+                    }
+                    break;
+                }
+            }
+        }
+
+        public void Delete(long id) {
+            var item = GetItem(id);
+            if (item != null) {
+                foreach (var mana in manager.Values) {
+                    if (mana.Remove(item)) {
+                        if (mana.CategoryID == 0) {//Trust
+                            datalist.Remove(item);
+                        }
+                        else {
+                            manager[0].Insert(item);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void Clear(string categoryname) {
+            var id = getCategoryID(categoryname);
+            if (id >= 0) {
+                manager[id].Clear();
+            }
+        }
+
+        public long GetNewID() {
+            //int s = 0;
+            //foreach (var m in manager.Values) {
+            //    s+=m.GetDataCount();
             //}
+            //if (s == 0) return 0;
+
+            //var id = manager.Values.Max(n => {
+            //    return n.GetMaxID();
+            //});
+            //id++;
+            //return id ;
+
+            if (datalist.Count == 0) return 0;
+
+            return datalist.Last().ID + 1;
         }
 
-        //public ItemManager create(string name) {
-        //    var m = new ItemManager();
-        //    manager.Add(name, m);
-        //    return m;
-        //}
+        public Data GetItem(long id) {
+            //foreach (var m in manager.Values) {
+            //    var item = m.GetItem(id);
+            //    if (item != null) return item;
+            //}
+            //return null;
+            return datalist.Find(n => {
+                return n.ID == id;
+            });
+        }
+
+        public List<Data> GetItem(List<long> ids) {
+            //var res = new List<Data>();
+            //foreach (var id in ids) {
+            //    var data = this.getItem(id);
+            //    if (data != null) {
+            //        res.Add(data);
+            //    }
+            //}
+            //return res;
+
+            return datalist.FindAll(n => {
+                return ids.Contains(n.ID);
+            });
+        }
+
+        public bool CreateFile(string categoryname) {
+            var id = getCategoryID(categoryname);
+            if (id < 0) {
+                var newid = 0;
+                while (true) {
+                    bool res = categorylist.Exists(n => {
+                        return n.ID == newid;
+                    });
+                    if (!res) {
+                        break;
+                    }
+                    newid++;
+                }
+                categorylist.Add(new CategoryData() { ID=newid, Name= categoryname });
+
+                var m = new ItemManager();
+                m.CategoryID = newid;
+                m.eventHandler += eventHandler;
+                manager.Add(newid, m);
+            }
+            
+            return true;
+        }
         public bool RenameFile(string from, string to) {
             var topath = Path.Combine(this.DataDir, to + Ext);
             if (File.Exists(topath)) {
@@ -94,18 +231,20 @@ namespace wiki {
 
             var id = getCategoryID(from);
             if (id >= 0) {
-                category[id] = to;
-                manager[id].Name = to;
+                categorylist.Find(n => {
+                    return n.ID == id;
+                }).Name = to;
+                manager[id].CategoryID = getCategoryID(to);
                 manager[id].IsDirty = true;
             }
             return true;
         }
 
-        public void DeleteFile(string name) {
-            var id = getCategoryID(name);
+        public void DeleteFile(string categoryname) {
+            var id = getCategoryID(categoryname);
             if (id >= 0) {
                 manager.Remove(id);
-                var file = Path.Combine(this.DataDir, name);
+                var file = Path.Combine(this.DataDir, categoryname);
                 if (File.Exists(file)) {
                     Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
                         file,
@@ -113,170 +252,32 @@ namespace wiki {
                         RecycleOption.SendToRecycleBin);
                 }
             }
-            //if (manager.ContainsKey(name)) {
-            //    manager.Remove(name);
-            //    var file = Path.Combine(this.DataDir, name);
-            //    if (File.Exists(file)) {
-            //        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
-            //            file,
-            //            UIOption.OnlyErrorDialogs,
-            //            RecycleOption.SendToRecycleBin);
-            //    }
-            //}
-        }
-
-        public void DeleteItem(string name, long id) {
-            var cid = getCategoryID(name);
-            if (cid >= 0) {
-                var m = manager[cid];
-                if (name == Trust) {
-                    m.Remove(id);
-                }
-                else {
-                    var tid = getCategoryID(Trust);
-                    if (tid >= 0) {
-                        var d = m.GetItem(id);
-                        m.Remove(id);
-                        manager[tid].Insert(d);
-                    }
-                }
-            }
-            //if (manager.ContainsKey(name)) {
-            //    var m = manager[name];
-            //    if (name == Trust) {
-            //        m.Remove(id);
-            //    } else {
-            //        if (manager.ContainsKey(Trust)) {
-            //            var d = m.GetItem(id);
-            //            m.Remove(id);
-            //            manager[Trust].Insert(d);
-            //        }
-            //    }
-            //}
-        }
-
-        public void ClearItem(string name) {
-            var id = getCategoryID(name);
-            if (id >= 0) {
-                manager[id].Clear();
-            }
-            //if (manager.ContainsKey(name)) {
-            //    manager[name].Clear();
-            //}
-        }
-
-        public long GetNewID() {
-            int s = 0;
-            foreach (var m in manager.Values) {
-                s+=m.GetDataCount();
-            }
-            if (s == 0) return 0;
-
-            var id = manager.Values.Max(n => {
-                return n.GetMaxID();
-            });
-            id++;
-            return id ;
-        }
-
-        public Data getItem(long id){
-            foreach (var m in manager.Values) {
-                var item = m.GetItem(id);
-                if (item != null) return item;
-            }
-            return null;
-        }
-
-        public List<Data> GetItem(List<long> ids) {
-            var res = new List<Data>();
-            foreach (var id in ids) {
-                var data = this.getItem(id);
-                if (data != null) {
-                    res.Add(data);
-                }
-            }
-            return res;
-        }
-
-        private int getNewCategoryID() {
-            var i=0;
-            while(category.ContainsKey(i)){
-                i++;
-            }
-            return i;
-        }
-
-        public ItemManager getManger(string name) {
-            var id = getCategoryID(name);
-            if (id < 0) {
-                id = getNewCategoryID();
-                category.Add(id, name);
-            }
-            if(!manager.ContainsKey(id)){
-                var m = new ItemManager();
-                //m.DataPath = Path.Combine(DataDir, name); //name;
-                m.eventHandler += eventHandler;
-                m.Name = name;
-                m.IsDirty = true;
-
-                manager.Add(id, m);
-
-            }
-            return manager[id];
-
-            //if (!manager.ContainsKey(name)) {
-            //    var m = new ItemManager();
-            //    m.DataPath = Path.Combine(DataDir, name); //name;
-            //    m.eventHandler += eventHandler;
-            //    m.Name = name;
-            //    m.IsDirty = true;
-            //    manager.Add(name, m);
-            //}
-            //return manager[name];
         }
     }
 
     public enum ChangeType {
-        Insert,
-        UpDate,
-        //UpDateText,
-        //UpDateCreationTime,
-        //UpDateCategory,
+        Create,
+        UpDateText,
+        UpDateCreationTime,
+        UpDateCategory,
         Delete,
         Clear
     }
     public class CallBackEventArgs : EventArgs {
-        public string Name;
         public Data Item;
         public ChangeType type;
+        public int FromCategoryID;
+        public int ToCategoryID;
     }
     delegate void EventHandler(object sender, CallBackEventArgs e);
 
     class ItemManager {
         public event EventHandler eventHandler;
         public bool IsDirty = false;
-
-
-        public string Name { get; set; }
-        //public string DataPath { get; set; }
-        public Data EditingData {
-            get;
-            set;
-        }
+        public int CategoryID;
 
         private List<Data> datas = new List<Data>();
-
-        public void Load(string DataDir) {
-            datas = XMLSerializer.Deserialize<List<Data>>(Path.Combine(DataDir, Name + Category.Ext), new List<Data>());
-            //datas = Serializer.Deserialize<List<Data>>(DataPath, new List<Data>());
-        }
-        public void Save(string DataDir) {
-            if (IsDirty) {
-                XMLSerializer.Serialize<List<Data>>(Path.Combine(DataDir, Name + Category.Ext), datas);
-                //Serializer.Serialize<List<Data>>(DataPath, datas);
-            }
-            IsDirty = false;
-        }
+        public List<Data> Datas { get { return datas; } set { datas = value; } }
         
         public static int Insert(List<Data> list, Data item) {
             if (list.Count == 0) {
@@ -316,81 +317,61 @@ namespace wiki {
             IsDirty = true;
             ItemManager.Insert(this.datas, item);
             if (eventHandler != null) {
-                eventHandler(this, new CallBackEventArgs {Name=this.Name, Item = item, type = ChangeType.Insert });
+                eventHandler(this, new CallBackEventArgs { FromCategoryID = this.CategoryID, Item = item, type = ChangeType.Create });
             }
-
         }
 
-        public void Remove(long id) {
-            IsDirty = true;
-            var item = GetItem(id);
+        public bool Remove(Data item) {
             if (item != null) {
-                datas.Remove(item);
-                if (eventHandler != null) {
-                    eventHandler(this, new CallBackEventArgs { Name = this.Name, Item = item, type = ChangeType.Delete });
+                var index = datas.IndexOf(item);
+                if (index >= 0) {
+                    IsDirty = true;
+                    datas.Remove(item);
+                }
+                if (index >= 0 && eventHandler != null) {             
+                    
+                    eventHandler(this, new CallBackEventArgs { FromCategoryID = this.CategoryID, Item = item, type = ChangeType.Delete });
+                    return true;
                 }
             }
+            return false;
         }
+
         public void Clear() {
             IsDirty = true;
             datas.Clear();
             if (eventHandler != null) {
-                eventHandler(this, new CallBackEventArgs { Name = this.Name, type = ChangeType.Clear });
+                eventHandler(this, new CallBackEventArgs { FromCategoryID = this.CategoryID, type = ChangeType.Clear });
             }
         }
 
-        public void UpDate(Data item) {
-            IsDirty = true;
+        public bool UpDate(Data item, ChangeType changetype) {    
             var index = datas.IndexOf(item);
-            if (eventHandler != null) {
-                eventHandler(this, new CallBackEventArgs { Name = this.Name, Item = item, type = ChangeType.UpDate });
+            if (index >= 0) {
+                IsDirty = true;
             }
-        }
-
-        public long GetNewID() {
-            if(datas.Count == 0){
-                return 0;
+            if (index >= 0 && eventHandler != null) {
+                eventHandler(this, new CallBackEventArgs { FromCategoryID = this.CategoryID, Item = item, type = changetype });
+                return true;
             }
 
-            var maxid = datas.Max(n=>n.ID);
-            return maxid + 1;
-            
+            return false;
         }
+        public bool UpDate(Data item, int fromid, int toid) {
+            var index = datas.IndexOf(item);
+            if (index >= 0) {
+                IsDirty = true;
+            }
 
-        public int GetDataCount() {
-            return datas.Count;
-        }
+            if (index >= 0) {
+                return true;
+            }
 
-        public long GetMaxID() {
-            if (datas.Count == 0) return 0;
-
-            return datas.Max(n => n.ID);
+            return false;
         }
 
         public List<Data> Filter(Predicate<Data> pre) {
             return datas.FindAll(pre);
-        }
-
-        public Data GetItem(long id){
-            var index = datas.FindIndex(new Predicate<Data>((x) => {
-                return x.ID == id;
-            }));
-
-            if (index >= 0 && index < datas.Count)
-                return datas[index];
-
-            return null;
-        }
-
-        public List<Data> GetItem(List<long> ids) {
-            var res = new List<Data>();
-            foreach (var id in ids) {
-                var data = this.GetItem(id);
-                if (data != null) {
-                    res.Add(data);
-                }
-            }
-            return res;
         }
     }
 
@@ -419,90 +400,5 @@ namespace wiki {
         }
 
         #endregion
-    }
-
-    class Items {
-        public event EventHandler eventHandler;
-
-        private Dictionary<int, string> category = new Dictionary<int, string>();
-        private IDComparer idcomp = new IDComparer();
-        List<Data> list = new List<Data>();
-
-        public Items() {
-            category.Add(0, "Trust");
-        }
-
-        public void AddCate() {
-
-        }
-
-        public void sort() {
-            list.Sort(idcomp);
-        }
-        public long getNewID() {
-            return list.Last().ID + 1;
-        }
-
-        public void Create(string text, DateTime creation, int category) {
-            var item = new Data { ID = getNewID(), Text = text, CreationTime = creation };
-            list.Add(item);
-            if (eventHandler != null) {
-                eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Insert });
-            }
-        }
-        public Data Read(long id) {
-            var data =
-                from p in list
-                where p.ID == id
-                select p;
-            if (data.Count() == 0) return null;
-
-            return data.ElementAt(0);
-        }
-        public List<Data> Read(int category) {
-            var datas =
-                from p in list
-                where p.Category == category
-                select p;
-
-            return datas.ToList();
-        }
-        public void UpDate(long id, string text) {
-            var item = Read(id);
-            if (item != null) {
-                item.Text = text;
-                if (eventHandler != null) {
-                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateText });
-                }
-            }
-        }
-        public void UpDate(long id, DateTime creationtime) {
-            var item = Read(id);
-            if (item != null) {
-                item.CreationTime = creationtime;
-                if (eventHandler != null) {
-                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateCreationTime });
-                }
-            }
-        }
-        public void UpDate(long id, int category) {
-            var item = Read(id);
-            if (item != null) {
-                item.Category = category;
-                if (eventHandler != null) {
-                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.UpDateCategory });
-                }
-            }
-        }
-        public void Delete(long id) {
-            var item = Read(id);
-            if (item != null) {
-                list.Remove(item);
-                if (eventHandler != null) {
-                    eventHandler(this, new CallBackEventArgs { Item = item, type = ChangeType.Delete });
-                }
-            }
-        }
-
     }
 }

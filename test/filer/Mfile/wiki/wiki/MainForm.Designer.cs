@@ -71,9 +71,6 @@
             this.NextPageToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.PageToolStripLabel = new System.Windows.Forms.ToolStripLabel();
             this.PrevPageToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.ToggleShowToolStripSplitButton = new System.Windows.Forms.ToolStripSplitButton();
-            this.ShowListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ShowLargeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.BrowserSearchToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
@@ -442,7 +439,6 @@
             this.NextPageToolStripButton,
             this.PageToolStripLabel,
             this.PrevPageToolStripButton,
-            this.ToggleShowToolStripSplitButton,
             this.toolStripSeparator1,
             this.BrowserSearchToolStripButton,
             this.toolStripSeparator5,
@@ -510,33 +506,6 @@
             this.PrevPageToolStripButton.Name = "PrevPageToolStripButton";
             this.PrevPageToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.PrevPageToolStripButton.Text = "Prev";
-            // 
-            // ToggleShowToolStripSplitButton
-            // 
-            this.ToggleShowToolStripSplitButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ToggleShowToolStripSplitButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ToggleShowToolStripSplitButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ShowListToolStripMenuItem,
-            this.ShowLargeToolStripMenuItem});
-            this.ToggleShowToolStripSplitButton.Image = ((System.Drawing.Image)(resources.GetObject("ToggleShowToolStripSplitButton.Image")));
-            this.ToggleShowToolStripSplitButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ToggleShowToolStripSplitButton.Name = "ToggleShowToolStripSplitButton";
-            this.ToggleShowToolStripSplitButton.Size = new System.Drawing.Size(32, 22);
-            this.ToggleShowToolStripSplitButton.Text = "ToggleShow";
-            // 
-            // ShowListToolStripMenuItem
-            // 
-            this.ShowListToolStripMenuItem.Image = global::wiki.Properties.Resources.win_show_detail;
-            this.ShowListToolStripMenuItem.Name = "ShowListToolStripMenuItem";
-            this.ShowListToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.ShowListToolStripMenuItem.Text = "List";
-            // 
-            // ShowLargeToolStripMenuItem
-            // 
-            this.ShowLargeToolStripMenuItem.Image = global::wiki.Properties.Resources.win_show_largeIcon;
-            this.ShowLargeToolStripMenuItem.Name = "ShowLargeToolStripMenuItem";
-            this.ShowLargeToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.ShowLargeToolStripMenuItem.Text = "Large";
             // 
             // toolStripSeparator1
             // 
@@ -823,9 +792,6 @@
         private System.Windows.Forms.ToolStripMenuItem NormalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem RegexToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MigemoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSplitButton ToggleShowToolStripSplitButton;
-        private System.Windows.Forms.ToolStripMenuItem ShowLargeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ShowListToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton CopyToolStripButton;
         private System.Windows.Forms.ToolStripButton PasteToolStripButton;

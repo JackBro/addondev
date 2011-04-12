@@ -34,8 +34,6 @@ namespace wiki
         private string categoryname;
         private Category category;
 
-        //private Dictionary<string, TabControl> Tabs = new Dictionary<string,TabControl>();
-        //private Dictionary<int, TabControl> Tabs = new Dictionary<int, TabControl>();
         private Migemo migemo;
 
         private HttpServer httpServer;
@@ -286,6 +284,7 @@ namespace wiki
 
             this.Load += (sender1, e1) => {
 
+                initPage();
 
             };
             this.FormClosing += (sender, e) => {
@@ -314,21 +313,6 @@ namespace wiki
                 config.SaveSnippetList();
 
                 var TabList = new Dictionary<string, List<KeyValuePair<string, SearchMode>>>();
-                //foreach (var key in Tabs.Keys) {
-                //    var list = new List<KeyValuePair<string, SearchMode>>();
-                //    var tabs = Tabs[key].TabPages;
-                //    for (int i = 0; i < tabs.Count; i++) {
-                //        var listview = GetTabListViewControl(tabs[i]);
-                //        var s = listview.search;
-                //        if (s.Mode != SearchMode.All) {
-                //            var mode = s.Mode;
-                //            var pt = s.Pattern;
-                //            list.Add(new KeyValuePair<string, SearchMode>(pt, mode));
-                //        }
-                //    }
-                //    TabList.Add(key, list);
-                //}
-
                 for (int i = 0; i < CategoryListView.Items.Count; i++) {
                     var list = new List<KeyValuePair<string, SearchMode>>();
                     var item = CategoryListView.Items[i];
@@ -352,12 +336,15 @@ namespace wiki
             _editor.TextChanged += (sender, e) => {
 
                 if (dirty) {
-                    var manager = category.getManger(getSelectedCategory());
-                    var item = manager.EditingData;
-                    if (item != null) {
-                        item.Text = _editor.Text;
-                        manager.UpDate(item);
-                    }
+                    //var manager = category.getManger(getSelectedCategory());
+                    //var item = manager.EditingData;
+                    //var item = category.GetItem(category.EditingID);
+                    //if (item != null) {
+                        //item.Text = _editor.Text;
+                        //manager.UpDate(item);
+                        //category.UpDate(item);
+                        category.UpDateText(category.EditingID, _editor.Text);
+                    //}
                 }
                 dirty = true;
             };
@@ -374,9 +361,10 @@ namespace wiki
             category.DataDir = config.DataDirPath;
             category.eventHandler = (sender, e) => {
                 switch (e.type) {
-                    case ChangeType.Insert: {
+                    case ChangeType.Create: {
                             //if (Tabs[e.Name] == GetCurrentTabControl()) {
-                            if (TabPanel.Controls[e.Name] == GetCurrentTabControl()) {
+                            var name = category.getCategoryName(e.FromCategoryID);
+                            if (TabPanel.Controls[name] == GetCurrentTabControl()) {
                                 //ItemTabControl.SelectedTab = AllPage;
                                 GetCurrentTabControl().SelectedIndex = 0;
                                 var listview = GetSelctedTabListViewControl();// GetTabListViewControl(AllPage);
@@ -393,18 +381,56 @@ namespace wiki
                                 //var tabc = Tabs[e.Name];
 
                                 //var listview = GetTabListViewControl(Tabs[e.Name].TabPages[0]);
-                                var listview = GetTabListViewControl(((TabControl)TabPanel.Controls[e.Name]).TabPages[0]);
+                                var listview = GetTabListViewControl(((TabControl)TabPanel.Controls[name]).TabPages[0]);
                                 listview.AddItem(e.Item);
                             }
                         }
                         break;
-                    case ChangeType.UpDate:
-                        //if (Tabs[e.Name] == GetCurrentTabControl()) {
-                        if (TabPanel.Controls[e.Name] == GetCurrentTabControl()) {
-                            editContent(e.Item);
-                            var cf = InvokeScript("js_getComeFrom");
-                            var list = JsonSerializer.Deserialize<List<string>>(cf.ToString());
-                            config.ComeFormWords.Union(list);
+                    case ChangeType.UpDateText: {
+                            //if (Tabs[e.Name] == GetCurrentTabControl()) {
+                            var name = category.getCategoryName(e.FromCategoryID);
+                            if (TabPanel.Controls[name] == GetCurrentTabControl()) {
+                                editContent(e.Item);
+                                var cf = InvokeScript("js_getComeFrom");
+                                var list = JsonSerializer.Deserialize<List<string>>(cf.ToString());
+                                config.ComeFormWords.Union(list);
+                            }
+                        }
+                        break;
+                    case ChangeType.UpDateCreationTime: {
+                            var name = category.getCategoryName(e.FromCategoryID);
+                            var tabc = getTabControl(name);
+                            var s = new DateTimeComparer();
+                            for (int i = 0; i < tabc.TabPages.Count; i++) {
+                                var lv = GetTabListViewControl(tabc.TabPages[i]);
+                                if (lv.DataItems.IndexOf(e.Item) >= 0) {
+                                    lv.DataItems.Sort(s);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    case ChangeType.UpDateCategory: {
+                            var form = e.FromCategoryID;
+                            var to = e.ToCategoryID;
+
+                            //if (Tabs[e.Name] == GetCurrentTabControl()) {
+                            var fromname = category.getCategoryName(e.FromCategoryID);
+                            var fromtabc = getTabControl(fromname);
+                            for (int i = 0; i < fromtabc.TabPages.Count; i++) {
+                                var lv = GetTabListViewControl(fromtabc.TabPages[i]);
+                                if (lv.DataItems.IndexOf(e.Item) >= 0) {
+                                    lv.DeleteItem(e.Item);
+                                    break;
+                                }
+                            }
+
+                            var toname = category.getCategoryName(e.ToCategoryID);
+                            var totabc = getTabControl(toname);
+                            for (int i = 0; i < totabc.TabPages.Count; i++) {
+                                var lv = GetTabListViewControl(totabc.TabPages[i]);
+                                lv.AddItem(e.Item);
+                            }
                         }
                         break;
                     case ChangeType.Delete:
@@ -422,19 +448,20 @@ namespace wiki
                         //    InvokeScript("js_Remove", e.Item.ID.ToString());
                         //}
 
-                       
-                        for (int i = 0; i < CategoryListView.Items.Count; i++) {
-                            var item = CategoryListView.Items[i];
-                            var tabpages = ((TabControl)TabPanel.Controls[item.Name]).TabPages;
-                            for (int j = 0; j < tabpages.Count; j++) {
-                                var listview = GetTabListViewControl(tabpages[j]);
-                                listview.DeleteItem(e.Item);
+                        {
+                            for (int i = 0; i < CategoryListView.Items.Count; i++) {
+                                var item = CategoryListView.Items[i];
+                                var tabpages = ((TabControl)TabPanel.Controls[item.Name]).TabPages;
+                                for (int j = 0; j < tabpages.Count; j++) {
+                                    var listview = GetTabListViewControl(tabpages[j]);
+                                    listview.DeleteItem(e.Item);
+                                }
+                            }
+                            var name = category.getCategoryName(e.FromCategoryID);
+                            if (name == GetCurrentTabControl().Name) {
+                                InvokeScript("js_Remove", e.Item.ID.ToString());
                             }
                         }
-                        if (e.Name == GetCurrentTabControl().Name) {
-                            InvokeScript("js_Remove", e.Item.ID.ToString());
-                        }
-
                         break;
                     case ChangeType.Clear:
                         InvokeScript("js_ClearAll");
@@ -443,30 +470,32 @@ namespace wiki
                         break;
                 }
             };
+            category.Load();
 
-            if (config.Categorys.Count == 0) {
-                config.Categorys.Add("new");
-            }
-            if (!config.Categorys.Contains("Trust")) {
-                config.Categorys.Add("Trust");
-            }
-            category.Load(config.Categorys);
+            //if (config.Categorys.Count == 0) {
+            //    config.Categorys.Add("new");
+            //}
+            //if (!config.Categorys.Contains("Trust")) {
+            //    config.Categorys.Add("Trust");
+            //}
+            //category.Load(config.Categorys);
 
             {
                 var TabList = JsonSerializer.Deserialize<Dictionary<string, List<KeyValuePair<string, SearchMode>>>>(config.TabListJson);
-                foreach (var c in config.Categorys) {
+                //foreach (var c in config.Categorys) {
+                foreach (var c in category.categorylist) {
                     //CategoryListView.Items.Add(item);
-                    var item = new ListViewItem(c, c == "Trust" ? 1 : 0);
-                    item.Name = c;
+                    var item = new ListViewItem(c.Name, c.Name == "Trust" ? 1 : 0);
+                    item.Name = c.Name;
                     CategoryListView.Items.Add(item);
 
                     if (TabList != null) {
-                        var tabc = getTabControl(c);
-                        if (TabList.ContainsKey(c)) {
-                            var list = TabList[c];
+                        var tabc = getTabControl(c.Name);
+                        if (TabList.ContainsKey(c.Name)) {
+                            var list = TabList[c.Name];
                             foreach (var l in list) {
                                 var sobj = CreateSearchObj(l.Key, l.Value);
-                                var p = CreateListViewTabPage(c, tabc, sobj);
+                                var p = CreateListViewTabPage(c.Name, tabc, sobj);
                                 tabc.TabPages.Add(p);
                                 //t.BringToFront();
                                 //t.SelectedTab = p;
@@ -501,65 +530,65 @@ namespace wiki
                 };
             };
 
-            if (config.ShowType == ShowType.List) {
-                ShowLargeToolStripMenuItem.Checked = false;
-                ShowListToolStripMenuItem.Checked = true;
-                ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_detail;
-                ToggleShowToolStripSplitButton.Text = "List";
-            }
-            else if (config.ShowType == ShowType.Large) {
-                ShowLargeToolStripMenuItem.Checked = true;
-                ShowListToolStripMenuItem.Checked = false;
-                ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_largeIcon;
-                ToggleShowToolStripSplitButton.Text = "Large";
-            }
+            //if (config.ShowType == ShowType.List) {
+            //    ShowLargeToolStripMenuItem.Checked = false;
+            //    ShowListToolStripMenuItem.Checked = true;
+            //    ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_detail;
+            //    ToggleShowToolStripSplitButton.Text = "List";
+            //}
+            //else if (config.ShowType == ShowType.Large) {
+            //    ShowLargeToolStripMenuItem.Checked = true;
+            //    ShowListToolStripMenuItem.Checked = false;
+            //    ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_largeIcon;
+            //    ToggleShowToolStripSplitButton.Text = "Large";
+            //}
             this.KeyDown += (sender, e) => {
                 var ee = e.KeyValue;
             };
 
-            ToggleShowToolStripSplitButton.ButtonClick += (sender, e) => {
-                ShowLargeToolStripMenuItem.Checked = !ShowLargeToolStripMenuItem.Checked;
-                ShowListToolStripMenuItem.Checked = !ShowListToolStripMenuItem.Checked;
+            //ToggleShowToolStripSplitButton.ButtonClick += (sender, e) => {
+            //    ShowLargeToolStripMenuItem.Checked = !ShowLargeToolStripMenuItem.Checked;
+            //    ShowListToolStripMenuItem.Checked = !ShowListToolStripMenuItem.Checked;
 
-                var islist = ShowListToolStripMenuItem.Checked;
-                if (islist) {
-                    config.ShowType = ShowType.List;
-                    ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_detail;
-                    //initPage();
-                    //var listview =  GetSelctedTabControl();
-                    //List<Data> list = new List<Data>();
-                    //var last = listview.DataItems.Count < config.ShowNum ? listview.DataItems.Count : config.ShowNum;
-                    //for (int i = 0; i < last; i++) {
-                    //    list.Add(listview.DataItems[i]);
-                    //}
-                    //reBuild(list);    
-                }
-                else {
-                    config.ShowType = ShowType.Large;
-                    ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_largeIcon;
+            //    var islist = ShowListToolStripMenuItem.Checked;
+            //    if (islist) {
+            //        config.ShowType = ShowType.List;
+            //        ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_detail;
+            //        //initPage();
+            //        //var listview =  GetSelctedTabControl();
+            //        //List<Data> list = new List<Data>();
+            //        //var last = listview.DataItems.Count < config.ShowNum ? listview.DataItems.Count : config.ShowNum;
+            //        //for (int i = 0; i < last; i++) {
+            //        //    list.Add(listview.DataItems[i]);
+            //        //}
+            //        //reBuild(list);    
+            //    }
+            //    else {
+            //        config.ShowType = ShowType.Large;
+            //        ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_largeIcon;
 
-                    //var listview = GetSelctedTabControl();
-                    //var item = listview.GetSelectedItem();
-                    //reBuild(item);
-                }
-                ToggleShow(config.ShowType);
-            };
-            ShowLargeToolStripMenuItem.Click += (sender, e) => {
-                if (!ShowLargeToolStripMenuItem.Checked) {
-                    ShowLargeToolStripMenuItem.Checked = true;
-                    ShowListToolStripMenuItem.Checked = false;
-                    config.ShowType = ShowType.Large;
-                    ToggleShow(config.ShowType);
-                }
-            };
-            ShowListToolStripMenuItem.Click += (sender, e) => {
-                if (!ShowListToolStripMenuItem.Checked) {
-                    ShowListToolStripMenuItem.Checked = true;
-                    ShowLargeToolStripMenuItem.Checked = false;
-                    config.ShowType = ShowType.List;
-                    ToggleShow(config.ShowType);
-                }
-            };
+            //        //var listview = GetSelctedTabControl();
+            //        //var item = listview.GetSelectedItem();
+            //        //reBuild(item);
+            //    }
+            //    ToggleShow(config.ShowType);
+            //};
+            //ShowLargeToolStripMenuItem.Click += (sender, e) => {
+            //    if (!ShowLargeToolStripMenuItem.Checked) {
+            //        ShowLargeToolStripMenuItem.Checked = true;
+            //        ShowListToolStripMenuItem.Checked = false;
+            //        config.ShowType = ShowType.Large;
+            //        ToggleShow(config.ShowType);
+            //    }
+            //};
+            //ShowListToolStripMenuItem.Click += (sender, e) => {
+            //    if (!ShowListToolStripMenuItem.Checked) {
+            //        ShowListToolStripMenuItem.Checked = true;
+            //        ShowLargeToolStripMenuItem.Checked = false;
+            //        config.ShowType = ShowType.List;
+            //        ToggleShow(config.ShowType);
+            //    }
+            //};
 
             PrevPageToolStripButton.Click += (sender, e) => {
 
@@ -589,6 +618,7 @@ namespace wiki
                 }
                 PrevPageToolStripButton.Enabled = true;
             };
+            //initPage();
 
             ReloadToolStripButton.Click += (sender, e) => {
                 //InvokeScript("jsview.jsmsg", new string[] { "jsview.jsmsg test" });
@@ -639,6 +669,7 @@ namespace wiki
                 this.ClearItem();
             };
 
+
             CategoryListView.Items[0].Selected = true;
             CategoryListView.ItemSelectionChanged += (s, e) => {
                 if (e.IsSelected) {
@@ -652,6 +683,9 @@ namespace wiki
                         var datas = getCurrentPageDatas(listview, config.ShowNum);
                         InvokeScript("js_ClearAll");
                         reBuild(datas);
+
+
+                        initPage();
                     }
                 }
             };
@@ -701,7 +735,7 @@ namespace wiki
                     var item = CategoryListView.GetItemAt(point.X, point.Y);
                     if (item != null && item.Name != getSelectedCategory()) {
                         DeleteItem(data.ID);
-                        category.getManger(item.Name).Insert(data);
+                        //category.getManger(item.Name).Insert(data);
                     }
                 }
                 else if (e.Data.GetDataPresent(typeof(string))) {
@@ -720,8 +754,8 @@ namespace wiki
                             var ni = CategoryListView.Items.IndexOfKey(item.Name);
                             var ins = i == 0 ? 0 : ni + 1;
                             CategoryListView.Items.Insert(ins, removeitem);
-                            config.Categorys.Remove(name);
-                            config.Categorys.Insert(ins, name);
+                            //config.Categorys.Remove(name);
+                            //config.Categorys.Insert(ins, name);
                             //CategoryListView.Sort();
                         }
 
@@ -730,9 +764,6 @@ namespace wiki
                 }
             };
 
-            CategoryListView.BeforeLabelEdit += (s, e) => {
-
-            };
             CategoryListView.AfterLabelEdit += (s, e) => {
                 //e.CancelEdit = true;
                 if (File.Exists(Path.Combine(config.DataDirPath, e.Label + ".xml"))) {
@@ -746,6 +777,7 @@ namespace wiki
                     }
                 }
             };
+
 
             TabListViewEditItemToolStripMenuItem.Click += (s, e) => {
                 var lv = GetSelctedTabListViewControl();
@@ -796,40 +828,38 @@ namespace wiki
         }
 
         private void initPage() {
-            if (config.ShowType == ShowType.Large) {
-                PrevPageToolStripButton.Enabled = false;
-                NextPageToolStripButton.Enabled = false;
-            } else if (config.ShowType == ShowType.List) {
-                int max = config.ShowNum;
-                var l = GetSelctedTabListViewControl();
-                if ((l.Page - 1) * max <= 0) {
-                    PrevPageToolStripButton.Enabled = false;
-                }
-                if ((l.Page + 1) * max >= l.DataItems.Count) {
-                    NextPageToolStripButton.Enabled = false;
-                }
-            }
+            int max = config.ShowNum;
+            var l = GetSelctedTabListViewControl();
+            //if ((l.Page - 1) * max <= 0) {
+            //    PrevPageToolStripButton.Enabled = false;
+            //}
+            //if ((l.Page + 1) * max >= l.DataItems.Count) {
+            //    NextPageToolStripButton.Enabled = false;
+            //}
+
+            PrevPageToolStripButton.Enabled = !((l.Page - 1) * max <= 0);
+            NextPageToolStripButton.Enabled = !((l.Page + 1) * max >= l.DataItems.Count);
         }
 
-        void ToggleShow(ShowType showtype) {
-            if (showtype == ShowType.List) {
-                //config.ShowType = ShowType.List;
-                initPage();
-                var listview = GetSelctedTabListViewControl();
-                List<Data> list = new List<Data>();
-                var last = listview.DataItems.Count < config.ShowNum ? listview.DataItems.Count : config.ShowNum;
-                for (int i = 0; i < last; i++) {
-                    list.Add(listview.DataItems[i]);
-                }
-                reBuild(list);
+        //void ToggleShow(ShowType showtype) {
+        //    //if (showtype == ShowType.List) {
+        //        //config.ShowType = ShowType.List;
+        //        initPage();
+        //        var listview = GetSelctedTabListViewControl();
+        //        List<Data> list = new List<Data>();
+        //        var last = listview.DataItems.Count < config.ShowNum ? listview.DataItems.Count : config.ShowNum;
+        //        for (int i = 0; i < last; i++) {
+        //            list.Add(listview.DataItems[i]);
+        //        }
+        //        reBuild(list);
 
-            } else {
-                //config.ShowType = ShowType.Large;
-                var listview = GetSelctedTabListViewControl();
-                var item = listview.GetSelectedItem();
-                reBuild(item);
-            }
-        }
+        //    //} else {
+        //    //    //config.ShowType = ShowType.Large;
+        //    //    var listview = GetSelctedTabListViewControl();
+        //    //    var item = listview.GetSelectedItem();
+        //    //    reBuild(item);
+        //    //}
+        //}
 
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e) {
             webBrowser1.DocumentCompleted -= webBrowser1_DocumentCompleted;
@@ -855,7 +885,7 @@ namespace wiki
             if (items.Count > 0) {
                 listview.Items[0].Selected = true;
                 //reBuild(items[0]);
-                ToggleShow(config.ShowType);
+                //ToggleShow(config.ShowType);
             }
 
             //webBrowser1.Document.Window.Error += new HtmlElementErrorEventHandler(Window_Error);
@@ -913,10 +943,11 @@ namespace wiki
             item.Name = name;
             CategoryListView.Items.Insert(0, item);
 
-            config.Categorys.Clear();
-            for (int i = 0; i < CategoryListView.Items.Count; i++) {
-                config.Categorys.Add(CategoryListView.Items[i].Name);
-            }
+            //config.Categorys.Clear();
+            //for (int i = 0; i < CategoryListView.Items.Count; i++) {
+            //    config.Categorys.Add(CategoryListView.Items[i].Name);
+            //}
+            category.CreateFile(name);
 
             item.Selected = true;
         }
@@ -934,19 +965,24 @@ namespace wiki
                 CategoryListView.Items.RemoveAt(index);
                 CategoryListView.Items[0].Selected = true;
             }
-            config.Categorys.Remove(name);
+            //config.Categorys.Remove(name);
         }
 
         internal void CreateItem() {
-            var manager = category.getManger(getSelectedCategory());
-            var id = category.GetNewID();
+            //var manager = category.getManger(getSelectedCategory());
+            //var id = category.GetNewID();
             //manager.Insert(new Data { ID=manager.GetNewID(), Text = "!new", CreationTime = DateTime.Now });
-            manager.Insert(new Data { ID = id, Text = "!new", CreationTime = DateTime.Now });
+            //manager.Insert(new Data { ID = id, Text = "!new", CreationTime = DateTime.Now });
+            if (category.getCategoryID(getSelectedCategory()) >= 0) {
+                category.Create(config.ItemTemplete, DateTime.Now, getSelectedCategory());
+            }
+
         }
         internal void DeleteItem(long id) {
             //var manager = category.getManger(getSelectedCategory());
             //manager.Remove(id);
-            category.DeleteItem(getSelectedCategory(), id);
+            //category.DeleteItem(getSelectedCategory(), id);
+            category.Delete(id);
         }
         internal void DeleteItem() {
             var lv = GetSelctedTabListViewControl();
@@ -982,79 +1018,107 @@ namespace wiki
                 //for (int i = 0; i < cnt; i++) {
                 //    this.DeleteItem(lv.DataItems[i].ID);
                 //}
-                category.ClearItem(cate);
+                //category.ClearItem(cate);
+                category.Clear(cate);
             }   
         }
         internal void EditItem(long id) {
-            var manager = category.getManger(getSelectedCategory());
-            var item = manager.GetItem(id);
+            //var manager = category.getManger(getSelectedCategory());
+            //var item = manager.GetItem(id);
+            var item = category.GetItem(id);
             if (item == null) return;
 
             this.OpenEditor();
             EditorInfoToolStripLabel.Text = "Editing id = " + id.ToString();
 
-            manager.EditingData = item;
+            //manager.EditingData = item;
+            category.EditingID = id;
             dirty = false;
             _editor.Text = item.Text;
             _editor.Focus();
         }
 
         private List<Data> getCurrentPageDatas(ListViewEx listview, int max) {
-            var si = listview.Page * max;
+            var p = listview.DataItems.Count / max;
+            p = listview.DataItems.Count % max == 0 ? p : p + 1;
+            var si = (p-listview.Page) * max;
             var cnt = listview.DataItems.Count;
             var last = (si + max) > cnt ? cnt : (si + max);
             var list = new List<Data>();
             for (int i = si; i < last; i++) {
+            //for (int i = cnt - si; i < si; i++) {
                 list.Add(listview.DataItems[i]);
             }
             return list;
         }
 
         private void Moves(long id) {
-            if (config.ShowType == ShowType.Large) {
-                var manager = category.getManger(getSelectedCategory());
-                var item = manager.GetItem(id);
-                reBuild(item);
-            } else if (config.ShowType == ShowType.List) {
+            //if (config.ShowType == ShowType.Large) {
+            //    //var manager = category.getManger(getSelectedCategory());
+            //    //var item = manager.GetItem(id);
+            //    //reBuild(item);
+            //} else if (config.ShowType == ShowType.List) {
             
-                //var view = GetSelctedTabControl();
-                var view = GetSelctedTabListViewControl();
-                var index = view.DataItems.FindIndex((n) => {
+            //var view = GetSelctedTabControl();
+            var view = GetSelctedTabListViewControl();
+            var index = view.DataItems.FindIndex((n) => {
+                return (n.ID == id);
+            });
+            if (index == -1) {
+                GetCurrentTabControl().SelectedIndex = 0;
+                view = GetSelctedTabListViewControl();
+                index = view.DataItems.FindIndex((n) => {
                     return (n.ID == id);
                 });
-                if (index == -1) {
-                    GetCurrentTabControl().SelectedIndex = 0;
-                    view = GetSelctedTabListViewControl();
-                    index = view.DataItems.FindIndex((n) => {
-                        return (n.ID == id);
-                    });
-                }
-
+            }
+            var max = config.ShowNum;
             //if (index != -1) {
-                index++;
-                var page = 0;
-                if (index <= config.ShowNum) {
-                    page = 0;
+            index++;
+            bool res = false;
+            int cnt = 1;
+            while (true) {
+                var t = view.DataItems.Take(max * cnt);
+                res = t.Any(n => {
+                    return n.ID == id;
+                });
+                if (res) {
+                    break; 
                 }
-                else {
-                    if (index % config.ShowNum == 0) {
-                        page = index / config.ShowNum - 1;
-                    }
-                    else {
-                        page = index / config.ShowNum;
-                    }
+                if (t.Count() < max) {
+                    break;
                 }
-                if (view.Page != page) {
-                    var list = getCurrentPageDatas(view, config.ShowNum);
-                    reBuild(list);
-                }
-                var p = config.htmlPath + "#" + id;
-                webBrowser1.Navigate(p);
+                cnt++;
+            }
+            cnt--;
+
+            var p = view.DataItems.Count / max;
+            p = view.DataItems.Count % max == 0 ? p : p + 1;
+            var page = p-cnt;// -view.Page;
+            //if (index <= config.ShowNum) {
+            //    page = 0;
+            //}
+            //else {
+            //    if (index % config.ShowNum == 0) {
+            //        page = index / config.ShowNum - 1;
+            //    }
+            //    else {
+            //        page = index / config.ShowNum;
+            //    }
+            //}
+            if (view.Page != page) {
+                view.Page = page;
+                var list = getCurrentPageDatas(view, config.ShowNum);
+                reBuild(list);
+
+                initPage();
+            }
+            var url = config.htmlPath + "#" + id;
+            webBrowser1.Navigate(url);
 
             //}
             //else {
             //}
-            }
+            //}
         }
 
         private ListViewEx GetTabListViewControl(TabPage page) {
@@ -1091,14 +1155,19 @@ namespace wiki
                 var tabpage = tabcontrol.TabPages[i];
                 var lw = GetTabListViewControl(tabpage);
                 if (lw.search == search) {
-                    var manager = category.getManger(getSelectedCategory());
-                    lw.DataItems = manager.Filter(search.getSearch());
+                    //var manager = category.getManger(getSelectedCategory());
+                    //lw.DataItems = manager.Filter(search.getSearch());
+                    lw.DataItems = category.Filter(getSelectedCategory(), search.getSearch());
                     return tabpage;
                 }
             }
 
-            var items = category.getManger(categoryname).Filter(search.getSearch());
-            var listview = new ListViewEx(items);
+            //var items = category.getManger(categoryname).Filter(search.getSearch());
+            //var listview = new ListViewEx(items);
+
+            var listview = new ListViewEx(category.Filter(categoryname, search.getSearch()));
+            var page = listview.DataItems.Count / config.ShowNum;
+            listview.Page = listview.DataItems.Count % config.ShowNum == 0 ? page : page + 1;
 
             if (categoryname == Category.Trust) {
                 listview.MultiSelect = true;
@@ -1124,22 +1193,30 @@ namespace wiki
             //    }
             //};
             listview.DoubleClick += (sender, e) => {
-                if (config.ShowType == ShowType.List && listview.SelectedIndices.Count == 1) {
+                //if (config.ShowType == ShowType.List && listview.SelectedIndices.Count == 1) {
+                if (listview.SelectedIndices.Count == 1) {
                     var selindex = listview.SelectedIndices[0];
                     var id = listview.DataItems[selindex].ID;
                     this.Moves(id);
                 }
             };
 
-            listview.MouseMove += (s, e) => {
-                if (e.Button == MouseButtons.Left) {
-                    if(listview.SelectedIndices.Count>0){
-                        var index = listview.SelectedIndices[0];
-                        var data = listview.DataItems[index];
-                        listview.DoDragDrop(data, DragDropEffects.Move);
-                    }
+            listview.ItemDrag += (s, e) => {
+                if (listview.SelectedIndices.Count > 0) {
+                    var index = listview.SelectedIndices[0];
+                    var data = listview.DataItems[index];
+                    listview.DoDragDrop(data, DragDropEffects.Move);
                 }
             };
+            //listview.MouseMove += (s, e) => {
+            //    if (e.Button == MouseButtons.Left) {
+            //        if(listview.SelectedIndices.Count>0){
+            //            var index = listview.SelectedIndices[0];
+            //            var data = listview.DataItems[index];
+            //            listview.DoDragDrop(data, DragDropEffects.Move);
+            //        }
+            //    }
+            //};
 
             listview.Dock = DockStyle.Fill;
 

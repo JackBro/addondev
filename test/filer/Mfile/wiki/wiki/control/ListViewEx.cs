@@ -85,13 +85,12 @@ namespace wiki {
 
         public int AddItem(Data item){
             //items.Add(item);
-            var i = ItemManager.Insert(items, item);
-            this.VirtualListSize = items.Count;
-            return i;
-        }
-
-        public void UpDate(Data item){
-            
+            if (search.getSearch().Invoke(item)) {
+                var i = ItemManager.Insert(items, item);
+                this.VirtualListSize = items.Count;
+                return i;
+            }
+            return -1;
         }
 
         private List<Data> nulldata = new List<Data>();

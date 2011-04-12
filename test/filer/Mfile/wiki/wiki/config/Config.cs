@@ -12,21 +12,21 @@ namespace wiki {
 
 
 
-    public enum ShowType
-    {
-        Large,
-        List
-    }
+    //public enum ShowType
+    //{
+    //    Large,
+    //    List
+    //}
 
     public class Config {
         public static string SettingPath = "wiki.xml";
 
-        public List<string> Categorys { get; set; }
+        //public List<string> Categorys { get; set; }
 
         public string TabListJson { get; set; }
 
         public int ShowNum { get; set; }
-        public ShowType ShowType { get; set; }
+        //public ShowType ShowType { get; set; }
         public int Port { get; set; }
 
         public FormWindowState WindowState { get; set; }
@@ -111,8 +111,8 @@ namespace wiki {
 
 
         public Config() {
-
-            this.Categorys = new List<string>();
+            ItemTemplete = "new";
+            //this.Categorys = new List<string>();
             this.TabListJson = string.Empty;
 
             ComeFormWords = new List<string>();
@@ -129,7 +129,7 @@ namespace wiki {
 
             this.Port = 8088;
             this.ShowNum = 20;
-            this.ShowType = ShowType.List;
+            //this.ShowType = ShowType.List;
 
             ShowTab = false;
             ShowEol = false;

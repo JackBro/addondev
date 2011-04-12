@@ -106,20 +106,24 @@ namespace wiki {
         }
 
         internal void EditDateTime() {
-            var manager = category.getManger(getSelectedCategory());
-            if (manager.EditingData == null) return;
+            //var manager = category.getManger(getSelectedCategory());
+            //if (manager.EditingData == null) return;
+
+            var item = category.GetItem(category.EditingID);
+            if (item == null) return;
 
             var tform = new DateTimeForm();
-            tform.Time = manager.EditingData.CreationTime;
+            tform.Time = item.CreationTime;
             tform.StartPosition = FormStartPosition.CenterParent;
             var res = tform.ShowDialog(this);
             if (res == DialogResult.OK) {
                 var mtime = tform.Time;
-                if (mtime != manager.EditingData.CreationTime) {
-                    var data = manager.EditingData;
-                    manager.Remove(data.ID);
-                    data.CreationTime = mtime;
-                    manager.Insert(data);
+                if (mtime != item.CreationTime) {
+                    //var data = manager.EditingData;
+                    //manager.Remove(data.ID);
+                    //data.CreationTime = mtime;
+                    //manager.Insert(data);
+                    category.UpDateCreationTime(category.EditingID, mtime);
                 }
             }
             tform.Close();
