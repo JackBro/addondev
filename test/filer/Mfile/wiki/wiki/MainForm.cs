@@ -43,15 +43,20 @@ namespace wiki
         
         ScriptManager sm = new ScriptManager();
 
-        Regex regShow = new Regex(@"\/item\/(\d+)$", RegexOptions.Compiled);
-        Regex regEdit = new Regex(@"\/item\/(\d+)\/(edit)$", RegexOptions.Compiled);
-        Regex regExe = new Regex(@"\/item\/(exe)$", RegexOptions.Compiled);
-        Regex regMove = new Regex(@"\/item\/(\d+)\/(move)$", RegexOptions.Compiled);
-        Regex regGoto = new Regex(@"\/item\/(goto)$", RegexOptions.Compiled);
-        Regex regComeFrom = new Regex(@"\/item\/(\d+)\/(comefrom)$", RegexOptions.Compiled);
+        Regex regID = new Regex(@"\/item\/(\d+)$", RegexOptions.Compiled);
 
-        Regex regNew = new Regex(@"\/item\/(new)$", RegexOptions.Compiled);
-        Regex regScript = new Regex(@"\/item\/(script)$", RegexOptions.Compiled);
+        //Regex regEdit = new Regex(@"\/item\/(\d+)\/(edit)$", RegexOptions.Compiled);
+        //Regex regMove = new Regex(@"\/item\/(\d+)\/(move)$", RegexOptions.Compiled);
+        //Regex regComeFrom = new Regex(@"\/item\/(\d+)\/(comefrom)$", RegexOptions.Compiled);
+
+        Regex regIDMethod = new Regex(@"\/item\/(\d+)\/(.+)$", RegexOptions.Compiled);
+
+        //Regex regExe = new Regex(@"\/item\/(exe)$", RegexOptions.Compiled);
+        //Regex regGoto = new Regex(@"\/item\/(goto)$", RegexOptions.Compiled);
+        //Regex regNew = new Regex(@"\/item\/(new)$", RegexOptions.Compiled);
+        //Regex regScript = new Regex(@"\/item\/(script)$", RegexOptions.Compiled);
+
+        Regex regMethod = new Regex(@"\/item\/(\w+)$", RegexOptions.Compiled);
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
 
@@ -115,10 +120,10 @@ namespace wiki
                 if (url.IndexOf('?') >= 0) {
                     url = e.Request.RawUrl.Split('?')[0];
                 }
-                var methd = e.Request.HttpMethod;
+                var httpmathod = e.Request.HttpMethod;
                 e.Response = "accept";
 
-                var m = regShow.Match(url);
+                var m = regID.Match(url);
                 if (m.Success) {
                     var idlist = new List<long>();
                     var idstr = m.Groups[1].Value;
@@ -136,7 +141,7 @@ namespace wiki
                     //var items = manager.GetItem(idlist);
                     var items = category.GetItem(idlist);
                     var res = string.Empty;
-                    switch (methd) {
+                    switch (httpmathod) {
                         case "DELETE":
                             reqparam["method"] = "delete";
                             reqparam["id"] = m.Groups[1].Value;
@@ -154,64 +159,84 @@ namespace wiki
                     return;
                 }
 
-                m = regExe.Match(url);
-                if (m.Success) {
-                    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
-                    reqparam["method"] = "exe";
-                    reqparam["data"] = _RequestBody;
-                    serveBW.ReportProgress(1, reqparam);
-                    return;
-                }
+                //m = regEdit.Match(url);
+                //if (m.Success) {
+                //    var id = m.Groups[1].Value;
 
-                m = regScript.Match(url);
-                if (m.Success) {
-                    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
-                    reqparam["method"] = "script";
-                    reqparam["data"] = _RequestBody;
-                    serveBW.ReportProgress(1, reqparam);
-                    return;
-                }
+                //    reqparam["method"] = "edit";
+                //    //reqparam["url"] = url;
+                //    reqparam["id"] = id;
+                //    serveBW.ReportProgress(1, reqparam);
+                //    return;
+                //}
+                //m = regMove.Match(url);
+                //if (m.Success) {
+                //    var id = m.Groups[1].Value;
 
-                m = regEdit.Match(url);
+                //    reqparam["method"] = "move";
+                //    //reqparam["url"] = url;
+                //    reqparam["id"] = id;
+                //    serveBW.ReportProgress(1, reqparam);
+                //    return;
+                //}
+                //m = regComeFrom.Match(url);
+                //if (m.Success) {
+                //    reqparam["method"] = "comefrom";
+                //    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                //    reqparam["data"] = _RequestBody;
+                //    serveBW.ReportProgress(1, reqparam);
+                //    return;
+                //}
+                m = regIDMethod.Match(url);
                 if (m.Success) {
                     var id = m.Groups[1].Value;
-
-                    reqparam["method"] = "edit";
-                    reqparam["url"] = url;
+                    var method = m.Groups[2].Value;
                     reqparam["id"] = id;
+                    reqparam["method"] = method;
+                    if (httpmathod == "POST") {
+                        var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                        reqparam["data"] = _RequestBody;                       
+                    }
                     serveBW.ReportProgress(1, reqparam);
                     return;
                 }
 
-                m = regMove.Match(url);
+
+                //m = regExe.Match(url);
+                //if (m.Success) {
+                //    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                //    reqparam["method"] = "exe";
+                //    reqparam["data"] = _RequestBody;
+                //    serveBW.ReportProgress(1, reqparam);
+                //    return;
+                //}
+                //m = regGoto.Match(url);
+                //if (m.Success) {
+                //    reqparam["method"] = "goto";
+                //    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                //    reqparam["data"] = _RequestBody;
+                //    serveBW.ReportProgress(1, reqparam);
+                //    return;
+                //}
+                //m = regScript.Match(url);
+                //if (m.Success) {
+                //    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                //    reqparam["method"] = "script";
+                //    reqparam["data"] = _RequestBody;
+                //    serveBW.ReportProgress(1, reqparam);
+                //    return;
+                //}
+                m = regMethod.Match(url);
                 if (m.Success) {
-                    var id = m.Groups[1].Value;
-
-                    reqparam["method"] = "move";
-                    reqparam["url"] = url;
-                    reqparam["id"] = id;
+                    var method = m.Groups[1].Value;
+                    reqparam["method"] = method;
+                    if (httpmathod == "POST") {
+                        var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
+                        reqparam["data"] = _RequestBody;
+                    }
                     serveBW.ReportProgress(1, reqparam);
                     return;
                 }
-
-                m = regComeFrom.Match(url);
-                if (m.Success) {
-                    reqparam["method"] = "comefrom";
-                    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
-                    reqparam["data"] = _RequestBody;
-                    serveBW.ReportProgress(1, reqparam);
-                    return;
-                }
-
-                m = regGoto.Match(url);
-                if (m.Success) {
-                    reqparam["method"] = "goto";
-                    var _RequestBody = new StreamReader(e.Request.InputStream).ReadToEnd();
-                    reqparam["data"] = _RequestBody;
-                    serveBW.ReportProgress(1, reqparam);
-                    return;
-                }
-
             };
             serveBW = new BackgroundWorker();
             serveBW.WorkerReportsProgress = true;
@@ -530,65 +555,10 @@ namespace wiki
                 };
             };
 
-            //if (config.ShowType == ShowType.List) {
-            //    ShowLargeToolStripMenuItem.Checked = false;
-            //    ShowListToolStripMenuItem.Checked = true;
-            //    ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_detail;
-            //    ToggleShowToolStripSplitButton.Text = "List";
-            //}
-            //else if (config.ShowType == ShowType.Large) {
-            //    ShowLargeToolStripMenuItem.Checked = true;
-            //    ShowListToolStripMenuItem.Checked = false;
-            //    ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_largeIcon;
-            //    ToggleShowToolStripSplitButton.Text = "Large";
-            //}
+
             this.KeyDown += (sender, e) => {
                 var ee = e.KeyValue;
             };
-
-            //ToggleShowToolStripSplitButton.ButtonClick += (sender, e) => {
-            //    ShowLargeToolStripMenuItem.Checked = !ShowLargeToolStripMenuItem.Checked;
-            //    ShowListToolStripMenuItem.Checked = !ShowListToolStripMenuItem.Checked;
-
-            //    var islist = ShowListToolStripMenuItem.Checked;
-            //    if (islist) {
-            //        config.ShowType = ShowType.List;
-            //        ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_detail;
-            //        //initPage();
-            //        //var listview =  GetSelctedTabControl();
-            //        //List<Data> list = new List<Data>();
-            //        //var last = listview.DataItems.Count < config.ShowNum ? listview.DataItems.Count : config.ShowNum;
-            //        //for (int i = 0; i < last; i++) {
-            //        //    list.Add(listview.DataItems[i]);
-            //        //}
-            //        //reBuild(list);    
-            //    }
-            //    else {
-            //        config.ShowType = ShowType.Large;
-            //        ToggleShowToolStripSplitButton.Image = global::wiki.Properties.Resources.win_show_largeIcon;
-
-            //        //var listview = GetSelctedTabControl();
-            //        //var item = listview.GetSelectedItem();
-            //        //reBuild(item);
-            //    }
-            //    ToggleShow(config.ShowType);
-            //};
-            //ShowLargeToolStripMenuItem.Click += (sender, e) => {
-            //    if (!ShowLargeToolStripMenuItem.Checked) {
-            //        ShowLargeToolStripMenuItem.Checked = true;
-            //        ShowListToolStripMenuItem.Checked = false;
-            //        config.ShowType = ShowType.Large;
-            //        ToggleShow(config.ShowType);
-            //    }
-            //};
-            //ShowListToolStripMenuItem.Click += (sender, e) => {
-            //    if (!ShowListToolStripMenuItem.Checked) {
-            //        ShowListToolStripMenuItem.Checked = true;
-            //        ShowLargeToolStripMenuItem.Checked = false;
-            //        config.ShowType = ShowType.List;
-            //        ToggleShow(config.ShowType);
-            //    }
-            //};
 
             PrevPageToolStripButton.Click += (sender, e) => {
 
@@ -830,36 +800,10 @@ namespace wiki
         private void initPage() {
             int max = config.ShowNum;
             var l = GetSelctedTabListViewControl();
-            //if ((l.Page - 1) * max <= 0) {
-            //    PrevPageToolStripButton.Enabled = false;
-            //}
-            //if ((l.Page + 1) * max >= l.DataItems.Count) {
-            //    NextPageToolStripButton.Enabled = false;
-            //}
 
             PrevPageToolStripButton.Enabled = !((l.Page - 1) * max <= 0);
             NextPageToolStripButton.Enabled = !((l.Page + 1) * max >= l.DataItems.Count);
         }
-
-        //void ToggleShow(ShowType showtype) {
-        //    //if (showtype == ShowType.List) {
-        //        //config.ShowType = ShowType.List;
-        //        initPage();
-        //        var listview = GetSelctedTabListViewControl();
-        //        List<Data> list = new List<Data>();
-        //        var last = listview.DataItems.Count < config.ShowNum ? listview.DataItems.Count : config.ShowNum;
-        //        for (int i = 0; i < last; i++) {
-        //            list.Add(listview.DataItems[i]);
-        //        }
-        //        reBuild(list);
-
-        //    //} else {
-        //    //    //config.ShowType = ShowType.Large;
-        //    //    var listview = GetSelctedTabListViewControl();
-        //    //    var item = listview.GetSelectedItem();
-        //    //    reBuild(item);
-        //    //}
-        //}
 
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e) {
             webBrowser1.DocumentCompleted -= webBrowser1_DocumentCompleted;
@@ -887,16 +831,6 @@ namespace wiki
                 //reBuild(items[0]);
                 //ToggleShow(config.ShowType);
             }
-
-            //webBrowser1.Document.Window.Error += new HtmlElementErrorEventHandler(Window_Error);
-
-            //webBrowser1.Document.Window.Error += (ss, se) => {
-            //    //se.
-            //    se.Handled = true;
-            //};
-            //this.webBrowser1.Document.MouseDown += (ss, se) => {
-            //    var ee = e;
-            //};
         }
 
         internal void Option() {
@@ -943,10 +877,6 @@ namespace wiki
             item.Name = name;
             CategoryListView.Items.Insert(0, item);
 
-            //config.Categorys.Clear();
-            //for (int i = 0; i < CategoryListView.Items.Count; i++) {
-            //    config.Categorys.Add(CategoryListView.Items[i].Name);
-            //}
             category.CreateFile(name);
 
             item.Selected = true;
@@ -969,19 +899,11 @@ namespace wiki
         }
 
         internal void CreateItem() {
-            //var manager = category.getManger(getSelectedCategory());
-            //var id = category.GetNewID();
-            //manager.Insert(new Data { ID=manager.GetNewID(), Text = "!new", CreationTime = DateTime.Now });
-            //manager.Insert(new Data { ID = id, Text = "!new", CreationTime = DateTime.Now });
             if (category.getCategoryID(getSelectedCategory()) >= 0) {
                 category.Create(config.ItemTemplete, DateTime.Now, getSelectedCategory());
             }
-
         }
         internal void DeleteItem(long id) {
-            //var manager = category.getManger(getSelectedCategory());
-            //manager.Remove(id);
-            //category.DeleteItem(getSelectedCategory(), id);
             category.Delete(id);
         }
         internal void DeleteItem() {
@@ -991,8 +913,6 @@ namespace wiki
                     var index = lv.SelectedIndices[i];
                     this.DeleteItem(lv.DataItems[index].ID);
                 }
-                //var index = lv.SelectedIndices[0];
-                //this.DeleteItem(lv.DataItems[index].ID);
             }
         }
         internal void ClearItem() {
@@ -1014,24 +934,15 @@ namespace wiki
                 }
 
                 GetTabListViewControl(alltabpage).ClearItem(); ;
-                //var cnt = lv.DataItems.Count;
-                //for (int i = 0; i < cnt; i++) {
-                //    this.DeleteItem(lv.DataItems[i].ID);
-                //}
-                //category.ClearItem(cate);
                 category.Clear(cate);
             }   
         }
         internal void EditItem(long id) {
-            //var manager = category.getManger(getSelectedCategory());
-            //var item = manager.GetItem(id);
             var item = category.GetItem(id);
             if (item == null) return;
 
             this.OpenEditor();
             EditorInfoToolStripLabel.Text = "Editing id = " + id.ToString();
-
-            //manager.EditingData = item;
             category.EditingID = id;
             dirty = false;
             _editor.Text = item.Text;
@@ -1046,20 +957,12 @@ namespace wiki
             var last = (si + max) > cnt ? cnt : (si + max);
             var list = new List<Data>();
             for (int i = si; i < last; i++) {
-            //for (int i = cnt - si; i < si; i++) {
                 list.Add(listview.DataItems[i]);
             }
             return list;
         }
 
         private void Moves(long id) {
-            //if (config.ShowType == ShowType.Large) {
-            //    //var manager = category.getManger(getSelectedCategory());
-            //    //var item = manager.GetItem(id);
-            //    //reBuild(item);
-            //} else if (config.ShowType == ShowType.List) {
-            
-            //var view = GetSelctedTabControl();
             var view = GetSelctedTabListViewControl();
             var index = view.DataItems.FindIndex((n) => {
                 return (n.ID == id);
@@ -1094,17 +997,6 @@ namespace wiki
             var p = view.DataItems.Count / max;
             p = view.DataItems.Count % max == 0 ? p : p + 1;
             var page = p-cnt;// -view.Page;
-            //if (index <= config.ShowNum) {
-            //    page = 0;
-            //}
-            //else {
-            //    if (index % config.ShowNum == 0) {
-            //        page = index / config.ShowNum - 1;
-            //    }
-            //    else {
-            //        page = index / config.ShowNum;
-            //    }
-            //}
             if (view.Page != page) {
                 view.Page = page;
                 var list = getCurrentPageDatas(view, config.ShowNum);
@@ -1114,11 +1006,6 @@ namespace wiki
             }
             var url = config.htmlPath + "#" + id;
             webBrowser1.Navigate(url);
-
-            //}
-            //else {
-            //}
-            //}
         }
 
         private ListViewEx GetTabListViewControl(TabPage page) {
@@ -1133,37 +1020,16 @@ namespace wiki
             return getTabControl(getSelectedCategory());
         }
 
-        //private Dictionary<Search, TabPage> searchtabdic = new Dictionary<Search, TabPage>();
-        //private Dictionary<TabControl, Dictionary<Search, TabPage>> searchtabdic = new Dictionary<TabControl, Dictionary<Search, TabPage>>();
         private bool dirty = false;
         private TabPage CreateListViewTabPage(string categoryname, TabControl tabcontrol, Search search) {
-            //if (searchtabdic.ContainsKey(tabcontrol)) {
-            //    var dic = searchtabdic[tabcontrol];
-            //    foreach (var item in dic.Keys) {
-            //        if (item.Equals(search)) {
-            //            var p = dic[search];
-            //            var lv = GetTabListViewControl(p);
-            //            var manager = category.getManger(getSelectedCategory());
-            //            lv.DataItems = manager.Filter(search.getSearch());
-            //            return p;
-            //        }
-            //    }
-            //} else {
-            //    searchtabdic.Add(tabcontrol, new Dictionary<Search, TabPage>());
-            //}
             for (int i = 0; i < tabcontrol.TabPages.Count; i++) {
                 var tabpage = tabcontrol.TabPages[i];
                 var lw = GetTabListViewControl(tabpage);
                 if (lw.search == search) {
-                    //var manager = category.getManger(getSelectedCategory());
-                    //lw.DataItems = manager.Filter(search.getSearch());
                     lw.DataItems = category.Filter(getSelectedCategory(), search.getSearch());
                     return tabpage;
                 }
             }
-
-            //var items = category.getManger(categoryname).Filter(search.getSearch());
-            //var listview = new ListViewEx(items);
 
             var listview = new ListViewEx(category.Filter(categoryname, search.getSearch()));
             var page = listview.DataItems.Count / config.ShowNum;
@@ -1182,18 +1048,7 @@ namespace wiki
                 }
             };
 
-            //listview.SelectedIndexChanged += (sender, e) => {
-            //    if (config.ShowType == ShowType.Large && listview.SelectedIndices.Count == 1) {
-            //        var selindex = listview.SelectedIndices[0];
-            //        var item = listview.DataItems[selindex];
-            //        //var cf = InvokeScript("js_getComeFrom");
-            //        //var dic = JsonSerializer.Deserialize<Dictionary<string, string>>(cf.ToString());
-            //        //Console.WriteLine("cf = " + cf);
-            //        reBuild(item);
-            //    }
-            //};
             listview.DoubleClick += (sender, e) => {
-                //if (config.ShowType == ShowType.List && listview.SelectedIndices.Count == 1) {
                 if (listview.SelectedIndices.Count == 1) {
                     var selindex = listview.SelectedIndices[0];
                     var id = listview.DataItems[selindex].ID;
@@ -1208,29 +1063,15 @@ namespace wiki
                     listview.DoDragDrop(data, DragDropEffects.Move);
                 }
             };
-            //listview.MouseMove += (s, e) => {
-            //    if (e.Button == MouseButtons.Left) {
-            //        if(listview.SelectedIndices.Count>0){
-            //            var index = listview.SelectedIndices[0];
-            //            var data = listview.DataItems[index];
-            //            listview.DoDragDrop(data, DragDropEffects.Move);
-            //        }
-            //    }
-            //};
 
             listview.Dock = DockStyle.Fill;
 
             var t = new TabPage(search.Pattern);
             t.Controls.Add(listview);
-            //ItemTabControl.TabPages.Add(t);
-
-            //searchtabdic[tabcontrol].Add(search, t);
-
             return t;
         }
 
         private string getSelectedCategory() {
-            //return CategoryListView.SelectedItems[0].Text;
             return this.categoryname;
         }
 
@@ -1286,9 +1127,6 @@ namespace wiki
         }
 
         private void reBuild(Data item) {
-            //var list = new List<Data>() { item };
-            //var json = JsonSerializer.Serialize(list);
-            //InvokeScript("js_BuildByID", json);
             List<string> wo = new List<string>() { "test", "FireBug" };
             var words = JsonSerializer.Serialize(wo);
             var json = JsonSerializer.Serialize(item);
@@ -1296,9 +1134,6 @@ namespace wiki
         }
 
         private void reBuild(long insertBefore,  Data item) {
-            //var list = new List<Data>() { item };
-            //var json = JsonSerializer.Serialize(list);
-            //InvokeScript("js_BuildInsertByID", insertBefore.ToString(), json);
             var json = JsonSerializer.Serialize(item);
             InvokeScript("js_BuildInsertByID", insertBefore.ToString(), json);
         }
@@ -1314,11 +1149,7 @@ namespace wiki
         private void toolStripMenuItem1_Click(object sender, EventArgs e) {
             var ae = webBrowser1.Document.ActiveElement;
             var h = ae.GetAttribute("href");
-          
-            
+        
         }
-
-    }
-
-    
+    }  
 }

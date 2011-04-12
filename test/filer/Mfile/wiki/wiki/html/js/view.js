@@ -315,15 +315,35 @@ var jsview = {
         hr.className = "list";
         container.appendChild(hr);
 
-        var did = document.createElement('a');
-        did.id = id;
-        container.appendChild(did);
+        //var did = document.createElement('a');
+        //did.id = id;
+        //container.appendChild(did);
 
         var date = document.createElement('div');
         date.id = 'date' + id;
         date.className = "tools";
-        date.appendChild(document.createTextNode(id + " " + creationtime.toLocaleString()));
+        var did = document.createElement('a');
+        did.href = "javascript:void(0)";
+        did.appendChild(document.createTextNode(id + " " + creationtime.toLocaleString()));
+        //date.appendChild(document.createTextNode(id + " " + creationtime.toLocaleString()));
+        date.appendChild(did);
         container.appendChild(date);
+        $(did).click(function (event) {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                async: false,
+                dataType: "text",
+                url: requrl + "/" + id + "/select",
+                success: function (data) {
+                    //alert("data = " + data);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error textStatus = " + errorThrown);
+                }
+            });
+            return false;
+        });
 
         var tools = document.createElement('div');
         tools.id = 'tools' + id;

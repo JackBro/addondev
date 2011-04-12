@@ -19,10 +19,23 @@ body {
  /*
 body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; line-height: 14px; }
 */
-
-:link { color: blue ! important }
+/*
+:link  
+{
+    text-decoration:none;
+    color: blue ! important;
+}
 :visited { color: blue ! important }
+*/
+a:link {
+ text-decoration:none;
+ color:#666C88;
+}
 
+a:visited {
+ text-decoration:none;
+ color:#656769;
+}
 .list 
 {
 /*
@@ -39,7 +52,8 @@ body { font-family: 'Lucida Grande', 'ＭＳ ゴシック'; font-size: small; li
 	margin: 5px;
 }
 
-.tools {
+.tools 
+{
 	background-color: #D3D3D3;
 	font-size: medium; 
 }
