@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using wiki.control;
+using System.Drawing;
 
 namespace wiki {
     partial class MainForm {
@@ -20,6 +21,7 @@ namespace wiki {
 
             
             _editor.ShowsLineNumber = true;
+            _editor.ColorScheme.SetColor(Sgry.Azuki.CharClass.Heading6 + 1, Color.Red, Color.Red);
 
             _editor.ImeOnOffEvent += (sender, e) => {
                 if (_editor.Document.AnchorIndex > 0) {

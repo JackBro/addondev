@@ -7,7 +7,8 @@ using Sgry.Azuki.Highlighter;
 namespace wiki.control {
     class EditorHighlighter : KeywordHighlighter {
         public EditorHighlighter() {
-            
+            //this.
+            AddEnclosure("", "", Sgry.Azuki.CharClass.Heading6 + 1);
         }
     }
 }
