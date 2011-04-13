@@ -105,6 +105,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="config\Config.cs" />
+    <Compile Include="control\EditorHighlighter.cs" />
     <Compile Include="control\SnippetForm.cs">
       <SubType>Form</SubType>
     </Compile>

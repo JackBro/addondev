@@ -251,7 +251,7 @@ namespace wiki
                 switch (param["method"]) {
                     case "edit": {
                             var id = long.Parse(param["id"]);
-                            this.EditItem(id);
+                            this.EditItem(id, true);
                         }
                         break;
                     case "delete": {
@@ -270,6 +270,18 @@ namespace wiki
                     case "move": {
                             var id = long.Parse(param["id"]);
                             this.Moves(id);
+                        }
+                        break;
+                    case "select": {
+                            var id = long.Parse(param["id"]);
+                            var lv = GetSelctedTabListViewControl();
+                            var index = lv.DataItems.FindIndex(n => {
+                                return n.ID == id;
+                            });
+                            if (index >= 0 && index<lv.Items.Count) {
+                                lv.Items[index].Selected = true;
+                                lv.Items[index].EnsureVisible();
+                            }
                         }
                         break;
                     case "goto": {
@@ -400,7 +412,7 @@ namespace wiki
                                 else {
                                     reBuild(listview.DataItems[iindex + 1].ID, e.Item);
                                 }
-                                this.EditItem(e.Item.ID);
+                                this.EditItem(e.Item.ID, true);
                             }
                             else {
                                 //var tabc = Tabs[e.Name];
@@ -416,9 +428,9 @@ namespace wiki
                             var name = category.getCategoryName(e.FromCategoryID);
                             if (TabPanel.Controls[name] == GetCurrentTabControl()) {
                                 editContent(e.Item);
-                                var cf = InvokeScript("js_getComeFrom");
-                                var list = JsonSerializer.Deserialize<List<string>>(cf.ToString());
-                                config.ComeFormWords.Union(list);
+                                //var cf = InvokeScript("js_getComeFrom");
+                                //var list = JsonSerializer.Deserialize<List<string>>(cf.ToString());
+                                //config.ComeFormWords.Union(list);
                             }
                         }
                         break;
@@ -654,6 +666,13 @@ namespace wiki
                         InvokeScript("js_ClearAll");
                         reBuild(datas);
 
+                        if (datas.Count > 0 && listview.SelectedIndices.Count == 0) {
+                            listview.Items[0].Selected = true;
+                        }
+                        else if (datas.Count > 0) {
+                            var index  = listview.SelectedIndices[0];
+                            this.EditItem(listview.DataItems[index].ID, false);
+                        }
 
                         initPage();
                     }
@@ -753,7 +772,7 @@ namespace wiki
                 var lv = GetSelctedTabListViewControl();
                 if (lv.SelectedIndices.Count > 0) {
                     var index = lv.SelectedIndices[0];
-                    EditItem(lv.DataItems[index].ID);
+                    EditItem(lv.DataItems[index].ID, true);
                 }
             };
             TabListViewNewItemToolStripMenuItem.Click += (s, e) => {
@@ -791,6 +810,10 @@ namespace wiki
             return TabPanel.Controls[categoryname] as TabControl;
             //var tab = Tabs[categoryname];           
             //return tab;
+        }
+
+        void refreshTab() {
+            
         }
 
         private void saveItem() {
@@ -937,27 +960,44 @@ namespace wiki
                 category.Clear(cate);
             }   
         }
-        internal void EditItem(long id) {
+
+        internal void EditItem(long id, bool isfocus) {
+            EditItem(id, isfocus, true);
+        }
+
+        internal void EditItem(long id, bool isfocus, bool isopen) {
             var item = category.GetItem(id);
             if (item == null) return;
 
-            this.OpenEditor();
-            EditorInfoToolStripLabel.Text = "Editing id = " + id.ToString();
+            if (isopen) {
+                this.OpenEditor();
+            }
+            EditorInfoToolStripLabel.Text = "ID = " + id.ToString();
             category.EditingID = id;
             dirty = false;
             _editor.Text = item.Text;
-            _editor.Focus();
+            _editor.ClearHistory();
+            initEditorToolStripButton();
+            if (isfocus) {
+                _editor.Focus();
+            }
         }
 
         private List<Data> getCurrentPageDatas(ListViewEx listview, int max) {
-            var p = listview.DataItems.Count / max;
-            p = listview.DataItems.Count % max == 0 ? p : p + 1;
-            var si = (p-listview.Page) * max;
-            var cnt = listview.DataItems.Count;
-            var last = (si + max) > cnt ? cnt : (si + max);
             var list = new List<Data>();
-            for (int i = si; i < last; i++) {
-                list.Add(listview.DataItems[i]);
+            if (listview.DataItems.Count <= max) {
+                list = listview.DataItems;
+            }
+            else {
+                var p = listview.DataItems.Count / max;
+                p = listview.DataItems.Count % max == 0 ? p : p + 1;
+                var si = (p - listview.Page) * max;
+                var cnt = listview.DataItems.Count;
+                var last = (si + max) > cnt ? cnt : (si + max);
+                
+                for (int i = si; i < last; i++) {
+                    list.Add(listview.DataItems[i]);
+                }
             }
             return list;
         }
@@ -1045,6 +1085,13 @@ namespace wiki
                 var item = listview.GetItemAt(e.X, e.Y);
                 if (item == null && listview.FocusedItem !=null) {
                     listview.FocusedItem.Selected = true;
+                }
+            };
+
+            listview.ItemSelectionChanged += (sender, e) => {
+                if (e.IsSelected) {
+                    var d = listview.DataItems[e.ItemIndex];
+                    this.EditItem(d.ID, false, false);
                 }
             };
 

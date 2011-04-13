@@ -14,37 +14,23 @@ namespace wiki {
             
             sb.ToggleButton.Click += new System.EventHandler(ToggleButton_Click);
             NormalToolStripMenuItem.Click += (sender, e) => {
-                //if (!NormalToolStripMenuItem.Checked) {
-                    NormalToolStripMenuItem.Checked = true;
-                    RegexToolStripMenuItem.Checked = false;
-                    MigemoToolStripMenuItem.Checked = false;
-                    sb.ToggleButton.Text = "N";
-                //}
-                //else {
-                //    NormalToolStripMenuItem.Checked = true;
-                //}
+                NormalToolStripMenuItem.Checked = true;
+                RegexToolStripMenuItem.Checked = false;
+                MigemoToolStripMenuItem.Checked = false;
+                sb.ToggleButton.Text = "N";
+
             };
             RegexToolStripMenuItem.Click += (sender, e) => {
-                //if (!RegexToolStripMenuItem.Checked) {
-                    RegexToolStripMenuItem.Checked = true;
-                    NormalToolStripMenuItem.Checked = false;
-                    MigemoToolStripMenuItem.Checked = false;
-                    sb.ToggleButton.Text = "R";
-                //}
-                //else {
-                //    RegexToolStripMenuItem.Checked = true;
-                //}
+                RegexToolStripMenuItem.Checked = true;
+                NormalToolStripMenuItem.Checked = false;
+                MigemoToolStripMenuItem.Checked = false;
+                sb.ToggleButton.Text = "R";
             };
             MigemoToolStripMenuItem.Click += (sender, e) => {
-                //if (!MigemoToolStripMenuItem.Checked) {
-                    MigemoToolStripMenuItem.Checked = true;
-                    NormalToolStripMenuItem.Checked = false;
-                    RegexToolStripMenuItem.Checked = false;
-                    sb.ToggleButton.Text = "M";
-                //}
-                //else {
-                //    MigemoToolStripMenuItem.Checked = true;
-                //}
+                MigemoToolStripMenuItem.Checked = true;
+                NormalToolStripMenuItem.Checked = false;
+                RegexToolStripMenuItem.Checked = false;
+                sb.ToggleButton.Text = "M";
             };
 
             NormalToolStripMenuItem.Checked = true;
@@ -75,8 +61,10 @@ namespace wiki {
                     var sobj = CreateSearchObj(text, mode);
 
                     var t = getTabControl(getSelectedCategory());
-                    var p = CreateListViewTabPage(getSelectedCategory(), t, sobj);                
-                    t.TabPages.Add(p);
+                    var p = CreateListViewTabPage(getSelectedCategory(), t, sobj);
+                    if (!t.TabPages.Contains(p)) {
+                        t.TabPages.Add(p);
+                    }
                     t.BringToFront();
                     t.SelectedTab = p;
                     //ItemTabControl.SelectedTab = p;

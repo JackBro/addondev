@@ -26,6 +26,16 @@ namespace wiki {
             Search s = (Search)obj;
             return (this.Mode == s.Mode) && (this.Pattern == s.Pattern);
         }
+
+        public static bool operator ==(Search x, Search y) {
+            if (Object.ReferenceEquals(x, null) && Object.ReferenceEquals(y, null)) return true;
+            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null)) return false; 
+
+            return (x.Mode == y.Mode) && (x.Pattern == y.Pattern);
+        }
+        public static Boolean operator !=(Search x, Search y) {
+            return !(x == y);
+        }
     }
 
     class SearchAll : Search {

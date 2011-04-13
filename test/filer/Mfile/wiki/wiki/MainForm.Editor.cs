@@ -39,6 +39,14 @@ namespace wiki {
                 }
             };
 
+            _editor.TextChanged += (s, e) => {
+                initEditorToolStripButton();
+            };
+
+            _editor.Document.SelectionChanged += (s, e) => {
+                initEditorToolStripButton();
+            };
+
             CloseEditorToolStripButton.Click += (sender, e) => {
                 //ViewEditorSplitContainer.Panel2Collapsed = true;
                 CloseEditor();
@@ -82,6 +90,14 @@ namespace wiki {
             EditorDateToolStripButton.Click += (s, e) => {
                 EditDateTime();
             };
+        }
+
+        void initEditorToolStripButton() {
+            UndoToolStripButto.Enabled = _editor.CanUndo;
+            RedoToolStripButton.Enabled = _editor.CanRedo;
+            CopyToolStripButton.Enabled = _editor.CanCopy;
+            CutToolStripButton.Enabled = _editor.CanCut;
+            PasteToolStripButton.Enabled = _editor.CanPaste;
         }
 
         void SearchComboBox_TextChanged(object sender, EventArgs e) {
