@@ -131,6 +131,7 @@
     <Compile Include="control\DateTimeForm.Designer.cs">
       <DependentUpon>DateTimeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExternalEditor.cs" />
     <Compile Include="MainForm.Action.cs">
       <SubType>Form</SubType>
     </Compile>

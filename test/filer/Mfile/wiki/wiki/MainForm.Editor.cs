@@ -111,8 +111,6 @@ namespace wiki {
 
             };
 
-            FileSystemWatcher fn = new FileSystemWatcher();
-            fn.
         }
 
         void initEditorToolStripButton() {
