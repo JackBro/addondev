@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using wiki.control;
 using System.Drawing;
+using System.IO;
 
 namespace wiki {
     partial class MainForm {
@@ -19,9 +20,20 @@ namespace wiki {
             _editor.Dock = DockStyle.Fill;
             EditorPanel.Controls.Add(_editor);
 
-            
+            _editor.Font = config.EditorFont;
+            _editor.ForeColor = config.EditorFontColor;
+            _editor.BackColor = config.EditorBackColor;
+            _editor.DrawsTab = config.ShowTab;
+            _editor.DrawsSpace = config.ShowSpace;
+            _editor.DrawsFullWidthSpace = config.ShowZenSpace;
+            _editor.DrawsEolCode = config.ShowEol;
             _editor.ShowsLineNumber = true;
-            _editor.ColorScheme.SetColor(Sgry.Azuki.CharClass.Heading6 + 1, Color.Red, Color.Red);
+
+            _editor.ColorScheme.SetColor(Sgry.Azuki.CharClass.Heading6 + 1, Color.Red, _editor.BackColor);
+            _editor.Highlighter = new EditorHighlighter();
+
+            EditorWrapToolStripButton.Checked = config.EdiorWrap;
+            CloseEditor();
 
             _editor.ImeOnOffEvent += (sender, e) => {
                 if (_editor.Document.AnchorIndex > 0) {
@@ -48,6 +60,8 @@ namespace wiki {
             _editor.Document.SelectionChanged += (s, e) => {
                 initEditorToolStripButton();
             };
+
+            //_editor.DragDrop
 
             CloseEditorToolStripButton.Click += (sender, e) => {
                 //ViewEditorSplitContainer.Panel2Collapsed = true;
@@ -92,6 +106,13 @@ namespace wiki {
             EditorDateToolStripButton.Click += (s, e) => {
                 EditDateTime();
             };
+
+            EditorPinToolStripButton.CheckedChanged += (s, e) => {
+
+            };
+
+            FileSystemWatcher fn = new FileSystemWatcher();
+            fn.
         }
 
         void initEditorToolStripButton() {

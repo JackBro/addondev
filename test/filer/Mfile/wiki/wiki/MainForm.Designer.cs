@@ -55,6 +55,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.EditorWrapToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.EditorInfoToolStripLabel = new System.Windows.Forms.ToolStripLabel();
+            this.EditorPinToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +63,7 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -248,7 +250,8 @@
             this.EditorSearchToolStripButton,
             this.toolStripSeparator4,
             this.EditorWrapToolStripButton,
-            this.EditorInfoToolStripLabel});
+            this.EditorInfoToolStripLabel,
+            this.EditorPinToolStripButton});
             this.EditorToolStrip.Location = new System.Drawing.Point(0, 0);
             this.EditorToolStrip.Name = "EditorToolStrip";
             this.EditorToolStrip.Size = new System.Drawing.Size(657, 25);
@@ -361,6 +364,17 @@
             this.EditorInfoToolStripLabel.Size = new System.Drawing.Size(81, 22);
             this.EditorInfoToolStripLabel.Text = "toolStripLabel1";
             // 
+            // EditorPinToolStripButton
+            // 
+            this.EditorPinToolStripButton.CheckOnClick = true;
+            this.EditorPinToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.EditorPinToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("EditorPinToolStripButton.Image")));
+            this.EditorPinToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.EditorPinToolStripButton.Name = "EditorPinToolStripButton";
+            this.EditorPinToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.EditorPinToolStripButton.Text = "toolStripButton1";
+            this.EditorPinToolStripButton.ToolTipText = "Pin";
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -412,9 +426,17 @@
             // 
             // viewToolStripMenuItem
             // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editorToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
             this.viewToolStripMenuItem.Text = "View";
+            // 
+            // editorToolStripMenuItem
+            // 
+            this.editorToolStripMenuItem.Name = "editorToolStripMenuItem";
+            this.editorToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.editorToolStripMenuItem.Text = "Editor";
             // 
             // ToolToolStripMenuItem
             // 
@@ -830,6 +852,8 @@
         private System.Windows.Forms.ToolStripMenuItem CategoryEmptyToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel SpacerToolStripStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel ScriptErrorToolStripStatusLabel;
+        private System.Windows.Forms.ToolStripButton EditorPinToolStripButton;
+        private System.Windows.Forms.ToolStripMenuItem editorToolStripMenuItem;
     }
 }
 

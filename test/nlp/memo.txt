@@ -1,3 +1,13 @@
+kozawa_WI2-2011.pdf(外出行動の事前情報を提供するためのWeb からのアドバイス文抽出)
+http://developer.cybozu.co.jp/tech/2009/05/post-a7de.html
+http://labs.cybozu.co.jp/blog/nakatani/2009/04/perceptron_1.html
+http://d.hatena.ne.jp/syou6162/20091115/1258220877
+http://nlp.iit.tsukuba.ac.jp/member/utsuro/papers/utsuro/deim2009-final-katayama-embedded.pdf
+http://d.hatena.ne.jp/echizen_tm/20110120/1295547335
+http://blog.moro-tyo.net/2006/07/-svm.html
+http://bosho-nedo.ddo.jp/lab/index.php/%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB
+http://d.hatena.ne.jp/momo_dev/20080331/p2
+
 http://d.hatena.ne.jp/echizen_tm/20110114/1295030258
 http://www-tsujii.is.s.u-tokyo.ac.jp/~hillbig/papers/2008-08-03-crf.pdf
 http://www.kamishima.net/jp/publist.html#BIB034

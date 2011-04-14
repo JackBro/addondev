@@ -95,15 +95,7 @@ namespace wiki
             initSearch();
             initBrowser();
 
-            Editor.Font = config.EditorFont;
-            Editor.ForeColor = config.EditorFontColor;
-            Editor.BackColor = config.EditorBackColor;
-            Editor.DrawsTab = config.ShowTab;
-            Editor.DrawsSpace = config.ShowSpace;
-            Editor.DrawsFullWidthSpace = config.ShowZenSpace;
-            Editor.DrawsEolCode = config.ShowEol;
-            EditorWrapToolStripButton.Checked = config.EdiorWrap;
-            CloseEditor();
+
 
             sm.init();
             sm.ScriptDir = config.ScriptDirPath;
@@ -286,7 +278,7 @@ namespace wiki
                         break;
                     case "goto": {
                             var word = param["data"];
-                            var s = CreateSearchObj(word, SearchMode.Normal);
+                            var s = CreateSearchObj(word, SearchMode.Text);
                             //ItemTabControl.SelectedTab = CreateListViewTabPage(word, s);
                             var seltabc = getTabControl(getSelectedCategory());
                             seltabc.SelectedTab = CreateListViewTabPage(getSelectedCategory(), seltabc, s);
@@ -966,6 +958,8 @@ namespace wiki
         }
 
         internal void EditItem(long id, bool isfocus, bool isopen) {
+            if (EditorPinToolStripButton.Checked) return;
+
             var item = category.GetItem(id);
             if (item == null) return;
 

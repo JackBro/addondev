@@ -354,13 +354,53 @@ var jsview = {
         eelem.href = "javascript:void(0)";
         eelem.appendChild(document.createTextNode("Edit"));
         tools.appendChild(eelem);
+
+        $(eelem).mousedown(function (event) {
+            alert(event.which);
+            if (event.which == 2) { //middle
+                event.stopPropagation();
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    async: false,
+                    dataType: "text",
+                    url: requrl + "/" + id + "/editor",
+                    success: function (data) {
+                        //alert("data = " + data);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("error textStatus = " + errorThrown);
+                    }
+                });              
+            }
+        });
+//        $(".togglable").wrap(
+//          "<a href='javascript:void(0);'
+//          onclick='return false;'></a>"
+//        );
+
         $(eelem).click(function (event) {
+//            alert(event.which);
+//            var req = requrl + "/" + id;
+//            switch (event.which) {
+//                case 1: //left
+//                    req += req + "/edit";
+//                    break;
+//                case 2: //middle
+//                    req += req + "/externaleditor";
+//                    break;
+//                case 3: //right
+//                    break;
+//                default:
+//                    break;
+//            }
             $.ajax({
                 type: "GET",
                 cache: false,
                 async: false,
                 dataType: "text",
                 url: requrl + "/" + id + "/edit",
+                //url: req,
                 success: function (data) {
                     //alert("data = " + data);
                 },

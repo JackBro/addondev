@@ -7,9 +7,10 @@ using System.Text.RegularExpressions;
 namespace wiki {
     public enum SearchMode {
         All,
-        Normal,
+        Text,
         Regex,
-        Migemo
+        Migemo,
+        DateTime
     }
     abstract class Search {
         public SearchMode Mode { get; protected set; }
@@ -48,9 +49,9 @@ namespace wiki {
         }
     }
 
-    class SearchNormal : Search{
-        public SearchNormal(String Pattern) {
-            this.Mode = SearchMode.Normal;
+    class SearchText : Search{
+        public SearchText(String Pattern) {
+            this.Mode = SearchMode.Text;
             this.Pattern = Pattern;
         }
         public override Predicate<Data> getSearch() {
@@ -89,6 +90,23 @@ namespace wiki {
             return x => {
                 return reg.IsMatch(x.Text);
             };
+        }
+    }
+
+    class SearchDateTime : Search {
+        private DateTime start, end;
+        public SearchDateTime(DateTime start, DateTime end) {
+            this.start = start;
+            this.end = end;
+            this.Mode = SearchMode.DateTime;
+            this.Pattern = "datetime";
+            
+        }
+
+        public override Predicate<Data> getSearch() {
+            return x => {
+                return (this.start <= x.CreationTime && x.CreationTime <= this.end);
+            };         
         }
     }
 }

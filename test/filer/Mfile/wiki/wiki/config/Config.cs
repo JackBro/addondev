@@ -93,6 +93,8 @@ namespace wiki {
 
         public bool EdiorWrap { get; set; }
 
+        public string ExternalEditor { get; set; }
+
         [XmlIgnore]
         public string SnippetListPath { get; set; }
         [XmlIgnore]
@@ -108,7 +110,6 @@ namespace wiki {
         public void SaveSnippetList() {
             XMLSerializer.Serialize<List<string>>(SnippetListPath, SnippetList);
         }
-
 
         public Config() {
             ItemTemplete = "new";

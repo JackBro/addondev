@@ -52,7 +52,7 @@ namespace wiki {
                     //    return x.Text.Contains(SearchComboBox.Text); ;
                     //}));
                     var text = SearchComboBox.Text;
-                    SearchMode mode = SearchMode.Normal;
+                    SearchMode mode = SearchMode.Text;
                     if(RegexToolStripMenuItem.Checked){
                         mode = SearchMode.Regex;
                     }else if(MigemoToolStripMenuItem.Checked){
@@ -93,8 +93,8 @@ namespace wiki {
         Search CreateSearchObj(string pattern, SearchMode mode) {
             Search s = null;
             switch (mode) {
-                case SearchMode.Normal:
-                    s = new SearchNormal(pattern);
+                case SearchMode.Text:
+                    s = new SearchText(pattern);
                     //s.Pattern = pattern;
                     break;
                 case SearchMode.Regex:
