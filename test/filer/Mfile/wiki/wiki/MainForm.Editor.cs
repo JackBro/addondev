@@ -19,7 +19,6 @@ namespace wiki {
             _editor = new AzukiControlEx();
             _editor.Dock = DockStyle.Fill;
             EditorPanel.Controls.Add(_editor);
-
             _editor.Font = config.EditorFont;
             _editor.ForeColor = config.EditorFontColor;
             _editor.BackColor = config.EditorBackColor;

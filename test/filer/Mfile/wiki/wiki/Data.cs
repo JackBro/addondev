@@ -45,7 +45,7 @@ namespace wiki {
     }
 
     public class Data {
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         //public int CategoryID { get; set; }
 

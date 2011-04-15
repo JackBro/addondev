@@ -9,6 +9,7 @@ namespace wiki {
     partial class MainForm {
         private SearchControl _browserSearchControl;
         private void initBrowser() {
+
             BrowserSearchToolStripButton.CheckedChanged += (sender, e) => {
                 string pat = string.Empty;
                 if (BrowserSearchToolStripButton.Checked) {

@@ -1,3 +1,5 @@
+http://d.hatena.ne.jp/tkng/20081217/1229475900
+
 kozawa_WI2-2011.pdf(外出行動の事前情報を提供するためのWeb からのアドバイス文抽出)
 http://developer.cybozu.co.jp/tech/2009/05/post-a7de.html
 http://labs.cybozu.co.jp/blog/nakatani/2009/04/perceptron_1.html

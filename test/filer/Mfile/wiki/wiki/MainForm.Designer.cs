@@ -435,8 +435,9 @@
             // editorToolStripMenuItem
             // 
             this.editorToolStripMenuItem.Name = "editorToolStripMenuItem";
-            this.editorToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.editorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.editorToolStripMenuItem.Text = "Editor";
+            this.editorToolStripMenuItem.Click += new System.EventHandler(this.editorToolStripMenuItem_Click);
             // 
             // ToolToolStripMenuItem
             // 
@@ -449,7 +450,7 @@
             // OptionToolStripMenuItem
             // 
             this.OptionToolStripMenuItem.Name = "OptionToolStripMenuItem";
-            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.OptionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.OptionToolStripMenuItem.Text = "Option";
             // 
             // toolStrip1

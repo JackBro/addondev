@@ -271,14 +271,23 @@ var jsview = {
     },
 
     editContent: function (json) {
-        var text = json["Text"];
-        var id = json["ID"];
-        var container = document.getElementById(id); //$('#' + id);
-        var pageElement = this.getWikiParser().parse(text, id);
-        $('#page' + id).remove();
-        pageElement.id = 'page' + id;
-        container.appendChild(pageElement);
-        this.cf = this.getWikiParser().cf;
+        try {
+            var text = json["Text"];
+            var id = json["ID"];
+            var container = document.getElementById(id); //$('#' + id);
+            var pageElement = this.getWikiParser().parse(text, id);
+            $('#page' + id).remove();
+            pageElement.id = 'page' + id;
+            container.appendChild(pageElement);
+            this.cf = this.getWikiParser().cf;
+        } catch (e) {
+            var r = "";
+            for (var ek in e) {
+                r += e[ek] + "\n";
+            }
+            alert(r);
+        }
+
     },
 
     rebuild: function (json) {
@@ -356,7 +365,7 @@ var jsview = {
         tools.appendChild(eelem);
 
         $(eelem).mousedown(function (event) {
-            alert(event.which);
+            //alert(event.which);
             if (event.which == 2) { //middle
                 event.stopPropagation();
                 $.ajax({
@@ -371,8 +380,9 @@ var jsview = {
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         alert("error textStatus = " + errorThrown);
                     }
-                });              
+                });
             }
+            return false;
         });
 //        $(".togglable").wrap(
 //          "<a href='javascript:void(0);'
@@ -400,6 +410,7 @@ var jsview = {
                 async: false,
                 dataType: "text",
                 url: requrl + "/" + id + "/edit",
+                //url: requrl + "/" + id + "/editor",
                 //url: req,
                 success: function (data) {
                     //alert("data = " + data);

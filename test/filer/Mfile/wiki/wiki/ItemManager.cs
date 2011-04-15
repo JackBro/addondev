@@ -13,7 +13,7 @@ namespace wiki {
         public static string Trust = "Trust";
         public static string Ext = ".xml";
 
-        public long EditingID { get; set; }
+        public int EditingID { get; set; }
 
         private string datapath;
         public string DataDir { 
@@ -91,13 +91,13 @@ namespace wiki {
             manager[getCategoryID(categoryname)].Insert(item);
         }
 
-        public Data Read(long id) {
+        public Data Read(int id) {
             return datalist.Find(n => {
                 return n.ID == id;
             });
         }
 
-        public void UpDateText(long id, string text) {
+        public void UpDateText(int id, string text) {
             var item = GetItem(id);
             item.Text = text;
             foreach (var mana in manager.Values) {
@@ -107,7 +107,7 @@ namespace wiki {
             }
         }
 
-        public void UpDateCreationTime(long id, DateTime creationtime) {
+        public void UpDateCreationTime(int id, DateTime creationtime) {
             var item = GetItem(id);
             item.CreationTime = creationtime;
             foreach (var mana in manager.Values) {
@@ -117,7 +117,7 @@ namespace wiki {
             }
         }
 
-        public void UpDateCategory(long id, int fromid, int toid) {
+        public void UpDateCategory(int id, int fromid, int toid) {
             var item = GetItem(id);
             foreach (var mana in manager.Values) {
                 if (mana.UpDate(item, fromid, toid)) {
@@ -130,7 +130,7 @@ namespace wiki {
             }
         }
 
-        public void Delete(long id) {
+        public void Delete(int id) {
             var item = GetItem(id);
             if (item != null) {
                 foreach (var mana in manager.Values) {
@@ -154,7 +154,7 @@ namespace wiki {
             }
         }
 
-        public long GetNewID() {
+        public int GetNewID() {
             //int s = 0;
             //foreach (var m in manager.Values) {
             //    s+=m.GetDataCount();
@@ -172,7 +172,7 @@ namespace wiki {
             return datalist.Last().ID + 1;
         }
 
-        public Data GetItem(long id) {
+        public Data GetItem(int id) {
             //foreach (var m in manager.Values) {
             //    var item = m.GetItem(id);
             //    if (item != null) return item;
@@ -183,7 +183,7 @@ namespace wiki {
             });
         }
 
-        public List<Data> GetItem(List<long> ids) {
+        public List<Data> GetItem(List<int> ids) {
             //var res = new List<Data>();
             //foreach (var id in ids) {
             //    var data = this.getItem(id);

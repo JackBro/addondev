@@ -31,6 +31,10 @@ namespace wiki
             #endregion
         }
 
+        //delegate void FocusDelegate(Data function);
+        delegate void FocusDelegate(int function, string text);
+        delegate string TextDelegate(string text);
+
         private string categoryname;
         private Category category;
 
@@ -40,6 +44,7 @@ namespace wiki
         private BackgroundWorker serveBW;
 
         internal Config config;
+        ExternalEditor externalEditor;
         
         ScriptManager sm = new ScriptManager();
 
@@ -59,6 +64,31 @@ namespace wiki
         Regex regMethod = new Regex(@"\/item\/(\w+)$", RegexOptions.Compiled);
 
         private Dictionary<string, string> reqparam = new Dictionary<string, string>();
+
+        System.Text.UTF8Encoding u = new UTF8Encoding(false);
+        private string ReadText(string filepath) {
+
+            List<string> texts = new List<string>();
+            //hStream = File::Open(sDir + "\\" + sNam, FileMode::Open, FileAccess::Read, FileShare::ReadWrite);
+            //using (FileStream fs = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)){
+            using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                using (TextReader sr = new StreamReader(fs, u)) {
+                    using (var ssr = TextReader.Synchronized(sr)) {
+
+                        String line;
+                        // Read and display lines from the file until the end of
+                        // the file is reached.
+                        while ((line = ssr.ReadLine()) != null) {
+                            //Console.WriteLine(line);
+                            texts.Add(line);
+                        }
+                    }
+                    //sr.Close();
+                }
+                //fs.Close();
+            }
+            return string.Join("\n", texts.ToArray());
+        }
 
         public MainForm() {
             InitializeComponent();
@@ -89,7 +119,20 @@ namespace wiki
             ViewEditorSplitContainer.SplitterDistance = config.BrowserH;
             ListViewSplitContainer.Orientation = config.TabListView_BrowserOri;
             ListViewSplitContainer.SplitterDistance = config.ListViewSize;
-            
+
+            externalEditor = new ExternalEditor(Path.GetFullPath(@"."));
+            externalEditor.UpDateEvent += (s, e) => {
+
+                //var te= this.Invoke(new TextDelegate(ReadText), e.ID.ToString()+ ".txt");
+                this.Invoke(new FocusDelegate(category.UpDateText), e.ID, e.Text);
+                //category.UpDateText(e.ID, e.Text);
+                
+                //var i = category.GetItem(e.ID);
+                //i.Text = e.Text;
+                //this.Invoke(new FocusDelegate(this.editContent), i);
+                //this.Invoke(InvokeScript);
+            };
+
             initKeyMap();
             initEditor();
             initSearch();
@@ -117,16 +160,16 @@ namespace wiki
 
                 var m = regID.Match(url);
                 if (m.Success) {
-                    var idlist = new List<long>();
+                    var idlist = new List<int>();
                     var idstr = m.Groups[1].Value;
                     if (idstr.IndexOf(',') > 0) {
                         var ids = idstr.Split(',');
                         foreach (var id in ids) {
-                            idlist.Add(long.Parse(id));
+                            idlist.Add(int.Parse(id));
                         }
                     }
                     else {
-                        var id = long.Parse(idstr);
+                        var id = int.Parse(idstr);
                         idlist.Add(id);
                     }
                     //var manager = category.getManger(getSelectedCategory());
@@ -242,12 +285,26 @@ namespace wiki
                 var param = e.UserState as Dictionary<string, string>;
                 switch (param["method"]) {
                     case "edit": {
-                            var id = long.Parse(param["id"]);
+                            var id = int.Parse(param["id"]);
                             this.EditItem(id, true);
                         }
                         break;
+                    case "editor": {
+                            var id = int.Parse(param["id"]);
+                            //this.EditItem(id, true);
+                        var item = category.GetItem(id);
+                        if (item != null) {
+                            //externalEditor.stopFw();
+                            //var filepath = id.ToString() + ".txt";
+                            //File.WriteAllText(filepath, item.Text, Encoding.UTF8);
+                            //externalEditor.Process(@"C:\Program Files\sakura\sakura.exe", filepath);
+                            //externalEditor.startFw();
+                            externalEditor.write(id, item.Text);
+                        }
+                        }
+                        break;
                     case "delete": {
-                            var id = long.Parse(param["id"]);
+                            var id = int.Parse(param["id"]);
                             this.DeleteItem(id);
                         }
                         break;
@@ -260,12 +317,12 @@ namespace wiki
                         sm.Eval(script);
                         break;
                     case "move": {
-                            var id = long.Parse(param["id"]);
+                            var id = int.Parse(param["id"]);
                             this.Moves(id);
                         }
                         break;
                     case "select": {
-                            var id = long.Parse(param["id"]);
+                            var id = int.Parse(param["id"]);
                             var lv = GetSelctedTabListViewControl();
                             var index = lv.DataItems.FindIndex(n => {
                                 return n.ID == id;
@@ -326,7 +383,9 @@ namespace wiki
                     migemo.Dispose();
                 }
                 serveBW.CancelAsync();
-                serveBW.ReportProgress(0);
+                if (serveBW.IsBusy) {
+                    serveBW.ReportProgress(0);
+                }
                 //httpServer.stop();
 
                 config.WindowState = this.WindowState;
@@ -550,6 +609,7 @@ namespace wiki
                
                 
             };
+
             webBrowser1.Navigated += (s, e) => {
                 webBrowser1.Document.Window.Error += (ss, se) => {
                     //se.
@@ -918,7 +978,7 @@ namespace wiki
                 category.Create(config.ItemTemplete, DateTime.Now, getSelectedCategory());
             }
         }
-        internal void DeleteItem(long id) {
+        internal void DeleteItem(int id) {
             category.Delete(id);
         }
         internal void DeleteItem() {
@@ -953,11 +1013,11 @@ namespace wiki
             }   
         }
 
-        internal void EditItem(long id, bool isfocus) {
+        internal void EditItem(int id, bool isfocus) {
             EditItem(id, isfocus, true);
         }
 
-        internal void EditItem(long id, bool isfocus, bool isopen) {
+        internal void EditItem(int id, bool isfocus, bool isopen) {
             if (EditorPinToolStripButton.Checked) return;
 
             var item = category.GetItem(id);
@@ -996,7 +1056,7 @@ namespace wiki
             return list;
         }
 
-        private void Moves(long id) {
+        private void Moves(int id) {
             var view = GetSelctedTabListViewControl();
             var index = view.DataItems.FindIndex((n) => {
                 return (n.ID == id);
@@ -1116,9 +1176,15 @@ namespace wiki
             return this.categoryname;
         }
 
+
+
         private Object InvokeScript(string function, params string[] param) {
+            //object[] pp = (object[])param;
             return webBrowser1.Document.InvokeScript(function, param);
+            //var a = Convert.ToString(param);
+            //return webBrowser1.Document.InvokeScript(function, a);
         }
+
         private Object InvokeScript(string function) {
             return webBrowser1.Document.InvokeScript(function);
         }
@@ -1165,6 +1231,7 @@ namespace wiki
         private void editContent(Data item) {
             var json = JsonSerializer.Serialize(item);
             InvokeScript("js_editContent", json);
+            //InvokeScript("js_editContent", new string[]{json});
         }
 
         private void reBuild(Data item) {
@@ -1174,7 +1241,7 @@ namespace wiki
             InvokeScript("js_BuildByID", json, words);
         }
 
-        private void reBuild(long insertBefore,  Data item) {
+        private void reBuild(int insertBefore, Data item) {
             var json = JsonSerializer.Serialize(item);
             InvokeScript("js_BuildInsertByID", insertBefore.ToString(), json);
         }
@@ -1191,6 +1258,11 @@ namespace wiki
             var ae = webBrowser1.Document.ActiveElement;
             var h = ae.GetAttribute("href");
         
+        }
+
+        private void editorToolStripMenuItem_Click(object sender, EventArgs e) {
+            var t = File.ReadAllText("100.txt");
+            category.UpDateText(100, t);
         }
     }  
 }
