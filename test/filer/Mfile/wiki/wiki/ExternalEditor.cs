@@ -67,7 +67,8 @@ namespace wiki {
             //        sr.Write(text);
             //    }
             //}
-            this.Process(@"C:\Program Files\tpad\TeraPad.exe", filepath);
+            //this.Process(@"C:\Program Files\tpad\TeraPad.exe", filepath);
+            this.Process(@"D:\program\tpad\TeraPad.exe", filepath);
             //this.startFw();
             fw.EnableRaisingEvents = true;
         }
