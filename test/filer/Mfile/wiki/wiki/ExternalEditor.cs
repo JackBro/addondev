@@ -67,8 +67,8 @@ namespace wiki {
             //        sr.Write(text);
             //    }
             //}
-            //this.Process(@"C:\Program Files\tpad\TeraPad.exe", filepath);
-            this.Process(@"D:\program\tpad\TeraPad.exe", filepath);
+            this.Process(@"C:\Program Files\tpad\TeraPad.exe", filepath);
+            //this.Process(@"D:\program\tpad\TeraPad.exe", filepath);
             //this.startFw();
             fw.EnableRaisingEvents = true;
         }
@@ -119,6 +119,7 @@ namespace wiki {
                         Console.WriteLine("read");
                         if (UpDateEvent != null) {
                             try {
+                                System.Threading.Thread.Sleep(100);
                                 //fw.EnableRaisingEvents = false;
                                 var text = ReadText(e.FullPath);// File.ReadAllText(e.FullPath, u);
                                 var id = int.Parse(m.Groups[1].Value);
@@ -127,8 +128,13 @@ namespace wiki {
                                 //UpDateEvent(this, new UpDateEventArgs { ID = id });
                             }
                             catch (Exception ex) {
-                                MessageBox.Show(ex.Message);
+                                Console.WriteLine("Exception = " + ex.Message);
+                                //MessageBox.Show(ex.Message);
+                                //lastwrite.Remove(e.FullPath);
+                                //System.Threading.Thread.Sleep(100);
+                                
                                 //throw;
+                                //startFw();
                             }
                         }
 

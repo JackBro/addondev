@@ -26,6 +26,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.PortSearchButton = new System.Windows.Forms.Button();
             this.PortTextBox = new System.Windows.Forms.TextBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,6 +57,10 @@
             this.PortTextBox.Size = new System.Drawing.Size(100, 19);
             this.PortTextBox.TabIndex = 0;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // MainConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -74,5 +79,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox PortTextBox;
         private System.Windows.Forms.Button PortSearchButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
