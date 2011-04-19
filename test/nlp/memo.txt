@@ -1,3 +1,7 @@
+http://blogger.splhack.org/2009/06/vim-ruby-debugger-macvim.html
+http://debug-commons.rubyforge.org/protocol-spec.html
+http://www.ginriki.net/wd/category/ruby/ruby-on-rails/
+
 http://www1.doshisha.ac.jp/~mjin/R/28.pdf
 http://www.jstage.jst.go.jp/article/sociotechnica/5/0/5_216/_article/-char/ja
 http://nlp.dse.ibaraki.ac.jp/~shinnou/zemi2007/zemi07-clustering.html
