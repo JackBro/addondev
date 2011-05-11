@@ -25,6 +25,10 @@ namespace MF {
             return size;
         }
 
+        public ListView listView {
+            get { return listView1; }
+        }
+
         private int MaxNameWidth;
         private int DateWidth;
         private string DateFormat;
@@ -78,26 +82,32 @@ namespace MF {
                 //}
             };
 
-            listView1.DoubleClick += (sender, e) => {
-                if (listView1.SelectedIndices.Count == 1) {
-                    var index = listView1.SelectedIndices[0];
-                    if (!Items[index].IsFile) {
-                        var name = Items[index].Name;
-                        this.Path = System.IO.Path.Combine(this.Path, name);
-                    }
-                }
-            };
+            //listView1.DoubleClick += (sender, e) => {
+            //    if (listView1.SelectedIndices.Count == 1) {
+            //        var index = listView1.SelectedIndices[0];
+            //        if (!Items[index].IsFile) {
+            //            var name = Items[index].Name;
+            //            this.Path = System.IO.Path.Combine(this.Path, name);
+            //        }
+            //    }
+            //    else {
+            //    }
+            //};
 
             listView1.RetrieveVirtualItem += (sender, e) => {
                 if (e.ItemIndex < Items.Count) {
                     var item = Items[e.ItemIndex];
                     var listviewitem = new ListViewItem();
-                    if (!item.IsFile) {
-                        //listviewitem.ForeColor = Color.Yellow;
-                    }
-                    listviewitem.Text = item.Name;
-                    listviewitem.SubItems.Add("");
 
+                    listviewitem.Text = item.Name;
+                    //if (item.IsFile) {
+                        //listviewitem.ForeColor = Color.Yellow;
+                        listviewitem.SubItems.Add(item.type);
+                    //}
+                    //else {
+                    //    listviewitem.SubItems.Add("Dir");
+                    //}
+                    
                     listviewitem.SubItems.Add(getFileSizeFormat(item.Size));
                     listviewitem.SubItems.Add(item.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"));
                     //listviewitem.SubItems.Add(item.LastWriteTime.ToLongDateString());
@@ -106,40 +116,60 @@ namespace MF {
             };
 
             listView1.DrawSubItem += (sender, e) => {
-                // 描画するSubItemが2列目(ColumnIndexが1)の時は、StringAligment.Farに設定して、右寄せにする
-                // それ以外は、Nearにして、標準の左寄せ
-                StringFormat drawFormat = new StringFormat();
-                if (e.ColumnIndex == 2) {
-                    drawFormat.Alignment = StringAlignment.Far;
-                } else {
-                    drawFormat.Alignment = StringAlignment.Near;
+                //// 描画するSubItemが2列目(ColumnIndexが1)の時は、StringAligment.Farに設定して、右寄せにする
+                //// それ以外は、Nearにして、標準の左寄せ
+                //StringFormat drawFormat = new StringFormat();
+                //if (e.ColumnIndex == 2) {
+                //    drawFormat.Alignment = StringAlignment.Far;
+                //} else {
+                //    drawFormat.Alignment = StringAlignment.Near;
+                //}
+
+                //System.Drawing.Brush brush;
+
+                //// Forcus = 0x0010,Selected = 0x0001 として ItemStateにForcusとSelectedがセットされていた場合、
+                //// 2bitで書くと Selected = 0001 0000 ItemState = 0000 0001で
+                //// この二つ論理積を取ると0000 0001(0x0001 = Selected)となる。
+                ////if ((e.ItemState & ListViewItemStates.Selected) == ListViewItemStates.Selected) {
+                //if (listView1.SelectedIndices.Contains(e.ItemIndex)) {
+                //    // Hightlightで範囲を塗りつぶす
+                //    e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
+                //    // 上でセルを塗りつぶしているので、表示する文字を反転する
+                //    brush = SystemBrushes.HighlightText;
+                //} else {
+                //    //if (!Items[e.ItemIndex].IsFile) {
+                //    //    brush = SystemBrushes.HighlightText;
+                //    //} else {
+                //        // 塗りつぶされていない通常のセルはWindowsTextに設定する
+                //        brush = SystemBrushes.WindowText;
+                //    //}
+                //}
+
+                //// 上で設定した,brushとdrawFormatを利用して文字を描画する
+                //e.Graphics.DrawString(e.SubItem.Text, e.Item.Font, brush, e.Bounds, drawFormat);
+
+                //// drawFormatを開放する
+                //drawFormat.Dispose();
+
+                TextFormatFlags flg;
+                if (e.ColumnIndex == 0) {
+                    flg = TextFormatFlags.EndEllipsis;
+                }else if (e.ColumnIndex == 2) {
+                    flg = TextFormatFlags.Right;
                 }
-
-                System.Drawing.Brush brush;
-
-                // Forcus = 0x0010,Selected = 0x0001 として ItemStateにForcusとSelectedがセットされていた場合、
-                // 2bitで書くと Selected = 0001 0000 ItemState = 0000 0001で
-                // この二つ論理積を取ると0000 0001(0x0001 = Selected)となる。
-                //if ((e.ItemState & ListViewItemStates.Selected) == ListViewItemStates.Selected) {
+                else {
+                    flg = TextFormatFlags.Left;
+                }
+                Color brush;
                 if (listView1.SelectedIndices.Contains(e.ItemIndex)) {
-                    // Hightlightで範囲を塗りつぶす
                     e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
-                    // 上でセルを塗りつぶしているので、表示する文字を反転する
-                    brush = SystemBrushes.HighlightText;
-                } else {
-                    //if (!Items[e.ItemIndex].IsFile) {
-                    //    brush = SystemBrushes.HighlightText;
-                    //} else {
-                        // 塗りつぶされていない通常のセルはWindowsTextに設定する
-                        brush = SystemBrushes.WindowText;
-                    //}
+                    brush = SystemColors.HighlightText;
                 }
-
-                // 上で設定した,brushとdrawFormatを利用して文字を描画する
-                e.Graphics.DrawString(e.SubItem.Text, e.Item.Font, brush, e.Bounds, drawFormat);
-
-                // drawFormatを開放する
-                drawFormat.Dispose();
+                else {
+                    brush = SystemColors.WindowText;
+                }
+                Rectangle r = new Rectangle(e.Bounds.Location, new Size(listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height));
+                TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, r, brush, flg);
             };
 
             listView1.DrawColumnHeader += (sender, e) => {
@@ -152,6 +182,7 @@ namespace MF {
                     Path = textBox1.Text;
                 }
             };
+
         }
 
         #region IDisposable メンバ
@@ -163,16 +194,31 @@ namespace MF {
 
         #endregion
 
+        internal class ChangePathEventArgs : EventArgs {
+            public string path;
+        }
+        internal delegate void ChangePathEventHandler(object sender, ChangePathEventArgs e);
+
+        internal event ChangePathEventHandler ChangePath;
+
         private string _path;
         public string Path{
             get { return this._path; }
             set {
-                this._path = value;
-                textBox1.Text = this._path;
-                this.LoadDir(this._path);
+                if (value != null) {
+                    this._path = value;
+                    textBox1.Text = this._path;
+                    if (ChangePath != null) {
+                        ChangePath(this, new ChangePathEventArgs { path = this._path });
+                    }
+                    this.LoadDir(this._path);
+                }
             }
         }
 
+        internal List<FileItem> ItemList {
+            get { return Items; }
+        }
         private List<FileItem> Items = new List<FileItem>();
         private void LoadDir(string path) {
 
@@ -210,6 +256,7 @@ namespace MF {
                     FileItem fitem = new FileItem();
                     fitem.IsFile = false;
                     fitem.Name = item.Name;
+                    fitem.type = "/";
                     //fitem.NameWidth = GetTextExtend(fitem.Name).width;
                     //if (MaxNameWidth < fitem.NameWidth) {
                     //    MaxNameWidth = fitem.NameWidth;
@@ -221,6 +268,7 @@ namespace MF {
                     FileItem fitem = new FileItem();
                     fitem.IsFile = true;
                     fitem.Name = item.Name;
+                    fitem.type = item.Extension;
                     //fitem.NameWidth = GetTextExtend(fitem.Name).width;
                     //if (MaxNameWidth < fitem.NameWidth) {
                     //    MaxNameWidth = fitem.NameWidth;
@@ -240,7 +288,25 @@ namespace MF {
             return KBSize;
         }
 
+        internal void MoveUp() {
+            var u = UpDirPath(this.Path);
+            if (!u.Equals(this.Path)) {
+                this.Path = u;
+            }
+        }
+
+        private string UpDirPath(string path) {
+            if (!path.EndsWith(@"\")) {
+                path += @"\";
+            }
+            Uri u1 = new Uri(path);
+            Uri u2 = new Uri(u1, @"..\");
+
+            return u2.LocalPath;
+        }
+
         private void toolStripButton1_Click(object sender, EventArgs e) {
+            MoveUp();
         }
     }
 }
