@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using Peter;
 
 namespace MF {
     public partial class MainForm : Form {
@@ -136,6 +137,20 @@ namespace MF {
                         }
                         item.Selected = true;
                     }
+                } else if (e.Button == MouseButtons.Right) {
+                    var ctm = new ShellContextMenu();
+                    var selfiles = us.SelectedItemList;
+                    if (selfiles.Count == 0) {
+                        DirectoryInfo[] dir = new DirectoryInfo[1];
+                        dir[0] = new DirectoryInfo(us.Path);
+                        ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));
+                    } else {
+                        List<FileInfo> arrFI = new List<FileInfo>();
+                        selfiles.ForEach(x => {
+                            arrFI.Add(new FileInfo(Path.Combine(us.Path, x.Name)));
+                        });
+                        ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
+                    }    
                 }
             };
             us.listView.MouseUp += (s, e) => {

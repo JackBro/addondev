@@ -216,6 +216,17 @@ namespace MF {
             }
         }
 
+        internal List<FileItem> SelectedItemList {
+            get {
+                var ret = new List<FileItem>();
+                var indexs = listView1.SelectedIndices;
+                for (int i = 0; i < indexs.Count; i++) {
+                    ret.Add(Items[indexs[i]]);
+                }
+                return ret;
+            }
+        }
+
         internal List<FileItem> ItemList {
             get { return Items; }
         }
