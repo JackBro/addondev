@@ -18,7 +18,7 @@ namespace MF {
             this.ResizeEnd += (sender, e) => {
                 ResizeWindow();
             };
-            panel1.SizeChanged += (sender, e) => {
+            flowLayoutPanel1.SizeChanged += (sender, e) => {
                 ResizeWindow();
             };
 
@@ -83,22 +83,39 @@ namespace MF {
                 Rectangle r = new Rectangle(e.Bounds.Location, new Size(HistoryListView.Width, e.Bounds.Height));
                 TextRenderer.DrawText(e.Graphics, e.Item.Text, e.Item.Font, r, brush, TextFormatFlags.PathEllipsis);
             };
+
+            flowLayoutPanel1.ControlRemoved += (s, e) => {
+                ResizeWindow();
+            };
             
         }
 
         private void ResizeWindow() {
-            var w = panel1.Width / (panel1.Controls.Count) - 1;
+            var rmax = 3;
+            var cc = flowLayoutPanel1.Controls.Count < rmax ? flowLayoutPanel1.Controls.Count : rmax;
+            //var w = panel1.Width / (panel1.Controls.Count) - 1;
+            var w = flowLayoutPanel1.Width / cc;
+            var hc = flowLayoutPanel1.Controls.Count / cc;
+            var h = 0;
+            if (hc == 0) {
+                h = flowLayoutPanel1.Height;
+            }
+            else {
+                h = flowLayoutPanel1.Controls.Count % cc == 0 ? flowLayoutPanel1.Height / hc : flowLayoutPanel1.Height / (hc + 1);
+            }
 
-            foreach (var item in panel1.Controls) {
+            //foreach (var item in panel1.Controls) {
+            foreach (var item in flowLayoutPanel1.Controls) {
                 UserControl1 u = item as UserControl1;
                 u.Width = w;
+                u.Height = h;
             }          
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e) {
             UserControl1 us = new UserControl1();
-            us.Dock = DockStyle.Right;
-            panel1.Controls.Add(us); 
+            //us.Dock = DockStyle.Right;
+            flowLayoutPanel1.Controls.Add(us); 
 
             ResizeWindow();
         }
@@ -108,15 +125,22 @@ namespace MF {
         }
         private UserControl1 createView(string path) {
             UserControl1 us = new UserControl1();
+            us.listView.BackColor = Color.LightGray;
             us.Enter += (s, e) => {
+                if (activeUs != null) {
+                    activeUs.listView.BackColor = Color.LightGray;
+                }
                 activeUs = us;
+                activeUs.listView.BackColor = Color.White;
             };
+
             us.listView.DoubleClick += (sender, e) => {
                 if (us.listView.SelectedIndices.Count == 1) {
                     var items = us.ItemList; 
                     var index = us.listView.SelectedIndices[0];
                     var fp = System.IO.Path.Combine(us.Path, items[index].Name);
                     if (items[index].IsFile) {
+                        HistoryListView.Items.Insert(0, fp);
                         Process.Start(fp);
                     }
                     else {
@@ -126,31 +150,19 @@ namespace MF {
                 }
             };
             us.listView.MouseDown += (s, e) => {
-                if (e.Button == MouseButtons.Middle) {
+                if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) {
                     var item = us.listView.GetItemAt(e.Location.X, e.Location.Y);
                     if (item != null) {
-                        var indexs = us.listView.SelectedIndices;
-                        if (indexs.Count > 0) {
-                            for (int i = 0; i < indexs.Count; i++) {
+                        if ((e.Button == MouseButtons.Right && !us.listView.SelectedIndices.Contains(item.Index))
+                            || e.Button == MouseButtons.Middle) {
+                            var indexs = new int[us.listView.SelectedIndices.Count];
+                            us.listView.SelectedIndices.CopyTo(indexs, 0);
+                            for (int i = 0; i < indexs.Length; i++) {
                                 us.listView.Items[indexs[i]].Selected = false;
                             }
+                            item.Selected = true;
                         }
-                        item.Selected = true;
                     }
-                } else if (e.Button == MouseButtons.Right) {
-                    var ctm = new ShellContextMenu();
-                    var selfiles = us.SelectedItemList;
-                    if (selfiles.Count == 0) {
-                        DirectoryInfo[] dir = new DirectoryInfo[1];
-                        dir[0] = new DirectoryInfo(us.Path);
-                        ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));
-                    } else {
-                        List<FileInfo> arrFI = new List<FileInfo>();
-                        selfiles.ForEach(x => {
-                            arrFI.Add(new FileInfo(Path.Combine(us.Path, x.Name)));
-                        });
-                        ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
-                    }    
                 }
             };
             us.listView.MouseUp += (s, e) => {
@@ -163,17 +175,29 @@ namespace MF {
                         }
                     }
                 }
+                else if (e.Button == MouseButtons.Right) {
+                    var ctm = new ShellContextMenu();
+                    var selfiles = us.SelectedItemList;
+                    if (selfiles.Count == 0) {
+                        DirectoryInfo[] dir = new DirectoryInfo[1];
+                        dir[0] = new DirectoryInfo(us.Path);
+                        ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));
+                    }
+                    else {
+                        List<FileInfo> arrFI = new List<FileInfo>();
+                        selfiles.ForEach(x => {
+                            arrFI.Add(new FileInfo(Path.Combine(us.Path, x.Name)));
+                        });
+                        ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
+
+                    } 
+                }
             };
             us.ChangePath += (s, e) => {
-                //string tt=e.path;
-                //TextRenderer.DrawText
-                //TextRenderer.MeasureText(tt, us.listView.Font, new Size(100, 20), TextFormatFlags.ModifyString); 
                 HistoryListView.Items.Insert(0, e.path);
             };
 
-            us.Dock = DockStyle.Right;
-
-            panel1.Controls.Add(us);
+            flowLayoutPanel1.Controls.Add(us);
             us.Path = path;
 
             ResizeWindow();

@@ -7,10 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace MF {
 
     public partial class UserControl1 : UserControl, IDisposable {
+        private const int LVM_FIRST = 0x1000;
+        private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
+        private const int LVM_GETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 55);
+        private const int LVS_EX_DOUBLEBUFFER = 0x00010000;
+
         private IntPtr dc_;
         private IntPtr hfont_;
         private IntPtr hwnd_;
@@ -29,6 +35,9 @@ namespace MF {
             get { return listView1; }
         }
 
+        public event EventHandler Closed;
+        public event EventHandler Closing;
+
         private int MaxNameWidth;
         private int DateWidth;
         private string DateFormat;
@@ -37,6 +46,7 @@ namespace MF {
             InitializeComponent();
 
             this.DoubleBuffered = true;
+            this.Margin = new Padding(0);
 
             hwnd_ = listView1.Handle;
             dc_ = Win32API.GetDC(hwnd_);
@@ -47,6 +57,11 @@ namespace MF {
             listView1.VirtualListSize = 0;
             listView1.FullRowSelect = true;
             listView1.View = View.Details;
+
+            int styles = (int)MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_GETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)0);
+            styles |= LVS_EX_DOUBLEBUFFER;
+            MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)styles);
+
 
             DateWidth = GetTextExtend(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")).width+10;
 
@@ -69,8 +84,10 @@ namespace MF {
             headerLastWriteTime.Name = "lastwritetime";
             headerLastWriteTime.Text = "lastwritetime";
             headerLastWriteTime.Width = DateWidth;
+
             //headerLastWriteTime.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView1.Columns.Add(headerLastWriteTime);
+            //listView1.ColumnClick
 
             listView1.SizeChanged += (sender, e) => {
                 //var w = listView1.Width;
@@ -166,7 +183,12 @@ namespace MF {
                     brush = SystemColors.HighlightText;
                 }
                 else {
-                    brush = SystemColors.WindowText;
+                    if (Items[e.ItemIndex].IsFile) {
+                        brush = SystemColors.WindowText;
+                    }
+                    else {
+                        brush = Color.Blue;
+                    }
                 }
                 Rectangle r = new Rectangle(e.Bounds.Location, new Size(listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height));
                 TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, r, brush, flg);
@@ -183,6 +205,89 @@ namespace MF {
                 }
             };
 
+            CloseToolStripButton.Click += (s, e) => {
+                Close();
+            };
+
+            fileSystemWatcher1.IncludeSubdirectories = false;
+            //fileSystemWatcher1.NotifyFilter = (NotifyFilters.DirectoryName | NotifyFilters.FileName | NotifyFilters.Size);
+            fileSystemWatcher1.SynchronizingObject = this;
+            fileSystemWatcher1.Created += new FileSystemEventHandler(fileSystemWatcher1_Changed);
+            fileSystemWatcher1.Deleted += new FileSystemEventHandler(fileSystemWatcher1_Changed);
+            fileSystemWatcher1.Changed += new FileSystemEventHandler(fileSystemWatcher1_Changed);
+            fileSystemWatcher1.Renamed += (s, e) => {
+                
+            };
+
+        }
+        FileItem lFileItem = null;
+
+        void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e) {
+            switch (e.ChangeType) {
+                case System.IO.WatcherChangeTypes.Changed:
+                    Console.WriteLine("ファイル 「" + e.FullPath + "」が変更されました。");
+                    if (File.Exists(e.FullPath)) {
+                        FileItem fi = null;
+                        var info = new FileInfo(e.FullPath);
+                        if (lFileItem != null && lFileItem.Name.Equals(e.Name)) {
+                            fi = lFileItem;
+                        }
+                        else if ((listView1.SelectedIndices.Count > 0 && Items[listView1.SelectedIndices[0]].Name.Equals(e.Name))) {
+                            fi = Items[listView1.SelectedIndices[0]];
+                        }else{
+                            fi = Items.First(x => {
+                                return x.Name.Equals(e.Name);
+                            });
+                        }
+                        if (fi != null) {
+                            fi.Size = info.Length;
+                            fi.LastWriteTime = info.LastWriteTime; 
+   
+                            var index = Items.IndexOf(fi);
+                            listView1.RedrawItems(index, index, false);
+                        }
+                        lFileItem = fi;
+                    }
+                    break;
+                case System.IO.WatcherChangeTypes.Created:
+                    var fitem = new FileItem();
+                    fitem.Name = e.Name;
+                    if (File.Exists(e.FullPath)) {
+                        //var info = new FileInfo(e.FullPath);
+                        fitem.IsFile = true;
+                        fitem.type = e.Name.Substring(e.Name.IndexOf("."));
+                        //fitem.Size = info.Length;
+                        //fitem.LastWriteTime = info.LastWriteTime;
+                    }
+                    else {
+                        //var info = new DirectoryInfo(e.FullPath);
+                        fitem.IsFile = false;
+                        fitem.type = "/";
+                        //fitem.LastWriteTime = info.LastWriteTime;
+                    }
+                    lFileItem = fitem;
+                    Items.Add(fitem);
+                    listView1.VirtualListSize = Items.Count;
+                    Console.WriteLine("ファイル 「" + e.FullPath + "」がCreatedされました。");
+                    break;
+                case System.IO.WatcherChangeTypes.Deleted:
+                    Console.WriteLine("ファイル 「" + e.FullPath + "」が削除されました。");
+                    Items.Remove(Items.First(x=>{
+                        return x.Name.Equals(e.Name);
+                    }));
+                    listView1.VirtualListSize = Items.Count;
+                    break;
+            }
+        }
+
+        internal void Close() {
+            if (Closing != null) {
+                Closing(this, new EventArgs());
+            }
+            this.Parent.Controls.Remove(this);
+            if (Closed != null) {
+                Closed(this, new EventArgs());
+            }
         }
 
         #region IDisposable メンバ
@@ -206,12 +311,27 @@ namespace MF {
             get { return this._path; }
             set {
                 if (value != null) {
+                    if (this._path == null) {
+                        var w = listView1.Width;
+                        w -= listView1.Columns["type"].Width;// headerType.Width;
+                        w -= listView1.Columns["size"].Width;//headerSize.Width;
+                        w -= listView1.Columns["lastwritetime"].Width + 10;//headerLastWriteTime.Width + 10;
+                        if (w > 0) {
+                            listView1.Columns["name"].Width = w;// headerName.Width = w;
+                        }
+                    }
                     this._path = value;
                     textBox1.Text = this._path;
                     if (ChangePath != null) {
                         ChangePath(this, new ChangePathEventArgs { path = this._path });
                     }
+                    fileSystemWatcher1.EnableRaisingEvents = false;
                     this.LoadDir(this._path);
+
+                    fileSystemWatcher1.Path = this._path;
+                    fileSystemWatcher1.NotifyFilter = (NotifyFilters.DirectoryName | NotifyFilters.FileName | NotifyFilters.Size);
+                    fileSystemWatcher1.EnableRaisingEvents = true;
+                    
                 }
             }
         }

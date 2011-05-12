@@ -28,5 +28,9 @@ namespace MF {
         [DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
         public static extern bool GetTextExtentExPointW(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string lpszStr,
            int cchString, int nMaxExtent, out int lpnFit, int[] alpDx, out SIZE lpSize);
+
+        [ComVisibleAttribute(false)]
+        internal class NativeMethods { [DllImport("user32.dll")] public static extern int SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam); }
+
     }
 }

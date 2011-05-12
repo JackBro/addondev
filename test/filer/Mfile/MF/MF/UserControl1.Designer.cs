@@ -30,7 +30,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.ClosetoolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.CloseToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
@@ -85,7 +85,7 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ClosetoolStripButton,
+            this.CloseToolStripButton,
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -93,15 +93,15 @@
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // ClosetoolStripButton
+            // CloseToolStripButton
             // 
-            this.ClosetoolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ClosetoolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ClosetoolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("ClosetoolStripButton.Image")));
-            this.ClosetoolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ClosetoolStripButton.Name = "ClosetoolStripButton";
-            this.ClosetoolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.ClosetoolStripButton.Text = "toolStripButton1";
+            this.CloseToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.CloseToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.CloseToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("CloseToolStripButton.Image")));
+            this.CloseToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CloseToolStripButton.Name = "CloseToolStripButton";
+            this.CloseToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.CloseToolStripButton.Text = "toolStripButton1";
             // 
             // toolStripButton1
             // 
@@ -140,7 +140,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton ClosetoolStripButton;
+        private System.Windows.Forms.ToolStripButton CloseToolStripButton;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
     }

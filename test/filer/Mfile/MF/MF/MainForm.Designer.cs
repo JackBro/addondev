@@ -26,13 +26,13 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.RegDirListView = new System.Windows.Forms.ListView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.RegDirListView = new System.Windows.Forms.ListView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.HistoryListView = new System.Windows.Forms.ListView();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -67,14 +67,6 @@
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
-            // panel1
-            // 
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(564, 512);
-            this.panel1.TabIndex = 1;
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -87,22 +79,10 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.panel1);
+            this.splitContainer1.Panel2.Controls.Add(this.flowLayoutPanel1);
             this.splitContainer1.Size = new System.Drawing.Size(691, 512);
             this.splitContainer1.SplitterDistance = 123;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // RegDirListView
-            // 
-            this.RegDirListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RegDirListView.HideSelection = false;
-            this.RegDirListView.Location = new System.Drawing.Point(3, 3);
-            this.RegDirListView.MultiSelect = false;
-            this.RegDirListView.Name = "RegDirListView";
-            this.RegDirListView.Size = new System.Drawing.Size(109, 481);
-            this.RegDirListView.TabIndex = 0;
-            this.RegDirListView.UseCompatibleStateImageBehavior = false;
-            this.RegDirListView.View = System.Windows.Forms.View.List;
             // 
             // tabControl1
             // 
@@ -123,8 +103,20 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(115, 487);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.Text = "Fav";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // RegDirListView
+            // 
+            this.RegDirListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RegDirListView.HideSelection = false;
+            this.RegDirListView.Location = new System.Drawing.Point(3, 3);
+            this.RegDirListView.MultiSelect = false;
+            this.RegDirListView.Name = "RegDirListView";
+            this.RegDirListView.Size = new System.Drawing.Size(109, 481);
+            this.RegDirListView.TabIndex = 0;
+            this.RegDirListView.UseCompatibleStateImageBehavior = false;
+            this.RegDirListView.View = System.Windows.Forms.View.List;
             // 
             // tabPage2
             // 
@@ -134,7 +126,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(115, 487);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "His";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // HistoryListView
@@ -149,6 +141,15 @@
             this.HistoryListView.TabIndex = 0;
             this.HistoryListView.UseCompatibleStateImageBehavior = false;
             this.HistoryListView.View = System.Windows.Forms.View.List;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(564, 512);
+            this.flowLayoutPanel1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -178,13 +179,13 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListView RegDirListView;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ListView HistoryListView;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
 
