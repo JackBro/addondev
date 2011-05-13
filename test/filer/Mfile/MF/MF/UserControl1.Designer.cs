@@ -50,7 +50,6 @@
             this.listView1.BackColor = System.Drawing.SystemColors.Window;
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(0, 44);
             this.listView1.Name = "listView1";

@@ -326,6 +326,7 @@ namespace Peter
             {
                 return null;
             }
+            if (arrFI[0].Parent == null) return null;
 
             IShellFolder oParentFolder = GetParentFolder(arrFI[0].Parent.FullName);
             if (null == oParentFolder)

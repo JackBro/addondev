@@ -138,33 +138,35 @@ namespace MF {
                 if (us.listView.SelectedIndices.Count == 1) {
                     var items = us.ItemList; 
                     var index = us.listView.SelectedIndices[0];
-                    var fp = System.IO.Path.Combine(us.Path, items[index].Name);
-                    if (items[index].IsFile) {
+                    //var fp = System.IO.Path.Combine(us.Path, items[index].Name);
+                    var fp = getFullPath(us.Path, items[index].Name);
+                    //if (items[index].IsFile) {
+                    if (File.Exists(fp)) {
                         HistoryListView.Items.Insert(0, fp);
                         Process.Start(fp);
                     }
-                    else {
+                    else if(Directory.Exists(fp)){
                         us.Path = fp;
                     }
 
                 }
             };
-            us.listView.MouseDown += (s, e) => {
-                if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) {
-                    var item = us.listView.GetItemAt(e.Location.X, e.Location.Y);
-                    if (item != null) {
-                        if ((e.Button == MouseButtons.Right && !us.listView.SelectedIndices.Contains(item.Index))
-                            || e.Button == MouseButtons.Middle) {
-                            var indexs = new int[us.listView.SelectedIndices.Count];
-                            us.listView.SelectedIndices.CopyTo(indexs, 0);
-                            for (int i = 0; i < indexs.Length; i++) {
-                                us.listView.Items[indexs[i]].Selected = false;
-                            }
-                            item.Selected = true;
-                        }
-                    }
-                }
-            };
+            //us.listView.MouseDown += (s, e) => {
+            //    if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) {
+            //        var item = us.listView.GetItemAt(e.Location.X, e.Location.Y);
+            //        if (item != null) {
+            //            if ((e.Button == MouseButtons.Right && !us.listView.SelectedIndices.Contains(item.Index))
+            //                || e.Button == MouseButtons.Middle) {
+            //                var indexs = new int[us.listView.SelectedIndices.Count];
+            //                us.listView.SelectedIndices.CopyTo(indexs, 0);
+            //                for (int i = 0; i < indexs.Length; i++) {
+            //                    us.listView.Items[indexs[i]].Selected = false;
+            //                }
+            //                item.Selected = true;
+            //            }
+            //        }
+            //    }
+            //};
             us.listView.MouseUp += (s, e) => {
                 if (e.Button == MouseButtons.Middle) {
                     if (us.listView.SelectedIndices.Count > 0) {
@@ -175,23 +177,22 @@ namespace MF {
                         }
                     }
                 }
-                else if (e.Button == MouseButtons.Right) {
-                    var ctm = new ShellContextMenu();
-                    var selfiles = us.SelectedItemList;
-                    if (selfiles.Count == 0) {
-                        DirectoryInfo[] dir = new DirectoryInfo[1];
-                        dir[0] = new DirectoryInfo(us.Path);
-                        ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));
-                    }
-                    else {
-                        List<FileInfo> arrFI = new List<FileInfo>();
-                        selfiles.ForEach(x => {
-                            arrFI.Add(new FileInfo(Path.Combine(us.Path, x.Name)));
-                        });
-                        ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
-
-                    } 
-                }
+                //else if (e.Button == MouseButtons.Right) {
+                //    var ctm = new ShellContextMenu();
+                //    var selfiles = us.SelectedItemList;
+                //    if (selfiles.Count == 0) {
+                //        DirectoryInfo[] dir = new DirectoryInfo[1];
+                //        dir[0] = new DirectoryInfo(us.Path);
+                //        ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));
+                //    }
+                //    else {
+                //        List<FileInfo> arrFI = new List<FileInfo>();
+                //        selfiles.ForEach(x => {
+                //            arrFI.Add(new FileInfo(Path.Combine(us.Path, x.Name)));
+                //        });
+                //        ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
+                //    } 
+                //}
             };
             us.ChangePath += (s, e) => {
                 HistoryListView.Items.Insert(0, e.path);
@@ -203,6 +204,15 @@ namespace MF {
             ResizeWindow();
 
             return us;
+        }
+
+        private string getFullPath(string parent, string name) {
+            if(name.EndsWith(".lnk", StringComparison.CurrentCultureIgnoreCase)){
+                return Util.getShortcutPath(System.IO.Path.Combine(parent, name));
+            }else{
+                return System.IO.Path.Combine(parent, name);
+            }
+            
         }
     }
 }

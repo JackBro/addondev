@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
+using Peter;
 
 namespace MF {
 
@@ -57,7 +58,7 @@ namespace MF {
             listView1.VirtualListSize = 0;
             listView1.FullRowSelect = true;
             listView1.View = View.Details;
-
+            
             int styles = (int)MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_GETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)0);
             styles |= LVS_EX_DOUBLEBUFFER;
             MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)styles);
@@ -88,6 +89,8 @@ namespace MF {
             //headerLastWriteTime.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView1.Columns.Add(headerLastWriteTime);
             //listView1.ColumnClick
+
+            listView1.ShowItemToolTips = true;
 
             listView1.SizeChanged += (sender, e) => {
                 //var w = listView1.Width;
@@ -126,7 +129,7 @@ namespace MF {
                     //}
                     
                     listviewitem.SubItems.Add(getFileSizeFormat(item.Size));
-                    listviewitem.SubItems.Add(item.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"));
+                    if (item.LastWriteTime!=null) listviewitem.SubItems.Add(item.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"));
                     //listviewitem.SubItems.Add(item.LastWriteTime.ToLongDateString());
                     e.Item = listviewitem;
                 }
@@ -179,7 +182,13 @@ namespace MF {
                 }
                 Color brush;
                 if (listView1.SelectedIndices.Contains(e.ItemIndex)) {
+                    //if (e.ColumnIndex == 0) {
+
                     e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
+
+                    //}
+                    //Rectangle hr = new Rectangle(e.Bounds.Location, new Size(listView1.Width, e.Bounds.Height));
+                    //e.Graphics.FillRectangle(SystemBrushes.Highlight, hr);
                     brush = SystemColors.HighlightText;
                 }
                 else {
@@ -198,6 +207,42 @@ namespace MF {
                 e.DrawDefault = true;
             };
 
+            listView1.MouseDown += (s, e) => {
+                if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) {
+                    var lv = s as ListView;
+                    var item = lv.GetItemAt(e.Location.X, e.Location.Y);
+                    if (item != null) {
+                        if ((e.Button == MouseButtons.Right && !lv.SelectedIndices.Contains(item.Index))
+                            || e.Button == MouseButtons.Middle) {
+                            var indexs = new int[lv.SelectedIndices.Count];
+                            lv.SelectedIndices.CopyTo(indexs, 0);
+                            for (int i = 0; i < indexs.Length; i++) {
+                                listView1.Items[indexs[i]].Selected = false;
+                            }
+                            item.Selected = true;
+                        }
+                    }
+                }
+            };
+            listView1.MouseUp += (s, e) => {
+                var lv = s as ListView;
+                if (e.Button == MouseButtons.Right) {
+                    var ctm = new ShellContextMenu();
+                    var selfiles = SelectedItemList;
+                    if (selfiles.Count == 0) {
+                        DirectoryInfo[] dir = new DirectoryInfo[1];
+                        dir[0] = new DirectoryInfo(this.Path);
+                        ctm.ShowContextMenu(dir, lv.PointToScreen(new Point(e.X, e.Y)));
+                    }
+                    else {
+                        List<FileInfo> arrFI = new List<FileInfo>();
+                        selfiles.ForEach(x => {
+                            arrFI.Add(new FileInfo(System.IO.Path.Combine(this.Path, x.Name)));
+                        });
+                        ctm.ShowContextMenu(arrFI.ToArray(), lv.PointToScreen(new Point(e.X, e.Y)));
+                    }
+                }
+            };
 
             textBox1.KeyDown +=(sender, e)=>{
                 if (e.KeyCode == Keys.Return) {
@@ -216,7 +261,7 @@ namespace MF {
             fileSystemWatcher1.Deleted += new FileSystemEventHandler(fileSystemWatcher1_Changed);
             fileSystemWatcher1.Changed += new FileSystemEventHandler(fileSystemWatcher1_Changed);
             fileSystemWatcher1.Renamed += (s, e) => {
-                
+
             };
 
         }
@@ -226,28 +271,27 @@ namespace MF {
             switch (e.ChangeType) {
                 case System.IO.WatcherChangeTypes.Changed:
                     Console.WriteLine("ファイル 「" + e.FullPath + "」が変更されました。");
-                    if (File.Exists(e.FullPath)) {
-                        FileItem fi = null;
-                        var info = new FileInfo(e.FullPath);
-                        if (lFileItem != null && lFileItem.Name.Equals(e.Name)) {
-                            fi = lFileItem;
-                        }
-                        else if ((listView1.SelectedIndices.Count > 0 && Items[listView1.SelectedIndices[0]].Name.Equals(e.Name))) {
-                            fi = Items[listView1.SelectedIndices[0]];
-                        }else{
-                            fi = Items.First(x => {
-                                return x.Name.Equals(e.Name);
-                            });
-                        }
-                        if (fi != null) {
-                            fi.Size = info.Length;
-                            fi.LastWriteTime = info.LastWriteTime; 
-   
-                            var index = Items.IndexOf(fi);
-                            listView1.RedrawItems(index, index, false);
-                        }
-                        lFileItem = fi;
-                    }
+                    //if (File.Exists(e.FullPath)) {
+                    //    FileItem fi = null;
+                    //    var info = new FileInfo(e.FullPath);
+                    //    if (lFileItem != null && lFileItem.Name.Equals(e.Name)) {
+                    //        fi = lFileItem;
+                    //    }
+                    //    else if ((listView1.SelectedIndices.Count > 0 && Items[listView1.SelectedIndices[0]].Name.Equals(e.Name))) {
+                    //        fi = Items[listView1.SelectedIndices[0]];
+                    //    }else{
+                    //        fi = Items.First(x => {
+                    //            return x.Name.Equals(e.Name);
+                    //        });
+                    //    }
+                    //    if (fi != null) {
+                    //        fi.Size = info.Length;
+                    //        fi.LastWriteTime = info.LastWriteTime; 
+                    //        var index = Items.IndexOf(fi);
+                    //        listView1.RedrawItems(index, index, false);
+                    //    }
+                    //    lFileItem = fi;
+                    //}
                     break;
                 case System.IO.WatcherChangeTypes.Created:
                     var fitem = new FileItem();
