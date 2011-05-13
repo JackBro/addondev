@@ -42,6 +42,7 @@ namespace MF {
         private int MaxNameWidth;
         private int DateWidth;
         private string DateFormat;
+        private TextFormatFlags flg;
 
         public UserControl1() {
             InitializeComponent();
@@ -56,7 +57,7 @@ namespace MF {
             listView1.OwnerDraw = true;
             listView1.VirtualMode = true;
             listView1.VirtualListSize = 0;
-            listView1.FullRowSelect = true;
+            //listView1.FullRowSelect = true;
             listView1.View = View.Details;
             
             int styles = (int)MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_GETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)0);
@@ -135,13 +136,15 @@ namespace MF {
                 }
             };
 
+
             listView1.DrawSubItem += (sender, e) => {
                 //// 描画するSubItemが2列目(ColumnIndexが1)の時は、StringAligment.Farに設定して、右寄せにする
                 //// それ以外は、Nearにして、標準の左寄せ
                 //StringFormat drawFormat = new StringFormat();
                 //if (e.ColumnIndex == 2) {
                 //    drawFormat.Alignment = StringAlignment.Far;
-                //} else {
+                //}
+                //else {
                 //    drawFormat.Alignment = StringAlignment.Near;
                 //}
 
@@ -153,15 +156,22 @@ namespace MF {
                 ////if ((e.ItemState & ListViewItemStates.Selected) == ListViewItemStates.Selected) {
                 //if (listView1.SelectedIndices.Contains(e.ItemIndex)) {
                 //    // Hightlightで範囲を塗りつぶす
-                //    e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
+                //    if (e.ColumnIndex == 0) {
+
+                //        e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
+
                 //    // 上でセルを塗りつぶしているので、表示する文字を反転する
                 //    brush = SystemBrushes.HighlightText;
-                //} else {
+                //    }else{
+                //        brush = SystemBrushes.WindowText;
+                //    }
+                //}
+                //else {
                 //    //if (!Items[e.ItemIndex].IsFile) {
                 //    //    brush = SystemBrushes.HighlightText;
                 //    //} else {
-                //        // 塗りつぶされていない通常のセルはWindowsTextに設定する
-                //        brush = SystemBrushes.WindowText;
+                //    // 塗りつぶされていない通常のセルはWindowsTextに設定する
+                //    brush = SystemBrushes.WindowText;
                 //    //}
                 //}
 
@@ -171,17 +181,18 @@ namespace MF {
                 //// drawFormatを開放する
                 //drawFormat.Dispose();
 
-                TextFormatFlags flg;
+                //TextFormatFlags flg;
                 if (e.ColumnIndex == 0) {
                     flg = TextFormatFlags.EndEllipsis;
-                }else if (e.ColumnIndex == 2) {
+                }
+                else if (e.ColumnIndex == 2) {
                     flg = TextFormatFlags.Right;
                 }
                 else {
                     flg = TextFormatFlags.Left;
                 }
                 Color brush;
-                if (listView1.SelectedIndices.Contains(e.ItemIndex)) {
+                if (e.ColumnIndex == 0 && listView1.SelectedIndices.Contains(e.ItemIndex)) {
                     //if (e.ColumnIndex == 0) {
 
                     e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
