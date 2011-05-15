@@ -25,6 +25,7 @@ namespace MF {
             //UserControl1 us = new UserControl1();
             //us.Dock = DockStyle.Fill;
             //panel1.Controls.Add(us);
+            //flowLayoutPanel1.FlowDirection = FlowDirection.
 
             var us = createView();
             if (activeUs == null) {

@@ -261,7 +261,7 @@ namespace MF {
                 }
             };
 
-            CloseToolStripButton.Click += (s, e) => {
+            CloseLabel.Click += (s, e) => {
                 Close();
             };
 

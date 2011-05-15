@@ -1,3 +1,6 @@
+http://developer.cybozu.co.jp/tech/2009/06/plrweb1-8cb7.html
+http://todayspython.blogspot.com/2011/05/web2py.html
+
 http://cse.naro.affrc.go.jp/takezawa/r-tips/r.html
 http://rbloger.blog51.fc2.com/blog-entry-31.html
 http://homepage2.nifty.com/nandemoarchive/toukei_hosoku/TextAnalysis.htm
