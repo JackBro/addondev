@@ -220,8 +220,9 @@ namespace MF {
             };
 
             us.listView.MouseMove += (s, e) => {
-                //if (e.Button == MouseButtons.Right) {
-                //Console.WriteLine("MouseMove");
+                if (e.Button == MouseButtons.Right) {
+                    Console.WriteLine("MouseMove");
+                }
                 if(mgstart){
                     Arrow arrow = mg.Test(new Point(e.X, e.Y));
                     if (arrow != Arrow.none) {
