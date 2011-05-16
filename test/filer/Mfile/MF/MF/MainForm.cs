@@ -9,14 +9,28 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Peter;
+using MouseGesture_Net;
 
 namespace MF {
     public partial class MainForm : Form {
+        Dictionary<Keys, Action<MainForm>> _KeyMap = new Dictionary<Keys, Action<MainForm>>();
+
         public MainForm() {
             InitializeComponent();
 
+            initKeyMap();
+            initMouseGesture();
+
             this.ResizeEnd += (sender, e) => {
                 ResizeWindow();
+            };
+            this.KeyPreview = true;
+            this.KeyDown += (sender, e) => {
+                if (_KeyMap.ContainsKey(e.KeyData)) {
+                    _KeyMap[e.KeyData](this);
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
             };
             flowLayoutPanel1.SizeChanged += (sender, e) => {
                 ResizeWindow();
@@ -34,10 +48,6 @@ namespace MF {
 
             RegDirListView.Items.Add(@"c:\");
             RegDirListView.Items.Add(@"d:\");
-
-            //var p = Path.GetFullPath(@"..\d:\src\ruby");
-            Uri u1 = new Uri(@"d:\data\src\ruby\");
-            Uri u2 = new Uri(u1, @"..\");
 
             //listView1.MouseClick += (s, e) => {
             //    if (listView1.SelectedItems.Count > 0) {
@@ -62,7 +72,7 @@ namespace MF {
                     var item = RegDirListView.SelectedItems[0];
                     var t = item.Text;
                     if (e.Button == MouseButtons.Left && activeUs != null) {
-                        activeUs.Path = t;
+                        activeUs.Dir = t;
                     }
                     else if (e.Button == MouseButtons.Middle) {
                         createView(t);
@@ -105,12 +115,30 @@ namespace MF {
                 h = flowLayoutPanel1.Controls.Count % cc == 0 ? flowLayoutPanel1.Height / hc : flowLayoutPanel1.Height / (hc + 1);
             }
 
-            //foreach (var item in panel1.Controls) {
-            foreach (var item in flowLayoutPanel1.Controls) {
+            ////foreach (var item in panel1.Controls) {
+            //foreach (var item in flowLayoutPanel1.Controls) {
+            //    UserControl1 u = item as UserControl1;
+            //    u.Width = w;
+            //    u.Height = h;
+            //}
+            
+            for (int i = 0; i < cc*hc; i++) {
+                var item = flowLayoutPanel1.Controls[i] as UserControl1;
                 UserControl1 u = item as UserControl1;
                 u.Width = w;
-                u.Height = h;
-            }          
+                u.Height = h;               
+            }
+
+            var resc = flowLayoutPanel1.Controls.Count % cc;
+            if (resc != 0) {
+                var resw = flowLayoutPanel1.Width / resc;
+                for (int i = cc * hc; i < cc * hc + resc; i++) {
+                    var item = flowLayoutPanel1.Controls[i] as UserControl1;
+                    UserControl1 u = item as UserControl1;
+                    u.Width = resw;
+                    u.Height = h;
+                }
+            }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -120,16 +148,22 @@ namespace MF {
 
             ResizeWindow();
         }
-        UserControl1 activeUs;
+        internal UserControl1 activeUs;
         private UserControl1 createView() {
             return createView(null);
         }
+        MouseGesture mg = new MouseGesture();
+        string mglog = string.Empty;
+        bool mgstart = false;
         private UserControl1 createView(string path) {
             UserControl1 us = new UserControl1();
             us.listView.BackColor = Color.LightGray;
             us.Enter += (s, e) => {
                 if (activeUs != null) {
                     activeUs.listView.BackColor = Color.LightGray;
+                    mg.End();
+                    mglog = string.Empty;
+                    mgstart = false;
                 }
                 activeUs = us;
                 activeUs.listView.BackColor = Color.White;
@@ -140,19 +174,35 @@ namespace MF {
                     var items = us.ItemList; 
                     var index = us.listView.SelectedIndices[0];
                     //var fp = System.IO.Path.Combine(us.Path, items[index].Name);
-                    var fp = getFullPath(us.Path, items[index].Name);
+                    var fp = getFullPath(us.Dir, items[index].Name);
                     //if (items[index].IsFile) {
                     if (File.Exists(fp)) {
                         HistoryListView.Items.Insert(0, fp);
                         Process.Start(fp);
                     }
                     else if(Directory.Exists(fp)){
-                        us.Path = fp;
+                        us.Dir = fp;
                     }
 
                 }
             };
-            //us.listView.MouseDown += (s, e) => {
+            //mdtime = DateTime.Now;
+            //this.Capture = true;
+            //this.MouseMove += (s, e) => {
+            //    Console.WriteLine("MouseMove");
+            //    if (mgstart) {
+            //        var mm = 0;
+            //    }
+            //};
+            //us.listView.AllowDrop = true;
+
+            us.listView.MouseDown += (s, e) => {
+                //this.Capture = true;
+                if (e.Button == MouseButtons.Right) {
+                    mglog = string.Empty;
+                    mg.Start(us.listView, new Point(e.X, e.Y));
+                    mgstart = true;
+                }
             //    if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) {
             //        var item = us.listView.GetItemAt(e.Location.X, e.Location.Y);
             //        if (item != null) {
@@ -167,18 +217,52 @@ namespace MF {
             //            }
             //        }
             //    }
-            //};
+            };
+
+            us.listView.MouseMove += (s, e) => {
+                //if (e.Button == MouseButtons.Right) {
+                //Console.WriteLine("MouseMove");
+                if(mgstart){
+                    Arrow arrow = mg.Test(new Point(e.X, e.Y));
+                    if (arrow != Arrow.none) {
+                        switch (arrow) {
+                            case Arrow.up:
+                                //label1.Text += "↑";
+                                mglog += "U";
+                                break;
+                            case Arrow.right:
+                                //label1.Text += "→";
+                                mglog += "R";
+                                break;
+                            case Arrow.down:
+                                //label1.Text += "↓";
+                                mglog += "D";
+                                break;
+                            case Arrow.left:
+                                mglog += "L";
+                                //label1.Text += "←";
+                                break;
+                        }
+                    }
+                }
+            };
             us.listView.MouseUp += (s, e) => {
                 if (e.Button == MouseButtons.Middle) {
                     if (us.listView.SelectedIndices.Count > 0) {
                         var item = us.ItemList[us.listView.SelectedIndices[0]];
                         if (!item.IsFile) {
-                            var p = Path.Combine(us.Path, item.Name);
+                            var p = Path.Combine(us.Dir, item.Name);
                             createView(p);
                         }
                     }
                 }
-                //else if (e.Button == MouseButtons.Right) {
+                else if (e.Button == MouseButtons.Right) {
+                    mg.End();
+                    mgstart = false;
+                    if (MouseGestureMap.ContainsKey(mglog)) {
+                        MouseGestureMap[mglog](this);
+                    }
+                    mglog = string.Empty;
                 //    var ctm = new ShellContextMenu();
                 //    var selfiles = us.SelectedItemList;
                 //    if (selfiles.Count == 0) {
@@ -193,14 +277,14 @@ namespace MF {
                 //        });
                 //        ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
                 //    } 
-                //}
+                }
             };
             us.ChangePath += (s, e) => {
                 HistoryListView.Items.Insert(0, e.path);
             };
 
             flowLayoutPanel1.Controls.Add(us);
-            us.Path = path;
+            us.Dir = path;
 
             ResizeWindow();
 
@@ -214,6 +298,20 @@ namespace MF {
                 return System.IO.Path.Combine(parent, name);
             }
             
+        }
+
+
+        internal void initKeyMap() {
+            _KeyMap.Clear();
+            _KeyMap.Add(Keys.Control | Keys.X, Actions.Cut);
+            _KeyMap.Add(Keys.Control | Keys.C, Actions.Copy);
+            _KeyMap.Add(Keys.Control | Keys.V, Actions.Paste);
+        }
+
+        private Dictionary<string, Action<MainForm>> MouseGestureMap = new Dictionary<string, Action<MainForm>>();
+        internal void initMouseGesture() {
+            MouseGestureMap.Clear();
+            MouseGestureMap.Add("U", Actions.UpDir);
         }
     }
 }

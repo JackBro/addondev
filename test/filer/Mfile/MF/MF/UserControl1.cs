@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using Peter;
+using System.Collections.Specialized;
 
 namespace MF {
 
@@ -43,6 +44,7 @@ namespace MF {
         private int DateWidth;
         private string DateFormat;
         private TextFormatFlags flg;
+        private DateTime mdtime = DateTime.Now;
 
         public UserControl1() {
             InitializeComponent();
@@ -217,10 +219,27 @@ namespace MF {
             listView1.DrawColumnHeader += (sender, e) => {
                 e.DrawDefault = true;
             };
-
+            bool res = false;
             listView1.MouseDown += (s, e) => {
+                var lv = s as ListView;
+                //if (e.Button == MouseButtons.Left) {
+                //    if (res) {
+                //        res = false;
+                //        return;
+                //    }
+                //    var mdinv = DateTime.Now - mdtime;
+                //    if (!res && mdinv.Milliseconds <= SystemInformation.DoubleClickTime/2) {
+                //        if (lv.SelectedIndices.Count == 0) {
+                //            MoveUp();
+                //            res = true;
+                //        }
+                //    }
+                //    else {
+                //    mdtime = DateTime.Now;
+                //    }
+                //}else 
                 if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) {
-                    var lv = s as ListView;
+                    
                     var item = lv.GetItemAt(e.Location.X, e.Location.Y);
                     if (item != null) {
                         if ((e.Button == MouseButtons.Right && !lv.SelectedIndices.Contains(item.Index))
@@ -242,13 +261,13 @@ namespace MF {
                     var selfiles = SelectedItemList;
                     if (selfiles.Count == 0) {
                         DirectoryInfo[] dir = new DirectoryInfo[1];
-                        dir[0] = new DirectoryInfo(this.Path);
+                        dir[0] = new DirectoryInfo(this.Dir);
                         ctm.ShowContextMenu(dir, lv.PointToScreen(new Point(e.X, e.Y)));
                     }
                     else {
                         List<FileInfo> arrFI = new List<FileInfo>();
                         selfiles.ForEach(x => {
-                            arrFI.Add(new FileInfo(System.IO.Path.Combine(this.Path, x.Name)));
+                            arrFI.Add(new FileInfo(System.IO.Path.Combine(this.Dir, x.Name)));
                         });
                         ctm.ShowContextMenu(arrFI.ToArray(), lv.PointToScreen(new Point(e.X, e.Y)));
                     }
@@ -257,7 +276,7 @@ namespace MF {
 
             textBox1.KeyDown +=(sender, e)=>{
                 if (e.KeyCode == Keys.Return) {
-                    Path = textBox1.Text;
+                    Dir = textBox1.Text;
                 }
             };
 
@@ -272,10 +291,80 @@ namespace MF {
             fileSystemWatcher1.Deleted += new FileSystemEventHandler(fileSystemWatcher1_Changed);
             fileSystemWatcher1.Changed += new FileSystemEventHandler(fileSystemWatcher1_Changed);
             fileSystemWatcher1.Renamed += (s, e) => {
-
+                //var index = e.OldFullPath.LastIndexOf("\\");
+                //var oldname = e.OldFullPath.Substring(index + 1, e.OldFullPath.Length - (index + 1));
+                var old = Items.First(x => {
+                    return x.Name.Equals(e.OldName);
+                });
+                if (old != null) {
+                    old.Name = e.Name;
+                    var index = Items.IndexOf(old);
+                    listView1.RedrawItems(index, index, false);
+                }
             };
 
         }
+
+        internal void Copy() {
+            StringCollection files = new StringCollection();
+            foreach (var item in SelectedItemList) {
+                files.Add(System.IO.Path.Combine(this.Dir, item.Name));
+            }
+            Clipboard.SetFileDropList(files);
+        }
+
+        internal void Cut() {
+            var files = new List<string>();
+            var selfiles = SelectedItemList;
+            foreach (var item in selfiles) {
+                files.Add(System.IO.Path.Combine(this.Dir, item.Name));
+            }
+            string[] fileNames = files.ToArray();
+            IDataObject data = new DataObject(DataFormats.FileDrop, fileNames);
+            byte[] bs = new byte[] { (byte)DragDropEffects.Move, 0, 0, 0 };
+            System.IO.MemoryStream ms = new System.IO.MemoryStream(bs);
+            data.SetData("Preferred DropEffect", ms);
+            Clipboard.SetDataObject(data);
+        }
+
+        internal void Paste() {
+            try {
+                var dde = Util.GetPreferredDropEffect(Clipboard.GetDataObject());
+                if (Clipboard.ContainsFileDropList()) {
+                    var files = Clipboard.GetFileDropList();
+                    string[] fary = new string[files.Count];
+                    files.CopyTo(fary, 0);
+                    if (dde == (DragDropEffects.Copy | DragDropEffects.Link)) {
+                        Util.ShellFileCopy(this.Handle, fary, this.Dir);
+                    }
+                    else if (dde == DragDropEffects.Move) {
+                        Util.ShellFileMove(this.Handle, fary, this.Dir);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        internal void Delete() {
+            try {
+                var files = new List<string>();
+                var selfiles = SelectedItemList;
+                foreach (var item in selfiles) {
+                    files.Add(System.IO.Path.Combine(this.Dir, item.Name));
+                }
+                Util.ShellFileDelete(this.Handle, files.ToArray());
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        internal void Reload() {
+            LoadDir(this.Dir);
+        }
+
         FileItem lFileItem = null;
 
         void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e) {
@@ -361,12 +450,12 @@ namespace MF {
 
         internal event ChangePathEventHandler ChangePath;
 
-        private string _path;
-        public string Path{
-            get { return this._path; }
+        private string _dir;
+        public string Dir{
+            get { return this._dir; }
             set {
                 if (value != null) {
-                    if (this._path == null) {
+                    if (this._dir == null) {
                         var w = listView1.Width;
                         w -= listView1.Columns["type"].Width;// headerType.Width;
                         w -= listView1.Columns["size"].Width;//headerSize.Width;
@@ -375,15 +464,15 @@ namespace MF {
                             listView1.Columns["name"].Width = w;// headerName.Width = w;
                         }
                     }
-                    this._path = value;
-                    textBox1.Text = this._path;
+                    this._dir = value;
+                    textBox1.Text = this._dir;
                     if (ChangePath != null) {
-                        ChangePath(this, new ChangePathEventArgs { path = this._path });
+                        ChangePath(this, new ChangePathEventArgs { path = this._dir });
                     }
                     fileSystemWatcher1.EnableRaisingEvents = false;
-                    this.LoadDir(this._path);
+                    this.LoadDir(this._dir);
 
-                    fileSystemWatcher1.Path = this._path;
+                    fileSystemWatcher1.Path = this._dir;
                     fileSystemWatcher1.NotifyFilter = (NotifyFilters.DirectoryName | NotifyFilters.FileName | NotifyFilters.Size);
                     fileSystemWatcher1.EnableRaisingEvents = true;
                     
@@ -406,6 +495,8 @@ namespace MF {
             get { return Items; }
         }
         private List<FileItem> Items = new List<FileItem>();
+        //private List<FileItem> viewItems = new List<FileItem>();
+
         private void LoadDir(string path) {
 
             listView1.VirtualListSize = 0;
@@ -434,50 +525,55 @@ namespace MF {
             //        Items.Add(item);
             //    }
             //}
-
+            long sum = 0;        
             MaxNameWidth = 0;
-            {
-                var dirinfo = new DirectoryInfo(path);
-                foreach (var item in dirinfo.GetDirectories()) {
-                    FileItem fitem = new FileItem();
-                    fitem.IsFile = false;
-                    fitem.Name = item.Name;
-                    fitem.type = "/";
-                    //fitem.NameWidth = GetTextExtend(fitem.Name).width;
-                    //if (MaxNameWidth < fitem.NameWidth) {
-                    //    MaxNameWidth = fitem.NameWidth;
-                    //}
-                    fitem.LastWriteTime = item.LastWriteTime;
-                    Items.Add(fitem);
-                }
-                foreach (var item in dirinfo.GetFiles()) {
-                    FileItem fitem = new FileItem();
-                    fitem.IsFile = true;
-                    fitem.Name = item.Name;
-                    fitem.type = item.Extension;
-                    //fitem.NameWidth = GetTextExtend(fitem.Name).width;
-                    //if (MaxNameWidth < fitem.NameWidth) {
-                    //    MaxNameWidth = fitem.NameWidth;
-                    //}
-                    fitem.Size = item.Length;
-                    fitem.LastWriteTime = item.LastWriteTime;
-                    Items.Add(fitem);
-                }
+            var dirinfo = new DirectoryInfo(path);
+            foreach (var item in dirinfo.GetDirectories()) {
+                FileItem fitem = new FileItem();
+                fitem.IsFile = false;
+                fitem.Name = item.Name;
+                fitem.type = "/";
+                //fitem.NameWidth = GetTextExtend(fitem.Name).width;
+                //if (MaxNameWidth < fitem.NameWidth) {
+                //    MaxNameWidth = fitem.NameWidth;
+                //}
+                fitem.LastWriteTime = item.LastWriteTime;
+                Items.Add(fitem);
+                
             }
+            int dircnt = Items.Count;
 
-            toolStripStatusLabel1.Text = (DateTime.Now - s).TotalMilliseconds.ToString();
+            foreach (var item in dirinfo.GetFiles()) {
+                FileItem fitem = new FileItem();
+                fitem.IsFile = true;
+                fitem.Name = item.Name;
+                fitem.type = item.Extension;
+                //fitem.NameWidth = GetTextExtend(fitem.Name).width;
+                //if (MaxNameWidth < fitem.NameWidth) {
+                //    MaxNameWidth = fitem.NameWidth;
+                //}
+                fitem.Size = item.Length;
+                fitem.LastWriteTime = item.LastWriteTime;
+                Items.Add(fitem);
+                sum += fitem.Size; 
+            }
+            int filecnt = Items.Count-dircnt;
+
+            //toolStripStatusLabel1.Text = (DateTime.Now - s).TotalMilliseconds.ToString();
+            toolStripStatusLabel1.Text = string.Format("Objects {0}(Dir {1}, Files {2})", Items.Count.ToString(), dircnt, filecnt); ;
+            toolStripStatusLabel2.Text = getFileSizeFormat(sum);
             listView1.VirtualListSize = Items.Count;
         }
 
         private string getFileSizeFormat(long size) {
-            string KBSize = string.Format("{0} KB", size / 1024);
+            string KBSize = string.Format("{0:N0} KB", size / 1024);
             return KBSize;
         }
 
-        internal void MoveUp() {
-            var u = UpDirPath(this.Path);
-            if (!u.Equals(this.Path)) {
-                this.Path = u;
+        internal void UpDir() {
+            var u = UpDirPath(this.Dir);
+            if (!u.Equals(this.Dir)) {
+                this.Dir = u;
             }
         }
 
@@ -492,7 +588,7 @@ namespace MF {
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e) {
-            MoveUp();
+            UpDir();
         }
     }
 }
