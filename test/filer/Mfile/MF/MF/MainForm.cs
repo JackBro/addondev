@@ -217,7 +217,7 @@ namespace MF {
             };
             us.listView.MouseUpEx += (s, e) => {
                 if (e.Button == MouseButtons.Right) {
-                    Console.WriteLine("mglog=" + mglog);
+                    //Console.WriteLine("mglog=" + mglog);
                     if (MouseGestureMap.ContainsKey(mglog)) {
                         MouseGestureMap[mglog](this);
                     }

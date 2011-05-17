@@ -12,17 +12,22 @@ using Peter;
 using System.Collections.Specialized;
 
 namespace MF {
-
+    public enum SortType {
+        Name,
+        Type,
+        Size,
+        WriteTime
+    }
     public partial class UserControl1 : UserControl, IDisposable {
         //private const int LVM_FIRST = 0x1000;
         //private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
         //private const int LVM_GETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 55);
         //private const int LVS_EX_DOUBLEBUFFER = 0x00010000;
+        private Brush headerBrush;
 
         private IntPtr dc_;
         private IntPtr hfont_;
         private IntPtr hwnd_;
-
         private int fit;
         //private Win32API.SIZE GetTextExtend(string str, out int fit) {
         private Win32API.SIZE GetTextExtend(string str) {
@@ -37,6 +42,43 @@ namespace MF {
             get { return listView1; }
         }
 
+        private SortType type;
+        private int incdec;
+        public void sort(SortType type, int incdec){
+            this.type = type;
+            this.incdec = incdec;
+            listView1.BeginUpdate();
+            switch (type) {
+                case SortType.Name:
+                    //Items.OrderBy(n => n.IsFile).ThenBy(n => n.Name).Reverse();
+                    Items.Sort((x, y) => {
+                        if (!x.IsFile && y.IsFile) return -1;
+                        if (x.IsFile && !y.IsFile) return 1;
+                        return incdec * x.Name.CompareTo(y.Name);
+                    });
+                    break;
+                case SortType.Type:
+                    Items.Sort((x, y) => {
+                        return incdec * x.type.CompareTo(y.Name);
+                    });
+                    break;
+                case SortType.Size:
+                    Items.Sort((x, y) => {
+                        return incdec * x.Size.CompareTo(y.Name);
+                    });
+                    break;
+                case SortType.WriteTime:
+                    Items.Sort((x, y) => {
+                        return incdec * x.LastWriteTime.CompareTo(y.Name);
+                    });
+                    break;
+                default:
+                    break;
+            }
+ 
+            listView1.EndUpdate();
+        }
+
         public event EventHandler Closed;
         public event EventHandler Closing;
 
@@ -44,6 +86,9 @@ namespace MF {
         private int DateWidth;
         private string DateFormat;
         private TextFormatFlags flg;
+
+        private int sortcolum;
+        private int sorttype;
         //private DateTime mdtime = DateTime.Now;
         private ListViewEx listView1;
 
@@ -58,7 +103,7 @@ namespace MF {
             panel2.Controls.Add(listView1);
 
 
-
+            
             listView1.View = View.Details;
             listView1.OwnerDraw = true;
             listView1.VirtualMode = true;
@@ -70,6 +115,7 @@ namespace MF {
             hwnd_ = listView1.Handle;
             dc_ = Win32API.GetDC(hwnd_);
             hfont_ = listView1.Font.ToHfont();
+            headerBrush = new SolidBrush(Color.DarkGray);
             
             //int styles = (int)MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_GETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)0);
             //styles |= LVS_EX_DOUBLEBUFFER;
@@ -147,7 +193,7 @@ namespace MF {
                 }
             };
 
-
+            //Brush b = new SolidBrush(Color.Red);
             listView1.DrawSubItem += (sender, e) => {
                 //// 描画するSubItemが2列目(ColumnIndexが1)の時は、StringAligment.Farに設定して、右寄せにする
                 //// それ以外は、Nearにして、標準の左寄せ
@@ -223,10 +269,40 @@ namespace MF {
                 }
                 Rectangle r = new Rectangle(e.Bounds.Location, new Size(listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height));
                 TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, r, brush, flg);
+
+            };
+            //Brush b = new SolidBrush(Color.DarkGray);
+            listView1.DrawColumnHeader += (sender, e) => {
+                //e.DrawDefault = true;
+                e.DrawBackground();
+                e.DrawText();
+                if (e.ColumnIndex == 0 || e.ColumnIndex == 1) {
+                    //e.Graphics.FillRectangle(b, e.Bounds.Left, e.Bounds.Top, 5, 5);
+                    e.Graphics.FillPolygon(headerBrush,
+                        new Point[] { new Point(e.Bounds.Right - 15, e.Bounds.Top+5), 
+                            new Point(e.Bounds.Right-5, e.Bounds.Top+5), 
+                            new Point(e.Bounds.Right - 10, e.Bounds.Bottom-5 ) });
+                }
+                
             };
 
-            listView1.DrawColumnHeader += (sender, e) => {
-                e.DrawDefault = true;
+            listView1.ColumnClick += (s, e) => {
+                switch (e.Column) {
+                    case 0:
+                        this.sort(SortType.Name, -1 * this.incdec);
+                        break;
+                    case 1:
+                        this.sort(SortType.Type, -1 * this.incdec);
+                        break;
+                    case 2:
+                        this.sort(SortType.Size, -1 * this.incdec);
+                        break;
+                    case 3:
+                        this.sort(SortType.WriteTime, -1 * this.incdec);
+                        break;
+                    default:
+                        break;
+                }
             };
             //bool res = false;
 
@@ -449,6 +525,7 @@ namespace MF {
         void IDisposable.Dispose() {
             Win32API.ReleaseDC(hwnd_, dc_);
             Win32API.DeleteObject(hfont_);
+            headerBrush.Dispose();
         }
 
         #endregion
