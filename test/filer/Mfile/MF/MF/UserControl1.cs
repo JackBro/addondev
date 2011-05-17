@@ -14,10 +14,10 @@ using System.Collections.Specialized;
 namespace MF {
 
     public partial class UserControl1 : UserControl, IDisposable {
-        private const int LVM_FIRST = 0x1000;
-        private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
-        private const int LVM_GETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 55);
-        private const int LVS_EX_DOUBLEBUFFER = 0x00010000;
+        //private const int LVM_FIRST = 0x1000;
+        //private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
+        //private const int LVM_GETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 55);
+        //private const int LVS_EX_DOUBLEBUFFER = 0x00010000;
 
         private IntPtr dc_;
         private IntPtr hfont_;
@@ -33,7 +33,7 @@ namespace MF {
             return size;
         }
 
-        public ListView listView {
+        public ListViewEx listView {
             get { return listView1; }
         }
 
@@ -44,27 +44,36 @@ namespace MF {
         private int DateWidth;
         private string DateFormat;
         private TextFormatFlags flg;
-        private DateTime mdtime = DateTime.Now;
+        //private DateTime mdtime = DateTime.Now;
+        private ListViewEx listView1;
 
         public UserControl1() {
             InitializeComponent();
 
-            this.DoubleBuffered = true;
+            //this.DoubleBuffered = true;
             this.Margin = new Padding(0);
 
-            hwnd_ = listView1.Handle;
-            dc_ = Win32API.GetDC(hwnd_);
-            hfont_ = listView1.Font.ToHfont();
+            listView1 = new ListViewEx();
+            listView1.Dock = DockStyle.Fill;
+            panel2.Controls.Add(listView1);
 
+
+
+            listView1.View = View.Details;
             listView1.OwnerDraw = true;
             listView1.VirtualMode = true;
             listView1.VirtualListSize = 0;
             //listView1.FullRowSelect = true;
             listView1.View = View.Details;
+            listView1.ShowItemToolTips = true;
+
+            hwnd_ = listView1.Handle;
+            dc_ = Win32API.GetDC(hwnd_);
+            hfont_ = listView1.Font.ToHfont();
             
-            int styles = (int)MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_GETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)0);
-            styles |= LVS_EX_DOUBLEBUFFER;
-            MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)styles);
+            //int styles = (int)MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_GETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)0);
+            //styles |= LVS_EX_DOUBLEBUFFER;
+            //MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)styles);
 
 
             DateWidth = GetTextExtend(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")).width+10;
@@ -93,17 +102,17 @@ namespace MF {
             listView1.Columns.Add(headerLastWriteTime);
             //listView1.ColumnClick
 
-            listView1.ShowItemToolTips = true;
+            //listView1.ShowItemToolTips = true;
 
-            listView1.SizeChanged += (sender, e) => {
-                //var w = listView1.Width;
-                //w -= headerType.Width;
-                //w -= headerSize.Width;
-                //w -= headerLastWriteTime.Width + 10;
-                //if (w > 0) {
-                //    headerName.Width = w;
-                //}
-            };
+            //listView1.SizeChanged += (sender, e) => {
+            //    //var w = listView1.Width;
+            //    //w -= headerType.Width;
+            //    //w -= headerSize.Width;
+            //    //w -= headerLastWriteTime.Width + 10;
+            //    //if (w > 0) {
+            //    //    headerName.Width = w;
+            //    //}
+            //};
 
             //listView1.DoubleClick += (sender, e) => {
             //    if (listView1.SelectedIndices.Count == 1) {
@@ -219,7 +228,8 @@ namespace MF {
             listView1.DrawColumnHeader += (sender, e) => {
                 e.DrawDefault = true;
             };
-            bool res = false;
+            //bool res = false;
+
             listView1.MouseDown += (s, e) => {
                 var lv = s as ListView;
                 //if (e.Button == MouseButtons.Left) {
@@ -254,25 +264,25 @@ namespace MF {
                     }
                 }
             };
-            listView1.MouseUp += (s, e) => {
-                var lv = s as ListView;
-                if (e.Button == MouseButtons.Right) {
-                    var ctm = new ShellContextMenu();
-                    var selfiles = SelectedItemList;
-                    if (selfiles.Count == 0) {
-                        DirectoryInfo[] dir = new DirectoryInfo[1];
-                        dir[0] = new DirectoryInfo(this.Dir);
-                        ctm.ShowContextMenu(dir, lv.PointToScreen(new Point(e.X, e.Y)));
-                    }
-                    else {
-                        List<FileInfo> arrFI = new List<FileInfo>();
-                        selfiles.ForEach(x => {
-                            arrFI.Add(new FileInfo(System.IO.Path.Combine(this.Dir, x.Name)));
-                        });
-                        ctm.ShowContextMenu(arrFI.ToArray(), lv.PointToScreen(new Point(e.X, e.Y)));
-                    }
-                }
-            };
+            //listView1.MouseUp += (s, e) => {
+            //    var lv = s as ListView;
+            //    if (e.Button == MouseButtons.Right) {
+            //        var ctm = new ShellContextMenu();
+            //        var selfiles = SelectedItemList;
+            //        if (selfiles.Count == 0) {
+            //            DirectoryInfo[] dir = new DirectoryInfo[1];
+            //            dir[0] = new DirectoryInfo(this.Dir);
+            //            ctm.ShowContextMenu(dir, lv.PointToScreen(new Point(e.X, e.Y)));
+            //        }
+            //        else {
+            //            List<FileInfo> arrFI = new List<FileInfo>();
+            //            selfiles.ForEach(x => {
+            //                arrFI.Add(new FileInfo(System.IO.Path.Combine(this.Dir, x.Name)));
+            //            });
+            //            ctm.ShowContextMenu(arrFI.ToArray(), lv.PointToScreen(new Point(e.X, e.Y)));
+            //        }
+            //    }
+            //};
 
             textBox1.KeyDown +=(sender, e)=>{
                 if (e.KeyCode == Keys.Return) {
@@ -334,7 +344,7 @@ namespace MF {
                     var files = Clipboard.GetFileDropList();
                     string[] fary = new string[files.Count];
                     files.CopyTo(fary, 0);
-                    if (dde == (DragDropEffects.Copy | DragDropEffects.Link)) {
+                    if ((dde == (DragDropEffects.Copy | DragDropEffects.Link)) || dde== DragDropEffects.None) {
                         Util.ShellFileCopy(this.Handle, fary, this.Dir);
                     }
                     else if (dde == DragDropEffects.Move) {

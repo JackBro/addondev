@@ -3,72 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace MF {
 
-    public class ColumnEventArgs : EventArgs {
-        public int index { get; set; }
-    }
-    public delegate void ColumnEventHandler(object sender, ColumnEventArgs e);
+    //public class ColumnEventArgs : EventArgs {
+    //    public int index { get; set; }
+    //}
+    //public delegate void ColumnEventHandler(object sender, ColumnEventArgs e);
 
     public class ListViewEx : ListView {
-        public event ColumnEventHandler ColumnDoubleClick;
+        private const int WM_MOUSEMOVE = 0x0200;
+        private const int WM_LBUTTONDOWN = 0x0201;
+        private const int WM_LBUTTONUP = 0x0202;
+        private const int WM_RBUTTONDOWN = 0x204;
+        private const int WM_RBUTTONUP = 0x205;
+        private const int WM_MBUTTONDOWN = 0x0207;
+        private const int WM_MBUTTONUP = 0x0208;
 
-        public int[] FixedColumns {
-            get { return this.fixedColumns; }
-            set { this.fixedColumns = (value == null) ? new int[0] : value; }
-        }
-        private int[] fixedColumns = new int[0];
-        private struct NotifyMessageHeader {
-            public IntPtr Window;
-            public int Id;
-            public int NotifyCode;
-            public int ItemIndex;
-            public MouseButton MouseButton;
-            public IntPtr ItemInfo;
-            // 単に警告を黙らせるためだけなので無くて良いコンストラクタ
-            public NotifyMessageHeader(int dummy) {
-                this.Window = this.ItemInfo = IntPtr.Zero;
-                this.Id = this.NotifyCode = this.ItemIndex = 0;
-                this.MouseButton = MouseButton.Left;
-            }
-        }
-        private enum MouseButton {
-            Left = 0,
-            Right = 1,
-            Middle = 2,
-        }
-        protected virtual bool ProcessNotifyMessage(ref Message m) {
-            object lParam = m.GetLParam(typeof(NotifyMessageHeader));
-            NotifyMessageHeader header = (NotifyMessageHeader)lParam;
-            //const int BeginTrackW = -326; //HDN_BEGINTRACKW
-            //const int BeginTrackA = -306; //HDN_BEGINTRACKA
-            const int DividerDoubleClickW = -325; //HDCN_DIVIDERDBLCLICKW
-            const int DividerDoubleClickA = -305; //HDCN_DIVIDERDBLCLICKA
-            switch (header.NotifyCode) {
-                //A が来るはずなのに W が来たりなどあるようなのでいっそ全部
-                //case BeginTrackW:
-                case DividerDoubleClickW:
-                //case BeginTrackA:
-                case DividerDoubleClickA:
-                    if (this.fixedColumns == null)
-                        break;
-                    if (Array.IndexOf(this.fixedColumns, header.ItemIndex) != -1) {
-                        m.Result = new IntPtr(1);
-                        if (ColumnDoubleClick != null) {
-                            ColumnDoubleClick(this, new ColumnEventArgs { index = header.ItemIndex});
-                        }
-                        return true;
-                    }
-                    break;
-            }
-            return false;
+        public event MouseEventHandler MouseUpEx;
+        //public event ColumnEventHandler ColumnDoubleClick;
+        public ListViewEx() {
+            this.DoubleBuffered = true;
         }
 
         protected override void WndProc(ref Message m) {
-            if (m.Msg == 0x4E) { //WM_NOTIFY
-                if (ProcessNotifyMessage(ref m))
-                    return;
+            if (m.Msg == WM_RBUTTONUP){
+                if (MouseUpEx != null) {
+                    Point p = new Point(m.LParam.ToInt32());
+                    MouseUpEx(this, new MouseEventArgs(MouseButtons.Right,1, p.X, p.Y, 0)); 
+                }
             }
             base.WndProc(ref m);
         }

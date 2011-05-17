@@ -14,10 +14,11 @@ using MouseGesture_Net;
 namespace MF {
     public partial class MainForm : Form {
         Dictionary<Keys, Action<MainForm>> _KeyMap = new Dictionary<Keys, Action<MainForm>>();
-
+        MouseGesture mg;
         public MainForm() {
             InitializeComponent();
 
+            mg = new MouseGesture();
             initKeyMap();
             initMouseGesture();
 
@@ -32,35 +33,24 @@ namespace MF {
                     e.SuppressKeyPress = true;
                 }
             };
+            this.FormClosing += (s, e) => {
+                this.save();
+            };
+
+
             flowLayoutPanel1.SizeChanged += (sender, e) => {
                 ResizeWindow();
             };
 
-            //UserControl1 us = new UserControl1();
-            //us.Dock = DockStyle.Fill;
-            //panel1.Controls.Add(us);
-            //flowLayoutPanel1.FlowDirection = FlowDirection.
-
-            var us = createView();
-            if (activeUs == null) {
-                activeUs = us;
-            }
+            //var us = createView();
+            //if (activeUs == null) {
+            //    activeUs = us;
+            //}
+            load();
 
             RegDirListView.Items.Add(@"c:\");
             RegDirListView.Items.Add(@"d:\");
 
-            //listView1.MouseClick += (s, e) => {
-            //    if (listView1.SelectedItems.Count > 0) {
-            //        var item = listView1.SelectedItems[0];
-            //        var t = item.Text;
-            //        if (e.Button == MouseButtons.Left && activeUs !=null) {
-            //            activeUs.Path = t;
-            //        }
-            //        else if (e.Button == MouseButtons.Middle) {
-            //            createView(t);
-            //        }
-            //    }
-            //};
             RegDirListView.MouseDown += (s, e) => {
                 var item = RegDirListView.GetItemAt(e.Location.X, e.Location.Y);
                 if (item != null) {
@@ -152,18 +142,18 @@ namespace MF {
         private UserControl1 createView() {
             return createView(null);
         }
-        MouseGesture mg = new MouseGesture();
+
         string mglog = string.Empty;
-        bool mgstart = false;
+        //bool mgstart = false;
         private UserControl1 createView(string path) {
             UserControl1 us = new UserControl1();
             us.listView.BackColor = Color.LightGray;
             us.Enter += (s, e) => {
                 if (activeUs != null) {
                     activeUs.listView.BackColor = Color.LightGray;
-                    mg.End();
+                    if(mg !=null)mg.End();
                     mglog = string.Empty;
-                    mgstart = false;
+                    //mgstart = false;
                 }
                 activeUs = us;
                 activeUs.listView.BackColor = Color.White;
@@ -186,45 +176,23 @@ namespace MF {
 
                 }
             };
-            //mdtime = DateTime.Now;
-            //this.Capture = true;
-            //this.MouseMove += (s, e) => {
-            //    Console.WriteLine("MouseMove");
-            //    if (mgstart) {
-            //        var mm = 0;
-            //    }
-            //};
-            //us.listView.AllowDrop = true;
 
             us.listView.MouseDown += (s, e) => {
-                //this.Capture = true;
                 if (e.Button == MouseButtons.Right) {
                     mglog = string.Empty;
-                    mg.Start(us.listView, new Point(e.X, e.Y));
-                    mgstart = true;
+                    //if (mg == null) mg = new MouseGesture();
+                    
+                    //mg.Start(us.listView, e.Location);
+                    mg.Start(us.listView, us.listView.PointToScreen(new Point(e.X, e.Y)));
+                    activeUs.listView.MultiSelect = false;
                 }
-            //    if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) {
-            //        var item = us.listView.GetItemAt(e.Location.X, e.Location.Y);
-            //        if (item != null) {
-            //            if ((e.Button == MouseButtons.Right && !us.listView.SelectedIndices.Contains(item.Index))
-            //                || e.Button == MouseButtons.Middle) {
-            //                var indexs = new int[us.listView.SelectedIndices.Count];
-            //                us.listView.SelectedIndices.CopyTo(indexs, 0);
-            //                for (int i = 0; i < indexs.Length; i++) {
-            //                    us.listView.Items[indexs[i]].Selected = false;
-            //                }
-            //                item.Selected = true;
-            //            }
-            //        }
-            //    }
             };
 
             us.listView.MouseMove += (s, e) => {
                 if (e.Button == MouseButtons.Right) {
-                    Console.WriteLine("MouseMove");
-                }
-                if(mgstart){
-                    Arrow arrow = mg.Test(new Point(e.X, e.Y));
+
+                    //Arrow arrow = mg.Test(new Point(e.X, e.Y));
+                    Arrow arrow = mg.Test(us.listView.PointToScreen(new Point(e.X, e.Y)));
                     if (arrow != Arrow.none) {
                         switch (arrow) {
                             case Arrow.up:
@@ -247,6 +215,34 @@ namespace MF {
                     }
                 }
             };
+            us.listView.MouseUpEx += (s, e) => {
+                if (e.Button == MouseButtons.Right) {
+                    Console.WriteLine("mglog=" + mglog);
+                    if (MouseGestureMap.ContainsKey(mglog)) {
+                        MouseGestureMap[mglog](this);
+                    }
+                    else if (mglog == string.Empty) {
+                        //UserControl1 u = s as UserControl1;
+                        var ctm = new ShellContextMenu();
+                        var selfiles = us.SelectedItemList;
+                        if (selfiles.Count == 0) {
+                            DirectoryInfo[] dir = new DirectoryInfo[1];
+                            dir[0] = new DirectoryInfo(us.Dir);
+                            ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));
+                        }
+                        else {
+                            List<FileInfo> arrFI = new List<FileInfo>();
+                            selfiles.ForEach(x => {
+                                arrFI.Add(new FileInfo(System.IO.Path.Combine(us.Dir, x.Name)));
+                            });
+                            ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
+                        }
+                    }
+                    if (mg != null) mg.End();
+                    mglog = string.Empty;
+                    activeUs.listView.MultiSelect = true;
+                }
+            };
             us.listView.MouseUp += (s, e) => {
                 if (e.Button == MouseButtons.Middle) {
                     if (us.listView.SelectedIndices.Count > 0) {
@@ -257,27 +253,23 @@ namespace MF {
                         }
                     }
                 }
-                else if (e.Button == MouseButtons.Right) {
-                    mg.End();
-                    mgstart = false;
-                    if (MouseGestureMap.ContainsKey(mglog)) {
-                        MouseGestureMap[mglog](this);
+                else if (e.Button == MouseButtons.Right && !activeUs.listView.MultiSelect) {
+                    var ctm = new ShellContextMenu();
+                    var selfiles = us.SelectedItemList;
+                    //if (selfiles.Count == 0) {
+                    //    DirectoryInfo[] dir = new DirectoryInfo[1];
+                    //    dir[0] = new DirectoryInfo(us.Dir);
+                    //    ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));
+                    //}
+                    //else 
+                    if (selfiles.Count > 0) {
+                        List<FileInfo> arrFI = new List<FileInfo>();
+                        selfiles.ForEach(x => {
+                            arrFI.Add(new FileInfo(System.IO.Path.Combine(us.Dir, x.Name)));
+                        });
+                        ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
                     }
-                    mglog = string.Empty;
-                //    var ctm = new ShellContextMenu();
-                //    var selfiles = us.SelectedItemList;
-                //    if (selfiles.Count == 0) {
-                //        DirectoryInfo[] dir = new DirectoryInfo[1];
-                //        dir[0] = new DirectoryInfo(us.Path);
-                //        ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));
-                //    }
-                //    else {
-                //        List<FileInfo> arrFI = new List<FileInfo>();
-                //        selfiles.ForEach(x => {
-                //            arrFI.Add(new FileInfo(Path.Combine(us.Path, x.Name)));
-                //        });
-                //        ctm.ShowContextMenu(arrFI.ToArray(), us.listView.PointToScreen(new Point(e.X, e.Y)));
-                //    } 
+                    activeUs.listView.MultiSelect = true;
                 }
             };
             us.ChangePath += (s, e) => {
@@ -301,18 +293,44 @@ namespace MF {
             
         }
 
-
         internal void initKeyMap() {
             _KeyMap.Clear();
             _KeyMap.Add(Keys.Control | Keys.X, Actions.Cut);
             _KeyMap.Add(Keys.Control | Keys.C, Actions.Copy);
             _KeyMap.Add(Keys.Control | Keys.V, Actions.Paste);
+            _KeyMap.Add(Keys.Delete, Actions.Delete);
         }
 
         private Dictionary<string, Action<MainForm>> MouseGestureMap = new Dictionary<string, Action<MainForm>>();
         internal void initMouseGesture() {
             MouseGestureMap.Clear();
-            MouseGestureMap.Add("U", Actions.UpDir);
+            MouseGestureMap.Add("L", Actions.UpDir);
+        }
+
+        internal void load() {
+            var list = XMLSerializer.Deserialize<List<string>>("list", new List<string>() { Path.GetDirectoryName(Application.ExecutablePath) });
+            foreach (var item in list) {
+                if (Directory.Exists(item)) {
+                    var us = createView(item);
+                    if (activeUs == null) {
+                        activeUs = us;
+                    }
+                }
+            }
+        }
+
+        internal void save() {
+            var list = new List<string>();
+            foreach (var c in flowLayoutPanel1.Controls) {
+                UserControl1 us = c as UserControl1;
+                list.Add(us.Dir);
+            }
+            XMLSerializer.Serialize<List<string>>("list", list);
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e) {
+            //activeUs.listView.MultiSelect = !activeUs.listView.MultiSelect;
+            //Text = activeUs.listView.MultiSelect.ToString();
         }
     }
 }

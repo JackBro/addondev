@@ -23,14 +23,15 @@
         /// コード エディタで変更しないでください。
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserControl1));
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.panel1 = new System.Windows.Forms.Panel();
             this.CloseLabel = new System.Windows.Forms.Label();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -44,21 +45,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(344, 19);
             this.textBox1.TabIndex = 0;
-            // 
-            // listView1
-            // 
-            this.listView1.BackColor = System.Drawing.SystemColors.Window;
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 25);
-            this.listView1.Name = "listView1";
-            this.listView1.OwnerDraw = true;
-            this.listView1.Size = new System.Drawing.Size(378, 394);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.VirtualMode = true;
             // 
             // statusStrip1
             // 
@@ -77,6 +63,12 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(114, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(114, 17);
+            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
             // 
             // fileSystemWatcher1
             // 
@@ -99,24 +91,27 @@
             // CloseLabel
             // 
             this.CloseLabel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.CloseLabel.Image = ((System.Drawing.Image)(resources.GetObject("CloseLabel.Image")));
             this.CloseLabel.Location = new System.Drawing.Point(344, 0);
+            this.CloseLabel.Margin = new System.Windows.Forms.Padding(1);
             this.CloseLabel.Name = "CloseLabel";
             this.CloseLabel.Size = new System.Drawing.Size(34, 25);
             this.CloseLabel.TabIndex = 5;
-            this.CloseLabel.Text = "label1";
             // 
-            // toolStripStatusLabel2
+            // panel2
             // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(114, 17);
-            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 25);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(378, 394);
+            this.panel2.TabIndex = 5;
             // 
             // UserControl1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Name = "UserControl1";
@@ -134,12 +129,12 @@
         #endregion
 
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label CloseLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.Panel panel2;
     }
 }
