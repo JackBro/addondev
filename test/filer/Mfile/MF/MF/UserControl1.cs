@@ -18,7 +18,7 @@ namespace MF {
         Size,
         WriteTime
     }
-    public partial class UserControl1 : UserControl, IDisposable {
+    public partial class UserControl1 : UserControl {
         //private const int LVM_FIRST = 0x1000;
         //private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
         //private const int LVM_GETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 55);
@@ -42,11 +42,13 @@ namespace MF {
             get { return listView1; }
         }
 
+
+        private int sortcolum;
         private SortType type;
-        private int incdec;
-        public void sort(SortType type, int incdec){
+        private int sortOrder;
+        public void sort(SortType type, int sortorder) {
             this.type = type;
-            this.incdec = incdec;
+            this.sortOrder = sortorder;
             listView1.BeginUpdate();
             switch (type) {
                 case SortType.Name:
@@ -54,22 +56,26 @@ namespace MF {
                     Items.Sort((x, y) => {
                         if (!x.IsFile && y.IsFile) return -1;
                         if (x.IsFile && !y.IsFile) return 1;
-                        return incdec * x.Name.CompareTo(y.Name);
+                        return this.sortOrder * x.Name.CompareTo(y.Name);
+                        //return this.sortOrder * string.Compare(x.Name, y.Name);
                     });
                     break;
                 case SortType.Type:
                     Items.Sort((x, y) => {
-                        return incdec * x.type.CompareTo(y.Name);
+                        return this.sortOrder * x.type.CompareTo(y.type);
                     });
                     break;
                 case SortType.Size:
                     Items.Sort((x, y) => {
-                        return incdec * x.Size.CompareTo(y.Name);
+                        //if (x.Size > y.Size) return -1 * this.sortOrder;
+                        //if (x.Size < y.Size) return 1 * this.sortOrder;
+                        //return 0;
+                        return this.sortOrder * x.Size.CompareTo(y.Size);
                     });
                     break;
                 case SortType.WriteTime:
                     Items.Sort((x, y) => {
-                        return incdec * x.LastWriteTime.CompareTo(y.Name);
+                        return this.sortOrder * x.LastWriteTime.CompareTo(y.LastWriteTime);
                     });
                     break;
                 default:
@@ -87,10 +93,20 @@ namespace MF {
         private string DateFormat;
         private TextFormatFlags flg;
 
-        private int sortcolum;
         private int sorttype;
         //private DateTime mdtime = DateTime.Now;
         private ListViewEx listView1;
+
+
+        //#region IDisposable メンバ
+
+        //void IDisposable.Dispose() {
+        //    Win32API.ReleaseDC(hwnd_, dc_);
+        //    Win32API.DeleteObject(hfont_);
+        //    headerBrush.Dispose();
+        //}
+
+        //#endregion
 
         public UserControl1() {
             InitializeComponent();
@@ -101,9 +117,7 @@ namespace MF {
             listView1 = new ListViewEx();
             listView1.Dock = DockStyle.Fill;
             panel2.Controls.Add(listView1);
-
-
-            
+   
             listView1.View = View.Details;
             listView1.OwnerDraw = true;
             listView1.VirtualMode = true;
@@ -111,6 +125,10 @@ namespace MF {
             //listView1.FullRowSelect = true;
             listView1.View = View.Details;
             listView1.ShowItemToolTips = true;
+            
+            this.sortcolum = 0;
+            this.type = SortType.Name;
+            this.sortOrder = 1;
 
             hwnd_ = listView1.Handle;
             dc_ = Win32API.GetDC(hwnd_);
@@ -121,8 +139,10 @@ namespace MF {
             //styles |= LVS_EX_DOUBLEBUFFER;
             //MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)styles);
 
-
             DateWidth = GetTextExtend(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")).width+10;
+            Win32API.ReleaseDC(hwnd_, dc_);
+            Win32API.DeleteObject(hfont_);
+
 
             ColumnHeader headerName = new ColumnHeader();
             headerName.Name = "name";
@@ -146,31 +166,6 @@ namespace MF {
 
             //headerLastWriteTime.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView1.Columns.Add(headerLastWriteTime);
-            //listView1.ColumnClick
-
-            //listView1.ShowItemToolTips = true;
-
-            //listView1.SizeChanged += (sender, e) => {
-            //    //var w = listView1.Width;
-            //    //w -= headerType.Width;
-            //    //w -= headerSize.Width;
-            //    //w -= headerLastWriteTime.Width + 10;
-            //    //if (w > 0) {
-            //    //    headerName.Width = w;
-            //    //}
-            //};
-
-            //listView1.DoubleClick += (sender, e) => {
-            //    if (listView1.SelectedIndices.Count == 1) {
-            //        var index = listView1.SelectedIndices[0];
-            //        if (!Items[index].IsFile) {
-            //            var name = Items[index].Name;
-            //            this.Path = System.IO.Path.Combine(this.Path, name);
-            //        }
-            //    }
-            //    else {
-            //    }
-            //};
 
             listView1.RetrieveVirtualItem += (sender, e) => {
                 if (e.ItemIndex < Items.Count) {
@@ -273,32 +268,51 @@ namespace MF {
             };
             //Brush b = new SolidBrush(Color.DarkGray);
             listView1.DrawColumnHeader += (sender, e) => {
-                //e.DrawDefault = true;
-                e.DrawBackground();
-                e.DrawText();
-                if (e.ColumnIndex == 0 || e.ColumnIndex == 1) {
-                    //e.Graphics.FillRectangle(b, e.Bounds.Left, e.Bounds.Top, 5, 5);
-                    e.Graphics.FillPolygon(headerBrush,
-                        new Point[] { new Point(e.Bounds.Right - 15, e.Bounds.Top+5), 
-                            new Point(e.Bounds.Right-5, e.Bounds.Top+5), 
-                            new Point(e.Bounds.Right - 10, e.Bounds.Bottom-5 ) });
+                if (e.ColumnIndex == sortcolum){
+                    e.DrawBackground();
+                    e.DrawText(TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
+                        //e.Graphics.FillRectangle(b, e.Bounds.Left, e.Bounds.Top, 5, 5);
+                    if (this.sortOrder == 1) {
+                        e.Graphics.FillPolygon(headerBrush,
+                            new Point[] { new Point(e.Bounds.Right - 10, e.Bounds.Top+5), 
+                                new Point(e.Bounds.Right-5, e.Bounds.Bottom-5), 
+                                new Point(e.Bounds.Right - 15, e.Bounds.Bottom-5 ) });
+                    }
+                    else if(this.sortOrder == -1){
+                        e.Graphics.FillPolygon(headerBrush,
+                            new Point[] { new Point(e.Bounds.Right - 15, e.Bounds.Top+5), 
+                                new Point(e.Bounds.Right-5, e.Bounds.Top+5), 
+                                new Point(e.Bounds.Right - 10, e.Bounds.Bottom-5 ) });
+                    }
+                }else{  
+                    e.DrawDefault = true;
                 }
                 
             };
 
             listView1.ColumnClick += (s, e) => {
+                if (this.sortcolum == e.Column) {
+                    this.sortOrder = -1 * this.sortOrder;
+                }
+                else {
+                    this.sortOrder = 1;
+                }
+                this.sortcolum = e.Column;
+                
+                //listView.Invalidate(new Rectangle(0, 0, listView.Width, listView.Height-listView.ClientSize.Height), true);
+
                 switch (e.Column) {
                     case 0:
-                        this.sort(SortType.Name, -1 * this.incdec);
+                        this.sort(SortType.Name, this.sortOrder);
                         break;
                     case 1:
-                        this.sort(SortType.Type, -1 * this.incdec);
+                        this.sort(SortType.Type, this.sortOrder);
                         break;
                     case 2:
-                        this.sort(SortType.Size, -1 * this.incdec);
+                        this.sort(SortType.Size, this.sortOrder);
                         break;
                     case 3:
-                        this.sort(SortType.WriteTime, -1 * this.incdec);
+                        this.sort(SortType.WriteTime, this.sortOrder);
                         break;
                     default:
                         break;
@@ -307,23 +321,7 @@ namespace MF {
             //bool res = false;
 
             listView1.MouseDown += (s, e) => {
-                var lv = s as ListView;
-                //if (e.Button == MouseButtons.Left) {
-                //    if (res) {
-                //        res = false;
-                //        return;
-                //    }
-                //    var mdinv = DateTime.Now - mdtime;
-                //    if (!res && mdinv.Milliseconds <= SystemInformation.DoubleClickTime/2) {
-                //        if (lv.SelectedIndices.Count == 0) {
-                //            MoveUp();
-                //            res = true;
-                //        }
-                //    }
-                //    else {
-                //    mdtime = DateTime.Now;
-                //    }
-                //}else 
+                var lv = s as ListView; 
                 if (e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) {
                     
                     var item = lv.GetItemAt(e.Location.X, e.Location.Y);
@@ -340,25 +338,6 @@ namespace MF {
                     }
                 }
             };
-            //listView1.MouseUp += (s, e) => {
-            //    var lv = s as ListView;
-            //    if (e.Button == MouseButtons.Right) {
-            //        var ctm = new ShellContextMenu();
-            //        var selfiles = SelectedItemList;
-            //        if (selfiles.Count == 0) {
-            //            DirectoryInfo[] dir = new DirectoryInfo[1];
-            //            dir[0] = new DirectoryInfo(this.Dir);
-            //            ctm.ShowContextMenu(dir, lv.PointToScreen(new Point(e.X, e.Y)));
-            //        }
-            //        else {
-            //            List<FileInfo> arrFI = new List<FileInfo>();
-            //            selfiles.ForEach(x => {
-            //                arrFI.Add(new FileInfo(System.IO.Path.Combine(this.Dir, x.Name)));
-            //            });
-            //            ctm.ShowContextMenu(arrFI.ToArray(), lv.PointToScreen(new Point(e.X, e.Y)));
-            //        }
-            //    }
-            //};
 
             textBox1.KeyDown +=(sender, e)=>{
                 if (e.KeyCode == Keys.Return) {
@@ -514,21 +493,13 @@ namespace MF {
             if (Closing != null) {
                 Closing(this, new EventArgs());
             }
+            headerBrush.Dispose();
             this.Parent.Controls.Remove(this);
             if (Closed != null) {
                 Closed(this, new EventArgs());
             }
         }
 
-        #region IDisposable メンバ
-
-        void IDisposable.Dispose() {
-            Win32API.ReleaseDC(hwnd_, dc_);
-            Win32API.DeleteObject(hfont_);
-            headerBrush.Dispose();
-        }
-
-        #endregion
 
         internal class ChangePathEventArgs : EventArgs {
             public string path;
