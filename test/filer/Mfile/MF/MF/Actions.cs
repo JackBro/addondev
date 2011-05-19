@@ -40,5 +40,11 @@ namespace MF {
                 form.activeUs.Reload();
             }
         };
+
+        public static Action<MainForm> UpDateInfo = (form) => {
+            if (form.activeUs != null) {
+                form.activeUs.UpDateInfo();
+            }
+        };
     }
 }

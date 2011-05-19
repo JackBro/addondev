@@ -67,5 +67,21 @@ namespace MF {
 
             return dde;
         }
+
+        public static Win32API.SIZE GetTextExtend(Control c, string str) {
+            IntPtr hwnd_ = c.Handle;
+            IntPtr hfont_ = c.Font.ToHfont();
+            IntPtr dc_ = Win32API.GetDC(hwnd_);
+            int fit = 0;
+            IntPtr OldFont = Win32API.SelectObject(dc_, hfont_);
+            Win32API.SIZE size = new Win32API.SIZE();
+            Win32API.GetTextExtentExPointW(dc_, str, str.Length, int.MaxValue, out fit, null, out size);
+            Win32API.SelectObject(dc_, OldFont);
+
+            Win32API.ReleaseDC(hwnd_, dc_);
+            Win32API.DeleteObject(hfont_);
+
+            return size;
+        }
     }
 }

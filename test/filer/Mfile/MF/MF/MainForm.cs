@@ -116,7 +116,9 @@ namespace MF {
                 var item = flowLayoutPanel1.Controls[i] as UserControl1;
                 UserControl1 u = item as UserControl1;
                 u.Width = w;
-                u.Height = h;               
+                u.Height = h;
+
+                //u.resetColumSize();   
             }
 
             var resc = flowLayoutPanel1.Controls.Count % cc;
@@ -127,6 +129,8 @@ namespace MF {
                     UserControl1 u = item as UserControl1;
                     u.Width = resw;
                     u.Height = h;
+
+                    //u.resetColumSize();
                 }
             }
         }
@@ -159,9 +163,25 @@ namespace MF {
                 activeUs.listView.BackColor = Color.White;
             };
 
-            us.listView.DoubleClick += (sender, e) => {
+            //us.listView.DoubleClick += (sender, e) => {
+            //    if (us.listView.SelectedIndices.Count == 1) {
+            //        var items = us.ItemList; 
+            //        var index = us.listView.SelectedIndices[0];
+            //        //var fp = System.IO.Path.Combine(us.Path, items[index].Name);
+            //        var fp = getFullPath(us.Dir, items[index].Name);
+            //        //if (items[index].IsFile) {
+            //        if (File.Exists(fp)) {
+            //            HistoryListView.Items.Insert(0, fp);
+            //            Process.Start(fp);
+            //        }
+            //        else if(Directory.Exists(fp)){
+            //            us.Dir = fp;
+            //        }
+            //    }
+            //};
+            us.listView.DoubleClickEx += (sender, e) => {
                 if (us.listView.SelectedIndices.Count == 1) {
-                    var items = us.ItemList; 
+                    var items = us.ItemList;
                     var index = us.listView.SelectedIndices[0];
                     //var fp = System.IO.Path.Combine(us.Path, items[index].Name);
                     var fp = getFullPath(us.Dir, items[index].Name);
@@ -170,10 +190,13 @@ namespace MF {
                         HistoryListView.Items.Insert(0, fp);
                         Process.Start(fp);
                     }
-                    else if(Directory.Exists(fp)){
+                    else if (Directory.Exists(fp)) {
                         us.Dir = fp;
                     }
 
+                }
+                else if (us.listView.SelectedIndices.Count == 0) {
+                    us.UpDir();
                 }
             };
 
@@ -299,6 +322,8 @@ namespace MF {
             _KeyMap.Add(Keys.Control | Keys.C, Actions.Copy);
             _KeyMap.Add(Keys.Control | Keys.V, Actions.Paste);
             _KeyMap.Add(Keys.Delete, Actions.Delete);
+
+            _KeyMap.Add(Keys.F5, Actions.UpDateInfo);
         }
 
         private Dictionary<string, Action<MainForm>> MouseGestureMap = new Dictionary<string, Action<MainForm>>();

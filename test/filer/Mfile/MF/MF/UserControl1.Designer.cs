@@ -23,7 +23,6 @@
         /// コード エディタで変更しないでください。
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserControl1));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -43,7 +42,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(0, 3);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(344, 19);
+            this.textBox1.Size = new System.Drawing.Size(352, 19);
             this.textBox1.TabIndex = 0;
             // 
             // statusStrip1
@@ -91,12 +90,13 @@
             // CloseLabel
             // 
             this.CloseLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.CloseLabel.Image = ((System.Drawing.Image)(resources.GetObject("CloseLabel.Image")));
-            this.CloseLabel.Location = new System.Drawing.Point(344, 0);
+            this.CloseLabel.Location = new System.Drawing.Point(353, 0);
             this.CloseLabel.Margin = new System.Windows.Forms.Padding(1);
             this.CloseLabel.Name = "CloseLabel";
-            this.CloseLabel.Size = new System.Drawing.Size(34, 25);
+            this.CloseLabel.Size = new System.Drawing.Size(25, 25);
             this.CloseLabel.TabIndex = 5;
+            this.CloseLabel.Text = "x";
+            this.CloseLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel2
             // 

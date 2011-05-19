@@ -25,24 +25,27 @@ namespace MF {
         //private const int LVS_EX_DOUBLEBUFFER = 0x00010000;
         private Brush headerBrush;
 
-        private IntPtr dc_;
-        private IntPtr hfont_;
-        private IntPtr hwnd_;
-        private int fit;
-        //private Win32API.SIZE GetTextExtend(string str, out int fit) {
-        private Win32API.SIZE GetTextExtend(string str) {
-            IntPtr OldFont = Win32API.SelectObject(dc_, hfont_);
-            Win32API.SIZE size = new Win32API.SIZE();
-            Win32API.GetTextExtentExPointW(dc_, str, str.Length, int.MaxValue, out fit, null, out size);
-            Win32API.SelectObject(dc_, OldFont);
-            return size;
-        }
+        //private IntPtr dc_;
+        //private IntPtr hfont_;
+        //private IntPtr hwnd_;
+        //private int fit;
+        ////private Win32API.SIZE GetTextExtend(string str, out int fit) {
+        //private Win32API.SIZE GetTextExtend(string str) {
+        //    IntPtr OldFont = Win32API.SelectObject(dc_, hfont_);
+        //    Win32API.SIZE size = new Win32API.SIZE();
+        //    Win32API.GetTextExtentExPointW(dc_, str, str.Length, int.MaxValue, out fit, null, out size);
+        //    Win32API.SelectObject(dc_, OldFont);
+        //    return size;
+        //}
 
         public ListViewEx listView {
             get { return listView1; }
         }
 
-
+        public int DateTimeColumWidth {
+            get;
+            private set;
+        }
         private int sortcolum;
         private SortType type;
         private int sortOrder;
@@ -88,16 +91,31 @@ namespace MF {
         public event EventHandler Closed;
         public event EventHandler Closing;
 
-        private int MaxNameWidth;
-        private int DateWidth;
-        private string DateFormat;
+        //private int MaxNameWidth;
+        //private int DateWidth;
+        //private string DateFormat;
         private TextFormatFlags flg;
 
-        private int sorttype;
+        //private int sorttype;
         //private DateTime mdtime = DateTime.Now;
         private ListViewEx listView1;
 
+        public List<string> history=new List<string>();
+        private int historyCurIndex;
 
+        public bool CanHistoryFore {
+            get {
+
+                return true;
+            }
+        }
+
+        public void HistoryFore() {
+            
+        }
+        public void HistoryBefor() {
+            
+        }
         //#region IDisposable メンバ
 
         //void IDisposable.Dispose() {
@@ -111,8 +129,19 @@ namespace MF {
         public UserControl1() {
             InitializeComponent();
 
+            ChangedItems = new List<string>();
+
             //this.DoubleBuffered = true;
             this.Margin = new Padding(0);
+            
+            //textBox1.Enter += (s, e) => {
+            //    textBox1.SelectAll();
+            //};
+            //textBox1.MouseDown += (s, e) => {
+            //    if (textBox1.SelectionLength == 0) {
+            //        textBox1.SelectAll();
+            //    }
+            //};
 
             listView1 = new ListViewEx();
             listView1.Dock = DockStyle.Fill;
@@ -130,19 +159,20 @@ namespace MF {
             this.type = SortType.Name;
             this.sortOrder = 1;
 
-            hwnd_ = listView1.Handle;
-            dc_ = Win32API.GetDC(hwnd_);
-            hfont_ = listView1.Font.ToHfont();
+            //hwnd_ = listView1.Handle;
+            //dc_ = Win32API.GetDC(hwnd_);
+            //hfont_ = listView1.Font.ToHfont();
             headerBrush = new SolidBrush(Color.DarkGray);
             
             //int styles = (int)MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_GETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)0);
             //styles |= LVS_EX_DOUBLEBUFFER;
             //MF.Win32API.NativeMethods.SendMessage(listView1.Handle, (int)LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (IntPtr)styles);
 
-            DateWidth = GetTextExtend(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")).width+10;
-            Win32API.ReleaseDC(hwnd_, dc_);
-            Win32API.DeleteObject(hfont_);
-
+            //DateWidth = GetTextExtend(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")).width+10;
+            //DateTimeColumWidth = GetTextExtend(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")).width + 10;
+            //Win32API.ReleaseDC(hwnd_, dc_);
+            //Win32API.DeleteObject(hfont_);
+            DateTimeColumWidth = Util.GetTextExtend(listView, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")).width + 10;
 
             ColumnHeader headerName = new ColumnHeader();
             headerName.Name = "name";
@@ -162,7 +192,7 @@ namespace MF {
             ColumnHeader headerLastWriteTime = new ColumnHeader();
             headerLastWriteTime.Name = "lastwritetime";
             headerLastWriteTime.Text = "lastwritetime";
-            headerLastWriteTime.Width = DateWidth;
+            headerLastWriteTime.Width = DateTimeColumWidth;
 
             //headerLastWriteTime.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView1.Columns.Add(headerLastWriteTime);
@@ -244,6 +274,9 @@ namespace MF {
                     flg = TextFormatFlags.Left;
                 }
                 Color brush;
+                if (ChangedItems.Contains(e.Item.Text)) {
+                    e.Graphics.FillRectangle(SystemBrushes.GrayText, e.Bounds);
+                }
                 if (e.ColumnIndex == 0 && listView1.SelectedIndices.Contains(e.ItemIndex)) {
                     //if (e.ColumnIndex == 0) {
 
@@ -370,6 +403,92 @@ namespace MF {
 
         }
 
+        //FileItem lFileItem = null;
+
+        void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e) {
+            switch (e.ChangeType) {
+                case System.IO.WatcherChangeTypes.Changed: {
+                        Console.WriteLine("ファイル 「" + e.FullPath + "」が変更されました。");
+                        if (!ChangedItems.Contains(e.Name)) {
+                            ChangedItems.Add(e.Name);
+                            var index = (Items.FindIndex(x => {
+                                return x.Name.Equals(e.Name);
+                            }));
+                            if (index >= 0) {
+                                listView.RedrawItems(index, index, false);
+                            }
+                        }
+                    }
+                    //if (File.Exists(e.FullPath)) {
+                    //    FileItem fi = null;
+                    //    var info = new FileInfo(e.FullPath);
+                    //    if (lFileItem != null && lFileItem.Name.Equals(e.Name)) {
+                    //        fi = lFileItem;
+                    //    }
+                    //    else if ((listView1.SelectedIndices.Count > 0 && Items[listView1.SelectedIndices[0]].Name.Equals(e.Name))) {
+                    //        fi = Items[listView1.SelectedIndices[0]];
+                    //    }else{
+                    //        fi = Items.First(x => {
+                    //            return x.Name.Equals(e.Name);
+                    //        });
+                    //    }
+                    //    if (fi != null) {
+                    //        fi.Size = info.Length;
+                    //        fi.LastWriteTime = info.LastWriteTime; 
+                    //        var index = Items.IndexOf(fi);
+                    //        listView1.RedrawItems(index, index, false);
+                    //    }
+                    //    lFileItem = fi;
+                    //}
+                    break;
+                case System.IO.WatcherChangeTypes.Created: {
+                        var fitem = new FileItem();
+                        fitem.Name = e.Name;
+                        if (File.Exists(e.FullPath)) {
+                            //var info = new FileInfo(e.FullPath);
+                            fitem.IsFile = true;
+                            fitem.type = e.Name.Substring(e.Name.IndexOf("."));
+                            //fitem.Size = info.Length;
+                            //fitem.LastWriteTime = info.LastWriteTime;
+                        }
+                        else {
+                            //var info = new DirectoryInfo(e.FullPath);
+                            fitem.IsFile = false;
+                            fitem.type = "/";
+                            //fitem.LastWriteTime = info.LastWriteTime;
+                        }
+                        //lFileItem = fitem;
+                        var index = 0;
+                        if (listView.SelectedIndices.Count == 0) {
+                            index = listView.TopItem != null ? listView.TopItem.Index : 0;
+                        }
+                        else {
+                            index = listView.SelectedIndices[listView.SelectedIndices.Count - 1];
+                        }
+                        index = index == Items.Count ? index : index + 1;
+                        //Items.Add(fitem);
+                        Items.Insert(index, fitem);
+
+                        if (!ChangedItems.Contains(e.Name)) {
+                            ChangedItems.Add(e.Name);
+                            listView.RedrawItems(index, index, false);
+                        }
+
+                        listView1.VirtualListSize = Items.Count;
+                        //Console.WriteLine("ファイル 「" + e.FullPath + "」がCreatedされました。");
+                        break;
+                    }
+                case System.IO.WatcherChangeTypes.Deleted: {
+                        //Console.WriteLine("ファイル 「" + e.FullPath + "」が削除されました。");
+                        Items.Remove(Items.First(x => {
+                            return x.Name.Equals(e.Name);
+                        }));
+                        listView1.VirtualListSize = Items.Count;
+                        break;
+                    }
+            }
+        }
+
         internal void Copy() {
             StringCollection files = new StringCollection();
             foreach (var item in SelectedItemList) {
@@ -430,64 +549,25 @@ namespace MF {
             LoadDir(this.Dir);
         }
 
-        FileItem lFileItem = null;
-
-        void fileSystemWatcher1_Changed(object sender, FileSystemEventArgs e) {
-            switch (e.ChangeType) {
-                case System.IO.WatcherChangeTypes.Changed:
-                    Console.WriteLine("ファイル 「" + e.FullPath + "」が変更されました。");
-                    //if (File.Exists(e.FullPath)) {
-                    //    FileItem fi = null;
-                    //    var info = new FileInfo(e.FullPath);
-                    //    if (lFileItem != null && lFileItem.Name.Equals(e.Name)) {
-                    //        fi = lFileItem;
-                    //    }
-                    //    else if ((listView1.SelectedIndices.Count > 0 && Items[listView1.SelectedIndices[0]].Name.Equals(e.Name))) {
-                    //        fi = Items[listView1.SelectedIndices[0]];
-                    //    }else{
-                    //        fi = Items.First(x => {
-                    //            return x.Name.Equals(e.Name);
-                    //        });
-                    //    }
-                    //    if (fi != null) {
-                    //        fi.Size = info.Length;
-                    //        fi.LastWriteTime = info.LastWriteTime; 
-                    //        var index = Items.IndexOf(fi);
-                    //        listView1.RedrawItems(index, index, false);
-                    //    }
-                    //    lFileItem = fi;
-                    //}
-                    break;
-                case System.IO.WatcherChangeTypes.Created:
-                    var fitem = new FileItem();
-                    fitem.Name = e.Name;
-                    if (File.Exists(e.FullPath)) {
-                        //var info = new FileInfo(e.FullPath);
-                        fitem.IsFile = true;
-                        fitem.type = e.Name.Substring(e.Name.IndexOf("."));
-                        //fitem.Size = info.Length;
-                        //fitem.LastWriteTime = info.LastWriteTime;
+        internal void UpDateInfo() {
+            foreach (var name in ChangedItems) {
+                var finfo = new FileInfo(Path.Combine(this.Dir, name));
+                if (finfo.Exists) {
+                    var item = Items.First(x => {
+                        return x.Name.Equals(name);
+                    });
+                    if (item != null) {
+                        item.Size = finfo.Length; 
+                        item.LastWriteTime = finfo.LastWriteTime;
                     }
-                    else {
-                        //var info = new DirectoryInfo(e.FullPath);
-                        fitem.IsFile = false;
-                        fitem.type = "/";
-                        //fitem.LastWriteTime = info.LastWriteTime;
-                    }
-                    lFileItem = fitem;
-                    Items.Add(fitem);
-                    listView1.VirtualListSize = Items.Count;
-                    Console.WriteLine("ファイル 「" + e.FullPath + "」がCreatedされました。");
-                    break;
-                case System.IO.WatcherChangeTypes.Deleted:
-                    Console.WriteLine("ファイル 「" + e.FullPath + "」が削除されました。");
-                    Items.Remove(Items.First(x=>{
-                        return x.Name.Equals(e.Name);
-                    }));
-                    listView1.VirtualListSize = Items.Count;
-                    break;
+                }
             }
+            if (ChangedItems.Count > 0) {
+                listView.Refresh();
+            }
+            ChangedItems.Clear();
         }
+        
 
         internal void Close() {
             if (Closing != null) {
@@ -522,6 +602,10 @@ namespace MF {
                             listView1.Columns["name"].Width = w;// headerName.Width = w;
                         }
                     }
+                    if (!value.Equals(this._dir)) {
+                        ChangedItems.Clear();
+                    }
+
                     this._dir = value;
                     textBox1.Text = this._dir;
                     if (ChangePath != null) {
@@ -536,6 +620,11 @@ namespace MF {
                     
                 }
             }
+        }
+
+        internal List<string> ChangedItems {
+            get;
+            private set;
         }
 
         internal List<FileItem> SelectedItemList {
@@ -560,7 +649,7 @@ namespace MF {
             listView1.VirtualListSize = 0;
             Items.Clear();
 
-            DateTime s = DateTime.Now;
+            //DateTime s = DateTime.Now;
             //{
             //    var dirs = Directory.GetDirectories(path);
             //    var files = Directory.GetFiles(path);
@@ -584,7 +673,7 @@ namespace MF {
             //    }
             //}
             long sum = 0;        
-            MaxNameWidth = 0;
+            //MaxNameWidth = 0;
             var dirinfo = new DirectoryInfo(path);
             foreach (var item in dirinfo.GetDirectories()) {
                 FileItem fitem = new FileItem();
@@ -623,19 +712,29 @@ namespace MF {
             listView1.VirtualListSize = Items.Count;
         }
 
+        internal void resetColumSize() {
+            int colw=0;
+            for (int i = 0; i < listView.Columns.Count; i++){
+			    colw+=listView.Columns[i].Width;
+			}
+            if (colw < listView.Width) {
+                listView.Columns["name"].Width = listView.Width - (colw - listView.Columns["name"].Width);
+            }
+        }
+
         private string getFileSizeFormat(long size) {
             string KBSize = string.Format("{0:N0} KB", size / 1024);
             return KBSize;
         }
 
         internal void UpDir() {
-            var u = UpDirPath(this.Dir);
+            var u = getUpDirPath(this.Dir);
             if (!u.Equals(this.Dir)) {
                 this.Dir = u;
             }
         }
 
-        private string UpDirPath(string path) {
+        private string getUpDirPath(string path) {
             if (!path.EndsWith(@"\")) {
                 path += @"\";
             }
