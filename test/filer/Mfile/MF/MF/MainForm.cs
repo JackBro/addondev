@@ -209,6 +209,10 @@ namespace MF {
                     mg.Start(us.listView, us.listView.PointToScreen(new Point(e.X, e.Y)));
                     activeUs.listView.MultiSelect = false;
                 }
+
+                if (popupForm != null && popupForm.Visible) {
+                    popupForm.Visible = false;
+                }
             };
 
             us.listView.MouseMove += (s, e) => {
@@ -295,6 +299,11 @@ namespace MF {
                     activeUs.listView.MultiSelect = true;
                 }
             };
+            us.listView.ItemMouseHover += (s, e) => {
+                //e.Item.
+                //var kk=0;
+                
+            };
             us.ChangePath += (s, e) => {
                 HistoryListView.Items.Insert(0, e.path);
             };
@@ -324,6 +333,8 @@ namespace MF {
             _KeyMap.Add(Keys.Delete, Actions.Delete);
 
             _KeyMap.Add(Keys.F5, Actions.UpDateInfo);
+
+            _KeyMap.Add(Keys.Control | Keys.Space, Actions.ShowPopupForm);
         }
 
         private Dictionary<string, Action<MainForm>> MouseGestureMap = new Dictionary<string, Action<MainForm>>();
@@ -353,9 +364,29 @@ namespace MF {
             XMLSerializer.Serialize<List<string>>("list", list);
         }
 
+        internal void ShowPopupForm() {
+            if (activeUs == null) return;
+
+            var lv = activeUs.listView;
+            if (lv.SelectedIndices.Count > 0) {
+                if (popupForm == null) {
+                    popupForm = new PopupForm();
+                }
+                var item = lv.Items[lv.SelectedIndices[0]];
+                var point = lv.PointToScreen(item.Bounds.Location);
+
+                popupForm.Show(this, "test", point.X, point.Y + item.Bounds.Height);
+            }
+            
+        }
+
+        private PopupForm popupForm;
         private void toolStripButton1_Click(object sender, EventArgs e) {
             //activeUs.listView.MultiSelect = !activeUs.listView.MultiSelect;
             //Text = activeUs.listView.MultiSelect.ToString();
+            //var f = new PopupForm();
+            //f.Show("[[test]]\nok");
+            //f.Show();
         }
     }
 }

@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions.cs" />
+    <Compile Include="Comment.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="FileItem.cs" />
     <Compile Include="ListViewEx.cs">

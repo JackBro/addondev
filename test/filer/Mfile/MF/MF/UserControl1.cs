@@ -84,7 +84,6 @@ namespace MF {
                 default:
                     break;
             }
- 
             listView1.EndUpdate();
         }
 

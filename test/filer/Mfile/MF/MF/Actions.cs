@@ -46,5 +46,10 @@ namespace MF {
                 form.activeUs.UpDateInfo();
             }
         };
+
+        public static Action<MainForm> ShowPopupForm = (form) => {
+            form.ShowPopupForm();
+        };
+
     }
 }
