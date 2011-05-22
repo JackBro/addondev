@@ -15,6 +15,9 @@ namespace MF {
     public partial class MainForm : Form {
         Dictionary<Keys, Action<MainForm>> _KeyMap = new Dictionary<Keys, Action<MainForm>>();
         MouseGesture mg;
+
+        private CommentMg cmg = new CommentMg();
+
         public MainForm() {
             InitializeComponent();
 
