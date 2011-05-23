@@ -1,3 +1,5 @@
+https://github.com/fligtar/favloc/tree/master/builds
+
 http://www.mwsoft.jp/programming/munou/mecab_hatena.html
 http://fg-180.katamayu.net/archives/2005/09/11/181946
 http://d.hatena.ne.jp/code46/20090531/p1
