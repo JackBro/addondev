@@ -1,3 +1,14 @@
+http://yoshifuji.blogspot.com/2010/11/mahout-web.html
+http://d.hatena.ne.jp/daisuke-m/20110309/1299675862
+http://‚Æ‚¤‚²‚ë‚¤.jp/wiki/%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92/Mac%E3%81%A7Mahout%E3%82%92%E4%BD%BF%E3%81%86/
+http://www.ibm.com/developerworks/jp/java/library/j-mahout/
+http://d.hatena.ne.jp/n_shuyo/20110131/mahout
+http://www.slideshare.net/yanaoki/hadoop-mahouth-base
+http://www.pwv.co.jp/~take/TakeWiki/index.php?mahout%2F%E3%83%AC%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%89%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E4%BD%9C%E3%82%8A%E6%96%B9
+http://www.mcontents.com/runliferun/?p=92
+http://www.slideshare.net/yanaoki/mahout
+
+
 http://d.hatena.ne.jp/hamadakoichi/
 http://d.hatena.ne.jp/hamadakoichi/20110130/p1
 
