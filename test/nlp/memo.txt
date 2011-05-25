@@ -1,3 +1,32 @@
+http://www1.doshisha.ac.jp/~mjin/R/32/32.html
+http://www.slideshare.net/yanashi/r-3847999
+http://www.slideshare.net/zgmfx20a/random-forests
+
+/*
+library(randomForest)
+n <- nrow(iris)
+idx <- sample(n, n * 0.5)
+iris.learn <- iris[idx,]
+iris.test <- iris[-idx,]
+forest<-randomForest(Species~.,data=iris.learn)
+pred.forest <- predict(forest, newdata=iris.test, type="class")
+table(pred.forest,iris.test[,5])
+
+library(mvpart)
+n <- nrow(iris)
+idx <- sample(n, n * 0.5)
+iris.learn <- iris[idx,]
+iris.test <- iris[-idx,]
+tree<-rpart(Species~.,data=iris.learn, method="class")
+predtree<-predict(tree, iris.learn, type="class")
+table(predtree, iris.test$Species)
+
+library(kernlab)
+svm <- ksvm(Species~., data=iris.learn ,kernel="vanilla")
+pred.svm <- predict(svm, newdata= iris.test)
+table(pred.svm,iris.test[,5])
+*/
+
 http://yoshifuji.blogspot.com/2010/11/mahout-web.html
 http://d.hatena.ne.jp/daisuke-m/20110309/1299675862
 http://‚Æ‚¤‚²‚ë‚¤.jp/wiki/%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92/Mac%E3%81%A7Mahout%E3%82%92%E4%BD%BF%E3%81%86/

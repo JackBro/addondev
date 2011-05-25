@@ -196,8 +196,8 @@ namespace MF {
             //headerLastWriteTime.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView1.Columns.Add(headerLastWriteTime);
 
-            //listView1.SmallImageList = imageList1;
-            //listView1.SmallImageList.ImageSize = new Size(1, 20);
+            listView1.SmallImageList = new ImageList();
+            listView1.SmallImageList.ImageSize = new Size(1, 32);
 
             listView1.RetrieveVirtualItem += (sender, e) => {
                 if (e.ItemIndex < Items.Count) {
@@ -268,7 +268,7 @@ namespace MF {
                 //TextFormatFlags flg;
                 if (e.ColumnIndex == 0) {
                     flg = TextFormatFlags.EndEllipsis;
-
+                    //flg = TextFormatFlags.WordBreak;
                 }
                 else if (e.ColumnIndex == 2) {
                     flg = TextFormatFlags.Right;
@@ -308,6 +308,11 @@ namespace MF {
                 Rectangle r = new Rectangle(e.Bounds.Location.X+16, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
                 TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, r, brush, flg);
                 e.DrawFocusRectangle(e.Item.Bounds);
+                //var str = string.Join(" ", Array.ConvertAll(e.SubItem.Text.ToCharArray(),
+                //delegate(Char c) { return c + "\x200c"; }));
+                //TextRenderer.DrawText(e.Graphics, str, e.Item.Font, r, brush, flg);
+                //e.DrawFocusRectangle(e.Item.Bounds);
+
 
             };
             //Brush b = new SolidBrush(Color.DarkGray);
