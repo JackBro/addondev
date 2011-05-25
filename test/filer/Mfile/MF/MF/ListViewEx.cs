@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace MF {
 
@@ -29,6 +30,14 @@ namespace MF {
             this.DoubleBuffered = true;
         }
 
+        private bool isInWmPaintMsg = false;
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMHDR {
+            public IntPtr hwndFrom;
+            public IntPtr idFrom;
+            public int code;
+        }
+
         protected override void WndProc(ref Message m) {
             switch (m.Msg) {
                 case WM_RBUTTONUP:
@@ -36,15 +45,31 @@ namespace MF {
                         Point p = new Point(m.LParam.ToInt32());
                         MouseUpEx(this, new MouseEventArgs(MouseButtons.Right, 1, p.X, p.Y, 0));
                     }
+                    base.WndProc(ref m);
                     break;
                 case WM_LBUTTONDBLCLK:
                     if (DoubleClickEx != null) {
                         Point p = new Point(m.LParam.ToInt32());
                         DoubleClickEx(this, new MouseEventArgs(MouseButtons.Left, 1, p.X, p.Y, 0));
                     }
+                    base.WndProc(ref m);
+                    break;
+                case 0x0F: // WM_PAINT 
+                    this.isInWmPaintMsg = true;
+                    base.WndProc(ref m);
+                    this.isInWmPaintMsg = false;
+                    break;
+                case 0x204E: // WM_REFLECT_NOTIFY 
+                    NMHDR nmhdr = (NMHDR)m.GetLParam(typeof(NMHDR));
+                    if (nmhdr.code == -12) { // NM_CUSTOMDRAW 
+                        if (this.isInWmPaintMsg)
+                            base.WndProc(ref m);
+                    } else
+                        base.WndProc(ref m);
                     break;
                 default:
-                    break;
+                    base.WndProc(ref m);
+                    break; 
             }
             //if (m.Msg == WM_RBUTTONUP){
             //    if (MouseUpEx != null) {
@@ -52,7 +77,7 @@ namespace MF {
             //        MouseUpEx(this, new MouseEventArgs(MouseButtons.Right, 1, p.X, p.Y, 0));
             //    }
             //}
-            base.WndProc(ref m);
+            //base.WndProc(ref m);
         }
     }
 }

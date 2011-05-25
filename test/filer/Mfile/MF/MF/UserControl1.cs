@@ -196,14 +196,13 @@ namespace MF {
             //headerLastWriteTime.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView1.Columns.Add(headerLastWriteTime);
 
-            listView1.SmallImageList = new ImageList();
-            listView1.SmallImageList.ImageSize = new Size(1, 32);
+            //listView1.SmallImageList = new ImageList();
+            //listView1.SmallImageList.ImageSize = new Size(1, 32);
 
             listView1.RetrieveVirtualItem += (sender, e) => {
                 if (e.ItemIndex < Items.Count) {
                     var item = Items[e.ItemIndex];
                     var listviewitem = new ListViewItem();
-
                     listviewitem.Text = item.Name;
                     //if (item.IsFile) {
                         //listviewitem.ForeColor = Color.Yellow;
@@ -219,7 +218,7 @@ namespace MF {
                     e.Item = listviewitem;
                 }
             };
-
+ 
             //Brush b = new SolidBrush(Color.Red);
             listView1.DrawSubItem += (sender, e) => {
                 //// 描画するSubItemが2列目(ColumnIndexが1)の時は、StringAligment.Farに設定して、右寄せにする
@@ -299,15 +298,14 @@ namespace MF {
                     }
                 }
 
-                if (e.ColumnIndex == 0) {
-                    e.Graphics.FillRectangle(SystemBrushes.MenuHighlight, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.X + 16, e.Bounds.Y+16));
-
-                }
+                //if (e.ColumnIndex == 0) {
+                //    e.Graphics.FillRectangle(SystemBrushes.MenuHighlight, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.X + 16, e.Bounds.Y+16));
+                //}
 
                 //Rectangle r = new Rectangle(e.Bounds.Location, new Size(listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height));
-                Rectangle r = new Rectangle(e.Bounds.Location.X+16, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
+                Rectangle r = new Rectangle(e.Bounds.Location.X, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
                 TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, r, brush, flg);
-                e.DrawFocusRectangle(e.Item.Bounds);
+                //e.DrawFocusRectangle(e.Item.Bounds);
                 //var str = string.Join(" ", Array.ConvertAll(e.SubItem.Text.ToCharArray(),
                 //delegate(Char c) { return c + "\x200c"; }));
                 //TextRenderer.DrawText(e.Graphics, str, e.Item.Font, r, brush, flg);
