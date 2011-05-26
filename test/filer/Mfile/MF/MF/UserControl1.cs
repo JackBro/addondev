@@ -124,7 +124,9 @@ namespace MF {
         //}
 
         //#endregion
-
+        //private static IntPtr SmallImageListHandle;
+        //private static IntPtr LargeImageListHandle;
+        //SHFILEINFO shFileInfo = new SHFILEINFO();
         public UserControl1() {
             InitializeComponent();
 
@@ -151,8 +153,27 @@ namespace MF {
             listView1.VirtualMode = true;
             listView1.VirtualListSize = 0;
             //listView1.FullRowSelect = true;
-            listView1.View = View.Details;
+            //listView1.View = View.Details;
             listView1.ShowItemToolTips = true;
+
+
+            listView1.SmallImageList = new ImageList();
+            //listView1.StateImageList = imageList1;
+            //listView1.LargeImageList = new ImageList();
+            //listView1.SmallImageList.ColorDepth = ColorDepth.Depth32Bit;
+            listView1.SmallImageList.ImageSize = new Size(16, 16);
+            //SHFILEINFO shFileInfo = new SHFILEINFO();
+            //SmallImageListHandle = NativeMethods.SHGetFileInfo(String.Empty, 0,
+            //    out shFileInfo, (uint)Marshal.SizeOf(shFileInfo),
+            //    NativeMethods.SHGFI_SMALLICON | NativeMethods.SHGFI_SYSICONINDEX);
+            //LargeImageListHandle = NativeMethods.SHGetFileInfo(String.Empty, 0,
+            //    out shFileInfo, (uint)Marshal.SizeOf(shFileInfo),
+            //    NativeMethods.SHGFI_LARGEICON | NativeMethods.SHGFI_SYSICONINDEX);
+            //NativeMethods.SendMessage(listView1.Handle, NativeMethods.LVM_SETIMAGELIST,
+            //    new IntPtr(NativeMethods.LVSIL_SMALL), SmallImageListHandle);
+            //NativeMethods.SendMessage(listView1.Handle, NativeMethods.LVM_SETIMAGELIST,
+            //    new IntPtr(NativeMethods.LVSIL_NORMAL), LargeImageListHandle);
+
             
             this.sortcolum = 0;
             this.type = SortType.Name;
@@ -196,8 +217,7 @@ namespace MF {
             //headerLastWriteTime.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView1.Columns.Add(headerLastWriteTime);
 
-            //listView1.SmallImageList = new ImageList();
-            //listView1.SmallImageList.ImageSize = new Size(1, 32);
+
 
             listView1.RetrieveVirtualItem += (sender, e) => {
                 if (e.ItemIndex < Items.Count) {
@@ -211,11 +231,28 @@ namespace MF {
                     //else {
                     //    listviewitem.SubItems.Add("Dir");
                     //}
-                    
+                    //    listviewitem.ImageIndex = 0;
                     listviewitem.SubItems.Add(getFileSizeFormat(item.Size));
                     if (item.LastWriteTime!=null) listviewitem.SubItems.Add(item.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"));
                     //listviewitem.SubItems.Add(item.LastWriteTime.ToLongDateString());
                     e.Item = listviewitem;
+
+                    
+    //                NativeMethods.SHGetFileInfo(Path.Combine(this.Dir, item.Name), 0, out shFileInfo,
+    //(uint)Marshal.SizeOf(shFileInfo), NativeMethods.SHGFI_ICON |
+    //NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_OVERLAYINDEX);
+    //                // 最上位8ビットを除いた値をアイコンインデックス値とする
+    //                int iconIndex = (shFileInfo.iIcon & 0xFFFFFF);
+    //                listviewitem.ImageIndex = iconIndex;
+    //                LVITEM lvitem = new LVITEM();
+    //                lvitem.stateMask = NativeMethods.LVIS_OVERLAYMASK;
+    //                // 最上位8ビットの値を、8-11ビット目に格納、それ以外のビットは 0 にする
+    //                lvitem.state = ((shFileInfo.iIcon >> 16) & 0x0F00);
+    //                NativeMethods.SendMessage(listView1.Handle,
+    //                    NativeMethods.LVM_SETITEMSTATE, listviewitem.Index, ref lvitem);
+    //                if (shFileInfo.hIcon != IntPtr.Zero)
+    //                    NativeMethods.DestroyIcon(shFileInfo.hIcon);
+                    
                 }
             };
  
@@ -257,7 +294,7 @@ namespace MF {
                 //    brush = SystemBrushes.WindowText;
                 //    //}
                 //}
-
+ 
                 //// 上で設定した,brushとdrawFormatを利用して文字を描画する
                 //e.Graphics.DrawString(e.SubItem.Text, e.Item.Font, brush, e.Bounds, drawFormat);
 
@@ -268,6 +305,8 @@ namespace MF {
                 if (e.ColumnIndex == 0) {
                     flg = TextFormatFlags.EndEllipsis;
                     //flg = TextFormatFlags.WordBreak;
+                    //e.Graphics.DrawImage(imageList1.Images[0], e.Bounds.Location.X, e.Bounds.Location.Y);                
+
                 }
                 else if (e.ColumnIndex == 2) {
                     flg = TextFormatFlags.Right;
@@ -281,9 +320,9 @@ namespace MF {
                 }
                 if (e.ColumnIndex == 0 && listView1.SelectedIndices.Contains(e.ItemIndex)) {
                     //if (e.ColumnIndex == 0) {
+                    Rectangle sr = new Rectangle(e.Bounds.Location.X + 16, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
 
                     e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
-
                     //}
                     //Rectangle hr = new Rectangle(e.Bounds.Location, new Size(listView1.Width, e.Bounds.Height));
                     //e.Graphics.FillRectangle(SystemBrushes.Highlight, hr);
@@ -298,12 +337,16 @@ namespace MF {
                     }
                 }
 
-                //if (e.ColumnIndex == 0) {
-                //    e.Graphics.FillRectangle(SystemBrushes.MenuHighlight, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.X + 16, e.Bounds.Y+16));
-                //}
+                if (e.ColumnIndex == 0) {
+                    var item = Items[e.ItemIndex];
+                    var img = IconCache.Inst.getImage(Path.Combine(this.Dir, item.Name), item.type, item.IsFile);
+                    if (img != null) {
+                        e.Graphics.DrawImage(img, e.Bounds.Location.X, e.Bounds.Location.Y, img.Width, img.Height);
+                    }
+                }
 
                 //Rectangle r = new Rectangle(e.Bounds.Location, new Size(listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height));
-                Rectangle r = new Rectangle(e.Bounds.Location.X, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
+                Rectangle r = new Rectangle(e.Bounds.Location.X+16+2, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
                 TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, r, brush, flg);
                 //e.DrawFocusRectangle(e.Item.Bounds);
                 //var str = string.Join(" ", Array.ConvertAll(e.SubItem.Text.ToCharArray(),

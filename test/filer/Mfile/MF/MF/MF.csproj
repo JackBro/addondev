@@ -53,6 +53,7 @@
     <Compile Include="Comment.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="FileItem.cs" />
+    <Compile Include="IconCache.cs" />
     <Compile Include="ListViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
