@@ -18,7 +18,7 @@ namespace MF {
         Size,
         WriteTime
     }
-    public partial class UserControl1 : UserControl {
+    public partial class UserControl1 : UserControl, IDisposable {
         //private const int LVM_FIRST = 0x1000;
         //private const int LVM_SETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 54);
         //private const int LVM_GETEXTENDEDLISTVIEWSTYLE = (LVM_FIRST + 55);
@@ -115,15 +115,17 @@ namespace MF {
         public void HistoryBefor() {
             
         }
-        //#region IDisposable メンバ
 
-        //void IDisposable.Dispose() {
-        //    Win32API.ReleaseDC(hwnd_, dc_);
-        //    Win32API.DeleteObject(hfont_);
-        //    headerBrush.Dispose();
-        //}
+        private ImageList iconcache;
 
-        //#endregion
+        #region IDisposable メンバ
+
+        void IDisposable.Dispose() {
+            iconcache.Dispose();
+        }
+
+        #endregion
+
         //private static IntPtr SmallImageListHandle;
         //private static IntPtr LargeImageListHandle;
         //SHFILEINFO shFileInfo = new SHFILEINFO();
@@ -131,6 +133,7 @@ namespace MF {
             InitializeComponent();
 
             ChangedItems = new List<string>();
+            iconcache = new ImageList();
 
             //this.DoubleBuffered = true;
             this.Margin = new Padding(0);
@@ -234,9 +237,18 @@ namespace MF {
                     //    listviewitem.ImageIndex = 0;
                     listviewitem.SubItems.Add(getFileSizeFormat(item.Size));
                     if (item.LastWriteTime!=null) listviewitem.SubItems.Add(item.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"));
+
+                    if (item.type == ".exe") {
+                        if (!iconcache.Images.ContainsKey(item.Name)) {
+                            Image icon;
+                            if (IconMethods.getIcon(Path.Combine(this.Dir, item.Name), out icon)) {
+                                iconcache.Images.Add(item.Name, icon);
+                            }
+                        }
+                        
+                    }
                     //listviewitem.SubItems.Add(item.LastWriteTime.ToLongDateString());
                     e.Item = listviewitem;
-
                     
     //                NativeMethods.SHGetFileInfo(Path.Combine(this.Dir, item.Name), 0, out shFileInfo,
     //(uint)Marshal.SizeOf(shFileInfo), NativeMethods.SHGFI_ICON |
@@ -303,7 +315,7 @@ namespace MF {
 
                 //TextFormatFlags flg;
                 if (e.ColumnIndex == 0) {
-                    flg = TextFormatFlags.EndEllipsis;
+                    flg = TextFormatFlags.EndEllipsis | TextFormatFlags.VerticalCenter;
                     //flg = TextFormatFlags.WordBreak;
                     //e.Graphics.DrawImage(imageList1.Images[0], e.Bounds.Location.X, e.Bounds.Location.Y);                
 
@@ -320,9 +332,9 @@ namespace MF {
                 }
                 if (e.ColumnIndex == 0 && listView1.SelectedIndices.Contains(e.ItemIndex)) {
                     //if (e.ColumnIndex == 0) {
-                    Rectangle sr = new Rectangle(e.Bounds.Location.X + 16, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
+                    Rectangle sr = new Rectangle(e.Bounds.Location.X + 16+4, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width-(16+4), e.Bounds.Height);
 
-                    e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
+                    e.Graphics.FillRectangle(SystemBrushes.Highlight, sr);
                     //}
                     //Rectangle hr = new Rectangle(e.Bounds.Location, new Size(listView1.Width, e.Bounds.Height));
                     //e.Graphics.FillRectangle(SystemBrushes.Highlight, hr);
@@ -339,14 +351,17 @@ namespace MF {
 
                 if (e.ColumnIndex == 0) {
                     var item = Items[e.ItemIndex];
-                    var img = IconCache.Inst.getImage(Path.Combine(this.Dir, item.Name), item.type, item.IsFile);
+                    var img = item.type==".exe"?iconcache.Images[item.Name]: IconCache.Inst.getImage(Path.Combine(this.Dir, item.Name), item.type, item.IsFile);
                     if (img != null) {
                         e.Graphics.DrawImage(img, e.Bounds.Location.X, e.Bounds.Location.Y, img.Width, img.Height);
                     }
                 }
 
                 //Rectangle r = new Rectangle(e.Bounds.Location, new Size(listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height));
-                Rectangle r = new Rectangle(e.Bounds.Location.X+16+2, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
+                int x = e.ColumnIndex == 0 ? e.Bounds.Location.X + 16+4 : e.Bounds.Location.X;
+                int w = e.ColumnIndex == 0 ? listView1.Columns[e.ColumnIndex].Width - (16+4 ) : listView1.Columns[e.ColumnIndex].Width;
+                //Rectangle r = new Rectangle(e.Bounds.Location.X+16+2, e.Bounds.Location.Y, listView1.Columns[e.ColumnIndex].Width, e.Bounds.Height);
+                Rectangle r = new Rectangle(x, e.Bounds.Location.Y, w, e.Bounds.Height);
                 TextRenderer.DrawText(e.Graphics, e.SubItem.Text, e.Item.Font, r, brush, flg);
                 //e.DrawFocusRectangle(e.Item.Bounds);
                 //var str = string.Join(" ", Array.ConvertAll(e.SubItem.Text.ToCharArray(),
@@ -620,9 +635,9 @@ namespace MF {
                 }
             }
             if (ChangedItems.Count > 0) {
+                ChangedItems.Clear();
                 listView.Refresh();
-            }
-            ChangedItems.Clear();
+            } 
         }
         
 
@@ -661,6 +676,7 @@ namespace MF {
                     }
                     if (!value.Equals(this._dir)) {
                         ChangedItems.Clear();
+                        iconcache.Dispose();
                     }
 
                     this._dir = value;

@@ -256,6 +256,7 @@ namespace MF {
                         var ctm = new ShellContextMenu();
                         var selfiles = us.SelectedItemList;
                         if (selfiles.Count == 0) {
+                            //ctm.CreateFolderMenu(us.listView.PointToScreen(new Point(e.X, e.Y)), us.Dir);
                             DirectoryInfo[] dir = new DirectoryInfo[1];
                             dir[0] = new DirectoryInfo(us.Dir);
                             ctm.ShowContextMenu(dir, us.listView.PointToScreen(new Point(e.X, e.Y)));

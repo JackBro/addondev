@@ -546,7 +546,11 @@ namespace Peter
                 ReleaseAll();
             }
         }
+
         #endregion
+
+        
+
 
         #region Local variabled
         private IContextMenu _oContextMenu;

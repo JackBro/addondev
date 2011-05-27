@@ -36,6 +36,9 @@ namespace MF {
         }
 
         private IconCache() {
+
+            ImageAddIcon(@"c:\", list);
+
             SHFILEINFO shFileInfo = new SHFILEINFO();
             NativeMethods.SHGetFileInfo("", 0, out shFileInfo,
                 (uint)Marshal.SizeOf(shFileInfo), NativeMethods.SHGFI_ICON |
@@ -46,8 +49,8 @@ namespace MF {
             }
             cache.ImageSize = new Size(16, 16);
             cache.ColorDepth = ColorDepth.Depth32Bit;
-            list.ColorDepth = ColorDepth.Depth32Bit;
-            ImageAddIcon("shell32.dll", list);
+            //list.ColorDepth = ColorDepth.Depth32Bit;
+            //ImageAddIcon("shell32.dll", list);
         }
 
         public Image getImage(string path, string ext, bool isfile) {
@@ -83,7 +86,7 @@ namespace MF {
             return cache.Images[ext];
         }
 
-
+       
         //public bool ImageAddIcon(string dllPath, int index, out Image image) {
         //    image = null;
         //    IntPtr[] small = new IntPtr[1];
@@ -135,6 +138,23 @@ namespace MF {
                 foreach (IntPtr ptr in hIcon)
                     if (ptr != IntPtr.Zero) NativeMethods.DestroyIcon(ptr);
             }
+        }
+    }
+
+    public class IconMethods {
+        public static bool getIcon(string file, out Image image) {
+            image = null;
+            SHFILEINFO shFileInfo = new SHFILEINFO();
+            NativeMethods.SHGetFileInfo(file, 0, out shFileInfo,
+                (uint)Marshal.SizeOf(shFileInfo), NativeMethods.SHGFI_ICON |
+                NativeMethods.SHGFI_SMALLICON | 0x4);
+            if (shFileInfo.hIcon != IntPtr.Zero) {
+
+                image = Icon.FromHandle(shFileInfo.hIcon).ToBitmap();
+                NativeMethods.DestroyIcon(shFileInfo.hIcon);
+                return true;
+            }
+            return false;
         }
     }
 }
