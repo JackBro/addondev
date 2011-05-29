@@ -25,7 +25,12 @@ namespace MF {
             MF.Win32API.SHFILEOPSTRUCT shellOpStruct = new MF.Win32API.SHFILEOPSTRUCT();
             shellOpStruct.hwnd = hwnd;
             shellOpStruct.wFunc = Win32API.FOFunc.FO_DELETE;
-            var form = string.Join(@"\0", files) + @"\0\0";
+            //var form = string.Join(@"\0", files) + '\0' + '\0';
+            var form = string.Empty;
+            foreach (var f in files) {
+                form +=  f + '\0';
+            }
+            form += '\0';
             shellOpStruct.pFrom = form;
             shellOpStruct.pTo = null;
             shellOpStruct.fFlags = Win32API.FOFlags.FOF_ALLOWUNDO;
@@ -38,7 +43,12 @@ namespace MF {
             MF.Win32API.SHFILEOPSTRUCT shellOpStruct = new MF.Win32API.SHFILEOPSTRUCT();
             shellOpStruct.hwnd = hwnd;
             shellOpStruct.wFunc = func;
-            var form = string.Join(@"\0", files) + @"\0\0";
+            //var form = string.Join(@"\0", files) + @"\0" + @"\0";
+            var form = string.Empty;
+            foreach (var f in files) {
+                form += f + '\0';
+            }
+            form += '\0';
             shellOpStruct.pFrom = form;
             shellOpStruct.pTo = toDir;
             MF.Win32API.SHFileOperation(ref shellOpStruct);
