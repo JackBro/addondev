@@ -22,6 +22,30 @@ Created on 2011/07/06
 #print u*s*v
 from numpy import *
 import numpy as np
+
+def dimReducShare(u, v, d, share=0.5 ):
+  print ""
+
+def myQuery(qtext, term):
+  i=0
+  deli = []
+  for n1 in w1:
+    f=False
+    for n2 in q:
+      if n2==n1:
+        f=True
+        #deli.append(i)
+        deli.append(1)
+        break
+    if f==False:
+      deli.append(0)
+    i=i+1
+  #print asarray(deli)  
+  return asarray(deli)
+
+#def myCosine(a, b):
+#  numpy.cross()
+
 a = np.array([1,2,3,4,5])
 b = np.array([[1,1,0,1,0],
               [0,1,1,0,1],
@@ -44,6 +68,53 @@ for n in c:
 d = delete(b,dele, axis=1)
 print d
 
+print d.cumsum(axis=1)
+
+u3 = d[:, :2]
+print u3
+
+u, sigma, v = linalg.svd(b) # 特異値分解
+print sigma
+ss = sigma.sum()
+print sigma.cumsum()/ss
+
+ind = max(where(sigma.cumsum()/ss <= 0.5))
+dim = max(ind)
+if dim < 2:
+  dim=2
+print u[:, :dim]
+print v[:, :dim]
+print sigma[:dim]
   
+w1 = np.array(["a","b","c","d","e", "f"])
+q = np.array(["a","d","e"])
+w2 = w1.copy()
+i=0
+deli = []
+for n1 in w1:
+  f=False
+  for n2 in q:
+    if n2==n1:
+      f=True
+      #deli.append(i)
+      deli.append(1)
+      break
+  if f==False:
+    deli.append(0)
+  i=i+1
+  
+print asarray(deli)
+
+#def myfunc(m):
+#  return (m[0]+m[-1])/2
+#print apply_along_axis(myfunc,0,b)
+print corrcoef(b.T)
+#res=[]
+#for x in b:
+#  for y in b:
+#    print corrcoef(x,y)
+#print res
+#print w2.astype(float64) 
+
 if __name__ == '__main__':
     pass
