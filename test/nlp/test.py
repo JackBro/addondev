@@ -23,8 +23,27 @@ Created on 2011/07/06
 from numpy import *
 import numpy as np
 
+def kyoki(data, minfreq=2):
+  dele = []
+  i=0
+  c = np.sum(data,0)
+  for n in c:
+    if n < minfreq :
+      dele.append(i)
+    i=i+1
+    
+  d = delete(data,dele, axis=1)
+  return d
+
 def dimReducShare(u, v, d, share=0.5 ):
-  print ""
+  sigma = d
+  ss = sigma.sum()
+  ind = max(where(sigma.cumsum()/ss <= 0.5))
+  dim = max(ind)
+  if dim < 2:
+    dim=2
+    
+  return  u[:, :dim], v[:, :dim], sigma[:dim]
 
 def myQuery(qtext, term):
   i=0
